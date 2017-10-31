@@ -1,0 +1,2 @@
+# Exclude eclipse's bin directories
+**/bin/

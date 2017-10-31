@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<ruleset name="PMD.rul" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+
+  <description>This ruleset was created from PMD.rul</description>
+
+  <rule ref="rulesets/java/basic.xml">
+    <exclude name="EmptyInitializer"/>
+    <exclude name="UnnecessaryFinalModifier"/>
+    <exclude name="UnnecessaryReturn"/>
+    <exclude name="UselessParentheses"/>
+  </rule>
+
+  <rule ref="rulesets/java/braces.xml"/>
+
+  <rule ref="rulesets/java/clone.xml">
+    <exclude name="CloneMethodMustImplementCloneable"/>
+  </rule>
+
+  <rule ref="rulesets/java/controversial.xml">
+    <exclude name="AtLeastOneConstructor"/>
+    <exclude name="AvoidFinalLocalVariable"/>
+    <exclude name="AvoidLiteralsInIfCondition"/>
+    <exclude name="AvoidUsingShortType"/>
+    <exclude name="AvoidUsingVolatile"/>
+    <exclude name="BooleanInversion"/>
+    <exclude name="CallSuperInConstructor"/>
+    <exclude name="DataflowAnomalyAnalysis"/>
+    <exclude name="NullAssignment"/>
+    <exclude name="OnlyOneReturn"/>
+    <exclude name="UnnecessaryParentheses"/>
+    <exclude name="UseConcurrentHashMap"/>
+    <exclude name="UseObjectForClearerAPI"/>
+  </rule>
+
+  <rule ref="rulesets/java/design.xml">
+    <exclude name="AccessorClassGeneration"/>
+    <exclude name="AvoidDeeplyNestedIfStmts"/>
+    <exclude name="CompareObjectsWithEquals"/>
+    <exclude name="ConfusingTernary"/>
+    <exclude name="GodClass"/>
+    <exclude name="SwitchDensity"/>
+    <exclude name="UseUtilityClass"/>
+  </rule>
+
+  <rule ref="rulesets/java/empty.xml">
+    <exclude name="EmptyInitializer"/>
+  </rule>
+
+  <rule ref="rulesets/java/finalizers.xml"/>
+
+  <rule ref="rulesets/java/imports.xml">
+    <exclude name="UnusedImports"/>
+  </rule>
+
+  <rule ref="rulesets/java/j2ee.xml">
+    <exclude name="DoNotUseThreads"/>
+    <exclude name="UseProperClassLoader"/>
+  </rule>
+
+  <rule ref="rulesets/java/javabeans.xml">
+    <exclude name="BeanMembersShouldSerialize"/>
+  </rule>
+
+  <rule ref="rulesets/java/junit.xml"/>
+
+  <rule ref="rulesets/java/logging-jakarta-commons.xml"/>
+
+  <rule ref="rulesets/java/logging-java.xml"/>
+
+  <rule ref="rulesets/java/naming.xml">
+    <exclude name="AbstractNaming"/>
+    <exclude name="LongVariable"/>
+    <exclude name="MisleadingVariableName"/>
+    <exclude name="ShortVariable"/>
+  </rule>
+
+  <rule ref="rulesets/java/optimizations.xml">
+    <exclude name="AvoidInstantiatingObjectsInLoops"/>
+    <exclude name="LocalVariableCouldBeFinal"/>
+    <exclude name="MethodArgumentCouldBeFinal"/>
+    <exclude name="PrematureDeclaration"/>
+    <exclude name="SimplifyStartsWith"/>
+  </rule>
+
+  <rule ref="rulesets/java/strictexception.xml">
+    <exclude name="SignatureDeclareThrowsException"/>
+  </rule>
+
+  <rule ref="rulesets/java/strings.xml">
+    <exclude name="AppendCharacterWithChar"/>
+    <exclude name="InefficientEmptyStringCheck"/>
+    <exclude name="InsufficientStringBufferDeclaration"/>
+    <exclude name="UseIndexOfChar"/>
+    <exclude name="UseStringBufferLength"/>
+    <exclude name="UselessStringValueOf"/>
+  </rule>
+
+  <rule ref="rulesets/java/sunsecure.xml"/>
+
+  <rule ref="rulesets/java/typeresolution.xml"/>
+
+  <rule ref="rulesets/java/unnecessary.xml">
+    <exclude name="UnnecessaryFinalModifier"/>
+    <exclude name="UnnecessaryReturn"/>
+    <exclude name="UselessParentheses"/>
+  </rule>
+
+  <rule ref="rulesets/java/unusedcode.xml">
+    <exclude name="UnusedFormalParameter"/>
+    <exclude name="UnusedModifier"/>
+  </rule>
+
+</ruleset>

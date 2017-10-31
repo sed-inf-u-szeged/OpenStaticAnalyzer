@@ -1,0 +1,23 @@
+
+if (NOT IS_ABSOLUTE ${COPY_SOURCE})
+  set (COPY_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/${COPY_SOURCE})
+endif()
+
+file (GLOB_RECURSE FILES_TO_COPY
+      ${COPY_SOURCE}${COPY_PATTERN}
+)
+
+message ("COPY:${FILES_TO_COPY}")
+
+foreach (SOURCE_FILE ${FILES_TO_COPY})
+  file(RELATIVE_PATH TARGET_FILE ${COPY_SOURCE} ${SOURCE_FILE})
+  message ("${COPY_TARGET}/${TARGET_FILE}")
+  get_filename_component(TARGET_DIR "${COPY_TARGET}/${TARGET_FILE}" DIRECTORY)
+  file (COPY ${SOURCE_FILE}
+        DESTINATION ${TARGET_DIR}
+  )
+endforeach ()
+
+
+
+

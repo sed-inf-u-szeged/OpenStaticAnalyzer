@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="OpenStaticAnalyzer"
+xmlns="OpenStaticAnalyzer"
+elementFormDefault="qualified">
+
+<xs:element name="Rul">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="ToolDescription" type="ToolDescriptionType" minOccurs = "0" maxOccurs = "1" />
+      <xs:element name="Configurations" type="ConfigurationsType" minOccurs = "0" maxOccurs = "1" />
+      <xs:element name="Views" type="ViewsType" minOccurs = "0" maxOccurs = "1" />
+      <xs:element name="Edges" type="EdgesType" minOccurs = "0" maxOccurs = "1" />
+      <xs:element name="Metric" type="MetricType" minOccurs = "0" maxOccurs = "unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<xs:complexType name="MetricType">
+  <xs:sequence>
+    <xs:element name="Configuration" type="ConfigurationType" minOccurs = "1" maxOccurs = "unbounded" />
+  </xs:sequence>
+  <xs:attribute name="id" type="xs:string" use = "required"/>
+</xs:complexType>
+
+<xs:complexType name="ConfigurationType">
+  <xs:sequence>
+    <xs:element name="Enabled" type="xs:boolean" minOccurs = "1" maxOccurs = "1" />
+    <xs:element name="Visible" type="xs:boolean" minOccurs = "0" maxOccurs = "1" />
+    <xs:element name="Group" minOccurs = "0" maxOccurs = "1" >
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="false"/>
+          <xs:enumeration value="summarized"/>
+          <xs:enumeration value="visual"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:element>
+    <xs:element name="AggregatedFormula" type="xs:string" minOccurs = "0" maxOccurs = "1" />
+    <xs:element name="NumericType" type="xs:boolean" minOccurs = "0" maxOccurs = "1" />
+    <xs:element name="GroupMember" type="xs:string" minOccurs = "0" maxOccurs = "unbounded" />
+    <xs:element name="Language" type="LanguageType" minOccurs = "1" maxOccurs = "unbounded" />
+    <xs:element name="Baselines" type="BaselinesType" minOccurs = "0" maxOccurs = "1" />
+    <xs:element name="Settings" type="SettingsType" minOccurs = "0" maxOccurs = "1" />
+  </xs:sequence>
+  <xs:attribute name="name" type="xs:string" use = "required"/>
+</xs:complexType>
+
+<xs:complexType name="LanguageType">
+  <xs:all>
+    <xs:element name="Warning" type="xs:boolean" minOccurs = "1" maxOccurs = "1" />
+    <xs:element name="DisplayName" type="xs:string" minOccurs = "0" maxOccurs = "1" />
+    <xs:element name="Description" type="xs:string" minOccurs = "0" maxOccurs = "1" />
+    <xs:element name="HelpText" type="xs:string" minOccurs = "0" maxOccurs = "1" />
+    <xs:element name="WarningText" type="xs:string" minOccurs = "0" maxOccurs = "1" />
+  </xs:all>
+  <xs:attribute name="lang" type="xs:string" use = "required"/>
+</xs:complexType>
+
+<xs:complexType name="SettingsType">
+  <xs:sequence>
+    <xs:element name="Setting" minOccurs = "0" maxOccurs = "unbounded" >
+      <xs:complexType>
+        <xs:simpleContent>
+          <xs:extension base="xs:string">
+            <xs:attribute name="editable" type="xs:boolean" use = "required"/>
+            <xs:attribute name="name" type="xs:string" use = "required"/>          
+          </xs:extension>
+        </xs:simpleContent>
+      </xs:complexType>
+    </xs:element>
+  </xs:sequence>
+</xs:complexType>
+
+
+
+<xs:complexType name="ToolDescriptionType">
+  <xs:sequence>
+    <xs:element name="Configuration" minOccurs = "0" maxOccurs = "unbounded" >
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="ToolDescriptionItem" minOccurs = "0" maxOccurs = "unbounded" >
+            <xs:complexType>
+              <xs:simpleContent>
+                <xs:extension base="xs:string">
+                  <xs:attribute name="name" type="xs:string" use = "required"/>
+                </xs:extension>
+              </xs:simpleContent>              
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use = "required"/>
+      </xs:complexType>
+    </xs:element>
+  </xs:sequence>
+</xs:complexType>
+
+<xs:complexType name = "ConfigurationsType">
+  <xs:sequence>
+    <xs:element name = "config" minOccurs = "0" maxOccurs = "unbounded">
+      <xs:complexType>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="redefine" type="xs:string" use="optional"/>
+      </xs:complexType>
+    </xs:element>
+  </xs:sequence>
+</xs:complexType>
+
+<xs:complexType name = "ViewsType">
+  <xs:sequence>
+    <xs:element name = "View" type = "ViewType"  minOccurs = "0" maxOccurs = "unbounded"/>
+  </xs:sequence>
+</xs:complexType>
+
+<xs:complexType name = "ViewType">
+  <xs:sequence>
+    <xs:element name = "Edge" minOccurs = "0" maxOccurs = "unbounded">
+      <xs:complexType>
+        <xs:attribute name = "name" type = "xs:string" use = "required" />
+      </xs:complexType>
+    </xs:element>
+  </xs:sequence>
+  <xs:attribute name = "name" type = "xs:string" use = "required" />
+</xs:complexType>
+
+<xs:simpleType name = "attrPlace">
+  <xs:restriction base="xs:string">
+    <xs:enumeration value="attribute"/>
+    <xs:enumeration value="level"/>
+  </xs:restriction>
+</xs:simpleType>
+
+
+<xs:complexType name = "EdgesType">
+  <xs:sequence>
+    <xs:element name = "Edge" minOccurs = "0" maxOccurs = "unbounded">
+      <xs:complexType>
+        <xs:simpleContent>
+        <xs:extension base="attrPlace">
+          <xs:attribute name = "name" type = "xs:string" use = "required" />
+        </xs:extension>
+       </xs:simpleContent>
+      </xs:complexType>
+    </xs:element>
+  </xs:sequence>  
+</xs:complexType>
+
+<xs:complexType name="BaselinesType">
+  <xs:sequence>
+    <xs:element name="Baseline" minOccurs = "0" maxOccurs = "unbounded" >
+      <xs:complexType>
+        <xs:simpleContent>
+          <xs:extension base="xs:integer">
+            <xs:attribute name="name" type="xs:string" use = "required"/>
+          </xs:extension>
+        </xs:simpleContent>
+      </xs:complexType>
+    </xs:element>
+  </xs:sequence>
+</xs:complexType>
+
+</xs:schema>

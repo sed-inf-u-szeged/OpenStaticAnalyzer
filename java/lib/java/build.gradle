@@ -1,0 +1,24 @@
+apply plugin: 'java'
+
+defaultTasks 'jar'
+jar.baseName = 'java'
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'src'
+        }
+    }
+}
+
+dependencies {
+    compile project(COLUMBUSLOGGER)
+}
+
+// Copies everything except the java sources into the jar
+jar {
+    from (file('/src/main/resources')) {
+        exclude '**/*.java'
+    }
+}
+

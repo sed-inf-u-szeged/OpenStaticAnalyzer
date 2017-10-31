@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>hu.u-szeged.OpenStaticAnalyzer</groupId>
+  <artifactId>plugin-agragator</artifactId>
+  <version>8.2</version>
+  <packaging>pom</packaging>
+  <description>This is the mutiple project</description>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  
+  
+    <modules>
+      <module>ext/mojoExecutorModule/v2/</module>
+      
+      <module>columbus-maven-plugin/pom.2.2.1.xml</module>
+      <module>maven-agent</module>
+    </modules>
+    
+
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.1</version>
+                    <executions>
+                         <execution>
+                            <id>mojo-before-all</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <tasks>
+                                    <condition property="wrapperos" value="Linux" else="Windows">
+                                         <os family="unix"/>
+                                    </condition>
+                                    <condition property="batchEx" value=".sh" else=".bat">
+                                         <os family="unix"/>
+                                    </condition>
+                                    <echo>[M2_HOME] ${env.M2_HOME}</echo>
+                                    <echo>[Path] ${env.OSA_DIR}</echo>
+                                    <echo>[os] ${wrapperos}</echo>
+                                    <mkdir dir="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/"/>
+                                    
+                                  <copy file="ext\maveninstall\installMavenWrapper${batchEx}"
+                                  
+                                 tofile="${env.OSA_DIR}/installMavenWrapper${batchEx}"/>
+                                 
+                                 <chmod file="${env.OSA_DIR}/installMavenWrapper${batchEx}" perm="777"  />
+                                  
+                                 <copy file="columbus-maven-plugin\target\OpenStaticAnalyzer-maven-plugin-8.2.jar"
+                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-8.2.jar"/>
+                                 
+                                 <copy file="columbus-maven-plugin\pom.3.0.5.xml"
+                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-8.2-V3.pom"/>
+                                 
+                                 <copy file="columbus-maven-plugin\pom.3.1.0.xml"
+                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-8.2-V31.pom"/>
+                                 
+                                 <copy file="columbus-maven-plugin\pom.2.2.1.xml"
+                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-8.2-V2.pom"/>
+                                 
+                                 <copy file="ext\mojoExecutorModule\v2\target\OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.jar"
+                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.jar"/>
+                                 <copy file="ext\mojoExecutorModule\v2\pom.xml"
+                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.pom"/>
+                                 
+                                 <copy file="ext\mojoExecutorModule\v3\target\OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.0.jar"
+                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.0.jar"/>
+                                 <copy file="ext\mojoExecutorModule\v3\pom.xml"
+                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.0.pom"/>
+                                 
+                                 <copy file="ext\mojoExecutorModule\v31\target\OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.1.jar"
+                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.1.jar"/>
+                                 <copy file="ext\mojoExecutorModule\v31\pom.xml"
+                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.1.pom"/>
+                                 
+                                 
+                                </tasks>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
+
+</project>

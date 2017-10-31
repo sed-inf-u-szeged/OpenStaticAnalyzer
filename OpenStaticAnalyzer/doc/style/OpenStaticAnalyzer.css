@@ -1,0 +1,312 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+
+* {
+	outline: none !important;
+	margin: 0;
+	padding: 0;
+	border: 0px solid;
+}
+
+html {
+	border: 0;
+	font-family: open_sansregular, Arial, sans-serif;
+	font-size: 13px;
+	color: #666;
+	margin: 0;
+	padding: 1em;
+	background: #e8eaec;
+}
+
+body {
+	background: #f9fbfc;
+	width: 1180px;
+	margin: auto;
+	padding: 2em;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+  -webkit-box-shadow:  3px 3px 10px 0px rgba(89, 89, 89, 0.34);
+  -moz-box-shadow:     3px 3px 10px 0px rgba(89, 89, 89, 0.34);
+  box-shadow:          3px 3px 10px 0px rgba(89, 89, 89, 0.34);
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: open_sanssemibold;
+	margin: .5em 0;
+	padding: 0;
+}
+
+h3 {
+  font-size: 150%;
+}
+
+h3, h4, h5, h6 {
+	margin: .5em 0 0 0;
+}
+
+h4, h5, h6 {
+	font-family: "Open Sans";
+  font-size: 105%;
+  color: #0090c6;
+  border-bottom:dotted 2px #0090c6;
+  display: inline-block;
+}
+
+h4:after, h5:after, h6:after {
+  content: "\A";
+  white-space: pre;
+}
+
+a {
+	text-decoration: none;
+	color: #0090c6;
+}
+
+input, select {
+	font-family: open_sanslight_italic, Arial, sans-serif;
+	font-size: 12px;
+	outline: 0 none;
+	resize: none;
+	margin: 0;
+}
+
+ul {
+	list-style-type: none;
+	padding-left: 2em;
+}
+
+li {
+	vertical-align: middle;
+	line-height: 150%;
+}
+
+nav#TOC {
+  /*text-align: center;*/
+}
+
+nav#TOC > ul {
+  /*display: inline-block;*/
+  text-align: left;
+  font-size: 1.5em;
+}
+
+nav#TOC ul {
+  margin: 0;
+}
+
+nav#TOC > ul ul {
+  font-size: 75%;
+}
+
+nav#TOC > ul li a {
+  border-bottom: dotted #0090c6 1px;
+  line-height: 150%;
+}
+
+nav#TOC > ul ul ul li a {
+  line-height: 190%;
+}
+
+nav#TOC > ul ul ul ul {
+  font-size: 100%;
+}
+
+nav#TOC > ul ul ul ul li a {
+  line-height: 110%;
+}
+
+
+.red {
+	color: red;
+}
+
+.green {
+	color: green;
+}
+
+table.fill {
+	width: 95%;
+}
+
+#container {
+	background: #f9fbfc;
+	width: 930px;
+	margin: auto;
+	padding: 2em;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px
+}
+
+table {
+	background: #ccc;
+	margin: 20px;
+	border: #ccc 1px solid;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px
+}
+
+table th {
+	padding: 4px 10px;
+  text-align: center;
+	vertical-align: middle;
+	color: #233;
+}
+
+table, tbody, tr, td {
+	vertical-align: inherit;
+	text-align: inherit;
+}
+
+table td {
+	background: #F4F4F5;
+	padding: 4px 10px 4px 10px;
+	vertical-align: inherit;
+}
+
+.middle {
+	vertical-align: middle;
+}
+
+.center {
+	text-align: center;
+}
+
+td.name {
+	text-align: left;
+}
+
+td.path {
+	text-align: left;
+}
+
+table tr.even td {
+	background: #eee
+}
+
+table a {
+	display: block;
+}
+
+table tr:first-child td:first-child {
+	-moz-border-radius-topleft: 5px;
+	-webkit-border-top-left-radius: 5px;
+	border-top-left-radius: 5px;
+}
+
+table tr:first-child td:last-child {
+	-moz-border-radius-topright: 5px;
+	-webkit-border-top-right-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+table tr:last-child td:first-child {
+	-moz-border-radius-bottomleft: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+table tr:last-child td:last-child {
+	-moz-border-radius-bottomright: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+table.collapsed {
+	border-collapse: collapse
+}
+
+ul {
+    list-style:disc outside;
+}
+
+ol[type=1] {
+    list-style-type:decimal;
+}
+
+ol[type=a] {
+    list-style-type:lower-alpha;
+}
+
+ol[type=A] {
+    list-style-type:upper-alpha;
+}
+
+ol[type=I] {
+    list-style-type:upper-roman;
+}
+
+ol[type=i] {
+    list-style-type:lower-roman;
+}
+
+p {
+  margin: 1em 0;
+}
+
+li p:only-of-type {
+  margin: 0;
+}
+
+blockquote,ul,ol,dl {
+    margin:1em 2em;
+}
+
+dl dd {
+    margin-left:1em;
+}
+
+caption {
+    margin-bottom:.5em;
+    text-align:center;
+}
+
+fieldset,pre {
+    margin-top:.5em;
+    margin-bottom:.5em;
+}
+
+pre,code,tt {
+    font-family:monospace;
+    font-size:108%;
+    line-height:100%;
+}
+
+dl {
+    margin:0 0 1.125em;
+}
+
+dt {
+    font-weight:700;
+    line-height:1.125em;
+    font-family: "Open Sans";
+}
+
+dd {
+    margin-left:1em;
+    line-height:1.125em;
+}
+
+dd p {
+  margin-top: .3em;
+}
+
+pre {
+  border: 2px dotted #ddd;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  padding: 1.5em;
+}
+
+hr {
+  border-top: #ddd dotted 5px;
+
+}
+
+img {
+  margin-left: auto;
+  margin-right: auto;
+  max-width:  100%;
+}

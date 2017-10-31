@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="graphsupportlib" default="release" basedir=".">
+
+	<property name="bin" location= "../../../../bin/Release/java/lib/${ant.project.name}"/>
+	<property name="bin.dir" value="../../../../bin/Release/java/lib/"/>
+	<property name="build" location="${bin}/build"/>
+	<property name="dist" location="${bin}/dist"/>
+	<property name="src" location="src"/>
+
+	<target name="init-release">
+		<property name="debug" value="off"/>
+	</target>
+
+	<target name="init-debug">
+		<property name="debug" value="on"/>
+	</target>
+
+	<target name="clean">
+		<delete dir="${bin}"/>
+	</target>
+
+	<target name="init">
+		<mkdir dir="${bin}"/>
+		<mkdir dir="${build}"/>
+		<mkdir dir="${dist}"/>
+	</target>
+
+	<target name="build" depends="init">
+		<javac srcdir="src" classpath="${bin.dir}/graphlib/dist/graphlib.jar" destdir="${build}" debug="${debug}">
+		<compilerarg value="-Xlint"/>
+		</javac>
+	</target>
+
+	<target name="jar" depends="clean,build">
+		<jar destfile="${dist}/${ant.project.name}.jar" update="false">
+			<fileset dir="${build}" includes="**/*.class"/>
+		</jar>  
+		<javadoc sourcepath="${src}" destdir="${dist}/doc" classpath="${bin.dir}/graphlib/dist/graphlib.jar">
+			<fileset dir="${src}" includes="**/*.java"/>
+		</javadoc>
+	</target>
+
+	<target name="debug" depends="init-debug,jar"/>
+
+	<!-- default -->
+	<target name="release" depends="init-release,jar"/>
+
+</project>

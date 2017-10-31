@@ -1,0 +1,21 @@
+
+set (GENERATED_FILE ${CMAKE_CURRENT_BINARY_DIR}/src/columbus/revision/Revision.java)
+set (INPUT_TEMPLATE ${CMAKE_CURRENT_SOURCE_DIR}/src/columbus/revision/Revision.java)
+
+set (TARGET_NAME java_revision)
+
+add_custom_command (
+    OUTPUT ${GENERATED_FILE}
+    DEPENDS ${INPUT_TEMPLATE} ${BUILD_INFO_FILE}
+    COMMAND ${CMAKE_COMMAND} "-DINPUT_FILE_NAME=${INPUT_TEMPLATE}" "-DOUTPUT_FILE_NAME=${GENERATED_FILE}" "-DTEMPLATE_VARIABLE_NAME=GIT_HASH" "-DTEMPLATE_VARIABLE_VALUE_FILE=${BUILD_INFO_FILE}" -P ${CMAKE_MODULE_PATH}/ConfigureFile.cmake
+)
+
+add_custom_target (
+    ${TARGET_NAME}
+    DEPENDS ${GENERATED_FILE}
+)
+
+add_dependencies (${TARGET_NAME} generate_build_info)
+set_target_properties (${TARGET_NAME} PROPERTIES FOLDER ${CMAKE_SUPPORT_FOLDER_NAME})
+
+

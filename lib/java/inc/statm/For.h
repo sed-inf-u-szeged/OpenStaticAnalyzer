@@ -1,0 +1,233 @@
+/*
+ *  This file is part of OpenStaticAnalyzer.
+ *
+ *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *
+ *  Licensed under Version 1.2 of the EUPL (the "Licence");
+ *
+ *  You may not use this work except in compliance with the Licence.
+ *
+ *  You may obtain a copy of the Licence in the LICENSE file or at:
+ *
+ *  https://joinup.ec.europa.eu/software/page/eupl
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the Licence is distributed on an "AS IS" basis,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the Licence for the specific language governing permissions and
+ *  limitations under the Licence.
+ */
+
+#ifndef _JAVA_For_H_
+#define _JAVA_For_H_
+
+#include "java/inc/java.h"
+
+/**
+* \file For.h
+* \brief Contains declaration of the statm::For class.
+* \brief The it get atributes from 
+    * \brief base::Base
+    * \brief base::Commentable
+*/
+
+namespace columbus { namespace java { namespace asg {
+namespace statm {
+
+  /**
+  * \brief For class, which represents the statm::For node.
+  * (missing)
+  * 
+  * Attributes:
+  *   - leftParenPosition (Range) : (missing)
+  *   - rightParenPosition (Range) : (missing)
+  */
+  class For : public Iteration {
+    protected:
+      /**
+      * \internal
+      * \brief Non-public constructor, only factory can instantiates nodes.
+      * \param nodeId  [in] The id of the node.
+      * \param factory [in] Poiter to the Factory the node belongs to.
+      */
+      For(NodeId nodeId, Factory *factory);
+
+      /**
+      * \internal
+      * \brief Non-public destructor, only factory can destroy nodes.
+      */
+      virtual ~For();
+
+    private:
+      /**
+      * \brief This function always throws a JavaException due to copying is not allowed!
+      */
+      For & operator=(const For&);
+
+      /**
+      * \brief This function always throws a JavaException due to copying is not allowed!
+      */
+      For(const For&);
+
+    protected:
+      /**
+      * \internal
+      * \brief Clone method.
+      */
+      virtual void clone(const For& other, bool tryOnVirtualParent);
+
+    public:
+      /**
+      * \brief Gives back the NodeKind of the node.
+      * \return Returns with the NodeKind.
+      */
+      virtual NodeKind getNodeKind() const = 0;
+
+      /**
+      * \brief Delete all edge.
+      */
+      virtual void prepareDelete(bool tryOnVirtualParent);
+
+
+      // ---------- Attribute getter function(s) ----------
+
+      /**
+      * \brief Gives back the leftParenPosition of the node.
+      * \return Returns with the leftParenPosition.
+      */
+      virtual const Range getLeftParenPosition() const;
+
+      /**
+      * \brief Compare two node by leftParenPosition attribute of the node.
+      * \return Returns with the result.
+      */
+      virtual int compareByLeftParenPosition(const For& other) const;
+
+      /**
+      * \brief Gives back the rightParenPosition of the node.
+      * \return Returns with the rightParenPosition.
+      */
+      virtual const Range getRightParenPosition() const;
+
+      /**
+      * \brief Compare two node by rightParenPosition attribute of the node.
+      * \return Returns with the result.
+      */
+      virtual int compareByRightParenPosition(const For& other) const;
+
+
+      // ---------- Attribute setter function(s) ----------
+
+      /**
+      * \internal
+      * \brief Sets the leftParenPosition of the node.
+      * \param leftParenPosition [in] The new value of the leftParenPosition.
+      */
+      virtual void setLeftParenPosition(const Range& _leftParenPosition);
+
+      /**
+      * \internal
+      * \brief Sets the rightParenPosition of the node.
+      * \param rightParenPosition [in] The new value of the rightParenPosition.
+      */
+      virtual void setRightParenPosition(const Range& _rightParenPosition);
+
+    protected:
+
+      // ---------- Attribute(s) ----------
+
+      /** \internal \brief todo (unknown). */
+      MultiRange m_leftParenPosition;
+
+      /** \internal \brief todo (unknown). */
+      MultiRange m_rightParenPosition;
+
+    protected:
+      /**
+      * \brief Set or add the edge by edge kind
+      * \param edgeKind           [in] The kind of the edge.
+      * \param edgeEnd            [in] The id of node which is on the end of the edge.
+      * \param tryOnVirtualParent [in] This is help for the traversal.
+      * \return Return true if setting was success.
+      */
+      virtual bool setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent);
+
+    protected:
+      /**
+      * \brief Remove the edge by edge kind
+      * \param edgeKind           [in] The kind of the edge.
+      * \param edgeEnd            [in] The id of node which is on the end of the edge.
+      * \param tryOnVirtualParent [in] This is help for the traversal.
+      * \return Return true if removing was success.
+      */
+      virtual bool removeEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent);
+
+    public:
+
+      // ---------- Accept functions for Visitor it now pure virtual ----------
+
+      /**
+      * \brief It calls the appropriate visit method of the given visitor in the child nodes.
+      * \param visitor [in] The used visitor.
+      */
+      virtual void accept(Visitor& visitor) const = 0;
+
+      /**
+      * \brief It calls the appropriate visitEnd method of the given visitor in the child nodes.
+      * \param visitor [in] The used visitor.
+      */
+      virtual void acceptEnd(Visitor& visitor) const = 0;
+
+      /**
+      * \internal
+      * \brief Calculate node similarity.
+      * \param nodeIf [in] The other node.
+      */
+      virtual double getSimilarity(const base::Base& node);
+
+      /**
+      * \internal
+      * \brief Calculate node hash.
+      */
+      virtual NodeHashType getHash(std::set<NodeId>&  node) const ;
+
+    protected:
+      /**
+      * \internal
+      * \brief It is swap the string table ids to the other string table.
+      * \param newStrTable [in] The new table
+      * \param oldAndNewStrKeyMap [in] The map for fast serch.
+      */
+      virtual void swapStringTable(RefDistributorStrTable& newStrTable, std::map<Key,Key>& oldAndNewStrKeyMap );
+
+      /**
+      * \internal
+      * \brief Saves the node.
+      * \param io [in] The node is written into io.
+      */
+      virtual void save(io::BinaryIO &io, bool withVirtualBase = true) const;
+
+      /**
+      * \internal
+      * \brief Loads the node.
+      * \param io [in] The node is read from io.
+      */
+      virtual void load(io::BinaryIO &io, bool withVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief Sorts some edges and attributes of the node.
+      */
+      virtual void sort(bool withVirtualBase = true);
+
+
+      friend class java::asg::Factory;
+      friend class java::asg::VisitorSave;
+  };
+
+} 
+
+
+}}}
+#endif
+

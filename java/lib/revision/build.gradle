@@ -1,0 +1,23 @@
+apply plugin: 'java'
+
+defaultTasks 'jar'
+jar.baseName = 'revision'
+buildDir = file (buildDir.getPath() + "/$jar.baseName")
+
+if (project.hasProperty('generatedRevisionDir'))
+{
+    ext.revisionSource = generatedRevisionDir
+}
+else
+{
+    ext.revisionSource = 'src/'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs revisionSource
+        }
+    }
+}
+

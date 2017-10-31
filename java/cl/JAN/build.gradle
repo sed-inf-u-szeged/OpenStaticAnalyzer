@@ -1,0 +1,31 @@
+apply plugin: 'java'
+
+defaultTasks 'dist'
+jar.baseName = 'JAN'
+buildDir = file (buildDir.getPath() + "/$jar.baseName")
+jar.destinationDir = file(buildDir.getPath() + '/bin')
+dependencies {
+    compile project(JAVA)
+    compile project(LANGTOOLS)
+    compile project(COLUMBUSLOGGER)
+    compile project(REVISION)
+    compile files(EXT + 'jewelcli-0.8.5.jar', EXT + 'guessencoding-1.4.jar')
+}
+
+task dist(type: Copy, dependsOn: 'jar') {
+    from 'toolchain.ini'
+    into buildDir.getPath() + '/bin'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.jan.Main'
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    } {
+        exclude 'logback.xml' // from java lib
+    }
+
+}

@@ -1,0 +1,111 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>hu.u-szeged.OpenStaticAnalyzer</groupId>
+  <artifactId>maven-agent</artifactId>
+  <packaging>jar</packaging>
+  <version>8.2</version>
+  <name>maven-agent</name>
+  <url>http://maven.apache.org</url>
+  
+  <profiles>
+    
+    <!-- The following profile is activated with "-P weblogic" on the command line -->
+    <profile>
+        <id>linux</id>
+        <properties>
+            <wrapperos>Linux</wrapperos>
+        </properties>
+         <activation>
+            <os>
+             <family>Unix</family>
+            </os>
+        </activation>
+    </profile>
+    
+     <profile>
+        <id>windows</id>
+        <properties>
+            <wrapperos>Windows</wrapperos>
+        </properties>
+         <activation>
+            <os>
+             <family>Windows</family>
+            </os>
+        </activation>
+    </profile>
+    
+</profiles>
+   
+  <dependencies>
+  
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.2</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+    <groupId>org.javassist</groupId>
+    <artifactId>javassist</artifactId>
+    <version>3.14.0-GA</version>
+    </dependency>
+    
+  </dependencies>
+  
+   <build>
+    <plugins>
+        
+     <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+    
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+  
+  
+  <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-jar-plugin</artifactId>
+    <version>2.4</version>
+    <executions>
+        <execution>
+            <phase>process-classes</phase>
+            <goals>
+                <goal>jar</goal>
+            </goals>
+            <configuration>
+                <archive>
+                    <manifestEntries>
+                        <premain-class>com.columbus.javaagent.Agent</premain-class>
+                    </manifestEntries>
+                </archive>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+
+<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+         
+          <finalName>OpenStaticAnalyzerAgent-${version}</finalName>
+          <outputDirectory>${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/</outputDirectory>
+        </configuration>
+      </plugin>
+  </plugins>
+  </build>
+</project>

@@ -1,0 +1,20 @@
+<!ELEMENT GraphSchema (AttributeGroup*, Nodes?, NodeGroup*, Edges?)>
+<!ELEMENT AttributeGroup (attribute*) >
+<!ATTLIST AttributeGroup name CDATA #REQUIRED>
+<!ELEMENT attribute (attribute*) >
+<!ATTLIST attribute name CDATA #REQUIRED>
+<!ATTLIST attribute type (int|float|string|composite) #REQUIRED>
+<!ATTLIST attribute context CDATA #REQUIRED>
+<!ELEMENT Nodes (NodeGroup*, node*) >
+<!ELEMENT node (Attributes?)>
+<!ATTLIST node type CDATA #REQUIRED>
+<!ELEMENT Attributes (AttributeGroup*, attribute*)>
+<!ELEMENT NodeGroup (Nodes*, Attributes*)>
+<!ATTLIST NodeGroup name CDATA #REQUIRED>
+<!ELEMENT Edges (edge+)>
+<!ELEMENT edge (Attributes?, between+) >
+<!ATTLIST edge type CDATA #REQUIRED>
+<!ATTLIST edge dir (directed|directed_with_reverse|bidirected) #REQUIRED>
+<!ELEMENT between EMPTY>
+<!ATTLIST between from CDATA #REQUIRED>
+<!ATTLIST between to CDATA #REQUIRED>

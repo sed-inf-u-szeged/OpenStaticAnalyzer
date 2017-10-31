@@ -1,0 +1,19 @@
+apply plugin: 'java'
+ 
+defaultTasks 'jar'
+
+jar.baseName = 'JColumbusAntWrapper'
+buildDir = file (buildDir.getPath() + "/$jar.baseName")
+jar.destinationDir = file(buildDir.getPath() + '/bin')
+
+dependencies {
+    compile project(COLUMBUSLOGGER)
+}
+
+sourceSets.main.compileClasspath += files(EXT + 'ant-1.6.5.jar')
+
+jar {
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

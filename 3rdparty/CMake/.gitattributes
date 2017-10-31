@@ -1,0 +1,2 @@
+# Set line endigs of the patch files 
+*.patch text eol=lf

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="GraphExample" default="jar" basedir=".">
+ 
+  <property name="bin" location="bin"/>
+  <property name="build" location="build"/>
+
+  <target name="init-release">
+    <property name="debug" value="off"/>
+  </target>
+
+  <target name="init-debug">
+    <property name="debug" value="on"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="${build}"/>
+  </target>
+
+  <target name="init">
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="build" depends="init">
+    <javac srcdir="src" classpath="${bin}/*.jar" destdir="${build}" debug="${debug}">
+      <classpath location="../Graphlib/graphlib.jar"/>
+      <classpath location="../Graphsupportlib/graphsupportlib.jar"/>
+    </javac>
+  </target>
+
+  <target name="jar" depends="clean,build">
+    <jar destfile="${bin}/${ant.project.name}.jar" update="false">
+      <fileset dir="${build}" includes="**/*.class"/>
+      <manifest>
+        <attribute name="Main-Class" value="columbus.VisitorExample"/>
+        <attribute name="Class-Path" value="graphlib.jar graphsupportlib.jar"/>
+      </manifest>
+    </jar>  
+  </target>
+
+  <target name="debug" depends="init-debug,jar"/>
+
+  <!-- default -->
+  <target name="release" depends="init-release,jar"/>
+
+</project>

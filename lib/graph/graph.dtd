@@ -1,0 +1,14 @@
+<!ELEMENT graph (node*)>
+<!ELEMENT node (attribute*,edge*)>
+<!ATTLIST node name CDATA #REQUIRED>
+<!ATTLIST node type CDATA #REQUIRED>
+<!ELEMENT attribute (attribute*)>
+<!ATTLIST attribute type CDATA #REQUIRED>
+<!ATTLIST attribute name CDATA #REQUIRED>
+<!ATTLIST attribute value CDATA #IMPLIED>
+<!ATTLIST attribute context CDATA #IMPLIED>
+<!ELEMENT edge (attribute*,edgePair*)>
+<!ATTLIST edge type CDATA #REQUIRED>
+<!ATTLIST edge direction CDATA #REQUIRED>
+<!ATTLIST edge to CDATA #REQUIRED>
+<!ELEMENT edgePair (attribute*)>

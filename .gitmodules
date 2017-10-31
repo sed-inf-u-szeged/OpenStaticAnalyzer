@@ -1,0 +1,12 @@
+[submodule "3rdparty/boost"]
+	path = 3rdparty/boost
+	url = https://github.com/boostorg/boost.git
+[submodule "3rdparty/zlib"]
+	path = 3rdparty/zlib
+	url = https://github.com/madler/zlib.git
+[submodule "3rdparty/PMD"]
+	path = 3rdparty/PMD
+	url = https://github.com/sed-inf-u-szeged/pmd.git
+[submodule "java/lib/langtools"]
+	path = java/lib/langtools
+	url = https://github.com/sed-inf-u-szeged/langtools.git
