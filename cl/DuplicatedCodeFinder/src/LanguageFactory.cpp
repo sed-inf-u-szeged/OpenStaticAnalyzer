@@ -163,6 +163,7 @@ namespace columbus { namespace dcf {
 
   void LanguageFactory::fillComponentList( std::list<std::string> listOfInputFile )
   {
+#ifdef SCHEMA_JAVA
     for (std::list<std::string>::iterator it = listOfInputFile.begin();it != listOfInputFile.end();++it) {
       columbus::CsiHeader header;
       columbus::RefDistributorStrTable stt;
@@ -178,6 +179,7 @@ namespace columbus { namespace dcf {
 
       limComponentNameFileNameMap[componentID] = *it;
     }
+#endif
   }
 
 }}

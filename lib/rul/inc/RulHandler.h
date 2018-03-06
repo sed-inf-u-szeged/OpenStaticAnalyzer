@@ -80,6 +80,10 @@ private:
       : text(_empty_string)
       , editable(rulUndefined)
     {}
+    bool operator==(const std::string& text) const
+    {
+      return this->text == text;
+    }
   };
 
 
@@ -326,7 +330,7 @@ protected:
   const R& getConfSpecData (const std::string& ruleId, T key, const R& wrongValue) const;
 
   template<typename T, typename R, typename N>
-  void getConfSpecDataFromMap (const std::string& ruleId, const N& name, T key, R& retvalue, bool& found) const;
+  void getConfSpecDataFromMap (const std::string& ruleId, const N& name, T key, R& retvalue, const std::string& wrongValue, bool& found) const;
 
   template<class T>
   void getMetricGroupMembers(const std::string& ruleId, std::insert_iterator<T> insertIt ) const;

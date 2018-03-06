@@ -120,27 +120,29 @@ The OpenStaticAnalyzer for Java package contains the following directories and f
 
 Windows:
 
------------------  -----------------------  --------------------------------------
-OpenStaticAnalyzer\\Java\\
-                   Demo                     \# Example project directory
-                   WindowsTools             \# ASG checker and exporter tools directory
-                   WindowsWrapper           \# Wrapper and analyzer tools directory
-                   OpenStaticAnalyzerJava.exe          \# Program file to execute the analysis
-                   installMavenWrapper.bat  \# Batch file to install the Maven wrapper
-                   UsersGuide.html          \# User's guide
------------------  -----------------------  ---------------------------------------
+|                            |                            |                                               |
+|----------------------------|----------------------------|-----------------------------------------------|
+|OpenStaticAnalyzer\\Java\\  |                            |                                               |
+|                            | Demo                       |   \# Example project directory                |
+|                            | WindowsTools               |   \# ASG checker and exporter tools directory |
+|                            | WindowsWrapper             |   \# Wrapper and analyzer tools directory     |
+|                            | OpenStaticAnalyzerJava.exe |   \# Program file to execute the analysis     |
+|                            | installMavenWrapper.bat    |  \# Batch file to install the Maven wrapper   |
+|                            | UsersGuide.html            |  \# User's guide                              |
+
 
 Linux:
 
--------------------  -----------------------  --------------------------------------
-OpenStaticAnalyzer/Java/
-                     Demo                     \# Example project directory
-                     LinuxTools               \# ASG checker and exporter tools directory
-                     LinuxWrapper             \# Wrapper and analyzer tools directory
-                     OpenStaticAnalyzerJava              \# Program file to execute the analysis
-                     installMavenWrapper.sh   \# Shell script to install the Maven wrapper
-                     UsersGuide.html          \# User's guide
--------------------  -----------------------  --------------------------------------
+|                            |                           |                                             |
+|----------------------------|---------------------------|---------------------------------------------|
+|OpenStaticAnalyzer/Java/    |                           |                                             |
+|                            | Demo                      | \# Example project directory                |
+|                            | LinuxTools                | \# ASG checker and exporter tools directory |
+|                            | LinuxWrapper              | \# Wrapper and analyzer tools directory     |
+|                            | OpenStaticAnalyzerJava    | \# Program file to execute the analysis     |
+|                            | installMavenWrapper.sh    | \# Shell script to install the Maven wrapper|
+|                            | UsersGuide.html           | \# User's guide                             |
+
 
 
 To analyze Maven based projects, installMavenWrapper.bat (in case of Windows) or installMavenWrapper.sh (in case of Linux) must be executed in an environment where all the necessary environment variables of Maven are set and the user has write privilege for the Maven repository required for the install.
@@ -309,12 +311,12 @@ Source code elements in the files marked with darker background will not be cons
   : There are certain rule violations that are computed by more than one tool. E.g. ADLIBDC (Avoid Decimal Literals In BigDecimal Constructor) is checked by both FindBugs and PMD. In these cases, in order to avoid duplications, there is a priority order among the tools. This parameter can be used to override these default priorizations by specifying a .csv file in the following format:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.csv}
-      toolId;FH;AH;VH;FB;PMD
+      toolId;FB;PMD
       ...
-      ADLIBDC;-;-;-;1;2
-      ADNIS;1;-;-;-;2
-      ADS;-;-;-;-;1
-      AEAI;-;-;-;-;1 
+      ADLIBDC;1;2
+      ADNIS;-;1
+      ADS;-;1
+      AEAI;-;1
       ...
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -372,7 +374,7 @@ Source code elements in the files marked with darker background will not be cons
 
 **-FBOptions**
 
-  : Extra command line parameters for FindBugs can be set with this option. For instance if some auxiliary classes are needed, these can be set by adding the –FBOptions="–auxclasspath external.jar" option.
+  : Extra command line parameters for FindBugs can be set with this option. For instance if some auxiliary classes are needed, these can be set by adding the -FBOptions="-auxclasspath external.jar" option.
 
 **-runPMD**
 

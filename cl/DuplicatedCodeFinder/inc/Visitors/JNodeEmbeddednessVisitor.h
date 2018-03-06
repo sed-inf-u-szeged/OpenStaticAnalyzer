@@ -20,6 +20,7 @@
 
 #ifndef _DCF_CPPJNODEV_H_
 #define _DCF_CPPJNODEV_H_
+#ifdef SCHEMA_JAVA
 
 #include "../common.h"
 #include "NodeEmbeddednessVisitorBase.h"
@@ -45,4 +46,5 @@ protected:
 };
 
 #define NODE_EMBEDDEDNESS_VISITOR JNodeEmbeddednessVisitorBase
+#endif // SCHEMA_JAVA
 #endif // _DCF_CPPJNODEV_H_

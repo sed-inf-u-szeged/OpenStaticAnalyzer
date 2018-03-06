@@ -409,7 +409,3 @@ void ResultConverter::aggregateWarnings(bool createGroups) {
   if (createGroups)
     columbus::graphsupport::createGroupMetrics(graph, *xRulhandler);
 }
-
-void ResultConverter::addLicenseTypeToTheGraphHeader(const string& toolName) {
-  graph.setHeaderInfo(toolName + graphsupport::graphconstants::HEADER_MODE_KEY_SUFFIX, graphsupport::graphconstants::HEADER_MODE_VALUE_FULL );
-}

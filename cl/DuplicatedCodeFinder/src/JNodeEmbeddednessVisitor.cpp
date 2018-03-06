@@ -18,6 +18,8 @@
  *  limitations under the Licence.
  */
 
+#ifdef SCHEMA_JAVA
+
 #include "../inc/common.h"
 #include "../inc/Visitors/JNodeEmbeddednessVisitor.h"
 #include "../inc/dcm.h"
@@ -108,3 +110,5 @@ void JNodeEmbeddednessVisitorBase::visit( const columbus::java::asg::expr::Expre
     }
   }
 }
+
+#endif

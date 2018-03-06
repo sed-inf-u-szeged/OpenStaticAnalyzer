@@ -40,13 +40,25 @@ typedef columbus::LANGUAGE_NAMESPACE::VisitorAbstractNodes VisitorAbstractNodes;
 #define LIM_FILTER_FILE_EXTENSION ".flim"
 #define AlgorithmCommon columbus::LANGUAGE_NAMESPACE::Common
 
-#define FILTER_FILE_EXTENSION ".fjsi"
-#define FILTER_FILE_EXTENSION_W L".fjsi"
-#define LANGUAGE columbus::java::JavaLanguage
-#define LANGUAGE_NS columbus::java
-#define getUniqueName_v1 AlgorithmCommon::getUniqueNameForBase
-#define UNIQUE_NAME_FOR_MEMBER AlgorithmCommon::getUniqueNameForBase
-#define NAMED_VISITOR NamedVisitor
+#if defined(SCHEMA_JAVA)
+  #define FILTER_FILE_EXTENSION ".fjsi"
+  #define FILTER_FILE_EXTENSION_W L".fjsi"
+  #define LANGUAGE columbus::java::JavaLanguage
+  #define LANGUAGE_NS columbus::java
+  #define getUniqueName_v1 AlgorithmCommon::getUniqueNameForBase
+  #define UNIQUE_NAME_FOR_MEMBER AlgorithmCommon::getUniqueNameForBase
+  #define NAMED_VISITOR NamedVisitor
+
+#elif defined(SCHEMA_PYTHON)
+  #define FILTER_FILE_EXTENSION ".fpsi"
+  #define FILTER_FILE_EXTENSION_W L".fpsi"
+  #define LANGUAGE columbus::python::PythonLanguage
+  #define LANGUAGE_NS columbus::python
+  #define getUniqueName_v1 AlgorithmCommon::getUniqueNameForBase
+  #define UNIQUE_NAME_FOR_MEMBER AlgorithmCommon::getUniqueName
+  #define NAMED_VISITOR NamedVisitor
+
+#endif
 
 #endif
 

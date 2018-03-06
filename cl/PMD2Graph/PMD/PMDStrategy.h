@@ -39,7 +39,7 @@ class PMDStrategy : public CheckerStrategy{
 public:
   PMDStrategy() : CheckerStrategy(), group_paths() { }
   virtual ~PMDStrategy(){}
-  virtual void makeRul(File_Names&, std::string& rul, std::string& rulConfig, std::string& rul_option_filename, std::string& faulthunterrul);
+  virtual void makeRul(File_Names&, std::string& rul, std::string& rulConfig, std::string& rul_option_filename);
   virtual void makeConfig(File_Names& file_names, std::string& rul, std::string& rulConfig, std::string& configFile);
   virtual void makeCsv(std::string& lim, std::string& rul, std::string& rulConfig, File_Names& file_names, std::string& metrics, std::string& groupedmetrics, std::string& monitor, std::string& checkerbasedir, std::string& pathfrom, std::string& pathto, FILE *f);
 protected:
@@ -51,7 +51,6 @@ private:
   static const char OPTION_SEPARATOR = ';';
 
   std::string pmd2InternalGroupName(const std::string& pmdGroup);
-  std::string fh2PMDRuleId(const std::string& fhRuleId);
 
   //makeRul section
   void makeRulByFile(const char*, columbus::rul::RulHandler&, list<pair<string,string> > &rul_refs);

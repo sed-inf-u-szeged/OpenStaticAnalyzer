@@ -23,7 +23,7 @@
 
 #include <vector>
 #include <string>
-#include <sstream>
+#include <fstream>
 #include <boost/filesystem/path.hpp>
 #include "Properties.h"
 
@@ -106,7 +106,7 @@ public:
   void addDependsOn(const std::string& taskName);
   const std::vector<std::string>& getDependsOn() const;
   virtual const std::string& getName() const = 0;
-  std::string getLog() const;
+  bool openLogFile();
 
 protected:
 
@@ -141,7 +141,7 @@ protected:
   static void copyBinaryExecutable(const boost::filesystem::path& source, const boost::filesystem::path& dest, const std::string& binaryName);
   static void copyDirectory(const boost::filesystem::path& source, const boost::filesystem::path& dest, const std::string& dirName);
   static int  exec (const boost::filesystem::path& program, const std::vector<std::string>& args, const boost::filesystem::path& log );
-  static int  exec (const boost::filesystem::path& program, const std::vector<std::string>& args, std::stringstream& std_out_err);
+  static int  exec (const boost::filesystem::path& program, const std::vector<std::string>& args, std::ostream& std_out_err);
   static void createDirectories(const boost::filesystem::path& dir, ExecutionLogger& logger);
 
   void checkedExec(const boost::filesystem::path& program, const std::vector<std::string>& args, ExecutionLogger& logger, bool critical = true);
@@ -149,8 +149,8 @@ protected:
   void addMessageLevelNumber(std::vector<std::string>& args, unsigned verbose, unsigned normal);
 
   std::vector<std::string> dependsOn;
-  std::stringstream logstream;
   const BaseProperties& properties;
+  std::ofstream logstream;
 
   friend class ExecutionLogger;
 };

@@ -1,6 +1,6 @@
 ![](OpenStaticAnalyzer/doc/logo/OSA_small.png)
 # OpenStaticAnalyzer™
-Copyright (c) 2004-2017 Department of Software Engineering, University of Szeged, Hungary.
+Copyright (c) 2004-2018 Department of Software Engineering, University of Szeged, Hungary.
 
 ## About
 
@@ -20,16 +20,18 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
     - Metric threshold violations (MetricHunter module)
     - Re-prioritized and carefully selected [PMD] 5.2.3 coding rule violations
     - [FindBugs] 3.0.0 coding rule violations
+    - [Pylint] 1.8.2 coding rule violations
 - Clone detection (copy-pasted source code fragments) extended with clone tracking and "clone smells"
     - Syntax-based, so-called Type-2 clones
-- Metrics calculation at component, file, package, class, and method levels:
+- Metrics calculation at component, file, package, class, method, and function levels:
     - Source code metrics
     - Clone metrics
     - Coding rule violation metrics
-- Supported languages: Java (C/C++, C#, Python will be available in the near future).
+- Supported languages: Java, Python (C/C++, C# will be available in the near future).
 
 [PMD]:http://pmd.sourceforge.net/
 [FindBugs]:http://findbugs.sourceforge.net
+[Pylint]:http://www.pylint.org/
 
 By continuous static analysis, the software developers can:
 - reduce the software erosion rate and this way decrease development costs;
@@ -37,7 +39,7 @@ By continuous static analysis, the software developers can:
 - the number of errors in delivered software can be reduced, so the operational risks can be decreased, increasing the company's reputation.
 
 ## License
-OpenStaticAnalyzer 1.0 is licensed under the [European Union Public Licence](https://joinup.ec.europa.eu/software/page/eupl) (EUPL) v1.2.
+OpenStaticAnalyzer 2.0 is licensed under the [European Union Public Licence](https://joinup.ec.europa.eu/software/page/eupl) (EUPL) v1.2.
 
 OpenStaticAnalyzer is free software, distributed in the hope that it will be useful, but on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the LICENSE file for more details.
 
@@ -45,7 +47,9 @@ OpenStaticAnalyzer is free software, distributed in the hope that it will be use
 
 ### User's Guide
 
-[User's guide](OpenStaticAnalyzer/java/doc/usersguide/md/Main.md)
+[Java](OpenStaticAnalyzer/java/doc/usersguide/md/Main.md)
+
+[Python](OpenStaticAnalyzer/python/doc/usersguide/md/Main.md)
 
 ### How to compile
 
@@ -60,7 +64,8 @@ In order to build the OpenStaticAnalyzer software package the following tools ar
 - Gradle 1.6
 - Apache Maven 3.2.5
 - Pandoc 1.16
-- Subversion
+- Python 2.7 or 3.x
+- Pylint 1.8.2
 
 Some of the 3rd party libraries are used as a submodule so either `--recursive` parameter has to be used with the `git clone` command, or they have to be initialized immediately after the cloning with the `git submodule update --init --recursive` command.
 OpenStaticAnalyzer uses CMake for generating the platform dependent build files. After cloning the source code into a `OpenStaticAnalyzer` directory and creating a `Build` directory next to it, it can be built by executing the following commands in the `Build` directory:

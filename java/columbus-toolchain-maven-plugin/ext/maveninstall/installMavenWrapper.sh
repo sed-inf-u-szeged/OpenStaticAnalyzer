@@ -20,21 +20,21 @@ then
     then 
         echo ${NOTTESTEDMSG}
     fi
-    mvn install:install-file -Dfile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-8.2.jar -DpomFile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-8.2-V2.pom
+    mvn install:install-file -Dfile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-2.0.jar -DpomFile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-2.0-V2.pom
 else if test "${mainver}" = "3.0" 
 then
     if test "${ver}" != "3.0.5" 
     then 
         echo echo ${NOTTESTEDMSG}
     fi
-    mvn install:install-file -Dfile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-8.2.jar -DpomFile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-8.2-V3.pom
+    mvn install:install-file -Dfile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-2.0.jar -DpomFile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-2.0-V3.pom
 else if test "${mainver}" = "3.1" 
 then
     if test "${ver}" != "3.1.1"  
     then 
         echo ${NOTTESTEDMSG}
     fi
-    mvn install:install-file -Dfile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-8.2.jar -DpomFile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-8.2-V31.pom
+    mvn install:install-file -Dfile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-2.0.jar -DpomFile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-2.0-V31.pom
 else if test "${mainver}" = "3.2" 
 then
     if test "${ver}" != "3.2.2"  
@@ -44,7 +44,7 @@ then
             echo ${NOTTESTEDMSG}
         fi
     fi
-    mvn install:install-file -Dfile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-8.2.jar -DpomFile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-8.2-V31.pom
+    mvn install:install-file -Dfile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-2.0.jar -DpomFile=LinuxWrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-2.0-V31.pom
 else
     echo "Error! Your maven version is not supported yet!"
     exit 1
@@ -53,7 +53,7 @@ fi
 fi
 fi
 
-mvn org.apache.maven.plugins:OpenStaticAnalyzer-maven-plugin:8.2:installyourself
+mvn org.apache.maven.plugins:OpenStaticAnalyzer-maven-plugin:2.0:installyourself
 
 echo "Maven plugin has been successfully installed."
 exit 0

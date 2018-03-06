@@ -46,7 +46,6 @@
 #define CMSG_PMD2GRAPH_ERROR_WRITING_XML_FILE                WriteMsg::mlError, "Error: An error occurred while writing XML file\n"
 
 //MetricTree.cpp messages
-#define CMSG_PMD2GRAPH_USING_CONFIG                          WriteMsg::mlNormal, "Using configuration: \"%s\"\n"
 #define CMSG_PMD2GRAPH_LOADING_LIM                           WriteMsg::mlNormal, "Loading LIM ASG file \"%s\"\n"
 #define CMSG_PMD2GRAPH_LOADING_LIM_FILTER                    WriteMsg::mlNormal, "Loading filter file \"%s\"\n"
 #define CMSG_PMD2GRAPH_FILTER_FILE_IS_DEPRECATED             WriteMsg::mlWarning, "Warning: Filter file (%s) is older than the input file. Filter file is not used.\n"

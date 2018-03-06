@@ -32,11 +32,6 @@
 #include <graphsupport/inc/GraphRangeIndexer.h>
 #include <common/inc/PlatformDependentDefines.h>
 
-#define FAULTHUNTER "FaultHunter"
-#define CONFIG_DEFAULT "Default"
-#define CONFIG_FAULTHUNTER FAULTHUNTER
-
-
 #include <iostream>
 using namespace std;
 

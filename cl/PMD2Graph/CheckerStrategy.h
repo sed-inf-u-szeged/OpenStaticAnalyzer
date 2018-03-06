@@ -69,7 +69,7 @@ public:
     this->graphIndexer.turnOn(this->graph);
   }
   virtual ~CheckerStrategy(){}
-  virtual void makeRul(File_Names&,std::string& rul, std::string& rulConfig, std::string& rul_option_filename, std::string& faulthunterrul) = 0;
+  virtual void makeRul(File_Names&,std::string& rul, std::string& rulConfig, std::string& rul_option_filename) = 0;
   virtual void makeConfig(File_Names&, std::string&, std::string& rulConfig, std::string& configFile) = 0;
   virtual void makeCsv(std::string& lim, std::string& rul, std::string& rulConfig, File_Names& file_names, std::string& metrics, std::string& groupedmetrics, std::string& monitor, std::string& checkerbasedir);
   virtual void makeCsv(std::string& lim, std::string& rul, std::string& rulConfig , File_Names& file_names, std::string& metrics, std::string& groupedmetrics, std::string& monitor, std::string& checkerbasedir, const std::map<std::string, std::string>& levelMap);
@@ -77,8 +77,6 @@ public:
   virtual void saveGraph(const std::string& filename, bool exportRul);
 
   void setGraph(columbus::graph::Graph& ingraph) { this->graphIndexer.turnOff(this->graph); graph = ingraph; this->graphIndexer.turnOn(this->graph);}
-
-  void addLicenseTypeToTheGraphHeader(const std::string& toolName);
 
 protected:
   XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc;

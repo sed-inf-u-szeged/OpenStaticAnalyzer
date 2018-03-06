@@ -51,7 +51,7 @@ using namespace columbus;
 using namespace common;
 XERCES_CPP_NAMESPACE_USE
 
-void PMDStrategy::makeRul(File_Names& file_names, std::string& rul, std::string& rulConfig, std::string& rul_option_filename, std::string& faulthunterrul){
+void PMDStrategy::makeRul(File_Names& file_names, std::string& rul, std::string& rulConfig, std::string& rul_option_filename){
   rul::RulHandler rh(rulConfig, "eng");
 
   setConstantData(rh);
@@ -59,9 +59,6 @@ void PMDStrategy::makeRul(File_Names& file_names, std::string& rul, std::string&
   list<pair<string,string> > rul_refs;
   for(File_Names::iterator it = file_names.begin();it != file_names.end();++it)
     makeRulByFile(it->c_str(), rh, rul_refs);
-
-  // FaultHunter -> Default redef
-  rh.setConfigParent(CONFIG_FAULTHUNTER, CONFIG_DEFAULT);
 
   set<string> ref_id_list;
   // setting the groups of referenced ruls
@@ -158,7 +155,6 @@ void PMDStrategy::makeRul(File_Names& file_names, std::string& rul, std::string&
         string id = *it;
         bool enabled = common::str2int(*(++it)) != 0;
         rh.setIsEnabled(id, enabled);
-        rh.setIsEnabled(id, CONFIG_FAULTHUNTER, enabled);
         rh.setSettingValue(id, "Priority", *(++it), true);
 
         cols.clear();
@@ -166,30 +162,6 @@ void PMDStrategy::makeRul(File_Names& file_names, std::string& rul, std::string&
       in.close();
     }
     file.close();
-  }
-
-  // turn off FH rules in the FaultHunter config
-  if (!faulthunterrul.empty()) {
-    set<string> pmdRules;
-    rh.getRuleIdList(pmdRules);
-
-    rul::RulHandler fhRh(faulthunterrul, "Default", "eng");
-
-    set<string> fhRules;
-    fhRh.getRuleIdList(fhRules);
-
-    for (set<string>::const_iterator it = fhRules.begin(), itEnd = fhRules.end(); it != itEnd; ++it) {
-      const string& fhRuleId = *it;
-      string groupType = fhRh.getGroupType(fhRuleId);
-      if (groupType == "false") { // only rules, no groups
-        string pmdRuleId = fh2PMDRuleId(fhRuleId);
-        if (pmdRules.find(pmdRuleId) != pmdRules.end()) {
-          if (fhRh.getIsEnabled(fhRuleId)) {
-            rh.setIsEnabled(pmdRuleId, CONFIG_FAULTHUNTER, false); // disable rule
-          }
-        }
-      }
-    }
   }
 
   //Writing out the rul file
@@ -223,14 +195,6 @@ void PMDStrategy::makeRulByFile(const char* xmlFile, columbus::rul::RulHandler& 
     rh.setIsEnabled(groupshortname, true);
     rh.setIsVisible(groupshortname, true);
     rh.setSettingValue(groupshortname, "Priority", "Minor", true);
-
-    // FaultHunter config
-    rh.createConfiguration(groupshortname, CONFIG_FAULTHUNTER);
-    rh.createLanguage(groupshortname, CONFIG_FAULTHUNTER, "eng");
-    rh.setConfig(CONFIG_FAULTHUNTER);
-    rh.setHasWarningText(groupshortname, true);
-    rh.setIsEnabled(groupshortname, true);
-    rh.setConfig(CONFIG_DEFAULT);
 
     string path = xmlFile;
     std::replace(path.begin(), path.end(), DIRDIVCHAR, '/');
@@ -279,14 +243,6 @@ void PMDStrategy::makeRulByFile(const char* xmlFile, columbus::rul::RulHandler& 
             rh.setHelpText(shortname, rulename);
             rh.setDescription(shortname, rulename);
           }
-
-          // FaultHunter config
-          rh.createConfiguration(shortname, CONFIG_FAULTHUNTER);
-          rh.createLanguage(shortname, CONFIG_FAULTHUNTER, "eng");
-          rh.setConfig(CONFIG_FAULTHUNTER);
-          rh.setHasWarningText(shortname, true);
-          rh.setIsEnabled(shortname, true);
-          rh.setConfig(CONFIG_DEFAULT);
 
         } else if(node->getAttributes()->getNamedItem(XMLString::transcode("ref"))) {
           string name = XMLString::transcode(node->getAttributes()->getNamedItem(XMLString::transcode("ref"))->getNodeValue());
@@ -352,13 +308,3 @@ string PMDStrategy::pmd2InternalGroupName(const string& pmdGroupName) {
   group += " Rules";
   return group;
 }
-
-string PMDStrategy::fh2PMDRuleId(const std::string& fhRuleId) {
-  string pmdRuleId = fhRuleId;
-  if (pmdRuleId.find("FH_") == 0) {
-    pmdRuleId.erase(0, 3);
-  }
-  pmdRuleId = "PMD_" + pmdRuleId;
-  return pmdRuleId;
-}
-

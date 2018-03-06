@@ -196,10 +196,6 @@ bool CheckerStrategy::getIsNeeded (const std::string& id, const rul::RulHandler&
   return xRulHandler.getIsEnabled(id);
 }
 
-void CheckerStrategy::addLicenseTypeToTheGraphHeader(const string& toolName) {
-  graph.setHeaderInfo(toolName + graphsupport::graphconstants::HEADER_MODE_KEY_SUFFIX, graphsupport::graphconstants::HEADER_MODE_VALUE_FULL );
-}
-
 void CheckerStrategy::saveGraph(const std::string& filename, bool exportRul) {
   if(exportRul)
     graphsupport::buildRulToGraph(graph, *(mt->xRulhandler));

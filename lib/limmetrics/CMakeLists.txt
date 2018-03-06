@@ -56,11 +56,8 @@ set (SOURCES
     inc/RulParser.h     
 )
 
-function (add_language_config LANG)
-  add_library (${LIBNAME}_${LANG} STATIC ${SOURCES})
-  set_schema_language_compiler_settings(${LIBNAME}_${LANG} ${LANG})
-  add_dependencies (${LIBNAME}_${LANG} lim)
-  set_visual_studio_project_folder(${LIBNAME}_${LANG} FALSE)
-endfunction()
+add_library (${LIBNAME} STATIC ${SOURCES})
+add_dependencies (${LIBNAME} lim)
+add_pch_generation(${LIBNAME} lim)
+set_visual_studio_project_folder(${LIBNAME} FALSE)
 
-add_language_config(java)

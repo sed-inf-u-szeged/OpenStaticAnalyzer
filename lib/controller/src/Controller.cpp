@@ -218,34 +218,26 @@ int Controller::executeTasks(ExecutionMode executionMode)
         for(vector<string>::iterator s_it = it->second.begin(); s_it != it->second.end(); s_it++)
         {
           Task* task = getTask(*s_it);
+          if (!task->openLogFile())
+          {
+            string logfilename = (_props.logDir / (task->getName() + ".log")).string();
+            WriteMsg::write(WriteMsg::mlError, "Can not open log file for writing: %s\n", logfilename.c_str());
+          }
 
           runningTasks.push_back(make_pair(task, Task::ExecutionResult()));
           threadPool.add(columbus::thread::ThreadPool::PtrTask(new Worker(runningTasks.back().first, &runningTasks.back().second, threadPool.getTaskLockMutex())));
         }
         threadPool.wait();
         
-        for(TaskResultVector::const_iterator taskIt = runningTasks.begin(); taskIt != runningTasks.end(); taskIt++) {
-          const Task* task = taskIt->first;
-          const Task::ExecutionResult& result = taskIt->second;
-                  
-          string logfilename = (_props.logDir / (task->getName() + ".log")).string();
-          FILE* logfile = fopen(logfilename.c_str(), "wb");
-          string log = task->getLog();
-          if (logfile != NULL) {
-            fwrite(log.c_str(), log.size(), 1 , logfile);
-            fclose(logfile);
-          } else {
-            WriteMsg::write(WriteMsg::mlError, "Can not open log file for writing: %s\n", logfilename.c_str());
-            WriteMsg::write(WriteMsg::mlError, "The log is printed to the stdout:\n%s\n", log.c_str());
-          }
+        for(const auto& taskResultPair : runningTasks)
+        {
+          const Task::ExecutionResult& result = taskResultPair.second;
 
-          if (result.hasCriticalError()) {
+          if (result.hasCriticalError())
             failed = true;
-          }
-          
-          if (result.hasError() && executionMode == EM_FAIL_ON_ANY_ERROR) {
+
+          if (result.hasError() && executionMode == EM_FAIL_ON_ANY_ERROR)
             failed = true;
-          }
         }
       }
     }

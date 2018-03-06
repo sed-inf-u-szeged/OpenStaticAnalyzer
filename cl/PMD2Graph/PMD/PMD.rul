@@ -6,9 +6,7 @@
       <ToolDescriptionItem name = "ID">PMD</ToolDescriptionItem>
     </Configuration>
   </ToolDescription>
-  <Configurations>
-    <config name = "FaultHunter" redefine = "Default"/>
-  </Configurations>
+  <Configurations/>
   <Views/>
   <Edges/>
   <Metric id = "Android Rules">
@@ -26,15 +24,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -55,15 +44,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "Brace Rules">
     <Configuration name = "Default">
@@ -80,15 +60,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -109,15 +80,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "Code Size Rules">
     <Configuration name = "Default">
@@ -134,15 +96,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -163,15 +116,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "Controversial Rules">
     <Configuration name = "Default">
@@ -188,15 +132,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -217,15 +152,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "Design Rules">
     <Configuration name = "Default">
@@ -242,15 +168,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -271,15 +188,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "Finalizer Rules">
     <Configuration name = "Default">
@@ -296,15 +204,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -325,15 +224,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "J2EE Rules">
     <Configuration name = "Default">
@@ -350,15 +240,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -379,15 +260,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "Jakarta Commons Logging Rules">
     <Configuration name = "Default">
@@ -404,15 +276,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -433,15 +296,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "JavaBean Rules">
     <Configuration name = "Default">
@@ -458,15 +312,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -487,15 +332,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "Migration Rules">
     <Configuration name = "Default">
@@ -512,15 +348,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -541,15 +368,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "Migration14 Rules">
     <Configuration name = "Default">
@@ -566,15 +384,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -595,15 +404,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "Naming Rules">
     <Configuration name = "Default">
@@ -620,15 +420,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -649,15 +440,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_AAA">
     <Configuration name = "Default">
@@ -674,15 +456,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -704,15 +477,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_AAL">
     <Configuration name = "Default">
@@ -729,15 +493,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -758,15 +513,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ACF">
     <Configuration name = "Default">
@@ -783,15 +529,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -812,15 +549,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ACGE">
     <Configuration name = "Default">
@@ -837,15 +565,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -866,15 +585,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ACNPE">
     <Configuration name = "Default">
@@ -891,15 +601,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -920,15 +621,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ACWAM">
     <Configuration name = "Default">
@@ -945,15 +637,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -974,15 +657,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ADL">
     <Configuration name = "Default">
@@ -999,15 +673,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1028,15 +693,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ADNIS">
     <Configuration name = "Default">
@@ -1055,15 +711,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ADS">
     <Configuration name = "Default">
@@ -1080,15 +727,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1110,15 +748,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_AES">
     <Configuration name = "Default">
@@ -1135,15 +764,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1164,15 +784,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_AFNMMN">
     <Configuration name = "Default">
@@ -1189,15 +800,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1218,15 +820,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_AICICC">
     <Configuration name = "Default">
@@ -1243,15 +836,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1272,15 +856,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_AIOIL">
     <Configuration name = "Default">
@@ -1297,15 +872,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1326,15 +892,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ALEI">
     <Configuration name = "Default">
@@ -1351,15 +908,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1380,15 +928,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ALOC">
     <Configuration name = "Default">
@@ -1405,15 +944,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1434,15 +964,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_AN">
     <Configuration name = "Default">
@@ -1459,15 +980,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1488,15 +1000,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_APMIFCNE">
     <Configuration name = "Default">
@@ -1513,15 +1016,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1542,15 +1036,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_APST">
     <Configuration name = "Default">
@@ -1567,15 +1052,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1596,15 +1072,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ARP">
     <Configuration name = "Default">
@@ -1621,15 +1088,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1650,15 +1108,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ASBF">
     <Configuration name = "Default">
@@ -1675,15 +1124,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1704,15 +1144,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ATNFS">
     <Configuration name = "Default">
@@ -1729,15 +1160,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1758,15 +1180,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ATNPE">
     <Configuration name = "Default">
@@ -1783,15 +1196,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1812,15 +1216,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_AUHCIP">
     <Configuration name = "Default">
@@ -1837,15 +1232,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1866,15 +1252,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_AUOV">
     <Configuration name = "Default">
@@ -1891,15 +1268,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1920,15 +1288,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_AUV">
     <Configuration name = "Default">
@@ -1945,15 +1304,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -1974,15 +1324,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_BC">
     <Configuration name = "Default">
@@ -1999,15 +1340,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2028,15 +1360,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_BI">
     <Configuration name = "Default">
@@ -2053,15 +1376,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2082,15 +1396,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_BMSS">
     <Configuration name = "Default">
@@ -2107,15 +1412,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2136,15 +1432,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_BoI">
     <Configuration name = "Default">
@@ -2161,15 +1448,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2191,15 +1469,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_CASR">
     <Configuration name = "Default">
@@ -2216,15 +1485,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2245,15 +1505,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_CC">
     <Configuration name = "Default">
@@ -2270,15 +1521,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2299,15 +1541,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_CCOM">
     <Configuration name = "Default">
@@ -2324,15 +1557,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2353,15 +1577,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_CLA">
     <Configuration name = "Default">
@@ -2378,15 +1593,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2407,15 +1613,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_CNC">
     <Configuration name = "Default">
@@ -2432,15 +1629,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2461,15 +1649,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_CR">
     <Configuration name = "Default">
@@ -2486,15 +1665,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2515,15 +1685,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_CS">
     <Configuration name = "Default">
@@ -2540,15 +1701,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2569,15 +1721,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_CSIC">
     <Configuration name = "Default">
@@ -2594,15 +1737,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2623,15 +1757,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_CSR">
     <Configuration name = "Default">
@@ -2648,15 +1773,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2677,15 +1793,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_CTCNSE">
     <Configuration name = "Default">
@@ -2702,15 +1809,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2731,15 +1829,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ClMMIC">
     <Configuration name = "Default">
@@ -2756,15 +1845,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2785,15 +1865,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_CoC">
     <Configuration name = "Default">
@@ -2810,15 +1881,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2839,15 +1901,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_DCL">
     <Configuration name = "Default">
@@ -2864,15 +1917,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2893,15 +1937,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_DI">
     <Configuration name = "Default">
@@ -2918,15 +1953,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -2947,15 +1973,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_DIS">
     <Configuration name = "Default">
@@ -2972,15 +1989,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3001,15 +2009,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_DNCGCE">
     <Configuration name = "Default">
@@ -3026,15 +2025,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3055,15 +2045,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_DNEJLE">
     <Configuration name = "Default">
@@ -3080,15 +2061,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3109,15 +2081,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_DNTEIF">
     <Configuration name = "Default">
@@ -3134,15 +2097,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3163,15 +2117,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_DP">
     <Configuration name = "Default">
@@ -3188,15 +2133,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3217,15 +2153,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_EAFC">
     <Configuration name = "Default">
@@ -3242,15 +2169,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3272,15 +2190,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ECL">
     <Configuration name = "Default">
@@ -3299,15 +2208,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_EF">
     <Configuration name = "Default">
@@ -3324,15 +2224,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3354,15 +2245,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_EI">
     <Configuration name = "Default">
@@ -3379,15 +2261,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3409,15 +2282,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_EMIACSBA">
     <Configuration name = "Default">
@@ -3434,15 +2298,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3463,15 +2318,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_EN">
     <Configuration name = "Default">
@@ -3488,15 +2334,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3517,15 +2354,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_EPC">
     <Configuration name = "Default">
@@ -3544,15 +2372,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_EPL">
     <Configuration name = "Default">
@@ -3569,15 +2388,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3599,15 +2409,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ESI">
     <Configuration name = "Default">
@@ -3625,15 +2426,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3655,15 +2447,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ESS">
     <Configuration name = "Default">
@@ -3681,15 +2464,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3711,15 +2485,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_EWS">
     <Configuration name = "Default">
@@ -3737,15 +2502,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3767,15 +2523,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_EmSB">
     <Configuration name = "Default">
@@ -3793,15 +2540,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3822,15 +2560,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_FDSBASOC">
     <Configuration name = "Default">
@@ -3847,15 +2576,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3876,15 +2596,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_FLMUB">
     <Configuration name = "Default">
@@ -3901,15 +2612,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3930,15 +2632,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_FO">
     <Configuration name = "Default">
@@ -3955,15 +2648,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -3984,15 +2668,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_FSBP">
     <Configuration name = "Default">
@@ -4009,15 +2684,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4038,15 +2704,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_GDL">
     <Configuration name = "Default">
@@ -4063,15 +2720,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4092,15 +2740,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_GLSJU">
     <Configuration name = "Default">
@@ -4117,15 +2756,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4146,15 +2776,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_IESC">
     <Configuration name = "Default">
@@ -4171,15 +2792,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4200,15 +2812,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_IF">
     <Configuration name = "Default">
@@ -4227,15 +2830,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_IFSP">
     <Configuration name = "Default">
@@ -4252,15 +2846,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4282,15 +2867,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_IO">
     <Configuration name = "Default">
@@ -4307,15 +2883,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4336,15 +2903,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ISBD">
     <Configuration name = "Default">
@@ -4361,15 +2919,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4390,15 +2939,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ITGC">
     <Configuration name = "Default">
@@ -4417,15 +2957,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_JI">
     <Configuration name = "Default">
@@ -4442,15 +2973,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4472,15 +2994,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_JU4TSUAA">
     <Configuration name = "Default">
@@ -4498,15 +3011,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4528,15 +3032,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_JU4TSUTA">
     <Configuration name = "Default">
@@ -4554,15 +3049,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4583,15 +3069,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_JUS">
     <Configuration name = "Default">
@@ -4608,15 +3085,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4637,15 +3105,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_JUTCTMA">
     <Configuration name = "Default">
@@ -4664,15 +3123,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_JUTSIA">
     <Configuration name = "Default">
@@ -4689,15 +3139,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4719,15 +3160,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_LC">
     <Configuration name = "Default">
@@ -4744,15 +3176,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4773,15 +3196,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_LI">
     <Configuration name = "Default">
@@ -4798,15 +3212,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4827,15 +3232,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_LISNC">
     <Configuration name = "Default">
@@ -4852,15 +3248,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4881,15 +3268,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_LPC">
     <Configuration name = "Default">
@@ -4906,15 +3284,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -4935,15 +3304,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_LVCBF">
     <Configuration name = "Default">
@@ -4962,15 +3322,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_LoC">
     <Configuration name = "Default">
@@ -4987,15 +3338,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5017,15 +3359,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_MACBF">
     <Configuration name = "Default">
@@ -5042,15 +3375,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5071,15 +3395,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_MCC">
     <Configuration name = "Default">
@@ -5096,15 +3411,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5125,15 +3431,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_MNC">
     <Configuration name = "Default">
@@ -5150,15 +3447,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5179,15 +3467,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_MSMINIC">
     <Configuration name = "Default">
@@ -5204,15 +3483,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5233,15 +3503,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_MTOL">
     <Configuration name = "Default">
@@ -5258,15 +3519,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5287,15 +3539,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_MWSNAEC">
     <Configuration name = "Default">
@@ -5312,15 +3555,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5341,15 +3575,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_NA">
     <Configuration name = "Default">
@@ -5366,15 +3591,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5395,15 +3611,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_NCLISS">
     <Configuration name = "Default">
@@ -5420,15 +3627,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5449,15 +3647,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_NP">
     <Configuration name = "Default">
@@ -5474,15 +3663,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5503,15 +3683,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_NSI">
     <Configuration name = "Default">
@@ -5528,15 +3699,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5557,15 +3719,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_NTSS">
     <Configuration name = "Default">
@@ -5582,15 +3735,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5611,15 +3755,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ODPL">
     <Configuration name = "Default">
@@ -5636,15 +3771,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5665,15 +3791,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_OTAC">
     <Configuration name = "Default">
@@ -5690,15 +3807,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5719,15 +3827,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_PCI">
     <Configuration name = "Default">
@@ -5744,15 +3843,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5773,15 +3863,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_PL">
     <Configuration name = "Default">
@@ -5798,15 +3879,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5827,15 +3899,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_PLFICIC">
     <Configuration name = "Default">
@@ -5852,15 +3915,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5881,15 +3935,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_REARTN">
     <Configuration name = "Default">
@@ -5906,15 +3951,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -5936,15 +3972,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_RFFB">
     <Configuration name = "Default">
@@ -5963,15 +3990,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_RFI">
     <Configuration name = "Default">
@@ -5988,15 +4006,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6018,15 +4027,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_RINC">
     <Configuration name = "Default">
@@ -6045,15 +4045,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_RSINC">
     <Configuration name = "Default">
@@ -6070,15 +4061,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6100,15 +4082,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_SBA">
     <Configuration name = "Default">
@@ -6125,15 +4098,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6154,15 +4118,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_SBIWC">
     <Configuration name = "Default">
@@ -6179,15 +4134,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6208,15 +4154,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_SC">
     <Configuration name = "Default">
@@ -6233,15 +4170,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6262,15 +4190,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_SCFN">
     <Configuration name = "Default">
@@ -6287,15 +4206,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6316,15 +4226,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_SD">
     <Configuration name = "Default">
@@ -6341,15 +4242,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6370,15 +4262,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_SDTE">
     <Configuration name = "Default">
@@ -6395,15 +4278,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6424,15 +4298,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_SEMN">
     <Configuration name = "Default">
@@ -6449,15 +4314,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6478,15 +4334,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_SHMN">
     <Configuration name = "Default">
@@ -6503,15 +4350,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6533,15 +4371,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_SMN">
     <Configuration name = "Default">
@@ -6558,15 +4387,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6587,15 +4407,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_SP">
     <Configuration name = "Default">
@@ -6612,15 +4423,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6641,15 +4443,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_SSW">
     <Configuration name = "Default">
@@ -6666,15 +4459,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6695,15 +4479,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_SV">
     <Configuration name = "Default">
@@ -6720,15 +4495,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6749,15 +4515,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_StI">
     <Configuration name = "Default">
@@ -6774,15 +4531,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6803,15 +4551,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_TFBFASS">
     <Configuration name = "Default">
@@ -6828,15 +4567,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6857,15 +4587,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_TMM">
     <Configuration name = "Default">
@@ -6882,15 +4603,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6911,15 +4623,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UAAL">
     <Configuration name = "Default">
@@ -6936,15 +4639,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -6965,15 +4659,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UALIOV">
     <Configuration name = "Default">
@@ -6990,15 +4675,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7019,15 +4695,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UASIOAT">
     <Configuration name = "Default">
@@ -7044,15 +4711,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7073,15 +4731,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UBA">
     <Configuration name = "Default">
@@ -7098,15 +4747,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7127,15 +4767,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UCC">
     <Configuration name = "Default">
@@ -7152,15 +4783,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7181,15 +4803,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UCHM">
     <Configuration name = "Default">
@@ -7208,15 +4821,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UCIE">
     <Configuration name = "Default">
@@ -7233,15 +4837,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7263,15 +4858,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UEC">
     <Configuration name = "Default">
@@ -7288,15 +4874,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7317,15 +4894,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UETCS">
     <Configuration name = "Default">
@@ -7342,15 +4910,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7372,15 +4931,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UFP">
     <Configuration name = "Default">
@@ -7397,15 +4947,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7426,15 +4967,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UI">
     <Configuration name = "Default">
@@ -7451,15 +4983,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7480,15 +5003,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UIS">
     <Configuration name = "Default">
@@ -7505,15 +5019,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7534,15 +5039,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_ULV">
     <Configuration name = "Default">
@@ -7559,15 +5055,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7588,15 +5075,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UM">
     <Configuration name = "Default">
@@ -7615,15 +5093,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UNAION">
     <Configuration name = "Default">
@@ -7640,15 +5109,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7670,15 +5130,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UOFCAPI">
     <Configuration name = "Default">
@@ -7695,15 +5146,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7725,15 +5167,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UOOI">
     <Configuration name = "Default">
@@ -7751,15 +5184,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7780,15 +5204,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UPCL">
     <Configuration name = "Default">
@@ -7805,15 +5220,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7834,15 +5240,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UPM">
     <Configuration name = "Default">
@@ -7859,15 +5256,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7889,15 +5277,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_USBFSA">
     <Configuration name = "Default">
@@ -7914,15 +5293,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Major</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7943,15 +5313,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_USDF">
     <Configuration name = "Default">
@@ -7968,15 +5329,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Critical</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -7997,15 +5349,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UUC">
     <Configuration name = "Default">
@@ -8022,15 +5365,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -8051,15 +5385,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UWOC">
     <Configuration name = "Default">
@@ -8078,15 +5403,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_UnI">
     <Configuration name = "Default">
@@ -8103,15 +5419,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -8133,15 +5440,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "PMD_VNC">
     <Configuration name = "Default">
@@ -8158,15 +5456,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -8187,15 +5476,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>false</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "Security Code Guideline Rules">
     <Configuration name = "Default">
@@ -8212,15 +5492,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -8241,15 +5512,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "String and StringBuffer Rules">
     <Configuration name = "Default">
@@ -8266,15 +5528,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>
@@ -8295,15 +5548,6 @@
       </Settings>
       <Calculated/>
     </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
-      <Calculated/>
-    </Configuration>
   </Metric>
   <Metric id = "Unnecessary and Unused Code Rules">
     <Configuration name = "Default">
@@ -8320,15 +5564,6 @@
       <Settings>
         <Setting name = "Priority" editable = "true">Minor</Setting>
       </Settings>
-      <Calculated/>
-    </Configuration>
-    <Configuration name = "FaultHunter">
-      <Enabled>true</Enabled>
-      <Language lang = "eng">
-        <Warning>true</Warning>
-      </Language>
-      <Baselines/>
-      <Settings/>
       <Calculated/>
     </Configuration>
   </Metric>

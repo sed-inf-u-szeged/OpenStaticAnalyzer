@@ -25,3 +25,4 @@ function (add_language_config LANG)
 endfunction()
 
 add_language_config(java)
+add_language_config(python)

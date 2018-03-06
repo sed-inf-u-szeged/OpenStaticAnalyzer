@@ -10,3 +10,9 @@
 [submodule "java/lib/langtools"]
 	path = java/lib/langtools
 	url = https://github.com/sed-inf-u-szeged/langtools.git
+[submodule "3rdparty/python2"]
+	path = 3rdparty/python2
+	url = ../cpython
+[submodule "3rdparty/python3"]
+	path = 3rdparty/python3
+	url = ../cpython

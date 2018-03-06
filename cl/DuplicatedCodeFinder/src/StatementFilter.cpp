@@ -36,8 +36,18 @@ bool StatementFilter::isFiltered( const columbus::genealogy::CloneClass& cc )
       if (position == NULL)
         continue;
 
+#if defined SCHEMA_JAVA
       if (columbus::LANGUAGE_NAMESPACE::Common::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkStatement))
         return false;
+
+#elif defined SCHEMA_PYTHON
+      if (columbus::LANGUAGE_NAMESPACE::Common::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkStatement)){
+        if (!columbus::LANGUAGE_NAMESPACE::Common::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkImportStatement) &&
+            !columbus::LANGUAGE_NAMESPACE::Common::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkAlias))
+        return false;
+      }
+#endif
+
     }
   } // iterating over all the clone instances in this class
   return true;

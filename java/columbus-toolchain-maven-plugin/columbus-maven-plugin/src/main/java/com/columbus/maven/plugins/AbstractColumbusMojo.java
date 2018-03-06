@@ -57,7 +57,7 @@ public abstract class AbstractColumbusMojo extends
   protected static final String MY_PLUGIN_NAME = "OpenStaticAnalyzer-maven-plugin";
   protected static final String MY_PLUGIN_PREFIX = "OpenStaticAnalyzer";
   protected static final String MY_PLUGIN_GROUP_NAME = "org.apache.maven.plugins";
-  protected static final String MY_PLUGIN_VERSION = "8.2";
+  protected static final String MY_PLUGIN_VERSION = "2.0";
   /**
    * Collect the given groupid when export the results of analysis.
    */

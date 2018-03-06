@@ -19,7 +19,7 @@
  */
 
 #include "../inc/common.h"
-#include "../inc/CoverageVisitorBase.h"
+#include "../inc/Visitors/CoverageVisitorBase.h"
 
 
 CoverageVisitorBase::CoverageVisitorBase() 
@@ -178,6 +178,7 @@ void CoverageVisitorBase::setLimNodeId( NodeId val ) {
 }
 
 void CoverageVisitorBase::insertLines( std::set<LineIdentifier>* lineSet, const Base& n ) const {
+#ifdef SCHEMA_JAVA
   if (!columbus::java::asg::Common::getIsPositioned(n)) 
     return;
   const columbus::java::asg::base::Positioned& p = dynamic_cast<const columbus::java::asg::base::Positioned&>(n);
@@ -187,6 +188,7 @@ void CoverageVisitorBase::insertLines( std::set<LineIdentifier>* lineSet, const 
 
   lineSet->insert(LineIdentifier(p.getPosition().getPathKey(),p.getPosition().getWideLine()));
   lineSet->insert(LineIdentifier(p.getPosition().getPathKey(),p.getPosition().getWideEndLine()));
+#endif
 }
 
 void CoverageVisitorBase::visitStartComponent( const columbus::lim::asg::base::Component &component )

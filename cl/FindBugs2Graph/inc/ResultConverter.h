@@ -46,7 +46,6 @@ public:
   columbus::graph::Graph* getGraph() { return &graph; }
   void aggregateWarnings(bool createGroups);
 
-  void addLicenseTypeToTheGraphHeader(const std::string& toolName);
 protected:
   
   void writeWarningLine(const std::string& id, const std::string& warningText, std::list<columbus::graph::AttributeComposite>& sourceLinks, const std::string& path, int line, int endline, int col, int endcol);

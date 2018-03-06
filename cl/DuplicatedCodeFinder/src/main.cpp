@@ -93,15 +93,6 @@ static bool ppGenealogy (const Option *o, char *argv[]) {
   config.genealogyFilename = argv[0];
   return true;
 }
-
-static bool ppBackupDir (const Option *o, char *argv[]) {
-  config.backup = argv[0];
-  return true;
-}
-static bool ppGraphML (const Option *o, char *argv[]) {
-  config.graphml = true;
-  return true;
-}
 #endif
 
 static void ppFile(char *filename) {
@@ -161,10 +152,9 @@ const common::Option OPTIONS_OBJ [] = {
   { false,  "-minoccur",      1, "number",                0, OT_WC,    ppOccur,        NULL,   "The minimum number of occurences of each kind of duplication. Default value is 2."},
 
 #ifdef GENEALOGY
-  { true,  "-genealogy",      1, "filename",             0, OT_WC,     ppGenealogy,    NULL,    "The geneology while, which contains historical information about the clones."},
-  { true,  "-backupdir",      1, "dirname",              0, OT_WC,     ppBackupDir,    NULL,    "The directory where all the input ASG files are copied."},
-  { true,  "-dumpgenealogygraphml",  0, "",              0, OT_NONE,   ppGraphML,      NULL,    "Dump the genealogy data in graphml format."},
+  { false,  "-genealogy",      1, "filename",             0, OT_WC,    ppGenealogy,    NULL,    "The geneology while, which contains historical information about the clones."},
 #endif
+
   { false, "-graph",           1, "filename",             0, OT_WC,    ppGraph,        NULL,   "Save structured result of the clones and metrics in binary graph format."},
   { false, "-patternfilterlog",1, "filename",             0, OT_WC,    ppFOut,         NULL,   "Save the source code positions of the filtered source elements to the given file. If it is not set then the list will be written to the standard out."},
   { false, "-patternfilter",   2, "number number",        0, OT_WS,    ppPatternFilter,NULL,   "Enable pattern filter with the given parameters. The first number is the maximum length (default value is 10) of a single pattern "
@@ -193,7 +183,11 @@ void initValues() {
     }
     // create rule handler
     if(config.rulConfig.empty()) {
+#ifdef SCHEMA_JAVA
       config.rulConfig = "java";
+#elif defined(SCHEMA_PYTHON)
+	  config.rulConfig = "python";
+#endif
     }
 
     rulHandler=new rul::RulHandler(config.rul_str, config.rulConfig, "eng");

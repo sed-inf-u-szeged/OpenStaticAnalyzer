@@ -72,7 +72,6 @@ struct Properties : public columbus::controller::BaseProperties
   boost::filesystem::path columbusWrapperTmpDirName;  // Name of the directory where the wrapper is assembled (osaDir / temp / wrapper)
   boost::filesystem::path externalHardFilter;         // Absolute path of the external hardfilter file
   boost::filesystem::path externalSoftFilter;         // Absolute path of the external softfilter file
-  boost::filesystem::path metricThreshold;            // Absolute path of the metric threshold file
 
   boost::filesystem::path profileXML;
   boost::filesystem::path rulesCSV;
@@ -98,7 +97,6 @@ struct Properties : public columbus::controller::BaseProperties
   bool runDCF;                                        // Run DCF.
   bool runLimMetrics;                                 // Run Lim2Metrics.
   bool runMetricHunter;                               // Run MetricHunter.
-  bool runChangeTracker;                              // Run ChangeTracker.
   std::string analysisOutputDir;                      // The name of the output directory (.columbus_java)
 };
 

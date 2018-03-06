@@ -109,11 +109,6 @@ bool ppBaseDir(const common::Option *o, char *argv[]) {
   return true;
 }
 
-bool ppMetricThreshold(const common::Option *o, char *argv[]) {
-  props.metricThreshold = argv[0];
-  return true;
-}
-
 bool ppJavacOptions(const common::Option *o, char *argv[]) {
   props.javacOptions = argv[0];
   return true;
@@ -286,7 +281,6 @@ void dumpProperties() {
   DUMP_PROPERTY_PATH(columbusWrapperTmpDir);
   DUMP_PROPERTY_PATH(externalHardFilter);
   DUMP_PROPERTY_PATH(externalSoftFilter);
-  DUMP_PROPERTY_PATH(metricThreshold);
   DUMP_PROPERTY_STRING(projectName);
   DUMP_PROPERTY_INT(cloneGenealogy);
   DUMP_PROPERTY_INT(maxThreads);
@@ -354,7 +348,7 @@ void checkUserProperties()
     props.projectBaseDir = canonical(props.projectBaseDir).make_preferred();
 
   if (props.currentDate.empty())
-    props.currentDate = common::getCurrentTimeAndDate("%Y-%m-%d-%H-%M-%S"); // pattern="yyyy-MM-dd_HH-mm-ss"
+    props.currentDate = common::getCurrentTimeAndDate("%Y-%m-%d-%H-%M-%S"); // pattern="yyyy-MM-dd-HH-mm-ss"
   
   props.projectResultDir = props.resultsDir / props.projectName / "java";
   props.projectTimedResultDir =  props.projectResultDir / props.currentDate;
@@ -372,8 +366,6 @@ void checkUserProperties()
     props.externalHardFilter = system_complete(props.externalHardFilter);
   if ( !props.externalSoftFilter.empty() )
     props.externalSoftFilter = system_complete(props.externalSoftFilter);
-  if ( !props.metricThreshold.empty() )
-    props.metricThreshold = system_complete(props.metricThreshold);
   
   if (props.maxThreads == 0)
     props.maxThreads = columbus::thread::ThreadPool::getNumberOfCores();

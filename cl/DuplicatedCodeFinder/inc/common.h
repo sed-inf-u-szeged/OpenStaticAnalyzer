@@ -36,8 +36,14 @@
 #include<boost/algorithm/string.hpp>
 #include<boost/filesystem.hpp>
 
-#include "java/inc/java.h"
-#define LANGUAGE_NAMESPACE java::asg
+#ifdef SCHEMA_JAVA
+  #include "java/inc/java.h"
+  #define LANGUAGE_NAMESPACE java::asg
+#elif defined SCHEMA_PYTHON
+  #include "python/inc/python.h"
+  #define LANGUAGE_NAMESPACE python::asg
+#endif
+
 #define BASE_NAMESPACE base
 #define TOGRAPH columbus::lim2graph
 #define GET_LINE_OF_POSITIONS          getPosition().getLine()
@@ -59,17 +65,18 @@
 #include "lim/inc/lim.h"
 #include "Config.h"
 #include "ClonePositioned.h"
-#include "CloneVisitorBase.h"
-#include "CoverageVisitorBase.h"
-#include "JCoverageVisitor.h"
-#include "NamedVisitor.h"
+#include "Visitors/CloneVisitorBase.h"
+#include "Visitors/CoverageVisitorBase.h"
+#include "Visitors/PCoverageVisitor.h"
+#include "Visitors/JCoverageVisitor.h"
+#include "Visitors/NamedVisitor.h"
 #include "Interval.h"
 #include "AbstractFilter.h"
 #include "Aligner.h"
 #include "CloneLengthFilter.h"
 #include "RepeatingLinesFilter.h"
 #include "CloneOccuranceFilter.h"
-#include "DistanceVisitor.h"
+#include "Visitors/DistanceVisitor.h"
 
 extern Config config;
 

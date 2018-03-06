@@ -88,9 +88,9 @@ endif ()
 
 if (CMAKE_SYSTEM_NAME STREQUAL Linux)
   ExternalProject_Add( xerces-c
-      SVN_REPOSITORY https://svn.apache.org/repos/asf/xerces/c/tags/Xerces-C_3_1_4
-      BUILD_IN_SOURCE 1
-      UPDATE_COMMAND ""
+      URL http://archive.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.4.tar.gz
+	  URL_HASH MD5=21bb097b711a513275379b59757cba4c 
+	  BUILD_IN_SOURCE 1
       CONFIGURE_COMMAND ./reconf
                 COMMAND ./configure --disable-shared -disable-network --disable-transcoder-icu --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR}
       BUILD_COMMAND make -j8 all
@@ -111,16 +111,15 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL Windows)
   endif ()
   
   ExternalProject_Add( xerces-c
-      SVN_REPOSITORY https://svn.apache.org/repos/asf/xerces/c/tags/Xerces-C_3_1_4
+	  URL http://archive.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.4.zip
+	  URL_HASH MD5=6fcd8ec268f6bfe11d8ce2cd7d25a185
       BUILD_IN_SOURCE 1
-      UPDATE_COMMAND ""
       CONFIGURE_COMMAND ${CMAKE_COMMAND} -E echo "No configuration is required."
       BUILD_COMMAND msbuild projects/Win32/VC14/xerces-all/xerces-all.sln /m /t:XercesLib "/p:Configuration=Static $<CONFIG>" /p:Platform=${VS_PLATFORM} /p:PlatformToolset=${CMAKE_VS_PLATFORM_TOOLSET}
       INSTALL_COMMAND ${CMAKE_COMMAND} "-DCOPY_SOURCE=${CMAKE_CURRENT_BINARY_DIR}/xerces-c-prefix/src/xerces-c/src/xercesc/" "-DCOPY_TARGET=${COLUMBUS_3RDPARTY_INSTALL_DIR}/include/xercesc" -DCOPY_PATTERN=*.hpp -P ${CMAKE_CURRENT_SOURCE_DIR}/CMake/SearchAndCopyFiles.cmake
               COMMAND ${CMAKE_COMMAND} "-DCOPY_SOURCE=${CMAKE_CURRENT_BINARY_DIR}/xerces-c-prefix/src/xerces-c/src/xercesc/" "-DCOPY_TARGET=${COLUMBUS_3RDPARTY_INSTALL_DIR}/include/xercesc" -DCOPY_PATTERN=*.c -P ${CMAKE_CURRENT_SOURCE_DIR}/CMake/SearchAndCopyFiles.cmake
               COMMAND ${CMAKE_COMMAND} -E copy "Build/${XERCESC_BUILD_OUTPUT_DIR}/VC14/Static $<CONFIG>/xerces-c_static_3$<$<CONFIG:Debug>:d>.lib" ${COLUMBUS_3RDPARTY_INSTALL_DIR}/lib/xerces-c.lib
       LOG_DOWNLOAD 1
-      LOG_UPDATE 1
       LOG_CONFIGURE 1
       LOG_BUILD 1
       LOG_INSTALL 1
@@ -151,3 +150,69 @@ add_custom_target (
 )
 
 set_target_properties (PMD PROPERTIES FOLDER "ExternalProjectTargets/pmd")
+
+########################### python27 #########################
+if (CMAKE_SYSTEM_NAME STREQUAL Linux)
+
+  ExternalProject_Add( python2.7
+      DEPENDS zlib
+      SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/python2
+      BUILD_IN_SOURCE 1
+      CONFIGURE_COMMAND ./configure --enable-optimizations --disable-shared --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR}
+      BUILD_COMMAND make -j8 altbininstall inclinstall
+      INSTALL_COMMAND ${CMAKE_COMMAND} -E echo "No install step is required as the build step installs the library."
+      LOG_CONFIGURE 1
+      LOG_BUILD 1
+      LOG_INSTALL 1
+  )
+elseif (CMAKE_SYSTEM_NAME STREQUAL Windows)
+  if (COLUMBUS_64BIT)
+    set (PYTHON_BUILD_OUTPUT_DIR amd64)
+  endif ()
+
+  ExternalProject_Add( python2.7
+      DEPENDS zlib
+      SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/python2
+      BUILD_IN_SOURCE 1
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND msbuild PCbuild/pythoncore.vcxproj /m /t:Build /p:Configuration=$<CONFIG> /p:Platform=${VS_PLATFORM} /p:PlatformToolset=${CMAKE_VS_PLATFORM_TOOLSET}
+      INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory Include ${COLUMBUS_3RDPARTY_INSTALL_DIR}/include/python2.7
+              COMMAND ${CMAKE_COMMAND} -E copy "PC/pyconfig.h" ${COLUMBUS_3RDPARTY_INSTALL_DIR}/include/python2.7/pyconfig.h
+              COMMAND ${CMAKE_COMMAND} -E copy "PCbuild/${PYTHON_BUILD_OUTPUT_DIR}/python27$<$<CONFIG:Debug>:_d>.lib" ${COLUMBUS_3RDPARTY_INSTALL_DIR}/lib/python2.7.lib
+      LOG_CONFIGURE 1
+      LOG_BUILD 1
+      LOG_INSTALL 1
+  )
+
+endif ()
+
+########################### python36 #########################
+if (CMAKE_SYSTEM_NAME STREQUAL Linux)
+
+  ExternalProject_Add( python3.6
+      DEPENDS zlib
+      SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/python3
+      BUILD_IN_SOURCE 1
+      CONFIGURE_COMMAND ./configure --enable-optimizations --disable-shared --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR} --without-pymalloc
+      BUILD_COMMAND make -j8 altbininstall inclinstall
+      INSTALL_COMMAND ${CMAKE_COMMAND} -E echo "No install step is required as the build step installs the library."
+      LOG_CONFIGURE 1
+      LOG_BUILD 1
+      LOG_INSTALL 1
+  )
+elseif (CMAKE_SYSTEM_NAME STREQUAL Windows)
+
+  ExternalProject_Add( python3.6
+      DEPENDS zlib
+      SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/python3
+      BUILD_IN_SOURCE 1
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND msbuild PCbuild/pythoncore.vcxproj /m /t:Build /p:Configuration=$<CONFIG> /p:Platform=${VS_PLATFORM} /p:PlatformToolset=${CMAKE_VS_PLATFORM_TOOLSET}
+      INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory Include ${COLUMBUS_3RDPARTY_INSTALL_DIR}/include/python3.6
+              COMMAND ${CMAKE_COMMAND} -E copy "PC/pyconfig.h" ${COLUMBUS_3RDPARTY_INSTALL_DIR}/include/python3.6/pyconfig.h
+              COMMAND ${CMAKE_COMMAND} -E copy "PCbuild/${PYTHON_PLATFORM_NAME}/python36$<$<CONFIG:Debug>:_d>.lib" ${COLUMBUS_3RDPARTY_INSTALL_DIR}/lib/python3.6.lib
+      LOG_CONFIGURE 1
+      LOG_BUILD 1
+      LOG_INSTALL 1
+  )
+endif ()

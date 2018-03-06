@@ -184,7 +184,6 @@ int main(int argc, char* argv[]) {
 
     updateMemoryStat();
 
-    rc.addLicenseTypeToTheGraphHeader(EXECUTABLE_NAME);
     rc.saveGraph(outGraph);
 
     // terminate xerces

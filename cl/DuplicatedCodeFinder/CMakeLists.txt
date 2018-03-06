@@ -12,6 +12,7 @@ set (SOURCES
     src/JNodeEmbeddednessVisitor.cpp
     src/LanguageFactory.cpp
     src/main.cpp
+    src/PNodeEmbeddednessVisitor.cpp
     src/RepeatingLinesFilter.cpp
     src/StatementFilter.cpp
     
@@ -20,22 +21,24 @@ set (SOURCES
     inc/CloneLengthFilter.h
     inc/CloneOccuranceFilter.h
     inc/ClonePositioned.h
-    inc/CloneVisitorBase.h
     inc/common.h
     inc/Config.h
-    inc/CoverageVisitorBase.h
     inc/dcm.h
-    inc/DistanceVisitor.h
     inc/Interval.h
-    inc/JCoverageVisitor.h
     inc/LanguageFactory.h
     inc/messages.h
-    inc/NamedVisitor.h
     inc/RepeatingLinesFilter.h
     inc/StatementFilter.h
     inc/types.h
+    inc/Visitors/CloneVisitorBase.h
+    inc/Visitors/CoverageVisitorBase.h
+    inc/Visitors/DistanceVisitor.h
+    inc/Visitors/JCoverageVisitor.h
     inc/Visitors/JNodeEmbeddednessVisitor.h
+    inc/Visitors/NamedVisitor.h
     inc/Visitors/NodeEmbeddednessVisitorBase.h
+    inc/Visitors/PCoverageVisitor.h
+    inc/Visitors/PNodeEmbeddednessVisitor.h
 )
 
 function (add_language_config LANG)
@@ -51,5 +54,6 @@ function (add_language_config LANG)
 endfunction()
 
 add_language_config(java)
+add_language_config(python)
 
 

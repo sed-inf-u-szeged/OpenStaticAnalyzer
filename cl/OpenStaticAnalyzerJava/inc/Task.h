@@ -29,24 +29,17 @@ DEFINETASK(CleanProjectTask)
 DEFINETASK(DirectoryBasedAnalysisTask)
 DEFINETASK(RemoveWrapperBinsTask)
 DEFINETASK(CheckASGListTask)
-DEFINETASK(JAN2ChangePathTask)
-DEFINETASK(ASGBackupTask)
 DEFINETASK(JANFilterTask)
 DEFINETASK(SuperlinkTask)
 DEFINETASK(JAN2limTask)
 DEFINETASK(ProfileTask)
-DEFINETASK(FaultHunterTask)
-DEFINETASK(VulnerabilityHunterTask)
-DEFINETASK(AndroidHunterTask)
 DEFINETASK(DcfTask)
 DEFINETASK(PMD2GraphTask)
 DEFINETASK(FindBugsTask)
 DEFINETASK(Lim2metricsTask)
-DEFINETASK(RTEHunterTask)
 DEFINETASK(GraphMergeTask)
 DEFINETASK(GraphDumpTask)
 DEFINETASK(MetricHunterTask)
-DEFINETASK(ChangeTrackerTask)
 
 class WrapperBasedAnalysisTask : public columbus::controller::Task
 {
@@ -60,19 +53,6 @@ public:
 
   const static std::string name;
   virtual const std::string& getName() const{
-    return name;
-  }
-};
-
-class AddLicenceTask : public columbus::controller::Task
-{
-private:
-  std::list<std::string> inactives;
-public:
-  const static std::string name;
-  AddLicenceTask(std::list<std::string> inactives, const Properties& properties);
-  virtual ExecutionResult execute();
-  virtual const std::string& getName() const {
     return name;
   }
 };

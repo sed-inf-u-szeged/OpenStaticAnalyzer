@@ -46,8 +46,8 @@ add_custom_generated_copy_dependency_to_tools_dir (GraphMerge${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (JAN2ChangePath${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (JAN2Lim${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (JANFilter${EXE})
-add_custom_generated_copy_dependency_to_tools_dir (LIM2Metrics_java${EXE} LIM2Metrics_java LIM2Metrics${EXE})
-add_custom_generated_copy_dependency_to_tools_dir (MET.rul LIM2Metrics_java)
+add_custom_generated_copy_dependency_to_tools_dir (LIM2Metrics${EXE})
+add_custom_generated_copy_dependency_to_tools_dir (MET.rul LIM2Metrics)
 add_custom_generated_copy_dependency_to_tools_dir (MetricHunter_java${EXE} MetricHunter_java MetricHunter${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (MetricHunter_JAVA.threshold MetricHunter_java_copy_MetricHunter_JAVA.threshold MetricHunter.threshold)
 add_custom_generated_copy_dependency_to_tools_dir (PMD2Graph${EXE})
@@ -137,16 +137,16 @@ set (MAVEN_PLUGIN_DIR ${CMAKE_SOURCE_DIR}/java/columbus-toolchain-maven-plugin)
 
 add_custom_create_file_target (
     ${OSA_TARGET_NAME}
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-8.2.jar
+    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-2.0.jar
     ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.jar
     ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.pom
     ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.0.jar
     ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.0.pom
     ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.1.jar
     ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.1.pom
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-8.2-V2.pom
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-8.2-V3.pom
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-8.2-V31.pom
+    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-2.0-V2.pom
+    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-2.0-V3.pom
+    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-2.0-V31.pom
     ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/installMavenWrapper${SCRIPT_EXT}
     COMMAND mvn${MVN_POSTFIX} install -f ${MAVEN_PLUGIN_DIR}/ext/mojoExecutorModule/v3/pom.xml > ${CMAKE_CURRENT_BINARY_DIR}/v3install.log
     COMMAND mvn${MVN_POSTFIX} install -f ${MAVEN_PLUGIN_DIR}/ext/mojoExecutorModule/v31/pom.xml > ${CMAKE_CURRENT_BINARY_DIR}/v31install.log

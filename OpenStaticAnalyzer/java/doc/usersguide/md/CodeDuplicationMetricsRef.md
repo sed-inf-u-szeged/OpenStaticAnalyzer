@@ -36,11 +36,14 @@ The following table summarizes the code duplication metrics, their abbreviations
   Clone Classes                     CCL                                     X        X       X           X      X         X       
   Clone Complexity                  CCO      X                X             X        X       X           X      X         X       
   Clone Coverage                    CC                                      X        X       X           X      X         X       
+  Clone Elimination Effort          CEE                       X                                                           X       
+  Clone Elimination Gain            CEG                       X                                                           X       
   Clone Embeddedness                CE       X                X                                                                   
   Clone Instances                   CI                        X             X        X       X           X      X         X       
   Clone Line Coverage               CLC                                     X        X       X           X      X         X       
   Clone Lines of Code               CLLOC    X                X                                                                   
   Clone Logical Line Coverage       CLLC                                    X        X       X           X      X         X       
+  Clone Risk                        CR                        X                                                           X       
   Clone Variability                 CV       X                X                                                                   
   Lines of Duplicated Code          LDC                                     X        X       X           X      X         X       
   Logical Lines of Duplicated Code  LLDC                                    X        X       X           X      X         X       
@@ -74,6 +77,18 @@ The following table summarizes the code duplication metrics, their abbreviations
 
 **Component:** ratio of code covered by code duplications in the component to the size of the component, expressed in terms of the number of syntactic entities (statements, expressions, etc.).
 
+#### Clone Elimination Effort (CEE) {#CEE}
+
+**Clone class:** index of the effort required to eliminate the clone class. It is computed as the product of CI, CE, and NCR.
+
+**Component:** index of the effort required to eliminate all clones from the component. It is computed as the sum of CEE of the clone classes in the component.
+
+#### Clone Elimination Gain (CEG) {#CEG}
+
+**Clone class:** index of the gain resulting from eliminating the clone class. It is computed as the ratio of CR to CEE.
+
+**Component:** index of the gain resulting from eliminating all clones from the component. It is computed as the logistic function of the ratio of CR to CEE.
+
 #### Clone Embeddedness (CE) {#CE}
 
 **Clone instance:** sum of incoming and outgoing references (function calls, variable references, type references; different references to the same entity are counted only once) in the code fragment corresponding to the clone instance, weighted with the number of directory changes between the referenced code fragments.
@@ -105,6 +120,12 @@ The following table summarizes the code duplication metrics, their abbreviations
 **Method/class/package:** ratio of code covered by code duplications in the source code element to the size of source code element, expressed in terms of logical lines of code (non-empty, non-comment lines).
 
 **Component:** ratio of code covered by code duplications in the component to the size of the component, expressed in terms of logical lines of code (non-empty, non-comment lines).
+
+#### Clone Risk (CR) {#CR}
+
+**Clone class:** risk index of the existence of the clone class. It is computed as the product of CLLOC, CI, CCO, NCR, and CV.
+
+**Component:** relative risk index of the existence of code duplications in the component. It is computed as the sum of CR of the clone classes in the component, divided by the total logical lines of code (non-empty, non-comment lines) of the component. It expresses the risk index projected to a non-empty, non-comment line of code in the component.
 
 #### Clone Variability (CV) {#CV}
 

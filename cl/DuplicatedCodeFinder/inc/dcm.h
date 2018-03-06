@@ -33,7 +33,13 @@
 #include <suffixarray/inc/suffix_array.h>
 #include <rul/inc/RulHandler.h>
 
+#ifdef SCHEMA_JAVA
 #include "Visitors/JNodeEmbeddednessVisitor.h"
+#endif
+
+#ifdef SCHEMA_PYTHON
+#include "Visitors/PNodeEmbeddednessVisitor.h"
+#endif
 
 #include "common/inc/math/common.h"
 #include <boost/bimap.hpp>

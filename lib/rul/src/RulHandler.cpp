@@ -551,7 +551,7 @@ string RulHandler::getBaselineValue(const string& ruleId, const string& baseline
 {
   map<string, string>::const_iterator baselineIt;
   bool found = false;
-  getConfSpecDataFromMap(ruleId, baselineName, &RulConfiguration::baselines, baselineIt, found);
+  getConfSpecDataFromMap(ruleId, baselineName, &RulConfiguration::baselines, baselineIt, _empty_string, found);
   if(found) {
     return baselineIt->second;
   } else {
@@ -579,7 +579,7 @@ string RulHandler::getSettingValue(const string& ruleId, const string& settingNa
 {
   map<string, RulSetting>::const_iterator settingIt;
   bool found = false;
-  getConfSpecDataFromMap(ruleId, settingName, &RulConfiguration::settings, settingIt, found);
+  getConfSpecDataFromMap(ruleId, settingName, &RulConfiguration::settings, settingIt, _empty_string, found);
   if(found) {
     return settingIt->second.text;
   } else {
@@ -625,7 +625,7 @@ bool RulHandler::getSettingIsEditable(const string& ruleId, const string& settin
 {
   map<string, RulSetting>::const_iterator settingIt;
   bool found = false;
-  getConfSpecDataFromMap(ruleId, settingName, &RulConfiguration::settings, settingIt, found);
+  getConfSpecDataFromMap(ruleId, settingName, &RulConfiguration::settings, settingIt, _empty_string, found);
   if(found) {
     return settingIt->second.editable == rulTrue;
   } else {
@@ -1525,7 +1525,7 @@ void RulHandler::setConfSpecData (const string& ruleId, const string& configurat
 }
 
 template<typename T, typename R, typename N>
-void RulHandler::getConfSpecDataFromMap (const string& ruleId, const N& name, T key, R& retvalue, bool& found ) const
+void RulHandler::getConfSpecDataFromMap (const string& ruleId, const N& name, T key, R& retvalue, const string& wrongValue, bool& found ) const
 {
   const RulMetric* metric = findMetric(ruleId);
   found = false;
@@ -1533,7 +1533,7 @@ void RulHandler::getConfSpecDataFromMap (const string& ruleId, const N& name, T 
     const RulConfiguration* rulConfig = metric->actualConfig;
     while(rulConfig != NULL) {
       retvalue  = (rulConfig->*key).find(name);
-      if(!_strictMode && (retvalue == (rulConfig->*key).end()) ) {
+      if(!_strictMode && ((retvalue == (rulConfig->*key).end()) || retvalue->second == wrongValue)) {
           rulConfig = getParentConfig(rulConfig);
       } else {
         found = true;
@@ -1596,7 +1596,7 @@ protected:
   char* xmlTranscode(const XMLCh* xmlCh)
   {
     XMLSize_t inputSize = XMLString::stringLen(xmlCh);
-    XMLByte* buffer = new XMLByte[inputSize * 2];
+    XMLByte* buffer = new XMLByte[inputSize * 2 + 1];
     XMLSize_t charsEaten = 0;
     XMLSize_t transformedChars = transcoder->transcodeTo(xmlCh, inputSize, buffer, inputSize *2 , charsEaten, XMLTranscoder::UnRep_Throw);
     buffer[transformedChars] = '\0';
@@ -1863,10 +1863,6 @@ public:
 
   virtual void  endElement (const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname)
   {
-    if(_actualContent.empty()) {
-      _actualContent = _RUL_EMPTY_STRING;
-    }
-
     switch(_readerState) {
       case rsToolDescriptionItem:
         if(_actualToolDescription != NULL) {

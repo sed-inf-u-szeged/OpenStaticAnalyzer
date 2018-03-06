@@ -23,6 +23,6 @@
 
 #include "columbus_config.h"
 
-static const char  CopyRightMessage[] = "Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged ";
+static const char  CopyRightMessage[] = "Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged ";
 
 #endif

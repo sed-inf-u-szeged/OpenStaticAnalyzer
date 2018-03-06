@@ -13,6 +13,7 @@ endif ()
 add_custom_target (
     ${OSA_TARGET_NAME}
     DEPENDS OSA-Java
+    DEPENDS OSA-Python
     COMMAND ${CMAKE_COMMAND} -E ${COMPRESS_COMMAND}
 )
 
@@ -49,3 +50,4 @@ function (copy_licenses)
 endfunction ()
 
 add_subdirectory (java)
+add_subdirectory (python)

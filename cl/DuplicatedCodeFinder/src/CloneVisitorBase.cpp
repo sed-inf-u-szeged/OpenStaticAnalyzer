@@ -19,7 +19,7 @@
  */
 
 #include "../inc/common.h"
-#include "../inc/CloneVisitorBase.h"
+#include "../inc/Visitors/CloneVisitorBase.h"
 
 using namespace columbus;
 using namespace common;
@@ -71,7 +71,11 @@ CloneVisitorBase::~CloneVisitorBase() {}
 
 bool CloneVisitorBase::isAnalizeNode(const Base& node) {
   if(analizeNode) {
+#if defined SCHEMA_JAVA
     return columbus::java::asg::Common::getIsMethodDeclaration(node);
+#elif defined SCHEMA_PYTHON
+    return columbus::python::asg::Common::getIsFunctionDef(node);
+#endif
   }
   return false;
 }
@@ -88,11 +92,15 @@ void CloneVisitorBase::addToResultSequence(int kind) {
 
 ClonePositioned* CloneVisitorBase::createClonePositioned(const Positioned* p) {
   ClonePositioned* px;
+#ifdef SCHEMA_JAVA
   if (columbus::java::asg::Common::getIsPackage(*p)) {
     px = new ClonePositioned("unknown", 0, 0, 0, 0, p->getNodeKind(), p->getId(), currentLimNode.empty()?currentLimComponent:currentLimNode.top(),currentLimComponent);
   } else {
     px = new ClonePositioned(p->getPosition().getPath(), p->getPosition().getWideLine(), p->getPosition().getWideCol(), p->getPosition().getWideEndLine(), p->getPosition().getWideEndCol(), p->getNodeKind(), p->getId(),currentLimNode.empty()?currentLimComponent:currentLimNode.top(),currentLimComponent);
   }
+#elif defined SCHEMA_PYTHON
+  px = new ClonePositioned(p->getPosition().getPath(), p->GET_LINE_OF_POSITIONS, p->GET_COLUMN_OF_POSITIONS, p->GET_END_LINE_OF_POSITIONS, p->GET_END_COLUMN_OF_POSITIONS, p->getNodeKind(), p->getId(),currentLimNode.empty()?currentLimComponent:currentLimNode.top(),currentLimComponent);
+#endif
   return px;
 }
 
@@ -163,17 +171,25 @@ void CloneVisitorBase::blockNode(const Base& b) {
 
   std::string lPath=pos.getPosition().getPath();
   LowerStringOnWindows(lPath);
+#if defined(SCHEMA_JAVA)
   unsigned line = pos.getPosition().getWideLine();
-
+#elif defined(SCHEMA_PYTHON)
+  unsigned line = pos.getPosition().getLine();
+#endif
   if ((prevPath!=lPath) && fileNamesByComponent) {
     assignSrcFileToComponenet(lPath,currentLimComponent);
   }
 
   if (logicalLines) {
+#if defined(SCHEMA_JAVA)
     logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getLine()));
     logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getEndLine()));
     logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getWideLine()));
     logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getWideEndLine()));
+#elif defined (SCHEMA_PYTHON)
+    logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getLine()));
+    logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getEndLine()));
+#endif
   }
 
   if ((prevPath!=lPath || line!=prevLine) && lPath!="") {
@@ -286,8 +302,10 @@ void CloneVisitorBase::dumpFilterRange(columbus::NodeId from,columbus::NodeId to
 }
 
 void CloneVisitorBase::visit(const  Positioned& n,bool callVirtualParent){
+#if defined (SCHEMA_JAVA)
   if (n.getIsCompilerGenerated())
     return;
+#endif
 
   visitedNodesNumber++;
   evoluteLimNode(n,false);
@@ -328,12 +346,14 @@ void CloneVisitorBase::visit(const  Positioned& n,bool callVirtualParent){
   lastIsFilteredOut = false;
 
 
+#if defined(SCHEMA_JAVA)
   if (columbus::java::asg::Common::getIsPackage(n)) {
     addFileSeparator();
     addPattern(n);
     path="";
     return;
   }
+#endif
 
   if (AlgorithmCommon::getIsPositioned(n)) {
     const Positioned& posNodeRef = dynamic_cast<const Positioned&>(n);
@@ -354,8 +374,10 @@ void CloneVisitorBase::visit(const  Positioned& n,bool callVirtualParent){
 }
 
 void CloneVisitorBase::visitEnd(const  Positioned& n, bool callVirtualParent) {
+#if defined(SCHEMA_JAVA)
   if (n.getIsCompilerGenerated())
     return;
+#endif
 
   if ((blockNodeKind == BK_asgNodeBlock) && ( n.getId() == blockedNode )) {
     blockedNode = 0;

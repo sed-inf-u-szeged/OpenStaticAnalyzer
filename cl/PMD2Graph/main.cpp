@@ -58,7 +58,6 @@ static string changepathfrom;
 static string changepathto;
 static string lim;
 static string separator = ";";
-static string faulthunter_rul;
 static bool exportRul = false;
 static bool printstdout = false;
 static std::string out; //name of the output file
@@ -160,11 +159,6 @@ static bool ppPrintStdOut (const Option *o, char *argv[]) {
   return true;
 }
 
-static bool ppFaultHunterRul(const Option *o, char *argv[]) {
-  faulthunter_rul = argv[0];
-  return true;
-}
-
 const Option OPTIONS_OBJ [] = {
   { false,  "-makerul",         0, "",                  1,  OT_NONE,  ppMakeRul,        NULL,   "Making rul file based on input list file."},
   { false,  "-makeconfig",      0, "",                  1,  OT_NONE,  ppMakeCfg,        NULL,   "Making config file based on input rul file."},
@@ -183,7 +177,6 @@ const Option OPTIONS_OBJ [] = {
   { false,  "-out",             1, "file",              0,  OT_WC,    ppOut,            NULL,   "Specify the name of the output file. The list of rule violations will be dumped in it.\n"
                                                                                                 "Either this or the -printstdout switch has to be provided."},
   { false,  "-printstdout",     0, "",                  0,  OT_NONE,  ppPrintStdOut,    NULL,   "Dump the detected rule violations to the standard output."},
-  { false,  "-faulthunterrul",  1, "rulfile",           0,  OT_WC,    ppFaultHunterRul, NULL,   "Name of the FaultHunter rul file."},
   CL_EXPORTRUL
   COMMON_CL_ARGS
 };
@@ -274,7 +267,7 @@ int main(int argc, char *argv[]) {
       rul_str = getExecutableProgramDir() + rul_str;
     PMDStrategy pmd_strategy;
     if(makerul){
-      pmd_strategy.makeRul(file_names, rul_str, rulConfig, rul_options, faulthunter_rul);
+      pmd_strategy.makeRul(file_names, rul_str, rulConfig, rul_options);
     }else if(makeconfig){
       pmd_strategy.makeConfig(file_names, rul_str, rulConfig, config);
     } else if(makecsv){
@@ -295,8 +288,6 @@ int main(int argc, char *argv[]) {
       if(f != stdout) {
         fclose(f);
       }
-      
-      pmd_strategy.addLicenseTypeToTheGraphHeader(EXECUTABLE_NAME);
 
       if (!graph_filename.empty())
         pmd_strategy.saveGraph(graph_filename, exportRul);

@@ -38,7 +38,6 @@ namespace columbus
 namespace controller
 {
 
-
 void Task::addMessageLevel(std::vector<std::string>& args) {
   if (properties.verbose) {
     args.push_back("-ml:4");
@@ -54,7 +53,7 @@ void Task::addMessageLevelNumber(std::vector<std::string>& args, unsigned verbos
 }
 
 
-int Task::exec(const boost::filesystem::path& program, const std::vector<std::string>& args, std::stringstream& std_out_err) {
+int Task::exec(const boost::filesystem::path& program, const std::vector<std::string>& args, std::ostream& std_out_err) {
   if (WriteMsg::getMessageLevel() >= WriteMsg::mlDebug) {
     std_out_err << "[" << common::getCurrentTimeAndDate("%Y-%m-%d %H:%M:%S") << "]";
     std_out_err << current_path().string() << "> " << program.string();
@@ -88,6 +87,12 @@ const vector<string>& Task::getDependsOn() const
   return dependsOn;
 }
 
+bool Task::openLogFile()
+{
+  logstream.open((properties.logDir / (getName() + ".log")).string(), ios_base::binary);
+  return logstream.is_open();
+}
+
 void Task::copyAllFiles(const  path& source,const  path& dest)
 {
   if( exists( path (source)) )
@@ -117,11 +122,6 @@ void Task::copyDirectory(const path& source, const path& dest, const string& dir
     }
   }
 }
-
-string Task::getLog() const {
-  return logstream.str();
-}
-
 
 Task::ExecutionLogger::ExecutionLogger(Task* task, ExecutionResult& result) : task(task), result(result) {
   task->logstream << "[" << common::getCurrentTimeAndDate("%Y-%m-%d %H:%M:%S") << "] Start:" << task->getName() << "\n";

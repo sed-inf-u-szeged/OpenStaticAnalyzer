@@ -86,18 +86,30 @@ namespace columbus {
       }
 
       // ========================= Computing F3 Attribute ==========================================
+#if  defined SCHEMA_JAVA
       if (AlgorithmCommon::getIsNamed(ciFirstRootNode) && AlgorithmCommon::getIsMember(ciFirstRootNode)) {
         Named& toP=dynamic_cast<Named&>(ciFirstRootNode);
-
+#elif  defined SCHEMA_PYTHON
+      if (AlgorithmCommon::getIsMemberNode(ciFirstRootNode) ) {
+        Base& toP=dynamic_cast<Base&>(ciFirstRootNode);
+#endif
         if (ci.getF3_HeadNodeUniqueName().empty())  {
           ci.setF3_HeadNodeUniqueName(UNIQUE_NAME_FOR_MEMBER(toP));
           common::WriteMsg::write(WriteMsg::mlDDDDebug,"the F3 is %s for %d\n",ci.getF3_HeadNodeUniqueName().c_str(),ci.getId());
         }
       }
       // ============================ Computing F4 Attribute =======================================
+#if defined SCHEMA_PYTHON
+      Base* namedAncestor = NULL;
+#else
       Named* namedAncestor = NULL;
+#endif
       if (ci.getF4_AncestorUniqueName().empty()) {
+#if defined SCHEMA_JAVA
         namedAncestor = dynamic_cast<Named*>(AlgorithmCommon::getScopeOrMethodDeclarationParent(ciFirstRootNode));
+#elif defined SCHEMA_PYTHON
+        namedAncestor = dynamic_cast<Base*>(AlgorithmCommon::getScopeParent(ciFirstRootNode));
+#endif
         if (namedAncestor != NULL) {
     
           ci.setF4_AncestorUniqueName(UNIQUE_NAME_FOR_MEMBER(*namedAncestor));
@@ -778,6 +790,21 @@ namespace columbus {
           if (getIsNeeded("NCR")) {
             columbus::graphsupport::incMetricFloat(graph, classItem, "NCR", (float)cc.getNcrad() );
           }
+          
+          //CLLOC * CI * CCO * NCR * CS
+          if (getIsNeeded("CR")) {
+            columbus::graphsupport::setMetricFloat(graph, classItem, "CR", cc.getRisk() );
+          }
+
+          //CI * CED * NCR
+          if (getIsNeeded("CEE")) {
+            columbus::graphsupport::setMetricFloat(graph, classItem, "CEE", cc.getEffort());
+          }
+
+          if (getIsNeeded("CEG")) {
+            float ceg = ((float)cc.getRisk())/cc.getEffort();
+            columbus::graphsupport::setMetricFloat(graph, classItem, "CEG", ceg);
+          }
 
           if (getIsNeeded("CV")) {
             columbus::graphsupport::setMetricFloat(graph, classItem, "CV",  (float)cc.getCv());
@@ -1321,6 +1348,21 @@ namespace columbus {
           if (getIsNeeded("NCR")){
             columbus::graphsupport::setMetricFloat(graph, gaphSysNodeUUid, "NCR", (float)(collectedMetrics.sumNCR/collectedMetrics.numNCR));
           }
+
+          if (getIsNeeded("CR")) {
+            columbus::graphsupport::setMetricFloat(graph, gaphSysNodeUUid, "CR", collectedMetrics.sumCR/ componentNode->getTLLOC());
+          }
+
+          if (getIsNeeded("CEE")) {
+            columbus::graphsupport::setMetricFloat(graph, gaphSysNodeUUid, "CEE", collectedMetrics.CEE);
+          }
+
+          if (getIsNeeded("CEG")) {
+            /* (((1 / (1+  e^(-2*CR/ln(CEE)) )*100)-50)*2) */
+            double componentCR = (double)collectedMetrics.sumCR / limFact->getRoot()->getTLLOC();
+            columbus::graphsupport::setMetricFloat(graph, gaphSysNodeUUid, "CEG", ((100.0 / ( 1.0 + exp(-2.0 * componentCR / log(collectedMetrics.CEE)))) - 50.0) * 2.0);
+          }
+
         }
       }
       common::WriteMsg::write(CMSG_FINALIZE_DONE_IN, common::getProcessUsedTime().user - time.user);
@@ -2873,7 +2915,33 @@ namespace columbus {
         if (leftNode.uniformPath != rightNode.uniformPath) {
           return (leftNode.uniformPath < rightNode.uniformPath) ;
         }
+#if defined SCHEMA_JAVA
         return  leftNode.node->compareByPosition(*rightNode.node) < 0;
+#else
+        if(leftNode.node->GET_FILE_KEY_OF_POSITIONS != rightNode.node->GET_FILE_KEY_OF_POSITIONS)
+          return leftNode.node->GET_FILE_KEY_OF_POSITIONS < rightNode.node->GET_FILE_KEY_OF_POSITIONS;
+
+        if(leftNode.node->GET_LINE_OF_POSITIONS != rightNode.node->GET_LINE_OF_POSITIONS)
+          return leftNode.node->GET_LINE_OF_POSITIONS < rightNode.node->GET_LINE_OF_POSITIONS;
+
+        if(leftNode.node->GET_COLUMN_OF_POSITIONS != rightNode.node->GET_COLUMN_OF_POSITIONS)
+          return leftNode.node->GET_COLUMN_OF_POSITIONS < rightNode.node->GET_COLUMN_OF_POSITIONS;
+
+        if(leftNode.node->GET_END_FILE_KEY_OF_POSITIONS != rightNode.node->GET_END_FILE_KEY_OF_POSITIONS)
+          return leftNode.node->GET_END_FILE_KEY_OF_POSITIONS > rightNode.node->GET_END_FILE_KEY_OF_POSITIONS;
+
+        if(leftNode.node->GET_END_LINE_OF_POSITIONS != rightNode.node->GET_END_LINE_OF_POSITIONS)
+          return leftNode.node->GET_END_LINE_OF_POSITIONS > rightNode.node->GET_END_LINE_OF_POSITIONS;
+
+        if(leftNode.node-> GET_END_COLUMN_OF_POSITIONS != rightNode.node-> GET_END_COLUMN_OF_POSITIONS)
+          return leftNode.node-> GET_END_COLUMN_OF_POSITIONS > rightNode.node-> GET_END_COLUMN_OF_POSITIONS; 
+
+        if (leftNode.node->getNodeKind() != rightNode.node->getNodeKind()) {
+          return leftNode.node->getNodeKind() < rightNode.node->getNodeKind();
+        }
+
+        return false;
+#endif
       }
     };
 

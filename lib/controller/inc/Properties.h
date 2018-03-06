@@ -29,7 +29,7 @@ namespace controller
 
 struct BaseProperties {
   BaseProperties()
-    : maxThreads (1)
+    : maxThreads (0)
     , verbose (false)
   {}
   boost::filesystem::path logDir;       // Absolute path of the directory of the log files

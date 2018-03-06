@@ -226,15 +226,15 @@ namespace columbus { namespace lim { namespace metrics {
                       logical::Class *classOfAttribute = (logical::Class*)(&(*it));
                       if(classOfAttribute->getAggregated() != NULL)
                         classOfAttribute = (logical::Class*)(classOfAttribute->getAggregated());
-                        
-                        if (parentClasses.find(classOfAttribute) != parentClasses.end() || classOfAttribute->getId() == actClassId) {
 
-                          elementInComponent.nextElement = &actualElement;
+                      if (parentClasses.find(classOfAttribute) != parentClasses.end() || classOfAttribute->getId() == actClassId) {
 
-                          actualAttributes.insert(elementAttributes.begin(), elementAttributes.end());
-                          isConnected = true;
-                          break;
-                        }
+                        elementInComponent.nextElement = &actualElement;
+
+                        actualAttributes.insert(elementAttributes.begin(), elementAttributes.end());
+                        isConnected = true;
+                        break;
+                      }
 
                     }
                   }
@@ -256,14 +256,14 @@ namespace columbus { namespace lim { namespace metrics {
                       logical::Class *classOfMethod = (logical::Class*)(&(*it));
                       if(classOfMethod->getAggregated() != NULL)
                         classOfMethod = (logical::Class*)(classOfMethod->getAggregated());
-                        
-                        if (parentClasses.find(classOfMethod) != parentClasses.end()) {
 
-                          elementInComponent.nextElement = &actualElement;
+                      if (parentClasses.find(classOfMethod) != parentClasses.end()) {
 
-                          actualMethods.insert(elementMethods.begin(), elementMethods.end());
-                          break;
-                        }
+                        elementInComponent.nextElement = &actualElement;
+
+                        actualMethods.insert(elementMethods.begin(), elementMethods.end());
+                        break;
+                      }
 
                     }
                   }

@@ -20,6 +20,7 @@
 
 #include "../inc/common.h"
 
+#ifdef SCHEMA_JAVA
 using namespace columbus;
 using namespace java;
 using namespace asg;
@@ -47,3 +48,4 @@ bool JCoverageVisitor::isIncTheComplexity( int nodeKind ) {
    
   return false;
 }
+#endif
