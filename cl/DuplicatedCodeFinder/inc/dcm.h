@@ -41,6 +41,10 @@
 #include "Visitors/PNodeEmbeddednessVisitor.h"
 #endif
 
+#ifdef SCHEMA_CSHARP
+#include "Visitors/CSNodeEmbeddednessVisitor.h"
+#endif
+
 #include "common/inc/math/common.h"
 #include <boost/bimap.hpp>
 #include <fstream>

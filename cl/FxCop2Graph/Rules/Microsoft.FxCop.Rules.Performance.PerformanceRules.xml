@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Rules FriendlyName="Performance Rules">
+  <Rule TypeName="DoNotCastUnnecessarily" Category="Microsoft.Performance" CheckId="CA1800">
+    <Name>Do not cast unnecessarily</Name>
+    <Description>Avoid duplicate casts where possible, since there is a cost associated with them.</Description>
+    <Url>@ms182271.aspx</Url>
+    <Resolution Name="Local">{0}, a variable, is cast to type {1} multiple times in method {2}. Cache the result of the 'as' operator or direct cast in order to eliminate the redundant {3} instruction.</Resolution>
+    <Resolution Name="Parameter">{0}, a parameter, is cast to type {1} multiple times in method {2}. Cache the result of the 'as' operator or direct cast in order to eliminate the redundant {3} instruction.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--  Moved to Usage 4/5/05
+  <Rule TypeName="AvoidUnusedParameters" Category="Microsoft.Performance" CheckId="CA1801">
+    <Name>Avoid unused parameters</Name>
+    <Description>Avoid declaring parameters that are not used in the method body. Unused parameters incur maintenance and performance costs. Sometimes a violation of this rule can point to an implementation bug in the method (i.e. the parameter should actually have been used in the method body). Exclude warnings of this rule if the parameter has to exist because of backward compatibility.</Description>
+    <Url>@/Performance/AvoidUnusedParameters.html</Url>
+    <Resolution>Parameter '{0}' of {1} is never used. Remove the parameter or use it in the method body.</Resolution>
+    <Resolution Name="MarkAsStatic">The 'this' parameter (or 'Me' in Visual Basic) of {0} is never used. Mark the method as static (or Shared in Visual Basic) or use 'this'/Me in the method body.</Resolution>
+    <Email>fxcopbug@microsoft.com</Email>
+    <MessageLevel Certainty="95">Warning</MessageLevel>
+    <FixCategories>Breaking,NonBreaking</FixCategories>
+    <Owner />
+  </Rule> -->
+  <Rule TypeName="UseLiteralsWhereAppropriate" Category="Microsoft.Performance" CheckId="CA1802">
+    <Name>Use literals where appropriate</Name>
+    <Description>Prefer literals over InitOnly fields if values do not have to be calculated at runtime.</Description>
+    <Url>@ms182280.aspx</Url>
+    <Resolution Name="Default">Field {0} is declared as 'static readonly' but is initialized with a constant value '{1}'. Mark this field as 'const' instead.</Resolution>
+    <Resolution Name="EmptyString">Field {0} is declared as 'static readonly' but is initialized with an empty string (""). Mark this field as 'const' instead.</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="95">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804">
+    <Name>Remove unused locals</Name>
+    <Description>Remove locals that are not used or are only assigned to in method implementations.</Description>
+    <Url>@ms182278.aspx</Url>
+    <Resolution>{0} declares a variable, {1}, of type {2}, which is never used or is only assigned to. Use this variable or remove it.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!-- Removed for Dev10
+  <Rule TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805">
+    <Name>Do not initialize unnecessarily</Name>
+    <Description>Do not make initializations that have already been done by the runtime.</Description>
+    <Url>@ms182274.aspx</Url>
+    <Resolution>{0} initializes field {1} of type {2} to {3}. Remove this initialization because it will be done automatically by the runtime.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <!-- Moved to Usage 4/5/05
+  <Rule TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Performance" CheckId="CA1806">
+    <Name>Do not ignore method results</Name>
+    <Description>The result of methods that create objects should be assigned to a variable and subsequently used. If the result of a method that creates a new object, such as String.ToLower(), is not assigned to a variable, the call is wasted.</Description>
+    <Url>@/Performance/DoNotIgnoreMethodResults.html</Url>
+    <Resolution Name="ObjectCreation">{0} creates an instance of {1} which is either not assigned to a variable or is never used. Remove the object creation if it is unnecessary or use it within the method.</Resolution>
+    <Resolution Name="MethodCall">{0} calls {1} but does not assign the result to a variable. Use the result as an argument to another method, assign the result to a variable, or remove the call if it is unnecessary.</Resolution>
+    <Resolution Name="CallerShouldCheckResult">{0} calls {1} but does not assign the result to a variable or check the result in a conditional statement. The call that has been flagged is known to require a check of its return value in order to handle negative cases or other conditions.</Resolution>
+    <Email>fxcopbug@microsoft.com</Email>
+    <MessageLevel Certainty="95">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule> -->
+  <!--<Rule TypeName="AvoidUnnecessaryStringCreation" Category="Microsoft.Performance" CheckId="CA1807">
+    <Name>Avoid unnecessary string creation</Name>
+    <Description>Avoid creating strings unnecessarily. When converting strings to upper or lowercase, cache the result when necessary rather than duplicating a previous string creation. Prefer String.Compare over converting strings to upper or lowercase when performing case-insensitive comparisons. Do not create strings that are not subsequently assigned to variables.</Description>
+    <Url>@/Performance/AvoidUnnecessaryStringCreation.html</Url>
+    <Resolution Name="DuplicateStringCreationLocal">Multiple calls to {0} occur on '{1}', a variable. Cache the result of the first occurrence and eliminate redundant string creation.</Resolution>
+    <Resolution Name="DuplicateStringCreationParameter">Multiple calls to {0} occur on '{1}'. Cache the result of the first occurrence and eliminate redundant string creation.</Resolution>
+    <Resolution Name="UseStringCompareLocal">{0} calls {1} after converting '{2}', a variable, to upper or lowercase. If possible, eliminate the string creation and call the overload of String.Compare that performs a case-insensitive comparison.</Resolution>
+    <Resolution Name="UseCaseInsensitiveHashtableLocal">{0} calls {1} on a Hashtable instance after converting '{2}', a variable, to upper or lowercase. Pass a CaseInsensitiveHashCodeProvider and CaseInsensitiveComparer to the Hashtable constructor (so that keys are case-insensitive) and eliminate the unnecessary string creation.</Resolution>
+    <Resolution Name="UseCaseInsensitiveHybridDictionaryLocal">{0} calls {1} on a HybridDictionary instance after converting '{2}', a variable, to upper or lowercase. Pass 'true' to the HybridDictionary constructor (so that keys are case-insensitive) and eliminate the unnecessary string creation.</Resolution>
+    <Resolution Name="UseStringCompareParameter">{0} calls {1} after converting '{2}', a parameter, to upper or lowercase. If possible, eliminate the string creation and call the overload of String.Compare that performs a case-insensitive comparison.</Resolution>
+    <Resolution Name="UseCaseInsensitiveHashtableParameter">{0} calls {1} on a Hashtable instance after converting '{2}', a parameter, to upper or lowercase. Pass a CaseInsensitiveHashCodeProvider and CaseInsensitiveComparer to the Hashtable constructor (so that keys are case-insensitive) and eliminate the unnecessary string creation.</Resolution>
+    <Resolution Name="UseCaseInsensitiveHybridDictionaryParameter">{0} calls {1} on a HybridDictionary instance after converting '{2}', a parameter, to upper or lowercase. Pass 'true' to the HybridDictionary constructor (so that keys are case-insensitive) and eliminate the unnecessary string creation.</Resolution>
+    <MessageLevel Certainty="90">Warning</MessageLevel>
+    <Email>
+    </Email>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <!--
+  <Rule TypeName="AvoidCallsThatRequireUnboxing" Category="Microsoft.Performance" CheckId="CA1808">
+    <Name>Avoid calls that require unboxing</Name>
+    <Description>Weakly typed methods that return value types results in boxing. Prefer calling a strongly-typed version of the method, if it is available. Unboxing operations do not themselves allocate memory. The point of this rule is to prevent the original boxing, if possible, that is implied by the call that unboxes. This can sometimes be accomplished by using a strongly-typed alternative to weakly-typed methods.</Description>
+    <Url>@/Performance/AvoidCallsThatRequireUnboxing.html</Url>
+    <Resolution Name="BetterMethodAvailable">{0} calls {1}, a weakly-typed method, and unboxes the result as {2}, a value type. Call {3} instead, the strongly-typed equivalent.</Resolution>
+    <Resolution Name="Default">{0} calls {1}, a weakly-typed method, and unboxes the result as {2}, a value type.</Resolution>
+    <Resolution Name="DefaultConsiderGenerics">{0} calls {1}, a weakly-typed method, and unboxes the result as {2}, a value type. Consider an alternative to this method that uses generics if available.</Resolution>
+    <Email>fxcopbug@microsoft.com</Email>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+-->
+  <Rule TypeName="AvoidExcessiveLocals" Category="Microsoft.Performance" CheckId="CA1809">
+    <Name>Avoid excessive locals</Name>
+    <Description>Method implementations should not contain more than 64 local variables. In order for the run-time to enregister local variables most efficiently, there should be 64 or fewer of them. Enregistering based on flow analysis will not occur for locals in excess of 64, which may result in slower performance.</Description>
+    <Url>@ms182263.aspx</Url>
+    <Resolution Name="Default">{0} has {1} local variables, some of which may have been generated by the compiler. Refactor {0} so that it uses fewer than 64 local variables.</Resolution>
+    <Resolution Name="Compiler">{0} has {1} local variables, {2} of which were generated by the compiler. Refactor {0} so that it uses fewer than 64 local variables.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="InitializeReferenceTypeStaticFieldsInline" Category="Microsoft.Performance" CheckId="CA1810">
+    <Name>Initialize reference type static fields inline</Name>
+    <Description>Static fields should be initialized when declared. Initializing static data in explicit static constructors results in less performant code.</Description>
+    <Url>@ms182275.aspx</Url>
+    <Resolution>Initialize all static fields in {0} when those fields are declared and remove the explicit static constructor.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811">
+    <Name>Avoid uncalled private code</Name>
+    <Description>There is uncalled code that is not externally visible and is not a known runtime entry point. If this violation fires in error, please send a problem report to the Visual Studio Code Analysis team.</Description>
+    <Url>@ms182264.aspx</Url>
+    <Resolution>{0} appears to have no upstream public or protected callers.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidUninstantiatedInternalClasses" Category="Microsoft.Performance" CheckId="CA1812">
+    <Name>Avoid uninstantiated internal classes</Name>
+    <Description>An internal class was detected that is apparently never instantiated. This rule does not attempt to detect late-bound creation and will generate false positives if instances of a type are only created in this way (for example, by means of Activator.CreateInstance or by passing the type as an argument to a TypeConverter constructor).</Description>
+    <Url>@ms182265.aspx</Url>
+    <Resolution>{0} is an internal class that is apparently never instantiated. If so, remove the code from the assembly. If this class is intended to contain only static methods, consider adding a private constructor to prevent the compiler from generating a default constructor.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidUnsealedAttributes" Category="Microsoft.Performance" CheckId="CA1813">
+    <Name>Avoid unsealed attributes</Name>
+    <Description>Seal attribute types for improved performance. Sealing attribute types speeds up performance during reflection on custom attributes.</Description>
+    <Url>@ms182267.aspx</Url>
+    <Resolution>Seal {0}, if possible.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="PreferJaggedArraysOverMultidimensional" Category="Microsoft.Performance" CheckId="CA1814">
+    <Name>Prefer jagged arrays over multidimensional</Name>
+    <Description>Multidimensional arrays can have a negative impact on performance. Use a jagged array if possible.</Description>
+    <Url>@ms182277.aspx</Url>
+    <Resolution Name="Default">{0} is a multidimensional array. Replace it with a jagged array if possible.</Resolution>
+    <Resolution Name="Return">{0} returns a multidimensional array of {1}. Replace it with a jagged array if possible.</Resolution>
+    <Resolution Name="Body">{0} uses a multidimensional array of {1}. Replace it with a jagged array if possible.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="25">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="OverrideEqualsAndOperatorEqualsOnValueTypes" Category="Microsoft.Performance" CheckId="CA1815">
+    <Name>Override equals and operator equals on value types</Name>
+    <Description>The default System.ValueType implementation might not perform as well as a custom implementation.</Description>
+    <Url>@ms182276.aspx</Url>
+    <Resolution Name="Equals">{0} should override Equals.</Resolution>
+    <Resolution Name="op_Equality">{0} should override the equality (==) and inequality (!=) operators.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule> 
+  <!--<Rule TypeName="DoNotCallPropertiesThatCloneValuesInLoops" Category="Microsoft.Performance" CheckId="CA1817">
+    <Name>Do not call properties that clone values in loops</Name>
+    <Description>Properties that clone values in their getters should not be called repeatedly from within a loop.</Description>
+    <Url>@ms182270.aspx</Url>
+    <Resolution>Within {0}, consider getting the value of '{1}' once and caching it inside a variable before entering the loop.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <!--<Rule TypeName="DoNotConcatenateStringsInsideLoops" Category="Microsoft.Performance" CheckId="CA1818">
+    <Name>Do not concatenate strings inside loops</Name>
+    <Description>Use StringBuilder instead.</Description>
+    <Url>@ms182272.aspx</Url>
+    <Resolution>Change {0} to use StringBuilder instead of String.Concat or +=.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <Rule TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819">
+    <Name>Properties should not return arrays</Name>
+    <Description>Properties that return arrays are prone to code inefficiencies. Consider using a collection or making this a method. See the design guidelines for more information.</Description>
+    <Url>@0fss9skc.aspx</Url>
+    <Resolution>Change {0} to return a collection or make it a method.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="TestForEmptyStringsUsingStringLength" Category="Microsoft.Performance" CheckId="CA1820">
+    <Name>Test for empty strings using string length</Name>
+    <Description>To test for empty strings, check if String.Length is equal to zero. Constructs such as "".Equals(someString) and String.Empty.Equals(someString) are less efficient than testing the string length. Replace these with checks for someString.Length == 0.</Description>
+    <Url>@ms182279.aspx</Url>
+    <Resolution Name="Default">Replace the call to {0} in {1} with a check for non-null and 'String.Length == 0'.</Resolution>
+    <Resolution Name="IsNullOrEmpty">Replace the call to {0} in {1} with a call to 'String.IsNullOrEmpty'.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="RemoveEmptyFinalizers" Category="Microsoft.Performance" CheckId="CA1821">
+    <Name>Remove empty finalizers</Name>
+    <Description>Finalizers should be avoided where possible, to avoid the additional performance overhead involved in tracking object lifetime.</Description>
+    <Url>@bb264476.aspx</Url>
+    <Resolution>{0} implements a finalizer that only calls conditionally emitted methods or the base type finalizer. Remove the finalizer or ensure that it is only conditionally compiled into the assembly. If this violation occurs against a finalizer that is entirely wrapped in a conditionally-emitted block of code, suppress this message.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
+    <Name>Mark members as static</Name>
+    <Description>Methods which do not access instance data or call instance methods can be marked as static (Shared in Visual Basic). After doing so, the compiler will emit non-virtual call sites to these members which will prevent a check at runtime for each call that ensures the current object pointer is non-null. This can result in a measurable performance gain for performance-sensitive code. In some cases, the failure to access the current object instance represents a correctness issue.</Description>
+    <Url>@ms245046.aspx</Url>
+    <Resolution>The 'this' parameter (or 'Me' in Visual Basic) of {0} is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Warning</MessageLevel>
+    <FixCategories>DependsOnFix,NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
+    <Name>Avoid unused private fields</Name>
+    <Description>Private fields were detected that do not appear to be accessed within the assembly. If this violation fires in error, please send a problem report to the Visual Studio Code Analysis team.</Description>
+    <Url>@ms245042.aspx</Url>
+    <Resolution>It appears that field {0} is never used or is only ever assigned to. Use this field or remove it.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="MarkAssembliesWithNeutralResourcesLanguage" Category="Microsoft.Performance" CheckId="CA1824">
+    <Name>Mark assemblies with NeutralResourcesLanguageAttribute</Name>
+    <Description>The NeutralResourcesLanguage attribute informs the ResourceManager of the language used to render the neutral culture's resources for an assembly. When looking up resources in the same culture as the neutral resources language, the ResourceManager automatically uses the resources located in the main assembly, instead of searching for a satellite assembly with the current user interface culture for the current thread. This will improve lookup performance for the first resource you load and can reduce your working set.</Description>
+    <Url>@bb385967.aspx</Url>
+    <Resolution>Because assembly {0} contains a ResX-based resource file, mark it with the NeutralResourcesLanguage attribute, specifying the language of the resources within the assembly. This could improve lookup performance the first time a resource is retrieved.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+</Rules>

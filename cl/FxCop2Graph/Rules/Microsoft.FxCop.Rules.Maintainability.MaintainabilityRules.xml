@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Rules FriendlyName="Maintainability Rules">
+  <Rule TypeName="VariableNamesShouldNotMatchFieldNames" Category="Microsoft.Maintainability" CheckId="CA1500">
+    <Name>Variable names should not match field names</Name>
+    <Description>Instance field and variable names should not be identical within the same scope.</Description>
+    <Url>@ms182216.aspx</Url>
+    <Resolution Name="Local">{0}, a variable declared in {1}, has the same name as an instance field on the type. Change the name of one of these items.</Resolution>
+    <Resolution Name="Parameter">{0}, a parameter declared in {1}, has the same name as an instance field on the type. Change the name of one of these items.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>DependsOnFix,Breaking,NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidExcessiveInheritance" Category="Microsoft.Maintainability" CheckId="CA1501">
+    <Name>Avoid excessive inheritance</Name>
+    <Description>Object hierarchies that are deeply nested increase the challenge of understanding and maintaining code.</Description>
+    <Url>@ms182213.aspx</Url>
+    <Resolution>{0} has an object hierarchy {1} levels deep within the defining module. If possible, eliminate base classes within the hierarchy: {2}</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <!-- TODO add code here to return breaking change yes/no (public/internal)-->
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502">
+    <Name>Avoid excessive complexity</Name>
+    <Description>Method implementations that are exceedingly complex increase the challenge of understanding and maintaining code.</Description>
+    <Url>@ms182212.aspx</Url>
+    <Resolution>{0} has a cyclomatic complexity of {1}. Rewrite or refactor the method to reduce complexity to {2}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--<Rule TypeName="RemoveUnusedNamespaceImports" Category="Microsoft.Maintainability" CheckId="CA1503">
+    <Name>Remove unused namespace imports</Name>
+    <Description>Remove unnecessary namespace imports from source files. These consist of 'using' statements in C# and C++, 'Imports' in Visual Basic.</Description>
+    <Url>@/Maintainability/RemoveUnusedNamespaceImports.html</Url>
+    <Resolution>Source file '{0}' contains the following unnecessary using (Imports in Visual Basic) statements. Consider removing them: {1}</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <Rule TypeName="ReviewMisleadingFieldNames" Category="Microsoft.Maintainability" CheckId="CA1504">
+    <Name>Review misleading field names</Name>
+    <Description>Review field names which, by convention, appear to indicate they are instance or static but, in fact, are not. This rule fires against instance fields which have names prefixed with "s_" and static fields which are prefixed with "m_".</Description>
+    <Url>@bb164506.aspx</Url>
+    <Resolution Name="Static">The field name {0} suggests that it is instance data but it is declared as static (Shared in Visual Basic). Review this member to verify that it should be static, or consider changing the field name.</Resolution>
+    <Resolution Name="Instance">The field name {0} suggests that it is static (Shared in Visual Basic) data but it is declared as an instance member. Review this member to verify that it should be instance, or consider changing the field name.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidUnmaintainableCode" Category="Microsoft.Maintainability" CheckId="CA1505">
+    <Name>Avoid unmaintainable code</Name>
+    <Description>Types and methods with a high degree of class coupling, cyclomatic complexity and/or program length can be difficult to maintain.</Description>
+    <Url>@bb386043.aspx</Url>
+    <Resolution Name="Method">{0} has a maintainability index of {1}. Rewrite or refactor the method to increase its maintainability index (MI). An MI below {2} indicates poor maintainability, an MI between {2} and {3} indicates moderate maintainability, and an MI above {3} indicates good maintainability.</Resolution>
+    <Resolution Name="Type">{0} has a maintainability index of {1}. Rewrite or refactor the type's methods to increase its maintainability index (MI). An MI below {2} indicates poor maintainability, an MI between {2} and {3} indicates moderate maintainability, and an MI above {3} indicates good maintainability.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506">
+    <Name>Avoid excessive class coupling</Name>
+    <Description>Types and methods with a high degree of class coupling can be difficult to maintain.</Description>
+    <Url>@bb397994.aspx</Url>
+    <Resolution Name="Method">{0} is coupled with {1} different types from {2} different namespaces. Rewrite or refactor the method to decrease its class coupling, or consider moving the method to one of the other types it is tightly coupled with. A class coupling above {3} indicates poor maintainability, a class coupling between {3} and {4} indicates moderate maintainability, and a class coupling below {4} indicates good maintainability.</Resolution>
+    <Resolution Name="Type">{0} is coupled with {1} different types from {2} different namespaces. Rewrite or refactor this class's methods to decrease its class coupling, or consider moving some of the class's methods to some of the other types it is tightly coupled with. A class coupling above {3} indicates poor maintainability, a class coupling between {3} and {4} indicates moderate maintainability, and a class coupling below {4} indicates good maintainability.</Resolution>
+    <Resolution Name="UIMethod">{0} is coupled with {1} different (non-IComponent) types from {2} different namespaces. Rewrite or refactor the method to decrease its class coupling, or consider moving the method to one of the other types it is tightly coupled with. A class coupling above {3} indicates poor maintainability, a class coupling between {3} and {4} indicates moderate maintainability, and a class coupling below {4} indicates good maintainability.</Resolution>
+    <Resolution Name="UIType">{0} is coupled with {1} different (non-IComponent) types from {2} different namespaces. Rewrite or refactor this class's methods to decrease its class coupling, or consider moving some of the class's methods to some of the other types it is tightly coupled with. A class coupling above {3} indicates poor maintainability, a class coupling between {3} and {4} indicates moderate maintainability, and a class coupling below {4} indicates good maintainability.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+</Rules>

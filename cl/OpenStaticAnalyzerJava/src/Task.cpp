@@ -338,11 +338,11 @@ Task::ExecutionResult WrapperBasedAnalysisTask::execute()
     string files[13] = {
       "JAN.jar",
       "JColumbusAntWrapper.jar",
-      "OpenStaticAnalyzerAgent-2.0.jar",
-      "OpenStaticAnalyzer-maven-plugin-2.0.jar",
-      "OpenStaticAnalyzer-maven-plugin-2.0-V2.pom",
-      "OpenStaticAnalyzer-maven-plugin-2.0-V3.pom",
-      "OpenStaticAnalyzer-maven-plugin-2.0-V31.pom",
+      "OpenStaticAnalyzerAgent-3.0.jar",
+      "OpenStaticAnalyzer-maven-plugin-3.0.jar",
+      "OpenStaticAnalyzer-maven-plugin-3.0-V2.pom",
+      "OpenStaticAnalyzer-maven-plugin-3.0-V3.pom",
+      "OpenStaticAnalyzer-maven-plugin-3.0-V31.pom",
       "OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.jar",
       "OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.pom",
       "OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.0.jar",
@@ -366,7 +366,7 @@ Task::ExecutionResult WrapperBasedAnalysisTask::execute()
     SafeEnvironmentModifier we_env("WRAPPER_ENVIRONMENT", props.tempDir, logger);
     SafeEnvironmentModifier wwdn_env("WRAPPER_WORK_DIR_NAME", props.columbusWrapperTmpDirName, logger);
     
-    SafeEnvironmentModifier mo_env("MAVEN_OPTS", "-javaagent:" + (props.wrapperToolsDir / "OpenStaticAnalyzerAgent-2.0.jar").string(), logger);
+    SafeEnvironmentModifier mo_env("MAVEN_OPTS", "-javaagent:" + (props.wrapperToolsDir / "OpenStaticAnalyzerAgent-3.0.jar").string(), logger);
     SafeEnvironmentModifier ssll_env("OSA_SUPERLINKLIST", props.superLinkList.string(), logger);
     SafeEnvironmentModifier sspmdll_env("OSA_SUPERPMDLIST", props.pmdXmlList.string(), logger);
 

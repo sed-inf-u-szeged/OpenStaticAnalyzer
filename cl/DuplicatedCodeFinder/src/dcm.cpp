@@ -40,6 +40,44 @@ namespace columbus {
   namespace dcf {
     using namespace suffix_array;
 
+#ifdef SCHEMA_CSHARP
+    string  getUniqueNameForMember(const columbus::csharp::asg::base::Base& node) {
+        using namespace columbus::csharp::asg;
+        string ret = AlgorithmCommon::getName(node);
+        base::Positioned* n = dynamic_cast<base::Positioned*>(Common::getScopeParent(&node.getFactory(), node.getId(), AlgorithmCommon::getIsMemberDeclarationSyntax));
+        while (n != NULL) {
+            if (n->getNodeKind() == ndkNamespaceDeclarationSyntax) {
+                structure::NamespaceDeclarationSyntax* nspace = dynamic_cast<structure::NamespaceDeclarationSyntax*>(n);
+                expression::NameSyntax* nameSyntax = nspace->getName();
+                ret = QualifiedNameSyntaxParser(nameSyntax, ret);
+            } else if (n->getNodeKind() == ndkIndexerDeclarationSyntax) {
+                structure::IndexerDeclarationSyntax* indexer = dynamic_cast<structure::IndexerDeclarationSyntax*>(n);
+                auto paramList = indexer->getParameterList();
+                auto params = paramList->getParametersListIteratorBegin();
+                string paramListStr;
+                unsigned i = 0;
+                for (; params != paramList->getParametersListIteratorEnd(); ++params){
+                    if (params->getType()->getNodeKind() == ndkPredefinedTypeSyntax){
+                        paramListStr += Common::toString(params->getType()->getId())+  " " + params->getIdentifier();
+                    } else {
+                        paramListStr += AlgorithmCommon::getName(*params->getType()) +  " " + params->getIdentifier();
+                    }
+                    if (i + 1 < paramList->getParametersSize()) {
+                        paramListStr += ", ";
+                    }
+                    i++;
+                }
+                ret = "this[" + paramListStr + "]";
+            }
+            else if (AlgorithmCommon::getIsNamed(*n)) {
+                ret = AlgorithmCommon::getName(*n) + "." + ret;
+            }
+            n = dynamic_cast<base::Positioned*>(Common::getScopeParent(&n->getFactory(), n->getId(), AlgorithmCommon::getIsMemberDeclarationSyntax));
+        }
+
+        return ret;
+    }
+#endif
 
 #ifdef GENEALOGY
     //when genealogy is maintained the previous factory is also needed
@@ -92,6 +130,9 @@ namespace columbus {
 #elif  defined SCHEMA_PYTHON
       if (AlgorithmCommon::getIsMemberNode(ciFirstRootNode) ) {
         Base& toP=dynamic_cast<Base&>(ciFirstRootNode);
+#elif defined SCHEMA_CSHARP
+      if (AlgorithmCommon::getIsNamed(ciFirstRootNode) && AlgorithmCommon::getIsMemberDeclarationSyntax(ciFirstRootNode)) {
+          Base& toP = dynamic_cast<Base&>(ciFirstRootNode);
 #endif
         if (ci.getF3_HeadNodeUniqueName().empty())  {
           ci.setF3_HeadNodeUniqueName(UNIQUE_NAME_FOR_MEMBER(toP));
@@ -109,6 +150,8 @@ namespace columbus {
         namedAncestor = dynamic_cast<Named*>(AlgorithmCommon::getScopeOrMethodDeclarationParent(ciFirstRootNode));
 #elif defined SCHEMA_PYTHON
         namedAncestor = dynamic_cast<Base*>(AlgorithmCommon::getScopeParent(ciFirstRootNode));
+#elif defined SCHEMA_CSHARP
+          namedAncestor = dynamic_cast<Base*>(AlgorithmCommon::getScopeParent(factory, ciFirstRootId, AlgorithmCommon::getIsNamed));
 #endif
         if (namedAncestor != NULL) {
     
@@ -120,11 +163,17 @@ namespace columbus {
       
       // The L2 is the node count of the instanse so normally it can not be 0. If it is zero then it means that it is not calculated yet.
       if (ci.getF5_L2() == 0 && namedAncestor != NULL) {
+#if defined SCHEMA_JAVA || SCHEMA_PYTHON
         if (!AlgorithmCommon::getIsPackage(ciFirstRootNode)) {
+#elif defined SCHEMA_CSHARP
+        if (!AlgorithmCommon::getIsCompilationUnitSyntax(ciFirstRootNode)) {
+#endif
           DistanceVisitor dv(ciFirstRootNode.getId());       // Az osszes reszfat figyelembe kene venni !
 
           AlgorithmPreorder ap;
+#if defined SCHEMA_JAVA || defined SCHEMA_PYTHON
           ap.setVisitSpecialNodes(false, false);
+#endif
           ap.run(*factory, dv, *namedAncestor);
         
           ci.setF5_L1(dv.getL1());
@@ -140,7 +189,9 @@ namespace columbus {
           NAMED_VISITOR NS;
 
           AlgorithmPreorder ap;
+#if defined SCHEMA_JAVA || defined SCHEMA_PYTHON
           ap.setVisitSpecialNodes(false, false);
+#endif
           ap.run(*factory, NS, factory->getRef(*ciRootsListIt));
           source += NS;
         }
@@ -3158,7 +3209,11 @@ namespace columbus {
       VisitorOfPosNodes visitor(rCurFact,sortedPostitionNodes,componenetId,filteredNodes);
       LANGUAGE_NAMESPACE::AlgorithmPreorder ap;
       ap.setSafeMode();
+#ifdef SCHEMA_CSHARP
+      ap.run(rCurFact, visitor);
+#else 
       ap.run(rCurFact,visitor,rCurFact.getRoot()->getId());
+#endif
     }
 
     unsigned int DuplicatedCodeMiner::getRealNumberCi( const genealogy::CloneClass& cc ) {

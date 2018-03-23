@@ -1,0 +1,62 @@
+﻿<Rules FriendlyName="ASP.NET Security Rules">
+  <Rule TypeName="EnableEventValidationShouldBeTrue" Category="ASP.NET.Security" CheckId="CA5327">
+    <Name>EnableEventValidationShouldBeTrue</Name>
+    <Description>Rule that will identify if the EnableEventValidation is disabled on a certain page.</Description>
+    <Url></Url>
+    <Resolution>The EnableEventValidation page property needs to be set to true. Refer to http://msdn.microsoft.com/en-us/library/system.web.ui.page.enableeventvalidation.aspx for more information</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="100">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ValidateRequestShouldBeEnabled" Category="ASP.NET.Security" CheckId="CA5328">
+    <Name>ValidateRequestShouldBeEnabled</Name>
+    <Description>Rule that will identify if the ValidateRequest is disabled on a certain page.</Description>
+    <Url></Url>
+    <Resolution>The ValidateRequest page property needs to be set to true. Refer to http://msdn.microsoft.com/en-us/library/ydy4x04a.aspx for more information</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="100">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ViewStateEncryptionModeShouldBeAlways" Category="ASP.NET.Security" CheckId="CA5329">
+    <Name>ViewStateEncryptionModeShouldBeAlways</Name>
+    <Description>Rule that will identify if the ViewStateEncryptionMode is not set to Never on a certain page.</Description>
+    <Url></Url>
+    <Resolution>The ViewStateEncryptionMode page property needs to be set to Always. Refer to http://msdn.microsoft.com/en-us/library/system.web.configuration.pagessection.viewstateencryptionmode.aspx for more information</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="100">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="EnableViewStateMacShouldBeTrue" Category="ASP.NET.Security" CheckId="CA5330">
+    <Name>EnableViewStateMacShouldBeTrue</Name>
+    <Description>Rule that will identify if the EnableViewStateMac is not set to false on a certain page.</Description>
+    <Url></Url>
+    <Resolution>The EnableViewStateMac page property needs to be set to true. Refer to http://msdn.microsoft.com/en-us/library/system.web.configuration.pagessection.enableviewstatemac.aspx for more information</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="100">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="EnableViewStateShouldBeTrue" Category="ASP.NET.Security" CheckId="CA5331">
+    <Name>EnableViewStateShouldBeTrue</Name>
+    <Description>Rule that will identify if the EnableViewStateRule is not set to false on a certain page.</Description>
+    <Url></Url>
+    <Resolution>The EnableViewStateRule page property needs to be set to true or the page cannot benefit from ViewStateUserKey protections against CSRF attacks.</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="100">Information</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ViewStateUserKeyShouldBeSet" Category="ASP.NET.Security" CheckId="CA5332">
+    <Name>ViewStateUserKeyShouldBeSet</Name>
+    <Description>Verifies if the ViewStateEncryptionMode directive is not set to Never  on a certain page.</Description>
+    <Url></Url>
+    <Resolution>The ViewStateUserKey page property on {0} needs to be set to a unique identifier. Refer to http://msdn.microsoft.com/en-us/library/system.web.ui.page.viewstateuserkey.aspx for more information</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="100">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+</Rules>

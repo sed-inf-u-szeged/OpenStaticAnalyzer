@@ -1,0 +1,289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="..\..\DefaultValues.props" Condition="Exists('..\..\DefaultValues.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug_CS</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{F96AF910-F727-4AD2-89FC-F6A3C6CF9DCC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CSharp</RootNamespace>
+    <AssemblyName>CSharp</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Algorithms\Algorithm.cs" />
+    <Compile Include="Algorithms\AlgorithmPreorder.cs" />
+    <Compile Include="Common.cs" />
+    <Compile Include="Constant.cs" />
+    <Compile Include="CsharpException.cs" />
+    <Compile Include="Factory.cs" />
+    <Compile Include="Filter.cs" />
+    <Compile Include="ListIterator.cs" />
+    <Compile Include="ListIteratorAssoc.cs" />
+    <Compile Include="Nodes\Base\Base.cs" />
+    <Compile Include="Nodes\Base\Positioned.cs" />
+    <Compile Include="Nodes\Expression\AliasQualifiedNameSyntax.cs" />
+    <Compile Include="Nodes\Expression\AnonymousFunctionExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\AnonymousMethodExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\AnonymousObjectCreationExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\ArrayCreationExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\ArrayTypeSyntax.cs" />
+    <Compile Include="Nodes\Expression\AssignmentExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\AwaitExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\BaseExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\BinaryExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\CastExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\CheckedExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\ConditionalAccessExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\ConditionalExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\DefaultExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\ElementAccessExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\ElementBindingExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\ExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\GenericNameSyntax.cs" />
+    <Compile Include="Nodes\Expression\IdentifierNameSyntax.cs" />
+    <Compile Include="Nodes\Expression\ImplicitArrayCreationExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\ImplicitElementAccessSyntax.cs" />
+    <Compile Include="Nodes\Expression\InitializerExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\InstanceExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\InterpolatedStringExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\InvocationExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\LambdaExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\LiteralExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\MakeRefExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\MemberAccessExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\MemberBindingExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\NameSyntax.cs" />
+    <Compile Include="Nodes\Expression\NullableTypeSyntax.cs" />
+    <Compile Include="Nodes\Expression\ObjectCreationExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\OmittedArraySizeExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\OmittedTypeArgumentSyntax.cs" />
+    <Compile Include="Nodes\Expression\ParenthesizedExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\ParenthesizedLambdaExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\PointerTypeSyntax.cs" />
+    <Compile Include="Nodes\Expression\PostfixUnaryExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\PredefinedTypeSyntax.cs" />
+    <Compile Include="Nodes\Expression\PrefixUnaryExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\QualifiedNameSyntax.cs" />
+    <Compile Include="Nodes\Expression\QueryExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\RefTypeExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\RefValueExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\SimpleLambdaExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\SimpleNameSyntax.cs" />
+    <Compile Include="Nodes\Expression\SizeOfExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\StackAllocArrayCreationExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\ThisExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\TypeOfExpressionSyntax.cs" />
+    <Compile Include="Nodes\Expression\TypeSyntax.cs" />
+    <Compile Include="Nodes\Statement\BlockSyntax.cs" />
+    <Compile Include="Nodes\Statement\BreakStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\CheckedStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\ContinueStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\DoStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\EmptyStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\ExpressionStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\FixedStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\ForEachStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\ForStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\GotoStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\IfStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\LabeledStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\LocalDeclarationStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\LockStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\ReturnStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\StatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\SwitchStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\ThrowStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\TryStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\UnsafeStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\UsingStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\WhileStatementSyntax.cs" />
+    <Compile Include="Nodes\Statement\YieldStatementSyntax.cs" />
+    <Compile Include="Nodes\Structure\AccessorDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\AccessorListSyntax.cs" />
+    <Compile Include="Nodes\Structure\AnonymousObjectMemberDeclaratorSyntax.cs" />
+    <Compile Include="Nodes\Structure\ArgumentListSyntax.cs" />
+    <Compile Include="Nodes\Structure\ArgumentSyntax.cs" />
+    <Compile Include="Nodes\Structure\ArrayRankSpecifierSyntax.cs" />
+    <Compile Include="Nodes\Structure\ArrowExpressionClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\AttributeArgumentListSyntax.cs" />
+    <Compile Include="Nodes\Structure\AttributeArgumentSyntax.cs" />
+    <Compile Include="Nodes\Structure\AttributeListSyntax.cs" />
+    <Compile Include="Nodes\Structure\AttributeSyntax.cs" />
+    <Compile Include="Nodes\Structure\AttributeTargetSpecifierSyntax.cs" />
+    <Compile Include="Nodes\Structure\BaseArgumentListSyntax.cs" />
+    <Compile Include="Nodes\Structure\BaseCrefParameterListSyntax.cs" />
+    <Compile Include="Nodes\Structure\BaseFieldDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\BaseListSyntax.cs" />
+    <Compile Include="Nodes\Structure\BaseMethodDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\BaseParameterListSyntax.cs" />
+    <Compile Include="Nodes\Structure\BasePropertyDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\BaseTypeDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\BaseTypeSyntax.cs" />
+    <Compile Include="Nodes\Structure\BracketedArgumentListSyntax.cs" />
+    <Compile Include="Nodes\Structure\BracketedParameterListSyntax.cs" />
+    <Compile Include="Nodes\Structure\CaseSwitchLabelSyntax.cs" />
+    <Compile Include="Nodes\Structure\CatchClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\CatchDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\CatchFilterClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\ClassDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\ClassOrStructConstraintSyntax.cs" />
+    <Compile Include="Nodes\Structure\CompilationUnitSyntax.cs" />
+    <Compile Include="Nodes\Structure\ConstructorConstraintSyntax.cs" />
+    <Compile Include="Nodes\Structure\ConstructorDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\ConstructorInitializerSyntax.cs" />
+    <Compile Include="Nodes\Structure\ConversionOperatorDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\ConversionOperatorMemberCrefSyntax.cs" />
+    <Compile Include="Nodes\Structure\CrefBracketedParameterListSyntax.cs" />
+    <Compile Include="Nodes\Structure\CrefParameterListSyntax.cs" />
+    <Compile Include="Nodes\Structure\CrefParameterSyntax.cs" />
+    <Compile Include="Nodes\Structure\CrefSyntax.cs" />
+    <Compile Include="Nodes\Structure\DefaultSwitchLabelSyntax.cs" />
+    <Compile Include="Nodes\Structure\DelegateDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\DestructorDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\ElseClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\EnumDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\EnumMemberDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\EqualsValueClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\EventDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\EventFieldDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\ExplicitInterfaceSpecifierSyntax.cs" />
+    <Compile Include="Nodes\Structure\ExternAliasDirectiveSyntax.cs" />
+    <Compile Include="Nodes\Structure\FieldDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\FinallyClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\FromClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\GlobalStatementSyntax.cs" />
+    <Compile Include="Nodes\Structure\GroupClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\IncompleteMemberSyntax.cs" />
+    <Compile Include="Nodes\Structure\IndexerDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\IndexerMemberCrefSyntax.cs" />
+    <Compile Include="Nodes\Structure\InterfaceDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\InterpolatedStringContentSyntax.cs" />
+    <Compile Include="Nodes\Structure\InterpolatedStringTextSyntax.cs" />
+    <Compile Include="Nodes\Structure\InterpolationAlignmentClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\InterpolationFormatClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\InterpolationSyntax.cs" />
+    <Compile Include="Nodes\Structure\JoinClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\JoinIntoClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\LetClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\MemberCrefSyntax.cs" />
+    <Compile Include="Nodes\Structure\MemberDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\MethodDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\NameColonSyntax.cs" />
+    <Compile Include="Nodes\Structure\NameEqualsSyntax.cs" />
+    <Compile Include="Nodes\Structure\NameMemberCrefSyntax.cs" />
+    <Compile Include="Nodes\Structure\NamespaceDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\OperatorDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\OperatorMemberCrefSyntax.cs" />
+    <Compile Include="Nodes\Structure\OrderByClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\OrderingSyntax.cs" />
+    <Compile Include="Nodes\Structure\ParameterListSyntax.cs" />
+    <Compile Include="Nodes\Structure\ParameterSyntax.cs" />
+    <Compile Include="Nodes\Structure\PropertyDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\QualifiedCrefSyntax.cs" />
+    <Compile Include="Nodes\Structure\QueryBodySyntax.cs" />
+    <Compile Include="Nodes\Structure\QueryClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\QueryContinuationSyntax.cs" />
+    <Compile Include="Nodes\Structure\SelectClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\SelectOrGroupClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\SimpleBaseTypeSyntax.cs" />
+    <Compile Include="Nodes\Structure\StructDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\SwitchLabelSyntax.cs" />
+    <Compile Include="Nodes\Structure\SwitchSectionSyntax.cs" />
+    <Compile Include="Nodes\Structure\SyntaxToken.cs" />
+    <Compile Include="Nodes\Structure\TypeArgumentListSyntax.cs" />
+    <Compile Include="Nodes\Structure\TypeConstraintSyntax.cs" />
+    <Compile Include="Nodes\Structure\TypeCrefSyntax.cs" />
+    <Compile Include="Nodes\Structure\TypeDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\TypeParameterConstraintClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\TypeParameterConstraintSyntax.cs" />
+    <Compile Include="Nodes\Structure\TypeParameterListSyntax.cs" />
+    <Compile Include="Nodes\Structure\TypeParameterSyntax.cs" />
+    <Compile Include="Nodes\Structure\UsingDirectiveSyntax.cs" />
+    <Compile Include="Nodes\Structure\VariableDeclarationSyntax.cs" />
+    <Compile Include="Nodes\Structure\VariableDeclaratorSyntax.cs" />
+    <Compile Include="Nodes\Structure\WhereClauseSyntax.cs" />
+    <Compile Include="Nodes\Structure\XmlAttributeSyntax.cs" />
+    <Compile Include="Nodes\Structure\XmlCDataSectionSyntax.cs" />
+    <Compile Include="Nodes\Structure\XmlCommentSyntax.cs" />
+    <Compile Include="Nodes\Structure\XmlCrefAttributeSyntax.cs" />
+    <Compile Include="Nodes\Structure\XmlElementEndTagSyntax.cs" />
+    <Compile Include="Nodes\Structure\XmlElementStartTagSyntax.cs" />
+    <Compile Include="Nodes\Structure\XmlElementSyntax.cs" />
+    <Compile Include="Nodes\Structure\XmlEmptyElementSyntax.cs" />
+    <Compile Include="Nodes\Structure\XmlNameAttributeSyntax.cs" />
+    <Compile Include="Nodes\Structure\XmlNameSyntax.cs" />
+    <Compile Include="Nodes\Structure\XmlNodeSyntax.cs" />
+    <Compile Include="Nodes\Structure\XmlPrefixSyntax.cs" />
+    <Compile Include="Nodes\Structure\XmlProcessingInstructionSyntax.cs" />
+    <Compile Include="Nodes\Structure\XmlTextAttributeSyntax.cs" />
+    <Compile Include="Nodes\Structure\XmlTextSyntax.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReverseEdges.cs" />
+    <Compile Include="SourcePosition.cs" />
+    <Compile Include="Types.cs" />
+    <Compile Include="Visitors\Visitor.cs" />
+    <Compile Include="Visitors\VisitorAbstractNodes.cs" />
+    <Compile Include="Visitors\VisitorCSHARPML.cs" />
+    <Compile Include="Visitors\VisitorFilter.cs" />
+    <Compile Include="Visitors\VisitorReverseEdges.cs" />
+    <Compile Include="Visitors\VisitorSave.cs" />
+    <Compile Include="Visitors\VisitorSubtreeCollector.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Columbus\Columbus.csproj">
+      <Project>{21908bbd-592f-4da5-b854-af879da59299}</Project>
+      <Name>Columbus</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_CS|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>$(CSHARP_BUILD_DIR)\Lib\$(AssemblyName).dir\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release_CS|x64'">
+    <OutputPath>$(CSHARP_BUILD_DIR)\Lib\$(AssemblyName).dir\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_CS|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>$(CSHARP_BUILD_DIR)\Lib\$(AssemblyName).dir\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release_CS|x86'">
+    <OutputPath>$(CSHARP_BUILD_DIR)\Lib\$(AssemblyName).dir\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

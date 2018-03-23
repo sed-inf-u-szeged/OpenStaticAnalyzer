@@ -69,27 +69,27 @@ for /f "tokens=3*" %%a in ('mvn --version') do (
 goto:eof
 
 :hackalias
-call mvn org.apache.maven.plugins:OpenStaticAnalyzer-maven-plugin:2.0:installyourself
+call mvn org.apache.maven.plugins:OpenStaticAnalyzer-maven-plugin:3.0:installyourself
 goto:eof
 
 :oldmaven
 echo Installing plugin for Maven 2.2.1 ...
-call mvn install:install-file -Dfile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-2.0.jar -DpomFile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-2.0-V2.pom
+call mvn install:install-file -Dfile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-3.0.jar -DpomFile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-3.0-V2.pom
 goto:eof
 
 :newmaven
 echo Installing plugin for Maven 3.0.5 ...
-call mvn install:install-file -Dfile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-2.0.jar -DpomFile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-2.0-V3.pom
+call mvn install:install-file -Dfile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-3.0.jar -DpomFile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-3.0-V3.pom
 goto:eof
 
 :newermaven
 echo Installing plugin for Maven 3.1.1 ...
-call mvn install:install-file -Dfile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-2.0.jar -DpomFile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-2.0-V31.pom
+call mvn install:install-file -Dfile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-3.0.jar -DpomFile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-3.0-V31.pom
 goto:eof
 
 :maven322
 echo Installing plugin for Maven 3.2.2 ...
-call mvn install:install-file -Dfile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-2.0.jar -DpomFile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-2.0-V31.pom
+call mvn install:install-file -Dfile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-3.0.jar -DpomFile=WindowsWrapper\WrapperBins\Tools\OpenStaticAnalyzer-maven-plugin-3.0-V31.pom
 goto:eof
 
 

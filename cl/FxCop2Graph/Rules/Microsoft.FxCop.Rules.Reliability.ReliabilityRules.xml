@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Rules FriendlyName="Reliability Rules">
+  <!--<Rule TypeName="DisposeObjectsBeforeLosingScope" Category="Microsoft.Reliability" CheckId="CA2000">
+    <Name>Dispose objects before losing scope</Name>
+    <Description>If a disposable object is not disposed before all references to it are out of scope, the object will not be disposed until it is finalized. If the AppDomain is abruptly brought down, it is possible the object will not be finalized and therefore never disposed.</Description>
+    <Url>@ms182289.aspx</Url>
+    <Resolution>Modify {0} to dispose variable {1} of type '{2}' for all code paths.</Resolution>
+    <Resolution Name="TemporaryVariable">Modify {0} to dispose temporary resource of type '{1}' for all code paths.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <Rule TypeName="AvoidCallingProblematicMethods" Category="Microsoft.Reliability" CheckId="CA2001">
+    <Name>Avoid calling problematic methods</Name>
+    <Description>Avoid making unnecessary and potentially dangerous method calls.</Description>
+    <Url>@bb385973.aspx</Url>
+    <Resolution Name="System.GC.Collect">Remove the call to GC.Collect from {0}. It is usually unnecessary to force garbage collection, and doing so can severely degrade performance.</Resolution>
+    <Resolution Name="System.Threading.Thread.Resume">Remove the call to Thread.Resume from {0}. Suspending and resuming threads can be dangerous if the system is in the middle of a critical operation such as executing a class constructor of an important system type or resolving security for a shared assembly.</Resolution>
+    <Resolution Name="System.Threading.Thread.Suspend">Remove the call to Thread.Suspend from {0}. Suspending and resuming threads can be dangerous if the system is in the middle of a critical operation such as executing a class constructor of an important system type or resolving security for a shared assembly.</Resolution>
+    <Resolution Name="System.Type.InvokeMember">Remove the call to System.Type.InvokeMember with BindingFlags.NonPublic from {0}. Taking a dependency on a private member increases the chance of a breaking change in the future.</Resolution>
+    <Resolution Name="CoInitializeSecurity">{0} is a P/Invoke declaration to an OLE32 API that cannot be reliably called after the runtime has been initialized. The workaround is to write an unmanaged shim that will call the routine and then activate and call into managed code. You can do this using an export from a mixed-mode C++ DLL, by registering a managed component for use by COM, or by using the runtime hosting API.</Resolution>
+    <Resolution Name="CoSetProxyBlanket">{0} is a P/Invoke declaration to an OLE32 API that cannot be reliably called against a runtime callable wrapper (a managed object wrapping a COM object). Runtime callable wrappers dynamically fetch interface pointers so the effect of the call might be arbitrarily lost. Runtime callable wrappers for a given COM object are also shared across an application domain so the call could possibly affect other users. Replace this call with a native wrapper COM object for the interface pointer that does the appropriate CoSetProxyBlanket calls.</Resolution>
+    <Resolution Name="System.Runtime.InteropServices.SafeHandle.DangerousGetHandle">Remove the call to SafeHandle.DangerousGetHandle from {0}.</Resolution>
+    <Resolution Name="System.Reflection.Assembly.LoadFrom">Remove the call to Assembly.LoadFrom from {0}.</Resolution>
+    <Resolution Name="System.Reflection.Assembly.LoadFile">Remove the call to Assembly.LoadFile from {0}.</Resolution>
+    <Resolution Name="System.Reflection.Assembly.LoadWithPartialName">Remove the call to Assembly.LoadWithPartialName from {0}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotLockOnObjectsWithWeakIdentity" Category="Microsoft.Reliability" CheckId="CA2002">
+    <Name>Do not lock on objects with weak identity</Name>
+    <Description>Don't take locks on objects that may bleed across AppDomains or that don't have a strong identity.</Description>
+    <Url>@ms182290.aspx</Url>
+    <Resolution>{0} locks on a reference of type {1}. Replace this with a lock against an object with strong-identity.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">CriticalError</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--
+  <Rule TypeName="DoNotBlockIndefinitelyInUnmanagedCode">
+    <Name>Don't block indefinitely in unmanaged code</Name>
+    <Description>Blocking in unmanaged code (instead of via managed code) can cause a denial of service attack because the runtime will not be able to abort your thread. </Description>
+    <LongDescription>A blocked thread prevents the runtime from unloading your appdomain, at least without doing some extremely unsafe operations. Blocking using a Win32 synchronization primitive is a clear example of something we can't allow. Blocking in a call to ReadFile on a socket should be avoided if possible - ideally the Win32 API should provide a mechanism for an operation like this to time out. If for some reason you must block in unmanaged code and you don't have a suitable workaround from the operating system, talk to clrsql about a workaround or additional runtime support.
+Any Framework method that calls into native should ideally use a Win32 call with a reasonable, finite timeout. If the user is allowed to specify the timeout, the user should not be allowed to specify an infinite timeout without some specific security permission (talk to SLange for the exact permission). As a loose guideline, if a method will block for more than ~10 seconds, you need to be using a version that supports timeouts or you need additional runtime support.</LongDescription>
+    <GroupOwner>MS FxCopDev</GroupOwner>
+    <DevOwner />
+    <Url>@/NoDocsPresent.htm</Url>
+    <Resolution>'{0}' calls the following methods that can potentially block indefinitely. These should be passed a reasonable timeout or be replaced with calls that do.</Resolution>
+    <Email>fxcopbug@microsoft.com</Email>
+    <Message Certainty="75">Error</Message>
+    <FixCategories>NonBreaking</FixCategories>
+    <Id RuleSet="FxCop">1212</Id>
+  </Rule>
+  -->
+  <Rule TypeName="DoNotTreatFibersAsThreads" Category="Microsoft.Reliability" CheckId="CA2003">
+    <Name>Do not treat fibers as threads</Name>
+    <Description>Do not assume a managed thread is a Win32 thread - it could be a fiber. The runtime will run managed threads as fibers on top of real threads owned by SQL Server. These threads will be shared across AppDomains and even databases in the SQL Server process. Using managed thread local storage will work, but you may not use unmanaged thread local storage or assume your code will run on the current OS thread again. Do not change settings like the thread's locale. Do not call CreateCriticalSection or CreateMutex via P/Invoke because they require the thread that enters a lock also exit the lock. Since this will not be the case when using fibers, Win32 critical sections and mutexes will be useless in SQL Server.
+You may safely use most of the state on a managed System.Thread object, including managed thread local storage and the thread's current UI culture. For programming model reasons, you will not be able to change a thread's current culture when running in SQL Server though (this will be enforced through a new permission).</Description>
+    <Url>@ms182291.aspx</Url>
+    <Resolution>Method {0} calls the native method {1}. Remove this call because it is inappropriate for managed threads.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--
+  <Rule TypeName="FinalizersMustNotHaveSynchronizationProblems">
+    <Name>Finalizers should be free of synchronization problems</Name>
+    <Description>Finalizers should be free of synchronization problems.</Description>
+    <LongDescription>In Whidbey there will be multiple finalizer threads, meaning the finalizers for different instances of the same type will run simultaneously. They don't have to be exactly thread-safe - the GC will still guarantee that only one thread will run the finalizer for a given the same object instance. However, you must write finalizers knowing that the finalizer may run on multiple different object instances simultaneously, avoiding race conditions and deadlocks. If you're using any external state (such as writing to a log file) in a finalizer, it's your responsibility to handle the threading issues. You cannot rely on finalization to provide thread safety (not even in V1 due to resurrection). You may not use thread local storage (managed or native) to store state on the finalizer thread.</LongDescription>
+    <GroupOwner>MS FxCopDev</GroupOwner>
+    <DevOwner />
+    <Url>@/NoDocsPresent.htm</Url>
+    <Resolution>Finalizer '{0}' accesses static mutable state and should be reviewed for synchronization problems.</Resolution>
+    <Email>fxcopbug@microsoft.com</Email>
+    <Message Certainty="75">Error</Message>
+    <FixCategories>NonBreaking</FixCategories>
+    <Id RuleSet="FxCop">1214</Id>
+  </Rule.
+  <Rule TypeName="IncrementAndDecrementLockCountsWhenTakingALock">
+    <Name>Increment and decrement lock count when taking lock</Name>
+    <Description>When taking a lock, increment and decrement lock count in a try/finally construct.</Description>
+    <LongDescription>The runtime needs to know when your code is in a lock so that it will know to tear down the appdomain rather than just aborting the thread. Aborting the thread could be dangerous as the data operated on by the thread could be left in an inconsistent state. Therefore the whole app domain has to be recycled. The consequences of failing to identify a lock will be either deadlocks or incorrect results.
+System.Threading.Monitor.Enter() and Exit() already have this runtime notification built in so usage of them are OK as are usages of C#'s lock() statement which uses these methods.</LongDescription>
+    <GroupOwner>MS FxCopDev</GroupOwner>
+    <DevOwner />
+    <Url>@/NoDocsPresent.htm</Url>
+    <Resolution>'{0}' contains the following calls that need to be wrapped in a try/finally clause calling IncrementLockCount and DecrementLockCount : {1}</Resolution>
+    <Email>fxcopbug@microsoft.com</Email>
+    <Message Certainty="75">Error</Message>
+    <FixCategories>NonBreaking</FixCategories>
+    <Id RuleSet="FxCop">1215</Id>
+  </Rule>
+  -->
+  <Rule TypeName="RemoveCallsToGCKeepAlive" Category="Microsoft.Reliability" CheckId="CA2004">
+    <Name>Remove calls to GC.KeepAlive</Name>
+    <Description>If converting to SafeHandle usage, remove all calls to GC.KeepAlive(object). Classes relying on SafeHandle do not require calls to GC.KeepAlive, and unnecessary calls can make code harder to maintain.</Description>
+    <Url>@ms182293.aspx</Url>
+    <Resolution>{0} contains one or more calls to GC.KeepAlive(object) that should be removed (after converting to SafeHandle to encapsulate the unmanaged resource).</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--
+  <Rule TypeName="ThreadingAndSynchronizationMethodsRequireSecurityChecks">
+    <Name>Methods used to introduce synchronization or threading must have an appropriate security check.</Name>
+    <Description>All methods used to introduce synchronization or threading must have an appropriate security check.</Description>
+    <LongDescription>To enforce SQL's programming model, SQL wants stored procedures to only use one thread. To enforce this, there will be some additional security permissions required for thread control, acquiring a lock, shared state, etc. These must be applied (commonly as link demands) throughout your libraries where appropriate.</LongDescription>
+    <GroupOwner>MS FxCopDev</GroupOwner>
+    <DevOwner />
+    <Url>@/NoDocsPresent.htm</Url>
+    <Resolution>'{0}' needs a security check applied to it.</Resolution>
+    <Email>fxcopbug@microsoft.com</Email>
+    <Message Certainty="90">Error</Message>
+    <FixCategories>NonBreaking</FixCategories>
+    <Id RuleSet="FxCop">1218</Id>
+  </Rule>
+  <Rule TypeName="UseSafeHandleLocalsToInsureResourceCleanup" Category="Microsoft.Reliability" CheckId="CA2005">
+    <Name>Use SafeHandle locals to insure resource cleanup</Name>
+    <Description>Use of IntPtr in managed code may indicate a potential security and reliability problem. All uses of IntPtr must be reviewed to determine whether use of a SafeHandle (or similar technology) is required in its place. Problems will occur if the IntPtr represents some native resource (memory, file handle, socket etc.) that managed code is considered to own. I.e. managed code is expected to in some way release the resource and failure to do so would cause resource leakage. In such scenarios security or reliability problems will also exist if multithreaded access is allowed to the IntPtr and a means of releasing the resource represented by the IntPtr. These problems involve recycling of the IntPtr value on resource release while simultaneous use of the resource is being made on another thread, leading to race conditions where one thread can read or write data associated with the wrong resource. For example, if your type stores an OS handle as an IntPtr and allows users to call both Close and any other method using that handle simultaneously (without some kind of synchronization), your code has a handle recycling problem, which causes data corruption and often a security vulnerability. SafeHandle (and its sibling class CriticalHandle) provide a mechanism for encapsulating a native handle to a resource so that such threading problems can be avoided (along with other issues such as the need to carefully control the lifetime of managed objects that contain a copy of the native handle over calls to native methods; ie, you can often remove calls to GC.KeepAlive). There are performance overheads implicit in using SafeHandle (and, to a lesser degree, CriticalHandle) which can often be mitigated through careful design.</Description>
+    <Url>@/Reliability/UseSafeHandleLocalsToInsureResourceCleanup.html</Url>
+    <Resolution>'{0}' contains one or more instances of the following variable types that might need to be replaced with SafeHandles or CriticalHandles: {1}</Resolution>
+    <Email>fxcopbug@microsoft.com</Email>
+    <MessageLevel Certainty="75">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  -->
+  <Rule TypeName="UseSafeHandleToEncapsulateNativeResources" Category="Microsoft.Reliability" CheckId="CA2006">
+    <Name>Use SafeHandle to encapsulate native resources</Name>
+    <Description>Use of IntPtr in managed code may indicate a potential security and reliability problem. All uses of IntPtr must be reviewed to determine whether use of a SafeHandle (or similar technology) is required in its place. Problems will occur if the IntPtr represents some native resource (memory, file handle, socket etc.) that managed code is considered to own. I.e. managed code is expected to in some way release the resource and failure to do so would cause resource leakage. In such scenarios security or reliability problems will also exist if multithreaded access is allowed to the IntPtr and a means of releasing the resource represented by the IntPtr. These problems involve recycling of the IntPtr value on resource release while simultaneous use of the resource is being made on another thread, leading to race conditions where one thread can read or write data associated with the wrong resource. For example, if your type stores an OS handle as an IntPtr and allows users to call both Close and any other method using that handle simultaneously (without some kind of synchronization), your code has a handle recycling problem, which causes data corruption and often a security vulnerability. SafeHandle (and its sibling class CriticalHandle) provide a mechanism for encapsulating a native handle to a resource so that such threading problems can be avoided (along with other issues such as the need to carefully control the lifetime of managed objects that contain a copy of the native handle over calls to native methods; ie, you can often remove calls to GC.KeepAlive). There are performance overheads implicit in using SafeHandle (and, to a lesser degree, CriticalHandle) which can often be mitigated through careful design.</Description>
+    <Url>@ms182294.aspx</Url>
+    <Resolution>Review usage of {0} (a {1} instance) to determine whether it should be replaced with a SafeHandle or CriticalHandle.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--
+  <Rule TypeName="MarkAssembliesWithReliabilityContract" Category="Microsoft.Reliability" CheckId="CA2007">
+    <Name>Mark assemblies with ReliabilityContract</Name>
+    <Description>A decision needs to be made on the reliability of each assembly. This decision must be reflected in the assembly by marking the assembly with ReliabilityContract.</Description>
+    <Url>@/Reliability/MarkAssembliesWithReliabilityContract.html</Url>
+    <Resolution>'{0}' should be marked with ReliabilityContract.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  -->
+</Rules>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Rules FriendlyName="Globalization Rules">
+  <Rule TypeName="SpecifyMessageBoxOptions" Category="Microsoft.Globalization" CheckId="CA1300">
+    <Name>Specify MessageBoxOptions</Name>
+    <Description>In order to run correctly on right-to-left systems, all calls to MessageBox.Show should use the overload that specifies MessageBoxOptions as an argument. Programs should detect whether they are running on a right-to-left system at run-time and pass the appropriate MessageBoxOptions value in order to display correctly.</Description>
+    <Url>@ms182191.aspx</Url>
+    <Resolution>Change {0} to call the MessageBox.Show overload that specifies MessageBoxOptions, and make sure to set MessageBoxOptions.RightAlign and MessageBoxOptions.RtlReading if RightToLeft is set to RightToLeft.Yes on the parent control.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!-- <Rule TypeName="ControlsAreLocalizable">
+        <Name>Controls that will be localized should be marked Localizable == true</Name>
+        <Description>Controls that will be localized are marked Localizable == true.</Description>
+        <LongDescription>Controls marked Localizable persist all localizable properties to a resx file rather than source code. The resx file can then be modified without requiring access to source.</LongDescription>
+        <GroupOwner>MS FxCopDev</GroupOwner>
+        <DevOwner />
+        <Url>@/Globalization/ControlsAreLocalizable.html</Url>
+        <Resolution>Set the Localizable property of {0} (in the Visual Studio .NET properties window) to true </Resolution>
+        <Email>fxcopbug@microsoft.com</Email>
+        <Message Certainty="95">Error</Message>
+        <FixCategories>NonBreaking</FixCategories>        
+    </Rule> -->
+  <Rule TypeName="AvoidDuplicateAccelerators" Category="Microsoft.Globalization" CheckId="CA1301">
+    <Name>Avoid duplicate accelerators</Name>
+    <Description>Controls should have unique accelerators for all items and sub-controls.</Description>
+    <Url>@ms182185.aspx</Url>
+    <Resolution>Define unique accelerators for the following controls in {0} that all currently use &amp;{1} as an accelerator: {2}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotHardcodeLocaleSpecificStrings" Category="Microsoft.Globalization" CheckId="CA1302">
+    <Name>Do not hardcode locale specific strings</Name>
+    <Description>Do not use string literals for system items that have locale-specific designations. Special system locations should be retrieved using provided API such as GetFolderPath. See the System.Environment.SpecialFolder enumeration for more information.</Description>
+    <Url>@ms182186.aspx</Url>
+    <Resolution>If the literal '{0}' used in method {1} refers to a special system location, replace it with a call to Environment.GetFolderPath.</Resolution>
+    <Resolution Name="CameFromDefaultParameterValue">In method {0}, parameter {1} on called method {2} has a default value of '{3}'. If the supplied default value refers to a special system location, replace it with a call to Environment.GetFolderPath.</Resolution>
+    <Resolution Name="IsDefaultParameterValue">If the default value '{0}' of parameter {1} on method {2} refers to a special system location, consider making parameter {1} a required parameter with no default value. Special system locations should be retrieved using an API such as Environment.GetFolderPath.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--<Rule TypeName="DoNotPassLiteralsAsLocalizedParameters" Category="Microsoft.Globalization" CheckId="CA1303">
+    <Name>Do not pass literals as localized parameters</Name>
+    <Description>String literals that are embedded in source code are difficult to localize. Avoid passing string literals as arguments in circumstances where a localized string is generally expected. Most localized applications, for example, should localize string arguments that are passed to exception constructors. When creating an Exception instance, therefore, a string argument retrieved from a string table is more appropriate than a string literal.</Description>
+    <Url>@ms182187.aspx</Url>
+    <Resolution>{0} passes a literal as parameter {1} of a call to {2}. Retrieve the following string argument from a resource table instead: '{3}'</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <Rule TypeName="SpecifyCultureInfo" Category="Microsoft.Globalization" CheckId="CA1304">
+    <Name>Specify CultureInfo</Name>
+    <Description>If an overload exists that takes a CultureInfo argument, it should always be called in favor of an overload that does not. The CultureInfo type contains culture-specific information required for performing numeric and string operations, such as casing, formatting, and string comparisons. In scenarios where conversion and parsing behavior should never change between cultures, specify CultureInfo.InvariantCulture, otherwise, specify CultureInfo.CurrentCulture.</Description>
+    <Url>@ms182189.aspx</Url>
+    <Resolution>Because the behavior of {0} could vary based on the current user's locale settings, replace this call in {1} with a call to {2}. If the result of {2} will be displayed to the user, specify 'CultureInfo.CurrentCulture' as the 'CultureInfo' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify 'CultureInfo.InvariantCulture'.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305">
+    <Name>Specify IFormatProvider</Name>
+    <Description>If an overload exists that takes an IFormatProvider argument, it should always be called in favor of an overload that does not. Some methods in the runtime convert a value to or from a string representation and take a string parameter that contains one or more characters, called format specifiers, which indicate how the value is to be converted. If the meaning of the format specifier varies by culture, a formatting object supplies the actual characters used in the string representation. In scenarios where sorting and comparison behavior should never change between cultures, specify CultureInfo.InvariantCulture, otherwise, specify CultureInfo.CurrentCulture.</Description>
+    <Url>@ms182190.aspx</Url>
+    <Resolution Name="IFormatProviderAlternateString">Because the behavior of {0} could vary based on the current user's locale settings, replace this call in {1} with a call to {2}. If the result of {2} will be displayed to the user, specify {3} as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify {4}.</Resolution>
+    <Resolution Name="IFormatProviderAlternate">Because the behavior of {0} could vary based on the current user's locale settings, replace this call in {1} with a call to {2}. If the result of {2} will be based on input from the user, specify {3} as the 'IFormatProvider' parameter. Otherwise, if the result will based on input stored and accessed by software, such as when it is loaded from disk or from a database, specify {4}.</Resolution>
+    <Resolution Name="UICultureString">{0} passes {1} as the 'IFormatProvider' parameter to {2}. This property returns a culture that is inappropriate for formatting methods. If the result of {2} will be displayed to the user, specify {3} as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify {4}.</Resolution>
+    <Resolution Name="UICulture">{0} passes {1} as the 'IFormatProvider' parameter to {2}. This property returns a culture that is inappropriate for formatting methods. If the result of {2} will be based on input from the user, specify {3} as the 'IFormatProvider' parameter. Otherwise, if the result will based on input stored and accessed by software, such as when it is loaded from disk or from a database, specify {4}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306">
+    <Name>Set locale for data types</Name>
+    <Description>In most cases, Locale should be explicitly set to CultureInfo.InvariantCulture on DataSet and DataTable instances. Upon creation of a DataSet or DataTable instance, the Locale is set to the current culture. In most cases, the Locale should be set to CultureInfo.InvariantCulture to guarantee proper sorting behavior in all cultures.</Description>
+    <Url>@ms182188.aspx</Url>
+    <Resolution>Be sure to set the {0} Locale property wherever {1} creates an instance of that type.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="SpecifyMarshalingForPInvokeStringArguments" Category="Microsoft.Globalization" CheckId="CA2101">
+    <!-- Note: this rule used to be in SecurityRules, hence the CA21xx check ID -->
+    <Name>Specify marshaling for P/Invoke string arguments</Name>
+    <Description>When marshaling strings as ANSI (or as Auto on Win9x), some characters may be changed. If best-fit mapping is on, strings that appear different in Unicode will be marshaled to identical ANSI strings, which may lead to incorrect security decisions. Turning best-fit mapping off reduces this risk, as all characters without equivalents are mapped to '?'. Also, note that CharSet.Ansi is the default setting for all string marshaling; Unicode marshaling must be specified explicitly, either as a CharSet setting of DllImport or StructLayout, or as a MarshalAs attribute with a Unicode (or system-dependent) UnmanagedType.</Description>
+    <Url>@ms182319.aspx</Url>
+    <Resolution Name="Parameter">To reduce security risk, marshal parameter {0} as Unicode, by setting DllImport.CharSet to CharSet.Unicode, or by explicitly marshaling the parameter as UnmanagedType.LPWStr. If you need to marshal this string as ANSI or system-dependent, set BestFitMapping=false; for added security, also set ThrowOnUnmappableChar=true.</Resolution>
+    <Resolution Name="Field">To reduce security risk, marshal field {0} as Unicode, by setting StructLayout.CharSet on {1} to CharSet.Unicode, or by explicitly marshaling the field as UnmanagedType.LPWStr. If you need to marshal this string as ANSI or system-dependent, use the BestFitMapping attribute to turn best-fit mapping off, and for added security, ensure ThrowOnUnmappableChar is on.</Resolution>
+    <Resolution Name="ParameterImplicitAnsi">To reduce security risk, marshal parameter {0} as Unicode, by setting DllImport.CharSet to CharSet.Unicode, or by explicitly marshaling the parameter as UnmanagedType.LPWStr. If you need to marshal this string as ANSI or system-dependent, specify MarshalAs explicitly, and set BestFitMapping=false; for added security, also set ThrowOnUnmappableChar=true.</Resolution>
+    <Resolution Name="FieldImplicitAnsi">To reduce security risk, marshal field {0} as Unicode, by setting StructLayout.CharSet on {1} to CharSet.Unicode, or by explicitly marshaling the field as UnmanagedType.LPWStr. If you need to marshal this string as ANSI or system-dependent, specify MarshalAs explicitly, use the BestFitMapping attribute to turn best-fit mapping off, and for added security, to turn ThrowOnUnmappableChar on.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="SpecifyStringComparison" Category="Microsoft.Globalization" CheckId="CA1307">
+    <Name>Specify StringComparison</Name>
+    <Description>If an overload exists that takes a StringComparison argument, it should always be called in favor of an overload that does not.</Description>
+    <Url>@bb386080.aspx</Url>
+    <Resolution>Because the behavior of {0} could vary based on the current user's locale settings, replace this call in {1} with a call to {2}. If the result of {2} will be displayed to the user, such as when sorting a list of items for display in a list box, specify 'StringComparison.CurrentCulture' or 'StringComparison.CurrentCultureIgnoreCase' as the 'StringComparison' parameter. If comparing case-insensitive identifiers, such as file paths, environment variables, or registry keys and values, specify 'StringComparison.OrdinalIgnoreCase'. Otherwise, if comparing case-sensitive identifiers, specify 'StringComparison.Ordinal'.</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="NormalizeStringsToUppercase" Category="Microsoft.Globalization" CheckId="CA1308">
+    <Name>Normalize strings to uppercase</Name>
+    <Description>Strings should be normalized to upper-case.</Description>
+    <Url>@bb386042.aspx</Url>
+    <Resolution Name="ToUpperInvariant">In method {0}, replace the call to {1} with String.ToUpperInvariant().</Resolution>
+    <Resolution Name="ToUpper">In method {0}, replace the call to String.ToLower(CultureInfo.InvariantCulture) with String.ToUpper(CultureInfo.InvariantCulture).</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="UseOrdinalStringComparison" Category="Microsoft.Globalization" CheckId="CA1309">
+    <Name>Use ordinal StringComparison</Name>
+    <Description>For non-linguistic comparisons, StringComparison.Ordinal or StringComparison.OrdinalIgnoreCase should be used instead of the linguistically-sensitive StringComparison.InvariantCulture.</Description>
+    <Url>@bb385972.aspx</Url>
+    <Resolution Name="StringComparison">{0} passes '{1}' as the 'StringComparison' parameter to {2}. To perform a non-linguistic comparison, specify 'StringComparison.Ordinal' or 'StringComparison.OrdinalIgnoreCase' instead.</Resolution>
+    <Resolution Name="StringComparer">{0} passes '{1}' as the 'StringComparer' parameter to {2}. To perform a non-linguistic comparison, specify 'StringComparer.Ordinal' or 'StringComparer.OrdinalIgnoreCase' instead.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+</Rules>

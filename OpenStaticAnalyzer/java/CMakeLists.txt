@@ -137,16 +137,16 @@ set (MAVEN_PLUGIN_DIR ${CMAKE_SOURCE_DIR}/java/columbus-toolchain-maven-plugin)
 
 add_custom_create_file_target (
     ${OSA_TARGET_NAME}
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-2.0.jar
+    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-3.0.jar
     ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.jar
     ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.pom
     ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.0.jar
     ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.0.pom
     ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.1.jar
     ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.1.pom
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-2.0-V2.pom
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-2.0-V3.pom
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-2.0-V31.pom
+    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-3.0-V2.pom
+    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-3.0-V3.pom
+    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-3.0-V31.pom
     ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/installMavenWrapper${SCRIPT_EXT}
     COMMAND mvn${MVN_POSTFIX} install -f ${MAVEN_PLUGIN_DIR}/ext/mojoExecutorModule/v3/pom.xml > ${CMAKE_CURRENT_BINARY_DIR}/v3install.log
     COMMAND mvn${MVN_POSTFIX} install -f ${MAVEN_PLUGIN_DIR}/ext/mojoExecutorModule/v31/pom.xml > ${CMAKE_CURRENT_BINARY_DIR}/v31install.log

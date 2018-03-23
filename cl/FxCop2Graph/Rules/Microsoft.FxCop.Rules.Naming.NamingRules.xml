@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Rules FriendlyName="Naming Rules">
+  <Rule TypeName="DoNotNameEnumValuesReserved" Category="Microsoft.Naming" CheckId="CA1700">
+    <Name>Do not name enum values 'Reserved'</Name>
+    <Description>Avoid naming an enum value 'Reserved'. Adding 'Reserved' values will lead to a breaking change on removal when the value is actually used in a later version of the product.</Description>
+    <Url>@ms182236.aspx</Url>
+    <Resolution>If {0} is not used in the current implementation, remove it. Otherwise give it a meaningful name.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ResourceStringCompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1701">
+    <Name>Resource string compound words should be cased correctly</Name>
+    <Description>Avoid creating compound words from terms which exist in the dictionary as discrete terms. Do not create a compound word such as 'StopWatch' or 'PopUp'. These terms are recognized in the dictionary and should be cased as 'Stopwatch' and 'Popup'.</Description>
+    <Url>@bb264481.aspx</Url>
+    <Resolution Name="StringResourceShouldBeDiscreteTerm">In resource {0}, referenced by name '{1}', the compound word '{2}' in string value '{3}' exists as a discrete term. If your usage is intended to be single word, case it as '{4}'.</Resolution>
+    <Resolution Name="StringResourceShouldBeCompoundWord">In resource {0}, referenced by name '{1}' the discrete term '{2}' in string value '{3}' should be expressed as a compound word. If '{2}' refers to an API identifier, case it as '{4}', otherwise split it into two words separated by a space.</Resolution>
+    <Resolution Name="XmlResourceShouldBeDiscreteTerm">In resource {0}, in XML element '{1}', the compound word '{2}' in '{3}' exists as a discrete term. If your usage is intended to be single word, case it as '{4}'.</Resolution>
+    <Resolution Name="XmlResourceShouldBeCompoundWord">In resource {0}, in XML element '{1}', the discrete term '{2}' in '{3}' should be expressed as a compound word. If '{2}' refers to an API identifier, case it as '{4}', otherwise split it into two words separated by a space.</Resolution>
+    <Resolution Name="ComponentResourceShouldBeDiscreteTerm">In component {0}, on '{1}', the compound word '{2}' in '{3}' exists as a discrete term. If your usage is intended to be single word, case it as '{4}'.</Resolution>
+    <Resolution Name="ComponentResourceShouldBeCompoundWord">In component {0}, on '{1}', the discrete term '{2}' in '{3}' should be expressed as a compound word. If '{2}' refers to an API identifier, case it as '{4}', otherwise split it into two words separated by a space.</Resolution>
+    <Localized Name="ErrorReadingXmlResource">An error occurred reading XML resource: {0}</Localized>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="80">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702">
+    <Name>Compound words should be cased correctly</Name>
+    <Description>Avoid creating compound words from terms which exist in the dictionary as discrete terms. Do not create a compound word such as 'StopWatch' or 'PopUp'. These terms are recognized in the dictionary and should be cased as 'Stopwatch' and 'Popup'.</Description>
+    <Url>@bb264474.aspx</Url>
+    <Resolution Name="AssemblyShouldBeDiscreteTerm">The compound word '{0}' in assembly name {1} exists as a discrete term. If your usage is intended to be single word, case it as '{2}'.</Resolution>
+    <Resolution Name="NamespaceShouldBeDiscreteTerm">The compound word '{0}' in namespace name '{1}' exists as a discrete term. If your usage is intended to be single word, case it as '{2}'.</Resolution>
+    <Resolution Name="MemberParameterShouldBeDiscreteTerm">In member {0}, the compound word '{1}' in parameter name {2} exists as a discrete term. If your usage is intended to be single word, case it as '{3}' or strip the first token entirely if it represents any sort of Hungarian notation.</Resolution>
+    <Resolution Name="DelegateParameterShouldBeDiscreteTerm">In delegate {0}, the compound word '{1}' in parameter name {2} exists as a discrete term. If your usage is intended to be single word, case it as '{3}' or strip the first token entirely if it represents any sort of Hungarian notation.</Resolution>
+    <Resolution Name="MethodTypeParameterShouldBeDiscreteTerm">On method {0}, the compound word '{1}' in generic type parameter name {2} exists as a discrete term. If your usage is intended to be single word, case it as '{3}'.</Resolution>
+    <Resolution Name="TypeTypeParameterShouldBeDiscreteTerm">On type {0}, the compound word '{1}' in generic type parameter name {2} exists as a discrete term. If your usage is intended to be single word, case it as '{3}'.</Resolution>
+    <Resolution Name="TypeShouldBeDiscreteTerm">The compound word '{0}' in type name {1} exists as a discrete term. If your usage is intended to be single word, case it as '{2}'.</Resolution>
+    <Resolution Name="MemberShouldBeDiscreteTerm">The compound word '{0}' in member name {1} exists as a discrete term. If your usage is intended to be single word, case it as '{2}' or strip the first token entirely if it represents any sort of Hungarian notation.</Resolution>
+    <Resolution Name="AssemblyShouldBeCompoundWord">The discrete term '{0}' in assembly name {1} should be expressed as a compound word, '{2}'.</Resolution>
+    <Resolution Name="NamespaceShouldBeCompoundWord">The discrete term '{0}' in namespace name '{1}' should be expressed as a compound word, '{2}'.</Resolution>
+    <Resolution Name="MemberParameterShouldBeCompoundWord">In member {0}, the discrete term '{1}' in parameter name {2} should be expressed as a compound word, '{3}'.</Resolution>
+    <Resolution Name="DelegateParameterShouldBeCompoundWord">In delegate {0}, the discrete term '{1}' in parameter name {2} should be expressed as a compound word, '{3}'.</Resolution>
+    <Resolution Name="MethodTypeParameterShouldBeCompoundWord">On method {0}, the discrete term '{1}' in generic type parameter name {2} should be expressed as a compound word, '{3}'.</Resolution>
+    <Resolution Name="TypeTypeParameterShouldBeCompoundWord">On type {0}, the discrete term '{1}' in generic type parameter name {2} should be expressed as a compound word, '{3}'.</Resolution>
+    <Resolution Name="TypeShouldBeCompoundWord">The discrete term '{0}' in type name {1} should be expressed as a compound word, '{2}'.</Resolution>
+    <Resolution Name="MemberShouldBeCompoundWord">The discrete term '{0}' in member name {1} should be expressed as a compound word, '{2}'.</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="80">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ResourceStringsShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1703">
+    <Name>Resource strings should be spelled correctly</Name>
+    <Description>The individual words that make up a resource string should not be abbreviated and should be spelled correctly. If this rule generates a false positive on a term that should be recognized, add the word to the FxCop custom dictionary.</Description>
+    <Url>@bb264483.aspx</Url>
+    <Resolution Name="StringResource">In resource {0}, referenced by name '{1}', correct the spelling of '{2}' in string value '{3}'.</Resolution>
+    <Resolution Name="XmlResource">In resource {0}, in XML element '{1}', correct the spelling of '{2}' in '{3}'.</Resolution>
+    <Resolution Name="ComponentResource">In component {0}, on '{1}', correct the spelling of '{2}' in '{3}'.</Resolution>
+    <Localized Name="ErrorReadingXmlResource">Error reading XML resource: {0}</Localized>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
+    <Name>Identifiers should be spelled correctly</Name>
+    <Description>The individual words that make up an identifier should not be abbreviated and should be spelled correctly. If this rule generates a false positive on a term that should be recognized, add the word to the FxCop custom dictionary.</Description>
+    <Url>@bb264492.aspx</Url>
+    <Resolution Name="Assembly">Correct the spelling of '{0}' in assembly name {1}.</Resolution>
+    <Resolution Name="Namespace">Correct the spelling of '{0}' in namespace name '{1}'.</Resolution>
+    <Resolution Name="Type">Correct the spelling of '{0}' in type name {1}.</Resolution>
+    <Resolution Name="Member">Correct the spelling of '{0}' in member name {1} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
+    <Resolution Name="MemberParameter">In method {0}, correct the spelling of '{1}' in parameter name {2} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
+    <Resolution Name="DelegateParameter">In delegate {0}, correct the spelling of '{1}' in parameter name {2} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
+    <Resolution Name="TypeTypeParameter">On type {0}, correct the spelling of '{1}' in generic type parameter name {2}.</Resolution>
+    <Resolution Name="MethodTypeParameter">On method {0}, correct the spelling of '{1}' in generic type parameter name {2}.</Resolution>
+    <Resolution Name="AssemblyMoreMeaningfulName">Consider providing a more meaningful name than assembly name {0}.</Resolution>
+    <Resolution Name="NamespaceMoreMeaningfulName">Consider providing a more meaningful name than namespace name '{0}'.</Resolution>
+    <Resolution Name="TypeMoreMeaningfulName">Consider providing a more meaningful name than type name {0}.</Resolution>
+    <Resolution Name="MemberMoreMeaningfulName">Consider providing a more meaningful name than member name {0}.</Resolution>
+    <Resolution Name="MemberParameterMoreMeaningfulName">In method {0}, consider providing a more meaningful name than parameter name {1}.</Resolution>
+    <Resolution Name="DelegateParameterMoreMeaningfulName">In delegate {0}, consider providing a more meaningful name than parameter name {1}.</Resolution>
+    <Resolution Name="TypeTypeParameterMoreMeaningfulName">On type {0}, consider providing a more meaningful name than generic type parameter name {1}.</Resolution>
+    <Resolution Name="MethodTypeParameterMoreMeaningfulName">On method {0}, consider providing a more meaningful name than generic type parameter name {1}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">CriticalWarning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707">
+    <Name>Identifiers should not contain underscores</Name>
+    <Description>Do not use underscores when specifying identifiers. Some generated Visual Studio identifiers for applications contain underscore characters. Underscore characters should generally be avoided in public identifiers.</Description>
+    <Url>@ms182245.aspx</Url>
+    <Resolution Name="Assembly">Remove the underscores from assembly name {0}.</Resolution>
+    <Resolution Name="Namespace">Remove the underscores from namespace name '{0}'.</Resolution>
+    <Resolution Name="Type">Remove the underscores from type name {0}.</Resolution>
+    <Resolution Name="Member">Remove the underscores from member name {0}.</Resolution>
+    <Resolution Name="TypeTypeParameter">On type {0}, remove the underscores from generic type parameter name {1}.</Resolution>
+    <Resolution Name="MethodTypeParameter">On method {0}, remove the underscores from generic type parameter name {1}.</Resolution>
+    <Resolution Name="MemberParameter">In member {0}, remove the underscores from parameter name {1}.</Resolution>
+    <Resolution Name="DelegateParameter">In delegate {0}, remove the underscores from parameter name {1}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="IdentifiersShouldDifferByMoreThanCase" Category="Microsoft.Naming" CheckId="CA1708">
+    <Name>Identifiers should differ by more than case</Name>
+    <Description>Do not use names that require case sensitivity for uniqueness. Components must be fully usable from both case-sensitive and case-insensitive languages. Since case-insensitive languages cannot distinguish between two names within the same context that differ only by case, components must avoid this situation.</Description>
+    <Url>@ms182242.aspx</Url>
+    <Resolution Name="Member">Change member names {0} and '{1}' so that they differ by more than case.</Resolution>
+    <Resolution Name="Type">Change type names {0} and '{1}' so that they differ by more than case.</Resolution>
+    <Resolution Name="Namespace">Change namespace names {0} and '{1}' so that they differ by more than case.</Resolution>
+    <Resolution Name="Parameter">Change parameter names {0} and '{1}' so that they differ by more than case.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709">
+    <Name>Identifiers should be cased correctly</Name>
+    <Description>Type, namespace, and member identifiers are Pascal-cased. Parameter identifiers are camel-cased. Two letter acronyms within these identifiers should be upper-cased, for example, use System.IO instead of System.Io. Acronyms of three or more letters should be Pascal-cased, for example, use System.Xml instead of System.XML. The pascal-casing convention capitalizes the first letter of each word, as in BackColor. The camel-casing convention formats the first letter of the first word in lowercase and capitalizes the first letter of all subsequent words, as in backgroundColor. Although it may be common practice for some two letter acronyms to not be fully capitalized, violations of this rule should not be excluded for this reason. For example, 'DbConnection', is common but incorrect; use DBConnection. A violation of this rule might be required for compatibility with existing, non-managed symbol schemes. In general, however, these symbols should not be visible outside the assembly that uses them.</Description>
+    <Url>@ms182240.aspx</Url>
+    <Resolution Name="Assembly">Correct the casing of '{0}' in assembly name {1} by changing it to '{2}'.</Resolution>
+    <Resolution Name="Namespace">Correct the casing of '{0}' in namespace name '{1}' by changing it to '{2}'.</Resolution>
+    <Resolution Name="Type">Correct the casing of '{0}' in type name {1} by changing it to '{2}'.</Resolution>
+    <Resolution Name="Member">Correct the casing of '{0}' in member name {1} by changing it to '{2}'.</Resolution>
+    <Resolution Name="MemberParameter">In member {0}, correct the casing of '{1}' in parameter name {2} by changing it to '{3}'.</Resolution>
+    <Resolution Name="DelegateParameter">In delegate {0}, correct the casing of '{1}' in parameter name {2} by changing it to '{3}'.</Resolution>
+    <Resolution Name="TypeTypeParameter">On type {0}, correct the casing of '{1}' in generic type parameter name {2} by changing it to '{3}'.</Resolution>
+    <Resolution Name="MethodTypeParameter">On method {0}, correct the casing of '{1}' in generic type parameter name {2} by changing it to '{3}'.</Resolution>
+    <Resolution Name="AssemblyAbbreviation">Correct the casing of '{0}' in assembly name {1} by changing it to '{2}'. '{2}' is an abbreviation and therefore is not subject to acronym casing guidelines.</Resolution>
+    <Resolution Name="NamespaceAbbreviation">Correct the casing of '{0}' in namespace name '{1}' by changing it to '{2}'. '{2}' is an abbreviation and therefore is not subject to acronym casing guidelines.</Resolution>
+    <Resolution Name="TypeAbbreviation">Correct the casing of '{0}' in type name {1} by changing it to '{2}'. '{2}' is an abbreviation and therefore is not subject to acronym casing guidelines.</Resolution>
+    <Resolution Name="MemberAbbreviation">Correct the casing of '{0}' in member name {1} by changing it to '{2}'. '{2}' is an abbreviation and therefore is not subject to acronym casing guidelines.</Resolution>
+    <Resolution Name="MemberParameterAbbreviation">In member {0}, correct the casing of '{1}' in parameter name {2} by changing it to '{3}'. '{3}' is an abbreviation and therefore is not subject to acronym casing guidelines.</Resolution>
+    <Resolution Name="DelegateParameterAbbreviation">In delegate {0}, correct the casing of '{1}' in parameter name {2} by changing it to '{3}'. '{3}' is an abbreviation and therefore is not subject to acronym casing guidelines.</Resolution>
+    <Resolution Name="TypeTypeParameterAbbreviation">On type {0}, correct the casing of '{1}' in generic type parameter name {2} by changing it to '{3}'. '{3}' is an abbreviation and therefore is not subject to acronym casing guidelines.</Resolution>
+    <Resolution Name="MethodTypeParameterAbbreviation">On method {0}, correct the casing of '{1}' in generic type parameter name {2} by changing it to '{3}'. '{3}' is an abbreviation and therefore is not subject to acronym casing guidelines.</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="85">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710">
+    <Name>Identifiers should have correct suffix</Name>
+    <Description>Types that extend certain base types have specified name suffixes. Types that extend Attribute, for example, should be suffixed in 'Attribute', as in ObsoleteAttribute. This rules checks types that extend several base types, including Attribute, Exception, EventArgs, IMembershipPermission, Stream, and others.</Description>
+    <Url>@ms182244.aspx</Url>
+    <Resolution>Rename {0} to end in '{1}'.</Resolution>
+    <Resolution Name="SpecialCollection">Rename {0} to end in either 'Collection' or '{1}'.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="IdentifiersShouldNotHaveIncorrectSuffix" Category="Microsoft.Naming" CheckId="CA1711">
+    <Name>Identifiers should not have incorrect suffix</Name>
+    <Description>Types that do not extend certain base types should not use reserved name suffixes. Types and members should not use 'Ex' or 'New' to distinguish them from an earlier version of the same API, instead, use a numeric suffix such as '2' or provide a more meaningful suffix. Concrete type implementations and members should not end 'Impl'. Members instead, should either consider using the suggested alternate 'Core' in replacement of 'Impl' or avoid any suffix at all.</Description>
+    <Url>@ms182247.aspx</Url>
+    <Resolution Name="TypeNoAlternate">Rename type name {0} so that it does not end in '{1}'.</Resolution>
+    <Resolution Name="MemberNewerVersion">Either replace the suffix '{0}' in member name {1} with the suggested numeric alternate '2' or provide a more meaningful suffix that distinguishes it from the member it replaces.</Resolution>
+    <Resolution Name="TypeNewerVersion">Either replace the suffix '{0}' in type name {1} with the suggested numeric alternate '2' or provide a more meaningful suffix that distinguishes it from the type it replaces.</Resolution>
+    <Resolution Name="MemberWithAlternate">Either replace the suffix '{0}' in member name '{1}' with the suggested alternate '{2}' or remove the suffix completely.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotPrefixEnumValuesWithTypeName" Category="Microsoft.Naming" CheckId="CA1712">
+    <Name>Do not prefix enum values with type name</Name>
+    <Description>The individual values that make up an enumeration type should not be prefixed with the type name.</Description>
+    <Url>@ms182237.aspx</Url>
+    <Resolution>Remove {1} from {0}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="EventsShouldNotHaveBeforeOrAfterPrefix" Category="Microsoft.Naming" CheckId="CA1713">
+    <Name>Events should not have before or after prefix</Name>
+    <Description>Use present and past tense for pre-events and post-events, instead of using 'Before' and 'After'. For example, use Closing and Closed rather than BeforeClose and AfterClose.</Description>
+    <Url>@ms182238.aspx</Url>
+    <Resolution Name="Before">Replace {0} with a present tense version of the event name.</Resolution>
+    <Resolution Name="After">Replace {0} with a past tense version of the event name.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="FlagsEnumsShouldHavePluralNames" Category="Microsoft.Naming" CheckId="CA1714">
+    <Name>Flags enums should have plural names</Name>
+    <Description>An enumeration marked with FlagsAttribute should have a plural name.</Description>
+    <Url>@bb264486.aspx</Url>
+    <Resolution>If enumeration name {0} is singular, change it to a plural form.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="IdentifiersShouldHaveCorrectPrefix" Category="Microsoft.Naming" CheckId="CA1715">
+    <Name>Identifiers should have correct prefix</Name>
+    <Description>Prefix interface names with the letter 'I' to indicate that the type is an interface, as in IFormattable. Prefix generic type parameter names with the letter 'T' and provide them with descriptive names, as in Dictionary&lt;TKey, TValue&gt;, unless a single 'T' is completely self-explanatory, as in Collection&lt;T&gt;. Use Pascal casing for both interface and type parameter names. Use abbreviations sparingly. Do not use the underscore character. Do use similar names when defining a class/interface pair where the class is a standard implementation of the interface. The names should differ only by the letter I prefixed on the interface name, as with Component and IComponent.</Description>
+    <Url>@ms182243.aspx</Url>
+    <Resolution Name="Interface">Prefix interface name {0} with 'I'.</Resolution>
+    <Resolution Name="TypeTypeParameter">On type {0}, prefix generic type parameter name {1} with 'T'.</Resolution>
+    <Resolution Name="MethodTypeParameter">On method {0}, prefix generic type parameter name {1} with 'T'.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking,NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="IdentifiersShouldNotMatchKeywords" Category="Microsoft.Naming" CheckId="CA1716">
+    <Name>Identifiers should not match keywords</Name>
+    <Description>Identifiers which conflict with reserved language keywords should be avoided. Using a reserved keyword as an identifier makes it harder for consumers in other languages to use your API.</Description>
+    <Url>@ms182248.aspx</Url>
+    <Resolution Name="MemberParameter">In virtual/interface member {0}, rename parameter {1} so that it no longer conflicts with the reserved language keyword '{2}'. Using a reserved keyword as the name of a parameter on a virtual/interface member makes it harder for consumers in other languages to override/implement the member.</Resolution>
+    <Resolution Name="Member">Rename virtual/interface member {0} so that it no longer conflicts with the reserved language keyword '{1}'. Using a reserved keyword as the name of a virtual/interface member makes it harder for consumers in other languages to override/implement the member.</Resolution>
+    <Resolution Name="Type">Rename type {0} so that it no longer conflicts with the reserved language keyword '{1}'. Using a reserved keyword as the name of a type makes it harder for consumers in other languages to use the type.</Resolution>
+    <Resolution Name="Namespace">Rename namespace {0} so that it no longer conflicts with the reserved language keyword '{1}'. Using a reserved keyword as the name of a namespace makes it harder for consumers in other languages to use the namespace.</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="OnlyFlagsEnumsShouldHavePluralNames" Category="Microsoft.Naming" CheckId="CA1717">
+    <Name>Only FlagsAttribute enums should have plural names</Name>
+    <Description>Plural names indicate that the values of the enumeration can be combined. For example, an enumeration named 'Day' indicates a single day, and an enumeration named 'Days' indicates multiple days. Enumeration values should be combined using the bit-wise OR operator only if the Flags attribute is present on the enumeration.</Description>
+    <Url>@bb264487.aspx</Url>
+    <Resolution>If the name {0} is plural, change it to its singular form.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--<Rule TypeName="AvoidLanguageSpecificTypeNamesInParameters" Category="Microsoft.Naming" CheckId="CA1718">
+    <Name>Avoid language specific type names in parameters</Name>
+    <Description>Do not use language-specific type names to name parameters; use a generic name instead. Language-specific type names might not be intuitive for developers using other languages. Some examples of C#-specific type names are 'float' (use 'Single' if a generic name is not sufficient), and 'ulong' (use 'UInt64' if a generic name is not sufficient).</Description>
+    <Url>@/Naming/AvoidLanguageSpecificTypeNamesInParameters.html</Url>
+    <Resolution>Use a generic name for parameter {0}. If this is not possible, replace the type identifier with a universal type name.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <Rule TypeName="ParameterNamesShouldNotMatchMemberNames" Category="Microsoft.Naming" CheckId="CA1719">
+    <Name>Parameter names should not match member names</Name>
+    <Description>Parameter names should be distinct from member names.</Description>
+    <Url>@ms182252.aspx</Url>
+    <Resolution>Change either member or parameter name {0} so that one differs from the other.</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="IdentifiersShouldNotContainTypeNames" Category="Microsoft.Naming" CheckId="CA1720">
+    <Name>Identifiers should not contain type names</Name>
+    <Description>Avoid using language-specific types name in parameters and members and data type identifiers in parameters. Types names might not be intuitive for all developers. It is recommended that you select a generic name, such as 'value', instead. If this is not sufficient, be sure to use the type name as it is defined in the .NET Framework Library and avoid language-specific type names completely. Some examples of C#-specific type names are 'float' (use 'Single' if a generic name is not sufficient), and 'ulong' (use 'UInt64' if a generic name is not sufficient).</Description>
+    <Url>@bb531486.aspx</Url>
+    <Resolution Name="LanguageIndependentMemberParameter">In member {0}, consider replacing the data type identifier '{1}' in parameter name {2} with a more generic term, such as 'value'.</Resolution>
+    <Resolution Name="LanguageIndependentDelegateParameter">In delegate {0}, consider replacing the data type identifier '{1}' in parameter name {2} with a more generic term, such as 'value'.</Resolution>
+    <Resolution Name="LanguageSpecificMemberParameter">In member {0}, consider replacing the language-specific data type identifier '{1}' in parameter name {2} with a more generic term, such as 'value'.</Resolution>
+    <Resolution Name="LanguageSpecificDelegateParameter">In delegate {0}, consider replacing the language-specific data type identifier '{1}' in parameter name {2} with a more generic term, such as 'value'.</Resolution>
+    <Resolution Name="LanguageSpecificMember">Consider replacing the language-specific data type identifier '{0}' in member name {1} with either a language-independent equivalent or a more generic term, such as 'value'.</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="PropertyNamesShouldNotMatchGetMethods" Category="Microsoft.Naming" CheckId="CA1721">
+    <Name>Property names should not match get methods</Name>
+    <Description>A Get method was found with the same name as a property. Get methods and properties should have names that clearly distinguish their function. See the design guidelines for information regarding choosing properties over methods.</Description>
+    <Url>@ms182253.aspx</Url>
+    <Resolution Name="SameType">The property name {0} is confusing given the existence of method {1}. Rename or remove one of these members.</Resolution>
+    <Resolution Name="BaseType">The property name {0} is confusing given the existence of inherited method {1}. Rename or remove this property.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="IdentifiersShouldNotHaveIncorrectPrefix" Category="Microsoft.Naming" CheckId="CA1722">
+    <Name>Identifiers should not have incorrect prefix</Name>
+    <Description>Do not use 'C' as a prefix for type names. Do not use any prefix for naming types. Consider using the name of the base class as the suffix when naming derived types. For example: ApplicationException is a kind of Exception. SerializableAttribute is a kind of Attribute.</Description>
+    <Url>@ms182246.aspx</Url>
+    <Resolution>Remove the leading 'C' from type name {0}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--
+  <Rule TypeName="TypeNamesShouldNotMatchKeywords" Category="Microsoft.Naming" CheckId="CA1723">
+    <Name>Type names should not match keywords</Name>
+    <Description>Identifiers which match reserved keywords should be avoided. Matching is performed case-insensitively. Semantically interesting names are preferable to type names in identifiers.</Description>
+    <Url>@/Naming/TypeNamesShouldNotMatchKeywords.html</Url>
+    <Resolution>Change type name {0} so that it does not conflict with reserved keyword:'{1}'.</Resolution>
+    <Email>fxcopbug@microsoft.com</Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  -->
+  <Rule TypeName="TypeNamesShouldNotMatchNamespaces" Category="Microsoft.Naming" CheckId="CA1724">
+    <Name>Type names should not match namespaces</Name>
+    <Description>Identifiers which conflict in whole or in part with namespace names should be avoided. Names that describe the purpose or contents of a type are preferred.</Description>
+    <Url>@ms182257.aspx</Url>
+    <Resolution Name="Default">The type name {0} conflicts in whole or in part with the namespace name '{1}'. Change either name to eliminate the conflict.</Resolution>
+    <Resolution Name="System">The type name {0} conflicts in whole or in part with the namespace name '{1}' defined in the .NET Framework. Rename the type to eliminate the conflict.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ParameterNamesShouldMatchBaseDeclaration" Category="Microsoft.Naming" CheckId="CA1725">
+    <Name>Parameter names should match base declaration</Name>
+    <Description>For usability reasons, parameter names in overridden methods should match those of the base declaration.</Description>
+    <Url>@ms182251.aspx</Url>
+    <Resolution>In member {0}, change parameter name {1} to {2} in order to match the identifier as it has been declared in {3}.</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="UsePreferredTerms" Category="Microsoft.Naming" CheckId="CA1726">
+    <Name>Use preferred terms</Name>
+    <Description>Use preferred terms over deprecated alternates.</Description>
+    <Url>@ms182258.aspx</Url>
+    <Resolution Name="Assembly">Replace the term '{0}' in assembly name {1} with the preferred alternate '{2}'.</Resolution>
+    <Resolution Name="Namespace">Replace the term '{0}' in namespace name '{1}' with the preferred alternate '{2}'.</Resolution>
+    <Resolution Name="MemberParameter">In member {0}, replace the term '{1}' in parameter name {2} with the preferred alternate '{3}'.</Resolution>
+    <Resolution Name="DelegateParameter">In delegate {0}, replace the term '{1}' in parameter name {2} with the preferred alternate '{3}'.</Resolution>
+    <Resolution Name="TypeTypeParameter">On type {0}, replace the term '{1}' in generic type parameter name {2} with the preferred alternate '{3}'.</Resolution>
+    <Resolution Name="MethodTypeParameter">On method {0}, replace the term '{1}' in generic type parameter name {2} with the preferred alternate '{3}'.</Resolution>
+    <Resolution Name="Type">Replace the term '{0}' in type name {1} with the preferred alternate '{2}'.</Resolution>
+    <Resolution Name="Member">Replace the term '{0}' in member name {1} with the preferred alternate '{2}'.</Resolution>
+    <Resolution Name="AssemblyNoAlternate">Replace the term '{0}' in assembly name {1} with an appropriate alternate or remove it entirely.</Resolution>
+    <Resolution Name="NamespaceNoAlternate">Replace the term '{0}' in namespace name '{1}' with an appropriate alternate or remove it entirely.</Resolution>
+    <Resolution Name="MemberParameterNoAlternate">In member {0}, replace the term '{1}' in parameter name {2} with an appropriate alternate or remove it entirely.</Resolution>
+    <Resolution Name="DelegateParameterNoAlternate">In delegate {0}, replace the term '{1}' in parameter name {2} with an appropriate alternate or remove it entirely.</Resolution>
+    <Resolution Name="TypeTypeParameterNoAlternate">On type {0}, replace the term '{1}' in generic type parameter name {2} with an appropriate alternate or remove it entirely.</Resolution>
+    <Resolution Name="MethodTypeParameterNoAlternate">On method {0}, replace the term '{1}' in generic type parameter name {2} with an appropriate alternate or remove it entirely.</Resolution>
+    <Resolution Name="TypeNoAlternate">Replace the term '{0}' in type name {1} with an appropriate alternate or remove it entirely.</Resolution>
+    <Resolution Name="MemberNoAlternate">Replace the term '{0}' in member name {1} with an appropriate alternate or remove it entirely.</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+</Rules>

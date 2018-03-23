@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Rules FriendlyName="Usage Rules">
+  <Rule TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801">
+    <Name>Review unused parameters</Name>
+    <Description>Review parameters in non-virtual methods that are not used in the method body to ensure no correctness exists around failure to access them. Unused parameters incur maintenance and performance costs. Sometimes a violation of this rule can point to an implementation bug in the method (i.e. the parameter should actually have been used in the method body). Exclude warnings of this rule if the parameter has to exist because of backward compatibility.</Description>
+    <Url>@ms182268.aspx</Url>
+    <Resolution>Parameter {0} of {1} is never used. Remove the parameter or use it in the method body.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Warning</MessageLevel>
+    <FixCategories>DependsOnFix,NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Usage" CheckId="CA1806">
+    <Name>Do not ignore method results</Name>
+    <Description>The result of methods that return new instances of strings should be assigned to a variable and subsequently used. If the result of a method that creates a new object, such as String.ToLower(), is not assigned to a variable, the call is wasted.</Description>
+    <Url>@ms182273.aspx</Url>
+    <Resolution Name="ObjectCreation">{0} creates a new instance of {1} which is never used. Pass the instance as an argument to another method, assign the instance to a variable, or remove the object creation if it is unnecessary.</Resolution>
+    <Resolution Name="StringCreation">{0} calls {1} but does not use the new string instance that the method returns. Pass the instance as an argument to another method, assign the instance to a variable, or remove the call if it is unnecessary.</Resolution>
+    <Resolution Name="HResultOrErrorCode">{0} calls {1} but does not use the HRESULT or error code that the method returns. This could lead to unexpected behavior in error conditions or low-resource situations. Use the result in a conditional statement, assign the result to a variable, or pass it as an argument to another method.</Resolution>
+    <Resolution Name="TryParse">{0} calls {1} but does not explicitly check whether the conversion succeeded. Either use the return value in a conditional statement or verify that the call site expects that the out argument will be set to the default value when the conversion fails.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200">
+    <Name>Rethrow to preserve stack details</Name>
+    <Description>Use the IL rethrow instruction to preserve original stack details when re-raising a caught exception.</Description>
+    <Url>@ms182363.aspx</Url>
+    <Resolution>{0} rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201">
+    <Name>Do not raise reserved exception types</Name>
+    <Description>User code should not create and raise exceptions of certain types that are reserved by the runtime or which are of a too general exception type. Exception types that are too general include Exception, SystemException, and ApplicationException. Exception types that are reserved by the runtime include ThreadAbortException, OutOfMemoryException, ExecutionEngineException, and IndexOutOfRangeException.</Description>
+    <Url>@ms182338.aspx</Url>
+    <Resolution Name="TooGeneric">{0} creates an exception of type {1}, an exception type that is not sufficiently specific and should never be raised by user code. If this exception instance might be thrown, use a different exception type.</Resolution>
+    <Resolution Name="Reserved">{0} creates an exception of type {1}, an exception type that is reserved by the runtime and should never be raised by managed code. If this exception instance might be thrown, use a different exception type.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+
+  <!--<Rule TypeName="DoNotDisposeObjectsMultipleTimes" Category="Microsoft.Usage" CheckId="CA2202">
+    <Name>Do not dispose objects multiple times</Name>
+    <Description>Incorrectly coded implementations of IDisposable cannot tolerate being called multiple times on the same object instance.</Description>
+    <Url>@ms182334.aspx</Url>
+    <Resolution>'{0}' contains possible code paths that dispose {1} multiple times. Change this behavior so that Close or Dispose is only called once or ensure that the Dispose implementation of '{1}' is reentrant.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <!--<Rule TypeName="InitializeLocalsBeforeUse" Category="Microsoft.Usage" CheckId="CA2203">
+    <Name>Initialize locals before use</Name>
+    <Description>Variables should always be initialized before they are used. Generally, the compiler will warn when a variable is potentially used in a method call in an uninitialized state. Not all compilers catch all occurrences of this issue, however.</Description>
+    <Url>@/Usage/InitializeLocalsBeforeUse.html</Url>
+    <Resolution>The variable '{0}' is in a potentially uninitialized state when calling '{1}'.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <!--<Rule TypeName="LiteralsShouldBeSpelledCorrectly" Category="Microsoft.Usage" CheckId="CA2204">
+    <Name>Literals should be spelled correctly</Name>
+    <Description>Literals should consist of correctly spelled words.</Description>
+    <Url>@bb264488.aspx</Url>
+    <Resolution>Correct the spelling of the unrecognized token '{0}' in the literal '{1}'.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="85">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <Rule TypeName="UseManagedEquivalentsOfWin32Api" Category="Microsoft.Usage" CheckId="CA2205">
+    <Name>Use managed equivalents of Win32 API</Name>
+    <Description>Use managed equivalents to Win32 API whenever possible.</Description>
+    <Url>@ms182365.aspx</Url>
+    <Resolution Name="PlatformInvokeDeclaration">Remove the declaration for {0}. Callers should use the following managed alternative: {1}</Resolution>
+    <!--<Resolution Name="CallToPlatformInvoke">Instead of calling native function '{0}' in module '{1}', use the following managed alternative implemented in the framework: {2}</Resolution>-->
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--
+  <Rule TypeName="ReviewBooleanAssignmentEvaluations" Category="Microsoft.Usage" CheckId="CA2206">
+    <Name>Review boolean assignment evaluations</Name>
+    <Description>Review boolean assignments within conditionals to ensure a comparison wasn't intended.</Description>
+    <Url>@/Usage/ReviewBooleanAssignmentEvaluations.html</Url>
+    <Resolution>Review assignment to '{0}' that occurs in {1} to be sure that a comparison wasn't intended.</Resolution>
+    <Email>fxcopbug@microsoft.com</Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  -->
+  <Rule TypeName="InitializeValueTypeStaticFieldsInline" Category="Microsoft.Usage" CheckId="CA2207">
+    <Name>Initialize value type static fields inline</Name>
+    <Description>Do not declare explicit static constructors on value types. Initializing static data in explicit static constructors results in a value type that is not marked in metadata as 'beforefieldinit'. In this case, the static constructor is not always guaranteed to be called before instance members on the value type are called.</Description>
+    <Url>@ms182346.aspx</Url>
+    <Resolution>Initialize all static fields in {0} when those fields are declared and remove the explicit static constructor.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="InstantiateArgumentExceptionsCorrectly" Category="Microsoft.Usage" CheckId="CA2208">
+    <Name>Instantiate argument exceptions correctly</Name>
+    <Description>String arguments passed to constructors of ArgumentException and its derived types should be correct. Types derived from ArgumentException have inconsistent constructor overloads with respect to the message and paramName parameters as compared to ArgumentException.</Description>
+    <Url>@ms182347.aspx</Url>
+    <Resolution Name="NoArguments">Call the {0} constructor that contains a message and/or paramName parameter.</Resolution>
+    <Resolution Name="IncorrectMessage">Method {0} passes parameter name '{1}' as the {2} argument to a {3} constructor. Replace this argument with a descriptive message and pass the parameter name in the correct position.</Resolution>
+    <Resolution Name="IncorrectParameterName">Method {0} passes '{1}' as the {2} argument to a {3} constructor. Replace this argument with one of the method's parameter names. Note that the provided parameter name should have the exact casing as declared on the method.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--
+  <Rule TypeName="AssembliesShouldDeclareMinimumSecurity" Category="Microsoft.Usage" CheckId="CA2209">
+    <Name>Assemblies should declare minimum security</Name>
+    <Description>Permission requests prevent security exceptions from being thrown after code in an assembly has already begun executing. If permission requests are specified on an assembly, the assembly will not load at runtime if it has insufficient permissions. To resolve violations of this rule, add attributes that specify what permissions the assembly will demand or might demand, and what permissions it does not want granted. To specify required permissions, use SecurityAction.Minimum. To specify permissions that the assembly might demand, use SecurityAction.RequestOptional. To specify permissions that the assembly must not be granted, use SecurityAction.RequestRefuse.</Description>
+    <Url>@ms182325.aspx</Url>
+    <Resolution>No valid permission requests were found for assembly {0}. You should always specify the minimum security permissions using SecurityAction.RequestMinimum.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  -->
+  <Rule TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211">
+    <Name>Non-constant fields should not be visible</Name>
+    <Description>Static fields should be constant unless you carefully manage access to the field using locks. Using static variables without making them thread safe can compromise execution state. This rule applies to managed code libraries. If the analyzed assembly is an application, it is usually safe to exclude violations of this rule.</Description>
+    <Url>@ms182353.aspx</Url>
+    <Resolution>Consider making {0} non-public or a constant.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotMarkServicedComponentsWithWebMethod" Category="Microsoft.Usage" CheckId="CA2212">
+    <Name>Do not mark serviced components with WebMethod</Name>
+    <Description>Types that extend ServicedComponent should not have the WebMethod attribute applied to members. Marking members of types that extend ServicedComponent with WebMethod is not a supported scenario.</Description>
+    <Url>@ms182336.aspx</Url>
+    <Resolution>{0} has the WebMethod attribute applied to it and its declaring type extends ServicedComponent. This is not a supported scenario.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalWarning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213">
+    <Name>Disposable fields should be disposed</Name>
+    <Description>If a type that implements IDisposable owns fields that also implement IDisposable, the encapsulating type's Dispose() implementation should call Dispose() on each disposable field.</Description>
+    <Url>@ms182328.aspx</Url>
+    <Resolution>{0} contains field {1} that is of IDisposable type: {2}. Change the Dispose method on {0} to call Dispose or Close on this field.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214">
+    <Name>Do not call overridable methods in constructors</Name>
+    <Description>Virtual methods defined on the class should not be called from constructors. If a derived class has overridden the method, the derived class version will be called (before the derived class constructor is called).</Description>
+    <Url>@ms182331.aspx</Url>
+    <Resolution>{0} contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: {1}</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--<Rule TypeName="DisposeMethodsShouldCallBaseClassDispose" Category="Microsoft.Usage" CheckId="CA2215">
+    <Name>Dispose methods should call base class dispose</Name>
+    <Description>If your base class implements Dispose, you should call it from your class's Dispose function.</Description>
+    <Url>@ms182330.aspx</Url>
+    <Resolution>Change {0} so that it calls its base class Dispose method for all code paths. Place the call in a finally block to ensure that resources are cleaned up when an exception is raised.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <Rule TypeName="DisposableTypesShouldDeclareFinalizer" Category="Microsoft.Usage" CheckId="CA2216">
+    <Name>Disposable types should declare finalizer</Name>
+    <Description>If a type implements a Dispose method and has unmanaged resources, it should provide a Finalize method in case Dispose is not explicitly called. The runtime calls the Finalize method or destructor of an object prior to reclaiming its managed resources in a process known as garbage collection. The Finalize method should free any unmanaged resources before they become inaccessible.</Description>
+    <Url>@ms182329.aspx</Url>
+    <Resolution>Implement a finalizer or destructor on {0}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotMarkEnumsWithFlags" Category="Microsoft.Usage" CheckId="CA2217">
+    <Name>Do not mark enums with FlagsAttribute</Name>
+    <Description>The enumeration does not appear to contain a consistent set values that can be combined using  the OR (|) and AND (&amp;amp;amp;) operators. Using the Flags attribute on an enumeration suggests that the enumeration values are meant to be combined using the AND and OR operators. Typically, a flags enumeration uses values that are either powers of two, or combine other values that are powers of two.</Description>
+    <Url>@ms182335.aspx</Url>
+    <Resolution>{0} is marked with FlagsAttribute but a discrete member cannot be found for every settable bit that is used across the range of enum values. Remove FlagsAttribute from the type or define new members for the following (currently missing) values: {1}</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="OverrideGetHashCodeOnOverridingEquals" Category="Microsoft.Usage" CheckId="CA2218">
+    <Name>Override GetHashCode on overriding Equals</Name>
+    <Description>When overriding Equals, you must also override GetHashCode to guarantee correct behavior with hashtables.</Description>
+    <Url>@ms182358.aspx</Url>
+    <Resolution>Since {0} redefines Equals, it should also redefine GetHashCode.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotRaiseExceptionsInExceptionClauses" Category="Microsoft.Usage" CheckId="CA2219">
+    <Name>Do not raise exceptions in exception clauses</Name>
+    <Description>Raising exceptions in exception clauses greatly increases the difficulty of debugging. Exceptions raised in finally and fault clauses will hide any exceptions raised in the corresponding try block. If an exception is raised in a filter, it is ignored and treated as if the filter had returned false.</Description>
+    <Url>@bb386041.aspx</Url>
+    <Resolution Name="Finally">Modify member {0} so that it does not raise an exception from within a finally clause. When an exception is raised from within a finally clause, the new exception hides the active exception, if present, making the original error hard to detect and debug.</Resolution>
+    <Resolution Name="Filter">Modify member {0} so that it does not raise an exception from within a filter clause. When an exception is raised from within a filter clause, the runtime silently catches the exception, causing the filter to evaluate to false. This makes it hard to detect and debug errors in the filter's logic.</Resolution>
+    <Resolution Name="Fault">Modify member {0} so that it does not raise an exception from within a fault clause. When an exception is raised from within a fault clause, the new exception hides the active exception, making the original error hard to detect and debug.</Resolution>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking, NonBreaking</FixCategories>
+    <Owner/>
+    <Email></Email>
+  </Rule>
+  <Rule TypeName="FinalizersShouldCallBaseClassFinalizer" Category="Microsoft.Usage" CheckId="CA2220">
+    <Name>Finalizers should call base class finalizer</Name>
+    <Description>The Finalize method should call its base class' Finalize method. This is done automatically with the C# destructor syntax.</Description>
+    <Url>@ms182341.aspx</Url>
+    <Resolution>Modify {0} so that it calls its base class' finalize method.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="FinalizersShouldBeProtected" Category="Microsoft.Usage" CheckId="CA2221">
+    <Name>Finalizers should be protected</Name>
+    <Description>Finalize methods should be declared as protected.</Description>
+    <Url>@ms182340.aspx</Url>
+    <Resolution>Mark the finalizer for type {0} as protected.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotDecreaseInheritedMemberVisibility" Category="Microsoft.Usage" CheckId="CA2222">
+    <Name>Do not decrease inherited member visibility</Name>
+    <Description>It is incorrect to override a public method from an inherited class with a private implementation, unless the type is sealed or the method is marked final. It is considered bad form to hide a method signature halfway down an inheritance tree.</Description>
+    <Url>@ms182332.aspx</Url>
+    <Resolution>Make {0} non-private, mark it as final, or seal its declaring type. This method was originally defined in base class {1}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="MembersShouldDifferByMoreThanReturnType" Category="Microsoft.Usage" CheckId="CA2223">
+    <Name>Members should differ by more than return type</Name>
+    <Description>Methods in the same type that differ only by return type can be difficult for developers and tools to properly recognize. When extending a type, be sure not to define new methods that differ from base type methods only by type.</Description>
+    <Url>@ms182352.aspx</Url>
+    <Resolution>'{0}' should differ from other members by more than its return type.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="OverrideEqualsOnOverloadingOperatorEquals" Category="Microsoft.Usage" CheckId="CA2224">
+    <Name>Override Equals on overloading operator equals</Name>
+    <Description>Types that redefine the equality operator should redefine Equals as well to ensure that these members return the same results. This helps ensure that types that rely on Equals (such as ArrayList and Hashtable) behave in a manner that is expected and consistent with the equality operator.</Description>
+    <Url>@ms182357.aspx</Url>
+    <Resolution>Override Equals on {0}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225">
+    <Name>Operator overloads have named alternates</Name>
+    <Description>When redefining operators, implement named methods to provide access to the operator functionality from languages that do not support operator overloading. For example, the functionality of the '+' operator should also be accessible using an 'Add' method.</Description>
+    <Url>@ms182355.aspx</Url>
+    <Resolution>Provide a method named '{0}' as a friendly alternate for operator {1}.</Resolution>
+    <Resolution Name="Property">Provide a property named '{0}' as a friendly alternate for operator {1}.</Resolution>
+    <Resolution Name="Multiple">Provide a method named '{0}' or '{1}' as an alternate for operator {2}.</Resolution>
+    <Resolution Name="Visibility">Mark {0} as public because it is a friendly alternate for operator {1}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="OperatorsShouldHaveSymmetricalOverloads" Category="Microsoft.Usage" CheckId="CA2226">
+    <Name>Operators should have symmetrical overloads</Name>
+    <Description>Overload operators that have related meanings so that their behavior is consistent. For example, when overloading the equality operator, you should also overload the inequality operator to ensure they return opposite results for the same input values.</Description>
+    <Url>@ms182356.aspx</Url>
+    <Resolution>Since '{0}' redefines operator '{1}', it should also redefine operator '{2}'.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227">
+    <Name>Collection properties should be read only</Name>
+    <Description>Properties that return collections should be read-only so that users cannot entirely replace the backing store. Users can still modify the contents of the collection by calling relevant methods on the collection. Note that the XmlSerializer class has special support for deserializing read-only collections. See the XmlSerializer overview for more information.</Description>
+    <Url>@ms182327.aspx</Url>
+    <Resolution>Change {0} to be read-only by removing the property setter.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotShipUnreleasedResourceFormats" Category="Microsoft.Usage" CheckId="CA2228">
+    <Name>Do not ship unreleased resource formats</Name>
+    <Description>Resources generated by pre-release versions of the .NET Framework might contain incorrect or incomplete type references. Pre-release versions of the .NET Framework can generate partial or incomplete references to types. Resources built with pre-release software are not guaranteed to work correctly in released versions.</Description>
+    <Url>@ms182339.aspx</Url>
+    <Resolution>Rebuild resource file {0} with a released version of .NET. The '{1}' key specified an unrecognized version '{2}'. The version found in the current mscorlib is '{3}'.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ImplementSerializationConstructors" Category="Microsoft.Usage" CheckId="CA2229">
+    <Name>Implement serialization constructors</Name>
+    <Description>The constructor signature accepts the same arguments as ISerializable.GetObjectData, namely, a SerializationInfo instance and a StreamingContext instance. The constructor should be protected for non-sealed classes and private for sealed classes. Failure to implement a serialization constructor will cause deserialization to fail, and throw a SerializationException.</Description>
+    <Url>@ms182343.aspx</Url>
+    <Resolution Name="CreateMagicConstructor">Add a constructor to {0} with the following signature: 'protected {0}(SerializationInfo info, StreamingContext context)'.</Resolution>
+    <Resolution Name="MakeUnsealedMagicConstructorFamily">Declare the serialization constructor of {0}, an unsealed type, as protected.</Resolution>
+    <Resolution Name="MakeSealedMagicConstructorPrivate">Declare the serialization constructor of {0}, a sealed type, as private.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="UseParamsForVariableArguments" Category="Microsoft.Usage" CheckId="CA2230">
+    <Name>Use params for variable arguments</Name>
+    <Description>Do not use the varargs calling convention to accept a variable number of arguments. In the managed world, the 'params' and 'ParamArray' keywords provide this functionality..</Description>
+    <Url>@ms182366.aspx</Url>
+    <Resolution>Change {0} to use parameter arrays instead of varargs. For C#, use 'params'. For Visual Basic .NET and C++, use 'ParamArray'.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="OverloadOperatorEqualsOnOverridingValueTypeEquals" Category="Microsoft.Usage" CheckId="CA2231">
+    <Name>Overload operator equals on overriding ValueType.Equals</Name>
+    <Description>Value types that redefine System.ValueType.Equals should redefine the equality operator as well to ensure that these members return the same results. This helps ensure that types that rely on Equals (such as ArrayList and Hashtable) behave in a manner that is expected and consistent with the equality operator.</Description>
+    <Url>@ms182359.aspx</Url>
+    <Resolution>Because {0} is a value type that overrides ValueType.Equals, it should also overload the equality and inequality operators (== and !=).</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="MarkWindowsFormsEntryPointsWithStaThread" Category="Microsoft.Usage" CheckId="CA2232">
+    <Name>Mark Windows Forms entry points with STAThread</Name>
+    <Description>Assemblies that reference System.Windows.Forms should have the STAThreadAttribute. Failure to apply this attribute will most likely result in an application that does not work. Windows Forms relies on a number of components that use the STA model.</Description>
+    <Url>@ms182351.aspx</Url>
+    <Resolution>Mark the entry point method {0} in assembly {1} with an STAThreadAttribute.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="OperationsShouldNotOverflow" Category="Microsoft.Usage" CheckId="CA2233">
+    <Name>Operations should not overflow</Name>
+    <Description>Arithmetic operations should not be done without first validating the operands to prevent overflow.</Description>
+    <Url>@ms182354.aspx</Url>
+    <Resolution>Correct the potential overflow in the operation '{0}' in {1}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="PassSystemUriObjectsInsteadOfStrings" Category="Microsoft.Usage" CheckId="CA2234">
+    <Name>Pass System.Uri objects instead of strings</Name>
+    <Description>If there are two overloads one taking System.Uri and one taking System.String, library code should never call the string-based overload.</Description>
+    <Url>@ms182360.aspx</Url>
+    <Resolution>Modify {0} to call {1} instead of {2}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="MarkAllNonSerializableFields" Category="Microsoft.Usage" CheckId="CA2235">
+    <Name>Mark all non-serializable fields</Name>
+    <Description>All fields that cannot be serialized directly should have the NonSerializedAttribute. Types that have the SerializableAttribute should not have fields of types that do not have the SerializableAttribute unless the fields are marked with the NonSerializedAttribute.</Description>
+    <Url>@ms182349.aspx</Url>
+    <Resolution>Field {0} is a member of type {1}, which is serializable, but is of type {2}, which is not serializable. Add the NonSerializedAttribute to {0}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="CallBaseClassMethodsOnISerializableTypes" Category="Microsoft.Usage" CheckId="CA2236">
+    <Name>Call base class methods on ISerializable types</Name>
+    <Description>Derived ISerializable types must call the base class magic constructor and the base class GetObjectData method.</Description>
+    <Url>@ms182326.aspx</Url>
+    <Resolution>Method {0} should be modified to call its base class implementation.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="MarkISerializableTypesWithSerializable" Category="Microsoft.Usage" CheckId="CA2237">
+    <Name>Mark ISerializable types with SerializableAttribute</Name>
+    <Description>The System.Runtime.Serialization.ISerializable interface allows the type to customize its serialization, while the Serializable attribute enables the runtime to recognize the type as being serializable.</Description>
+    <Url>@ms182350.aspx</Url>
+    <Resolution>Add [Serializable] to {0} as this type implements ISerializable.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ImplementSerializationMethodsCorrectly" Category="Microsoft.Usage" CheckId="CA2238">
+    <Name>Implement serialization methods correctly</Name>
+    <Description>Methods marked with OnSerializing, OnSerialized, OnDeserializing, or OnDeserialized, must be non-generic, private, return void (Sub in Visual Studio) and take a single parameter of type StreamingContext.</Description>
+    <Url>@ms182344.aspx</Url>
+    <Resolution Name="Visibility">Because {0} is marked with OnSerializing, OnSerialized, OnDeserializing, or OnDeserialized, change its accessibility to private.</Resolution>
+    <Resolution Name="ReturnType">Because {0} is marked with OnSerializing, OnSerialized, OnDeserializing, or OnDeserialized, change its return type from {1} to void (Sub in Visual Basic).</Resolution>
+    <Resolution Name="Parameters">Because {0} is marked with OnSerializing, OnSerialized, OnDeserializing, or OnDeserialized, change its signature so that it takes a single parameter of type 'System.Runtime.Serialization.StreamingContext'.</Resolution>
+    <Resolution Name="Generic">Because {0} is marked with OnSerializing, OnSerialized, OnDeserializing, or OnDeserialized, change its signature so that it is no longer generic.</Resolution>
+    <Resolution Name="Static">Because {0} is marked with OnSerializing, OnSerialized, OnDeserializing, or OnDeserialized, change it from static (Shared in Visual Basic) to an instance method.</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking,NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ProvideDeserializationMethodsForOptionalFields" Category="Microsoft.Usage" CheckId="CA2239">
+    <Name>Provide deserialization methods for optional fields</Name>
+    <Description>If a type contains fields attributed as OptionalField, then it should implement the corresponding special deserialization methods.</Description>
+    <Url>@ms182362.aspx</Url>
+    <Resolution Name="OnDeserialized">Add a 'private void OnDeserialized(StreamingContext)' method to type {0} and attribute it with the System.Runtime.Serialization.OnDeserializedAttribute.</Resolution>
+    <Resolution Name="OnDeserializing">Add a 'private void OnDeserializing(StreamingContext)' method to type {0} and attribute it with the System.Runtime.Serialization.OnDeserializingAttribute.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ImplementISerializableCorrectly" Category="Microsoft.Usage" CheckId="CA2240">
+    <Name>Implement ISerializable correctly</Name>
+    <Description>If a type is assignable to ISerializable, it should implement GetObjectData. For unsealed types, the GetObjectData method should be callable and overridable by derived types.</Description>
+    <Url>@ms182342.aspx</Url>
+    <Resolution Name="Default">Add an implementation of GetObjectData to type {0}.</Resolution>
+    <Resolution Name="MakeVisible">Increase the accessibility of {0}.GetObjectData so that it is visible to derived types.</Resolution>
+    <Resolution Name="MakeOverridable">Make {0}.GetObjectData virtual and overridable.</Resolution>
+    <Email>
+    </Email>
+    <FixCategories>NonBreaking</FixCategories>
+    <MessageLevel Certainty="60">Error</MessageLevel>
+    <Owner />
+  </Rule>
+  <!--<Rule TypeName="ProvideCorrectArgumentsToFormattingMethods" Category="Microsoft.Usage" CheckId="CA2241">
+    <Name>Provide correct arguments to formatting methods</Name>
+    <Description>Provide the correct number of arguments for calls to String.Format.</Description>
+    <Url>@ms182361.aspx</Url>
+    <Resolution Name="MissingSpecifier">A call to {0} in {1} does not appear to provide a format specifier for argument {2}. The complete format string provided is '{3}'.</Resolution>
+    <Resolution Name="MissingArgument">A call to {0} in {1} does not appear to provide an argument for the format specifier {2}. The complete format string provided is '{3}'.</Resolution>
+    <Email>
+    </Email>
+    <FixCategories>NonBreaking</FixCategories>
+    <MessageLevel Certainty="90">CriticalError</MessageLevel>
+    <Owner />
+  </Rule>-->
+  <Rule TypeName="TestForNaNCorrectly" Category="Microsoft.Usage" CheckId="CA2242">
+    <Name>Test for NaN correctly</Name>
+    <Description>Direct comparisons against 'Single.NaN' or 'Double.NaN' (not a number) always return true for inequality and false for all other comparisons; use 'Single.IsNaN' or 'Double.IsNaN' to check if a floating point value is NaN.</Description>
+    <Url>@bb264491.aspx</Url>
+    <Resolution>Because direct comparisons to 'Single.NaN' or 'Double.NaN' will always return true for inequality and false for all other comparisons, replace the comparison in {0} with a call to 'Single.IsNaN' or 'Double.IsNaN'.</Resolution>
+    <Email></Email>
+    <FixCategories>NonBreaking</FixCategories>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AttributeStringLiteralsShouldParseCorrectly" Category="Microsoft.Usage" CheckId="CA2243">
+    <Name>Attribute string literals should parse correctly</Name>
+    <Description>Literal strings used as attribute parameters that represent URLs, version numbers, or GUIDs, should have the appropriate format.</Description>
+    <Url>@bb264490.aspx</Url>
+    <Resolution Name="Default">In the constructor of {0}, change the value of argument {1}, which is currently "{2}", to something that can be correctly parsed as {3}.</Resolution>
+    <Resolution Name="Empty">In the constructor of {0}, change the value of argument {1}, which is currently an empty string (""), to something that can be correctly parsed as {2}.</Resolution>
+    <Email>
+    </Email>
+    <FixCategories>NonBreaking</FixCategories>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <Owner />
+  </Rule>
+  <Rule TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816">
+    <Name>Call GC.SuppressFinalize correctly</Name>
+    <Description>Call GC.SuppressFinalize to suppress finalization of your instance once Dispose has been called. Objects that implement IDisposable should call SuppressFinalize from the IDisposable.Dispose method to prevent the garbage collector from calling Object.Finalize on an object that does not require it.</Description>
+    <Url>@ms182269.aspx</Url>
+    <Resolution Name="NotCalledWithFinalizer">Change {0} to call {1}. This will prevent unnecessary finalization of the object once it has been disposed and it has fallen out of scope.</Resolution>
+    <Resolution Name="NotCalled">Change {0} to call {1}. This will prevent derived types that introduce a finalizer from needing to re-implement 'IDisposable' to call it.</Resolution>
+    <Resolution Name="NotPassedThis">{0} calls {1} on something other than itself. Change the call site to pass 'this' ('Me' in Visual Basic) instead.</Resolution>
+    <Resolution Name="OutsideDispose">{0} calls {1}, a method that is typically only called within an implementation of 'IDisposable.Dispose'. Refer to the IDisposable pattern for more information.</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="75">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+</Rules>

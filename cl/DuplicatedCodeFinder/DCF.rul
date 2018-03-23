@@ -28,6 +28,7 @@
     <config name="Default"/>
     <config name = "java" redefine = "Default"/>
     <config name = "python" redefine = "Default"/>
+    <config name = "csharp" redefine = "Default"/>
   </Configurations>
   <Views/>
   <Edges/>
@@ -66,6 +67,20 @@
       </Calculated>
     </Configuration>
     <Configuration name = "python">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Clone class/clone instance:&lt;/b&gt; number of previously analyzed revisions in which the clone class/clone instance was present + 1.</Description>
+        <HelpText>&lt;b&gt;Clone class/clone instance:&lt;/b&gt; number of previously analyzed revisions in which the clone class/clone instance was present + 1.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>CloneClass</CalculatedFor>
+        <CalculatedFor>CloneInstance</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "csharp">
       <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
@@ -137,6 +152,25 @@
         <CalculatedFor>Class</CalculatedFor>
       </Calculated>
     </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Method/Interface/Enum/class/Structure/Namespace:&lt;/b&gt; ratio of code covered by code duplications in the source code element to the size of the source code element, expressed in terms of the number of syntactic entities (statements, expressions, etc.).&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; ratio of code covered by code duplications in the component to the size of the component, expressed in terms of the number of syntactic entities (statements, expressions, etc.).</Description>
+        <HelpText>&lt;b&gt;Method/Interface/Enum/class/Structure/Namespace:&lt;/b&gt; ratio of code covered by code duplications in the source code element to the size of the source code element, expressed in terms of the number of syntactic entities (statements, expressions, etc.).&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; ratio of code covered by code duplications in the component to the size of the component, expressed in terms of the number of syntactic entities (statements, expressions, etc.).</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Component</CalculatedFor>
+        <CalculatedFor>Namespace</CalculatedFor>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+        <CalculatedFor>Interface</CalculatedFor>
+        <CalculatedFor>Enum</CalculatedFor>
+        <CalculatedFor>Method</CalculatedFor>
+      </Calculated>
+    </Configuration>
   </Metric>
   <Metric id = "CCL">
     <Configuration name = "Default">
@@ -193,6 +227,25 @@
         <CalculatedFor>Method</CalculatedFor>
         <CalculatedFor>Function</CalculatedFor>
         <CalculatedFor>Class</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Method/class/structure/interface/namespace:&lt;/b&gt; number of clone classes having at least one clone instance in the source code element.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; number of clone classes having at least one clone instance in the component.</Description>
+        <HelpText>&lt;b&gt;Method/class/structure/interface/namespace:&lt;/b&gt; number of clone classes having at least one clone instance in the source code element.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; number of clone classes having at least one clone instance in the component.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Component</CalculatedFor>
+        <CalculatedFor>Namespace</CalculatedFor>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+        <CalculatedFor>Interface</CalculatedFor>
+        <CalculatedFor>Enum</CalculatedFor>
+        <CalculatedFor>Method</CalculatedFor>
       </Calculated>
     </Configuration>
   </Metric>
@@ -257,6 +310,27 @@
         <CalculatedFor>Package</CalculatedFor>
       </Calculated>
     </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Clone instance:&lt;/b&gt; the McCabe complexity of the code fragment corresponding to the clone instance.&lt;br&gt;&lt;b&gt;Clone class:&lt;/b&gt; sum of CCO of clone instances in the clone class.&lt;br&gt;&lt;b&gt;Method/class/interface/namespace/structure:&lt;/b&gt; sum of CCO of clone instances in the source code element.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; sum of CCO of clone instances in the component.</Description>
+        <HelpText>&lt;b&gt;Clone instance:&lt;/b&gt; the McCabe complexity of the code fragment corresponding to the clone instance.&lt;br&gt;&lt;b&gt;Clone class:&lt;/b&gt; sum of CCO of clone instances in the clone class.&lt;br&gt;&lt;b&gt;Method/class/interface/namespace/structure:&lt;/b&gt; sum of CCO of clone instances in the source code element.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; sum of CCO of clone instances in the component.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>CloneClass</CalculatedFor>
+        <CalculatedFor>CloneInstance</CalculatedFor>
+        <CalculatedFor>Component</CalculatedFor>
+        <CalculatedFor>Namespace</CalculatedFor>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+        <CalculatedFor>Interface</CalculatedFor>
+        <CalculatedFor>Enum</CalculatedFor>
+        <CalculatedFor>Method</CalculatedFor>
+      </Calculated>
+    </Configuration>
   </Metric>
   <Metric id = "CE">
     <Configuration name = "Default">
@@ -293,6 +367,20 @@
       </Calculated>
     </Configuration>
     <Configuration name = "python">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Clone instance:&lt;/b&gt; sum of incoming and outgoing references (function calls, variable references, type references; different references to the same entity are counted only once) in the code fragment corresponding to the clone instance, weighted with the number of directory changes between the referenced code fragments.&lt;br&gt;&lt;b&gt;Clone class:&lt;/b&gt; sum of CE of the clone instances of the clone class + 1.</Description>
+        <HelpText>&lt;b&gt;Clone instance:&lt;/b&gt; sum of incoming and outgoing references (function calls, variable references, type references; different references to the same entity are counted only once) in the code fragment corresponding to the clone instance, weighted with the number of directory changes between the referenced code fragments.&lt;br&gt;&lt;b&gt;Clone class:&lt;/b&gt; sum of CE of the clone instances of the clone class + 1.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>CloneClass</CalculatedFor>
+        <CalculatedFor>CloneInstance</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "csharp">
       <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
@@ -355,6 +443,20 @@
         <CalculatedFor>Component</CalculatedFor>
       </Calculated>
     </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Clone class:&lt;/b&gt; index of the effort required to eliminate the clone class. It is computed as the product of CI, CE, and NCR.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; index of the effort required to eliminate all clones from the component. It is computed as the sum of CEE of the clone classes in the component.</Description>
+        <HelpText>&lt;b&gt;Clone class:&lt;/b&gt; index of the effort required to eliminate the clone class. It is computed as the product of CI, CE, and NCR.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; index of the effort required to eliminate all clones from the component. It is computed as the sum of CEE of the clone classes in the component.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>CloneClass</CalculatedFor>
+        <CalculatedFor>Component</CalculatedFor>
+      </Calculated>
+    </Configuration>
   </Metric>
   <Metric id = "CEG">
     <Configuration name = "Default">
@@ -391,6 +493,20 @@
       </Calculated>
     </Configuration>
     <Configuration name = "java">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Clone class:&lt;/b&gt; index of the gain resulting from eliminating the clone class. It is computed as the ratio of CR to CEE.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; index of the gain resulting from eliminating all clones from the component. It is computed as the logistic function of the ratio of CR to CEE.</Description>
+        <HelpText>&lt;b&gt;Clone class:&lt;/b&gt; index of the gain resulting from eliminating the clone class. It is computed as the ratio of CR to CEE.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; index of the gain resulting from eliminating all clones from the component. It is computed as the logistic function of the ratio of CR to CEE.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>CloneClass</CalculatedFor>
+        <CalculatedFor>Component</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "csharp">
       <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
@@ -464,6 +580,25 @@
         <CalculatedFor>Package</CalculatedFor>
       </Calculated>
     </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Description>&lt;b&gt;Method/class/Namespace:&lt;/b&gt; number of clone instances in the source code element.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; number of clone instances in the component.&lt;br&gt;&lt;b&gt;Clone class:&lt;/b&gt; number of clone instances in the clone class.</Description>
+        <HelpText>&lt;b&gt;Method/class/Namespace:&lt;/b&gt; number of clone instances in the source code element.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; number of clone instances in the component.&lt;br&gt;&lt;b&gt;Clone class:&lt;/b&gt; number of clone instances in the clone class.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>CloneClass</CalculatedFor>
+        <CalculatedFor>Component</CalculatedFor>
+        <CalculatedFor>Namespace</CalculatedFor>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+        <CalculatedFor>Interface</CalculatedFor>
+        <CalculatedFor>Enum</CalculatedFor>
+        <CalculatedFor>Method</CalculatedFor>
+      </Calculated>
+    </Configuration>
   </Metric>
   <Metric id = "CLC">
     <Configuration name = "Default">
@@ -520,6 +655,25 @@
         <CalculatedFor>Interface</CalculatedFor>
         <CalculatedFor>Method</CalculatedFor>
         <CalculatedFor>Package</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Method/class/interface/namespace:&lt;/b&gt; ratio of code covered by code duplications in the source code element to the size of the source code element, expressed in terms of lines of code.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; ratio of code covered by code duplications in the component to the size of the component, expressed in terms of lines of code.</Description>
+        <HelpText>&lt;b&gt;Method/class/interface/namespace:&lt;/b&gt; ratio of code covered by code duplications in the source code element to the size of the source code element, expressed in terms of lines of code.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; ratio of code covered by code duplications in the component to the size of the component, expressed in terms of lines of code.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Component</CalculatedFor>
+        <CalculatedFor>Namespace</CalculatedFor>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+        <CalculatedFor>Interface</CalculatedFor>
+        <CalculatedFor>Enum</CalculatedFor>
+        <CalculatedFor>Method</CalculatedFor>
       </Calculated>
     </Configuration>
   </Metric>
@@ -580,6 +734,25 @@
         <CalculatedFor>Package</CalculatedFor>
       </Calculated>
     </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Method/class/module/namespace:&lt;/b&gt; ratio of code covered by code duplications in the source code element to the size of source code element, expressed in terms of logical lines of code (non-empty, non-comment lines).&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; ratio of code covered by code duplications in the component to the size of the component, expressed in terms of logical lines of code (non-empty, non-comment lines).</Description>
+        <HelpText>&lt;b&gt;Method/class/module/namespace:&lt;/b&gt; ratio of code covered by code duplications in the source code element to the size of source code element, expressed in terms of logical lines of code (non-empty, non-comment lines).&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; ratio of code covered by code duplications in the component to the size of the component, expressed in terms of logical lines of code (non-empty, non-comment lines).</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Component</CalculatedFor>
+        <CalculatedFor>Namespace</CalculatedFor>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+        <CalculatedFor>Interface</CalculatedFor>
+        <CalculatedFor>Enum</CalculatedFor>
+        <CalculatedFor>Method</CalculatedFor>
+      </Calculated>
+    </Configuration>
   </Metric>
   <Metric id = "CLLOC">
     <Configuration name = "Default">
@@ -619,6 +792,20 @@
       </Calculated>
     </Configuration>
     <Configuration name = "java">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Clone instance:&lt;/b&gt; length of the clone instance expressed in terms of lines of code.&lt;br&gt;&lt;b&gt;Clone class:&lt;/b&gt;  average of CLLOC of clone instances belonging to the clone class.</Description>
+        <HelpText>&lt;b&gt;Clone instance:&lt;/b&gt; length of the clone instance expressed in terms of lines of code.&lt;br&gt;&lt;b&gt;Clone class:&lt;/b&gt;  average of CLLOC of clone instances belonging to the clone class.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>CloneClass</CalculatedFor>
+        <CalculatedFor>CloneInstance</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "csharp">
       <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
@@ -681,6 +868,20 @@
         <CalculatedFor>Component</CalculatedFor>
       </Calculated>
     </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Clone class:&lt;/b&gt; risk index of the existence of the clone class. It is computed as the product of CLLOC, CI, CCO, NCR, and CV.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; relative risk index of the existence of code duplications in the component. It is computed as the sum of CR of the clone classes in the component, divided by the total logical lines of code (non-empty, non-comment lines) of the component. It expresses the risk index projected to a non-empty, non-comment line of code in the component.</Description>
+        <HelpText>&lt;b&gt;Clone class:&lt;/b&gt; risk index of the existence of the clone class. It is computed as the product of CLLOC, CI, CCO, NCR, and CV.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; relative risk index of the existence of code duplications in the component. It is computed as the sum of CR of the clone classes in the component, divided by the total logical lines of code (non-empty, non-comment lines) of the component. It expresses the risk index projected to a non-empty, non-comment line of code in the component.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>CloneClass</CalculatedFor>
+        <CalculatedFor>Component</CalculatedFor>
+      </Calculated>
+    </Configuration>
   </Metric>
   <Metric id = "CV">
     <Configuration name = "Default">
@@ -730,6 +931,20 @@
         <CalculatedFor>CloneInstance</CalculatedFor>
       </Calculated>
     </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Clone instance:&lt;/b&gt; instability of the clone instance since it appeared. It is computed as the ratio of the number of previously analyzed revisions when the instance had been changed to its age (CA).&lt;br&gt;&lt;b&gt;Clone class:&lt;/b&gt; instability of the clone class since it appeared. It is computed as the ratio of the number of previously analyzed revisions when its contained instances were moved, deleted, or added, to its age (CA), plus the average CV of its clone instances.</Description>
+        <HelpText>&lt;b&gt;Clone instance:&lt;/b&gt; instability of the clone instance since it appeared. It is computed as the ratio of the number of previously analyzed revisions when the instance had been changed to its age (CA).&lt;br&gt;&lt;b&gt;Clone class:&lt;/b&gt; instability of the clone class since it appeared. It is computed as the ratio of the number of previously analyzed revisions when its contained instances were moved, deleted, or added, to its age (CA), plus the average CV of its clone instances.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>CloneClass</CalculatedFor>
+        <CalculatedFor>CloneInstance</CalculatedFor>
+      </Calculated>
+    </Configuration>
   </Metric>
   <Metric id = "Clone">
     <Configuration name = "Default">
@@ -755,6 +970,17 @@
       <Calculated/>
     </Configuration>
     <Configuration name = "java">
+      <Enabled>false</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Clone metrics:&lt;/b&gt; measure the amount of copy-paste programming in the source code.</Description>
+        <HelpText>&lt;b&gt;Clone metrics:&lt;/b&gt; measure the amount of copy-paste programming in the source code.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated/>
+    </Configuration>
+    <Configuration name = "csharp">
       <Enabled>false</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
@@ -823,6 +1049,25 @@
         <CalculatedFor>Package</CalculatedFor>
       </Calculated>
     </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Method/class/interface/namespace:&lt;/b&gt; number of code lines covered by code duplications in the source code element.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; number of code lines covered by code duplications in the component.</Description>
+        <HelpText>&lt;b&gt;Method/class/interface/namespace:&lt;/b&gt; number of code lines covered by code duplications in the source code element.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; number of code lines covered by code duplications in the component.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Component</CalculatedFor>
+        <CalculatedFor>Namespace</CalculatedFor>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+        <CalculatedFor>Interface</CalculatedFor>
+        <CalculatedFor>Enum</CalculatedFor>
+        <CalculatedFor>Method</CalculatedFor>
+      </Calculated>
+    </Configuration>
   </Metric>
   <Metric id = "LLDC">
     <Configuration name = "Default">
@@ -881,6 +1126,25 @@
         <CalculatedFor>Package</CalculatedFor>
       </Calculated>
     </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Method/class/interface/namespace:&lt;/b&gt; number of logical code lines (non-empty, non-comment lines) covered by code duplications in the source code element.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; The number of logical code lines (non-empty, non-comment lines) covered by code duplications in the component.</Description>
+        <HelpText>&lt;b&gt;Method/class/interface/namespace:&lt;/b&gt; number of logical code lines (non-empty, non-comment lines) covered by code duplications in the source code element.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; The number of logical code lines (non-empty, non-comment lines) covered by code duplications in the component.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Component</CalculatedFor>
+        <CalculatedFor>Namespace</CalculatedFor>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+        <CalculatedFor>Interface</CalculatedFor>
+        <CalculatedFor>Enum</CalculatedFor>
+        <CalculatedFor>Method</CalculatedFor>
+      </Calculated>
+    </Configuration>
   </Metric>
   <Metric id = "NCR">
     <Configuration name = "Default">
@@ -917,6 +1181,20 @@
       </Calculated>
     </Configuration>
     <Configuration name = "java">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Clone class:&lt;/b&gt; normalized average distance among clone instances belonging to the clone class, expressed in terms of number of directory changes.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; average of NCR of the clone classes in the component.</Description>
+        <HelpText>&lt;b&gt;Clone class:&lt;/b&gt; normalized average distance among clone instances belonging to the clone class, expressed in terms of number of directory changes.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; average of NCR of the clone classes in the component.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>CloneClass</CalculatedFor>
+        <CalculatedFor>Component</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "csharp">
       <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>

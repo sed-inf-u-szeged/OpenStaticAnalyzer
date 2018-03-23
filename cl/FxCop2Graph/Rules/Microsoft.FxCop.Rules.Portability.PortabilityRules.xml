@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Rules FriendlyName="Portability Rules">
+  <Rule TypeName="ValueTypeFieldsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1900">
+    <Name>Value type fields should be portable</Name>
+    <Description>Structures with explicit layout containing misaligned fields cause crashes on 64-bit platforms.</Description>
+    <Url>@ms182285(VS.100).aspx</Url>
+    <Resolution>Structure {0} contains the following non-portable fields: {1}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <FixCategories>Breaking,NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="PInvokeDeclarationsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1901">
+    <Name>P/Invoke declarations should be portable</Name>
+    <Description>.</Description>
+    <Url>@ms182284(VS.100).aspx</Url>
+    <Localized Name="32Bit">32-bit</Localized>
+    <Localized Name="64Bit">64-bit</Localized>
+    <Resolution Name="Parameter">As it is declared in your code, parameter {0} of P/Invoke {1} will be {2} bytes wide on {3} platforms. This is not correct, as the actual native declaration of this API indicates it should be {4} bytes wide on {3} platforms. Consult the MSDN Platform SDK documentation for help determining what data type should be used instead of {5}.</Resolution>
+    <Resolution Name="Return">As it is declared in your code, the return type of P/Invoke {0} will be {1} bytes wide on {2} platforms. This is not correct, as the actual native declaration of this API indicates it should be {3} bytes wide on {2} platforms. Consult the MSDN Platform SDK documentation for help determining what data type should be used instead of {4}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking,NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--  <Rule TypeName="AvoidTestingForFloatingPointEquality" Category="Microsoft.Portability" CheckId="CA1902">
+    <Name>Avoid testing for floating point equality</Name>
+    <Description>Avoid testing for floating-point equality.</Description>
+    <Url>@/Portability/AvoidTestingForFloatingPointEquality.html</Url>
+    <Resolution>Replace the test for floating-point equality in {0} with a test that can tolerate differences that may occur due to a lack of precision.</Resolution>
+    <Email>fxcopbug@microsoft.com</Email>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule> -->
+  <Rule TypeName="UseOnlyApiFromTargetedFramework" Category="Microsoft.Portability" CheckId="CA1903">
+    <Name>Use only API from targeted framework</Name>
+    <Description></Description>
+    <Url>@cc667408(VS.100).aspx</Url>
+    <Resolution Name="TypeReferencesType">Type {0} uses type {1}. Because this type was introduced in {2}, which was not included in the project's target framework, {3}, your application may fail to run on systems without this service pack installed.</Resolution>
+    <Resolution Name="TypeReferencesMember">Type {0} uses member {1}. Because this member was introduced in {2}, which was not included in the project's target framework, {3}, your application may fail to run on systems without this service pack installed.</Resolution>
+    <Resolution Name="MemberReferencesType">Member {0} uses type {1}. Because this type was introduced in {2}, which was not included in the project's target framework, {3}, your application may fail to run on systems without this service pack installed.</Resolution>
+    <Resolution Name="MemberReferencesMember">Member {0} uses member {1}. Because this member was introduced in {2}, which was not included in the project's target framework, {3}, your application may fail to run on systems without this service pack installed.</Resolution>
+    <Resolution Name="AssemblyReferencesMember">Assembly {0} is marked with an attribute that uses member {1}. Because this member was introduced in {2}, which was not included in the project's target framework, {3}, your application may fail to run on systems without this service pack installed.</Resolution>
+    <Resolution Name="AssemblyReferencesType">Assembly {0} is marked with an attribute that uses type {1}. Because this type was introduced in {2}, which was not included in the project's target framework, {3}, your application may fail to run on systems without this service pack installed.</Resolution>
+    <Resolution Name="AssemblyReferencesAssembly">Assembly {0} has a reference to assembly '{1}'. Because this assembly was introduced in {2}, which is higher than the project's target framework, {3}, your application may fail to run on systems without this framework installed.</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+  </Rule>
+</Rules>

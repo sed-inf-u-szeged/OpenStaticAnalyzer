@@ -26,3 +26,4 @@ endfunction()
 
 add_language_config(java)
 add_language_config(python)
+add_language_config(csharp)

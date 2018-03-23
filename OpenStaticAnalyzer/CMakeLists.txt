@@ -14,6 +14,7 @@ add_custom_target (
     ${OSA_TARGET_NAME}
     DEPENDS OSA-Java
     DEPENDS OSA-Python
+    DEPENDS OSA-CSharp
     COMMAND ${CMAKE_COMMAND} -E ${COMPRESS_COMMAND}
 )
 
@@ -51,3 +52,4 @@ endfunction ()
 
 add_subdirectory (java)
 add_subdirectory (python)
+add_subdirectory (csharp)

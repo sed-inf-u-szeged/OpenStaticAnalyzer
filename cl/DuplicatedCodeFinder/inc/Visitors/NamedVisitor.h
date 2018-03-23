@@ -27,11 +27,18 @@ protected:
 public:
   NamedVisitor() : repr("") {}
   virtual void visit(const Base& node, bool callVirtualBase = true) {
-#if defined SCHEMA_PYTHON
+#if defined SCHEMA_PYTHON || defined(SCHEMA_CSHARP)
+#if defined SCHEMA_CSHARP
+	std::string name = "";
+	try {
+	  name = AlgorithmCommon::getName(node);
+	} catch (...) {}
+#elif defined SCHEMA_PYTHON
     std::string name;
     if (node.getParent() != NULL ) {
       name = AlgorithmCommon::getUniqueName(node);
     }
+#endif
     if (!name.empty()) {
       repr+=std::string("(")+name;
     }
@@ -39,14 +46,23 @@ public:
     repr+=std::string("#")+common::toString(node.getNodeKind());
   }
   virtual void visitEnd(const Base& node, bool callVirtualBase = true) {
-#if defined SCHEMA_PYTHON
+#if defined SCHEMA_PYTHON || defined(SCHEMA_CSHARP)
+#if defined SCHEMA_CSHARP
+    std::string name = "";
+    try {
+      name = AlgorithmCommon::getName(node);
+    } catch (...) {}
+#elif defined SCHEMA_PYTHON
     std::string name = AlgorithmCommon::getUniqueName(node);
+#endif
     if (!name.empty()) {
       repr+=std::string(")");
     }
 #endif
     repr+="$";
   }
+
+#ifndef SCHEMA_CSHARP
   virtual void visit(const Named& node, bool callVirtualBase = true) {
     visit((Base&)node);
     repr+=std::string("(")+node.getName();
@@ -55,6 +71,7 @@ public:
     repr+=std::string(")");
     visitEnd((Base&)node);
   }
+#endif
   operator std::string() {return repr;}
 };
 

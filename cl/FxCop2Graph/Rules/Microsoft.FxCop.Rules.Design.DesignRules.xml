@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Rules FriendlyName="Design Rules">
+  <Rule TypeName="DoNotDeclareStaticMembersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1000">
+    <Name>Do not declare static members on generic types</Name>
+    <Description>The syntax for calling static members on generic types is complex as the type parameter has to be specified for each call.</Description>
+    <Url>@ms182139.aspx</Url>
+    <Resolution>Remove {0} from {1} or make it an instance member.</Resolution>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <Email>
+    </Email>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001">
+    <Name>Types that own disposable fields should be disposable</Name>
+    <Description>Types that declare disposable members should also implement IDisposable. If the type does not own any unmanaged resources, do not implement a finalizer on it.</Description>
+    <Url>@ms182172.aspx</Url>
+    <Resolution Name="DependsOnFix">Implement IDisposable on {0} because it creates members of the following IDisposable types: {1}. If {0} has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Resolution>
+    <Resolution Name="NonBreaking">Implement IDisposable on {0} because it creates members of the following IDisposable types: {1}.</Resolution>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <Email>
+    </Email>
+    <FixCategories>NonBreaking, DependsOnFix</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002">
+    <Name>Do not expose generic lists</Name>
+    <Description>Do not expose List&lt;T&gt; in object models. Use Collection&lt;T&gt;, ReadOnlyCollection&lt;T&gt; or KeyedCollection&lt;K,V&gt; instead. List&lt;T&gt; is meant to be used from implementation, not in object model API. List&lt;T&gt; is optimized for performance at the cost of long term versioning. For example, if you return List&lt;T&gt; to the client code, you will not ever be able to receive notifications when client code modifies the collection.</Description>
+    <Url>@ms182142.aspx</Url>
+    <Resolution>Change {0} in {1} to use Collection&lt;T&gt;, ReadOnlyCollection&lt;T&gt; or KeyedCollection&lt;K,V&gt;</Resolution>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <Email>
+    </Email>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="UseGenericEventHandlerInstances" Category="Microsoft.Design" CheckId="CA1003">
+    <Name>Use generic event handler instances</Name>
+    <Description>Do not declare new delegates to be used as event handlers when targeting a version of the .NET Framework that supports generics. Use an instance EventHandler&lt;T&gt; instead.</Description>
+    <Url>@ms182178.aspx</Url>
+    <Resolution Name="VB">Visual Basic generates EventHandler delegates for events that use the following pattern: Event MyEvent(ByVal Sender As Object, ByVal e as MyEventArgs). Change the event that defines EventHandler {0} to use EventHandler&lt;T&gt; by defining the event type explicitly, e.g. Event MyEvent As EventHandler(Of MyEventArgs).</Resolution>
+    <Resolution Name="Default">Remove {0} and replace its usage with EventHandler&lt;T&gt;</Resolution>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <Email>
+    </Email>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="GenericMethodsShouldProvideTypeParameter" Category="Microsoft.Design" CheckId="CA1004">
+    <Name>Generic methods should provide type parameter</Name>
+    <Description>Methods where the type parameter cannot be inferred from the parameters and therefore has to be defined in the method call are too difficult to understand. Methods with a formal parameter typed as the generic method type parameter support inference. Methods with no formal parameter typed as the generic method type parameter don't support inference.</Description>
+    <Url>@ms182150.aspx</Url>
+    <Resolution>Consider a design where {0} doesn't require explicit type parameter {1} in any call to it.</Resolution>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <Email>
+    </Email>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidExcessiveParametersOnGenericTypes" Category="Microsoft.Design" CheckId="CA1005">
+    <Name>Avoid excessive parameters on generic types</Name>
+    <Description>Avoid generic types with more than two type parameters as users have difficulties understanding what type parameters represent in types with long type parameter lists.</Description>
+    <Url>@ms182129.aspx</Url>
+    <Resolution>Consider a design where {0} has no more than 2 type parameters.</Resolution>
+    <MessageLevel Certainty="85">Error</MessageLevel>
+    <Email>
+    </Email>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotNestGenericTypesInMemberSignatures" Category="Microsoft.Design" CheckId="CA1006">
+    <Name>Do not nest generic types in member signatures</Name>
+    <Description>Avoid API that require users to instantiate a generic type with another generic type as type argument. The syntax gets too complex.</Description>
+    <Url>@ms182144.aspx</Url>
+    <Resolution>Consider a design where {0} doesn't nest generic type {1}.</Resolution>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <Email>
+    </Email>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="UseGenericsWhereAppropriate" Category="Microsoft.Design" CheckId="CA1007">
+    <Name>Use generics where appropriate</Name>
+    <Description>References passed to ref parameters must be the exact type of the parameter. Using generics enable the method for general use.</Description>
+    <Url>@ms182179.aspx</Url>
+    <Resolution>Consider using generics instead of a reference to System.Object in {0}.</Resolution>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <Email>
+    </Email>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="EnumsShouldHaveZeroValue" Category="Microsoft.Design" CheckId="CA1008">
+    <Name>Enums should have zero value</Name>
+    <Description>An enum should generally have a zero value. If the enum is not decorated with the Flags attribute, it should have a member with a value of zero that represents the empty state. Optionally, this value is named 'None'. For a Flags-attributed enum, a zero-valued member is optional and, if it exists, should always be named 'None'. This value should indicate that no values have been set in the enum. Using a zero-valued member for other purposes is contrary to the use of the Flags attribute in that the bitwise AND and OR operators are useless with the member.</Description>
+    <Url>@ms182149.aspx</Url>
+    <Resolution Name="FlagsRename">In enum {0}, change the name of {1} to 'None'.</Resolution>
+    <Resolution Name="FlagsMultipleZeros">Remove all members that have the value zero from {0} except for one member that is named 'None'.</Resolution>
+    <Resolution Name="NotFlagsNoZeroValue">Add a member to {0} that has a value of zero with a suggested name of 'None'.</Resolution>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <Email>
+    </Email>
+    <FixCategories>NonBreaking, Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009">
+    <Name>Declare event handlers correctly</Name>
+    <Description>By convention, .NET events have two parameters that specify the event sender and event data. Event handler signatures should follow this form: void MyEventHandler(object sender, EventArgs e). The 'sender' parameter is always of type System.Object, even if it is possible to employ a more specific type. The 'e' parameter is always of type System.EventArgs. Events that do not provide event data should use the System.EventHandler delegate type. Event handlers return void so that they can send each event to multiple target methods. Any value returned by a target would be lost after the first call.</Description>
+    <Url>@ms182133.aspx</Url>
+    <Resolution Name="Return">Change {0} to return void.</Resolution>
+    <Resolution Name="First">Declare the first parameter of {0} as an object named 'sender'.</Resolution>
+    <Resolution Name="Second">Declare the second parameter of {0} as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Resolution>
+    <Resolution Name="TooMany">Remove all but the first two parameters of {0}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="CollectionsShouldImplementGenericInterface" Category="Microsoft.Design" CheckId="CA1010">
+    <Name>Collections should implement generic interface</Name>
+    <Description>Non-generic strongly typed collections should implement one of the generic collection interfaces. This will allow better integration of the collection with generic API.</Description>
+    <Url>@ms182132.aspx</Url>
+    <Resolution>{0} appears to be a non-generic, strongly typed collection. Add an implementation to the instance of {1}&lt;T&gt; where T is the underlying element type of {0}.</Resolution>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <Email>
+    </Email>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--    <Rule TypeName="UnsealedPublicTypesAreNotMarkedSerializable">
+        <Name>Unsealed public types are not marked Serializable</Name>
+        <Description>An unsealed public type is marked with SerializableAttribute but does not implement ISerializable.</Description>
+        <LongDescription>A type that does not implement ISerializable relies on the default serialization behavior of the runtime. Serialization of the type is vulnerable to changes of state in subsequent versions of the type. Implementing ISerializable allows the serialization behavior to adjust to changes in the original version of the type without breaking the serialization behavior of previously derived types.</LongDescription>
+        <GroupOwner>MS FxCopDev</GroupOwner>
+        <DevOwner />
+        <Url>@/DesignRules/UnsealedPublicTypesAreNotMarkedSerializable.html</Url>
+        <Resolution>Implement ISerializable in '{0}' or make it sealed.</Resolution>
+        <Email>fxcopbug@microsoft.com</Email>
+        <Message Certainty="95">Error</Message>
+        <FixCategories>Breaking</FixCategories>        
+    </Rule> -->
+  <Rule TypeName="ConsiderPassingBaseTypesAsParameters" Category="Microsoft.Design" CheckId="CA1011">
+    <Name>Consider passing base types as parameters</Name>
+    <Description>Using base types as parameters to methods improves re-use of these methods if you only use methods &amp; properties from the parameter's base class. E.g. use Stream instead of FileStream as a parameter when only calling Stream.Read(), this makes the method work on all kind of streams instead of just File streams.</Description>
+    <Url>@3hk32yyz.aspx</Url>
+    <Resolution>Consider changing the type of parameter {0} in {1} from {2} to its base type {3}. This method appears to only require base class members in its implementation. Suppress this violation if there is a compelling reason to require the more derived type in the method signature.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AbstractTypesShouldNotHaveConstructors" Category="Microsoft.Design" CheckId="CA1012">
+    <Name>Abstract types should not have constructors</Name>
+    <Description>Public constructors for abstract types do not make sense because you cannot create instances of abstract types.</Description>
+    <Url>@ms182126.aspx</Url>
+    <Resolution>Change the accessibility of all public constructors in {0} to protected.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="OverloadOperatorEqualsOnOverloadingAddAndSubtract" Category="Microsoft.Design" CheckId="CA1013">
+    <Name>Overload operator equals on overloading add and subtract</Name>
+    <Description>When overloading the addition and subtraction operators, make sure that the equality operator (==) is defined in a consistent manner.</Description>
+    <Url>@ms182164.aspx</Url>
+    <Resolution>Consider adding an overload of the equality operator for {0} that takes the same parameters as {1}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="MarkAssembliesWithClsCompliant" Category="Microsoft.Design" CheckId="CA1014">
+    <Name>Mark assemblies with CLSCompliantAttribute</Name>
+    <Description>Assemblies should explicitly state their CLS compliance using the CLSCompliant attribute. An assembly without this attribute is not CLS-compliant. Assemblies, modules, and types can be CLS-compliant even if some parts of the assembly, module, or type are not CLS-compliant. The following rules apply: 1) If the element is marked CLSCompliant, any noncompliant members must have the CLSCompliant attribute present with its argument set to false. 2) A comparable CLS-compliant alternative member must be supplied for each member that is not CLS-compliant.</Description>
+    <Url>@ms182156.aspx</Url>
+    <Resolution>Mark {0} with CLSCompliant(true) because it exposes externally visible types.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210">
+    <Name>Assemblies should have valid strong names</Name>
+    <Description>Either the assembly has no strong name, an invalid one, or the strong name is valid only because of the computer configuration. The assembly should not be deployed in this state. The most common causes of this are: 1) The assembly's contents were modified after it was signed. 2) The signing process failed. 3) The assembly was delay-signed. 4) A registry key existed that allowed the check to pass (where it would not have otherwise).</Description>
+    <Url>@ms182127.aspx</Url>
+    <Resolution Name="NoStrongName">Sign {0} with a strong name key.</Resolution>
+    <Resolution Name="NotValid">Verify that {0} has a valid strong name before deploying.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="MarkAssembliesWithAssemblyVersion" Category="Microsoft.Design" CheckId="CA1016">
+    <Name>Mark assemblies with AssemblyVersionAttribute</Name>
+    <Description>Assemblies should use version numbers. The version number is considered part of an assembly's identity. Versioning is applied by means of the AssemblyVersion attribute.</Description>
+    <Url>@ms182155.aspx</Url>
+    <Resolution>Add an AssemblyVersion attribute to {0}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="MarkAssembliesWithComVisible" Category="Microsoft.Design" CheckId="CA1017">
+    <Name>Mark assemblies with ComVisibleAttribute</Name>
+    <Description>The System.Runtime.InteropServices.ComVisible attribute indicates whether COM clients can use the library. Good design dictates that developers explicitly indicate COM visibility. The default value for this attribute is 'true'. However, the best design is to mark the assembly ComVisible false, and then mark types, interfaces, and individual members as ComVisible true, as appropriate.</Description>
+    <Url>@ms182157.aspx</Url>
+    <Resolution Name="NoAttribute">Because {0} exposes externally visible types, mark it with ComVisible(false) at the assembly level and then mark all types within the assembly that should be exposed to COM clients with ComVisible(true).</Resolution>
+    <Resolution Name="AttributeTrue">Consider changing the ComVisible attribute on {0} to false, and opting in at the type level.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalError, Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="MarkAttributesWithAttributeUsage" Category="Microsoft.Design" CheckId="CA1018">
+    <Name>Mark attributes with AttributeUsageAttribute</Name>
+    <Description>The AttributeUsage attribute specifies the targets that are valid for the attribute (see System.AttributeTargets), whether an attribute can appear on a target more than once, and whether the attribute is inheritable.</Description>
+    <Url>@ms182158.aspx</Url>
+    <Resolution>Specify AttributeUsage on {0}.</Resolution>
+    <Resolution Name="Inherited">Even though attribute {0} inherits AttributeUsage from its base type, you should consider explicitly specifying AttributeUsage on the type to improve code readability and documentation.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Warning, Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DefineAccessorsForAttributeArguments" Category="Microsoft.Design" CheckId="CA1019">
+    <Name>Define accessors for attribute arguments</Name>
+    <Description>Provide accessors for both named and positional arguments. Each positional argument on an attribute should declare a read-only property with the same name (but different casing). Each named argument should provide a read/write property with the same name (but different casing).</Description>
+    <Url>@ms182136.aspx</Url>
+    <Resolution Name="Default">Add a public read-only property accessor for positional argument {0} of Attribute {1}.</Resolution>
+    <Resolution Name="RemoveSetter">Remove the property setter from {0} or reduce its accessibility because it corresponds to positional argument {1}.</Resolution>
+    <Resolution Name="IncreaseVisibility">If {0} is the property accessor for positional argument {1}, make it public.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020">
+    <Name>Avoid namespaces with few types</Name>
+    <Description>A namespace should generally have more than five types.</Description>
+    <Url>@ms182130.aspx</Url>
+    <Resolution>Consider merging the types defined in '{0}' with another namespace.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidOutParameters" Category="Microsoft.Design" CheckId="CA1021">
+    <Name>Avoid out parameters</Name>
+    <Description>Using out parameters might indicate a design flaw. Although there are legitimate times to use out parameters, their use frequently indicates a design that does not conform to the design guidelines for managed code.</Description>
+    <Url>@ms182131.aspx</Url>
+    <Resolution>Consider a design that does not require that {0} be an out parameter.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="IndexersShouldNotBeMultidimensional" Category="Microsoft.Design" CheckId="CA1023">
+    <Name>Indexers should not be multidimensional</Name>
+    <Description>Indexers (indexed properties) should use a single value (either an integer or string types) for indexing values. Multidimensional indexers can significantly reduce the usability of the library. For example, public object this [int index1, int index2] is a non-intuitive indexer.</Description>
+    <Url>@ms182152.aspx</Url>
+    <Resolution>Redesign indexer {0} to use a single string or integer value as its index.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024">
+    <Name>Use properties where appropriate</Name>
+    <Description>Properties should be used instead of Get/Set methods in most situations. Methods are preferable to properties in the following situations: the operation is a conversion, is expensive or has an observable side-effect; the order of execution is important; calling the member twice in succession creates different results; a member is static but returns a mutable value; or the member returns an array.</Description>
+    <Url>@ms182181.aspx</Url>
+    <Resolution>Change {0} to a property if appropriate.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ReplaceRepetitiveArgumentsWithParamsArray" Category="Microsoft.Design" CheckId="CA1025">
+    <Name>Replace repetitive arguments with params array</Name>
+    <Description>Several instances of same-type arguments can be better implemented as a parameter array argument. Generally, if a member declares three or more arguments of the same type, consider using a parameter array.</Description>
+    <Url>@ms182167.aspx</Url>
+    <Resolution>Consider implementing a version of {0} that accepts a parameter array argument.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026">
+    <Name>Default parameters should not be used</Name>
+    <Description>Some programming languages do not support default parameters. Replace default parameters with method overloads that supply the default argument.</Description>
+    <Url>@ms182135.aspx</Url>
+    <Resolution>Replace method {0} with an overload that supplies all default arguments.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="MarkEnumsWithFlags" Category="Microsoft.Design" CheckId="CA1027">
+    <Name>Mark enums with FlagsAttribute</Name>
+    <Description>The enumeration appears to be made up of combinable flags. If this true, apply the Flags attribute to the enumeration.</Description>
+    <Url>@ms182159.aspx</Url>
+    <Resolution>The constituent members of {0} appear to represent flags that can be combined rather than discrete values. If this is correct, mark the enumeration with FlagsAttribute.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="EnumStorageShouldBeInt32" Category="Microsoft.Design" CheckId="CA1028">
+    <Name>Enum storage should be Int32</Name>
+    <Description>There is little or no benefit to using a type smaller than Int32. You might require a type that is larger than Int32 if: 1) the enumeration values are flags and there are or will be many (&amp;amp;gt;32) values, or 2) the type needs to be different from Int32 for backward compatibility. Avoid using an underlying type that is not integral.</Description>
+    <Url>@ms182147.aspx</Url>
+    <Resolution Name="NotInt32">If possible, make the underlying type of {0} System.Int32 instead of {1}.</Resolution>
+    <Resolution Name="NotIntegral">If possible, make the underlying type of {0} Int32 instead of {1}. Otherwise consider Byte, Int16, or Int64.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="60">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="UseEventsWhereAppropriate" Category="Microsoft.Design" CheckId="CA1030">
+    <Name>Use events where appropriate</Name>
+    <Description>A method name suggestive of event functionality was encountered.</Description>
+    <Url>@ms182177.aspx</Url>
+    <Resolution>Consider making {0} an event.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031">
+    <Name>Do not catch general exception types</Name>
+    <Description>You should not catch Exception or SystemException. Catching generic exception types can hide run-time problems from the library user, and can complicate debugging. You should catch only those exceptions that you can handle gracefully.</Description>
+    <Url>@ms182137.aspx</Url>
+    <Resolution>Modify {0} to catch a more specific exception than {1} or rethrow the exception.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032">
+    <Name>Implement standard exception constructors</Name>
+    <Description>Multiple constructors are required to correctly implement a custom exception. Missing constructors can make your exception unusable in certain scenarios. For example, the serialization constructor is required for handling exceptions in XML Web services.</Description>
+    <Url>@ms182151.aspx</Url>
+    <Resolution Name="MissingConstructor">Add the following constructor to {0}: {1}.</Resolution>
+    <Resolution Name="Accessibility">Change the accessibility of {0} to {1}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="InterfaceMethodsShouldBeCallableByChildTypes" Category="Microsoft.Design" CheckId="CA1033">
+    <Name>Interface methods should be callable by child types</Name>
+    <Description>Explicit method implementations are defined with private accessibility. Classes that derive from classes with explicit method implementations and choose to re-declare them on the class will not be able to call into the base class implementation unless the base class has provided an alternate method with appropriate accessibility. When overriding a base class method that has been hidden by explicit interface implementation, in order to call into the base class implementation, a derived class must cast the base pointer to the relevant interface. When calling through this reference, however, the derived class implementation will actually be invoked, resulting in recursion and an eventual stack overflow.</Description>
+    <Url>@ms182153.aspx</Url>
+    <Resolution>Make {0} sealed (a breaking change if this class has previously shipped), implement the method non-explicitly, or implement a new method that exposes the functionality of {1} and is visible to derived classes.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034">
+    <Name>Nested types should not be visible</Name>
+    <Description>Do not use public, protected or protected internal (Protected Friend) nested types as a way of grouping types. Use namespaces for this purpose. There are very limited scenarios where nested types are the best design. Also, nested type member accessibility is not clearly understood by all audiences. Enumerators are exempt from this rule.</Description>
+    <Url>@ms182162.aspx</Url>
+    <Resolution Name="Default">Do not nest type {0}. Alternatively, change its accessibility so that it is not externally visible.</Resolution>
+    <Resolution Name="VisualBasicModule">Do not nest type {0}. Alternatively, change its accessibility so that it is not externally visible. If this type is defined in a Visual Basic Module, it will be considered a nested type to other .NET languages. In that case, consider moving the type outside of the Module.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ICollectionImplementationsHaveStronglyTypedMembers" Category="Microsoft.Design" CheckId="CA1035">
+    <Name>ICollection implementations have strongly typed members</Name>
+    <Description>Types that implement ICollection should also provide a version of CopyTo with the first parameter set to a strong type, namely a type other than an array of objects or System.Array. Implement the interface member explicitly and make the strongly typed version public. It is safe to ignore violations of this rule when you are implementing a new object-based collection, such as a binary tree, where types based on your collection will determine what the strong type is. These types should expose strongly typed members.</Description>
+    <Url>@49stb304.aspx</Url>
+    <Resolution>{0} should provide a strongly typed implementation of ICollection.CopyTo.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="OverrideMethodsOnComparableTypes" Category="Microsoft.Design" CheckId="CA1036">
+    <Name>Override methods on comparable types</Name>
+    <Description>Types that implement IComparable should redefine Equals and comparison operators to keep the meanings of less than, greater than, and equals consistent throughout the type.</Description>
+    <Url>@ms182163.aspx</Url>
+    <Resolution Name="Equals">{0} should override Equals since it implements IComparable.</Resolution>
+    <Resolution Name="Operator">{0} should define operator '{1}' since it implements IComparable.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--
+  <Rule TypeName="OverrideMethodsOnComparableTypes" Category="Microsoft.Design" CheckId="CA1037">
+    <Name>Comparable types should override operators</Name>
+    <Description>Types that implement IComparable should redefine comparison operators to keep the meanings of less than, greater than, and equals consistent throughout the type.</Description>
+    <Url>@ms182163.aspx</Url>
+    <Resolution>'{0}' should define operator '{1}' since it implements IComparable.</Resolution>
+    <Email>fxcopbug@microsoft.com</Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  -->
+  <Rule TypeName="EnumeratorsShouldBeStronglyTyped" Category="Microsoft.Design" CheckId="CA1038">
+    <Name>Enumerators should be strongly typed</Name>
+    <Description>Types that implement IEnumerator should also provide a version of the Current property that returns a type other than Object. Implement the interface member explicitly and make the strongly typed version public.</Description>
+    <Url>@ms182148.aspx</Url>
+    <Resolution>{0} should provide a strongly typed implementation of IEnumerator.Current.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ListsAreStronglyTyped" Category="Microsoft.Design" CheckId="CA1039">
+    <Name>Lists are strongly typed</Name>
+    <Description>IList implementations should also provide versions of the IList members that are strongly typed, namely they should specify types other than Object for method and property parameter and return types. Implement the interface members explicitly and make the strongly typed versions public. It is safe to ignore violations of this rule when you are implementing a new object-based collection, such as a linked list, where types based on your collection will determine what the strong type is. These types should expose strongly typed members.</Description>
+    <Url>@ms182154.aspx</Url>
+    <Resolution>{0} should provide a strongly typed implementation of {1}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040">
+    <Name>Avoid empty interfaces</Name>
+    <Description>Interfaces are meant to contain members that specify a set of behaviors. To mark or label a class, use an attribute instead of an empty interface.</Description>
+    <Url>@ms182128.aspx</Url>
+    <Resolution>Define a custom attribute to replace {0}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ProvideObsoleteAttributeMessage" Category="Microsoft.Design" CheckId="CA1041">
+    <Name>Provide ObsoleteAttribute message</Name>
+    <Description>The ObsoleteAttribute.Message property provides the text message displayed when an obsolete type or member is compiled. This message should provide information on the replacement for the obsolete element.</Description>
+    <Url>@ms182166.aspx</Url>
+    <Resolution>Provide a message for the ObsoleteAttribute that marks {0}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="UseIntegralOrStringArgumentForIndexers" Category="Microsoft.Design" CheckId="CA1043">
+    <Name>Use integral or string argument for indexers</Name>
+    <Description>Indexers (indexed properties) should use either integer or string types for indexing values. These types are easy to use and commonly used for indexing data structures; using other types can significantly reduce the usability of the library. For example, public char this [int index] is the C# signature for the String type's indexer.</Description>
+    <Url>@ms182180.aspx</Url>
+    <Resolution>Use an integral value or string as the parameter to indexer {0}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="PropertiesShouldNotBeWriteOnly" Category="Microsoft.Design" CheckId="CA1044">
+    <Name>Properties should not be write only</Name>
+    <Description>Write-only properties usually indicate a flawed design.</Description>
+    <Url>@ms182165.aspx</Url>
+    <Resolution Name="AddGetter">Because property {0} is write-only, either add a property getter with an accessibility that is greater than or equal to its setter or convert this property into a method.</Resolution>
+    <Resolution Name="MakeMoreAccessible">Because the property getter for {0} is less visible than its setter, either increase the accessibility of its getter or decrease the accessibility of its setter.</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotPassTypesByReference" Category="Microsoft.Design" CheckId="CA1045">
+    <Name>Do not pass types by reference</Name>
+    <Description>Although there are legitimate times to use reference parameters, such use frequently indicates a design that does not conform to the design guidelines for managed code.</Description>
+    <Url>@ms182146.aspx</Url>
+    <Resolution>Consider a design that does not require that {0} be a reference parameter.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotOverloadOperatorEqualsOnReferenceTypes" Category="Microsoft.Design" CheckId="CA1046">
+    <Name>Do not overload operator equals on reference types</Name>
+    <Description>Most reference types, including those that override System.Object.Equals, do not override the equality operator  (==). Most languages provide a default implementation of this operator.</Description>
+    <Url>@ms182145.aspx</Url>
+    <Resolution>{0} should not overload the equality operator.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotDeclareProtectedMembersInSealedTypes" Category="Microsoft.Design" CheckId="CA1047">
+    <Name>Do not declare protected members in sealed types</Name>
+    <Description>Sealed types cannot be extended, and protected members are only useful if you can extend the declaring type. Sealed types should not declare protected members.</Description>
+    <Url>@ms182138.aspx</Url>
+    <Resolution Name="Type">Make type {0} private, public, or internal (Friend in Visual Basic).</Resolution>
+    <Resolution Name="Member">Make member {0} private, public, or internal (Friend in Visual Basic).</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotDeclareVirtualMembersInSealedTypes" Category="Microsoft.Design" CheckId="CA1048">
+    <Name>Do not declare virtual members in sealed types</Name>
+    <Description>Sealed types cannot be extended, and virtual members are only useful if you can extend the declaring type.</Description>
+    <Url>@ms182140.aspx</Url>
+    <Resolution>'{0}' is a virtual member declared in a sealed type. Mark the member non-virtual or, if the type should be extensible, unseal it.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <!-- TODO is it? -->
+    <Owner />
+  </Rule>
+  <Rule TypeName="TypesThatOwnNativeResourcesShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1049">
+    <Name>Types that own native resources should be disposable</Name>
+    <Description>Types that allocate unmanaged resources should implement IDisposable to allow callers to release those resources on demand. Failure to implement IDisposable can result in unmanaged resources being unavailable or underutilized.</Description>
+    <Url>@ms182173.aspx</Url>
+    <Resolution>Implement IDisposable on {0}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">CriticalError</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DeclareTypesInNamespaces" Category="Microsoft.Design" CheckId="CA1050">
+    <Name>Declare types in namespaces</Name>
+    <Description>A type should be defined inside a namespace to avoid duplication.</Description>
+    <Url>@ms182134.aspx</Url>
+    <Resolution>{0} should be declared inside a namespace.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051">
+    <Name>Do not declare visible instance fields</Name>
+    <Description>Instance fields that are visible outside of the type that declares them, limit your ability to change the implementation details for those data items. Use properties instead. They do not compromise usability or performance and they do provide flexibility in that they conceal the implementation details of the underlying data.</Description>
+    <Url>@ms182141.aspx</Url>
+    <Resolution>Because field {0} is visible outside of its declaring type, change its accessibility to private and add a property, with the same accessibility as the field has currently, to provide access to it.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="StaticHolderTypesShouldBeSealed" Category="Microsoft.Design" CheckId="CA1052">
+    <Name>Static holder types should be sealed</Name>
+    <Description>Static holder types do not provide functionality that derived instances can extend. Inheriting from such a type indicates a flawed design.</Description>
+    <Url>@ms182168.aspx</Url>
+    <Resolution Name="Default">Because type {0} contains only 'static' ('Shared' in Visual Basic) members, mark it as 'sealed' ('NotInheritable' in Visual Basic) to prevent consumers from inheriting from it.</Resolution>
+    <Resolution Name="CSharp2_0">Because type {0} contains only 'static' members, mark it as 'static' to prevent consumers from inheriting from it.</Resolution>    
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">CriticalWarning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="StaticHolderTypesShouldNotHaveConstructors" Category="Microsoft.Design" CheckId="CA1053">
+    <Name>Static holder types should not have constructors</Name>
+    <Description>Instances of types that define only static members do not need to be created. Many compilers will automatically add a public default constructor if no constructor is specified. To prevent this, adding an empty private constructor may be required.</Description>
+    <Url>@ms182169.aspx</Url>
+    <Resolution Name="Default">Because type {0} contains only 'static' ('Shared' in Visual Basic) members, add a default private constructor to prevent the compiler from adding a default public constructor.</Resolution>
+    <Resolution Name="CSharp2_0">Because type {0} contains only 'static' members, mark it as 'static' to prevent the compiler from adding a default public constructor.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="UriParametersShouldNotBeStrings" Category="Microsoft.Design" CheckId="CA1054">
+    <Name>URI parameters should not be strings</Name>
+    <Description>If a parameter name contains "uri" or "url" or "urn", and it's typed as string, the parameter type should be changed to System.Uri, unless there is an overload method where the same parameter is typed as System.Uri.</Description>
+    <Url>@ms182174.aspx</Url>
+    <Resolution>Change the type of parameter {0} of method {1} from string to System.Uri, or provide an overload of {1}, that allows {0} to be passed as a System.Uri object.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="60">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="UriReturnValuesShouldNotBeStrings" Category="Microsoft.Design" CheckId="CA1055">
+    <Name>URI return values should not be strings</Name>
+    <Description>If a function name contains "uri" or "url" or "urn" and the return type is string, the return type should be changed to System.Uri.</Description>
+    <Url>@ms182176.aspx</Url>
+    <Resolution>Change the return type of {0} from string to System.Uri.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="60">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="UriPropertiesShouldNotBeStrings" Category="Microsoft.Design" CheckId="CA1056">
+    <Name>URI properties should not be strings</Name>
+    <Description>If a property name contains "uri" or "url" or "urn" and it's typed as string, it should be changed to System.Uri.</Description>
+    <Url>@ms182175.aspx</Url>
+    <Resolution>Change the type of property {0} from string to System.Uri.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="StringUriOverloadsCallSystemUriOverloads" Category="Microsoft.Design" CheckId="CA1057">
+    <Name>String URI overloads call System.Uri overloads</Name>
+    <Description>If a method overloads another method by replacing a System.Uri parameter with a string, then the string overload should simply build a Uri object from the string, and pass the result to the string overload.</Description>
+    <Url>@ms182170.aspx</Url>
+    <Resolution>Refactor {0} so that it builds a System.Uri object from {1}, and then calls {2}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="TypesShouldNotExtendCertainBaseTypes" Category="Microsoft.Design" CheckId="CA1058">
+    <Name>Types should not extend certain base types</Name>
+    <Description>It is best not to extend some base types or to prefer extending better alternatives to those base types.</Description>
+    <Url>@ms182171.aspx</Url>
+    <Email>
+    </Email>
+    <Resolution Name="System.Xml.XmlDocument">Change the base type of {0} so that it no longer extends {1}. The preferred design is to decouple the underlying XmlDocument representation from the type's interface by using containment instead of inheritance.</Resolution>
+    <Resolution Name="System.ApplicationException">Change the base type of {0} so that it no longer extends {1}. This base exception type does not provide any additional value for framework classes. Extend 'System.Exception' or an existing unsealed exception type instead. Do not create a new exception base type unless there is specific value in enabling the creation of a catch handler for an entire class of exceptions.</Resolution>
+    <Resolution Name="System.Collections.CollectionBase">Change the base type of {0} from {1} to its generic equivalent 'System.Collections.ObjectModel.Collection'.</Resolution>
+    <Resolution Name="System.Collections.DictionaryBase">Change the base type of {0} from {1} to its generic equivalent 'System.Collections.ObjectModel.KeyedCollection'.</Resolution>
+    <Resolution Name="System.Collections.Queue">Change the base type of {0} from {1} to its generic equivalent 'System.Collections.Generic.Queue'.</Resolution>
+    <Resolution Name="System.Collections.ReadOnlyCollectionBase">Change the base type of {0} from {1} to its generic equivalent 'System.Collections.ObjectModel.ReadOnlyCollection'.</Resolution>
+    <Resolution Name="System.Collections.SortedList">Change the base type of {0} from {1} to its generic equivalent 'System.Collections.Generic.SortedList'.</Resolution>
+    <Resolution Name="System.Collections.Stack">Change the base type of {0} from {1} to its generic equivalent 'System.Collections.Generic.Stack'.</Resolution>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="MembersShouldNotExposeCertainConcreteTypes" Category="Microsoft.Design" CheckId="CA1059">
+    <Name>Members should not expose certain concrete types</Name>
+    <Description>Members should not expose certain concrete types.</Description>
+    <Url>@ms182160.aspx</Url>
+    <Email>
+    </Email>
+    <Resolution Name="Xml">Modify member {0} so that it no longer exposes the concrete type {1}. Use IXPathNavigable to represent XML data sources.</Resolution>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060">
+    <Name>Move P/Invokes to NativeMethods class</Name>
+    <Description>This type contains members with the DllImport attribute. Members with the DllImport attribute should be contained in classes named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Description>
+    <Url>@ms182161.aspx</Url>
+    <Resolution>Because it is a P/Invoke method, {0} should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalWarning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotHideBaseClassMethods" Category="Microsoft.Design" CheckId="CA1061">
+    <Name>Do not hide base class methods</Name>
+    <Description>Defining a method in a derived class with the same name and parameters that are more weakly typed as one that is defined in the base class will obstruct access to the method defined in the base class.</Description>
+    <Url>@ms182143.aspx</Url>
+    <Resolution>Change or remove {0} because it hides a more specific base class method: {1}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalWarning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--<Rule TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062">
+    <Name>Validate arguments of public methods</Name>
+    <Description>All reference arguments passed to public methods should be tested against null (Nothing in Visual Basic), as they can be provided by arbitrary callers.</Description>
+    <Url>@ms182182.aspx</Url>
+    <Resolution>Validate parameter {0} passed to externally visible method {1}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <Rule TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063">
+    <Name>Implement IDisposable correctly</Name>
+    <Description>All IDisposable types should implement the Dispose pattern correctly.</Description>
+    <Url>@ms244737.aspx</Url>
+    <Resolution Name="IDisposableReimplementation">Remove IDisposable from the list of interfaces implemented by {0} and override the base class Dispose implementation instead.</Resolution>
+    <Resolution Name="FinalizeOverride">Remove the finalizer from type {0}, override Dispose(bool disposing), and put the finalization logic in the code path where 'disposing' is false.</Resolution>
+    <Resolution Name="DisposeOverride">Remove {0}, override Dispose(bool disposing), and put the dispose logic in the code path where 'disposing' is true.</Resolution>
+    <Resolution Name="DisposeSignature">Ensure that {0} is declared as public and sealed.</Resolution>
+    <Resolution Name="RenameDispose">Rename {0} to 'Dispose' and ensure that it is declared as public and sealed.</Resolution>
+    <Resolution Name="DisposeBoolSignature">Ensure that {0} is declared as protected, virtual, and unsealed.</Resolution>
+    <Resolution Name="DisposeImplementation">Modify {0} so that it calls Dispose(true), then calls GC.SuppressFinalize on the current object instance ('this' or 'Me' in Visual Basic), and then returns.</Resolution>
+    <Resolution Name="FinalizeImplementation">Modify {0} so that it calls Dispose(false) and then returns.</Resolution>
+    <Resolution Name="ProvideDisposeBool">Provide an overridable implementation of Dispose(bool) on {0} or mark the type as sealed. A call to Dispose(false) should only clean up native resources. A call to Dispose(true) should clean up both managed and native resources.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ExceptionsShouldBePublic" Category="Microsoft.Design" CheckId="CA1064">
+    <Name>Exceptions should be public</Name>
+    <Description>Exception classes should either be public, or have a non-generic public ancestor.</Description>
+    <Resolution>Make exception class {0} public.</Resolution>
+    <MessageLevel Certainty="95">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner/>
+    <Url>@bb264484.aspx</Url>
+    <Email></Email>
+  </Rule>
+  <Rule TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065">
+    <Name>Do not raise exceptions in unexpected locations</Name>
+    <Description>Do not explicitly raise exceptions from unexpected locations. There are some methods, such as Equals and GetHashCode, which users do not expect to raise exceptions. Therefore calls to these methods are not commonly wrapped in try catch blocks.</Description>
+    <Url>@bb386039.aspx</Url>
+    <Resolution Name="PropertyGetter">{0} creates an exception of type {1}, an exception type that should not be raised in a property. If this exception instance might be raised, use a different exception type, convert this property into a method, or change this property's logic so that it no longer raises an exception.</Resolution>
+    <Resolution Name="HasAllowedExceptions">{0} creates an exception of type {1}, an exception type that should not be raised in this type of method. If this exception instance might be raised, either use a different exception type or change this method's logic so that it no longer raises an exception.</Resolution>
+    <Resolution Name="NoAllowedExceptions">{0} creates an exception of type {1}. Exceptions should not be raised in this type of method. If this exception instance might be raised, change this method's logic so it no longer raises an exception.</Resolution>
+    <MessageLevel Certainty="90">Error, Warning</MessageLevel>
+    <FixCategories>Breaking, NonBreaking</FixCategories>
+    <Owner/>
+    <Email></Email>
+  </Rule>
+</Rules>

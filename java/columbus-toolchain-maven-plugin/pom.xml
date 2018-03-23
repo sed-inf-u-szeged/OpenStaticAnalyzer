@@ -5,7 +5,7 @@
 
   <groupId>hu.u-szeged.OpenStaticAnalyzer</groupId>
   <artifactId>plugin-agragator</artifactId>
-  <version>2.0</version>
+  <version>3.0</version>
   <packaging>pom</packaging>
   <description>This is the mutiple project</description>
   
@@ -55,17 +55,17 @@
                                  
                                  <chmod file="${env.OSA_DIR}/installMavenWrapper${batchEx}" perm="777"  />
                                   
-                                 <copy file="columbus-maven-plugin\target\OpenStaticAnalyzer-maven-plugin-2.0.jar"
-                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-2.0.jar"/>
+                                 <copy file="columbus-maven-plugin\target\OpenStaticAnalyzer-maven-plugin-3.0.jar"
+                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-3.0.jar"/>
                                  
                                  <copy file="columbus-maven-plugin\pom.3.0.5.xml"
-                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-2.0-V3.pom"/>
+                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-3.0-V3.pom"/>
                                  
                                  <copy file="columbus-maven-plugin\pom.3.1.0.xml"
-                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-2.0-V31.pom"/>
+                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-3.0-V31.pom"/>
                                  
                                  <copy file="columbus-maven-plugin\pom.2.2.1.xml"
-                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-2.0-V2.pom"/>
+                                 tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-maven-plugin-3.0-V2.pom"/>
                                  
                                  <copy file="ext\mojoExecutorModule\v2\target\OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.jar"
                                  tofile="${env.OSA_DIR}/${wrapperos}Wrapper/WrapperBins/Tools/OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.jar"/>

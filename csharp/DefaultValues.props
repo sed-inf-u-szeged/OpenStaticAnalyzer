@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <CSHARP_BUILD_DIR Condition="$(CSHARP_BUILD_DIR) == '' Or $(CSHARP_BUILD_DIR) == '*Undefined*'">..\..\..\..\csharp-build\$(Configuration)_$(Platform)</CSHARP_BUILD_DIR>
+    <COLUMBUS_BIN_DIR Condition="$(COLUMBUS_BIN_DIR) == '' Or $(COLUMBUS_BIN_DIR) == '*Undefined*'">..\..\..\..\build\bin</COLUMBUS_BIN_DIR>
+  </PropertyGroup>
+</Project>

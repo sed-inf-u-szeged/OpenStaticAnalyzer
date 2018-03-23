@@ -1,0 +1,6 @@
+# ignore the object files
+**/obj/
+
+# ignore the downloaded packages
+packages
+

@@ -31,7 +31,11 @@ typedef columbus::LANGUAGE_NAMESPACE::NodeKind NodeKind;
 typedef columbus::LANGUAGE_NAMESPACE::BASE_NAMESPACE::Base Base;
 
 typedef columbus::LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned Positioned;
+#if defined(SCHEMA_JAVA) || defined(SCHEMA_PYTHON)
 typedef columbus::LANGUAGE_NAMESPACE::BASE_NAMESPACE::Named Named;
+#elif defined(SCHEMA_CSHARP)
+typedef columbus::LANGUAGE_NAMESPACE::base::Base Named;
+#endif
 
 typedef columbus::LANGUAGE_NAMESPACE::AlgorithmPreorder AlgorithmPreorder;
 typedef columbus::LANGUAGE_NAMESPACE::Visitor Visitor;
@@ -57,6 +61,13 @@ typedef columbus::LANGUAGE_NAMESPACE::VisitorAbstractNodes VisitorAbstractNodes;
   #define getUniqueName_v1 AlgorithmCommon::getUniqueNameForBase
   #define UNIQUE_NAME_FOR_MEMBER AlgorithmCommon::getUniqueName
   #define NAMED_VISITOR NamedVisitor
+
+#elif defined(SCHEMA_CSHARP)
+  #define FILTER_FILE_EXTENSION ".fcssi"
+  #define FILTER_FILE_EXTENSION_W L".fcssi"
+  #define LANGUAGE_NS columbus::csharp
+  #define UNIQUE_NAME_FOR_MEMBER getUniqueNameForMember
+  #define NAMED_VISITOR CSharpNamedVisitor
 
 #endif
 

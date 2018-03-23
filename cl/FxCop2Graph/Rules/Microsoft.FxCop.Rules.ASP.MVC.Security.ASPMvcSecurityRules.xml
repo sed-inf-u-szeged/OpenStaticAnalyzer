@@ -1,0 +1,22 @@
+<Rules FriendlyName="ASP.NET MVC Security Rules">
+  <Rule TypeName="MarkVerbHandlersWithValidateAntiforgeryToken" Category="ASP.NET.MVC.Security" CheckId="CA5332">
+    <Name>MarkVerbHandlersWithValidateAntiforgeryToken</Name>
+    <Description>Rule that verifies that if the ValidateAntiforgeryTokenAttribute is used to protect against Potential CSRF attack in MVC.</Description>
+    <Url></Url>
+    <Resolution>The controller action must use the ValidateAntiForgeryTokenAttribute attribute. Info: {0}</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="100">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ControllerActionShouldValidateInput" Category="ASP.NET.MVC.Security" CheckId="CA5333">
+    <Name>ControllerActionShouldValidateInput</Name>
+    <Description>Verifies if the ValidateInputAttribute is used properly to protect against XSS attacks.</Description>
+    <Url></Url>
+    <Resolution>The ValidateRequestAttribute must be removed or set to true to enable request validation.</Resolution>
+    <Email></Email>
+    <MessageLevel Certainty="100">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+</Rules>

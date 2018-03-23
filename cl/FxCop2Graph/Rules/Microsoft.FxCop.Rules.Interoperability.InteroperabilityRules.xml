@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Rules FriendlyName="Interoperability Rules">
+  <Rule TypeName="PInvokeEntryPointsShouldExist" Category="Microsoft.Interoperability" CheckId="CA1400">
+    <Name>P/Invoke entry points should exist</Name>
+    <Description>Methods decorated with the DllImport attribute should point to existing unmanaged entry points. There is no compile-time check to ensure that methods decorated with the DllImport attribute actually exist in the referenced unmanaged dll. In the event that an entry point does not exist or the specified argument list is not correct, a runtime exception will be generated.</Description>
+    <Url>@ms182208.aspx</Url>
+    <Resolution>Correct the declaration of {0} so that it correctly points to an existing entry point in {1}. The unmanaged entry point name currently linked to is {2}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="PInvokesShouldNotBeVisible" Category="Microsoft.Interoperability" CheckId="CA1401">
+    <Name>P/Invokes should not be visible</Name>
+    <Description>Interop layer should not be public. The DllImport attribute should not be applied to publicly accessible members (public or protected).</Description>
+    <Url>@ms182209.aspx</Url>
+    <Resolution>Change the accessibility of P/Invoke {0} so that it is no longer visible from outside its assembly.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidOverloadsInComVisibleInterfaces" Category="Microsoft.Interoperability" CheckId="CA1402">
+    <Name>Avoid overloads in COM visible interfaces</Name>
+    <Description>Interfaces that are visible to COM should not define overloads, as they will be renamed and cannot be implemented by Visual Basic 6 clients. COM interfaces cannot contain overloaded methods.</Description>
+    <Url>@ms182197.aspx</Url>
+    <Resolution>ComVisible(true) interface {0} defines overloaded methods. Give each method a unique name or make the type ComVisible(false).</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">CriticalWarning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AutoLayoutTypesShouldNotBeComVisible" Category="Microsoft.Interoperability" CheckId="CA1403">
+    <Name>Auto layout types should not be COM visible</Name>
+    <Description>Types that are automatically ordered by the runtime should not be visible to COM. Types that are automatically laid out by the runtime do not have a guaranteed order between versions. This can break COM clients of those types. To ensure compatibility between versions, the type should be explicitly or sequentially ordered.</Description>
+    <Url>@ms182194.aspx</Url>
+    <Resolution>Type {0} is both ComVisible(true) and set to Auto layout. Make this type ComVisible(false) or specify Explicit or Sequential layout.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="CallGetLastErrorImmediatelyAfterPInvoke" Category="Microsoft.Interoperability" CheckId="CA1404">
+    <Name>Call GetLastError immediately after P/Invoke</Name>
+    <Description>The last Win32 error can be reset as a result of making managed calls, due to P/Invokes called by the runtime itself. In order to ensure the correctness of the value returned by GetLastWin32Error, place the call immediately after the relevant platform invoke call in your code.</Description>
+    <Url>@ms182199.aspx</Url>
+    <Resolution>Method {0} called GetLastWin32Error but the immediately preceding call to {1} is not a P/Invoke statement. Move the call to GetLastWin32Error so that it immediately follows the relevant platform invoke call.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ComVisibleTypeBaseTypesShouldBeComVisible" Category="Microsoft.Interoperability" CheckId="CA1405">
+    <Name>COM visible type base types should be COM visible</Name>
+    <Description>COM visible types should have an object hierarchy that is uniformly COM visible.</Description>
+    <Url>@ms182202.aspx</Url>
+    <Resolution>{0} is marked ComVisible(true) but has the following ComVisible(false) types in its object hierarchy: {1}</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidInt64ArgumentsForVB6Clients" Category="Microsoft.Interoperability" CheckId="CA1406">
+    <Name>Avoid Int64 arguments for Visual Basic 6 clients</Name>
+    <Description>COM visible types that might be accessed from Microsoft Visual Basic 6 clients should not expose methods with long arguments.</Description>
+    <Url>@ms182195.aspx</Url>
+    <Resolution>Member {0} has one or more parameters of type Int64 that cannot be used from Visual Basic 6 clients.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="25">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidStaticMembersInComVisibleTypes" Category="Microsoft.Interoperability" CheckId="CA1407">
+    <Name>Avoid static members in COM visible types</Name>
+    <Description>COM does not support static methods.</Description>
+    <Url>@ms182198.aspx</Url>
+    <Resolution>Consider whether the absence of {0} adversely impacts functionality for COM clients.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="25">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotUseAutoDualClassInterfaceType" Category="Microsoft.Interoperability" CheckId="CA1408">
+    <Name>Do not use AutoDual ClassInterfaceType</Name>
+    <Description>Classes that use the ClassInterfaceType.AutoDual setting might break in later versions if you change the member layout of the class or base classes. ClassInterfaceType.AutoDual should only be used when the versioning limitations are known to be acceptable.</Description>
+    <Url>@ms182205.aspx</Url>
+    <Resolution>Type {0} uses ClassInterfaceAttribute(ClassInterfaceType.AutoDual) which might not version properly. Instead, define and implement the interface and mark the class using ClassInterfaceType.None.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ComVisibleTypesShouldBeCreatable" Category="Microsoft.Interoperability" CheckId="CA1409">
+    <Name>COM visible types should be creatable</Name>
+    <Description>Types with no public default constructor are not COM-creatable. COM does not support parameterized object construction. A type was detected with a public parameterized constructor but no public default constructor. This type is not creatable by COM. If there is an alternate method for creating and passing object instances to COM clients (through a method on another type, for example), this might not be a problem.</Description>
+    <Url>@ms182203.aspx</Url>
+    <Resolution>Provide a public default constructor for {0} if it should be COM-creatable or mark the type as ComVisible(false).</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ComRegistrationMethodsShouldBeMatched" Category="Microsoft.Interoperability" CheckId="CA1410">
+    <Name>COM registration methods should be matched</Name>
+    <Description>If a COM registration method is provided, an unregistration method must also be provided to reverse the operations performed by the registration method. COM registration functions are static methods within a type that are marked with the ComRegisterFunction attribute. All COM registration functions should be matched by a static method within the same type that is marked with the ComUnregisterFunction attribute. This method should reverse any operations completed by the registration function.</Description>
+    <Url>@ms182200.aspx</Url>
+    <Resolution Name="UnmatchedRegistration">{0} is marked with the ComRegisterFunction attribute, but a corresponding unregistration function cannot be located in the type.</Resolution>
+    <Resolution Name="UnmatchedUnregistration">{0} is marked with the ComUnregisterFunction attribute, but a corresponding registration function cannot be located in the type.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ComRegistrationMethodsShouldNotBeVisible" Category="Microsoft.Interoperability" CheckId="CA1411">
+    <Name>COM registration methods should not be visible</Name>
+    <Description>COM registration and unregistration functions should be private or internal. COM registration and unregistration functions are called by the runtime when an assembly is registered or unregistered for use with COM. It is preferred that these methods are not externally visible.</Description>
+    <Url>@ms182201.aspx</Url>
+    <Resolution>Change the accessibility of {0}, a COM registration function, to private.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalWarning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="MarkComSourceInterfacesAsIDispatch" Category="Microsoft.Interoperability" CheckId="CA1412">
+    <Name>Mark ComSource interfaces as IDispatch</Name>
+    <Description>COM source interfaces should be marked ComInterfaceType.InterfaceIsIDispatch. Visual Basic 6 clients cannot receive events with non-IDispatch interfaces.</Description>
+    <Url>@ms182207.aspx</Url>
+    <Resolution>Mark interface {0} as InterfaceType(ComInterfaceType.InterfaceIsIDispatch) because it is specified in the ComSourceInterfaces attribute applied to types defined in {1}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AvoidNonpublicFieldsInComVisibleValueTypes" Category="Microsoft.Interoperability" CheckId="CA1413">
+    <Name>Avoid non-public fields in COM visible value types</Name>
+    <Description>COM visible value types should not expose non-public instance fields. COM visible value types have their non-public instance fields exposed to COM clients.</Description>
+    <Url>@ms182196.aspx</Url>
+    <Resolution>Type {0} has non-public field {1} that is exposed to COM clients.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="25">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="MarkBooleanPInvokeArgumentsWithMarshalAs" Category="Microsoft.Interoperability" CheckId="CA1414">
+    <Name>Mark boolean P/Invoke arguments with MarshalAs</Name>
+    <Description>All boolean P/Invoke parameters and return types should be explicitly marked with the MarshalAs attribute. By default, the system will marshal all booleans as 4-byte UnmanagedType.Bool. This is the correct behavior for Win32 'BOOL' arguments but incorrect for C++ 'bool' arguments, which should be marshaled as 1-byte UnmanagedType.U1. For code maintainability reasons, always explicitly specify the marshaling information for boolean arguments and return values.</Description>
+    <Url>@ms182206.aspx</Url>
+    <Resolution>Add the MarshalAsAttribute to parameter {0} of P/Invoke {1}. If the corresponding unmanaged parameter is a 4-byte Win32 'BOOL', use [MarshalAs(UnmanagedType.Bool)]. For a 1-byte C++ 'bool', use MarshalAs(UnmanagedType.U1).</Resolution>
+    <Resolution Name="Return">Add the MarshalAsAttribute to the return type of P/Invoke {0}. If the corresponding unmanaged return type is a 4-byte Win32 'BOOL', use MarshalAs(UnmanagedType.Bool). For a 1-byte C++ 'bool', use MarshalAs(UnmanagedType.U1).</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Warning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DeclarePInvokesCorrectly" Category="Microsoft.Interoperability" CheckId="CA1415">
+    <Name>Declare P/Invokes correctly</Name>
+    <Description>P/Invoke methods should be declared correctly to ensure correct runtime behaviors.</Description>
+    <Url>@ms182204.aspx</Url>
+    <Resolution Name="NativeOverlapped">Change the declaration of {0} so that parameter {1} is a pointer to System.Threading.NativeOverlapped.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <FixCategories>NonBreaking, Breaking</FixCategories>
+    <Owner />
+  </Rule>
+</Rules>

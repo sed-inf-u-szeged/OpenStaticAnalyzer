@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Rules FriendlyName="Security Rules">
+  <!--<Rule TypeName="ReviewSqlQueriesForSecurityVulnerabilities" Category="Microsoft.Security" CheckId="CA2100">
+    <Name>Review SQL queries for security vulnerabilities</Name>
+    <Description>SQL queries built up from user input are potentially vulnerable to injection attacks. SQL Server as well as other database servers support parameterized SQL queries, a feature that will reduce the risk for injection attacks.</Description>
+    <Url>@ms182310.aspx</Url>
+    <Resolution>Review if the query string "{0}", passed to {1} in {2}, accepts any user input. If so, consider using a parameterized SQL query instead of building up the query via string concatenations.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <Rule TypeName="CatchNonClsCompliantExceptionsInGeneralHandlers" Category="Microsoft.Security" CheckId="CA2102">
+    <Name>Catch non-CLSCompliant exceptions in general handlers</Name>
+    <Description>Exception handlers which are truly intended to catch all exceptions should handle non-CLSCompliant exceptions if there is a possibility one can be raised. If possible, catch handlers should only catch specific exceptions or exception base types. In circumstances where a handler is required to catch all exceptions (e.g., when a try block wraps arbitrary plug-in code), the handler should also include a generic catch handler (in C#, catch{ ... }) to handle non-CLSCompliant exceptions. It is possible to raise non-CLSCompliant exceptions by modifying and recompiling IL.</Description>
+    <Url>@bb264489.aspx</Url>
+    <Resolution>{0} is defined in an assembly that is not marked RuntimeCompatibility(WrapNonExceptionThrows = true) and defines a catch(Exception) handler that is not matched with a generic catch clause (catch{{}} in C#, catch(System::Object*){{}} in mc++) for non-CLSCompliant exceptions. Either mark the assembly as RuntimeCompatibility(WrapNonExceptionThrows = true), eliminate the catch(Exception) clause by catching a specific set of Exceptions or add a generic catch handler that duplicates the code contained within the catch(Exception) handler.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="80">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ReviewImperativeSecurity" Category="Microsoft.Security" CheckId="CA2103">
+    <Name>Review imperative security</Name>
+    <Description>Use of imperative demands can lead to unforeseen security problems. The values used to construct a permission should not change within the scope of the demand call. For some components the scope spans from the demand call to end of the method; for others it spans from the demand call until the component is finalized. If the values used to construct the permission are fields or properties, they can be changed within the scope of the demand call. This can lead to race conditions, mutable read-only arrays, and problems with boxed value types.</Description>
+    <Url>@ms182309.aspx</Url>
+    <Resolution Name="ClassMember">Review the following for a possible security vulnerability: In {0}, the class member {1} is being passed to a {2} constructor.</Resolution>
+    <Resolution Name="Parameter">Review the following for a possible security vulnerability: Parameter {0} of {1} is being passed to a {2} constructor.</Resolution>
+    <Resolution Name="MethodCall">Review the following for a possible security vulnerability: In {0}, the return value of a call to {1} is being passed to a {2} constructor.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="25">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104">
+    <Name>Do not declare read only mutable reference types</Name>
+    <Description>A read-only declaration for a mutable reference type does not prevent the field's instance data from being modified. For example, a read-only StringBuilder field declaration does not make sense, since the data encapsulated by the StringBuilder can be modified using the read-only reference.</Description>
+    <Url>@ms182302.aspx</Url>
+    <Resolution>Remove the read-only designation from {0} or change the field to one that is an immutable reference type. If the reference type {1} is, in fact, immutable, exclude this message.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="25">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ArrayFieldsShouldNotBeReadOnly" Category="Microsoft.Security" CheckId="CA2105">
+    <Name>Array fields should not be read only</Name>
+    <Description>Read-only fields that reference arrays might not give the intended effect. Setting a field which references an array to read-only prevents the value of the field from being changed. Note that elements in the array can be changed. You can ignore this violation if protecting the contents of the array is not a concern.</Description>
+    <Url>@ms182299.aspx</Url>
+    <Resolution>Either replace {0} with a strongly typed collection that cannot be changed, or replace the public field with a method that returns a clone of a private array.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">CriticalWarning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="SecureAsserts" Category="Microsoft.Security" CheckId="CA2106">
+    <Name>Secure asserts</Name>
+    <Description>Asserting a security permission without performing any security checks can leave an exploitable security weakness in your code. A security stack walk stops when a security permission is asserted. If you assert a permission without performing any checks on the caller, the caller might be able to indirectly execute code using your permissions. Asserts without security checks are only permissible when you are certain that the assert cannot be used in a harmful fashion, namely, if the code you call is harmless, or users have no way to pass arbitrary information to code that you call.</Description>
+    <Url>@ms182314.aspx</Url>
+    <Resolution Name="Default">Consider adding a security demand to {0}. This method is accessible from outside its assembly, and might therefore provide a way to circumvent security protection.</Resolution>
+    <Resolution Name="Stack">Consider adding a security demand to {0}. The following call stack might expose a way to circumvent security protection: {1}</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ReviewDenyAndPermitOnlyUsage" Category="Microsoft.Security" CheckId="CA2107">
+    <Name>Review deny and permit only usage</Name>
+    <Description>Use of Deny or PermitOnly should be carefully reviewed. Use of Deny or PermitOnly should be carefully considered, as they are not useful in some cases. For example, permissions that are path-based (like FileIOPermission and RegistryPermission) should not be used with Deny, because different paths might actually point to the same location. If callers are granted the right to assert permissions by the security policy, then they can terminate a stack walk before it reaches your Deny or PermitOnly. If a caller has been granted powerful permissions (such as the ability to call unmanaged code), then calling Deny or PermitOnly cannot truly stop it from doing whatever it chooses. Also consider that Deny and PermitOnly do not affect a LinkDemand. For instance, if you deny some permission P and call a method with a LinkDemand for P, the Deny will not affect the result of the LinkDemand.</Description>
+    <Url>@ms182308.aspx</Url>
+    <Resolution>{0} uses a permission Deny or PermitOnly. Use of Deny or PermitOnly should be carefully reviewed.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="25">CriticalWarning</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ReviewDeclarativeSecurityOnValueTypes" Category="Microsoft.Security" CheckId="CA2108">
+    <Name>Review declarative security on value types</Name>
+    <Description>A Demand or a LinkDemand on a structure does not prevent creation of an instance of that structure.</Description>
+    <Url>@ms182307.aspx</Url>
+    <Resolution Name="Type">Remove the demand or link demand from {0} because it will not prevent the struct from being instantiated. Place the demand on a parameterized constructor instead and make sure that the initial state of the structure is detectably valid or invalid (the struct will only be initialized with default values if the security demand is not satisfied).</Resolution>
+    <Resolution Name="Constructor">The demand or link demand on {0} will not prevent the struct from being instantiated but it will only be initialized with default values if the security demand is not satisfied. Make sure that the initial state of the structure is detectably valid or invalid.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ReviewVisibleEventHandlers" Category="Microsoft.Security" CheckId="CA2109">
+    <Name>Review visible event handlers</Name>
+    <Description>It appears that an event handler is externally visible or that an EventArgs parameter is being exposed in a visible method decorated with a security demand. There can be problems exposing sensitive functionality in an event handler function; the security demand might not do what you expect.</Description>
+    <Url>@ms182312.aspx</Url>
+    <Resolution Name="Security">Consider making {0} not externally visible or ensure that it is benign code.</Resolution>
+    <Resolution Name="Default">Consider making {0} not externally visible.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="40">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--<Rule TypeName="SecureGetObjectDataOverrides" Category="Microsoft.Security" CheckId="CA2110">
+    <Name>Secure GetObjectData overrides</Name>
+    <Description>Serializing an object exposes its private and protected data. You should apply the SerializationFormatter permission to the GetObjectData method to prevent any non-public data from being available to objects that do not have permission to serialize and deserialize objects.</Description>
+    <Url>@/Security/SecureGetObjectDataOverrides.html</Url>
+    <Resolution>Add the following declarative security to {0}: [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter=true)]</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <Rule TypeName="PointersShouldNotBeVisible" Category="Microsoft.Security" CheckId="CA2111">
+    <Name>Pointers should not be visible</Name>
+    <Description>IntPtr and UIntPtr fields should be declared as private. Exposing non-private pointers can cause a security weakness.</Description>
+    <Url>@ms182306.aspx</Url>
+    <Resolution>Make {0} private.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="SecuredTypesShouldNotExposeFields" Category="Microsoft.Security" CheckId="CA2112">
+    <Name>Secured types should not expose fields</Name>
+    <Description>Fields must be secured with a security check other than LinkDemand.</Description>
+    <Url>@ms182318.aspx</Url>
+    <Resolution>{0} has a LinkDemand or Demand, and exposes the field {1}. Fields cannot be protected by LinkDemands or Demands. To remove this vulnerability, make the field private and expose a property that has security applied to it.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--<Rule TypeName="ReviewSuppressUnmanagedCodeSecurityUsage">
+    <Name>Members do not suppress unmanaged code security</Name>
+    <Description>Using the SuppressUnmanagedCodeSecurityAttribute prevents the runtime from performing a security check to ensure that all callers have permission to execute unmanaged code. </Description>
+    <LongDescription>If your code suppresses security checking, malicious callers might be able to elevate their permissions simply by calling through your code.</LongDescription>
+    <GroupOwner>MS FxCopDev</GroupOwner>
+    <DevOwner />
+    <Url>@/SecurityRules/MbrsDoNotSupressUmCodeSec.html</Url>
+    <Resolution>Member {0} is marked with SuppressUnmanagedCodeSecurityAttribute. Make sure this does not result in a security vulnerability.</Resolution>
+    <Email>fxcopbug@microsoft.com</Email>
+    <Message Certainty="33">CriticalError</Message>
+    <FixCategories>Breaking</FixCategories>
+    <Id RuleSet="FxCop">1236</Id>
+  </Rule>
+  -->
+  <!--<Rule TypeName="SecureLateBindingMethods" Category="Microsoft.Security" CheckId="CA2113">
+    <Name>Secure late-binding methods</Name>
+    <Description>Do not wrap a late-binding call with a method that does not have any security checks. Violating this rule can result in an exploitable security weakness unless the late-bound member is completely benign or cannot be used in any harmful way by partially trusted callers.</Description>
+    <Url>@/Security/SecureLateBindingMethods.html</Url>
+    <Resolution>Apply a security check to {0}, because it calls {1}, a late-binding member.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="25">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  -->
+  <Rule TypeName="MethodSecurityShouldBeASupersetOfType" Category="Microsoft.Security" CheckId="CA2114">
+    <Name>Method security should be a superset of type</Name>
+    <Description>A method has security set at both the type and method levels. This might not have the intended effect. Security actions on the type level are overridden by security actions on the method level. When employing both type-level and method-level security, type-level security actions that are not also on the method will be ignored when the method executes.</Description>
+    <Url>@ms182304.aspx</Url>
+    <Resolution>Apply {0} security checks that currently exist at the type level only to method {1} as well.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="CallGCKeepAliveWhenUsingNativeResources" Category="Microsoft.Security" CheckId="CA2115">
+    <Name>Call GC.KeepAlive when using native resources</Name>
+    <Description>If a method uses an IntPtr or UIntPtr field in a class with a finalizer and does not call GC.KeepAlive, a race condition might be introduced.</Description>
+    <Url>@ms182300.aspx</Url>
+    <Resolution>Add a call to GC.KeepAlive(this) at the end of method {0}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116">
+    <Name>APTCA methods should only call APTCA methods</Name>
+    <Description>Methods with the AllowPartiallyTrustedCallersAttribute that call methods without that attribute might unintentionally expose functionality to partially trusted code. When a method has the AllowPartiallyTrustedCallersAttribute set, it is callable by partially trusted code. If it in turn calls methods without the attribute, a partially trusted caller is, in effect, being allowed to execute code that requires full trust. Depending on what full trust code is called and what parameter values are passed through from the partially trusted caller, malicious code might be able to exploit this security weakness.</Description>
+    <Url>@ms182297.aspx</Url>
+    <Resolution>The method {0} is defined in an assembly that has AllowPartiallyTrustedCallersAttribute and calls {1}, which is defined in an assembly ({2}) that does not. Review the called methods to ensure they cannot be used in a destructive manner if called by malicious code.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="25">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="AptcaTypesShouldOnlyExtendAptcaBaseTypes" Category="Microsoft.Security" CheckId="CA2117">
+    <Name>APTCA types should only extend APTCA base types</Name>
+    <Description>Types with the AllowPartiallyTrustedCallersAttribute that extend types without that attribute might unintentionally expose functionality in the base type to partially trusted callers. When a type has the AllowPartiallyTrustedCallersAttribute set, it is callable by partially trusted code. If the base type does not have this attribute, it requires callers to be fully trusted. If the derived type exposes protected members in the base type, the base type's data is made accessible to partially trusted callers, creating an exploitable security weakness.</Description>
+    <Url>@ms182298.aspx</Url>
+    <Resolution>Do one of the following: 1) Remove the AllowPartiallyTrustedCallersAttribute from {0}. 2) If the attribute is necessary, verify that {0} does not expose any protected members of inherited types. 3) Add AllowPartiallyTrustedCallersAttribute to the base type {1}, if you can ensure that this will not have negative implications on security.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="25">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="ReviewSuppressUnmanagedCodeSecurityUsage" Category="Microsoft.Security" CheckId="CA2118">
+    <Name>Review SuppressUnmanagedCodeSecurityAttribute usage</Name>
+    <Description>Calling a method with the SuppressUnmanagedCodeSecurityAttribute applied to it can create a security weakness. Unmanaged code security checks ensure that all callers in the call stack have permission to execute unmanaged code. Disabling code security for P/Invoke methods allows callers that do not have this permission to breach security. This is acceptable only if the code is completely harmless, or callers have no way to pass arbitrary arguments through to the unmanaged code.</Description>
+    <Url>@ms182311.aspx</Url>
+    <Resolution Name="PlatformInvokeVisible">Review declarative security for {0} and its callers for potential vulnerabilities. This method is accessible from outside its assembly, and might therefore provide a way to circumvent security protection. Consider removing SuppressUnmanagedCodeSecurity from the method or make it private and wrap it with a public method that demands a permission appropriate to the P/Invoke functionality and security risk.</Resolution>
+    <Resolution Name="PlatformInvokeStack">Review declarative security for {0} and its callers for potential vulnerabilities. The following call stack might expose a way to circumvent security protection: {1}</Resolution>
+    <Resolution Name="Default">Member {0} is marked with SuppressUnmanagedCodeSecurityAttribute. Make sure this does not result in a security vulnerability.</Resolution>
+    <Resolution Name="Type">Remove SuppressUnmanagedCodeSecurityAttribute from {0} or ensure its use does not result in a security vulnerability.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="33">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="SealMethodsThatSatisfyPrivateInterfaces" Category="Microsoft.Security" CheckId="CA2119">
+    <Name>Seal methods that satisfy private interfaces</Name>
+    <Description>Externally visible types that implement non-public interfaces should not be extensible. Types that extend public types with non-public interfaces can override interface members. This can compromise object behavior or create a security vulnerability.</Description>
+    <Url>@ms182313.aspx</Url>
+    <Resolution>{0} is an overridable method that satisfies a member on the private interface '{1}'. Mark the method as final, implement it explicitly or seal its declaring type {2}.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="SecureSerializationConstructors" Category="Microsoft.Security" CheckId="CA2120">
+    <Name>Secure serialization constructors</Name>
+    <Description>Serializable types that have a constructor protected by a security demand must apply the same security demands to the serialization constructor. Apply the demand using declarative security.</Description>
+    <Url>@ms182317.aspx</Url>
+    <Resolution>Security demands were found on {0}. Mark the serialization constructor for this type with the declarative form of the same demand(s).</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="33">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="StaticConstructorsShouldBePrivate" Category="Microsoft.Security" CheckId="CA2121">
+    <Name>Static constructors should be private</Name>
+    <Description>Non-private static constructors can cause unexpected behaviors, particularly when executed multiple times. This violation can occur if a type declares static data but has not explicitly  declared a static constructor. In this case, some compilers will generate an externally visible static constructor.</Description>
+    <Url>@ms182320.aspx</Url>
+    <Resolution>Declare an explicit static constructor for '{0}'.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="95">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <Rule TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122">
+    <Name>Do not indirectly expose methods with link demands</Name>
+    <Description>Do not wrap a method protected by a LinkDemand with a method that does not perform a security check. A LinkDemand checks the permissions of the immediate caller rather than checking the permissions of all callers in the call stack. In this case, the permissions of the wrapper method will be checked. If the wrapper method does not, itself, check the permissions of callers higher in the call stack, malicious code might be able to execute the wrapped function even though it lacks permission to do so.</Description>
+    <Url>@ms182303.aspx</Url>
+    <Resolution>{0} calls into {1} which has a LinkDemand. By making this call, {1} is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: {2}</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="33">CriticalError</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--<Rule TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123">
+    <Name>Override link demands should be identical to base</Name>
+    <Description>If a virtual method has a LinkDemand, in many cases, so should any override of it, and if an override has a LinkDemand, so should the overridden virtual method. Because it is possible to call any of the overrides of a virtual method explicitly, they should all have the same LinkDemand status or, if not, should be reviewed. This also applies to LinkDemand security checks for methods that part of an interface implementation, because the caller might use an interface-typed reference to access the method.</Description>
+    <Url>@ms182305.aspx</Url>
+    <Resolution>The LinkDemands on override {0} do not exactly match the LinkDemands on base method {1}. Add, remove, or modify LinkDemands where required.</Resolution>
+    <Resolution Name="OverrideOnly">Override {0} has the following LinkDemand that is not present on base method {1}: {2}. If possible, apply the same LinkDemand to the base method. Otherwise, replace it with a full Demand or remove it entirely.</Resolution>
+    <Resolution Name="BaseOnly">Add the following security attribute to {0} in order to match a LinkDemand on base method {1}:  {2}.</Resolution>
+    <Resolution Name="Both">The LinkDemands on override {0} do not exactly match the following LinkDemands on base method {1}: {2}. Add, remove, or modify LinkDemands where required.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="33">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>-->
+  <Rule TypeName="WrapVulnerableFinallyClausesInOuterTry" Category="Microsoft.Security" CheckId="CA2124">
+    <Name>Wrap vulnerable finally clauses in outer try</Name>
+    <Description>Finally clauses that restore security-related state should be wrapped in an outer try block. This will prevent an exception filter further up the stack from executing before a secure environment can be restored. Exception filters that run code expressions in the first pass after the guarded try blocks and before the associated finally block represent a possible security vulnerability. Examples of vulnerable functionality in finally clauses that should be protected against this include: calls to RevertAssert on an asserted permission, undoing a temporary impersonation, reversing an internal flag that bypasses a security check, and restoring the culture associated with a thread.</Description>
+    <Url>@ms182322.aspx</Url>
+    <Resolution>Wrap the finally clause in {0} that calls {1} in an outer try block with an associated catch that simply rethrows.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="75">Error</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--<Rule TypeName="EventHandlersShouldNotBeVisible" Category="Microsoft.Security" CheckId="CA2125">
+    <Name>Event handlers should not be visible</Name>
+    <Description>Methods used as event handlers that are declared as public or protected can open security holes. Untrusted code can register public or protected methods as event handlers in the case where the signature of the event matches that of the method. This can open a security vulnerability, depending on the functionality exposed by the event handler and method action.</Description>
+    <Url>@/Security/EventHandlersShouldNotBeVisible.html</Url>
+    <Resolution>Make '{0}' not externally visible.</Resolution>
+    <Email>fxcopbug@microsoft.com</Email>
+    <MessageLevel Certainty="40">Error</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  -->
+  <Rule TypeName="TypeLinkDemandsRequireInheritanceDemands" Category="Microsoft.Security" CheckId="CA2126">
+    <Name>Type link demands require inheritance demands</Name>
+    <Description>Unsealed types secured by a LinkDemand should also specify an InheritanceDemand. Without an InheritanceDemand, the link demand can be circumvented by overriding a method in a derived class.</Description>
+    <Url>@ms182321.aspx</Url>
+    <Resolution>{0} has one or more overridable methods with link demands that are not matched by an inheritance demand. Apply appropriate inheritance demands to the type.</Resolution>
+    <Resolution Name="Extended">{0} has one or more overridable methods with link demands that are not matched by an inheritance demand. Apply the following inheritance demands to the type: {1}</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="90">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+  <!--<Rule TypeName="SecurityTransparentAssembliesShouldNotContainSecurityCriticalCode" Category="Microsoft.Security" CheckId="CA2127">
+    <Name>Security transparent assemblies should not contain security critical code</Name>
+    <Description>Members that are marked with SecurityCritical must be declared in types and assemblies that are also marked with SecurityCritical</Description>
+    <Url>@bb264493.aspx</Url>
+    <Resolution>Refactor {0} into an independent SecurityCritical assembly or mark assembly {1} as SecurityCritical.</Resolution>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <Email></Email>
+    <FixCategories>Breaking</FixCategories>
+    <Owner/>
+  </Rule>
+  -->
+  <!--<Rule TypeName="SecurityTransparentCodeShouldNotAssert" Category="Microsoft.Security" CheckId="CA2128">
+    <Name>Security transparent code should not assert</Name>
+    <Description>Code that is marked as SecurityTransparent is not granted sufficient permissions to assert permissions.</Description>
+    <Url>@bb264482.aspx</Url>
+    <Resolution>Remove all asserts from {0} or mark the code as SecurityCritical.</Resolution>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <Email></Email>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+  </Rule>
+  -->
+  <!--<Rule TypeName="SecurityTransparentCodeShouldNotReferenceNonpublicSecurityCriticalCode" Category="Microsoft.Security" CheckId="CA2129">
+    <Name>Security transparent code should not reference non-public security critical members</Name>
+    <Description>Methods that are marked with SecurityTransparent (the default designation) should not reference non-public members that are marked as SecurityCritical.</Description>
+    <Url>@bb264475.aspx</Url>
+    <Resolution Name="Local">{0}, a SecurityTransparent method has a variable reference to {1}, a non-public SecurityCritical type. Remove or replace this variable, mark {0} as SecurityCritical, or decorate {1} with SecurityTreatAsSafe.</Resolution>
+    <Resolution Name="Parameter">{0}, a SecurityTransparent method contains a parameter of {1}, a non-public type. Remove or replace this parameter, mark {0} as SecurityCritical, or decorate {1} with SecurityTreatAsSafe.</Resolution>
+    <Resolution Name="ReturnType">{0}, a SecurityTransparent method returns {1}, a non-public SecurityCritical type. Change the return type, mark {0} as SecurityCritical, or decorate {1} with SecurityTreatAsSafe.</Resolution>
+    <Resolution Name="Method">{0}, a SecurityTransparent method, references {1}, a non-public SecurityCritical method. Remove or replace this call, mark {0} as SecurityCritical, or decorate {1} with SecurityTreatAsSafe.</Resolution>
+    <Resolution Name="Field">{0}, a SecurityTransparent method, accesses {1}, a non-public SecurityCritical field. Remove or replace this field access, mark {0} as SecurityCritical, or decorate {1} with SecurityTreatAsSafe.</Resolution>
+    <MessageLevel Certainty="95">CriticalError</MessageLevel>
+    <Email></Email>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+  </Rule>
+  -->
+
+  <!-- CA2130-CA2149 are reserved for SecurityTransparencyRules.dll -->
+</Rules>

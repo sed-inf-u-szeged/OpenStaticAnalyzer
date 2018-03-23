@@ -1,0 +1,211 @@
+/*
+ *  This file is part of OpenStaticAnalyzer.
+ *
+ *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *
+ *  Licensed under Version 1.2 of the EUPL (the "Licence");
+ *
+ *  You may not use this work except in compliance with the Licence.
+ *
+ *  You may obtain a copy of the Licence in the LICENSE file or at:
+ *
+ *  https://joinup.ec.europa.eu/software/page/eupl
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the Licence is distributed on an "AS IS" basis,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the Licence for the specific language governing permissions and
+ *  limitations under the Licence.
+ */
+
+#include "csharp/inc/csharp.h"
+#include "csharp/inc/Common.h"
+#include "common/inc/WriteMessage.h"
+
+#include "csharp/inc/messages.h"
+#include <algorithm>
+#include <string.h>
+#include "common/inc/math/common.h"
+
+
+namespace columbus { namespace csharp { namespace asg {
+
+typedef boost::crc_32_type  Crc_type;
+
+namespace structure { 
+  BaseArgumentListSyntax::BaseArgumentListSyntax(NodeId _id, Factory *_factory) :
+    Positioned(_id, _factory),
+    ArgumentsContainer()
+  {
+  }
+
+  BaseArgumentListSyntax::~BaseArgumentListSyntax() {
+  }
+
+  void BaseArgumentListSyntax::prepareDelete(bool tryOnVirtualParent){
+    while (!ArgumentsContainer.empty()) {
+      const NodeId id = *ArgumentsContainer.begin();
+      removeParentEdge(id);
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->removeEdge(id, this->getId(), edkBaseArgumentListSyntax_Arguments);
+      ArgumentsContainer.pop_front();
+    }
+    base::Positioned::prepareDelete(false);
+  }
+
+  ListIterator<structure::ArgumentSyntax> BaseArgumentListSyntax::getArgumentsListIteratorBegin() const {
+    return ListIterator<structure::ArgumentSyntax>(&ArgumentsContainer, factory, true);
+  }
+
+  ListIterator<structure::ArgumentSyntax> BaseArgumentListSyntax::getArgumentsListIteratorEnd() const {
+    return ListIterator<structure::ArgumentSyntax>(&ArgumentsContainer, factory, false);
+  }
+
+  bool BaseArgumentListSyntax::getArgumentsIsEmpty() const {
+    return getArgumentsListIteratorBegin() == getArgumentsListIteratorEnd();
+  }
+
+  unsigned int BaseArgumentListSyntax::getArgumentsSize() const {
+    unsigned int size = 0;
+    ListIterator<structure::ArgumentSyntax> endIt = getArgumentsListIteratorEnd();
+    for (ListIterator<structure::ArgumentSyntax> it = getArgumentsListIteratorBegin(); it != endIt; ++it) {
+      ++size;
+    }
+    return size;
+  }
+
+  bool BaseArgumentListSyntax::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
+    switch (edgeKind) {
+      case edkBaseArgumentListSyntax_Arguments:
+        addArguments(edgeEnd);
+        return true;
+      default:
+        break;
+    }
+    if (base::Positioned::setEdge(edgeKind, edgeEnd, false)) {
+      return true;
+    }
+    return false;
+  }
+
+  bool BaseArgumentListSyntax::removeEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
+    switch (edgeKind) {
+      case edkBaseArgumentListSyntax_Arguments:
+        removeArguments(edgeEnd);
+        return true;
+      default:
+        break;
+    }
+    if (base::Positioned::removeEdge(edgeKind, edgeEnd, false)) {
+      return true;
+    }
+    return false;
+  }
+
+  void BaseArgumentListSyntax::addArguments(const structure::ArgumentSyntax *_node) {
+    if (_node == NULL)
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
+
+    if (&(_node->getFactory()) != this->factory)
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
+
+    if (!((_node->getNodeKind() == ndkArgumentSyntax) ))
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+
+    ArgumentsContainer.push_back(_node->getId());
+    setParentEdge(_node,edkBaseArgumentListSyntax_Arguments);
+
+    if (factory->reverseEdges)
+      factory->reverseEdges->insertEdge(_node, this, edkBaseArgumentListSyntax_Arguments);
+  }
+
+  void BaseArgumentListSyntax::addArguments(NodeId _id) {
+    const structure::ArgumentSyntax *node = dynamic_cast<structure::ArgumentSyntax*>(factory->getPointer(_id));
+    if (node == NULL)
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    addArguments( node );
+  }
+
+  void BaseArgumentListSyntax::removeArguments(NodeId id) {
+    if (!factory->getExist(id))
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    ListIterator<structure::ArgumentSyntax>::Container::iterator it = find(ArgumentsContainer.begin(), ArgumentsContainer.end(), id);
+
+    if (it == ArgumentsContainer.end())
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    ArgumentsContainer.erase(it);
+
+    removeParentEdge(id);
+
+    if (factory->getExistsReverseEdges())
+      factory->reverseEdges->removeEdge(id, this->getId(), edkBaseArgumentListSyntax_Arguments);
+  }
+
+  void BaseArgumentListSyntax::removeArguments(structure::ArgumentSyntax *_node) {
+    if (_node == NULL)
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
+
+    removeArguments(_node->getId());
+  }
+
+  double BaseArgumentListSyntax::getSimilarity(const base::Base& base){
+    if(base.getNodeKind() == getNodeKind()) {
+      return 1.0;
+    } else {
+      return 0.0;
+    }
+  }
+
+  void BaseArgumentListSyntax::swapStringTable(RefDistributorStrTable& newStrTable, std::map<Key,Key>& oldAndNewStrKeyMap ){
+    std::map<Key,Key>::iterator foundKeyId;
+
+      m_position.swapStringTable(newStrTable,oldAndNewStrKeyMap);
+
+  }
+
+  NodeHashType BaseArgumentListSyntax::getHash(std::set<NodeId>& travNodes) const {
+    if (hashOk) return nodeHashCache;
+    common::WriteMsg::write(CMSG_GET_THE_NODE_HASH_OF_NODE_BEGIN,this->getId()); 
+    if (travNodes.count(getId())>0) {
+      common::WriteMsg::write(CMSG_GET_THE_NODE_HASH_OF_NODE_SKIP);
+      return 0;
+    }
+    travNodes.insert(getId());
+    Crc_type resultHash;
+    resultHash.process_bytes( "structure::BaseArgumentListSyntax", strlen("structure::BaseArgumentListSyntax"));
+    common::WriteMsg::write(CMSG_GET_THE_NODE_HASH_OF_NODE_END,resultHash.checksum()); 
+    nodeHashCache = resultHash.checksum();
+    hashOk = true;
+    return nodeHashCache;
+  }
+
+  void BaseArgumentListSyntax::save(io::BinaryIO &binIo,bool withVirtualBase  /*= true*/) const {
+    Positioned::save(binIo,false);
+
+
+    for (ListIterator<structure::ArgumentSyntax>::Container::const_iterator it = ArgumentsContainer.begin(); it != ArgumentsContainer.end(); ++it) {
+      binIo.writeUInt4(*it);
+    }
+    binIo.writeUInt4(0); // This is the end sign
+  }
+
+  void BaseArgumentListSyntax::load(io::BinaryIO &binIo, bool withVirtualBase /*= true*/) {
+    Positioned::load(binIo,false);
+
+    NodeId _id;
+
+    _id = binIo.readUInt4();
+    while (_id) {
+      ArgumentsContainer.push_back(_id);
+      setParentEdge(factory->getPointer(_id),edkBaseArgumentListSyntax_Arguments);
+      _id = binIo.readUInt4();
+    }
+  }
+
+
+}
+
+
+}}}

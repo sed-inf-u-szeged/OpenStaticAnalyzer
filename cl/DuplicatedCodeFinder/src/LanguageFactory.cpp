@@ -34,24 +34,32 @@ namespace columbus { namespace dcf {
     , limComponentNameFileNameMap()
     , hashCodes()
   {}
-  
+
   LanguageFactory::~LanguageFactory() {
     release();
   }
 
   void LanguageFactory::loadComponent(const std::string& fname, bool deleteFiltered, unsigned long long* hash, std::string* componentID /*=NULL*/) {
     columbus::RefDistributorStrTable *stt=new columbus::RefDistributorStrTable();
-    
+    Factory* factory = new Factory(*stt);
+
+#if defined(SCHEMA_JAVA) || defined SCHEMA_PYTHON
     columbus::CsiHeader header;
-    Factory* factory=new Factory(*stt);
     factory->load(fname, header);
+
+#elif defined SCHEMA_CSHARP
+    std::list<HeaderData*> headerList;
+    columbus::PropertyData header;
+    headerList.push_back(&header);
+    factory->load(fname, headerList);
+#endif
 
     if (componentID) {
       if (!header.get(header.csih_OriginalLocation,*componentID)) {
         *componentID = fname;
         common::changePath(*componentID, config.changepathfrom, config.changepathto);
       }
-      
+
       limComponentNameFileNameMap[*componentID] = fname;
     }
     factory->initializeFilter();
@@ -171,7 +179,7 @@ namespace columbus { namespace dcf {
 
       Factory factory(stt);
       factory.load(*it, header);
-      
+
       if (!header.get(header.csih_OriginalLocation,componentID)) {
         componentID = *it;
         common::changePath(componentID, config.changepathfrom, config.changepathto);

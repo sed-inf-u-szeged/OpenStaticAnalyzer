@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Rules FriendlyName="Security Transparency Rules">
+  <!-- Last used CheckId = 2152 -->
+
+  <Rule TypeName="ConstantsShouldBeTransparentFxCopRule" Category="Microsoft.Security" CheckId="CA2130">
+    <Name>Security critical constants should be transparent</Name>
+    <Description>Compilers inline accesses to constants, and as such transparency enforcement is not done for them since there is no runtime access to the field.  These fields should be security transparent so that code reviewers do not assume that transparent code cannot access the constant.</Description>
+    <Resolution>{0} is a literal field which is SecurityCritical; it should be transparent instead.</Resolution>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner/>
+    <Url>@dd997446(VS.100).aspx</Url>
+    <Email/>
+  </Rule>
+
+  <Rule TypeName="CriticalTypesMustNotParticipateInTypeEquivalenceFxCopRule" Category="Microsoft.Security" CheckId="CA2131">
+    <Name>Security critical types may not participate in type equivalence</Name>
+    <Description>Type equivalence requires that all participating types, as well as all methods and fields within those types, are transparent or security safe-critical.  The CLR will fail to load any type which violates this rule.</Description>
+    <Resolution Name="Field">{0} is a critical field contained in a type which is participating in type equivalence.  In order to allow type {1} to participate in equivalence, {0} must become security transparent or safe-critical.</Resolution>
+    <Resolution Name="Method">{0} is a critical method contained in a type which is participating in type equivalence.  In order to allow type {1} to participate in equivalence, {0} must become security transparent or safe-critical.</Resolution>
+    <Resolution Name="Type">{0} is a critical type which also participates in type equivalence.  In order to successfully use type equivalence, {0} must become security transparent or safe-critical.</Resolution>
+    <MessageLevel Certainty="99">CriticalError</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url>@dd997564(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+  
+  <Rule TypeName="DefaultConstructorsMustHaveConsistentTransparencyFxCopRule" Category="Microsoft.Security" CheckId="CA2132">
+    <Name>Default constructors must be at least as critical as base type default constructors</Name>
+    <Description>On CoreCLR, if a base type has a public or protected non-transparent default constructor than the derived type must obey default constructor inheritance rules.  The derived type must also have a default constructor and that constructor must be at least as critical as the base type's default constructor.  If the base type's default constructor is safe-critical, the derived type's default constructor must be safe-critical or critical.  If the base type's default constructor is critical, then the derived type's default constructor must also be critical.</Description>
+    <Resolution Name="AddDefaultCtor">{0} derives from {1} but does not have a default constructor.  {1} needs to add a default constructor to obey the security inheritance rules on CoreCLR.</Resolution>
+    <Resolution Name="DeriveFromCritical">{0} derives from {1} which has a critical default constructor while {0} has a transparent or safe-critical default constructor.  Change the default constructor of {0} to be critical in order to allow this inheritance relationship to succeed.</Resolution>
+    <Resolution Name="DeriveFromSafeCritical">{0} derives from {1} which has a safe-critical default constructor while {0} has a transparent default constructor.  Change the default constructor of {0} to be safe-critical or critical in order to allow this inheritance relationship to succeed.</Resolution>
+    <MessageLevel Certainty="99">CriticalError</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url>@dd983956(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+  <Rule TypeName="DelegatesMustBindWithConsistentTransparencyFxCopRule" Category="Microsoft.Security" CheckId="CA2133">
+    <Name>Delegates must bind to methods with consistent transparency</Name>
+    <Description>Delegate types and the methods that they bind to must have consistent transparency.  Transparent and safe-critical delegates may only bind to other transparent or safe-critical methods.  Similarly, critical delegates may only bind to critical methods.  These binding rules ensure that the only code which can invoke a method via a delegate could have also invoked the same method directly.  It prevents, for instance, transparent code from calling critical code directly via a transparent delegate.</Description>
+    <Resolution Name="CriticalBoundToTransparent">{0} binds a critical delegate of type {1} to transparent or safe-critical method {2} in violation of secure delegate binding rules.  {1} should be made transparent or {2} should be made critical in order to allow this delegate binding to succeed.</Resolution>
+    <Resolution Name="TransparentBoundToCritical">{0} binds a transparent or safe-critical delegate of type {1} to critical method {2} in violation of secure delegate binding rules.  {1} should be made critical or {2} should be made transparent or safe-critical in order to allow this delegate binding to succeed.</Resolution>
+    <MessageLevel Certainty="99">CriticalError</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url>@dd997710(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+  <Rule TypeName="FieldsWithCriticalTypesShouldBeCriticalFxCopRule" Category="Microsoft.Security" CheckId="CA2151">
+    <Name>Fields with critical types should be security critical.</Name>
+    <Description>Fields which have a critical type cannot be used from transparent code, and should therefore be marked security critical.  This makes it obvious to the users of the field that they must also be critical.  Additionally, such fields frequently store sensitive information such as a handle value.</Description>
+    <Resolution>Field {0} is transparent or safe-critical but has security critical type {1}.  This field should be marked security critical.</Resolution>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+    <Url />
+    <Email />
+  </Rule>
+  
+  <Rule TypeName="MethodsMustOverrideWithConsistentTransparencyFxCopRule" Category="Microsoft.Security" CheckId="CA2134">
+    <Name>Methods must keep consistent transparency when overriding base methods</Name>
+    <Description>Transparency visibility must be preserved between overriding methods and the methods that are being overridden.  If the virtual method being overridden or interface method being implemented is security safe-critical or security transparent, then the overriding method must also be either security safe-critical or security transparent.  Similarly, if the method being overridden is security critical, the overriding method must be security critical.</Description>
+    <Resolution Name="TransparentOverrideCritical">Transparent or safe critical method {0} is overriding critical method {1} in violation of method override rules.  {0} must become security critical in order to override a critical virtual method or implement a critical interface method.</Resolution>
+    <Resolution Name="CriticalOverrideTransparent">Critical method {0} is overriding transparent or safe critical method {1} in violation of method override rules.  {0} must become transparent or safe-critical in order to override a transparent or safe-critical virtual method or implement a transparent or safe-critical interface method.</Resolution>
+    <MessageLevel Certainty="99">CriticalError</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url>@dd997447(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+  <Rule TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123">
+    <Name>Override link demands should be identical to base</Name>
+    <Description>If a virtual method has a LinkDemand, in many cases, so should any override of it, and if an override has a LinkDemand, so should the overridden virtual method. Because it is possible to call any of the overrides of a virtual method explicitly, they should all have the same LinkDemand status or, if not, should be reviewed. This also applies to LinkDemand security checks for methods that part of an interface implementation, because the caller might use an interface-typed reference to access the method.</Description>
+    <Url>@ms182305(VS.100).aspx</Url>
+    <Resolution>The LinkDemands on override {0} do not exactly match the LinkDemands on base method {1}. Add, remove, or modify LinkDemands where required.</Resolution>
+    <Resolution Name="OverrideOnly">Override {0} has the following LinkDemand that is not present on base method {1}: {2}. If possible, apply the same LinkDemand to the base method. Otherwise, replace it with a full Demand or remove it entirely.</Resolution>
+    <Resolution Name="BaseOnly">Add the following security attribute to {0} in order to match a LinkDemand on base method {1}:  {2}.</Resolution>
+    <Resolution Name="Both">The LinkDemands on override {0} do not exactly match the following LinkDemands on base method {1}: {2}. Add, remove, or modify LinkDemands where required.</Resolution>
+    <Email>
+    </Email>
+    <MessageLevel Certainty="33">CriticalError</MessageLevel>
+    <FixCategories>Breaking</FixCategories>
+    <Owner />
+  </Rule>
+
+  <Rule TypeName="PInvokesShouldNotBeSafeCriticalFxCopRule" Category="Microsoft.Security" CheckId="CA5122">
+    <Name>P/Invoke declarations should not be safe-critical.</Name>
+    <Description>Since P/Invokes may not be called by transparent code, they should not be marked as safe-critical methods.  Doing so can lead to confusion on the part of developers who may believe that their transparent code should be able to call the P/Invoke method since it is marked safe-critical.</Description>
+    <Resolution>P/Invoke method {0} is marked safe-critical.  Since P/Invokes may only be called by critical code, this declaration should either be marked as security critical, or have its annotation removed entirely to avoid being misleading.</Resolution>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+    <Url/>
+    <Email />
+  </Rule>
+  
+  <Rule TypeName="SecurityRuleSetLevel2MethodsShouldNotBeProtectedWithLinkDemandsFxCopRule" Category="Microsoft.Security" CheckId="CA2135">
+    <Name>Level 2 assemblies should not contain LinkDemands</Name>
+    <Description>LinkDemands are deprecated in the level 2 security rule set.  Instead of using LinkDemands to enforce JIT time security, SecurityCritical methods, types, and fields should be used instead.</Description>
+    <Resolution>{0} is protected with a LinkDemand for {1}.  In the level 2 security rule set, it should be protected by being security critical instead.  Remove the LinkDemand and mark {0} security critical.</Resolution>
+    <MessageLevel Certainty="50">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+    <Url>@dd997569(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+  <Rule TypeName="TransparencyAnnotationsShouldNotConflictFxCopRule" Category="Microsoft.Security" CheckId="CA2136">
+    <Name>Members should not have conflicting transparency annotations</Name>
+    <Description>Transparency attributes are applied from larger scopes inward.  For instance, if a type is marked as entirely security critical, than all methods introduced by the type will also be security critical.  Members should not have transparency annotations which conflict with larger scoped annotations, as these smaller scoped annotations will be ignored by the CLR and can be misleading during a code review.  Methods not introduced by their type, such as virtual methods being overridden from a base type or interface methods being implemented, do have their annotations considered under the level 2 security rule set and are not considered by this rule.</Description>
+    <Resolution Name="CriticalMarkedSafeCritical">{0}, a security critical member, is marked with a safe-critical annotation.  This annotation should be removed.</Resolution>
+    <Resolution Name="CriticalMarkedTreatAsSafe">{0}, a security critical member, is marked with a treat as safe annotation.  This annotation should be removed.</Resolution>
+    <Resolution Name="SafeCriticalMarkedCritical">{0}, a security safe-critical member, is marked with a critical annotation.  This annotation should be removed.</Resolution>
+    <Resolution Name="TransparentMarkedCritical">{0}, a security transparent member, is marked with a critical annotation.  This annotation should be removed.</Resolution>
+    <Resolution Name="TransparentMarkedSafeCritical">{0}, a security transparent member, is marked with a safe-critical annotation.  This annotation should be removed.</Resolution>
+    <Resolution Name="TransparentMarkedTreatAsSafe">{0}, a security transparent member, is marked with a treat as safe annotation.  This annotation should be removed.</Resolution>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+    <Url>@bb264493(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+  <Rule TypeName="TransparentCodeMustNotUseCriticalAttributes" Category="Microsoft.Security" CheckId="CA2150">
+    <Name>Transparent code may not use security critical attributes</Name>
+    <Description>Transparent code must not use security critical attributes.  This includes using security critical constructors, properties, or fields of attributes.  Violations of this rule will result in an exception when code attempts to retrieve the custom attributes from the transparent target.</Description>
+    <Resolution Name="Ctor">{0}, a security transparent member, uses security critical attribute constructor {1}. Mark this target as security critical or security safe-critical, or remove the attribute from the target.</Resolution>
+    <Resolution Name="Field">{0}, a security transparent member, uses security critical attribute field {1}. Mark this target as security critical or security safe-critical, or remove the attribute from the target.</Resolution>
+    <Resolution Name="Property">{0}, a security transparent member, uses security critical attribute property {1}. Mark this target as security critical or security safe-critical, or remove the attribute from the target.</Resolution>
+    <MessageLevel Certainty="99">Error</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url />
+    <Email />
+  </Rule>
+    
+  <Rule TypeName="TransparentMethodsMustBeVerifiableFxCopRule" Category="Microsoft.Security" CheckId="CA2137">
+    <Name>Transparent methods must contain only verifiable IL</Name>
+    <Description>Transparent code must be fully verifiable.  This rule looks for any use of pointer types to check for unverifiable code, however it is not a complete verifier and PEVerify / transparent must be run on assemblies to ensure that all of their transparent code is verifiable.</Description>
+    <Resolution Name="ReturnByref">Transparent method {0} returns a byref type.  Change the return type of this method, or mark it security critical or safe-critical.</Resolution>
+    <Resolution Name="UnverifiableCode">Transparent method {0} contains unverifiable code.  Mark this method security critical or safe-critical, or remove the unverifiable code from the method.</Resolution>
+    <MessageLevel Certainty="99">Error</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url>@dd983954(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+  <Rule TypeName="TransparentMethodsMustNotCallNativeCodeFxCopRule" Category="Microsoft.Security" CheckId="CA2149">
+    <Name>Transparent methods must not call into native code</Name>
+    <Description>Transparent code may not call native code directly.  This rule looks for any transparent code which calls a method stub (such as a P/Invoke declaration) which is really a direct call into native code.</Description>
+    <Resolution Name="PInvoke">Transparent method {0} calls {1} which is a P/Invoke method.  Mark this method as security-critical or remove the call to the P/Invoke method.</Resolution>
+    <MessageLevel Certainty="99">Error</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url>@ee155709(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+  <Rule TypeName="TransparentMethodsMustNotCallSuppressUnmanagedCodeSecurityMethodsFxCopRule" Category="Microsoft.Security" CheckId="CA2138">
+    <Name>Transparent methods must not call methods with the SuppressUnmanagedCodeSecurity attribute</Name>
+    <Description>P/Invoke and COM interop methods with the SuppressUnmanagedCodeSecurity attribute result in a LinkDemand being done against the calling method.  Since security transparent code may not satisfy LinkDemands, it may also not call methods with SuppressUnmanagedCodeSecurity either on the method itself or on the type containing the method.</Description>
+    <Resolution>{0}, a security transparent method, calls {1} which is decorated with the SuppressUnmanagedCodeSecurity attribute.  Remove the attribute from {1}, or mark {0} security critical or safe-critical in order to allow this call to succeed.</Resolution>
+    <MessageLevel Certainty="99">Error</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url>@dd997711(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+  <Rule TypeName="TransparentMethodsMustNotHandleProcessCorruptingExceptionsFxCopRule" Category="Microsoft.Security" CheckId="CA2139">
+    <Name>Transparent methods may not use the HandleProcessCorruptingExceptions attribute</Name>
+    <Description>The HandleProcessCorruptingExceptions attribute may only be used by security critical methods, and will not be honored if it is applied to a transparent method.</Description>
+    <Resolution>{0}, a transparent method, uses the HandleProcessCorruptingExceptionsAttribute.  In order to handle process corrupting exceptions, this method must become security critical or security safe-critical.</Resolution>
+    <MessageLevel Certainty="99">Error</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url>@dd997565(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+  <Rule TypeName="TransparentMethodsMustNotReferenceCriticalCodeFxCopRule" Category="Microsoft.Security" CheckId="CA2140">
+    <Name>Transparent code must not reference security critical items</Name>
+    <Description>Transparent code cannot refer to security critical methods, types, or fields.  At runtime these references will result in MemberAccessExceptions or TypeLoadExceptions.</Description>
+    <Resolution Name="ExceptionHandler">Transparent method {0} handles security critical exception type {1}.  In order for this exception handler to be allowed under the security transparency rules, either {0} must become security critical or safe-critical, or {1} become security safe-critical or transparent.</Resolution>
+    <Resolution Name="Local">Transparent method {0} has a local variable {1} of security critical type {2}.  In order for this local variable to be allowed under the security transparency rules, either {0} must become security critical or safe-critical, or {2} must become security safe-critical or transparent.</Resolution>
+    <Resolution Name="FieldReference">Transparent method {0} references security critical field {1}.  In order for this reference to be allowed under the security transparency rules, either {0} must become security critical or safe-critical, or {1} become security safe-critical or transparent.</Resolution>
+    <Resolution Name="MethodGenericConstraint">Transparent method {0} has generic parameter {1} with security critical constraint {2}.  In order for this generic parameter to be allowed under the security transparency rules, either {0} must become security critical or safe-critical, or {2} become security safe-critical or transparent.</Resolution>
+    <Resolution Name="MethodReference">Transparent method {0} references security critical method {1}.  In order for this reference to be allowed under the security transparency rules, either {0} must become security critical or safe-critical, or {1} become security safe-critical or transparent.</Resolution>
+    <Resolution Name="Parameter">Transparent method {0} has parameter {1} of security critical type {2}.  In order for this parameter to be allowed under the security transparency rules, either {0} must become security critical or safe-critical, or {2} must become security safe-critical or transparent.</Resolution>
+    <Resolution Name="ReturnType">Transparent method {0} returns security critical type {1}.  In order for this return type to be allowed under the security transparency rules, either {0} must become security critical or safe-critical, or {1} must become security safe-critical or transparent.</Resolution>
+    <Resolution Name="ThisPointer">Transparent method {0} is a member of security critical type {1}.  Since this method will not have access to its own instance reference due to transparency rules, this method must either become static, security critical or security safe-critical.   Alternately, the type containing the method could become security transparent or security safe-critical.</Resolution>
+    <Resolution Name="TypeReference">Transparent method {0} references security critical type {1}.  In order for this reference to be allowed under the security transparency rules, either {0} must become security critical or safe-critical, or {1} become security safe-critical or transparent.</Resolution>
+    <MessageLevel Certainty="99">CriticalError</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url>@bb264475(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+  
+  <Rule TypeName="TransparentMethodsMustNotSatisfyLinkDemandsFxCopRule" Category="Microsoft.Security" CheckId="CA2141">
+    <Name>Transparent methods must not satisfy LinkDemands</Name>
+    <Description>Satisfying a LinkDemand is a security sensitive operation which can cause unintentional elevation of privilege.  Security transparent code must not satisfy LinkDemands, since it is not subject to the same security audit requirements as security critical code.  Transparent methods is security rule set level 1 assemblies will cause all LinkDemands they satisfy to be converted to full demands at runtime, which can cause performance problems.  In security rule set level 2 assemblies, transparent methods will fail to JIT if they attempt to satisfy a LinkDemand.</Description>
+    <Resolution Name="APTCA">Security transparent method {0} calls {1} which is in non-APTCA assembly {2}.  Non-APTCA assemblies have implicit LinkDemands on their public surface area, and cannot be called by transparent methods.</Resolution>
+    <Resolution Name="Method">Security transparent method {0} satisfies a LinkDemand for {2} on method {1}.  {0} should become critical or safe-critical in order to call {1}.</Resolution>
+    <Resolution Name="Type">Security transparent method {0} satisfies a LinkDemand for {3} on type {1} when calling method {2}.  {0} should become critical or safe-critical in order to call {2}.</Resolution>
+    <MessageLevel Certainty="99">Error</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url>@dd997445(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+  <Rule TypeName="TransparentMethodsMustNotUseSecurityAssertsFxCopRule" Category="Microsoft.Security" CheckId="CA2147">
+    <Name>Transparent code may not use security asserts</Name>
+    <Description>Transparent code may not use security asserts, since asserting permissions can result in elevating the effective permissions of the call stack.  Transparent code which attempts to assert will receive an InvalidOperationException at runtime.</Description>
+    <Resolution Name="Declarative">{0}, a transparent type or method, contains a declarative security assert for {1}.  {0} should be made security critical or security safe-critical, or the assert should be removed from the transparent code.</Resolution>
+    <Resolution Name="Imperative">{0}, a transparent method, contains a security assert.  {0} should be made security critical or security safe-critical, or the assert should be removed from the transparent code.</Resolution>
+    <Resolution Name="ImperativeFor">{0}, a transparent method, contains a security assert for {1}.  {0} should be made security critical or security safe-critical, or the assert should be removed from the transparent code.</Resolution>
+    <MessageLevel Certainty="99">CriticalError</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url>@bb264482(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+  <Rule TypeName="TransparentMethodsShouldNotBeProtectedWithLinkDemandsFxCopRule" Category="Microsoft.Security" CheckId="CA2142">
+    <Name>Transparent code should not be protected with LinkDemands</Name>
+    <Description>Security transparent code should not be responsible for verifying the security of an operation, and therefore should not be protected from partial trust callers with LinkDemands.</Description>
+    <Resolution>Transparent method {0} is protected with a LinkDemand for {1}.  Remove this LinkDemand, or make the method security critical or safe-critical.</Resolution>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url>@dd997567(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+  <Rule TypeName="TransparentMethodsShouldNotDemandFxCopRule" Category="Microsoft.Security" CheckId="CA2143">
+    <Name>Transparent methods should not use security demands</Name>
+    <Description>Security transparent code should not be responsible for verifying the security of an operation, and therefore should not demand permissions.  Any code which is performing security checks, such as security demands, should be safe-critical instead.</Description>
+    <Resolution Name="Declarative">{0}, a transparent type or method, contains a declarative security demand for {1}.  {0} should be made security-safe critical or the demand should be removed from the transparent code.</Resolution>
+    <Resolution Name="Imperative">{0}, a transparent method, contains a security demand.  {0} should be made security safe-critical, or the demand should be removed from the transparent code.</Resolution>
+    <Resolution Name="ImperativeFor">{0}, a transparent method, contains a security demand for {1}.  {0} should be made security safe-critical, or the demand should be removed from the transparent code.</Resolution>
+    <MessageLevel Certainty="50">CriticalWarning</MessageLevel>
+    <FixCategories>NonBreaking</FixCategories>
+    <Owner />
+    <Url>@dd997566(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+  <Rule TypeName="TransparentMethodsShouldNotLoadAssembliesFromByteArraysFxCopRule" Category="Microsoft.Security" CheckId="CA2144">
+    <Name>Transparent code should not load assemblies from byte arrays</Name>
+    <Description>Assemblies loaded from byte arrays inherit the grant set of the loading assembly.  Since this means that the loaded assembly may be fully trusted, any calls to load from byte array from trusted code should be reviewed to ensure that it is secure.  Transparent code is not subjected to the same audit scrutiny as critical code, and therefore should not load assemblies from byte arrays.</Description>
+    <Resolution>Transparent method {0} calls {1} to load an assembly from a byte array.  This method should be marked security critical or safe-critical if it wishes to load assemblies from byte arrays.</Resolution>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url>@dd997568(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+  <Rule TypeName="TransparentMethodsShouldNotUseSuppressUnmanagedCodeSecurityFxCopRule" Category="Microsoft.Security" CheckId="CA2145">
+    <Name>Transparent methods should not be decorated with the SuppressUnmanagedCodeSecurityAttribute</Name>
+    <Description>Methods decorated with the SuppressUnmanagedCodeSecurity attribute have an implicit LinkDemand placed upon all of their callers.  This LinkDemand requires that the calling code be security critical.  Marking the method which uses SuppressUnmanagedCodeSecurity as security critical makes this requirement more obvious for callers of the method.</Description>
+    <Resolution>Transparent or safe-critical method {0} uses the SuppressUnmanagedCodeSecurityAttribute, either directly on the method or on the containing type.  Remove the SuppressUnmanagedCodeSecurity attribute or mark the method as security critical.</Resolution>
+    <MessageLevel Certainty="50">Warning</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url>@dd997570(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+  <Rule TypeName="TypesMustBeAtLeastAsCriticalAsBaseTypesFxCopRule" Category="Microsoft.Security" CheckId="CA2146">
+    <Name>Types must be at least as critical as their base types and interfaces</Name>
+    <Description>While any type may derive from a transparent type or interface, restrictions apply as to the types that can inherit from or implement safe-critical or critical types.  Only safe-critical or critical types may derive from or implement safe-critical interfaces and base types.  Only critical types may derive from or implement critical interfaces and base types.</Description>
+    <Resolution Name="DeriveFromCritical">Transparent or safe-critical type {0} derives from critical type {1} in violation of the transparency inheritance rules.  {0} must be critical to derive from a critical type or implement a critical interface.</Resolution>
+    <Resolution Name="DeriveFromSafeCritical">Transparent type {0} derives from safe-critical type {1} in violation of the transparency inheritance rules.  {0} must be safe-critical or critical to derive from a safe-critical type or implement a safe-critical interface.</Resolution>
+    <MessageLevel Certainty="99">CriticalError</MessageLevel>
+    <FixCategories>DependsOnFix</FixCategories>
+    <Owner />
+    <Url>@dd997443(VS.100).aspx</Url>
+    <Email />
+  </Rule>
+
+</Rules>

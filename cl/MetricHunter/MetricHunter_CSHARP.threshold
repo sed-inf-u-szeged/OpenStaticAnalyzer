@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<thresholds> 
+  <threshold Mid="LOC" Relation="gt" Value="100" Entity="Method" />
+  <threshold Mid="LLOC" Relation="gt" Value="65" Entity="Method" />
+  <threshold Mid="NUMPAR" Relation="gt" Value="5" Entity="Method" />
+  <threshold Mid="NOS" Relation="gt" Value="90" Entity="Method" />
+  <threshold Mid="TLOC" Relation="gt" Value="160" Entity="Method" />
+  <threshold Mid="TLLOC" Relation="gt" Value="104" Entity="Method" />
+  <threshold Mid="TNOS" Relation="gt" Value="144" Entity="Method" />
+  <threshold Mid="LOC" Relation="gt" Value="1000" Entity="Class,Structure,Interface" />
+  <threshold Mid="LLOC" Relation="gt" Value="600" Entity="Class,Structure,Interface" />
+  <threshold Mid="NA" Relation="gt" Value="15" Entity="Class,Structure,Interface" />
+  <threshold Mid="NG" Relation="gt" Value="15" Entity="Class,Structure,Interface" />
+  <threshold Mid="NLA" Relation="gt" Value="5" Entity="Class,Structure,Interface" />
+  <threshold Mid="NLG" Relation="gt" Value="5" Entity="Class,Structure,Interface" />
+  <threshold Mid="NLM" Relation="gt" Value="20" Entity="Class,Structure,Interface" />
+  <threshold Mid="NLPA" Relation="gt" Value="0" Entity="Class,Structure,Interface" />
+  <threshold Mid="NLPM" Relation="gt" Value="15" Entity="Class,Structure,Interface" />
+  <threshold Mid="NLS" Relation="gt" Value="5" Entity="Class,Structure,Interface" />
+  <threshold Mid="NM" Relation="gt" Value="60" Entity="Class,Structure,Interface" />
+  <threshold Mid="NPA" Relation="gt" Value="0" Entity="Class,Structure,Interface" />
+  <threshold Mid="NPM" Relation="gt" Value="45" Entity="Class,Structure,Interface" />
+  <threshold Mid="NS" Relation="gt" Value="15" Entity="Class,Structure,Interface" />
+  <threshold Mid="NOS" Relation="gt" Value="900" Entity="Class,Structure,Interface" />
+  <threshold Mid="TNA" Relation="gt" Value="24" Entity="Class,Structure,Interface" />
+  <threshold Mid="TNG" Relation="gt" Value="24" Entity="Class,Structure,Interface" />
+  <threshold Mid="TNLA" Relation="gt" Value="8" Entity="Class,Structure,Interface" />
+  <threshold Mid="TNLG" Relation="gt" Value="8" Entity="Class,Structure,Interface" />
+  <threshold Mid="TNLM" Relation="gt" Value="32" Entity="Class,Structure,Interface" />
+  <threshold Mid="TNLPA" Relation="gt" Value="0" Entity="Class,Structure,Interface" />
+  <threshold Mid="TNLPM" Relation="gt" Value="24" Entity="Class,Structure,Interface" />
+  <threshold Mid="TNLS" Relation="gt" Value="8" Entity="Class,Structure,Interface" />
+  <threshold Mid="TNM" Relation="gt" Value="96" Entity="Class,Structure,Interface" />
+  <threshold Mid="TNPA" Relation="gt" Value="0" Entity="Class,Structure,Interface" />
+  <threshold Mid="TNPM" Relation="gt" Value="72" Entity="Class,Structure,Interface" />
+  <threshold Mid="TNS" Relation="gt" Value="24" Entity="Class,Structure,Interface" />
+  <threshold Mid="TLOC" Relation="gt" Value="1600" Entity="Class,Structure,Interface" />
+  <threshold Mid="TLLOC" Relation="gt" Value="960" Entity="Class,Structure,Interface" />
+  <threshold Mid="TNOS" Relation="gt" Value="1440" Entity="Class,Structure,Interface" />
+
+  <threshold Mid="AD" Relation="lt" Value="1" Entity="Class,Structure,Interface" />
+  <threshold Mid="CD" Relation="lt" Value="0.25" Entity="Class,Structure,Interface" />
+<!-- There are no baselines for this metrics. -->
+<!--  <threshold Mid="CLOC" Relation="gt" Value="0" Entity="Class,Structure,Interface" /> -->
+<!--  <threshold Mid="DLOC" Relation="gt" Value="0" Entity="Class,Structure,Interface" /> -->
+<!--  <threshold Mid="TCLOC" Relation="gt" Value="0" Entity="Class,Structure,Interface" /> -->
+<!-- There are no baselines for this metrics. -->
+  <threshold Mid="TCD" Relation="lt" Value="0.25" Entity="Class,Structure,Interface" />
+  <threshold Mid="NL" Relation="gt" Value="5" Entity="Class,Structure,Interface" />
+  <threshold Mid="NLE" Relation="gt" Value="3" Entity="Class,Structure,Interface" />
+  <threshold Mid="WMC" Relation="gt" Value="115" Entity="Class,Structure,Interface" />
+  <threshold Mid="CBO" Relation="gt" Value="10" Entity="Class,Structure,Interface" />
+<!-- There are no baselines for this metrics. -->  
+<!--  <threshold Mid="CBOI" Relation="gt" Value="0" Entity="Class,Structure,Interface" /> --> 
+<!--  <threshold Mid="NII" Relation="gt" Value="0" Entity="Class,Structure,Interface" /> --> 
+<!-- There are no baselines for this metrics. --> 
+  <threshold Mid="NOI" Relation="gt" Value="50" Entity="Class,Structure,Interface" />
+  <threshold Mid="RFC" Relation="gt" Value="70" Entity="Class,Structure,Interface" />
+  <threshold Mid="LCOM5" Relation="gt" Value="1" Entity="Class,Structure,Interface" />
+  
+  <threshold Mid="CD" Relation="lt" Value="0.25" Entity="Method" />
+<!-- There are no baselines for this metrics. -->
+<!--  <threshold Mid="CLOC" Relation="gt" Value="0" Entity="Method" /> -->
+<!--  <threshold Mid="DLOC" Relation="gt" Value="0" Entity="Method" /> -->
+<!--  <threshold Mid="TCLOC" Relation="gt" Value="0" Entity="Method" /> -->
+<!-- There are no baselines for this metrics. -->
+  <threshold Mid="TCD" Relation="lt" Value="0.25" Entity="Method" />
+  
+  <threshold Mid="McCC" Relation="gt" Value="10" Entity="Method" />
+  <threshold Mid="NL" Relation="gt" Value="5" Entity="Method" />
+  <threshold Mid="NLE" Relation="gt" Value="3" Entity="Method" />
+<!-- There are no baselines for this metrics. -->   
+<!--  <threshold Mid="NII" Relation="gt" Value="0" Entity="Method" /> -->
+<!-- There are no baselines for this metrics. -->   
+  <threshold Mid="NOI" Relation="gt" Value="10" Entity="Method" />
+
+  <threshold Mid="CCL" Relation="gt" Value="0" Entity="Class,Structure,Interface" /> 
+  <threshold Mid="CCO" Relation="gt" Value="57.5" Entity="Class,Structure,Interface" /> 
+  <threshold Mid="CC" Relation="gt" Value="0.15" Entity="Class,Structure,Interface" /> 
+  <threshold Mid="CI" Relation="gt" Value="0" Entity="Class,Structure,Interface" /> 
+  <threshold Mid="CLC" Relation="gt" Value="0.15" Entity="Class,Structure,Interface" /> 
+  <threshold Mid="CLLC" Relation="gt" Value="0.15" Entity="Class,Structure,Interface" /> 
+  <threshold Mid="LDC" Relation="gt" Value="160" Entity="Class,Structure,Interface" />  
+  <threshold Mid="LLDC" Relation="gt" Value="90" Entity="Class,Structure,Interface" />
+   
+  <threshold Mid="CCL" Relation="gt" Value="0" Entity="Method" />
+  <threshold Mid="CCO" Relation="gt" Value="57.5" Entity="Method" /> 
+  <threshold Mid="CC" Relation="gt" Value="0.15" Entity="Method" /> 
+  <threshold Mid="CI" Relation="gt" Value="0" Entity="Method" /> 
+  <threshold Mid="CLC" Relation="gt" Value="0.15" Entity="Method" /> 
+  <threshold Mid="CLLC" Relation="gt" Value="0.15" Entity="Method" /> 
+  <threshold Mid="LDC" Relation="gt" Value="15" Entity="Method" />  
+  <threshold Mid="LLDC" Relation="gt" Value="9.8" Entity="Method" />
+  
+  <threshold Mid="WarningBlocker" Relation="gt" Value="0" Entity="Method,Class,Structure,Interface" />
+  <threshold Mid="WarningCritical" Relation="gt" Value="0" Entity="Method,Class,Structure,Interface" />
+  <threshold Mid="WarningMajor" Relation="gt" Value="0" Entity="Method,Class,Structure,Interface" />
+  <threshold Mid="WarningMinor" Relation="gt" Value="0" Entity="Method,Class,Structure,Interface" />
+  
+  <threshold Mid="DIT" Relation="gt" Value="5" Entity="Class,Structure,Interface" />
+  <threshold Mid="NOA" Relation="gt" Value="5" Entity="Class,Structure,Interface" />
+  <threshold Mid="NOC" Relation="gt" Value="10" Entity="Class,Structure,Interface" />
+  <threshold Mid="NOD" Relation="gt" Value="50" Entity="Class,Structure,Interface" />
+  <threshold Mid="NOP" Relation="gt" Value="1" Entity="Class,Structure,Interface" />
+    
+  <threshold Mid="CI" Relation="gt" Value="2" Entity="CloneClass" />
+  <threshold Mid="CLLOC" Relation="gt" Value="33" Entity="CloneClass" /> 
+  <threshold Mid="NCR" Relation="gt" Value="0.15" Entity="CloneClass" /> 
+  <threshold Mid="CCO" Relation="gt" Value="10" Entity="CloneClass" /> 
+  <threshold Mid="CE" Relation="gt" Value="101" Entity="CloneClass" />
+<!-- There are no baselines for this metrics. -->  
+<!--  <threshold Mid="CA" Relation="gt" Value="0" Entity="CloneClass" />  -->
+<!--  <threshold Mid="CV" Relation="gt" Value="0" Entity="CloneClass" /> -->
+<!-- There are no baselines for this metrics. -->  
+  <threshold Mid="CLLOC" Relation="gt" Value="33" Entity="CloneInstance" /> 
+  <threshold Mid="CCO" Relation="gt" Value="10" Entity="CloneInstance" /> 
+  <threshold Mid="CE" Relation="gt" Value="101" Entity="CloneInstance" />   
+</thresholds>

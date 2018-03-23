@@ -7,6 +7,8 @@ set (SOURCES
     src/CloneVisitorBase.cpp
     src/common.cpp
     src/CoverageVisitorBase.cpp
+    src/CSCoverageVisitor.cpp
+    src/CSNodeEmbeddednessVisitor.cpp
     src/dcm.cpp
     src/JCoverageVisitor.cpp
     src/JNodeEmbeddednessVisitor.cpp
@@ -32,6 +34,9 @@ set (SOURCES
     inc/types.h
     inc/Visitors/CloneVisitorBase.h
     inc/Visitors/CoverageVisitorBase.h
+    inc/Visitors/CSCoverageVisitor.h
+    inc/Visitors/CSharpNamedVisitor.h
+    inc/Visitors/CSNodeEmbeddednessVisitor.h
     inc/Visitors/DistanceVisitor.h
     inc/Visitors/JCoverageVisitor.h
     inc/Visitors/JNodeEmbeddednessVisitor.h
@@ -55,5 +60,5 @@ endfunction()
 
 add_language_config(java)
 add_language_config(python)
-
+add_language_config(csharp)
 

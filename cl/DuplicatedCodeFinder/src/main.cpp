@@ -187,6 +187,8 @@ void initValues() {
       config.rulConfig = "java";
 #elif defined(SCHEMA_PYTHON)
 	  config.rulConfig = "python";
+#elif defined(SCHEMA_CSHARP)
+		config.rulConfig = "csharp";
 #endif
     }
 

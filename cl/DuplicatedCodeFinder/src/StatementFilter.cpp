@@ -46,6 +46,9 @@ bool StatementFilter::isFiltered( const columbus::genealogy::CloneClass& cc )
             !columbus::LANGUAGE_NAMESPACE::Common::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkAlias))
         return false;
       }
+#elif defined SCHEMA_CSHARP
+      if (columbus::LANGUAGE_NAMESPACE::Common::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkStatementSyntax))
+        return false;
 #endif
 
     }
