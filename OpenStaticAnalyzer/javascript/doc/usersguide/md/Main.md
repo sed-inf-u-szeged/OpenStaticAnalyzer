@@ -1,4 +1,4 @@
-# OpenSaticAnalyzer for JavaScript
+# OpenStaticAnalyzer for JavaScript
 
 ![](../../../doc/logo/OSA_small.png)
 
