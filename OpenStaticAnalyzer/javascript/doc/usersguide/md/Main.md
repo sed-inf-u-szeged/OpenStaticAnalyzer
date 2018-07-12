@@ -1,4 +1,4 @@
-# OpenStaticAnalyzer for JavaScript
+# OpenStaticAnalyzer™ for JavaScript
 
 ![](../../../doc/logo/OSA_small.png)
 
@@ -55,7 +55,7 @@ With the help of the filtering mechanism it is possible to specify a certain par
 
 During the static analysis, an Abstract Semantic Graph (ASG) is constructed from the language elements of the source code. This ASG is then processed by the different tools in the package to calculate product metrics, identify copy-pasted code (clones), coding rule violations, etc.
 
-# Installation {#installation-section}
+# Installation
 
 ## Supported platforms
 
