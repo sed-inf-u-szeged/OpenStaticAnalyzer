@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -27,6 +27,6 @@ namespace Columbus
         /// </summary>
         public static string Revision = "Build:@GIT_HASH@"
                                                + (System.IntPtr.Size == 8 ? " Win64" : " Win32");
-        public const string CopyRightMessage = "Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged ";
+        public const string CopyRightMessage = "Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged ";
     }
 }

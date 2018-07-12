@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -1043,7 +1043,7 @@ void Factory::setSeparatorAndPackageName() {
       scopeSeparator = ".";
       packageName = "Package";
       break;
-    case limLangJavascript:
+    case limLangJavaScript:
       scopeSeparator = ".";
       packageName = "Module";
       break;

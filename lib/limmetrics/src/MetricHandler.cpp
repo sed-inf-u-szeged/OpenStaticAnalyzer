@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -193,7 +193,13 @@ namespace columbus { namespace lim { namespace metrics {
           return NTYPE_LIM_PACKAGE;
         }
         break;
-      case limLangJavascript:
+      case limLangJavaScript:
+          if (
+              level == NTYPE_LIM_FUNCTION ||
+              level == NTYPE_LIM_METHOD
+              ) {
+              return NTYPE_LIM_METHOD;
+          }
       default:
         break;
     }

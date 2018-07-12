@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -78,7 +78,7 @@ namespace columbus { namespace lim { namespace asg {
     lnkMagic,
     lnkRpg,
     lnkPython,
-    lnkJavascript,
+    lnkJavaScript,
     lnkLAST
   };
 
@@ -265,7 +265,7 @@ namespace columbus { namespace lim { namespace asg {
     limLangFsql,
     limLangPython,
     limLangRpg,
-    limLangJavascript,
+    limLangJavaScript,
   };
 
   /**

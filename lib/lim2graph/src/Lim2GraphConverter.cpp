@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -66,7 +66,7 @@ void convertBaseGraph(lim::asg::Factory& factory, graph::Graph& graph, bool edge
     case lim::asg::limLangCsharp:
       graph.setHeaderInfo(graphsupport::graphconstants::HEADER_ASG_KEY, graphsupport::graphconstants::HEADER_ASG_VALUE_CSHARP);
       break;
-    case lim::asg::limLangJavascript:
+    case lim::asg::limLangJavaScript:
       graph.setHeaderInfo(graphsupport::graphconstants::HEADER_ASG_KEY, graphsupport::graphconstants::HEADER_ASG_VALUE_JAVASCRIPT);
       break;
   }

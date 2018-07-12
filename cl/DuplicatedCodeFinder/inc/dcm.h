@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -43,6 +43,10 @@
 
 #ifdef SCHEMA_CSHARP
 #include "Visitors/CSNodeEmbeddednessVisitor.h"
+#endif
+
+#ifdef SCHEMA_JAVASCRIPT
+#include "Visitors/JSNodeEmbeddedVisitor.h"
 #endif
 
 #include "common/inc/math/common.h"

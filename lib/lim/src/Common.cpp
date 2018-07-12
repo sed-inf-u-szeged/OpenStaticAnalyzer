@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -465,7 +465,7 @@ const std::string toString(LanguageKind kind) {
     case lnkMagic: return "lnkMagic";
     case lnkRpg: return "lnkRpg";
     case lnkPython: return "lnkPython";
-    case lnkJavascript: return "lnkJavascript";
+    case lnkJavaScript: return "lnkJavaScript";
     default: throw LimException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
@@ -693,7 +693,7 @@ const std::string toString(Language language) {
     case limLangCsharp: return "C#";
     case limLangFsql: return "Fsql";
     case limLangPython: return "Python";
-    case limLangJavascript: return "Javascript";
+    case limLangJavaScript: return "JavaScript";
     default: throw LimException(COLUMBUS_LOCATION, CMSG_EX_COMMON_INVALID_LANGUAGE);
   }
 }

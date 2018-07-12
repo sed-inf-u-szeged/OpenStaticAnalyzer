@@ -45,8 +45,8 @@ if (MSVC)
 
 elseif (CMAKE_SYSTEM_NAME STREQUAL Linux)
 
-  # Enable compiler warnings
-  set (EXTRA_COMPILER_OPTIONS "-Wall")
+  # Enable compiler warnings and use fPIC option
+  set (EXTRA_COMPILER_OPTIONS "-Wall -fPIC")
 
   if (STRIP)
     set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")

@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -58,6 +58,19 @@
   #define GET_COLUMN_OF_POSITIONS        getPosition().getCol()
   #define GET_END_LINE_OF_POSITIONS      getPosition().getEndLine()
   #define GET_END_COLUMN_OF_POSITIONS    getPosition().getEndCol()
+  #define GET_FILE_KEY_OF_POSITIONS      getPosition().getPathKey()
+  #define GET_END_FILE_KEY_OF_POSITIONS  getPosition().getPathKey()
+  #define GENEALOGY
+  
+#elif defined SCHEMA_JAVASCRIPT
+  #include "javascript/inc/javascript.h"
+  #define LANGUAGE_NAMESPACE javascript::asg
+  #define BASE_NAMESPACE base
+  #define TOGRAPH columbus::lim2graph
+  #define GET_LINE_OF_POSITIONS          getPosition().getWideLine()
+  #define GET_COLUMN_OF_POSITIONS        getPosition().getWideCol()
+  #define GET_END_LINE_OF_POSITIONS      getPosition().getWideEndLine()
+  #define GET_END_COLUMN_OF_POSITIONS    getPosition().getWideEndCol()
   #define GET_FILE_KEY_OF_POSITIONS      getPosition().getPathKey()
   #define GET_END_FILE_KEY_OF_POSITIONS  getPosition().getPathKey()
   #define GENEALOGY
@@ -135,6 +148,7 @@
 #include "Visitors/CSCoverageVisitor.h"
 #include "Visitors/PCoverageVisitor.h"
 #include "Visitors/JCoverageVisitor.h"
+#include "Visitors/JSCoverageVisitor.h"
 #include "Visitors/NamedVisitor.h"
 #include "Visitors/CSharpNamedVisitor.h"
 #include "Interval.h"

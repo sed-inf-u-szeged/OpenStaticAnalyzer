@@ -12,6 +12,8 @@ set (SOURCES
     src/dcm.cpp
     src/JCoverageVisitor.cpp
     src/JNodeEmbeddednessVisitor.cpp
+    src/JSNodeEmbeddedVisitor.cpp
+    src/JSCoverageVisitor.cpp
     src/LanguageFactory.cpp
     src/main.cpp
     src/PNodeEmbeddednessVisitor.cpp
@@ -40,6 +42,8 @@ set (SOURCES
     inc/Visitors/DistanceVisitor.h
     inc/Visitors/JCoverageVisitor.h
     inc/Visitors/JNodeEmbeddednessVisitor.h
+    inc/Visitors/JSCoverageVisitor.h
+    inc/Visitors/JSNodeEmbeddedVisitor.h
     inc/Visitors/NamedVisitor.h
     inc/Visitors/NodeEmbeddednessVisitorBase.h
     inc/Visitors/PCoverageVisitor.h
@@ -61,4 +65,5 @@ endfunction()
 add_language_config(java)
 add_language_config(python)
 add_language_config(csharp)
+add_language_config(javascript)
 

@@ -16,7 +16,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL Windows)
         ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/${CMAKE_SYSTEM_NAME}Tools
   )
 
-  # These functions copy the SOURCE file into different directories of the SourceMeter package.
+  # These functions copy the SOURCE file into different directories of the OpenStaticAnalyzer package.
   # The second parameter is optional. You can set the name of the target, which will be used for generating the SOURCE.
   # The third parameter is also optional. You can set a different name for the SOURCE on which the file will be created in the tools directory.
   function (add_custom_generated_copy_dependency_to_root_dir SOURCE)

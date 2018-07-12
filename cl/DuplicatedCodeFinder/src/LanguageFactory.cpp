@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -47,11 +47,12 @@ namespace columbus { namespace dcf {
     columbus::CsiHeader header;
     factory->load(fname, header);
 
-#elif defined SCHEMA_CSHARP
+#elif defined SCHEMA_CSHARP || defined (SCHEMA_JAVASCRIPT)
     std::list<HeaderData*> headerList;
     columbus::PropertyData header;
     headerList.push_back(&header);
     factory->load(fname, headerList);
+
 #endif
 
     if (componentID) {

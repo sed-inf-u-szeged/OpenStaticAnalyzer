@@ -1,0 +1,21 @@
+{
+  "name": "ESLintRunner",
+  "version": "0.0.1",
+  "description": "A simple wrapper for running the eslint tool.",
+  "main": "ESLintRunner.js",
+  "private": true,
+  "dependencies": {
+    "JSONStream": "1.3.2",
+    "command-line-args": "4.0.7",
+    "command-line-usage": "4.0.1",
+    "eslint": "4.17.0",
+    "esprima": "4.0.0",
+    "hashmap": "2.0.5",
+    "jsonfile": "3.0.1",
+    "memwatch-next": "0.3.0",
+    "xml2js": "0.4.19"
+  },
+  "scripts": {
+    "analyze": "node ESLintRunner.js"
+  }
+}

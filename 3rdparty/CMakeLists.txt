@@ -17,7 +17,7 @@ ExternalProject_Add(zlib
     PATCH_COMMAND git clean -x -d -f
           COMMAND git reset --hard
           COMMAND git apply --ignore-whitespace ${CMAKE_CURRENT_SOURCE_DIR}/CMake/zlib.patch
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${COLUMBUS_3RDPARTY_INSTALL_DIR} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${COLUMBUS_3RDPARTY_INSTALL_DIR} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS} -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}
     LOG_CONFIGURE 1
     LOG_BUILD 1
     LOG_INSTALL 1
@@ -45,8 +45,8 @@ ExternalProject_Add(boost
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/boost
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ${COMMAND_PREFIX}bootstrap${SCRIPT_EXT}
-    BUILD_COMMAND ${COMMAND_PREFIX}b2 --reconfigure --build-dir=${CMAKE_CURRENT_BINARY_DIR}/boost-prefix --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR} -j8 --with-filesystem --with-system --with-date_time --with-iostreams --with-graph --with-regex --with-thread --with-math --layout=system variant=$<$<CONFIG:Debug>:debug>$<$<CONFIG:Release>:release>  runtime-link=static architecture=x86  threading=multi ${BOOST_ADDRESS_MODEL} link=static  -sZLIB_INCLUDE=${COLUMBUS_3RDPARTY_INSTALL_DIR}/include -sZLIB_LIBPATH=${COLUMBUS_3RDPARTY_INSTALL_DIR}/lib -sZLIB_BINARY=z -sNO_ZLIB=0 -sNO_BZIP2=1   headers
-          COMMAND ${COMMAND_PREFIX}b2 --reconfigure --build-dir=${CMAKE_CURRENT_BINARY_DIR}/boost-prefix --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR} -j8 --with-filesystem --with-system --with-date_time --with-iostreams --with-graph --with-regex --with-thread --with-math --layout=system variant=$<$<CONFIG:Debug>:debug>$<$<CONFIG:Release>:release>  runtime-link=static architecture=x86  threading=multi ${BOOST_ADDRESS_MODEL} link=static  -sZLIB_INCLUDE=${COLUMBUS_3RDPARTY_INSTALL_DIR}/include -sZLIB_LIBPATH=${COLUMBUS_3RDPARTY_INSTALL_DIR}/lib -sZLIB_BINARY=z -sNO_ZLIB=0 -sNO_BZIP2=1   install
+    BUILD_COMMAND ${COMMAND_PREFIX}b2 cxxflags=-fPIC cflags=-fPIC --reconfigure --build-dir=${CMAKE_CURRENT_BINARY_DIR}/boost-prefix --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR} -j8 --with-filesystem --with-system --with-date_time --with-iostreams --with-graph --with-regex --with-thread --with-math --layout=system variant=$<$<CONFIG:Debug>:debug>$<$<CONFIG:Release>:release>  runtime-link=static architecture=x86  threading=multi ${BOOST_ADDRESS_MODEL} link=static  -sZLIB_INCLUDE=${COLUMBUS_3RDPARTY_INSTALL_DIR}/include -sZLIB_LIBPATH=${COLUMBUS_3RDPARTY_INSTALL_DIR}/lib -sZLIB_BINARY=z -sNO_ZLIB=0 -sNO_BZIP2=1   headers
+          COMMAND ${COMMAND_PREFIX}b2 cxxflags=-fPIC cflags=-fPIC --reconfigure --build-dir=${CMAKE_CURRENT_BINARY_DIR}/boost-prefix --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR} -j8 --with-filesystem --with-system --with-date_time --with-iostreams --with-graph --with-regex --with-thread --with-math --layout=system variant=$<$<CONFIG:Debug>:debug>$<$<CONFIG:Release>:release>  runtime-link=static architecture=x86  threading=multi ${BOOST_ADDRESS_MODEL} link=static  -sZLIB_INCLUDE=${COLUMBUS_3RDPARTY_INSTALL_DIR}/include -sZLIB_LIBPATH=${COLUMBUS_3RDPARTY_INSTALL_DIR}/lib -sZLIB_BINARY=z -sNO_ZLIB=0 -sNO_BZIP2=1   install
     INSTALL_COMMAND ${CMAKE_COMMAND} -E echo "No sepearate installation step is needed."
     LOG_CONFIGURE 1
     LOG_BUILD 1

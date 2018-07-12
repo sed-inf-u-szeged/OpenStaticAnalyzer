@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -189,6 +189,8 @@ void initValues() {
 	  config.rulConfig = "python";
 #elif defined(SCHEMA_CSHARP)
 		config.rulConfig = "csharp";
+#elif defined(SCHEMA_JAVASCRIPT)
+      config.rulConfig = "javascript";
 #endif
     }
 

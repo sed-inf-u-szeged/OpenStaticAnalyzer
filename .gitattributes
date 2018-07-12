@@ -1,2 +1,5 @@
 # Set line endigs of the text files to native format
 * text=auto
+
+lib/javascript/addon/package.json text eol=lf
+lib/javascript/addon/package-lock.json text eol=lf

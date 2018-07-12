@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -36,7 +36,7 @@ bool StatementFilter::isFiltered( const columbus::genealogy::CloneClass& cc )
       if (position == NULL)
         continue;
 
-#if defined SCHEMA_JAVA
+#if defined SCHEMA_JAVA || defined SCHEMA_JAVASCRIPT
       if (columbus::LANGUAGE_NAMESPACE::Common::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkStatement))
         return false;
 

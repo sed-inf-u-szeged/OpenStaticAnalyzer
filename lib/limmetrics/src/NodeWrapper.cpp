@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -93,7 +93,7 @@ namespace columbus { namespace lim { namespace metrics {
       case lnkCpp: return limLangCpp;
       case lnkCsharp: return limLangCsharp;
       case lnkPython: return limLangPython;
-      case lnkJavascript: return limLangJavascript;
+      case lnkJavaScript: return limLangJavaScript;
       default: break;
     }
     return limLangOther;

@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -73,6 +73,8 @@ bool CloneVisitorBase::isAnalizeNode(const Base& node) {
   if(analizeNode) {
 #if defined SCHEMA_JAVA
     return columbus::java::asg::Common::getIsMethodDeclaration(node);
+#elif defined SCHEMA_JAVASCRIPT
+    return AlgorithmCommon::getIsFunction(node) || AlgorithmCommon::getIsMethodDefinition(node);
 #elif defined SCHEMA_PYTHON
     return columbus::python::asg::Common::getIsFunctionDef(node);
 #elif defined SCHEMA_CSHARP
@@ -104,6 +106,8 @@ ClonePositioned* CloneVisitorBase::createClonePositioned(const Positioned* p) {
   }
 #elif defined SCHEMA_PYTHON
   px = new ClonePositioned(p->getPosition().getPath(), p->GET_LINE_OF_POSITIONS, p->GET_COLUMN_OF_POSITIONS, p->GET_END_LINE_OF_POSITIONS, p->GET_END_COLUMN_OF_POSITIONS, p->getNodeKind(), p->getId(),currentLimNode.empty()?currentLimComponent:currentLimNode.top(),currentLimComponent);
+#elif defined SCHEMA_JAVASCRIPT
+  px = new ClonePositioned(p->getPosition().getPath(), p->getPosition().getWideLine(), p->getPosition().getWideCol(), p->getPosition().getWideEndLine(), p->getPosition().getWideEndCol(), p->getNodeKind(), p->getId(), currentLimNode.empty() ? currentLimComponent : currentLimNode.top(), currentLimComponent);
 #elif defined SCHEMA_CSHARP
   px=new ClonePositioned(p->getPosition().getFileName(), p->GET_LINE_OF_POSITIONS, p->GET_COLUMN_OF_POSITIONS, p->GET_END_LINE_OF_POSITIONS, p->GET_END_COLUMN_OF_POSITIONS, p->getNodeKind(), p->getId(),currentLimNode.empty()?currentLimComponent:currentLimNode.top(),currentLimComponent);
 #endif
@@ -174,7 +178,7 @@ void CloneVisitorBase::blockNode(const Base& b) {
    *the next part blocks the generated code
    */
 
-#if defined(SCHEMA_JAVA)
+#if defined(SCHEMA_JAVA) || defined(SCHEMA_JAVASCRIPT)
   std::string lPath=pos.getPosition().getPath();
   unsigned line = pos.getPosition().getWideLine();
 #elif defined(SCHEMA_PYTHON)
@@ -201,6 +205,9 @@ void CloneVisitorBase::blockNode(const Base& b) {
 #elif defined SCHEMA_CSHARP
     logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getStartLine()));
     logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getEndLine()));
+#elif defined SCHEMA_JAVASCRIPT       
+      logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()), pos.getPosition().getLine()));
+      logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()), pos.getPosition().getEndLine()));
 #endif
   }
 
@@ -371,7 +378,7 @@ void CloneVisitorBase::visit(const  Positioned& n,bool callVirtualParent){
   }
 #endif
 
-#if  defined SCHEMA_JAVA
+#if  defined SCHEMA_JAVA || defined (SCHEMA_JAVASCRIPT)
 #define getPath getPosition().getPath
 #elif  defined SCHEMA_PYTHON
 #define getPath getPosition().getPath

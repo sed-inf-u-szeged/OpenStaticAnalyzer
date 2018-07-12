@@ -2,7 +2,7 @@
 <!--
   This file is part of OpenStaticAnalyzer.
 
-  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
 
   Licensed under Version 1.2 of the EUPL (the "Licence");
 
@@ -106,8 +106,8 @@
       <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
-        <Description>&lt;b&gt;Class:&lt;/b&gt; ratio of the number of documented methods in the class +1 if the class itself is documented to the number of all methods in the class + 1 (the class itself). &lt;br&gt;&lt;b&gt;Program:&lt;/b&gt; ratio of the number of documented public classes and methods in the package to the number of all of its public classes and methods.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; ratio of the number of documented methods in the class +1 if the class itself is documented to the number of all methods in the class + 1 (the class itself).&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Program:&lt;/strong&gt; ratio of the number of documented public classes and methods in the package to the number of all of its public classes and methods.&lt;/p&gt;&#x0A;</HelpText>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; ratio of the number of documented methods in the class +1 if the class itself is documented to the number of all methods in the class + 1 (the class itself). </Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; ratio of the number of documented methods in the class +1 if the class itself is documented to the number of all methods in the class + 1 (the class itself).&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -194,7 +194,7 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of directly used other classes (e.g. by inheritance, function call, type reference, attribute reference). Classes using many other classes highly depend on their environment, so it is difficult to test or reuse them; furthermore, they are very sensitive to the changes in the system.</Description>
@@ -285,7 +285,7 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of other classes, which directly use the class. Classes which are used by many other classes have a high impact on the behavior of the system, and should be modified very carefully and tested intensively.</Description>
@@ -384,8 +384,8 @@
       <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
-        <Description>&lt;b&gt;Method, function:&lt;/b&gt; ratio of the comment lines of the method/function (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).&lt;br&gt;&lt;b&gt;Class:&lt;/b&gt; ratio of the comment lines of the class (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).&lt;br&gt;&lt;b&gt;Program:&lt;/b&gt; ratio of the comment lines of the program (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; ratio of the comment lines of the method/function (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; ratio of the comment lines of the class (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Program:&lt;/strong&gt; ratio of the comment lines of the program (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).&lt;/p&gt;&#x0A;</HelpText>
+        <Description>&lt;b&gt;Method, function:&lt;/b&gt; ratio of the comment lines of the method/function (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).&lt;br&gt;&lt;b&gt;Class:&lt;/b&gt; ratio of the comment lines of the class (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).&lt;br&gt;&lt;b</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; ratio of the comment lines of the method/function (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; ratio of the comment lines of the class (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -492,7 +492,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method, Function:&lt;/b&gt; number of comment and documentation code lines of the method/function; however, its anonymous and local classes are not included.&lt;br&gt;&lt;b&gt;Class:&lt;/b&gt; number of comment and documentation code lines of the class, including its local methods and attributes; however, its nested, anonymous, and local classes are not included.&lt;br&gt;&lt;b&gt;Program:&lt;/b&gt; number of comment and documentation code lines of the program.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; number of comment and documentation code lines of the method/function; however, its anonymous and local classes are not included.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of comment and documentation code lines of the class, including its local methods and attributes; however, its nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Program:&lt;/strong&gt; number of comment and documentation code lines of the program.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;File:&lt;/strong&gt; number of comment and documentation code lines of the file.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; number of comment and documentation code lines of the method/function; however, its anonymous and local classes are not included.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of comment and documentation code lines of the class, including its local methods and attributes; however, its nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;File:&lt;/strong&gt; number of comment and documentation code lines of the file.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -893,8 +893,8 @@
       <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
-        <Description>&lt;b&gt;Method, Function:&lt;/b&gt; number of documentation code lines of the method/function.&lt;br&gt;&lt;b&gt;Class:&lt;/b&gt; number of documentation code lines of the class, including its local methods and attributes; however, its nested, anonymous, and local classes are not included.&lt;br&gt;&lt;b&gt;Program:&lt;/b&gt; number of documentation code lines of the program.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; number of documentation code lines of the method/function.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of documentation code lines of the class, including its local methods and attributes; however, its nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Program:&lt;/strong&gt; number of documentation code lines of the program.&lt;/p&gt;&#x0A;</HelpText>
+        <Description>&lt;b&gt;Method, Function:&lt;/b&gt; number of documentation code lines of the method/function.&lt;br&gt;&lt;b&gt;Class:&lt;/b&gt; number of documentation code lines of the class, including its local methods and attributes; however, its nested, anonymous, and local classes are not included.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; number of documentation code lines of the method/function.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of documentation code lines of the class, including its local methods and attributes; however, its nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -1794,7 +1794,7 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of functionalities of the class. One of the basic principles of object-oriented programming is encapsulation, meaning that attributes belonging together and the operations that use them should be organized into one class, and one class shall implement only one functionality, i.e. its attributes and methods should be coherent. This metric measures the lack of cohesion and computes into how many coherent classes the class could be split. It is calculated by taking a non-directed graph, where the nodes are the implemented local methods of the class and there is an edge between the two nodes if and only if a common (local or inherited) attribute or a method invokes another. The value of the metric is the number of connected components in the graph not counting those, which contain only constructors, getters, or setters. </Description>
@@ -1901,7 +1901,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method, Function:&lt;/b&gt; number of non-empty and non-comment code lines of the method/function; however, its anonymous and local functions are not included.&lt;br&gt;&lt;b&gt;Class:&lt;/b&gt; number of non-empty and non-comment code lines of the class, including the non-empty and non-comment lines of its local methods; however, its nested, anonymous, and local classes are not included.&lt;br&gt;&lt;b&gt;Program:&lt;/b&gt; number of non-empty and non-comment code lines of the package.&lt;br&gt;&lt;b&gt;File:&lt;/b&gt; number of non-empty and non-comment code lines of the file.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; number of non-empty and non-comment code lines of the method/function; however, its anonymous and local functions are not included.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of non-empty and non-comment code lines of the class, including the non-empty and non-comment lines of its local methods; however, its nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Program:&lt;/strong&gt; number of non-empty and non-comment code lines of the program.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;File:&lt;/strong&gt; number of non-empty and non-comment code lines of the file.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; number of non-empty and non-comment code lines of the method/function; however, its anonymous and local functions are not included.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of non-empty and non-comment code lines of the class, including the non-empty and non-comment lines of its local methods; however, its nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;File:&lt;/strong&gt; number of non-empty and non-comment code lines of the file.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -2012,7 +2012,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method/function:&lt;/b&gt; number of code lines of the method/function, including empty and comment lines; however, its anonymous and local classes are not included.&lt;br&gt;&lt;b&gt;Class:&lt;/b&gt; number of code lines of the class, including empty and comment lines, as well as its local methods; however, its nested, anonymous, and local classes are not included.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; number of code lines of the method/function, including empty and comment lines; however, its anonymous and local classes are not included.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of code lines of the class, including empty and comment lines, as well as its local methods; however, its nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;File:&lt;/strong&gt; number of code lines of the file, including empty and comment lines.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; number of code lines of the method/function, including empty and comment lines; however, its anonymous and local classes are not included.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of code lines of the class, including empty and comment lines, as well as its local methods; however, its nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;File:&lt;/strong&gt; number of code lines of the file, including empty and comment lines.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -2410,8 +2410,8 @@
       <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
-        <Description>&lt;b&gt;Method:&lt;/b&gt; complexity of the method expressed as the number of independent control flow paths in it. It represents a lower bound for the number of possible execution paths in the source code and at the same time it is an upper bound for the minimum number of test cases needed for achieving full branch test coverage. The value of the metric is initially 1 which increases by 1 for each occurence of the following instructions: if, for, foreach, while, do-while, case label (label that belongs to a switch instruction), catch (handler that belongs to a try block), conditional statement (?:). Moreover, logical and (&amp;&amp;) and logical or (||) expressions also add to the final value because their short-circuit evalutaion can cause branching depending on the first operand. The following language elements do not increase the value: else, try, switch, default label (default label that belongs to a switch instruction), finally.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; complexity of the method expressed as the number of independent control flow paths in it. It represents a lower bound for the number of possible execution paths in the source code and at the same time it is an upper bound for the minimum number of test cases needed for achieving full branch test coverage. The value of the metric is calculated as the number of the following instructions plus 1: if, for, foreach, range-based for, while, do-while, case label (which belongs to a switch instruction), catch, conditional expression (?:). Moreover, logical “and” (&amp;amp;&amp;amp;) and logical “or” (||) expressions also add 1 to the value because their short-circuit evaluation can cause branching depending on the first operand. The following instructions are not included: else, switch, default label (which belongs to a switch instruction), try.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;File:&lt;/strong&gt; complexity of the file expressed as the number of independent control flow paths in it. It represents a lower bound for the number of possible execution paths in the source code and at the same time it is an upper bound for the minimum number of test cases needed for achieving full branch test coverage. The value of the metric is calculated as the number of the following instructions plus 1: if, for, foreach, range-based for, while, do-while, case label (which belongs to a switch instruction), catch, conditional expression (?:). Moreover, logical “and” (&amp;amp;&amp;amp;) and logical “or” (||) expressions also add 1 to the value because their short-circuit evaluation can cause branching depending on the first operand. The following instructions are not included: else, switch, default label (which belongs to a switch instruction), try.&lt;/p&gt;&#x0A;</HelpText>
+        <Description>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; complexity of the method expressed as the number of independent control flow paths in it. It represents a lower bound for the number of possible execution paths in the source code and at the same time it is an upper bound for the minimum number of test cases needed for achieving full branch test coverage. The value of the metric is calculated as the number of the following instructions plus 1: if, else if, for, for...in, for...of, while, do-while, case label (which belongs to a switch instruction), catch clause, conditional expression (?:). Moreover, logical “and” (&amp;amp;&amp;amp;) and logical “or” (||) expressions also add 1 to the value because their short-circuit evaluation can cause branching depending on the first operand. The following instructions are not included: else, switch, try, finally.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;File:&lt;/strong&gt; complexity of the file expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity values of the methods can be found in the file.&lt;/p&gt;&#x0A;</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; complexity of the method expressed as the number of independent control flow paths in it. It represents a lower bound for the number of possible execution paths in the source code and at the same time it is an upper bound for the minimum number of test cases needed for achieving full branch test coverage. The value of the metric is calculated as the number of the following instructions plus 1: if, else if, for, for…in, for…of, while, do-while, case label (which belongs to a switch instruction), catch clause, conditional expression (?:). Moreover, logical “and” (&amp;amp;&amp;amp;) and logical “or” (||) expressions also add 1 to the value because their short-circuit evaluation can cause branching depending on the first operand. The following instructions are not included: else, switch, try, finally.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;File:&lt;/strong&gt; complexity of the file expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity values of the methods can be found in the file.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -2593,7 +2593,7 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;File:&lt;/b&gt; number of classes in the file.</Description>
@@ -2858,7 +2858,7 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Function:&lt;/b&gt; number of other functions which directly call the function. If the function is invoked several times from the same function, it is counted only once.&lt;b&gt;Method:&lt;/b&gt; number of other methods which directly call the method. If the method is invoked several times from the same method, it is counted only once.&lt;br&gt;&lt;b&gt;Class:&lt;/b&gt; number of other methods which directly call the local methods of the class. If a method is invoked several times from the same method, it is counted only once.</Description>
@@ -3033,8 +3033,8 @@
       <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
-        <Description>&lt;b&gt;Method/Function:&lt;/b&gt; complexity of the method/function expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes. The following instructions are taken into account: if, for, foreach, for...in, for...of, while, conditional expression. The following instructions do not increase the value by themselves; however, if additional embeddedness can be found in their blocks, they are considered: else, try, finally.&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes. It is calculated as the maximum nesting level (NL) of its local methods.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method/Function:&lt;/strong&gt; complexity of the method/function expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes. The following instructions are taken into account: if, for, foreach, for...in, for...of, while, conditional expression. The following instructions do not increase the value by themselves; however, if additional embeddedness can be found in their blocks, they are considered: else, try, finally.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes. It is calculated as the maximum nesting level (NL) of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+        <Description>&lt;b&gt;Method/Function:&lt;/b&gt; complexity of the method/function expressed as the depth of the maximum embeddedness of its conditional, iteration  and exception handling block scopes. The following instructions are taken into account: if, else-if, else, for, for-in, for-of, while, do-while, switch, try, catch, finally and block statements that are directly inside another block statement. The following instructions do not increase the value by themselves; however, if additional embeddedness can be found in their blocks, they are considered: case and default label (which belong to a switch instruction).&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes. It is calculated as the maximum nesting level (NL) of its local methods.&lt;/p&gt;&#x0A;</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; complexity of the method/function expressed as the depth of the maximum embeddedness of its conditional, iteration and exception handling block scopes. The following instructions are taken into account: if, else-if, else, for, for-in, for-of, while, do-while, switch, try, catch, finally and block statements that are directly inside another block statement. The following instructions do not increase the value by themselves; however, if additional embeddedness can be found in their blocks, they are considered: case and default label (which belong to a switch instruction).&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes. It is calculated as the maximum nesting level (NL) of its local methods.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -3124,7 +3124,7 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) attributes in the class.</Description>
@@ -3221,7 +3221,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method/Function:&lt;/b&gt; complexity of the method/function expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes, where in the if-else-if construct only the first if instruction is considered. The following instructions are taken into account: if, for, while, conditional expression. The following instructions do not increase the value by themselves; however, if additional embeddedness can be found in their blocks, they are considered: else, else if (i.e. in the if-else-if construct the use of else-if does not increase the value of the metric), try, except, finally.&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes, where in the if-else-if construct only the first if instruction is considered. It is calculated as the maximum nesting level (NLE) of its local methods.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method / Function:&lt;/strong&gt; complexity of the method/function expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes, where in the if-else-if construct only the first if instruction is considered. The following instructions are taken into account: if, for, while, conditional expression. The following instructions do not increase the value by themselves; however, if additional embeddedness can be found in their blocks, they are considered: else, else if (i.e. in the if-else-if construct the use of else-if does not increase the value of the metric), try, except, finally.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes, where in the if-else-if construct only the first if instruction is considered. It is calculated as the maximum nesting level (NLE) of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; complexity of the method/function expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes, where in the if-else-if construct only the first if instruction is considered. The following instructions are taken into account: if, for, while, conditional expression. The following instructions do not increase the value by themselves; however, if additional embeddedness can be found in their blocks, they are considered: else, else if (i.e. in the if-else-if construct the use of else-if does not increase the value of the metric), try, except, finally.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes, where in the if-else-if construct only the first if instruction is considered. It is calculated as the maximum nesting level (NLE) of its local methods.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -4118,7 +4118,7 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method, Function:&lt;/b&gt; number of directly called methods. If a method is invoked several times, it is counted only once.&lt;br&gt;&lt;b&gt;Class:&lt;/b&gt; number of directly called methods of other classes, including method invocations from attribute initializations. If a method is invoked several times, it is counted only once.</Description>
@@ -4308,13 +4308,12 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method, Function:&lt;/b&gt; number of statements in the method.&lt;br&gt;&lt;b&gt;Class:&lt;/b&gt; number of statements in the class. &lt;b&gt;File:&lt;/b&gt; number of statements in the file.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; number of statements in the method.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class, Structure, Union:&lt;/strong&gt; number of statements in the class.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;File:&lt;/strong&gt; number of statements in the file.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; number of statements in the method.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of statements in the class.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;File:&lt;/strong&gt; number of statements in the file.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
       <Calculated>
         <CalculatedFor>Class</CalculatedFor>
-        <CalculatedFor>File</CalculatedFor>
         <CalculatedFor>Function</CalculatedFor>
         <CalculatedFor>Method</CalculatedFor>
       </Calculated>
@@ -4829,7 +4828,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method/Function:&lt;/b&gt; number of the parameters of the method/function. Counts only the explicitly given number of parameters (&apos;arguments&apos; object is not counted).</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; number of the parameters of the method. Counts only the explicitly given number of parameters (&apos;arguments&apos; object is not counted).&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; number of the parameters of the method. Counts only the explicitly given number of parameters (‘arguments’ object is not counted).&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -4995,9 +4994,11 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt;number of documented methods in the class (+1 if the class itself is documented) , however, the methods of its nested, anonymous, and local classes are not counted.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of documented methods in the class (+1 if the class itself is documented); however, the methods of its nested, anonymous, and local classes are not counted.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -5090,9 +5091,11 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; number of undocumented methods in the class (+1 if the class itself is undocumented); however, the methods of its nested, anonymous, and local classes are not counted.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of undocumented methods in the class (+1 if the class itself is undocumented); however, the methods of its nested, anonymous, and local classes are not counted.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -5177,7 +5180,7 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) methods in the class (NLM) plus the number of directly invoked other methods by its methods (NOI).</Description>
@@ -5332,9 +5335,11 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
+        <Description>&lt;b&gt;Component:&lt;/b&gt; ratio of the number of documented classes and methods in the component to the number of all of its classes and methods, including its subcomponents.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Component:&lt;/strong&gt; ratio of the number of documented classes and methods in the component to the number of all of its classes and methods, including its subcomponents.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -5653,7 +5658,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method/Function:&lt;/b&gt; number of non-empty and non-comment code lines of the method/function, including the non-empty and non-comment lines of its nested functions.&lt;b&gt;Class:&lt;/b&gt; number of non-empty and non-comment code lines of the class, including the non-empty and non-comment code lines of its nested and local classes.&lt;b&gt;Component:&lt;/b&gt; number of non-empty and non-comment code lines of the component, including its subcomponents.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method / Function:&lt;/strong&gt; number of non-empty and non-comment code lines of the method/function, including the non-empty and non-comment lines of its nested functions.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of non-empty and non-comment code lines of the class, including the non-empty and non-comment code lines of its nested and local classes.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Component:&lt;/strong&gt; number of non-empty and non-comment code lines of the component, including its subcomponents.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; number of non-empty and non-comment code lines of the method/function, including the non-empty and non-comment lines of its nested functions.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of non-empty and non-comment code lines of the class, including the non-empty and non-comment code lines of its nested and local classes.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Component:&lt;/strong&gt; number of non-empty and non-comment code lines of the component, including its subcomponents.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -5764,7 +5769,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method/Function:&lt;/b&gt; number of code lines of the method/function, including empty and comment lines, as well as its nested functions.&lt;b&gt;Class:&lt;/b&gt; number of code lines of the class, including empty and comment lines, as well as its nested and local classes.&lt;b&gt;Component:&lt;/b&gt; number of code lines of the component, including empty and comment lines, as well as its subcomponents.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method / Function:&lt;/strong&gt; number of code lines of the method/function, including empty and comment lines, as well as its nested functions.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of code lines of the class, including empty and comment lines, as well as its nested and local classes.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Component:&lt;/strong&gt; number of code lines of the component, including empty and comment lines, as well as its subcomponents.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; number of code lines of the method/function, including empty and comment lines, as well as its nested functions.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of code lines of the class, including empty and comment lines, as well as its nested and local classes.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Component:&lt;/strong&gt; number of code lines of the component, including empty and comment lines, as well as its subcomponents.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -5866,7 +5871,7 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of attributes in the class, including the inherited ones, as well as the inherited and local attributes of its nested and local classes.&lt;b&gt;Component:&lt;/b&gt; number of attributes in the component, including the attributes of its subcomponents.</Description>
@@ -6311,7 +6316,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of getter methods in the class, including the inherited ones, as well as the inherited and local getter methods of its nested, anonymous and local classes.&lt;b&gt;Component:&lt;/b&gt; number of getter methods in the component, including the getter methods of its subcomponents.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of getter methods in the class, including the inherited ones, as well as the inherited and local getter methods of its nested, anonymous and local classes.&#x0A;&lt;p&gt;&lt;strong&gt;Component:&lt;/strong&gt; number of getter methods in the component, including the getter methods of its subcomponents.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of getter methods in the class, including the inherited ones, as well as the inherited and local getter methods of its nested, anonymous and local classes.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Component:&lt;/strong&gt; number of getter methods in the component, including the getter methods of its subcomponents.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -6478,7 +6483,7 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) attributes in the class, including the attributes of its nested and local classes.</Description>
@@ -7018,7 +7023,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of methods in the class, including the inherited ones, as well as the inherited and local methods of its nested, anonymous, and local classes.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; number of methods in the component, including the methods of its subcomponents.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of methods in the class, including the inherited ones, as well as the inherited and local methods of its nested, anonymous, and local classes.&#x0A;&lt;p&gt;&lt;strong&gt;Component:&lt;/strong&gt; number of methods in the component, including the methods of its subcomponents.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of methods in the class, including the inherited ones, as well as the inherited and local methods of its nested, anonymous, and local classes.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Component:&lt;/strong&gt; number of methods in the component, including the methods of its subcomponents.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -7121,7 +7126,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method/Function:&lt;/b&gt; number of statements in the method/function, including the statements of its nested functions.&lt;b&gt;Class:&lt;/b&gt; number of statements in the class, including the statements of its nested and local classes.&lt;b&gt;Component:&lt;/b&gt; number of statements in the component, including the statements of its subcomponents.</Description>
-        <HelpText>&lt;b&gt;Method/Function:&lt;/b&gt; number of statements in the method/function, including the statements of its nested functions.&lt;b&gt;Class:&lt;/b&gt; number of statements in the class, including the statements of its nested and local classes.&lt;b&gt;Component:&lt;/b&gt; number of statements in the component, including the statements of its subcomponents.</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; number of statements in the method/function, including the statements of its nested functions.Class: number of statements in the class, including the statements of its nested and local classes.Component: number of statements in the component, including the statements of its subcomponents.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -7884,7 +7889,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of setter methods in the class, including the inherited ones, as well as the inherited and local setter methods of its nested, anonymous and local classes.&lt;br&gt;&lt;b&gt;Component:&lt;/b&gt; number of setter methods in the component, including the setter methods of its subcomponents.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of setter methods in the class, including the inherited ones, as well as the inherited and local setter methods of its nested, anonymous and local classes.&#x0A;&lt;p&gt;&lt;strong&gt;Component:&lt;/strong&gt; number of setter methods in the component, including the setter methods of its subcomponents.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; number of setter methods in the class, including the inherited ones, as well as the inherited and local setter methods of its nested, anonymous and local classes.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Component:&lt;/strong&gt; number of setter methods in the component, including the setter methods of its subcomponents.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -8117,13 +8122,17 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
+        <Description>&lt;b&gt;Component:&lt;/b&gt; number of documented classes and methods in the component, including the documented classes and methods of its subcomponents.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Component:&lt;/strong&gt; number of documented classes and methods in the component, including the documented classes and methods of its subcomponents.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
-      <Calculated/>
+      <Calculated>
+        <CalculatedFor>Component</CalculatedFor>
+      </Calculated>
     </Configuration>
     <Configuration name = "python">
       <Enabled>false</Enabled>
@@ -8199,13 +8208,17 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
+        <Description>&lt;b&gt;Component:&lt;/b&gt; number of undocumented classes and methods in the component, including the undocumented classes and methods of its subcomponents.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Component:&lt;/strong&gt; number of undocumented classes and methods in the component, including the undocumented classes and methods of its subcomponents.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
-      <Calculated/>
+      <Calculated>
+        <CalculatedFor>Component</CalculatedFor>
+      </Calculated>
     </Configuration>
     <Configuration name = "python">
       <Enabled>false</Enabled>

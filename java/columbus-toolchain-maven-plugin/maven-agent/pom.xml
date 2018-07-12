@@ -4,7 +4,7 @@
   <groupId>hu.u-szeged.OpenStaticAnalyzer</groupId>
   <artifactId>maven-agent</artifactId>
   <packaging>jar</packaging>
-  <version>3.0</version>
+  <version>4.0</version>
   <name>maven-agent</name>
   <url>http://maven.apache.org</url>
   

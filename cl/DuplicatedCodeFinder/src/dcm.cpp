@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -79,6 +79,79 @@ namespace columbus {
     }
 #endif
 
+#ifdef SCHEMA_JAVASCRIPT
+    bool getIsMember(const columbus::javascript::asg::base::Base& node) {
+      using namespace columbus::javascript::asg;
+      return Common::getIsFunctionDeclaration(node) 
+        || Common::getIsClassDeclaration(node) 
+        || Common::getIsVariableDeclarator(node) 
+        || Common::getIsMethodDefinition(node);
+    }
+    
+    const std::string getName(const columbus::javascript::asg::base::Base &node) {
+      using namespace columbus::javascript::asg;
+      switch (node.getNodeKind()) {
+      case NodeKind::ndkFunctionDeclaration:
+        if (dynamic_cast<const declaration::FunctionDeclaration&>(node).getIdentifier()) {
+          return dynamic_cast<const declaration::FunctionDeclaration&>(node).getIdentifier()->getName();
+        }
+      case NodeKind::ndkClassDeclaration:
+        if (dynamic_cast<const declaration::ClassDeclaration&>(node).getIdentifier()) {
+          return dynamic_cast<const declaration::ClassDeclaration&>(node).getIdentifier()->getName();
+        }
+      case NodeKind::ndkVariableDeclarator:
+      {
+        const declaration::VariableDeclarator& vd = dynamic_cast<const declaration::VariableDeclarator&>(node);
+        if (vd.getIdentifier()) {
+          if (vd.getIdentifier()->getNodeKind() == NodeKind::ndkIdentifier) {
+            const expression::Identifier& identifier = dynamic_cast<const expression::Identifier&>(*(vd.getIdentifier()));
+            return identifier.getName();
+          }
+        }
+      }
+
+      case NodeKind::ndkMethodDefinition:
+      {
+        const structure::MethodDefinition& md = dynamic_cast<const structure::MethodDefinition&>(node);
+        if (md.getKey()) {
+          if (md.getKey()->getNodeKind() == NodeKind::ndkIdentifier) {
+            const expression::Identifier& identifier = dynamic_cast<const expression::Identifier&>(*(md.getKey()));
+            return identifier.getName();
+          }
+        }
+      }
+      case NodeKind::ndkProgram:
+      {
+        const base::Program& pr = dynamic_cast<const base::Program&>(node);
+        return pr.getName();
+      }
+      default:
+        return "";
+      }
+    }
+    const std::string getUniqueNameForBase(const columbus::javascript::asg::base::Base& node) {
+      std::string ret = getName(node);
+      return ret;
+    }
+
+    columbus::javascript::asg::base::Base* getScopeParent(const columbus::javascript::asg::base::Base& node) {
+      using namespace columbus::javascript::asg;
+      Factory& fact = node.getFactory();
+      if (&node == fact.getRoot())
+        return NULL;
+
+      base::Base* n = node.getParent();
+      while (n) {
+        if (Common::getIsProgram(*n) || getIsMember(*n)) {
+          return n;
+        }
+        n = n->getParent();
+      }
+      return NULL;
+    }
+#endif
+
+
 #ifdef GENEALOGY
     //when genealogy is maintained the previous factory is also needed
 
@@ -133,6 +206,9 @@ namespace columbus {
 #elif defined SCHEMA_CSHARP
       if (AlgorithmCommon::getIsNamed(ciFirstRootNode) && AlgorithmCommon::getIsMemberDeclarationSyntax(ciFirstRootNode)) {
           Base& toP = dynamic_cast<Base&>(ciFirstRootNode);
+#elif defined SCHEMA_JAVASCRIPT
+      if (getIsMember(ciFirstRootNode)) {
+        Base& toP=dynamic_cast<Base&>(ciFirstRootNode);
 #endif
         if (ci.getF3_HeadNodeUniqueName().empty())  {
           ci.setF3_HeadNodeUniqueName(UNIQUE_NAME_FOR_MEMBER(toP));
@@ -140,7 +216,7 @@ namespace columbus {
         }
       }
       // ============================ Computing F4 Attribute =======================================
-#if defined SCHEMA_PYTHON
+#if defined SCHEMA_PYTHON || defined SCHEMA_JAVASCRIPT
       Base* namedAncestor = NULL;
 #else
       Named* namedAncestor = NULL;
@@ -152,6 +228,8 @@ namespace columbus {
         namedAncestor = dynamic_cast<Base*>(AlgorithmCommon::getScopeParent(ciFirstRootNode));
 #elif defined SCHEMA_CSHARP
           namedAncestor = dynamic_cast<Base*>(AlgorithmCommon::getScopeParent(factory, ciFirstRootId, AlgorithmCommon::getIsNamed));
+#elif defined SCHEMA_JAVASCRIPT
+        namedAncestor = dynamic_cast<Base*>(getScopeParent(ciFirstRootNode));
 #endif
         if (namedAncestor != NULL) {
     
@@ -167,8 +245,10 @@ namespace columbus {
         if (!AlgorithmCommon::getIsPackage(ciFirstRootNode)) {
 #elif defined SCHEMA_CSHARP
         if (!AlgorithmCommon::getIsCompilationUnitSyntax(ciFirstRootNode)) {
+#elif defined SCHEMA_JAVASCRIPT
+        if (!AlgorithmCommon::getIsSystem(ciFirstRootNode)) {
 #endif
-          DistanceVisitor dv(ciFirstRootNode.getId());       // Az osszes reszfat figyelembe kene venni !
+          DistanceVisitor dv(ciFirstRootNode.getId());       // All the subtrees should be considered !
 
           AlgorithmPreorder ap;
 #if defined SCHEMA_JAVA || defined SCHEMA_PYTHON

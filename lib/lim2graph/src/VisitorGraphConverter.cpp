@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -107,6 +107,7 @@ void VisitorGraphConverter::visit(const lim::asg::base::Component& node, bool b)
         case lim::asg::limLangCpp:
         case lim::asg::limLangCsharp:
         case lim::asg::limLangPython:
+        case lim::asg::limLangJavaScript:
           gnode = g.createNode(determineNodeName(node), graph::Node::NodeType(graphconstants::NTYPE_LIM_COMPONENT));
           break;
         case lim::asg::limLangFsql:
@@ -265,6 +266,9 @@ void VisitorGraphConverter::visit(const lim::asg::logical::Class& node, bool b) 
         case lim::asg::limLangPython:
           gnode = g.createNode(determineNodeName(node), graph::Node::NodeType(graphconstants::NTYPE_LIM_CLASS));
           break;
+        case lim::asg::limLangJavaScript:
+          gnode = g.createNode(determineNodeName(node), graph::Node::NodeType(graphconstants::NTYPE_LIM_CLASS));
+          break;
       }
 
       if (attributes) {
@@ -313,7 +317,7 @@ void VisitorGraphConverter::visit(const lim::asg::logical::Method& node, bool b)
           break;
         case lim::asg::limLangCpp:
         case lim::asg::limLangPython:
-        case lim::asg::limLangJavascript:
+        case lim::asg::limLangJavaScript:
           {
             string nodeType = graphconstants::NTYPE_LIM_FUNCTION;
             const lim::asg::ReverseEdges& revEdges = factory.getReverseEdges();

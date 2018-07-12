@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<thresholds> 
+  <threshold Mid="AD" Relation="lt" Value="1" Entity="Class" />
+  <threshold Mid="CD" Relation="lt" Value="0.25" Entity="Class,Method,Function" />
+  <!--<threshold Mid="CLOC" Relation="gt" Value="0" Entity="Class,File,Function,Method" /> --> <!--Enabled, but missing Value -->
+  <!--<threshold Mid="Cohesion" Relation="?" Value="0" Entity="Class,File,Function,Method" /> --> <!--Enabled, but missing Value -->
+  <!--<threshold Mid="Complexity" Relation="lt" Value="0" Entity="" /> --> <!--Enabled, but missing Value and Calculated section-->
+  <!--<threshold Mid="Coupling" Relation="?" Value="0" Entity="" /> --> <!--Enabled, but missing Value,Relation and Calculated section-->
+  <!--<threshold Mid="Coupling" Relation="?" Value="0" Entity="" /> --> <!--Enabled, but missing Value,Relation and Calculated section-->
+  <threshold Mid="DIT" Relation="gt" Value="5" Entity="Class" />
+  <threshold Mid="DLOC" Relation="gt" Value="0" Entity="Class,Function,Method" />
+  <!--<threshold Mid="Documentation" Relation="gt" Value="0" Entity="" /> --> <!-- Enabled, but missing Value and Calculated section-->
+  <!--<threshold Mid="Inheritance" Relation="?" Value="?" Entity="" /> --> <!-- Enabled, but missing Value and Calculated section-->
+  <threshold Mid="LLOC" Relation="gt" Value="65" Entity="Method,Function" />
+  <threshold Mid="LLOC" Relation="gt" Value="600" Entity="Class,File" /> <!-- I dont know, where to put the "File" -->
+  <threshold Mid="LOC" Relation="gt" Value="100" Entity="Method,Function" />
+  <threshold Mid="LOC" Relation="gt" Value="1000" Entity="Class,File" /> <!-- I dont know, where to put the "File" -->
+  <threshold Mid="McCC" Relation="gt" Value="10" Entity="File,Method,Function" />
+  <!--<threshold Mid="NA" Relation="gt" Value="15" Entity="Class" />-->
+  <threshold Mid="NG" Relation="gt" Value="15" Entity="Class" />
+  <!-- <threshold Mid="NII" Relation="gt" Value="0" Entity="Class,Function,Method" /> --> <!-- Missing Value -->
+  <threshold Mid="NL" Relation="gt" Value="5" Entity="Class" />
+  <threshold Mid="NL" Relation="gt" Value="5" Entity="Method,Function" />
+  <threshold Mid="NLE" Relation="gt" Value="3" Entity="Class" />
+  <threshold Mid="NLE" Relation="gt" Value="3" Entity="Method,Function" />
+  <threshold Mid="NLG" Relation="gt" Value="5" Entity="Class" />
+  <threshold Mid="NLM" Relation="gt" Value="20" Entity="Class" />
+  <threshold Mid="NLS" Relation="gt" Value="5" Entity="Class" />
+  <threshold Mid="NM" Relation="gt" Value="60" Entity="Class" />
+  <threshold Mid="NOA" Relation="gt" Value="5" Entity="Class" />
+  <threshold Mid="NOC" Relation="gt" Value="10" Entity="Class" />
+  <threshold Mid="NOD" Relation="gt" Value="50" Entity="Class" />
+  <threshold Mid="NOS" Relation="gt" Value="90" Entity="Method,Function" />
+  <threshold Mid="NOS" Relation="gt" Value="900" Entity="Class" />
+  <threshold Mid="NS" Relation="gt" Value="15" Entity="Class" />
+  <threshold Mid="NUMPAR" Relation="gt" Value="5" Entity="Method,Function" />
+  <!-- <threshold Mid="PDA" Relation="?" Value="?" Entity="Class" /> --> <!-- Enabled, but missing Relation and Value -->
+  <!-- <threshold Mid="PUA" Relation="?" Value="?" Entity="Class" /> --> <!-- Enabled, but missing Relation and Value -->
+  <!-- <threshold Mid="Size" Relation="?" Value="?" Entity="" /> --> <!-- Enabled, but missing Relation, Calculated and Value -->
+  <!-- <threshold Mid="TAD" Relation="?" Value="?" Entity="Component" /> --> <!-- Enabled, but missing Relation and Value -->
+  <threshold Mid="TCD" Relation="lt" Value="0.25" Entity="Class,Component" /> <!-- I dont know, where to put the "Component" -->
+  <threshold Mid="TCD" Relation="lt" Value="0.25" Entity="Method,Function" />
+  <!-- <threshold Mid="TCLOC" Relation="gt" Value="?" Entity="Class,Component" /> --> <!-- Enabled, but missing Value and I don't know, where to put the "Component" -->
+  <!-- <threshold Mid="TCLOC" Relation="gt" Value="?" Entity="Method,Function" /> --> <!-- Enabled, but missing Value -->
+  <threshold Mid="TLLOC" Relation="gt" Value="104" Entity="Method,Function" />
+  <threshold Mid="TLLOC" Relation="gt" Value="960" Entity="Class,Component" /> <!-- Component ? -->
+  <threshold Mid="TLOC" Relation="gt" Value="160" Entity="Method,Function" />
+  <threshold Mid="TLOC" Relation="gt" Value="1600" Entity="Class,Component" /> <!-- Component? -->
+  <!--<threshold Mid="TNCL" Relation="?" Value="?" Entity="Component" />--> <!-- Missing relation and Value -->
+  <!--<threshold Mid="TNDI" Relation="?" Value="?" Entity="Component" />--> <!-- Missing relation and Value -->
+  <!--<threshold Mid="TNFI" Relation="?" Value="?" Entity="Component" />--> <!-- Missing relation and Value -->
+  <threshold Mid="TNG" Relation="gt" Value="24" Entity="Class,Component" />
+  <threshold Mid="TNLG" Relation="gt" Value="8" Entity="Class" />
+  <threshold Mid="TNLM" Relation="gt" Value="32" Entity="Class" />
+  <threshold Mid="TNLS" Relation="gt" Value="8" Entity="Class" />
+  <threshold Mid="TNM" Relation="gt" Value="96" Entity="Class,Component" />
+  <threshold Mid="TNOS" Relation="gt" Value="144" Entity="Method,Function" />
+  <threshold Mid="TNOS" Relation="gt" Value="1440" Entity="Class,Component" /> <!-- Component? -->
+  <threshold Mid="TNS" Relation="gt" Value="24" Entity="Class,Component" />
+  <!-- <threshold Mid="TPDA" Relation="?" Value="?" Entity="Component" /> --> <!-- Missing relation and Value -->
+  <!-- <threshold Mid="TPUA" Relation="?" Value="?" Entity="Component" /> --> <!-- Missing relation and Value -->
+  <threshold Mid="WMC" Relation="gt" Value="115" Entity="Class" />
+</thresholds>

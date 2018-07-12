@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -57,7 +57,7 @@ public abstract class AbstractColumbusMojo extends
   protected static final String MY_PLUGIN_NAME = "OpenStaticAnalyzer-maven-plugin";
   protected static final String MY_PLUGIN_PREFIX = "OpenStaticAnalyzer";
   protected static final String MY_PLUGIN_GROUP_NAME = "org.apache.maven.plugins";
-  protected static final String MY_PLUGIN_VERSION = "3.0";
+  protected static final String MY_PLUGIN_VERSION = "4.0";
   /**
    * Collect the given groupid when export the results of analysis.
    */

@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -31,7 +31,7 @@ typedef columbus::LANGUAGE_NAMESPACE::NodeKind NodeKind;
 typedef columbus::LANGUAGE_NAMESPACE::BASE_NAMESPACE::Base Base;
 
 typedef columbus::LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned Positioned;
-#if defined(SCHEMA_JAVA) || defined(SCHEMA_PYTHON)
+#if defined(SCHEMA_JAVA) || defined(SCHEMA_PYTHON) || defined (SCHEMA_JAVASCRIPT)
 typedef columbus::LANGUAGE_NAMESPACE::BASE_NAMESPACE::Named Named;
 #elif defined(SCHEMA_CSHARP)
 typedef columbus::LANGUAGE_NAMESPACE::base::Base Named;
@@ -62,6 +62,14 @@ typedef columbus::LANGUAGE_NAMESPACE::VisitorAbstractNodes VisitorAbstractNodes;
   #define UNIQUE_NAME_FOR_MEMBER AlgorithmCommon::getUniqueName
   #define NAMED_VISITOR NamedVisitor
 
+#elif defined(SCHEMA_JAVASCRIPT)
+  #define FILTER_FILE_EXTENSION ".fjssi"
+  #define FILTER_FILE_EXTENSION_W L".fjssi"
+  #define LANGUAGE_NS columbus::javascript
+  #define getUniqueName_v1 getUniqueNameForBase
+  #define UNIQUE_NAME_FOR_MEMBER getUniqueNameForBase
+  #define NAMED_VISITOR NamedVisitor
+  
 #elif defined(SCHEMA_CSHARP)
   #define FILTER_FILE_EXTENSION ".fcssi"
   #define FILTER_FILE_EXTENSION_W L".fcssi"

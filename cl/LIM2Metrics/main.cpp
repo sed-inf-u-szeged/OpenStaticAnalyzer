@@ -1,7 +1,7 @@
 /*
  *  This file is part of OpenStaticAnalyzer.
  *
- *  Copyright (c) 2004-2017 Department of Software Engineering - University of Szeged
+ *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
  *
  *  Licensed under Version 1.2 of the EUPL (the "Licence");
  *
@@ -200,7 +200,7 @@ int main(int argc, char *argv[]) {
         case lim::asg::limLangJava :       rulConfig = "java"; break;
         case lim::asg::limLangPython :     rulConfig = "python"; break;
         case lim::asg::limLangCsharp:      rulConfig = "csharp"; break;
-        case lim::asg::limLangJavascript:  rulConfig = "javascript"; break;
+        case lim::asg::limLangJavaScript:  rulConfig = "javascript"; break;
         default :                       rulConfig = "Default"; break;
       }
     }
