@@ -22,7 +22,7 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
     - [FindBugs] 3.0.0 coding rule violations
     - [Pylint] 1.8.2 coding rule violations
     - FxCop coding rule violations
-    - [EsLint] coding rule violations
+    - [ESLint] coding rule violations
 - Clone detection (copy-pasted source code fragments) extended with clone tracking and "clone smells"
     - Syntax-based, so-called Type-2 clones
 - Metrics calculation at component, file, package, class, method, and function levels:
@@ -34,7 +34,7 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
 [PMD]:http://pmd.sourceforge.net/
 [FindBugs]:http://findbugs.sourceforge.net
 [Pylint]:http://www.pylint.org/
-[EsLint]:https://eslint.org/
+[ESLint]:https://eslint.org/
 
 By continuous static analysis, the software developers can:
 - reduce the software erosion rate and this way decrease development costs;
