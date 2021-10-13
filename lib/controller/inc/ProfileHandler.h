@@ -46,6 +46,19 @@ class ProfileHandlerException : public columbus::Exception {
 
 
 class ProfileHandler {
+public:
+
+  struct UDMConfig {
+    std::string description;
+    std::string displayName;
+    std::string groupMember;
+    std::string helptext;
+    std::string formula;
+    std::string type;
+    std::set<std::string> calculatedFor;
+    UDMConfig() : description(), displayName(), groupMember(), helptext(), formula(), type(), calculatedFor() {}
+    UDMConfig(const UDMConfig& u) : description(u.description), displayName(u.displayName), groupMember(u.groupMember), helptext(u.helptext), formula(u.formula), type(u.type), calculatedFor(u.calculatedFor) {}
+  };
   
 private:
   
@@ -61,7 +74,9 @@ private:
   struct ToolSettings {
     bool enabled;
     std::map<std::string, Threshold> metricTresholds;
-    ToolSettings() : metricTresholds() {}
+    std::map<std::string, std::map<std::string, UDMConfig>> udmetrics;
+    std::map<std::string, std::vector<std::string>> lim2patternsParams;
+    ToolSettings() : metricTresholds(), udmetrics(), lim2patternsParams(){}
   };
 
   struct RuleSettings {
@@ -79,6 +94,8 @@ private:
   ProfileData profileData;
   const std::string _filename;
   static const std::string _empty_string;
+  static const std::set<std::string> standardGroupNames;
+  static const std::set<std::string> standardConfigurations;
 
 public:
   
@@ -185,6 +202,46 @@ public:
   * \throw ProfileHandlerException if rule settings not specified
   */
   std::string getRulePriority(const std::string& ruleId) const;
+
+  /**
+  * \brief Get all the user defined metrics' id
+  * \return All the udms, empty list if there is no udm defined
+  * \throw ProfileHandlerException if UDM tool is not found
+  */
+  std::list<std::string> getUDMIDs() const;
+
+  /**
+  * \brief Get a user defined metric's configuration
+  * \param udmID [in] the udm's id
+  * \return All the udm's configuration, empty list, if udm is not found
+  * \throw ProfileHandlerException if UDM tool is not found, or if udm is not found
+  */
+  std::list<std::string> getUDMConfigs(const std::string& udmID) const;
+
+  /**
+  * \brief Get all of the user defined metric's attributes
+  * \param udmID [in] the udm's id
+  * \param configuration [in] the attributes's configuration
+  * \return UDMConfig with all the attributes in it, if configuration does not found the "Default" configuration's attributes
+  * \throw ProfileHandlerException if UDM tool is not found, or if udm is not found, or if neither 'configuration' nor 'Default' configuration are not found
+  */
+  UDMConfig getUDMAttributes(const std::string& udmID, const std::string& configuration) const;
+
+
+  /**
+  * \brief Get LIM2Patterns tool parameters
+  * \param toolName [in] name of the tool
+  * \return mapped parameters
+  * \throw ProfileHandlerException when not a single parameter was set
+  */
+  std::map<std::string, std::string> getLIM2PatternsAttributes(const std::string &toolName) const;
+
+  /**
+  * \brief Get all of the user defined metric's GroupMember attribute
+  * \return A list with all the attributes in it
+  * \throw ProfileHandlerException if UDM tool is not found
+  */
+  std::set<std::string> getUDMGroupMembers(const std::string& configuration) const;
 
   void parseXML(const std::string& filename);
   

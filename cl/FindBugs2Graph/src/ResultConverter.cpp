@@ -158,10 +158,10 @@ void ResultConverter::addWarningToNode(const std::string& path, const std::strin
         for (list<AttributeComposite>::iterator it = sourceLinks.begin(); it != sourceLinks.end(); it++) {
           extraInfo.addAttribute(*it);
         }
-        warningAdded = graphsupport::addWarningOnce(graph, node, id, fullPath, line, col, endline, endcol, warningText, extraInfo);
+        warningAdded = graphsupport::addWarningOnce(graph, node, id, fullPath, line, col, endline, endcol, warningText, extraInfo, &warningCache);
 
       } else
-        warningAdded = graphsupport::addWarningOnce(graph, node, id, fullPath, line, col, endline, endcol, warningText);
+        warningAdded = graphsupport::addWarningOnce(graph, node, id, fullPath, line, col, endline, endcol, warningText, &warningCache);
     
       if (warningAdded)
         writeWarningLine(id, warningText, sourceLinks, fullPath, line, col, endline, endcol);
@@ -401,8 +401,7 @@ void ResultConverter::collectData(const std::string& fbOutFile){
 
 void ResultConverter::aggregateWarnings(bool createGroups) {
   // summarize warnings
-  graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENT, graph::Edge::edtDirectional), true);
-  graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENTTREE, graph::Edge::edtReverse), false);
+  graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENT, graph::Edge::edtDirectional), true, std::set<std::string>(), true);
   graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_LOGICALTREE, graph::Edge::edtReverse), false);
 
   // create group metrics

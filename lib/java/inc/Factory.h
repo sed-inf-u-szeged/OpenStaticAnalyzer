@@ -461,6 +461,12 @@ namespace columbus { namespace java { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
+      expr::AnnotatedTypeExpression* createAnnotatedTypeExpressionNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
       expr::ArrayAccess* createArrayAccessNode();
 
       /**
@@ -563,6 +569,12 @@ namespace columbus { namespace java { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
+      expr::Lambda* createLambdaNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
       expr::LongLiteral* createLongLiteralNode();
 
       /**
@@ -570,6 +582,12 @@ namespace columbus { namespace java { namespace asg {
       * \return Reference to the new node.
       */
       expr::MarkerAnnotation* createMarkerAnnotationNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      expr::MemberReference* createMemberReferenceNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -677,6 +695,12 @@ namespace columbus { namespace java { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
+      expr::TypeIntersectionExpression* createTypeIntersectionExpressionNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
       expr::TypeUnionExpression* createTypeUnionExpressionNode();
 
       /**
@@ -684,6 +708,36 @@ namespace columbus { namespace java { namespace asg {
       * \return Reference to the new node.
       */
       expr::WildcardExpression* createWildcardExpressionNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      module::Exports* createExportsNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      module::Opens* createOpensNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      module::Provides* createProvidesNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      module::Requires* createRequiresNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      module::Uses* createUsesNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -893,6 +947,18 @@ namespace columbus { namespace java { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
+      struc::Module* createModuleNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      struc::ModuleDeclaration* createModuleDeclarationNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
       struc::Package* createPackageNode();
 
       /**
@@ -924,6 +990,18 @@ namespace columbus { namespace java { namespace asg {
       * \return Reference to the new node.
       */
       struc::Variable* createVariableNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      type::IntersectionType* createIntersectionTypeNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      type::ModuleType* createModuleTypeNode();
 
       /**
       * \brief Flush the node Sizes to the default out
@@ -1018,6 +1096,7 @@ namespace columbus { namespace java { namespace asg {
       friend class base::NonJavadocComment;
       friend class base::Positioned;
       friend class base::PositionedWithoutComment;
+      friend class expr::AnnotatedTypeExpression;
       friend class expr::Annotation;
       friend class expr::ArrayAccess;
       friend class expr::ArrayTypeExpression;
@@ -1034,13 +1113,16 @@ namespace columbus { namespace java { namespace asg {
       friend class expr::ExternalTypeExpression;
       friend class expr::FieldAccess;
       friend class expr::FloatLiteral;
+      friend class expr::FunctionalExpression;
       friend class expr::Identifier;
       friend class expr::InfixExpression;
       friend class expr::InstanceOf;
       friend class expr::IntegerLiteral;
+      friend class expr::Lambda;
       friend class expr::Literal;
       friend class expr::LongLiteral;
       friend class expr::MarkerAnnotation;
+      friend class expr::MemberReference;
       friend class expr::MethodInvocation;
       friend class expr::NewArray;
       friend class expr::NewClass;
@@ -1048,6 +1130,7 @@ namespace columbus { namespace java { namespace asg {
       friend class expr::NullLiteral;
       friend class expr::NumberLiteral;
       friend class expr::ParenthesizedExpression;
+      friend class expr::PolyExpression;
       friend class expr::PostfixExpression;
       friend class expr::PrefixExpression;
       friend class expr::PrimitiveTypeExpression;
@@ -1060,9 +1143,16 @@ namespace columbus { namespace java { namespace asg {
       friend class expr::TypeApplyExpression;
       friend class expr::TypeCast;
       friend class expr::TypeExpression;
+      friend class expr::TypeIntersectionExpression;
       friend class expr::TypeUnionExpression;
       friend class expr::Unary;
       friend class expr::WildcardExpression;
+      friend class module::Exports;
+      friend class module::ModuleDirective;
+      friend class module::Opens;
+      friend class module::Provides;
+      friend class module::Requires;
+      friend class module::Uses;
       friend class statm::Assert;
       friend class statm::BasicFor;
       friend class statm::Block;
@@ -1111,6 +1201,8 @@ namespace columbus { namespace java { namespace asg {
       friend class struc::Method;
       friend class struc::MethodDeclaration;
       friend class struc::MethodGeneric;
+      friend class struc::Module;
+      friend class struc::ModuleDeclaration;
       friend class struc::NamedDeclaration;
       friend class struc::NormalMethod;
       friend class struc::Package;
@@ -1132,9 +1224,11 @@ namespace columbus { namespace java { namespace asg {
       friend class type::ErrorType;
       friend class type::FloatType;
       friend class type::IntType;
+      friend class type::IntersectionType;
       friend class type::LongType;
       friend class type::LowerBoundedWildcardType;
       friend class type::MethodType;
+      friend class type::ModuleType;
       friend class type::NoType;
       friend class type::NullType;
       friend class type::PackageType;

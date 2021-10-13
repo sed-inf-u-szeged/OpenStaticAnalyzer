@@ -37,6 +37,7 @@ import columbus.logger.LoggerHandler;
  */
 public class ErroneousTypeExpressionImpl extends BaseImpl implements ErroneousTypeExpression {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(ErroneousTypeExpressionImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

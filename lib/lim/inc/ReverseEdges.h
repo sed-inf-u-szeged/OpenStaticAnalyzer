@@ -188,7 +188,7 @@ namespace columbus { namespace lim { namespace asg {
       RevEdgesContainer reContainer;
 
       /** \internal \brief The possible edges by nodes. */
-      static bool possibleEdges[34][49];
+      static bool possibleEdges[34][51];
 
       friend class Factory;
       friend class VisitorReverseEdges;

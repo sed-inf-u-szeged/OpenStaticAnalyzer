@@ -190,8 +190,6 @@ Task::ExecutionResult DirectoryBasedAnalysisTask::execute()
     sv.clear();
 
     string JANPath = (props.wrapperToolsDir / "JAN.jar").string();
-    string vulerabilityPath = (props.wrapperToolsDir / "vulnerability.jar").string();
-    string androidPath = (props.wrapperToolsDir / "android.jar").string();
 
     string source_file_list = (props.tempDir / "source_file_list.lst").string();
     string cp_list = (props.tempDir / "cp_list.lst").string();
@@ -203,6 +201,9 @@ Task::ExecutionResult DirectoryBasedAnalysisTask::execute()
     split(props.JANJvmOptions, JANJvmOptionsV, ' ');
     sv.insert(sv.end(), JANJvmOptionsV.begin(), JANJvmOptionsV.end());
 
+    sv.push_back("--patch-module");
+    sv.push_back("jdk.compiler=" + (props.wrapperToolsDir / "jdk.compiler.jar").string());
+
     sv.push_back("-jar");
     sv.push_back(JANPath);
 
@@ -210,6 +211,10 @@ Task::ExecutionResult DirectoryBasedAnalysisTask::execute()
     sv.push_back(props.projectBaseDir.string());
 
     sv.push_back("-r");
+
+    vector<string> JANOptionsV;
+    split(props.JANOptions, JANOptionsV, ' ');
+    sv.insert(sv.end(), JANOptionsV.begin(), JANOptionsV.end());
 
     if (props.runPMD){
       sv.push_back("-s");
@@ -222,12 +227,6 @@ Task::ExecutionResult DirectoryBasedAnalysisTask::execute()
     if (!props.javacOptions.empty()){
       sv.push_back("-j:|" + props.javacOptions);
     }
-    
-    sv.push_back("-j:-cp");
-    sv.push_back("-j:" + vulerabilityPath);
-
-    sv.push_back("-j:-cp");
-    sv.push_back("-j:" + androidPath);
 
     sv.push_back("-c");
     sv.push_back(tmpConfig.string());
@@ -241,7 +240,7 @@ Task::ExecutionResult DirectoryBasedAnalysisTask::execute()
     copy_file(ljsi_file, (props.asgDir / (props.projectName + ".ljsi")).string());
     copy_file(fjsi_file, (props.asgDir / (props.projectName + ".fjsi")).string());
 
-    ofstream outfile;
+    std::ofstream outfile;
 
     outfile.open(props.superLinkList.string().c_str());
     outfile << ljsi_file;
@@ -262,7 +261,8 @@ Task::ExecutionResult DirectoryBasedAnalysisTask::execute()
       split(props.JVMOptions, JvmOptionsV, ' ');
       sv.insert(sv.end(), JvmOptionsV.begin(), JvmOptionsV.end());
 
-      sv.push_back("-Djava.ext.dirs=" + (props.wrapperToolsDir / "PMD" / "lib").string());
+      sv.push_back("-cp");
+      sv.push_back((props.wrapperToolsDir / "PMD" / "lib" / "*").string());
 
       sv.push_back("net.sourceforge.pmd.PMD");
 
@@ -288,6 +288,9 @@ Task::ExecutionResult DirectoryBasedAnalysisTask::execute()
       sv.push_back("-r");
       sv.push_back(pmd_res_xml);
 
+      sv.push_back("-failOnViolation");
+      sv.push_back("false"); // By default PMD exits with status 4 if violations are found, disable this
+
       try {
         checkedExec("java", sv, logger);
       } catch (const columbus::Exception&) {
@@ -310,304 +313,6 @@ DirectoryBasedAnalysisTask::DirectoryBasedAnalysisTask(const Properties& propert
 {
   addDependsOn(CleanResultsTask::name);
 }
-
-
-
-TASK_NAME_DEF( WrapperBasedAnalysisTask);
-
-Task::ExecutionResult WrapperBasedAnalysisTask::execute()
-{
-  ExecutionResult result;
-  ExecutionLogger logger(this, result);
-
-  try {
-
-    path wrapperWorkDir = props.columbusWrapperTmpDir;
-    path wrapperWorkDirBin = wrapperWorkDir / "bin";
-    path wrapperWorkDirLog = wrapperWorkDir / "log";
-    path wrapperWorkDirTmp = wrapperWorkDir / "tmp";
-
-    createDirectories(wrapperWorkDirBin, logger);
-    createDirectories(wrapperWorkDirLog, logger);
-    createDirectories(wrapperWorkDirTmp, logger);
-
-
-    copyBinaryExecutable(props.wrapperToolsDir, wrapperWorkDirBin, "GenericConfig");
-    copyBinaryExecutable(props.wrapperToolsDir, wrapperWorkDirBin, "JANLink");
-    
-    string files[13] = {
-      "JAN.jar",
-      "JColumbusAntWrapper.jar",
-      "OpenStaticAnalyzerAgent-4.0.jar",
-      "OpenStaticAnalyzer-maven-plugin-4.0.jar",
-      "OpenStaticAnalyzer-maven-plugin-4.0-V2.pom",
-      "OpenStaticAnalyzer-maven-plugin-4.0-V3.pom",
-      "OpenStaticAnalyzer-maven-plugin-4.0-V31.pom",
-      "OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.jar",
-      "OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.pom",
-      "OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.0.jar",
-      "OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.0.pom",
-      "OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.1.jar",
-      "OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.1.pom"
-    };
-
-    for(int i=0; i < 13; ++i ){
-      copy_file(props.wrapperToolsDir / files[i], wrapperWorkDirBin / files[i]);
-    }
-
-    copyDirectory(props.wrapperToolsDir, wrapperWorkDirBin, "findbugs-3.0.0");
-    copyDirectory(props.wrapperToolsDir, wrapperWorkDirBin, "PMD");
-
-
-    SafeEnvironmentModifier wwd_env("WRAPPER_WORK_DIR", wrapperWorkDir, logger);
-    SafeEnvironmentModifier wbd_env("WRAPPER_BIN_DIR", wrapperWorkDirBin, logger);
-    SafeEnvironmentModifier wld_env("WRAPPER_LOG_DIR", wrapperWorkDirLog, logger);
-    SafeEnvironmentModifier wtd_env("WRAPPER_TEMP_DIR", wrapperWorkDirTmp, logger);
-    SafeEnvironmentModifier we_env("WRAPPER_ENVIRONMENT", props.tempDir, logger);
-    SafeEnvironmentModifier wwdn_env("WRAPPER_WORK_DIR_NAME", props.columbusWrapperTmpDirName, logger);
-    
-    SafeEnvironmentModifier mo_env("MAVEN_OPTS", "-javaagent:" + (props.wrapperToolsDir / "OpenStaticAnalyzerAgent-4.0.jar").string(), logger);
-    SafeEnvironmentModifier ssll_env("OSA_SUPERLINKLIST", props.superLinkList.string(), logger);
-    SafeEnvironmentModifier sspmdll_env("OSA_SUPERPMDLIST", props.pmdXmlList.string(), logger);
-
-    if(!props.mavenFilter.empty())
-      SafeEnvironmentModifier swmf_env("OSA_WRAPPER_MAVEN_FILTER", props.mavenFilter, logger);
-        
-    SafeEnvironmentModifier smd_env("OSA_DIR", props.toolchainDir, logger);
-    SafeEnvironmentModifier smld_env("OSA_LOG_DIR", wrapperWorkDirLog, logger);
-    SafeEnvironmentModifier smwb_env("OSA_WRAPPER_BATCH", "", logger);
-    SafeEnvironmentModifier pbd_env("PROJECT_BASE_DIR", props.projectBaseDir, logger);
-    
-    
-    // -------------------------------------------------------------------------------------------------------------
-    // ---------------------------------------------- GenericConfig ------------------------------------------------
-    // -------------------------------------------------------------------------------------------------------------
-    
-    vector<string> sv;
-
-    path configFile = wrapperWorkDirBin / "toolchain.ini";
-
-    copy_file(props.wrapperToolsDir / "toolchain.ini", configFile);
-
-    sv.push_back("-config:" + configFile.string());
-
-    if (props.runPMD){
-      sv.push_back("-option:OTHER_TOOLS/CALL_PMD=1");
-    }else{
-      sv.push_back("-option:OTHER_TOOLS/CALL_PMD=0");
-    }
-
-    if (!props.externalHardFilter.empty()) {
-      sv.push_back("-option:JAN/hardFilter=" + props.externalHardFilter.string());
-    }
-    
-    if (!props.JANJvmOptions.empty()){
-      sv.push_back("-option:JAN_CALL/JAN_JVM_OPTS=" + props.JANJvmOptions);
-    }
-    
-    checkedExec(wrapperWorkDirBin / "GenericConfig", sv, logger);
-
-    // -------------------------------------------------------------------------------------------------------------
-    // --------------------------------------- WrapperEnvironmentConfig --------------------------------------------
-    // -------------------------------------------------------------------------------------------------------------
-    
-    path wrapperEnvironmentConfigPath = wrapperWorkDir / "wrapper_environment_config.ini";
-    
-    sv.clear();
-    
-#ifdef _WIN32
-    string ext = ".exe";
-#else
-    string ext;
-#endif
-
-    wrapTool("ant" + ext, "AntWrapper" + ext,sv);
-    wrapTool("javac" + ext, "JavacWrapper" + ext,sv);
-    wrapTool("jar" + ext, "JarWrapper" + ext,sv);
-      
-    sv.push_back("-setWrappedRun");
-    sv.push_back("ant" + ext);
-    sv.push_back("0");
-
-    sv.push_back("-setWrappedRun");
-    sv.push_back("javac" + ext);
-    sv.push_back("0");
-
-    sv.push_back("-setWrappedRun");
-    sv.push_back("jar" + ext);
-    sv.push_back("0");
-      
-    sv.push_back("-setLogging");
-    sv.push_back("ant" + ext);
-    sv.push_back("1");
-    sv.push_back("1");
-      
-    sv.push_back("-setLogging");
-    sv.push_back("javac" + ext);
-    sv.push_back("1");
-    sv.push_back("1");
-      
-    sv.push_back("-setLogging");
-    sv.push_back("jar" + ext);
-    sv.push_back("1");
-    sv.push_back("1");
-
-    ofstream outfile;
-
-#ifdef _WIN32
-    outfile.open((wrapperWorkDirBin / "ant.bat").string().c_str());
-    outfile << "ant.exe %%*";
-    outfile.close();
-    outfile.clear();
-#endif
-
-    string jColumbusAntWrapperJar = (wrapperWorkDirBin / "JColumbusAntWrapper.jar").string();
-
-    outfile.open((wrapperWorkDir / "wrapper.xml").string().c_str());
-    outfile 
-      << "<project>" << endl
-      << "  <taskdef name=\"javac\"    classname=\"org.jcolumbus.antwrapper.taskdefs.Javac\"    classpath=\"" + jColumbusAntWrapperJar + "\"/>" << endl
-      << "  <taskdef name=\"zip\"      classname=\"org.jcolumbus.antwrapper.taskdefs.Zip\"      classpath=\"" + jColumbusAntWrapperJar + "\"/>" << endl
-      << "  <taskdef name=\"jar\"      classname=\"org.jcolumbus.antwrapper.taskdefs.Jar\"      classpath=\"" + jColumbusAntWrapperJar + "\"/>" << endl
-      << "  <taskdef name=\"war\"      classname=\"org.jcolumbus.antwrapper.taskdefs.War\"      classpath=\"" + jColumbusAntWrapperJar + "\"/>" << endl
-      << "  <taskdef name=\"ear\"      classname=\"org.jcolumbus.antwrapper.taskdefs.Ear\"      classpath=\"" + jColumbusAntWrapperJar + "\"/>" << endl
-      << "  <taskdef name=\"copy\"     classname=\"org.jcolumbus.antwrapper.taskdefs.Copy\"     classpath=\"" + jColumbusAntWrapperJar + "\"/>" << endl
-      << "  <taskdef name=\"move\"     classname=\"org.jcolumbus.antwrapper.taskdefs.Move\"     classpath=\"" + jColumbusAntWrapperJar + "\"/>" << endl
-      << "  <taskdef name=\"delete\"   classname=\"org.jcolumbus.antwrapper.taskdefs.Delete\"   classpath=\"" + jColumbusAntWrapperJar + "\"/>" << endl
-      << "</project>" << endl;
-    outfile.close();
-    outfile.clear();
-
-
-    sv.push_back("-workingdir");
-    sv.push_back(wrapperWorkDir.string());
-    sv.push_back(wrapperEnvironmentConfigPath.string());
-    
-    checkedExec(props.wrapperBinDir / "WrapperEnvironmentConfig", sv, logger);
-
-    SafeEnvironmentModifier config_env(OSA_WRAPPER_CONFIG_FILE_ENV_VAR, wrapperEnvironmentConfigPath, logger);
-
-    // ----------------------------------------------------------------------------------------------------------------------
-    
-    string oldPath;
-    const char* pathValue = getenv("PATH");
-    if (pathValue != NULL)
-      oldPath = pathValue;
-      
-    SafeEnvironmentModifier path_env("PATH", (wrapperWorkDirBin.string() + PATH_SEPARATOR + oldPath).c_str(), logger, false);
-
-    sv.clear();
-    checkedExec(props.buildScript, sv, logger);
-    
-    if (exists(wrapperWorkDirLog / "Error.log")) {
-      logstream << CMSG_WRAPPER_ERROR << "\n";
-      result.setCriticalError();
-    }
-
-    if (exists(wrapperWorkDirLog / props.superLinkList.filename()))
-      copy_file(wrapperWorkDirLog / props.superLinkList.filename(), props.superLinkList);
-    if (exists(wrapperWorkDirLog / props.pmdXmlList.filename()))
-      copy_file(wrapperWorkDirLog / props.pmdXmlList.filename(), props.pmdXmlList);
-    
-
-  } HANDLE_TASK_EXCEPTIONS
-  return result;
-}
-
-void WrapperBasedAnalysisTask::wrapTool(const string& wrappedTool, const string& wrapperTool, vector<string>& sv ) const
-{
-  sv.push_back("-wraptools");
-  sv.push_back(wrappedTool);
-  sv.push_back(wrapperTool);
-  copy_file(props.wrapperBinDir/wrapperTool, props.columbusWrapperTmpDir/"bin"/wrapperTool, copy_option::overwrite_if_exists);
-  copy_file(props.wrapperBinDir/("exewrapper" BINARYEXT), props.columbusWrapperTmpDir/"bin"/wrappedTool);
-}
-
-WrapperBasedAnalysisTask::WrapperBasedAnalysisTask(const Properties& properties) : Task(properties)
-{
-  addDependsOn(CleanResultsTask::name);
-}
-
-
-
-TASK_NAME_DEF( RemoveWrapperBinsTask);
-
-Task::ExecutionResult RemoveWrapperBinsTask::execute()
-{
-  ExecutionResult result;
-  ExecutionLogger logger(this, result);
-
-  try {
-    
-    path wrapperbin(LONGDIRPREFIXSTRING + (props.columbusWrapperTmpDir / "bin").wstring());
-    logstream << "Removing directory: " << wrapperbin.string() << "\n";
-
-    system::error_code errorcode;
-    for(int i=0; i<3; i++){
-      remove_all(wrapperbin, errorcode);
-      if(errorcode.value() == system::errc::success)
-        break;
-    }
-
-    logger.warningIfFail( errorcode.value() == system::errc::success, "Failed to remove wrapper bin directory. %s.\n", errorcode.message().c_str());
-
-  } HANDLE_TASK_EXCEPTIONS
-  return result;
-}
-
-RemoveWrapperBinsTask::RemoveWrapperBinsTask(const Properties& properties) : Task(properties)
-{
-  addDependsOn(WrapperBasedAnalysisTask::name);
-}
-
-TASK_NAME_DEF(CheckASGListTask);
-
-Task::ExecutionResult CheckASGListTask::execute()
-{
-  ExecutionResult result;
-  ExecutionLogger logger(this, result);
-
-  try {
-
-    if (!exists(props.superLinkList)){
-      logstream << "ASG list file does not exist: " << props.superLinkList.string() << "!" << endl;
-      result.setCriticalError();
-    }
-
-    ifstream filestr;
-    filestr.open(props.superLinkList.string().c_str(), ios::ate | ios::binary);
-    streamoff length = filestr.tellg();
-    if ( 0 == length ){
-      logstream << "ASG list file is empty: " << props.superLinkList.string() << "!" << endl;
-      result.setCriticalError();
-    }
-
-    if(result.hasCriticalError()){
-      return result;
-    }
-    
-    path superLinkListOrig = props.superLinkList.string() + ".orig";
-
-    copy_file(props.superLinkList, superLinkListOrig);
-    
-    vector<string> sv;
-    addMessageLevel(sv);
-
-    sv.push_back("-inputlist:" + superLinkListOrig.string());
-    sv.push_back("-checklist:" + props.superLinkList.string());
-
-
-    checkedExec(props.wrapperToolsDir / "JANLink", sv, logger);
-    
-  } HANDLE_TASK_EXCEPTIONS
-  return result;
-}
-
-CheckASGListTask::CheckASGListTask(const Properties& properties) : Task(properties)
-{
-  addDependsOn(WrapperBasedAnalysisTask::name);
-}
-
 
 TASK_NAME_DEF(JANFilterTask);
 
@@ -634,35 +339,7 @@ Task::ExecutionResult JANFilterTask::execute()
 
 JANFilterTask::JANFilterTask(const Properties& properties) : Task(properties)
 {
-  addDependsOn(CheckASGListTask::name);
   addDependsOn(DirectoryBasedAnalysisTask::name);
-}
-
-TASK_NAME_DEF(SuperlinkTask);
-
-Task::ExecutionResult SuperlinkTask::execute()
-{
-  ExecutionResult result;
-  ExecutionLogger logger(this, result);
-
-  try {
-
-    vector<string> sv;
-    addMessageLevel(sv);
-
-    sv.push_back("-filterrefl");
-    sv.push_back("-fltp:" + props.externalSoftFilter.string());
-    sv.push_back("-inputlist:" + props.superLinkList.string());
-    sv.push_back("-out:" + (props.asgDir / (props.projectName + ".ljsi")).string());
-        
-    checkedExec(props.wrapperToolsDir / "JANLink", sv, logger);
-  } HANDLE_TASK_EXCEPTIONS
-  return result;
-}
-
-SuperlinkTask::SuperlinkTask(const Properties& properties) : Task(properties)
-{
-  addDependsOn(JANFilterTask::name);
 }
 
 TASK_NAME_DEF(JAN2limTask);
@@ -691,7 +368,6 @@ Task::ExecutionResult JAN2limTask::execute()
 JAN2limTask::JAN2limTask(const Properties& properties) : Task(properties)
 {
   addDependsOn(JANFilterTask::name);
-  addDependsOn(SuperlinkTask::name);
 }
 
 TASK_NAME_DEF(PMD2GraphTask);
@@ -759,7 +435,7 @@ Task::ExecutionResult FindBugsTask::execute()
 #else
       string fbExt;
 #endif
-      checkedExec(props.wrapperToolsDir / "findbugs-3.0.0" / "bin" / ("findbugs" + fbExt), sv, logger);
+      checkedExec(props.wrapperToolsDir / "spotbugs" / "bin" / ("spotbugs" + fbExt), sv, logger);
     } catch (const columbus::Exception&) {
       logstream << CMSG_FINDBUGS_ERROR << endl;
       throw;
@@ -891,6 +567,7 @@ Task::ExecutionResult GraphMergeTask::execute()
     }
     sort(sv.begin(), sv.end());
     sv.push_back("-out:" + (props.projectTimedResultDir /  (props.projectName + ".graph")).string());
+    sv.push_back("-summary");
 
     checkedExec(props.toolsDir / "GraphMerge", sv, logger);
   
@@ -905,7 +582,10 @@ GraphMergeTask::GraphMergeTask(const Properties& properties) : Task(properties)
   addDependsOn(FindBugsTask::name);
   addDependsOn(Lim2metricsTask::name);
   addDependsOn(DcfTask::name);
+  addDependsOn(Sonar2GraphTask::name);
 }
+
+
 
 TASK_NAME_DEF(GraphDumpTask);
 
@@ -913,18 +593,33 @@ Task::ExecutionResult GraphDumpTask::execute()
 {
   ExecutionResult result;
   ExecutionLogger logger(this, result);
-  try {
+  try
+  {
+    {
+      vector<string> sv;
+      addMessageLevel(sv);
     
-    vector<string> sv;
-    addMessageLevel(sv);
+      sv.push_back((props.projectTimedResultDir /  (props.projectName + ".graph")).string());
+      sv.push_back("-csv");
+      sv.push_back("-xml");
+      sv.push_back("-csvseparator:" + string(1, props.csvSeparator));
+      sv.push_back("-csvdecimalmark:" + string(1, props.csvDecimalmark));
+      sv.push_back("-sarif");
+      sv.push_back("-sarifseverity:" + props.sarifSeverityLevel);
 
-    sv.push_back((props.projectTimedResultDir /  (props.projectName + ".graph")).string());
-    sv.push_back("-csv");
-    sv.push_back("-xml");
-    sv.push_back("-csvseparator:" + string(1, props.csvSeparator));
-    sv.push_back("-csvdecimalmark:" + string(1, props.csvDecimalmark));
+      checkedExec(props.toolsDir / "GraphDump", sv, logger);
+    }
 
-    checkedExec(props.toolsDir / "GraphDump", sv, logger);
+    {
+      vector<string> sv;
+      addMessageLevel(sv);
+
+      sv.push_back((props.projectTimedResultDir / (props.projectName + "-summary.graph")).string());
+      sv.push_back("-xml");
+      sv.push_back("-json");
+
+      checkedExec(props.toolsDir / "GraphDump", sv, logger);
+    }
   
   } HANDLE_TASK_EXCEPTIONS
   
@@ -935,7 +630,11 @@ GraphDumpTask::GraphDumpTask(const Properties& properties) : Task(properties)
 {
   addDependsOn(GraphMergeTask::name);
   addDependsOn(MetricHunterTask::name);
+  addDependsOn(UserDefinedMetricsTask::name);
+  addDependsOn(LIM2PatternsTask::name);
 }
+
+
 
 TASK_NAME_DEF(MetricHunterTask);
 
@@ -999,6 +698,7 @@ Task::ExecutionResult ProfileTask::execute()
     boost::shared_ptr<rul::RulHandler> fbrh;
     boost::shared_ptr<rul::RulHandler> pmdrh;
 
+    // copy original rul files into temp
     if (exists(FindBugsRulFileOrig))
     {
       copy_file(FindBugsRulFileOrig, FindBugsRulFile);
@@ -1019,11 +719,39 @@ Task::ExecutionResult ProfileTask::execute()
     //process rules csv
     profileProcessRulesCSV(profile, rulHandlers, runTool, props.rulesCSV.string());
 
+
     path MetricHunterThresholdsFileOrig = props.toolsDir / "MetricHunter.threshold";
     path MetricHunterThresholdsFile = props.tempDir / "MetricHunter.threshold";
 
     //process thresholds
     profileProcessToolThresholds(profile, "MetricHunter", MetricHunterThresholdsFileOrig.string(), MetricHunterThresholdsFile.string());
+
+    //process udm metrics
+    bool UDM_result = profileProcessUDM(profile, (props.tempDir / "UDM.rul").string(), "java");
+    if (!props.runUDMExplicit) {
+      // if runUDM wasn't explicitly set, we decide by the presence of UDM metrics in the profile
+      props.runUDM = UDM_result;
+    }
+    else if (props.runUDMExplicit && props.runUDM && !UDM_result) {
+      // if, however, runUDM was explicitly set to true, but there are no valid UDM metrics, we abort
+      throw Exception(COLUMBUS_LOCATION, "UDM explicitly set to run without corresponding setup in the profile XML");
+    }
+
+    //process lim2patterns parameters
+    if (props.runLIM2Patterns) {
+      map<string, string> parameters;
+      if (profileProcessLIM2Patterns(profile, "LIM2Patterns", parameters)) {
+        if (parameters.find("whitelist") != parameters.end()) {
+          props.whitelist = parameters["whitelist"];
+        }
+        if (parameters.find("blacklist") != parameters.end()) {
+          props.blacklist = parameters["blacklist"];
+        }
+        if (parameters.find("pattern_directories") != parameters.end()) {
+          props.patternFile = parameters["pattern_directories"];
+        }
+      }
+    }
 
   } HANDLE_TASK_EXCEPTIONS
   return result;
@@ -1032,4 +760,79 @@ Task::ExecutionResult ProfileTask::execute()
 ProfileTask::ProfileTask(const Properties& properties) : Task(properties)
 {
   addDependsOn(JAN2limTask::name);
+}
+
+TASK_NAME_DEF(UserDefinedMetricsTask);
+TOOL_RUL_CONFIG_DEF(UserDefinedMetrics, java);
+
+Task::ExecutionResult UserDefinedMetricsTask::execute()
+{
+  ExecutionResult result;
+  if (!props.runUDM) {
+    inactives.push_back("UserDefinedMetrics");
+    return result;
+  }
+
+  ExecutionLogger logger(this, result);
+
+  try {
+    vector<string> sv;
+    sv.push_back((props.projectTimedResultDir / (props.projectName + ".graph")).string());
+    sv.push_back("-rul:" + (props.tempDir / "UDM.rul").string());
+    sv.push_back("-rulconfig:" + TOOL_RUL_CONFIG(UserDefinedMetrics));
+    sv.push_back("-graph:" + (props.projectTimedResultDir / (props.projectName + ".graph")).string());
+
+    checkedExec(props.toolsDir / "UserDefinedMetrics", sv, logger);
+
+  } HANDLE_TASK_EXCEPTIONS
+
+  return result;
+}
+
+UserDefinedMetricsTask::UserDefinedMetricsTask(list<string>& inactives, const Properties& properties) : Task(properties), inactives(inactives)
+{
+  addDependsOn(GraphMergeTask::name);
+  addDependsOn(MetricHunterTask::name);
+}
+
+SONAR2GRAPH_TASK(java)
+
+Sonar2GraphTask::Sonar2GraphTask(const Properties& properties) : Task(properties)
+{
+  addDependsOn(JAN2limTask::name);
+}
+
+TASK_NAME_DEF(LIM2PatternsTask);
+
+Task::ExecutionResult LIM2PatternsTask::execute()
+{
+  ExecutionResult result;
+  ExecutionLogger logger(this, result);
+  try {
+    vector<string> sv;
+
+    sv.push_back("-graph:" + (props.projectTimedResultDir / (props.projectName + ".graph")).string());
+    sv.push_back("-lim:" + (props.asgDir / (props.projectName + ".lim")).string());
+    sv.push_back("-pattern:" + props.patternFile + (!props.patternFile.empty() ? "," : "") + (props.toolsDir / "Patterns" / "AntiPatterns").string());
+    sv.push_back("-metrics:" + (props.toolsDir / "MET.rul").string());
+    sv.push_back("-out:" + (props.projectTimedResultDir / (props.projectName + ".txt")).string());
+
+    if (!props.whitelist.empty()) {
+        sv.push_back("-whitelist:" + props.whitelist);
+    }
+    if (!props.blacklist.empty()) {
+        sv.push_back("-blacklist:" + props.blacklist);
+    }
+
+    checkedExec(props.toolsDir / "LIM2Patterns", sv, logger);
+
+  } HANDLE_TASK_EXCEPTIONS
+
+    return result;
+}
+
+LIM2PatternsTask::LIM2PatternsTask(const Properties& properties) : Task(properties) {
+  addDependsOn(GraphMergeTask::name);
+  addDependsOn(MetricHunterTask::name);
+  addDependsOn(UserDefinedMetricsTask::name);
 }

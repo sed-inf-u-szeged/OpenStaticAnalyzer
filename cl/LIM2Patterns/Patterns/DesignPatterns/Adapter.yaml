@@ -1,0 +1,46 @@
+# https://sourcemaking.com/design_patterns/adapter
+name: Adapter
+kind : ndkClass
+role: adapterClass
+priority: Info
+displayName: Adapter
+description: "The Adapter acts as a wrapper between two objects. It catches calls for one object and transforms them to format and interface recognizable by the second object."
+conditions:
+  - any :
+      edge : edkClass_IsSubclass
+      kind : ndkType
+      role : _type
+      conditions :
+        - or :
+          - _type.class.classKind == clkInterface
+          - _type.class.isAbstract == true
+        - all :
+            from : adapterClass
+            edge : edkScope_HasMember
+            kind : ndkAttribute
+            role : adapteeAttr*
+            filters : accessibility == ackPrivate #this is ignored???
+            conditions :
+              - not: 
+                  - all:
+                      from : adapteeAttr.type.class
+                      edge : edkClass_IsSubclass
+                      role : adapteeIsNotFromSameInterface*
+                      kind : ndkType
+                      conditions :
+                        - type ~= _type
+              - any :
+                  from : adapterClass
+                  edge : edkScope_HasMember
+                  kind : ndkMethod
+                  role : ctor*
+                  filters : methodKind == mekConstructor
+                  conditions :
+                    - any :
+                        edge : edkMethod_HasParameter
+                        kind : ndkParameter
+                        role : param*
+                        conditions :
+                          - param.type == adapteeAttr.type
+          # Attribútum "Adaptee" az ne legyen leszármazottja az Adapter interface-éből
+          # any(legyen paraméter a konstructorban ami Adaptee)

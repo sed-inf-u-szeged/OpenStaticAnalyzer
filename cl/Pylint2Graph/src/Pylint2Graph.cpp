@@ -191,8 +191,7 @@ void Pylint2Graph::saveResultGraph(const string& outGraphFile, bool exportRul) {
   }
 
   // summarize warnings
-  graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENT, graph::Edge::edtDirectional), true);
-  graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENTTREE, graph::Edge::edtReverse), false);
+  graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENT, graph::Edge::edtDirectional), true, std::set<std::string>(), true);
   graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_LOGICALTREE, graph::Edge::edtReverse), false);
 
   // create group metrics
@@ -237,7 +236,7 @@ void Pylint2Graph::addWarningToNode(const string& path, int line, int col, int e
     }
 
     if (node != Graph::invalidNode) {
-      if (graphsupport::addWarningOnce(graph, node, warningID, path, line, col, endline, endcol, warningText)) {
+      if (graphsupport::addWarningOnce(graph, node, warningID, path, line, col, endline, endcol, warningText, &warningCache)) {
         out << path << "(" << line << "): " << warningID << ": " << warningText << endl;
       } else {
         WriteMsg::write(CMSG_PYLINT2GRAPH_WARNING_ALREADY_ADDED, warningID.c_str(), node.getUID().c_str(), path.c_str(), line, col, endline, endcol, warningText.c_str());

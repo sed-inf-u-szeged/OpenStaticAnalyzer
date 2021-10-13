@@ -207,7 +207,7 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     for (int i = 0; i < 86; ++i)
       nodeStatParent[i] = 0;
 
-    for (int i = 0; i < 93; ++i)
+    for (int i = 0; i < 95; ++i)
       edgeStat[i] = 0;
 
   }
@@ -987,6 +987,10 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkCallExpression_HasArguments];
   }
 
+  void VisitorAsgStat::visitCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end) {
+    ++edgeStat[edkCallExpression_Calls];
+  }
+
   void VisitorAsgStat::visitConditionalExpression_HasAlternate(const expression::ConditionalExpression& begin, const expression::Expression& end) {
     ++edgeStat[edkConditionalExpression_HasAlternate];
   }
@@ -1035,7 +1039,11 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkNewExpression_HasArguments];
   }
 
-  void VisitorAsgStat::visitObjectExpression_HasProperties(const expression::ObjectExpression& begin, const expression::Property& end) {
+  void VisitorAsgStat::visitNewExpression_Calls(const expression::NewExpression& begin, const statement::Function& end) {
+    ++edgeStat[edkNewExpression_Calls];
+  }
+
+  void VisitorAsgStat::visitObjectExpression_HasProperties(const expression::ObjectExpression& begin, const base::Positioned& end) {
     ++edgeStat[edkObjectExpression_HasProperties];
   }
 
@@ -1179,7 +1187,7 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkLabeledStatement_HasBody];
   }
 
-  void VisitorAsgStat::visitObjectPattern_HasProperties(const statement::ObjectPattern& begin, const expression::Property& end) {
+  void VisitorAsgStat::visitObjectPattern_HasProperties(const statement::ObjectPattern& begin, const base::Positioned& end) {
     ++edgeStat[edkObjectPattern_HasProperties];
   }
 

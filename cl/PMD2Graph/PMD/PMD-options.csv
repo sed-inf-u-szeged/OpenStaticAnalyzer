@@ -1,309 +1,313 @@
-Parent;Name;ID;Enabled;Priority
-Android Rules;Call Super First;PMD_CSF;0;Minor
-Android Rules;Call Super Last;PMD_CSL;0;Minor
-Android Rules;Do Not Hard Code SDCard;PMD_DNHCSDC;0;Minor
-Basic Rules;Avoid Branching Statement As Last In Loop;PMD_ABSALIL;1;Major
-Basic Rules;Avoid Decimal Literals In Big Decimal Constructor;PMD_ADLIBDC;1;Critical
-Basic Rules;Avoid Multiple Unary Operators;PMD_AMUO;1;Major
-Basic Rules;Avoid Thread Group;PMD_ATG;1;Critical
-Basic Rules;Avoid Using Hard Coded IP;PMD_AUHCIP;1;Major
-Basic Rules;Avoid Using Octal Values;PMD_AUOV;1;Critical
-Basic Rules;Big Integer Instantiation;PMD_BII;1;Minor
-Basic Rules;Boolean Instantiation;PMD_BI;1;Minor
-Basic Rules;Broken Null Check;PMD_BNC;1;Critical
-Basic Rules;Check Result Set;PMD_CRS;1;Critical
-Basic Rules;Check Skip Result;PMD_CSR;1;Critical
-Basic Rules;Class Cast Exception With To Array;PMD_CCEWTA;1;Critical
-Basic Rules;Collapsible If Statements;PMD_CIS;1;Minor
-Basic Rules;Dont Call Thread Run;PMD_DCTR;1;Critical
-Basic Rules;Dont Use Float Type For Loop Indices;PMD_DUFTFLI;1;Critical
-Basic Rules;Double Checked Locking;PMD_DCL;1;Critical
-Basic Rules;Extends Object;PMD_EO;1;Minor
-Basic Rules;For Loop Should Be While Loop;PMD_FLSBWL;1;Minor
-Basic Rules;Jumbled Incrementer;PMD_JI;1;Critical
-Basic Rules;Misplaced Null Check;PMD_MNC;1;Critical
-Basic Rules;Override Both Equals And Hashcode;PMD_OBEAH;1;Critical
-Basic Rules;Return From Finally Block;PMD_RFFB;1;Critical
-Basic Rules;Unconditional If Statement;PMD_UIS;1;Major
-Brace Rules;For Loops Must Use Braces;PMD_FLMUB;1;Minor
-Brace Rules;If Else Stmts Must Use Braces;PMD_IESMUB;1;Minor
-Brace Rules;If Stmts Must Use Braces;PMD_ISMUB;1;Minor
-Brace Rules;While Loops Must Use Braces;PMD_WLMUB;1;Minor
-Clone Implementation Rules;Clone Method Must Implement Cloneable;PMD_CMMIC;0;Major
-Clone Implementation Rules;Clone Throws Clone Not Supported Exception;PMD_CTCNSE;1;Major
-Clone Implementation Rules;Proper Clone Implementation;PMD_PCI;1;Critical
-Code Size Rules;Cyclomatic Complexity;PMD_CC;0;Minor
-Code Size Rules;Excessive Class Length;PMD_ECL;0;Minor
-Code Size Rules;Excessive Method Length;PMD_EML;0;Minor
-Code Size Rules;Excessive Parameter List;PMD_EPL;0;Minor
-Code Size Rules;Excessive Public Count;PMD_EPC;0;Minor
-Code Size Rules;Modified Cyclomatic Complexity;PMD_MCC;0;Minor
-Code Size Rules;NPath Complexity;PMD_NPC;0;Minor
-Code Size Rules;Ncss Constructor Count;PMD_NCC;0;Minor
-Code Size Rules;Ncss Method Count;PMD_NMC;0;Minor
-Code Size Rules;Ncss Type Count;PMD_NTC;0;Minor
-Code Size Rules;Std Cyclomatic Complexity;PMD_SCC;0;Minor
-Code Size Rules;Too Many Fields;PMD_TMF;0;Minor
-Code Size Rules;Too Many Methods;PMD_TMM;0;Minor
-Comment Rules;Comment Content;PMD_CoC;0;Minor
-Comment Rules;Comment Required;PMD_CR;0;Minor
-Comment Rules;Comment Size;PMD_CS;0;Minor
-Controversial Rules;Assignment In Operand;PMD_AIO;1;Minor
-Controversial Rules;At Least One Constructor;PMD_ALOC;0;Minor
-Controversial Rules;Avoid Accessibility Alteration;PMD_AAA;1;Major
-Controversial Rules;Avoid Final Local Variable;PMD_AFLV;0;Minor
-Controversial Rules;Avoid Literals In If Condition;PMD_ALIIC;0;Minor
-Controversial Rules;Avoid Prefixing Method Parameters;PMD_APMP;1;Minor
-Controversial Rules;Avoid Using Native Code;PMD_AUNC;1;Major
-Controversial Rules;Avoid Using Short Type;PMD_AUST;0;Minor
-Controversial Rules;Avoid Using Volatile;PMD_AUV;0;Minor
-Controversial Rules;Boolean Inversion;PMD_BoI;0;Minor
-Controversial Rules;Call Super In Constructor;PMD_CSIC;0;Minor
-Controversial Rules;Dataflow Anomaly Analysis;PMD_DAA;0;Minor
-Controversial Rules;Default Package;PMD_DP;1;Minor
-Controversial Rules;Do Not Call Garbage Collection Explicitly;PMD_DNCGCE;1;Major
-Controversial Rules;Dont Import Sun;PMD_DIS;1;Major
-Controversial Rules;Null Assignment;PMD_NA;0;Minor
-Controversial Rules;One Declaration Per Line;PMD_ODPL;1;Minor
-Controversial Rules;Only One Return;PMD_OOR;0;Minor
-Controversial Rules;Suspicious Octal Escape;PMD_SOE;1;Major
-Controversial Rules;Unnecessary Constructor;PMD_UC;1;Minor
-Controversial Rules;Unnecessary Parentheses;PMD_UP;0;Minor
-Controversial Rules;Use Concurrent Hash Map;PMD_UCHM;0;Minor
-Controversial Rules;Use Object For Clearer API;PMD_UOFCAPI;0;Minor
-Coupling Rules;Coupling Between Objects;PMD_CBO;0;Minor
-Coupling Rules;Excessive Imports;PMD_EI;0;Minor
-Coupling Rules;Law Of Demeter;PMD_LOD;0;Minor
-Coupling Rules;Loose Coupling;PMD_LC;0;Major
-Coupling Rules;Loose Package Coupling;PMD_LPC;0;Minor
-Design Rules;Abstract Class Without Abstract Method;PMD_ACWAM;1;Minor
-Design Rules;Abstract Class Without Any Method;PMD_AbCWAM;1;Minor
-Design Rules;Accessor Class Generation;PMD_ACG;0;Minor
-Design Rules;Assignment To Non Final Static;PMD_ATNFS;1;Critical
-Design Rules;Avoid Constants Interface;PMD_ACI;1;Minor
-Design Rules;Avoid Deeply Nested If Stmts;PMD_ADNIS;0;Minor
-Design Rules;Avoid Instanceof Checks In Catch Clause;PMD_AICICC;1;Major
-Design Rules;Avoid Protected Field In Final Class;PMD_APFIFC;1;Minor
-Design Rules;Avoid Protected Method In Final Class Not Extending;PMD_APMIFCNE;1;Minor
-Design Rules;Avoid Reassigning Parameters;PMD_ARP;1;Minor
-Design Rules;Avoid Synchronized At Method Level;PMD_ASAML;0;Minor
-Design Rules;Bad Comparison;PMD_BC;1;Critical
-Design Rules;Class With Only Private Constructors Should Be Final;PMD_CWOPCSBF;1;Minor
-Design Rules;Close Resource;PMD_ClR;1;Critical
-Design Rules;Compare Objects With Equals;PMD_COWE;0;Critical
-Design Rules;Confusing Ternary;PMD_CT;0;Minor
-Design Rules;Constructor Calls Overridable Method;PMD_CCOM;1;Critical
-Design Rules;Default Label Not Last In Switch Stmt;PMD_DLNLISS;1;Minor
-Design Rules;Empty Method In Abstract Class Should Be Abstract;PMD_EMIACSBA;1;Major
-Design Rules;Equals Null;PMD_EN;1;Critical
-Design Rules;Field Declarations Should Be At Start Of Class;PMD_FDSBASOC;1;Minor
-Design Rules;Final Field Could Be Static;PMD_FFCBS;1;Minor
-Design Rules;God Class;PMD_GC;0;Minor
-Design Rules;Idempotent Operations;PMD_IO;1;Major
-Design Rules;Immutable Field;PMD_IF;1;Minor
-Design Rules;Instantiation To Get Class;PMD_ITGC;1;Major
-Design Rules;Logic Inversion;PMD_LI;1;Minor
-Design Rules;Missing Break In Switch;PMD_MBIS;1;Critical
-Design Rules;Missing Static Method In Non Instantiatable Class;PMD_MSMINIC;1;Minor
-Design Rules;Non Case Label In Switch Statement;PMD_NCLISS;1;Critical
-Design Rules;Non Static Initializer;PMD_NSI;1;Critical
-Design Rules;Non Thread Safe Singleton;PMD_NTSS;1;Critical
-Design Rules;Optimizable To Array Call;PMD_OTAC;1;Major
-Design Rules;Position Literals First In Case Insensitive Comparisons;PMD_PLFICIC;1;Critical
-Design Rules;Position Literals First In Comparisons;PMD_PLFIC;1;Critical
-Design Rules;Preserve Stack Trace;PMD_PST;1;Major
-Design Rules;Return Empty Array Rather Than Null;PMD_REARTN;1;Major
-Design Rules;Simple Date Format Needs Locale;PMD_SDFNL;1;Minor
-Design Rules;Simplify Boolean Expressions;PMD_SBE;1;Minor
-Design Rules;Simplify Boolean Returns;PMD_SBR;1;Minor
-Design Rules;Simplify Conditional;PMD_SC;1;Minor
-Design Rules;Singular Field;PMD_SF;1;Major
-Design Rules;Switch Density;PMD_SD;0;Minor
-Design Rules;Switch Stmts Should Have Default;PMD_SSSHD;1;Major
-Design Rules;Too Few Branches For ASwitch Statement;PMD_TFBFASS;1;Minor
-Design Rules;Uncommented Empty Constructor;PMD_UEC;1;Minor
-Design Rules;Uncommented Empty Method;PMD_UEM;1;Minor
-Design Rules;Unnecessary Local Before Return;PMD_ULBR;1;Minor
-Design Rules;Unsynchronized Static Date Formatter;PMD_USDF;1;Critical
-Design Rules;Use Collection Is Empty;PMD_UCIE;1;Major
-Design Rules;Use Locale With Case Conversions;PMD_ULWCC;1;Critical
-Design Rules;Use Notify All Instead Of Notify;PMD_UNAION;1;Critical
-Design Rules;Use Utility Class;PMD_UUC;0;Minor
-Design Rules;Use Varargs;PMD_UV;1;Minor
-Empty Code Rules;Empty Catch Block;PMD_ECB;1;Critical
-Empty Code Rules;Empty Finally Block;PMD_EFB;1;Minor
-Empty Code Rules;Empty If Stmt;PMD_EIS;1;Major
-Empty Code Rules;Empty Initializer;PMD_EmI;0;Minor
-Empty Code Rules;Empty Statement Block;PMD_EmSB;1;Minor
-Empty Code Rules;Empty Statement Not In Loop;PMD_ESNIL;1;Minor
-Empty Code Rules;Empty Static Initializer;PMD_ESI;1;Minor
-Empty Code Rules;Empty Switch Statements;PMD_ESS;1;Major
-Empty Code Rules;Empty Synchronized Block;PMD_ESB;1;Major
-Empty Code Rules;Empty Try Block;PMD_ETB;1;Major
-Empty Code Rules;Empty While Stmt;PMD_EWS;1;Critical
-Finalizer Rules;Avoid Calling Finalize;PMD_ACF;1;Major
-Finalizer Rules;Empty Finalizer;PMD_EF;1;Minor
-Finalizer Rules;Finalize Does Not Call Super Finalize;PMD_FDNCSF;1;Critical
-Finalizer Rules;Finalize Only Calls Super Finalize;PMD_FOCSF;1;Minor
-Finalizer Rules;Finalize Overloaded;PMD_FO;1;Critical
-Finalizer Rules;Finalize Should Be Protected;PMD_FSBP;1;Critical
-Import Statement Rules;Dont Import Java Lang;PMD_DIJL;1;Minor
-Import Statement Rules;Duplicate Imports;PMD_DI;1;Minor
-Import Statement Rules;Import From Same Package;PMD_IFSP;1;Minor
-Import Statement Rules;Too Many Static Imports;PMD_TMSI;1;Major
-Import Statement Rules;Unnecessary Fully Qualified Name;PMD_UFQN;1;Minor
-Import Statement Rules;Unused Imports;PMD_UI;0;Minor
-J2EE Rules;Do Not Call System Exit;PMD_DNCSE;1;Critical
-J2EE Rules;Do Not Use Threads;PMD_DNUT;0;Minor
-J2EE Rules;Local Home Naming Convention;PMD_LHNC;1;Major
-J2EE Rules;Local Interface Session Naming Convention;PMD_LISNC;1;Major
-J2EE Rules;MDBAnd Session Bean Naming Convention;PMD_MDBASBNC;1;Major
-J2EE Rules;Remote Interface Naming Convention;PMD_RINC;1;Major
-J2EE Rules;Remote Session Interface Naming Convention;PMD_RSINC;1;Major
-J2EE Rules;Static EJBField Should Be Final;PMD_SEJBFSBF;1;Critical
-J2EE Rules;Use Proper Class Loader;PMD_UPCL;0;Minor
-JUnit Rules;JUnit Assertions Should Include Message;PMD_JUASIM;1;Minor
-JUnit Rules;JUnit Spelling;PMD_JUS;1;Critical
-JUnit Rules;JUnit Static Suite;PMD_JUSS;1;Critical
-JUnit Rules;JUnit Test Contains Too Many Asserts;PMD_JUTCTMA;1;Minor
-JUnit Rules;JUnit Tests Should Include Assert;PMD_JUTSIA;1;Major
-JUnit Rules;Simplify Boolean Assertion;PMD_SBA;1;Minor
-JUnit Rules;Test Class Without Test Cases;PMD_TCWTC;1;Minor
-JUnit Rules;Unnecessary Boolean Assertion;PMD_UBA;1;Minor
-JUnit Rules;Use Assert Equals Instead Of Assert True;PMD_UAEIOAT;1;Major
-JUnit Rules;Use Assert Null Instead Of Assert True;PMD_UANIOAT;1;Minor
-JUnit Rules;Use Assert Same Instead Of Assert True;PMD_UASIOAT;1;Minor
-JUnit Rules;Use Assert True Instead Of Assert Equals;PMD_UATIOAE;1;Minor
-Jakarta Commons Logging Rules;Guard Debug Logging;PMD_GDL;1;Major
-Jakarta Commons Logging Rules;Guard Log Statement;PMD_GLS;1;Minor
-Jakarta Commons Logging Rules;Proper Logger;PMD_PL;1;Minor
-Jakarta Commons Logging Rules;Use Correct Exception Logging;PMD_UCEL;1;Major
-Java Logging Rules;Avoid Print Stack Trace;PMD_APST;1;Major
-Java Logging Rules;Guard Log Statement Java Util;PMD_GLSJU;1;Minor
-Java Logging Rules;Logger Is Not Static Final;PMD_LINSF;1;Minor
-Java Logging Rules;More Than One Logger;PMD_MTOL;1;Major
-Java Logging Rules;System Println;PMD_SP;1;Major
-JavaBean Rules;Bean Members Should Serialize;PMD_BMSS;0;Minor
-JavaBean Rules;Missing Serial Version UID;PMD_MSVUID;1;Major
-Migration Rules;Avoid Assert As Identifier;PMD_AAAI;0;Minor
-Migration Rules;Avoid Enum As Identifier;PMD_AEAI;0;Minor
-Migration Rules;Byte Instantiation;PMD_ByI;0;Minor
-Migration Rules;Integer Instantiation;PMD_II;0;Minor
-Migration Rules;JUnit Use Expected;PMD_JUUE;0;Minor
-Migration Rules;JUnit4 Suites Should Use Suite Annotation;PMD_JU4SSUSA;0;Minor
-Migration Rules;JUnit4 Test Should Use After Annotation;PMD_JU4TSUAA;0;Minor
-Migration Rules;JUnit4 Test Should Use Before Annotation;PMD_JU4TSUBA;0;Minor
-Migration Rules;JUnit4 Test Should Use Test Annotation;PMD_JU4TSUTA;0;Minor
-Migration Rules;Long Instantiation;PMD_LoI;0;Minor
-Migration Rules;Replace Enumeration With Iterator;PMD_REWI;0;Minor
-Migration Rules;Replace Hashtable With Map;PMD_RHWM;0;Minor
-Migration Rules;Replace Vector With List;PMD_RVWL;0;Minor
-Migration Rules;Short Instantiation;PMD_SI;0;Minor
-Naming Rules;Abstract Naming;PMD_AN;0;Minor
-Naming Rules;Avoid Dollar Signs;PMD_ADS;1;Minor
-Naming Rules;Avoid Field Name Matching Method Name;PMD_AFNMMN;1;Minor
-Naming Rules;Avoid Field Name Matching Type Name;PMD_AFNMTN;1;Minor
-Naming Rules;Boolean Get Method Name;PMD_BGMN;1;Minor
-Naming Rules;Class Naming Conventions;PMD_CNC;1;Minor
-Naming Rules;Generics Naming;PMD_GN;1;Minor
-Naming Rules;Long Variable;PMD_LV;0;Minor
-Naming Rules;Method Naming Conventions;PMD_MeNC;1;Minor
-Naming Rules;Method With Same Name As Enclosing Class;PMD_MWSNAEC;1;Minor
-Naming Rules;Misleading Variable Name;PMD_MVN;0;Minor
-Naming Rules;No Package;PMD_NP;1;Minor
-Naming Rules;Package Case;PMD_PC;1;Minor
-Naming Rules;Short Class Name;PMD_SCN;1;Minor
-Naming Rules;Short Method Name;PMD_SMN;1;Minor
-Naming Rules;Short Variable;PMD_SV;0;Minor
-Naming Rules;Suspicious Constant Field Name;PMD_SCFN;1;Minor
-Naming Rules;Suspicious Equals Method Name;PMD_SEMN;1;Critical
-Naming Rules;Suspicious Hashcode Method Name;PMD_SHMN;1;Critical
-Naming Rules;Variable Naming Conventions;PMD_VNC;1;Minor
-Optimization Rules;Add Empty String;PMD_AES;1;Minor
-Optimization Rules;Avoid Array Loops;PMD_AAL;1;Major
-Optimization Rules;Avoid Instantiating Objects In Loops;PMD_AIOIL;0;Minor
-Optimization Rules;Local Variable Could Be Final;PMD_LVCBF;0;Minor
-Optimization Rules;Method Argument Could Be Final;PMD_MACBF;0;Minor
-Optimization Rules;Premature Declaration;PMD_PD;0;Minor
-Optimization Rules;Redundant Field Initializer;PMD_RFI;1;Minor
-Optimization Rules;Simplify Starts With;PMD_SSW;0;Minor
-Optimization Rules;Unnecessary Wrapper Object Creation;PMD_UWOC;1;Major
-Optimization Rules;Use Array List Instead Of Vector;PMD_UALIOV;1;Minor
-Optimization Rules;Use Arrays As List;PMD_UAAL;1;Major
-Optimization Rules;Use String Buffer For String Appends;PMD_USBFSA;1;Major
-Security Code Guideline Rules;Array Is Stored Directly;PMD_AISD;1;Major
-Security Code Guideline Rules;Method Returns Internal Array;PMD_MRIA;1;Major
-Strict Exception Rules;Avoid Catching Generic Exception;PMD_ACGE;1;Major
-Strict Exception Rules;Avoid Catching NPE;PMD_ACNPE;1;Critical
-Strict Exception Rules;Avoid Catching Throwable;PMD_ACT;1;Major
-Strict Exception Rules;Avoid Losing Exception Information;PMD_ALEI;1;Major
-Strict Exception Rules;Avoid Rethrowing Exception;PMD_ARE;1;Minor
-Strict Exception Rules;Avoid Throwing New Instance Of Same Exception;PMD_ATNIOSE;1;Minor
-Strict Exception Rules;Avoid Throwing Null Pointer Exception;PMD_ATNPE;1;Critical
-Strict Exception Rules;Avoid Throwing Raw Exception Types;PMD_ATRET;1;Major
-Strict Exception Rules;Do Not Extend Java Lang Error;PMD_DNEJLE;1;Critical
-Strict Exception Rules;Do Not Throw Exception In Finally;PMD_DNTEIF;1;Critical
-Strict Exception Rules;Exception As Flow Control;PMD_EAFC;1;Major
-Strict Exception Rules;Signature Declare Throws Exception;PMD_SDTE;0;Major
-String and StringBuffer Rules;Append Character With Char;PMD_ACWC;0;Minor
-String and StringBuffer Rules;Avoid Duplicate Literals;PMD_ADL;1;Major
-String and StringBuffer Rules;Avoid String Buffer Field;PMD_ASBF;1;Minor
-String and StringBuffer Rules;Consecutive Appends Should Reuse;PMD_CASR;1;Minor
-String and StringBuffer Rules;Consecutive Literal Appends;PMD_CLA;1;Minor
-String and StringBuffer Rules;Inefficient Empty String Check;PMD_IESC;0;Minor
-String and StringBuffer Rules;Inefficient String Buffering;PMD_ISB;1;Minor
-String and StringBuffer Rules;Insufficient String Buffer Declaration;PMD_ISBD;0;Minor
-String and StringBuffer Rules;String Buffer Instantiation With Char;PMD_SBIWC;1;Critical
-String and StringBuffer Rules;String Instantiation;PMD_StI;1;Minor
-String and StringBuffer Rules;String To String;PMD_STS;1;Minor
-String and StringBuffer Rules;Unnecessary Case Change;PMD_UCC;1;Minor
-String and StringBuffer Rules;Use Equals To Compare Strings;PMD_UETCS;1;Critical
-String and StringBuffer Rules;Use Index Of Char;PMD_UIOC;0;Minor
-String and StringBuffer Rules;Use String Buffer Length;PMD_USBL;0;Minor
-String and StringBuffer Rules;Useless String Value Of;PMD_USVO;0;Minor
-Type Resolution Rules;Clone Method Must Implement Cloneable;PMD_ClMMIC;1;Major
-Type Resolution Rules;Loose Coupling;PMD_LoC;1;Major
-Type Resolution Rules;Signature Declare Throws Exception;PMD_SiDTE;1;Major
-Type Resolution Rules;Unused Imports;PMD_UnI;1;Minor
-Unnecessary Rules;Unnecessary Conversion Temporary;PMD_UCT;1;Minor
-Unnecessary Rules;Unnecessary Final Modifier;PMD_UFM;0;Minor
-Unnecessary Rules;Unnecessary Return;PMD_UR;0;Minor
-Unnecessary Rules;Unused Null Check In Equals;PMD_UNCIE;1;Critical
-Unnecessary Rules;Useless Operation On Immutable;PMD_UOOI;1;Critical
-Unnecessary Rules;Useless Overriding Method;PMD_UOM;1;Minor
-Unnecessary Rules;Useless Parentheses;PMD_UsP;0;Minor
-Unused Code Rules;Unused Formal Parameter;PMD_UFP;0;Minor
-Unused Code Rules;Unused Local Variable;PMD_ULV;1;Major
-Unused Code Rules;Unused Modifier;PMD_UM;0;Minor
-Unused Code Rules;Unused Private Field;PMD_UPF;1;Major
-Unused Code Rules;Unused Private Method;PMD_UPM;1;Major
-;Android Rules;Android Rules;1;Minor
-;Basic Rules;Basic Rules;1;Minor
-;Brace Rules;Brace Rules;1;Minor
-;Clone Implementation Rules;Clone Implementation Rules;1;Minor
-;Code Size Rules;Code Size Rules;1;Minor
-;Comment Rules;Comment Rules;1;Minor
-;Controversial Rules;Controversial Rules;1;Minor
-;Coupling Rules;Coupling Rules;1;Minor
-;Design Rules;Design Rules;1;Minor
-;Empty Code Rules;Empty Code Rules;1;Minor
-;Finalizer Rules;Finalizer Rules;1;Minor
-;Import Statement Rules;Import Statement Rules;1;Minor
-;J2EE Rules;J2EE Rules;1;Minor
-;JUnit Rules;JUnit Rules;1;Minor
-;Jakarta Commons Logging Rules;Jakarta Commons Logging Rules;1;Minor
-;Java Logging Rules;Java Logging Rules;1;Minor
-;JavaBean Rules;JavaBean Rules;1;Minor
-;MigratingToJUnit4 Rules;MigratingToJUnit4 Rules;1;Minor
-;Migration Rules;Migration Rules;1;Minor
-;Migration13 Rules;Migration13 Rules;1;Minor
-;Migration14 Rules;Migration14 Rules;1;Minor
-;Migration15 Rules;Migration15 Rules;1;Minor
-;Naming Rules;Naming Rules;1;Minor
-;Optimization Rules;Optimization Rules;1;Minor
-;Security Code Guideline Rules;Security Code Guideline Rules;1;Minor
-;Strict Exception Rules;Strict Exception Rules;1;Minor
-;String and StringBuffer Rules;String and StringBuffer Rules;1;Minor
-;Type Resolution Rules;Type Resolution Rules;1;Minor
-;Unnecessary Rules;Unnecessary Rules;1;Minor
-;Unused Code Rules;Unused Code Rules;1;Minor
+ID;Name;Enabled;Priority
+AAA;AvoidAccessibilityAlteration;1;Major
+AAAI;AvoidAssertAsIdentifier;0;Minor
+AAL;AvoidArrayLoops;1;Major
+ABSALIL;AvoidBranchingStatementAsLastInLoop;1;Major
+ACDC;AvoidCalendarDateCreation;1;Minor
+ACF;AvoidCallingFinalize;1;Major
+ACG;AccessorClassGeneration;0;Minor
+ACGE;AvoidCatchingGenericException;1;Major
+ACNPE;AvoidCatchingNPE;1;Critical
+ACT;AvoidCatchingThrowable;1;Major
+ACWAM;AbstractClassWithoutAbstractMethod;1;Minor
+ACWC;AppendCharacterWithChar;0;Minor
+ADL;AvoidDuplicateLiterals;1;Major
+ADLIBDC;AvoidDecimalLiteralsInBigDecimalConstructor;1;Critical
+ADNIS;AvoidDeeplyNestedIfStmts;0;Minor
+ADS;AvoidDollarSigns;1;Minor
+AEAI;AvoidEnumAsIdentifier;0;Minor
+AES;AddEmptyString;1;Minor
+AFLV;AvoidFinalLocalVariable;0;Minor
+AFNMMN;AvoidFieldNameMatchingMethodName;1;Minor
+AFNMTN;AvoidFieldNameMatchingTypeName;1;Minor
+AFS;AvoidFileStream;1;Critical
+AICICC;AvoidInstanceofChecksInCatchClause;1;Major
+AIO;AssignmentInOperand;1;Minor
+AIOIL;AvoidInstantiatingObjectsInLoops;0;Minor
+AISD;ArrayIsStoredDirectly;1;Major
+ALEI;AvoidLosingExceptionInformation;1;Major
+ALIIC;AvoidLiteralsInIfCondition;0;Minor
+ALOC;AtLeastOneConstructor;0;Minor
+AMDF;AvoidMessageDigestField;1;Major
+AMG;AccessorMethodGeneration;1;Minor
+AMUO;AvoidMultipleUnaryOperators;1;Major
+AN;AbstractNaming;0;Minor
+APFIFC;AvoidProtectedFieldInFinalClass;1;Minor
+APMIFCNE;AvoidProtectedMethodInFinalClassNotExtending;1;Minor
+APMP;AvoidPrefixingMethodParameters;1;Minor
+APST;AvoidPrintStackTrace;1;Major
+ARCV;AvoidReassigningCatchVariables;1;Minor
+ARE;AvoidRethrowingException;1;Minor
+ARLV;AvoidReassigningLoopVariables;1;Minor
+ARP;AvoidReassigningParameters;1;Minor
+ASAML;AvoidSynchronizedAtMethodLevel;1;Minor
+ASBF;AvoidStringBufferField;1;Minor
+ATG;AvoidThreadGroup;1;Critical
+ATNFS;AssignmentToNonFinalStatic;1;Critical
+ATNIOSE;AvoidThrowingNewInstanceOfSameException;1;Minor
+ATNPE;AvoidThrowingNullPointerException;1;Critical
+ATRET;AvoidThrowingRawExceptionTypes;1;Major
+AUEIS;AvoidUncheckedExceptionsInSignatures;1;Minor
+AUHCIP;AvoidUsingHardCodedIP;1;Major
+AUNC;AvoidUsingNativeCode;1;Major
+AUOV;AvoidUsingOctalValues;1;Critical
+AUST;AvoidUsingShortType;0;Minor
+AUV;AvoidUsingVolatile;0;Minor
+AbCWAM;AbstractClassWithoutAnyMethod;1;Minor
+BC;BadComparison;1;Critical
+BGMN;BooleanGetMethodName;1;Minor
+BI;BooleanInstantiation;1;Minor
+BII;BigIntegerInstantiation;1;Minor
+BMSS;BeanMembersShouldSerialize;0;Minor
+BNC;BrokenNullCheck;1;Critical
+ByI;ByteInstantiation;0;Minor
+CASR;ConsecutiveAppendsShouldReuse;1;Minor
+CBO;CouplingBetweenObjects;0;Minor
+CC;CyclomaticComplexity;0;Minor
+CCEWTA;ClassCastExceptionWithToArray;1;Critical
+CCOM;ConstructorCallsOverridableMethod;1;Critical
+CDAM;CommentDefaultAccessModifier;0;Minor
+CII;ConstantsInInterface;1;Minor
+CIS;CollapsibleIfStatements;1;Minor
+CLA;ConsecutiveLiteralAppends;1;Minor
+CMMBP;CloneMethodMustBePublic;1;Minor
+CMRTMMCN;CloneMethodReturnTypeMustMatchClassName;1;Minor
+CNC;ClassNamingConventions;0;Minor
+COWE;CompareObjectsWithEquals;0;Critical
+CR;CommentRequired;0;Minor
+CRS;CheckResultSet;1;Critical
+CS;CommentSize;0;Minor
+CSB;ControlStatementBraces;1;Minor
+CSF;CallSuperFirst;0;Minor
+CSIC;CallSuperInConstructor;0;Minor
+CSL;CallSuperLast;0;Minor
+CSR;CheckSkipResult;1;Critical
+CT;ConfusingTernary;0;Minor
+CTCNSE;CloneThrowsCloneNotSupportedException;1;Major
+CWOPCSBF;ClassWithOnlyPrivateConstructorsShouldBeFinal;1;Minor
+ClMMIC;CloneMethodMustImplementCloneable;1;Major
+ClR;CloseResource;1;Critical
+CoC;CommentContent;0;Minor
+DAA;DataflowAnomalyAnalysis;0;Minor
+DBI;DoubleBraceInitialization;1;Minor
+DC;DataClass;1;Minor
+DCL;DoubleCheckedLocking;1;Critical
+DCTR;DontCallThreadRun;1;Critical
+DI;DuplicateImports;1;Minor
+DIJL;DontImportJavaLang;1;Minor
+DIS;DontImportSun;1;Major
+DLNLISS;DefaultLabelNotLastInSwitchStmt;1;Minor
+DNCGCE;DoNotCallGarbageCollectionExplicitly;1;Major
+DNCSE;DoNotCallSystemExit;0;Critical
+DNEJLE;DoNotExtendJavaLangError;1;Critical
+DNEJLT;DoNotExtendJavaLangThrowable;1;Critical
+DNHCSDC;DoNotHardCodeSDCard;0;Minor
+DNTEIF;DoNotThrowExceptionInFinally;1;Critical
+DNTVM;DoNotTerminateVM;1;Critical
+DNUT;DoNotUseThreads;0;Minor
+DP;DefaultPackage;1;Minor
+DTC;DetachedTestCase;1;Minor
+DUFTFLI;DontUseFloatTypeForLoopIndices;1;Critical
+EAFC;ExceptionAsFlowControl;1;Major
+ECB;EmptyCatchBlock;1;Critical
+ECL;ExcessiveClassLength;0;Minor
+EF;EmptyFinalizer;1;Minor
+EFB;EmptyFinallyBlock;1;Minor
+EI;ExcessiveImports;0;Minor
+EIS;EmptyIfStmt;1;Major
+EMIACSBA;EmptyMethodInAbstractClassShouldBeAbstract;1;Major
+EML;ExcessiveMethodLength;0;Minor
+EN;EqualsNull;1;Critical
+EO;ExtendsObject;1;Minor
+EPC;ExcessivePublicCount;0;Minor
+EPL;ExcessiveParameterList;0;Minor
+ESB;EmptySynchronizedBlock;1;Major
+ESNIL;EmptyStatementNotInLoop;1;Minor
+ESS;EmptySwitchStatements;1;Major
+ETB;EmptyTryBlock;1;Major
+EWS;EmptyWhileStmt;1;Critical
+EmI;EmptyInitializer;0;Minor
+EmSB;EmptyStatementBlock;1;Minor
+FDNCSF;FinalizeDoesNotCallSuperFinalize;1;Critical
+FDSBASOC;FieldDeclarationsShouldBeAtStartOfClass;1;Minor
+FFCBS;FinalFieldCouldBeStatic;1;Minor
+FLCBF;ForLoopCanBeForeach;1;Minor
+FLMUB;ForLoopsMustUseBraces;0;Minor
+FLSBWL;ForLoopShouldBeWhileLoop;1;Minor
+FLVC;ForLoopVariableCount;1;Minor
+FNC;FieldNamingConventions;0;Minor
+FO;FinalizeOverloaded;1;Critical
+FOCSF;FinalizeOnlyCallsSuperFinalize;1;Minor
+FPNC;FormalParameterNamingConventions;0;Minor
+FSBP;FinalizeShouldBeProtected;1;Critical
+GC;GodClass;0;Minor
+GLS;GuardLogStatement;1;Minor
+GN;GenericsNaming;1;Minor
+HCCK;HardCodedCryptoKey;1;Critical
+ICB;IdenticalCatchBranches;1;Minor
+ICI;InsecureCryptoIv;1;Critical
+IESC;InefficientEmptyStringCheck;0;Minor
+IESMUB;IfElseStmtsMustUseBraces;0;Minor
+IF;ImmutableField;1;Minor
+IFSP;ImportFromSamePackage;1;Minor
+II;IntegerInstantiation;0;Minor
+ILMF;InvalidLogMessageFormat;1;Minor
+IO;IdempotentOperations;1;Major
+IS4MF;InvalidSlf4jMessageFormat;0;Minor
+ISB;InefficientStringBuffering;1;Minor
+ISBD;InsufficientStringBufferDeclaration;0;Minor
+ISMUB;IfStmtsMustUseBraces;0;Minor
+ITGC;InstantiationToGetClass;1;Major
+JI;JumbledIncrementer;1;Critical
+JU4SSUSA;JUnit4SuitesShouldUseSuiteAnnotation;0;Minor
+JU4TSUAA;JUnit4TestShouldUseAfterAnnotation;0;Minor
+JU4TSUBA;JUnit4TestShouldUseBeforeAnnotation;0;Minor
+JU4TSUTA;JUnit4TestShouldUseTestAnnotation;0;Minor
+JUASIM;JUnitAssertionsShouldIncludeMessage;1;Minor
+JUS;JUnitSpelling;1;Critical
+JUSS;JUnitStaticSuite;1;Critical
+JUTCTMA;JUnitTestContainsTooManyAsserts;1;Minor
+JUTSIA;JUnitTestsShouldIncludeAssert;1;Major
+JUUE;JUnitUseExpected;0;Minor
+LFIC;LiteralsFirstInComparisons;1;Critical
+LHNC;LocalHomeNamingConvention;1;Major
+LI;LogicInversion;1;Minor
+LINSF;LoggerIsNotStaticFinal;1;Minor
+LISNC;LocalInterfaceSessionNamingConvention;1;Major
+LN;LinguisticNaming;0;Minor
+LOD;LawOfDemeter;0;Minor
+LPC;LoosePackageCoupling;0;Minor
+LV;LongVariable;0;Minor
+LVCBF;LocalVariableCouldBeFinal;0;Minor
+LVNC;LocalVariableNamingConventions;0;Minor
+LoC;LooseCoupling;1;Major
+LoI;LongInstantiation;0;Minor
+MACBF;MethodArgumentCouldBeFinal;0;Minor
+MBIS;MissingBreakInSwitch;1;Critical
+MCC;ModifiedCyclomaticComplexity;0;Minor
+MDBASBNC;MDBAndSessionBeanNamingConvention;1;Major
+MNC;MisplacedNullCheck;1;Critical
+MO;MissingOverride;1;Minor
+MRIA;MethodReturnsInternalArray;1;Major
+MSMINIC;MissingStaticMethodInNonInstantiatableClass;1;Minor
+MSVUID;MissingSerialVersionUID;1;Major
+MTOL;MoreThanOneLogger;1;Major
+MVN;MIsLeadingVariableName;0;Minor
+MWSNAEC;MethodWithSameNameAsEnclosingClass;1;Minor
+MeNC;MethodNamingConventions;0;Minor
+NA;NullAssignment;0;Minor
+NCC;NcssConstructorCount;0;Minor
+NCLISS;NonCaseLabelInSwitchStatement;1;Critical
+NCo;NcssCount;0;Minor
+NMC;NcssMethodCount;0;Minor
+NP;NoPackage;1;Minor
+NPC;NPathComplexity;0;Minor
+NSI;NonStaticInitializer;1;Critical
+NTC;NcssTypeCount;0;Minor
+NTSS;NonThreadSafeSingleton;1;Critical
+OBEAH;OverrideBothEqualsAndHashcode;1;Critical
+ODPL;OneDeclarationPerLine;1;Minor
+OOR;OnlyOneReturn;0;Minor
+OTAC;OptimizableToArrayCall;1;Major
+PC;PackageCase;1;Minor
+PCI;ProperCloneImplementation;1;Critical
+PD;PrematureDeclaration;0;Minor
+PL;ProperLogger;1;Minor
+PLFIC;PositionLiteralsFirstInComparisons;0;Critical
+PLFICIC;PositionLiteralsFirstInCaseInsensitiveComparisons;0;Critical
+PST;PreserveStackTrace;1;Major
+REARTN;ReturnEmptyArrayRatherThanNull;1;Major
+REWI;ReplaceEnumerationWithIterator;0;Minor
+RFFB;ReturnFromFinallyBlock;1;Critical
+RFI;RedundantFieldInitializer;1;Minor
+RHWM;ReplaceHashtableWithMap;0;Minor
+RINC;RemoteInterfaceNamingConvention;1;Major
+RSINC;RemoteSessionInterfaceNamingConvention;1;Major
+RVWL;ReplaceVectorWithList;0;Minor
+SBA;SimplifyBooleanAssertion;1;Minor
+SBE;SimplifyBooleanExpressions;1;Minor
+SBIWC;StringBufferInstantiationWithChar;1;Critical
+SBR;SimplifyBooleanReturns;1;Minor
+SC;SimplifyConditional;1;Minor
+SCC;StdCyclomaticComplexity;0;Minor
+SCFN;SuspiciousConstantFieldName;1;Minor
+SCN;ShortClassName;1;Minor
+SCRNI;SingletonClassReturningNewInstance;1;Major
+SD;SwitchDensity;0;Minor
+SDFNL;SimpleDateFormatNeedsLocale;1;Minor
+SEJBFSBF;StaticEJBFieldShouldBeFinal;1;Critical
+SEMN;SuspiciousEqualsMethodName;1;Critical
+SF;SingularField;1;Major
+SHMN;SuspiciousHashcodeMethodName;1;Critical
+SI;ShortInstantiation;0;Minor
+SMN;ShortMethodName;1;Minor
+SMS;SingleMethodSingleton;1;Major
+SOE;SuspiciousOctalEscape;1;Major
+SP;SystemPrintln;1;Major
+SSSHD;SwitchStmtsShouldHaveDefault;1;Major
+SSW;SimplifyStartsWith;0;Minor
+ST;SimplifiedTernary;1;Minor
+STS;StringToString;1;Minor
+SV;ShortVariable;0;Minor
+SiDTE;SignatureDeclareThrowsException;1;Major
+StI;StringInstantiation;1;Minor
+TCWTC;TestClassWithoutTestCases;1;Minor
+TFBFASS;TooFewBranchesForASwitchStatement;1;Minor
+TMF;TooManyFields;0;Minor
+TMM;TooManyMethods;0;Minor
+TMSI;TooManyStaticImports;1;Major
+UA;UnusedAssignment;1;Minor
+UAAL;UseArraysAsList;1;Major
+UAEIOAT;UseAssertEqualsInsteadOfAssertTrue;1;Major
+UALIOV;UseArrayListInsteadOfVector;1;Minor
+UANIOAT;UseAssertNullInsteadOfAssertTrue;1;Minor
+UASIOAT;UseAssertSameInsteadOfAssertTrue;1;Minor
+UATIOAE;UseAssertTrueInsteadOfAssertEquals;1;Minor
+UAVE;UnnecessaryAnnotationValueElement;1;Minor
+UBA;UnnecessaryBooleanAssertion;1;Minor
+UC;UnnecessaryConstructor;1;Minor
+UCC;UnnecessaryCaseChange;1;Minor
+UCEL;UseCorrectExceptionLogging;1;Major
+UCHM;UseConcurrentHashMap;0;Minor
+UCIE;UseCollectionIsEmpty;1;Major
+UCT;UnnecessaryConversionTemporary;1;Minor
+UDO;UseDiamondOperator;1;Minor
+UEC;UncommentedEmptyConstructor;1;Minor
+UEM;UncommentedEmptyMethodBody;1;Minor
+UETCS;UseEqualsToCompareStrings;1;Critical
+UFP;UnusedFormalParameter;0;Minor
+UFQN;UnnecessaryFullyQualifiedName;1;Minor
+UIOC;UseIndexOfChar;0;Minor
+UIOSWACFI;UseIOStreamsWithApacheCommonsFileItem;1;Major
+UIS;UnconditionalIfStatement;1;Major
+ULBR;UnnecessaryLocalBeforeReturn;1;Minor
+ULV;UnusedLocalVariable;1;Major
+ULWCC;UseLocaleWithCaseConversions;1;Critical
+UNAION;UseNotifyAllInsteadOfNotify;1;Critical
+UNCIE;UnusedNullCheckInEquals;1;Critical
+UOFCAPI;UseObjectForClearerAPI;0;Minor
+UOM;UselessOverridingMethod;1;Minor
+UOOI;UselessOperationOnImmutable;1;Critical
+UPCL;UseProperClassLoader;0;Minor
+UPF;UnusedPrivateField;1;Major
+UPM;UnusedPrivateMethod;1;Major
+UQT;UselessQualifiedThis;1;Minor
+UR;UnnecessaryReturn;0;Minor
+USAI;UseShortArrayInitializer;1;Minor
+USBFSA;UseStringBufferForStringAppends;1;Major
+USBL;UseStringBufferLength;0;Minor
+USDF;UnsynchronizedStaticDateFormatter;1;Critical
+USF;UnsynchronizedStaticFormatter;1;Minor
+USVO;UselessStringValueOf;0;Minor
+UTWR;UseTryWithResources;1;Minor
+UUC;UseUtilityClass;0;Minor
+UUINL;UseUnderscoresInNumericLiterals;1;Minor
+UV;UseVarargs;1;Minor
+UWOC;UnnecessaryWrapperObjectCreation;1;Major
+UnC;UnnecessaryCast;1;Minor
+UnI;UnusedImports;1;Minor
+UnM;UnnecessaryModifier;1;Minor
+UsP;UselessParentheses;0;Minor
+VNC;VariableNamingConventions;0;Minor
+WLMUB;WhileLoopsMustUseBraces;0;Minor
+WLWLB;WhileLoopWithLiteralBoolean;1;Minor

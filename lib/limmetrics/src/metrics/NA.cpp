@@ -33,6 +33,23 @@ namespace columbus { namespace lim { namespace metrics {
   NABase::NABase( const string& name, bool local, bool total, bool enabled, SharedContainers* shared )
     : MetricHandler( name, mdtInt, enabled, shared ), localMetric( local ), totalMetric( total )
   {
+    // setting invalid values where there would be differences between C++ and C structs/unions
+    set<string> common_invalids = {"NPA", "TNPA"};
+    if (common_invalids.find(name) != common_invalids.end()) {
+      registerHandler( phaseVisit, NTYPE_LIM_STRUCTURE, limLangC, false, [this] ( NodeWrapper& node ) {
+        setInvalid( node );
+      });
+      registerHandler( phaseVisit, NTYPE_LIM_UNION, limLangC, false, [this] ( NodeWrapper& node ) {
+        setInvalid( node );
+      });
+    }
+    set<string> struct_invalids = {"NLA", "NLPA", "TNLA", "TNLPA"};
+    if (struct_invalids.find(name) != struct_invalids.end()) {
+      registerHandler( phaseVisit, NTYPE_LIM_STRUCTURE, limLangC, false, [this] ( NodeWrapper& node ) {
+        setInvalid( node );
+      });
+    }
+
     if ( name == "NA" ) {
 
       registerHandler( phaseVisit, NTYPE_LIM_CLASS, limLangOther, false, [this] ( NodeWrapper& node ) {
@@ -150,26 +167,26 @@ namespace columbus { namespace lim { namespace metrics {
       }
 
       // Enum
-      if ( name == "NA" && newLevel == NTYPE_LIM_ENUM ) {
+      if ( newLevel == NTYPE_LIM_ENUM ) {
         return NTYPE_LIM_CLASS;
       }
     }
 
     // C++
-    // Classes/Structs are merged with Interfaces (and Unions for non-local metrics) (and Enums for NA only)
+    // Classes/Structs are merged with Interfaces (and Unions for non-local metrics) (and Enums)
     if ( language == limLangCpp ) {
       if (
         newLevel == NTYPE_LIM_CLASS ||
         newLevel == NTYPE_LIM_INTERFACE ||
         ( ! localMetric && newLevel == NTYPE_LIM_UNION ) ||
-        ( name == "NA" && newLevel == NTYPE_LIM_ENUM )
+        ( newLevel == NTYPE_LIM_ENUM )
       ) {
         return NTYPE_LIM_CLASS;
       }
     }
 
     // C#
-    // Classes/Structs are merged with Interfaces and Enums for NA only
+    // Classes/Structs are merged with Interfaces and Enums
     if ( language == limLangCsharp ) {
       if (
         newLevel == NTYPE_LIM_CLASS ||

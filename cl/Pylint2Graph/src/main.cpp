@@ -191,7 +191,6 @@ int main(int argc, char* argv[]) {
     } else if (runPylint) {
       PylintRunner runner;
       runner.run(projectBaseDir, pythonBinary, pylintDir, pylintrc, pylintOut, pylintOptions);
-      
       updateMemoryStat();
 
     } else {

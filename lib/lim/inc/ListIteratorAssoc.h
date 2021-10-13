@@ -70,10 +70,11 @@ namespace columbus { namespace lim { namespace asg {
   template <typename T, typename V>
   class ListIteratorAssoc : public ListIteratorBase<AssocEdge<NodeId,V>,T> {
 
-    protected:
+    public:
       /** \internal \brief Type definition to store association edges in a container. */
       typedef typename ListIteratorBase<AssocEdge<NodeId,V>,T>::Container Container;
 
+    protected:
       /**
       * \internal
       * \brief Non-public constructor, which creates a usable new iterator.

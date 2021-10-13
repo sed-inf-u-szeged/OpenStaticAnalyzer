@@ -101,6 +101,13 @@ namespace common {
     /**
     * \brief Writes message to the given output (set by writeOutput varibale).
     * \param level  [in] The level of the message.
+    * \param message [in] The message.
+    */
+    static void write(MsgLevel level, const std::string& message);
+
+    /**
+    * \brief Writes message to the given output (set by writeOutput varibale).
+    * \param level  [in] The level of the message.
     * \param format [in] The message.
     */
     static void write(MsgLevel level, const char* format, ...);
@@ -112,13 +119,6 @@ namespace common {
     * \param ap     [in] The va_list.
     */
     static void writeVaList(MsgLevel level, const char* format, va_list ap);
-
-    /**
-    * \brief Writes message to the given output (set by writeOutput varibale).
-    * \param level  [in] The level of the message.
-    * \param message [in] The message.
-    */
-    static void write(MsgLevel level, const std::string& message);
 
     /**
     * \brief Writes out checker output (depends on enableWarningMessages instead of message level).
@@ -150,6 +150,12 @@ namespace common {
     * \param needToFlush [in] If it is true, than the automatic flush will be set. Otherwise it will be turned off. 
     */
     static void setAutomaticFlush(bool needToFlush);
+
+    /**
+    * \brief Controls the generation of the timestamp prefixes.
+    * \param enable [in] If it is true, than the automatic timestamp prefixes are added to the messages. Otherwise no these prefixes are added.
+    */
+    static void setSetTimestampPrefixes(bool enable);
 
     /**
     * \brief Give back the write functin has been get warring or error messges.
@@ -186,6 +192,9 @@ namespace common {
 
     /** \brief If it is true, The warning messages has been flashed. */
     static bool wasWarning;
+
+    /** \brief If it is true, The warning messages get a timestamp prefix. */
+    static bool enableTimestamps;
 
   }; // writeMsg
 

@@ -75,6 +75,14 @@ void VisitorAbstractNodes::visitEnd(const expression::AttributeRef& node , bool 
   visitEnd   ((expression::Binary&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const expression::Await& node , bool callVirtualBase) {
+  visit   ((expression::Expression&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::Await& node , bool callVirtualBase) {
+  visitEnd   ((expression::Expression&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const expression::Binary& node , bool callVirtualBase) {
   visit   ((expression::Expression&)node,false); 
 }
@@ -97,6 +105,14 @@ void VisitorAbstractNodes::visit(const expression::BinaryLogical& node , bool ca
 
 void VisitorAbstractNodes::visitEnd(const expression::BinaryLogical& node , bool callVirtualBase) {
   visitEnd   ((expression::Binary&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const expression::BytesLiteral& node , bool callVirtualBase) {
+  visit   ((expression::Literal&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::BytesLiteral& node , bool callVirtualBase) {
+  visitEnd   ((expression::Literal&)node,false); 
 }
 
 void VisitorAbstractNodes::visit(const expression::Call& node , bool callVirtualBase) {
@@ -163,6 +179,14 @@ void VisitorAbstractNodes::visitEnd(const expression::FloatNumber& node , bool c
   visitEnd   ((expression::Literal&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const expression::FormattedValue& node , bool callVirtualBase) {
+  visit   ((expression::Literal&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::FormattedValue& node , bool callVirtualBase) {
+  visitEnd   ((expression::Literal&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const expression::Generator& node , bool callVirtualBase) {
   visit   ((base::Positioned&)node,false); 
 }
@@ -217,6 +241,14 @@ void VisitorAbstractNodes::visit(const expression::IntegerLiteral& node , bool c
 
 void VisitorAbstractNodes::visitEnd(const expression::IntegerLiteral& node , bool callVirtualBase) {
   visitEnd   ((expression::Literal&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const expression::JoinedStr& node , bool callVirtualBase) {
+  visit   ((expression::Expression&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::JoinedStr& node , bool callVirtualBase) {
+  visitEnd   ((expression::Expression&)node,false); 
 }
 
 void VisitorAbstractNodes::visit(const expression::KeyValue& node , bool callVirtualBase) {
@@ -275,6 +307,14 @@ void VisitorAbstractNodes::visitEnd(const expression::LongInteger& node , bool c
   visitEnd   ((expression::Literal&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const expression::NamedExpr& node , bool callVirtualBase) {
+  visit   ((expression::Expression&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::NamedExpr& node , bool callVirtualBase) {
+  visitEnd   ((expression::Expression&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const expression::Set& node , bool callVirtualBase) {
   visit   ((expression::Expression&)node,false); 
 }
@@ -305,6 +345,14 @@ void VisitorAbstractNodes::visit(const expression::Slicing& node , bool callVirt
 
 void VisitorAbstractNodes::visitEnd(const expression::Slicing& node , bool callVirtualBase) {
   visitEnd   ((expression::Unary&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const expression::Starred& node , bool callVirtualBase) {
+  visit   ((expression::Expression&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::Starred& node , bool callVirtualBase) {
+  visitEnd   ((expression::Expression&)node,false); 
 }
 
 void VisitorAbstractNodes::visit(const expression::StringConversion& node , bool callVirtualBase) {
@@ -385,6 +433,14 @@ void VisitorAbstractNodes::visit(const statement::Alias& node , bool callVirtual
 
 void VisitorAbstractNodes::visitEnd(const statement::Alias& node , bool callVirtualBase) {
   visitEnd   ((base::Named&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const statement::AnnAssign& node , bool callVirtualBase) {
+  visit   ((statement::Assign&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const statement::AnnAssign& node , bool callVirtualBase) {
+  visitEnd   ((statement::Assign&)node,false); 
 }
 
 void VisitorAbstractNodes::visit(const statement::Assert& node , bool callVirtualBase) {
@@ -492,11 +548,11 @@ void VisitorAbstractNodes::visitEnd(const statement::Global& node , bool callVir
 }
 
 void VisitorAbstractNodes::visit(const statement::Handler& node , bool callVirtualBase) {
-  visit   ((statement::Statement&)node,false); 
+  visit   ((base::Positioned&)node,false); 
 }
 
 void VisitorAbstractNodes::visitEnd(const statement::Handler& node , bool callVirtualBase) {
-  visitEnd   ((statement::Statement&)node,false); 
+  visitEnd   ((base::Positioned&)node,false); 
 }
 
 void VisitorAbstractNodes::visit(const statement::If& node , bool callVirtualBase) {
@@ -529,6 +585,14 @@ void VisitorAbstractNodes::visit(const statement::Iteration& node , bool callVir
 
 void VisitorAbstractNodes::visitEnd(const statement::Iteration& node , bool callVirtualBase) {
   visitEnd   ((statement::CompoundStatement&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const statement::Nonlocal& node , bool callVirtualBase) {
+  visit   ((statement::SimpleStatement&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const statement::Nonlocal& node , bool callVirtualBase) {
+  visitEnd   ((statement::SimpleStatement&)node,false); 
 }
 
 void VisitorAbstractNodes::visit(const statement::Parameter& node , bool callVirtualBase) {
@@ -611,22 +675,6 @@ void VisitorAbstractNodes::visitEnd(const statement::Try& node , bool callVirtua
   visitEnd   ((statement::CompoundStatement&)node,false); 
 }
 
-void VisitorAbstractNodes::visit(const statement::TryExcept& node , bool callVirtualBase) {
-  visit   ((statement::Try&)node,false); 
-}
-
-void VisitorAbstractNodes::visitEnd(const statement::TryExcept& node , bool callVirtualBase) {
-  visitEnd   ((statement::Try&)node,false); 
-}
-
-void VisitorAbstractNodes::visit(const statement::TryFinal& node , bool callVirtualBase) {
-  visit   ((statement::Try&)node,false); 
-}
-
-void VisitorAbstractNodes::visitEnd(const statement::TryFinal& node , bool callVirtualBase) {
-  visitEnd   ((statement::Try&)node,false); 
-}
-
 void VisitorAbstractNodes::visit(const statement::While& node , bool callVirtualBase) {
   visit   ((statement::Iteration&)node,false); 
 }
@@ -641,6 +689,14 @@ void VisitorAbstractNodes::visit(const statement::With& node , bool callVirtualB
 
 void VisitorAbstractNodes::visitEnd(const statement::With& node , bool callVirtualBase) {
   visitEnd   ((statement::CompoundStatement&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const statement::WithItem& node , bool callVirtualBase) {
+  visit   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const statement::WithItem& node , bool callVirtualBase) {
+  visitEnd   ((base::Positioned&)node,false); 
 }
 
 void VisitorAbstractNodes::visit(const type::DictType& node , bool callVirtualBase) {

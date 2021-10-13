@@ -25,7 +25,5 @@ AbstractFilter::AbstractFilter() :maxValue(0), currentValue(0){
 }
 
 int AbstractFilter::getMaxValue() {
-/*  CloneManager& theManager=CloneManager::getManager();
-  return theManager.getOrigNumCloneClasses();*/
   return 0;
 }

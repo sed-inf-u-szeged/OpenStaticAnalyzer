@@ -40,7 +40,8 @@ namespace expression {
   *   - identifier (String) : (missing)
   * 
   * Edges:
-  *   - Body (base::Positioned, single) : (missing)
+  *   - Block (statement::BlockSyntax, single) : (missing)
+  *   - ExpressionBody (expression::ExpressionSyntax, single) : (missing)
   */
   class AnonymousFunctionExpressionSyntax : public ExpressionSyntax {
     protected:
@@ -145,37 +146,63 @@ namespace expression {
       // ---------- Edge getter function(s) ----------
 
       /**
-      * \brief Gives back the pointer of the node the Body edge points to.
-      * \return Returns the end point of the Body edge.
+      * \brief Gives back the pointer of the node the Block edge points to.
+      * \return Returns the end point of the Block edge.
       */
-      base::Positioned* getBody() const;
+      statement::BlockSyntax* getBlock() const;
+
+      /**
+      * \brief Gives back the pointer of the node the ExpressionBody edge points to.
+      * \return Returns the end point of the ExpressionBody edge.
+      */
+      expression::ExpressionSyntax* getExpressionBody() const;
 
 
       // ---------- Edge setter function(s) ----------
 
       /**
-      * \brief Sets the Body edge.
-      * \param id [in] The new end point of the Body edge.
+      * \brief Sets the Block edge.
+      * \param id [in] The new end point of the Block edge.
       */
-      void setBody(NodeId id);
+      void setBlock(NodeId id);
 
       /**
-      * \brief Sets the Body edge.
-      * \param node [in] The new end point of the Body edge.
+      * \brief Sets the Block edge.
+      * \param node [in] The new end point of the Block edge.
       */
-      void setBody(base::Positioned *node);
+      void setBlock(statement::BlockSyntax *node);
 
       /**
-      * \brief remove the Body edge.
+      * \brief remove the Block edge.
       */
-      void removeBody();
+      void removeBlock();
+
+      /**
+      * \brief Sets the ExpressionBody edge.
+      * \param id [in] The new end point of the ExpressionBody edge.
+      */
+      void setExpressionBody(NodeId id);
+
+      /**
+      * \brief Sets the ExpressionBody edge.
+      * \param node [in] The new end point of the ExpressionBody edge.
+      */
+      void setExpressionBody(ExpressionSyntax *node);
+
+      /**
+      * \brief remove the ExpressionBody edge.
+      */
+      void removeExpressionBody();
 
     protected:
 
       // ---------- Edges ----------
 
-      /** \internal \brief The id of the node the Body edge points to. */
-      NodeId m_Body;
+      /** \internal \brief The id of the node the Block edge points to. */
+      NodeId m_Block;
+
+      /** \internal \brief The id of the node the ExpressionBody edge points to. */
+      NodeId m_ExpressionBody;
 
     public:
 

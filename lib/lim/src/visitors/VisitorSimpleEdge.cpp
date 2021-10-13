@@ -29,6 +29,22 @@ namespace columbus { namespace lim { namespace asg {
       VisitorSimpleEdge::~VisitorSimpleEdge(){};
 
       /**
+      * \brief Edge visitor for compilationUnit edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitComponent_CompilationUnit(const base::Component& begin, const physical::File& end) {
+        visitAllEdge (begin, end,NULL,acNone);
+      }
+      /**
+      * \brief Edge visitor for compilationUnit edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndComponent_CompilationUnit(const base::Component& begin, const physical::File& end) {
+        visitAllEdgeEnd (begin, end,NULL,acNone);
+      }
+      /**
       * \brief Edge visitor for contains edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -156,6 +172,22 @@ namespace columbus { namespace lim { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndAttributeAccess_Attribute(const logical::AttributeAccess& begin, const logical::Attribute& end) {
+        visitAllEdgeEnd (begin, end,NULL,acNone);
+      }
+      /**
+      * \brief Edge visitor for extends edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitClass_Extends(const logical::Class& begin, const logical::Class& end) {
+        visitAllEdge (begin, end,NULL,acNone);
+      }
+      /**
+      * \brief Edge visitor for extends edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndClass_Extends(const logical::Class& begin, const logical::Class& end) {
         visitAllEdgeEnd (begin, end,NULL,acNone);
       }
       /**

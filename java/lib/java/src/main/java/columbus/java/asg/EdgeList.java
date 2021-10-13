@@ -29,6 +29,7 @@ import columbus.logger.LoggerHandler;
  */
 public class EdgeList<T extends Base> {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(EdgeList.class, Constant.LoggerPropertyFile);
 	@SuppressWarnings("rawtypes")
 	private static final EdgeList EMPTY_LIST = new EdgeList(null);

@@ -21,13 +21,14 @@
 
 #include <time.h>
 #include <fstream>
+#include <regex>
 #include <common/inc/FileSup.h>
 #include <common/inc/StringSup.h>
 #include <common/inc/WriteMessage.h>
 #include <common/inc/PlatformDependentDefines.h>
 #include <threadpool/inc/ThreadPool.h>
 #include <boost/filesystem.hpp>
-#include <boost/regex.hpp>
+#include <Environment.h>
 
 #include "../inc/messages.h"
 #include "../inc/Properties.h"
@@ -36,6 +37,7 @@
 
 #define PROGRAM_NAME "OpenStaticAnalyzer for JavaScript"
 #define EXECUTABLE_NAME "OpenStaticAnalyzerJavaScript"
+#define REQUIRED_NODE_VER 8
 
 #include "MainCommon.h"
 
@@ -176,10 +178,113 @@ bool ppProfileXML(const common::Option *o, char *argv[]) {
   return true;
 }
 
+bool ppRunUDM(const common::Option *o, char *argv[]) {
+  props.runUDMExplicit = true;
+  if (strcmp(argv[0], "true") == 0)
+    props.runUDM = true;
+  else
+    props.runUDM = false;
+  return true;
+}
+
 bool ppRulesCSV(const common::Option *o, char *argv[]) {
   props.rulesCSV = argv[0];
   return true;
 }
+
+CL_PPSARIFSEVERITY
+
+bool ppRunSonar2Graph(const common::Option *o, char *argv[]) {
+  props.runSonar2Graph = argv[0];
+  return true;
+}
+
+bool ppHost(const common::Option *o, char *argv[]) {
+  props.host = argv[0];
+  return true;
+}
+
+bool ppPort(const common::Option *o, char *argv[]) {
+  props.port = argv[0];
+  return true;
+}
+
+bool ppProjectKey(const common::Option *o, char *argv[]) {
+  props.projectKey = argv[0];
+  return true;
+}
+
+bool ppProjectPrefix(const common::Option *o, char *argv[]) {
+  props.projectPrefix = argv[0];
+  return true;
+}
+
+bool ppJsonPath(const common::Option *o, char *argv[]) {
+  props.jsonPath = argv[0];
+  return true;
+}
+
+bool ppSqUsername(const common::Option *o, char *argv[]) {
+  props.sqUsername = argv[0];
+  return true;
+}
+
+bool ppSqPassword(const common::Option *o, char *argv[]) {
+  props.sqPassword = argv[0];
+  return true;
+}
+
+bool ppLanguageKey(const common::Option *o, char *argv[]) {
+  props.languageKey = argv[0];
+  return true;
+}
+
+bool ppStrict(const common::Option *o, char *argv[]) {
+  if(strcmp(argv[0], "true") == 0)
+    props.strict = true;
+  else
+    props.strict = false;
+  return true;
+}
+
+bool checkVersion(const string& command, const std::regex& pattern, std::smatch& result, string& output, const string& versionParameter = string("-v")) {
+	stringstream outStream;
+	vector<string> commandArgs;
+	int ret;
+#ifdef _WIN32
+	if (command.size() > 4 && command.rfind(".bat") == command.size() - 4) {
+		commandArgs.push_back("/c");
+		commandArgs.push_back(command);
+		commandArgs.push_back(versionParameter);
+		ret = common::run("cmd", commandArgs, outStream);
+	}
+	else {
+#endif
+		commandArgs.push_back(versionParameter);
+		ret = common::run(command, commandArgs, outStream);
+#ifdef _WIN32
+	}
+#endif
+	output = outStream.str();
+	if (ret == 0 && std::regex_search(output, result, pattern))
+		return true;
+	return false;
+}
+
+// LIM2Patterns start::
+bool ppRunLIM2Patterns(const common::Option *o, char *argv[]) {
+  if (strcmp(argv[0], "true") == 0)
+    props.runLIM2Patterns = true;
+  else
+    props.runLIM2Patterns = false;
+  return true;
+}
+
+static bool ppGetPattern(const Option *o, char *argv[]) {
+  props.patternFile = argv[0];
+  return true;
+}
+// LIM2Patterns end::
 
 const Option OPTIONS_OBJ [] = {  
   { false,  "-resultsDir",            1, CL_KIND_DIR,     0, OT_WE | OT_WC,     ppResultsDir,             NULL, "Relative or absolute path name of the directory where the results of the analysis will be stored. The directory will be created automatically if it does not exist."},
@@ -207,12 +312,19 @@ const Option OPTIONS_OBJ [] = {
 
   { false,  "-profileXML",            1, CL_KIND_FILE,    0, OT_WE | OT_WC,     ppProfileXML,             NULL, "Global configuration file for OpenStaticAnalyzer. Its tool-options tag can be used to override the default metric thresholds for the MetricHunter tool or define custom metric formulas for the UserDefinedMetrics tool. Furthermore, its rule-options tag can enable/disable or modify the priorities of multiple rules." },
   { true,   "-rulesCSV",              1, CL_KIND_FILE,    0, OT_WE | OT_WC,     ppRulesCSV,               NULL, "Set the rules csv." },
+
+  { false,  "-runLIM2Patterns",      1, CL_KIND_BOOL,     0, OT_WE | OT_WC,     ppRunLIM2Patterns,       NULL, "Run LIM2Patterns." },
+  
+  CL_SONAR2GRAPH_RUN
+  CL_SONAR2GRAPH_ARGS
+  CL_UDM_OPTIONS
+  CL_SARIFSEVERITY
+  CL_LIM2PATTERNS
   CL_VERBOSE
   CL_MESSAGELEVEL
   CL_HELP
   CL_VERSION
   CL_LAST
-
 };
 
 #define DUMP_PROPERTY_PATH(name) WriteMsg::write(WriteMsg::mlDebug, "  " #name "=[%s]\n", props.name.string().c_str())
@@ -244,7 +356,10 @@ void dumpProperties() {
   DUMP_PROPERTY_INT(runLimMetrics);
   DUMP_PROPERTY_INT(runMetricHunter);
   DUMP_PROPERTY_INT(runESLint);
+  DUMP_PROPERTY_INT(runUDM);
+  DUMP_PROPERTY_INT(runUDMExplicit);
   DUMP_PROPERTY_PATH(rulesCSV);
+  DUMP_PROPERTY_INT(runLIM2Patterns);
 }
 
 bool checkIfBinaryInPackage(const string& toolName) {
@@ -307,6 +422,9 @@ void checkUserProperties()
   props.runLimMetrics = props.runLimMetrics && checkIfBinaryInPackage("LIM2Metrics");
   props.runDCF = props.runDCF && checkIfBinaryInPackage("DuplicatedCodeFinder");
   props.runMetricHunter = props.runMetricHunter && checkIfBinaryInPackage("MetricHunter");
+  props.runUDM = props.runUDM && checkIfBinaryInPackage("UserDefinedMetrics");
+  props.runLIM2Patterns = props.runLIM2Patterns && checkIfBinaryInPackage("LIM2Patterns");
+
 }
 
 
@@ -331,13 +449,33 @@ void initializeProperties() {
 
   stringstream outStream;
   string tmpStr;
-  boost::smatch result;
+  std::smatch result;
   
   outStream.str(string());
   outStream.clear();
   tmpStr.clear();
 
   tmpStr = outStream.str();
+
+  string output;
+  bool nodeVersionOk = false;
+
+  if (checkVersion("node", std::regex("^v(\\d+)."), result, output))
+  {
+	  string submatch(result[0]);
+	  std::string::size_type pos = submatch.find_first_of('.');
+	  std::string majorVersionNumber = submatch.substr(0, pos);
+	  majorVersionNumber.erase(0, 1);
+	  if (std::stoi(majorVersionNumber) >= REQUIRED_NODE_VER) {
+		  nodeVersionOk = true;
+	  }
+  }
+
+  if (!nodeVersionOk) {
+	  WriteMsg::write(CMSG_ERROR_NODE_VERSION, REQUIRED_NODE_VER);
+	  exit(EXIT_FAILURE);
+  }
+
 }
 
 void makedirs()
@@ -370,23 +508,10 @@ void makedirs()
   }
 }
 
-void logEnvironment()
-{ 
-  ofstream envlog;
-  envlog.open((props.logDir / "environment.txt").string().c_str());
-  vector<string> variables;
-
-  common::getEnvironmentVariables(variables);
-
-  for(vector<string>::iterator it = variables.begin(); it != variables.end(); ++it){
-    envlog << *it <<endl;
-  }
-  envlog.close();
-}
-
 int runAnalyzeMode() 
 {
-  Controller ctrl(props);
+  columbus::thread::ThreadPool threadPool(props.maxThreads);
+  Controller ctrl(props, threadPool);
   
   if (props.cleanResults != -1)
     ctrl.addTask(new CleanResultsTask(props));
@@ -397,6 +522,14 @@ int runAnalyzeMode()
   list<string> inactives;
 
   ctrl.addTask(new ProfileTask(props));
+
+
+  // skipping UDM can only be decided here if it's explicit on the command line
+  // otherwise, we run it, and it exits, if there was nothing to do according to the profile
+  if (!props.runUDMExplicit || props.runUDM)
+    ctrl.addTask(new UserDefinedMetricsTask(inactives, props));
+  else
+    inactives.push_back("UserDefinedMetrics");
 
   if (props.runESLint){
     ctrl.addTask(new RunESLintTask(props));
@@ -421,14 +554,20 @@ int runAnalyzeMode()
   else
     inactives.push_back("MetricHunter");
 
-  ctrl.addTask(new AddLicenceTask(inactives, props));
   ctrl.addTask(new GraphMergeTask(props));
   ctrl.addTask(new GraphDumpTask(props));
 
-
+  if (props.runLIM2Patterns)
+    ctrl.addTask(new LIM2PatternsTask(props));
+  else
+    inactives.push_back("LIM2Patterns");
 
   if (props.cleanProject)
     ctrl.addTask(new CleanProjectTask(props));
+
+  if (props.runSonar2Graph) {
+    ctrl.addTask(new Sonar2GraphTask(props));
+  }
 
   return ctrl.executeTasks(Controller::EM_FAIL_ON_ANY_ERROR);
 }
@@ -441,14 +580,14 @@ int main(int argc, char* argv[])
     WriteMsg::setAutomaticFlush(true);
 
     MainInit(argc, argv, "-");
-
     initializeProperties();
     
     checkUserProperties();
     dumpProperties();
     
     makedirs();
-    logEnvironment();
+    logEnvironment(props);
+    logCommandLineArguments(props, argc, argv);
 
     ret = runAnalyzeMode();
 

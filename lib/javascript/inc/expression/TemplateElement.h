@@ -59,12 +59,12 @@ namespace expression {
 
     private:
       /**
-      * \brief This function always throws a JavaScriptException due to copying is not allowed!
+      * \brief This function always throws a JavascriptException due to copying is not allowed!
       */
       TemplateElement & operator=(const TemplateElement&);
 
       /**
-      * \brief This function always throws a JavaScriptException due to copying is not allowed!
+      * \brief This function always throws a JavascriptException due to copying is not allowed!
       */
       TemplateElement(const TemplateElement&);
 

@@ -412,7 +412,7 @@ namespace columbus {
         }
         else if (java::asg::Common::getIsCharacterLiteral(*literal)) {
           wchar_t str = dynamic_cast<const java::asg::expr::CharacterLiteral*>(literal)->getCharValue();
-          cout << str;
+          cout << std::hex << "0x" << (unsigned)str;
         }
         else if (java::asg::Common::getIsNumberLiteral(*literal)) {
           std::string str = dynamic_cast<const java::asg::expr::NumberLiteral*>(literal)->getValue();

@@ -53,12 +53,16 @@ set (SOURCES
     inc/expression/ArgumentList.h
     src/expression/AttributeRef.cpp
     inc/expression/AttributeRef.h
+    src/expression/Await.cpp
+    inc/expression/Await.h
     src/expression/Binary.cpp
     inc/expression/Binary.h
     src/expression/BinaryArithmetic.cpp
     inc/expression/BinaryArithmetic.h
     src/expression/BinaryLogical.cpp
     inc/expression/BinaryLogical.h
+    src/expression/BytesLiteral.cpp
+    inc/expression/BytesLiteral.h
     src/expression/Call.cpp
     inc/expression/Call.h
     src/expression/DictComp.cpp
@@ -75,6 +79,8 @@ set (SOURCES
     inc/expression/ExtSlice.h
     src/expression/FloatNumber.cpp
     inc/expression/FloatNumber.h
+    src/expression/FormattedValue.cpp
+    inc/expression/FormattedValue.h
     src/expression/Generator.cpp
     inc/expression/Generator.h
     src/expression/GeneratorExpression.cpp
@@ -89,6 +95,8 @@ set (SOURCES
     inc/expression/Index.h
     src/expression/IntegerLiteral.cpp
     inc/expression/IntegerLiteral.h
+    src/expression/JoinedStr.cpp
+    inc/expression/JoinedStr.h
     src/expression/KeyValue.cpp
     inc/expression/KeyValue.h
     src/expression/Keyword.cpp
@@ -103,6 +111,8 @@ set (SOURCES
     inc/expression/Literal.h
     src/expression/LongInteger.cpp
     inc/expression/LongInteger.h
+    src/expression/NamedExpr.cpp
+    inc/expression/NamedExpr.h
     src/expression/Set.cpp
     inc/expression/Set.h
     src/expression/SetComp.cpp
@@ -111,6 +121,8 @@ set (SOURCES
     inc/expression/Slice.h
     src/expression/Slicing.cpp
     inc/expression/Slicing.h
+    src/expression/Starred.cpp
+    inc/expression/Starred.h
     src/expression/StringConversion.cpp
     inc/expression/StringConversion.h
     src/expression/StringLiteral.cpp
@@ -131,6 +143,8 @@ set (SOURCES
     inc/module/Package.h
     src/statement/Alias.cpp
     inc/statement/Alias.h
+    src/statement/AnnAssign.cpp
+    inc/statement/AnnAssign.h
     src/statement/Assert.cpp
     inc/statement/Assert.h
     src/statement/Assign.cpp
@@ -167,6 +181,8 @@ set (SOURCES
     inc/statement/ImportStatement.h
     src/statement/Iteration.cpp
     inc/statement/Iteration.h
+    src/statement/Nonlocal.cpp
+    inc/statement/Nonlocal.h
     src/statement/Parameter.cpp
     inc/statement/Parameter.h
     src/statement/Pass.cpp
@@ -187,14 +203,12 @@ set (SOURCES
     inc/statement/TargetList.h
     src/statement/Try.cpp
     inc/statement/Try.h
-    src/statement/TryExcept.cpp
-    inc/statement/TryExcept.h
-    src/statement/TryFinal.cpp
-    inc/statement/TryFinal.h
     src/statement/While.cpp
     inc/statement/While.h
     src/statement/With.cpp
     inc/statement/With.h
+    src/statement/WithItem.cpp
+    inc/statement/WithItem.h
     src/type/DictType.cpp
     inc/type/DictType.h
     src/type/ReferenceType.cpp
@@ -212,6 +226,4 @@ set (SOURCES
 
 add_library (${LIBNAME} STATIC ${SOURCES})
 add_dependencies (${LIBNAME} boost)
-set_target_properties(${LIBNAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/inc/${LIBNAME}.h")
-add_pch_generation(${LIBNAME} boost)
 set_visual_studio_project_folder(${LIBNAME} TRUE)

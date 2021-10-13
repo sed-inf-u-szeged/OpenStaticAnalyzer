@@ -33,6 +33,7 @@ import columbus.logger.LoggerHandler;
  */
 public class NoTypeImpl extends BaseImpl implements NoType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(NoTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	public NoTypeImpl(int id, Factory factory) {
 		super(id, factory);

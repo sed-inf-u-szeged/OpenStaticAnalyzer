@@ -37,6 +37,7 @@ add_custom_copy_list_target (${OSA_TARGET_NAME}
 add_custom_generated_copy_dependency (${OSA_TARGET_NAME} ${CMAKE_BINARY_DIR}/java/lib/bin ${OSA_PACKAGE_DIR}/GraphAPI/Graphlib graphlib.jar java_graphlib)
 add_custom_generated_copy_dependency (${OSA_TARGET_NAME} ${CMAKE_BINARY_DIR}/java/lib/graphlib/build ${OSA_PACKAGE_DIR}/GraphAPI/Graphlib doc java_graphlib doc DIRECTORY)
 add_custom_generated_copy_dependency (${OSA_TARGET_NAME} ${CMAKE_BINARY_DIR}/java/lib/bin ${OSA_PACKAGE_DIR}/GraphAPI/Graphsupportlib graphsupportlib.jar java_graphsupportlib)
+#add_custom_generated_copy_dependency (${OSA_TARGET_NAME} ${CMAKE_BINARY_DIR}/java/lib/graphsupport/build ${OSA_PACKAGE_DIR}/GraphAPI/Graphsupportlib doc java_graphsupportlib DIRECTORY)
 add_custom_copy_target (${OSA_TARGET_NAME} ${CMAKE_SOURCE_DIR}/java/cl/GraphExample/src ${OSA_PACKAGE_DIR}/GraphAPI/GraphExample/src DIRECTORY)
 add_custom_copy_target (${OSA_TARGET_NAME} ${CMAKE_SOURCE_DIR}/java/cl/GraphExample/build_openstaticanalyzer_package.xml ${OSA_PACKAGE_DIR}/GraphAPI/GraphExample/build.xml)
 
@@ -55,3 +56,5 @@ add_subdirectory (java)
 add_subdirectory (python)
 add_subdirectory (csharp)
 add_subdirectory (javascript)
+
+copy_licenses()

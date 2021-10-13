@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class WildcardExpressionImpl extends BaseImpl implements WildcardExpression {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(WildcardExpressionImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

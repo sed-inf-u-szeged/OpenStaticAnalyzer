@@ -205,7 +205,7 @@ void loadFilter(javascript::asg::Factory& fact, const string& file)
   try {
     fact.loadFilter(flt);
   }
-  catch (IOException e) {
+  catch (const IOException&) {
     WriteMsg::write(CMSG_CANNOT_OPEN_FILTER_FILE, flt.c_str());
   }
 }
@@ -249,9 +249,15 @@ int main(int argc, char* argv[])
   int exitCode = 0;
   MAIN_BEGIN
 
+  uint64_t totalTime;
+  uint64_t conversionTime;
+  uint64_t saveTime;
+
   uint64_t maxMem = 0;
 
   int missingFiles = 0;
+
+  setStartTime(&totalTime);
 
   updateMemoryStat(true);
 
@@ -259,9 +265,12 @@ int main(int argc, char* argv[])
   options::parse(argc, argv);
 
   // lim graph
+  const string rootName = "root";
   RefDistributorStrTable limStrTable;
-  lim::asg::Factory limFactory(limStrTable, "root", lim::asg::limLangJavaScript);
-  limFactory.getRoot()->setLanguage(lim::asg::lnkJavaScript);
+  lim::asg::Factory limFactory(limStrTable, rootName, lim::asg::limLangJavaScript);
+  auto rootNode = limFactory.getRoot();
+  rootNode->setLanguage(lim::asg::lnkJavaScript);
+  rootNode->setDemangledName(rootName);
 
   // origin
   LimOrigin origin;
@@ -269,6 +278,7 @@ int main(int argc, char* argv[])
   //overrides
   lim::asg::OverrideRelations overrides(limFactory);
 
+  setStartTime(&conversionTime);
 
   for (list<string>::const_iterator it = options::inputFiles.begin(); it != options::inputFiles.end(); ++it) {
     // creating factory
@@ -284,7 +294,7 @@ int main(int argc, char* argv[])
     try {
       factory.load(it->c_str(), listData);
     }
-    catch (IOException e) {
+    catch (const IOException&) {
       WriteMsg::write(CMSG_WARN_CANNOT_READ_FILE, it->c_str());
       exitCode = 1;
       missingFiles++;
@@ -305,9 +315,14 @@ int main(int argc, char* argv[])
       factory.turnFilterOff();
     }
 
+    HalsteadVisitor halsteadVisitor(factory);
+    javascript::asg::AlgorithmPreorder().run(factory, halsteadVisitor);
+    updateMemStat(&maxMem);
+    std::map<NodeId, HalsteadVisitor::HalsteadInfo> halMap = halsteadVisitor.getHalsteadValues();
+
     // JSAN2Lim visitor is created and called
     WriteMsg::write(CMSG_CONVERTING_FILE, it->c_str());
-    JSAN2LimVisitor visitor(limFactory, factory, origin, compPath);
+    JSAN2LimVisitor visitor(limFactory, factory, origin, compPath, halMap);
 
     javascript::asg::AlgorithmPreorder().run(factory, visitor);
     updateMemStat(&maxMem);
@@ -323,6 +338,9 @@ int main(int argc, char* argv[])
   updateMemStat(&maxMem);
   JSAN2Lim::JSAN2LimVisitor::finalize(limFactory);
 
+  setElapsedTime(&conversionTime);
+  setStartTime(&saveTime);
+
   // saving the lim graph
   WriteMsg::write(CMSG_SAVING_FILE, options::out.c_str());
 
@@ -335,9 +353,19 @@ int main(int argc, char* argv[])
 
     limFactory.save(options::out, limHeader);
   }
-  catch (IOException e) {
+  catch (const IOException&) {
     WriteMsg::write(CMSG_WARN_CANNOT_WRITE_FILE, options::out.c_str());
   }
+  setElapsedTime(&saveTime);
+  setElapsedTime(&totalTime);
+
+  WriteMsg::write(
+    CMSG_STATISTICS,
+    ((float)conversionTime) / 100,
+    ((float)saveTime) / 100,
+    ((float)totalTime) / 100,
+    ((float)maxMem) / 1048576,
+    missingFiles);
 
   MAIN_END
 

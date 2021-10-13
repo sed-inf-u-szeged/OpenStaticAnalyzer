@@ -75,7 +75,14 @@ namespace columbus { namespace lim2graph {
       * \param node [in] The node in the ASG which name have to be determine.
       * \return Name of the node in the Graph.
       */
-      static const std::string determineNodeName(const lim::asg::base::Base &node) ;
+      static const std::string determineNodeName(const lim::asg::base::Base &node);
+
+       /**
+      * \brief Function to determine the name of the node in the Graph.
+      * \param node [in] The nodeId of the node which name have to be determine.
+      * \return Name of the node in the Graph.
+      */
+      static const std::string determineNodeName(NodeId nodeId);
 
     protected:
       /**

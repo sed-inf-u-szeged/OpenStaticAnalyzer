@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var arrayPattern = factory.createArrayPatternWrapper(factory);
+        var arrayPattern = factory.createArrayPatternWrapper();
         globals.setPositionInfo(node, arrayPattern);
         return arrayPattern;
     } else {
@@ -35,15 +35,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.elements.length; i++) {
                 if (node.elements[i] != null) {
                     var elementsWrapper = globals.getWrapperOfNode(node.elements[i]);
-                    if (node.elements[i].type !== "Literal") {
-                        var elementsWrapperFunctionString = "addElements" + node.elements[i].type;
-                    } else {
-                        var elementsWrapperFunctionString = "addElements" + globals.getLiteralType(node.elements[i]) + node.elements[i].type;
-                    }
                     try {
-                        arrayPatternWrapper[elementsWrapperFunctionString](elementsWrapper);
+                        arrayPatternWrapper.addElements(elementsWrapper);
                     } catch (e) {
-                        console.error("ARRAYPATTERN - Function not exist: arrayPatternWrapper." + elementsWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("ARRAYPATTERN - Could not add element! Reason of the error: " + e + "\n");
                     }
                 }
             }

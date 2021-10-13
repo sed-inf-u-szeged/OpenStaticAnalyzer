@@ -351,7 +351,7 @@ namespace columbus { namespace JAN2Lim
       return false;
 
     java::asg::base::Base* parent = node.getParent();
-    if ( ! parent || ! java::asg::Common::getIsNormalMethod(*parent) ) 
+    if ( ! parent || ( ! java::asg::Common::getIsNormalMethod(*parent) && ! java::asg::Common::getIsLambda(*parent) ) )
       return false;
 
     return true;
@@ -365,7 +365,8 @@ namespace columbus { namespace JAN2Lim
           || isClassLevelVariable(node)
           || isMethodParameter(node)
           || java::asg::Common::getIsTypeParameter(node)
-          || java::asg::Common::getIsInitializerBlock(node);
+          || java::asg::Common::getIsInitializerBlock(node)
+          || java::asg::Common::getIsLambda(node);
   }
 
   java::asg::base::Base* JAN2LimVisitor::getParentPtr( const java::asg::base::Base& javaNode )
@@ -424,6 +425,17 @@ namespace columbus { namespace JAN2Lim
           if ( it->getId() == node.getId() ) break;
         }
         return java::asg::Common::getUniqueNameForBase( meth ) + ".P~" + java::asg::Common::toString(ordinal);
+      }
+      else if (node.getParent() && java::asg::Common::getIsLambda(*node.getParent()))
+      {
+        java::asg::expr::Lambda& meth = dynamic_cast<java::asg::expr::Lambda&>(*node.getParent());
+        unsigned int ordinal = 0;
+        for ( java::asg::ListIterator<java::asg::struc::Parameter> it = meth.getParametersListIteratorBegin(); it != meth.getParametersListIteratorEnd(); ++it )
+        {
+          ++ordinal;
+          if (it->getId() == node.getId()) break;
+        }
+        return java::asg::Common::getUniqueNameForBase(meth) + ".P~" + java::asg::Common::toString(ordinal);
       }
       throw Exception( COLUMBUS_LOCATION, CMSG_EX_WRONG_PARAM_NODE(java::asg::Common::toString(node.getId())) );
     }
@@ -486,6 +498,9 @@ namespace columbus { namespace JAN2Lim
       nodeKind = lim::asg::ndkMethod;
     }
 
+    // Lambda
+    else if (java::asg::Common::getIsLambda(node)) nodeKind = lim::asg::ndkMethod;
+
     // Variable
     else if ( java::asg::Common::getIsVariableDeclaration(node) )
     {
@@ -525,7 +540,7 @@ namespace columbus { namespace JAN2Lim
     // setting lim::asg::base::Named node data
     if(java::asg::Common::getIsTypeDeclaration(node) || java::asg::Common::getIsMethodDeclaration(node) 
       || (java::asg::Common::getIsVariableDeclaration(node) && java::asg::Common::getIsTypeDeclaration(*node.getParent()))
-      || java::asg::Common::getIsPackage(node) || java::asg::Common::getIsInitializerBlock(node)) {
+      || java::asg::Common::getIsPackage(node) || java::asg::Common::getIsInitializerBlock(node) || java::asg::Common::getIsLambda(node)) {
       newLimPtr->setName( java::asg::Common::getName(node) );
     } else {
       newLimPtr->setName( uniqueName );
@@ -763,6 +778,14 @@ namespace columbus { namespace JAN2Lim
         addLimTypeFormers(ref);
       }
     }
+    else if (java::asg::Common::getIsIntersectionType(javaType))
+    {
+      const java::asg::type::IntersectionType& typeVar = dynamic_cast<const java::asg::type::IntersectionType&>(javaType);
+      for (java::asg::ListIterator<java::asg::type::Type> it = typeVar.getBoundsListIteratorBegin(); it != typeVar.getBoundsListIteratorEnd(); ++it) {
+        const java::asg::type::Type& ref = *it;
+        addLimTypeFormers(ref);
+      }
+    }
     else if( java::asg::Common::getIsWildcardType(javaType) )
     {
       const java::asg::type::WildcardType& wildCard = dynamic_cast<const java::asg::type::WildcardType&>( javaType );
@@ -775,11 +798,25 @@ namespace columbus { namespace JAN2Lim
       }
       addLimTypeFormers(*bound);
     }
-    // MethodType is not expected
+
     else if ( java::asg::Common::getIsMethodType(javaType) )
     {
-      // TODO JAN sometimes set this for variables upon error
-      common::WriteMsg::write( CMSG_UNEXPECTED_TYPE_NODE, javaType.getId(), java::asg::Common::toString( javaType.getNodeKind()).c_str() );
+      const java::asg::type::MethodType& methodType = dynamic_cast<const java::asg::type::MethodType&>(javaType);
+
+      limFactory.beginTypeFormerMethod();
+
+      if (methodType.getReturnType()) {
+        lim::asg::base::Base& limRetType = getLimType(*methodType.getReturnType());
+        limFactory.setTypeFormerMethodHasReturnType(limRetType.getId());
+      }
+
+      for (java::asg::ListIterator<java::asg::type::Type> it = methodType.getParameterTypesListIteratorBegin(); it != methodType.getParameterTypesListIteratorEnd(); ++it) {
+        lim::asg::base::Base& limParamType = getLimType(*it);
+        limFactory.addTypeFormerMethodHasParameterType(limParamType.getId(), lim::asg::ParameterKind::pmkInOut);
+      }
+
+      lim::asg::type::TypeFormerMethod& limMethodType = limFactory.endTypeFormerMethod();
+      limFactory.addTypeFormer(limMethodType.getId());
     }
 
     // nothing matched --> Exception
@@ -920,7 +957,7 @@ namespace columbus { namespace JAN2Lim
     return false;
   }
 
-  void JAN2LimVisitor::fillMemberData( lim::asg::logical::Member& limNode, const java::asg::struc::Member& javaNode )
+  void JAN2LimVisitor::fillMemberData( lim::asg::logical::Member& limNode, const java::asg::base::Base& javaNode )
   {
     bool initBlock = java::asg::Common::getIsInitializerBlock( javaNode );
     bool positioned = java::asg::Common::getIsPositioned( javaNode );
@@ -965,6 +1002,7 @@ namespace columbus { namespace JAN2Lim
       || ( java::asg::Common::getIsVariableDeclaration( javaNode ) && java::asg::Common::getIsTypeDeclaration( *javaNode.getParent() ) )
       || java::asg::Common::getIsPackage( javaNode )
       || java::asg::Common::getIsInitializerBlock( javaNode )
+      || java::asg::Common::getIsLambda(javaNode)
     )
     {
       limNode.setMangledName( java::asg::Common::getLongName( javaNode ) );
@@ -997,7 +1035,7 @@ namespace columbus { namespace JAN2Lim
     // hasMember
     if ( javaNode.getId() == javaFactory.getRoot()->getId() ) return;
   
-    java::asg::base::Base* javaParent = & const_cast<java::asg::struc::Member&>( javaNode );
+    java::asg::base::Base* javaParent = & const_cast<java::asg::base::Base&>( javaNode );
     lim::asg::base::Base* limParent;
     do
     {
@@ -1034,7 +1072,7 @@ namespace columbus { namespace JAN2Lim
     if ( positioned ) insertLLOCMap( dynamic_cast<const java::asg::base::Positioned&>( javaNode ) );
   }
 
-  void JAN2LimVisitor::fillScopeData( lim::asg::logical::Scope& limNode, const java::asg::struc::Member& javaNode )
+  void JAN2LimVisitor::fillScopeData( lim::asg::logical::Scope& limNode, const java::asg::base::Base& javaNode )
   {
     // Upcall --> Member
     fillMemberData( limNode, javaNode );
@@ -1044,7 +1082,7 @@ namespace columbus { namespace JAN2Lim
     // LLOC, TLLOC --> line info is gathered when visiting java::Positioned nodes, finalized separately in the end by setLLOC
 
     // isAnonymous
-    limNode.setIsAnonymous( java::asg::Common::getIsAnonymousClass(javaNode) );
+    limNode.setIsAnonymous( java::asg::Common::getIsAnonymousClass(javaNode) || java::asg::Common::getIsLambda(javaNode) );
   }
 
   void JAN2LimVisitor::fillData( lim::asg::logical::Package& limNode, const java::asg::struc::Package& javaNode )
@@ -1119,7 +1157,7 @@ namespace columbus { namespace JAN2Lim
     // the hasGenericParameter edges are created when visiting the java::TypeParameter nodes
   }
 
-  void JAN2LimVisitor::fillData( lim::asg::logical::Method& limNode, const java::asg::struc::Declaration& javaNode )
+  void JAN2LimVisitor::fillData( lim::asg::logical::Method& limNode, const java::asg::base::Base& javaNode )
   {
     // Stack
     if ( ! java::asg::Common::getIsInitializerBlock(javaNode) )
@@ -1170,6 +1208,13 @@ namespace columbus { namespace JAN2Lim
       limNode.setIsAbstract( false );
       limNode.setMethodKind( lim::asg::mekNormal );
     }
+    else if ( java::asg::Common::getIsLambda(javaNode) )
+    {
+      // default values for lambdas
+      limNode.setAccessibility( lim::asg::ackNone );
+      limNode.setIsAbstract( false );
+      limNode.setMethodKind( lim::asg::mekNormal );
+    }
     else
     {
       // default values for annotations
@@ -1186,8 +1231,8 @@ namespace columbus { namespace JAN2Lim
     // numberOfBranches   } are computed between visit and visitEnd
 
     // halstead
-    if (java::asg::Common::getIsMethodDeclaration(javaNode)) {
-      if (!javaNode.getIsCompilerGenerated()) {
+    if (java::asg::Common::getIsMethodDeclaration(javaNode)) { // TODO lambda ?
+      if (!dynamic_cast<const java::asg::base::Positioned&>(javaNode).getIsCompilerGenerated()) {
         HalsteadVisitor::HalsteadInfo& mi = halsteadValues[javaNode.getId()];
         limNode.setTotalOperators(mi.N1);
         limNode.setTotalOperands(mi.N2);
@@ -1630,6 +1675,32 @@ namespace columbus { namespace JAN2Lim
   }
 
   
+  /************************************************************/
+  /*        java::Lambda --> lim::Method                      */
+  /************************************************************/
+  void JAN2LimVisitor::visit( const java::asg::expr::Lambda& node, bool callVirtualBase )
+  {
+    VISIT_BEGIN( node, callVirtualBase, "Lambda" );
+    buildDispatch<lim::asg::logical::Method, java::asg::expr::Lambda>( node );
+  }
+
+  void JAN2LimVisitor::visitEnd( const java::asg::expr::Lambda& node, bool callVirtualBase )
+  {
+    VISIT_END_FIRST( node, "Lambda" );
+    if ( methodStack.size() > 0 && methodStack.top().method )
+    {
+      MethodInfo& methodInfo = methodStack.top();
+      lim::asg::logical::Method& method = dynamic_cast<lim::asg::logical::Method&>( limFactory.getRef( methodInfo.method ) );
+      fillCollectedMethodData( method, methodInfo );
+
+      methodStack.pop();
+      usesStack.pop();
+    }
+    else common::WriteMsg::write(CMSG_METHODE_STACK_IS_EMPTY);
+
+    VISIT_END( node, callVirtualBase, "Lambda" );
+  }
+
   //
   //  OTHER VISITORS
   //
@@ -1868,6 +1939,32 @@ namespace columbus { namespace JAN2Lim
     }
   }
 
+  // Method --> uses
+  void JAN2LimVisitor::visit( const java::asg::expr::MemberReference& javaNode, bool callVirtualBase )
+  {
+    VISIT_BEGIN( javaNode, callVirtualBase, "MemberReference" );
+
+    java::asg::struc::MethodDeclaration* invokes = javaNode.getReferredMethod();
+
+    NodeId calledMethodId = 0;
+
+    if ( invokes ) {
+      lim::asg::base::Base* calledMethod = getLimPtr( invokes );
+      if ( ! calledMethod ) {
+        calledMethod = & createLimNode( *invokes );
+      }
+      calledMethodId = calledMethod->getId();
+    } else {
+      common::WriteMsg::write(CMSG_INVOKES_IS_NULL);
+    }
+
+    if ( calledMethodId ) {
+      if ( !usesStack.empty() ) {
+        usesStack.top().insert( getLimType(*invokes->getMethodType()).getId() );
+      }
+    }
+  }
+
   // Method --> throws, NOS++
   void JAN2LimVisitor::visit( const java::asg::statm::Throw& javaNode, bool callVirtualBase )
   {
@@ -1891,10 +1988,10 @@ namespace columbus { namespace JAN2Lim
     VISIT_END_FIRST( node, "InstanceInitializerBlock" );
 
     if ( ! classStack.empty() ) 
-  {
-    classStack.top().instanceInit = methodStack.top();
+    {
+      classStack.top().instanceInit = methodStack.top();
       methodStack.pop();
-  }
+    }
 
     VISIT_END( node, callVirtualBase, "InstanceInitializerBlock" );
   }
@@ -1912,8 +2009,8 @@ namespace columbus { namespace JAN2Lim
     VISIT_END_FIRST( node, "StaticInitializerBlock" );
 
     if ( ! classStack.empty() ) 
-  {
-    classStack.top().staticInit = methodStack.top();
+    {
+      classStack.top().staticInit = methodStack.top();
       methodStack.pop();
     }
     VISIT_END( node, callVirtualBase, "StaticInitializerBlock" );

@@ -29,7 +29,7 @@
 #include "ErrorCodes.h"
 #include <common/inc/messages.h>
 
-#if defined(__unix__)
+#if defined(__linux__)
 #define CL_PAR_PLUS           '\''                // 'one parameter'
 #elif  defined(_WIN32)
 #define CL_PAR_PLUS           '"'                 // 'one parameter'

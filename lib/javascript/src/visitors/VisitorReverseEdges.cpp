@@ -117,6 +117,10 @@ void VisitorReverseEdges::visitCallExpression_HasArguments(const expression::Cal
   revEdges->insertEdge(&end, &begin, edkCallExpression_HasArguments);
 }
 
+void VisitorReverseEdges::visitCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end) {
+  revEdges->insertEdge(&end, &begin, edkCallExpression_Calls);
+}
+
 void VisitorReverseEdges::visitConditionalExpression_HasAlternate(const expression::ConditionalExpression& begin, const expression::Expression& end) {
   revEdges->insertEdge(&end, &begin, edkConditionalExpression_HasAlternate);
 }
@@ -165,7 +169,11 @@ void VisitorReverseEdges::visitNewExpression_HasArguments(const expression::NewE
   revEdges->insertEdge(&end, &begin, edkNewExpression_HasArguments);
 }
 
-void VisitorReverseEdges::visitObjectExpression_HasProperties(const expression::ObjectExpression& begin, const expression::Property& end) {
+void VisitorReverseEdges::visitNewExpression_Calls(const expression::NewExpression& begin, const statement::Function& end) {
+  revEdges->insertEdge(&end, &begin, edkNewExpression_Calls);
+}
+
+void VisitorReverseEdges::visitObjectExpression_HasProperties(const expression::ObjectExpression& begin, const base::Positioned& end) {
   revEdges->insertEdge(&end, &begin, edkObjectExpression_HasProperties);
 }
 
@@ -309,7 +317,7 @@ void VisitorReverseEdges::visitLabeledStatement_HasBody(const statement::Labeled
   revEdges->insertEdge(&end, &begin, edkLabeledStatement_HasBody);
 }
 
-void VisitorReverseEdges::visitObjectPattern_HasProperties(const statement::ObjectPattern& begin, const expression::Property& end) {
+void VisitorReverseEdges::visitObjectPattern_HasProperties(const statement::ObjectPattern& begin, const base::Positioned& end) {
   revEdges->insertEdge(&end, &begin, edkObjectPattern_HasProperties);
 }
 

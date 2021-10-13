@@ -37,7 +37,8 @@ namespace structure {
     Positioned(_id, _factory),
     m_identifier(0),
     AttributeListsContainer(),
-    m_Body(0)
+    m_Body(0),
+    m_ExpressionBody(0)
   {
   }
 
@@ -53,6 +54,7 @@ namespace structure {
       AttributeListsContainer.pop_front();
     }
     removeBody();
+    removeExpressionBody();
     base::Positioned::prepareDelete(false);
   }
 
@@ -107,6 +109,16 @@ namespace structure {
     return _node;
   }
 
+  structure::ArrowExpressionClauseSyntax* AccessorDeclarationSyntax::getExpressionBody() const {
+    structure::ArrowExpressionClauseSyntax *_node = NULL;
+    if (m_ExpressionBody != 0)
+      _node = dynamic_cast<structure::ArrowExpressionClauseSyntax*>(factory->getPointer(m_ExpressionBody));
+    if ( (_node == NULL) || factory->getIsFiltered(_node))
+      return NULL;
+
+    return _node;
+  }
+
   bool AccessorDeclarationSyntax::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
       case edkAccessorDeclarationSyntax_AttributeLists:
@@ -114,6 +126,9 @@ namespace structure {
         return true;
       case edkAccessorDeclarationSyntax_Body:
         setBody(edgeEnd);
+        return true;
+      case edkAccessorDeclarationSyntax_ExpressionBody:
+        setExpressionBody(edgeEnd);
         return true;
       default:
         break;
@@ -131,6 +146,9 @@ namespace structure {
         return true;
       case edkAccessorDeclarationSyntax_Body:
         removeBody();
+        return true;
+      case edkAccessorDeclarationSyntax_ExpressionBody:
+        removeExpressionBody();
         return true;
       default:
         break;
@@ -235,6 +253,52 @@ namespace structure {
       m_Body = 0;
   }
 
+  void AccessorDeclarationSyntax::setExpressionBody(NodeId _id) {
+    structure::ArrowExpressionClauseSyntax *_node = NULL;
+    if (_id) {
+      if (!factory->getExist(_id))
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+      _node = dynamic_cast<structure::ArrowExpressionClauseSyntax*> (factory->getPointer(_id));
+      if ( _node == NULL) {
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      }
+      if (&(_node->getFactory()) != this->factory)
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+
+      if (m_ExpressionBody) {
+        removeParentEdge(m_ExpressionBody);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_ExpressionBody, m_id, edkAccessorDeclarationSyntax_ExpressionBody);
+      }
+      m_ExpressionBody = _node->getId();
+      if (m_ExpressionBody != 0)
+        setParentEdge(factory->getPointer(m_ExpressionBody), edkAccessorDeclarationSyntax_ExpressionBody);
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->insertEdge(m_ExpressionBody, this->getId(), edkAccessorDeclarationSyntax_ExpressionBody);
+    } else {
+      if (m_ExpressionBody) {
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      }
+    }
+  }
+
+  void AccessorDeclarationSyntax::setExpressionBody(structure::ArrowExpressionClauseSyntax *_node) {
+    if (_node == NULL)
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+
+    setExpressionBody(_node->getId());
+  }
+
+  void AccessorDeclarationSyntax::removeExpressionBody() {
+      if (m_ExpressionBody) {
+        removeParentEdge(m_ExpressionBody);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_ExpressionBody, m_id, edkAccessorDeclarationSyntax_ExpressionBody);
+      }
+      m_ExpressionBody = 0;
+  }
+
   void AccessorDeclarationSyntax::accept(Visitor &visitor) const {
     visitor.visit(*this);
   }
@@ -301,6 +365,7 @@ namespace structure {
     binIo.writeUInt4(m_identifier);
 
     binIo.writeUInt4(m_Body);
+    binIo.writeUInt4(m_ExpressionBody);
 
 
     for (ListIterator<structure::AttributeListSyntax>::Container::const_iterator it = AttributeListsContainer.begin(); it != AttributeListsContainer.end(); ++it) {
@@ -317,6 +382,10 @@ namespace structure {
     m_Body =  binIo.readUInt4();
     if (m_Body != 0)
       setParentEdge(factory->getPointer(m_Body),edkAccessorDeclarationSyntax_Body);
+
+    m_ExpressionBody =  binIo.readUInt4();
+    if (m_ExpressionBody != 0)
+      setParentEdge(factory->getPointer(m_ExpressionBody),edkAccessorDeclarationSyntax_ExpressionBody);
 
     NodeId _id;
 

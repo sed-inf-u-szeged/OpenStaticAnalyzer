@@ -149,14 +149,14 @@ std::set<std::string> VisitorImport::getAll(module::Module& module){
                 }
               }
             }
-          }
-        }
-      }
+          } //Common::getIsValid(parent) && ndk == ndkAssign
+        } //id.getNodeKind() == ndkIdentifier
+      } //obj.getRefersToSize() == 1
       if(new_all){
         ret = __all__;
         break;
       }
-    }
+    } //obj.getName().compare("__all__") == 0
     if(name[0] != '_'){
       ret.insert(name);
     }

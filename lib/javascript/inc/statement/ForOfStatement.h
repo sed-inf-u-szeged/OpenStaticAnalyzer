@@ -36,6 +36,9 @@ namespace statement {
   /**
   * \brief ForOfStatement class, which represents the statement::ForOfStatement node.
   * (missing)
+  * 
+  * Attributes:
+  *   - async (boolean) : (missing)
   */
   class ForOfStatement : public ForInStatement {
     protected:
@@ -55,12 +58,12 @@ namespace statement {
 
     private:
       /**
-      * \brief This function always throws a JavaScriptException due to copying is not allowed!
+      * \brief This function always throws a JavascriptException due to copying is not allowed!
       */
       ForOfStatement & operator=(const ForOfStatement&);
 
       /**
-      * \brief This function always throws a JavaScriptException due to copying is not allowed!
+      * \brief This function always throws a JavascriptException due to copying is not allowed!
       */
       ForOfStatement(const ForOfStatement&);
 
@@ -75,6 +78,32 @@ namespace statement {
       * \brief Delete all edge.
       */
       virtual void prepareDelete(bool tryOnVirtualParent);
+
+
+      // ---------- Attribute getter function(s) ----------
+
+      /**
+      * \brief Gives back the async of the node.
+      * \return Returns with the async.
+      */
+      bool getAsync() const;
+
+
+      // ---------- Attribute setter function(s) ----------
+
+      /**
+      * \internal
+      * \brief Sets the async of the node.
+      * \param async [in] The new value of the async.
+      */
+      void setAsync(bool _async);
+
+    protected:
+
+      // ---------- Attribute(s) ----------
+
+      /** \internal \brief The value of the `async`. */
+      bool m_async : 1;
 
     protected:
       /**

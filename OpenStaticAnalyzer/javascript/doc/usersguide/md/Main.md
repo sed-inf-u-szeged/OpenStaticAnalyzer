@@ -6,7 +6,7 @@
 
 OpenStaticAnalyzer for JavaScript is a source code analyzer tool, which can perform deep static analysis of the source code of complex JavaScript systems.
 
-The source code of a program is usually its only up-to-date documentation. At the same time, the source code is the exquisite bearer of knowledge, business processes and methodology, accumulated over a long period of time. Source code quality decrease, which happens due to many quick fixes and time pressure, results in the increase of development and testing costs, and operational risks. In spite of this, the source code usually receives hostile treatment and is merely considered as a tool.
+The source code of a program is usually its only up-to-date documentation. At the same time, the source code is the exquisite bearer of knowledge, business processes and methodology, accumulated over a long period of time. Source code quality decrease, which happens due to many quick fixes and time pressure, results in the increase of development and testing costs, and operational risks. In spite of this fact, the source code usually receives hostile treatment and is merely considered as a tool.
 
 OpenStaticAnalyzer provides deep static analysis of source code. Using the results of the analysis, the quality of the analyzed source code can be improved and developed both in the short- and long term in a directed way.
 
@@ -26,11 +26,13 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
 
     - [ESLint] coding rule violations
 
+    - [SONARQUBE™] platform 8.0 (“SonarQube” in the following) coding rule violations
+
 - Clone detection (copy-pasted source code fragments) extended with clone tracking and "clone smells"
 
     - Syntax-based, so-called Type-2 clones
 
-- Metrics calculation at component, file, class, method, and function levels:
+- Metrics calculation at system, file, class, method, and function levels:
 
     - Source code metrics
 
@@ -39,6 +41,7 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
     - Coding rule violation metrics
 
 [ESLint]:http://eslint.org/
+[SONARQUBE™]:https://www.sonarqube.org
 
 By continuous static analysis, the software developers can:
 
@@ -48,14 +51,17 @@ By continuous static analysis, the software developers can:
 
 - the number of errors in delivered software can be reduced, so the operational risks can be decreased, increasing the company's reputation.
 
+OpenStaticAnalyzer can analyze source code conforming to ECMAScript 2015 (ECMAScript 6).
+
 With the help of the filtering mechanism it is possible to specify a certain part of the ASG to be used (or not to be used) during the analysis, hence the results can be made more focused and the usage of memory and CPU can be reduced (e.g. generated source files or test code can be filtered out).
 
+[Department of Software Engineering]:http://www.sed.inf.u-szeged.hu/softwarequality
 
 ## Background
 
 During the static analysis, an Abstract Semantic Graph (ASG) is constructed from the language elements of the source code. This ASG is then processed by the different tools in the package to calculate product metrics, identify copy-pasted code (clones), coding rule violations, etc.
 
-# Installation
+# Installation {#installation-section}
 
 ## Supported platforms
 
@@ -69,15 +75,15 @@ OpenStaticAnalyzer supports the following x86 and x86-64 platforms:
 
 - GNU/Linux with kernel version 2.6.18 and GNU C library 2.11 or newer
 
-## Requirements
+## Requirements {#requirements-section}
 
-In order to use OpenStaticAnalyzer for JavaScript it is necessary to have Node.js 8.x.x installed on the computer and the necessary environment variable (PATH) must be set correctly.
+In order to use OpenStaticAnalyzer for JavaScript, it is necessary to have Node.js 8.x.x installed on the computer and the necessary environment variable (PATH) must be set correctly.
 
-In case of Windows, the appropriate Microsoft Visual C++ 2015 Redistributable Package must be installed. It can be downloaded from the following URL:
+In case of Windows, the Microsoft Visual C++ 2017 Redistributable Package must be installed. It can be downloaded from the following URL:
 
-- [https://www.microsoft.com/en-us/download/details.aspx?id=48145] (x86/x64)
+- [https://aka.ms/vs/15/release/vc_redist.x64.exe] (x64)
 
-[https://www.microsoft.com/en-us/download/details.aspx?id=48145]:https://www.microsoft.com/en-us/download/details.aspx?id=48145
+[https://aka.ms/vs/15/release/vc_redist.x64.exe]:https://aka.ms/vs/15/release/vc_redist.x64.exe
 
 The Linux package uses bash scripts.
 
@@ -144,7 +150,7 @@ OpenStaticAnalyzer can be executed with the following parameters:
 
 **-externalHardFilter**
 
-  : Filter file specified with relative or absolute path, to filter out certain files from the analysis based on their path names. Filtered files will not appear in the results. The filter file is a simple text file containing lines starting with '+' or '-' characters followed by a regular expression[^1]. During the analysis, each input file will be checked for these expressions. If the first character of the last matching expression is '-', then the given file will be excluded from the analysis. If the first character of the last matching expression is '+', or there is no matching expression, then the file will be analyzed. A line starting with a different character than '-' or '+' will be ignored. Example filter file content:
+  : Filter file specified with relative or absolute path, to filter out certain files from the analysis based on their path names. Filtered files will not appear in the results. The filter file is a simple text file containing lines starting with '+' or '-' characters followed by a regular expression[^2]. During the analysis, each input file will be checked for these expressions. If the first character of the last matching expression is '-', then the given file will be excluded from the analysis. If the first character of the last matching expression is '+', or there is no matching expression, then the file will be analyzed. A line starting with a different character than '-' or '+' will be ignored. Example filter file content:
 
         # Filter out all source files starting with "test":
         -test[^\.]*.js
@@ -179,6 +185,10 @@ OpenStaticAnalyzer can be executed with the following parameters:
 **-csvDecimalMark**
 
   : This parameter sets the decimal mark character in the CSV outputs. The default is value is the dot ("."). The character set here must be placed in quotation marks (e.g. -csvDecimalMark=",").
+
+**-sarifseverity**
+
+  : This parameter sets the severity levels to be saved in the SARIF output. (1 - Info, 2 - Minor, 3 - Major, 4 - Critical, 5 - Blocker, c/C - CloneClass). The value should not be placed in quotation marks (e.g. -sarifseverity=2345c). The default value is 2345c.
 
 **-maximumThreads**
 
@@ -233,12 +243,55 @@ OpenStaticAnalyzer can be executed with the following parameters:
       </openstaticanalyzer-profile>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+**-runUDM**
+
+  : This parameter turns on or off the UserDefinedMetrics module. With this feature, OpenStaticAnalyzer computes custom source code metrics based on other, previously computed metrics. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is dependent on the presence of custom metric definitions in the profile xml.
+
+**-runSQ**
+
+  : Import issues from SonarQube server.
+
+**-SQHost**
+
+  : The URL address of the SonarQube server.
+
+**-SQPort**
+
+  : The port of the SonarQube server.
+
+**-SQProjectKey**
+
+  : The key of the project in the SonarQube server.
+
+**-SQProjectPrefix**
+
+  : Prefix path of the project's base directory (the path of the sonar-project.properties file).
+
+**-SQUserName**
+
+  : The user name for the SonarQube server.
+
+**-SQPassword**
+
+  : The password for the SonarQube server.
+
+**-SQLanguageKey**
+
+  : The key of the language in SonarQube.
+  
+**-runLIM2Patterns**
+
+  : This parameter can be used to enable or disable the LIM2Patterns module during analysis (default = on). 
+
+**-pattern**
+
+  : The pattern file or pattern directory for LIM2Patterns. By default it searches for the predefined Anti Patterns found in Tools/Patterns/AntiPatterns.
   
 # Usage
 
 Execute the following command to analyze the source code of a software system:
 
-    OpenStaticAnalyzer.exe -projectBaseDir:MyProject -projectName:MyProject -resultsDir:Results
+    OpenStaticAnalyzerJavaScript.exe -projectBaseDir:MyProject -projectName:MyProject -resultsDir:Results
 
 # Result files
 
@@ -248,54 +301,70 @@ An error-free execution of OpenStaticAnalyzer produces the following files:
 
 - Files containing the results of the static analysis in the results directory (set by the resultsDir parameter):
 
-    - \$(projectName)\\\$(DATE)\\\$(projectName)-\*.csv
+    - \$(projectName)\\javascript\\\$(DATE)\\\$(projectName)-\*.csv
 
         CSV (comma separated values) files containing different metrics:
 Component, File, Class, Method, and Function, level source code metrics, rule violation counts, and clone-related metrics at CloneClass and CloneInstance level.
 
-    - \$(projectName)\\\$(DATE)\\\$(projectName)-clones.txt
+    - \$(projectName)\\javascript\\\$(DATE)\\\$(projectName)-clones.txt
 
         List of the code clones (copy-pasted source code fragments) in the system.
 
-    - \$(projectName)\\\$(DATE)\\\$(projectName)-MetricHunter.txt
+    - \$(projectName)\\javascript\\\$(DATE)\\\$(projectName)-MetricHunter.txt
 
         List of the MetricHunter metric value violations in the system.
 
-    - \$(projectName)\\\$(DATE)\\\$(projectName)-ESLint.txt
+    - \$(projectName)\\javascript\\\$(DATE)\\\$(projectName)-ESLint.txt
 
         List of the ESLint coding rule violations in the system.
 
-    - \$(projectName)\\\$(DATE)\\\$(projectName).graph
+    - \$(projectName)\\javascript\\\$(DATE)\\\$(projectName).graph
 
         Binary representation of the result graph containing all the metrics, code clones and coding rule violations.
 
-    - \$(projectName)\\\$(DATE)\\\$(projectName).xml
+    - \$(projectName)\\javascript\\\$(DATE)\\\$(projectName).xml
 
         XML representation of the result graph containing all the metrics, code clones and coding rule violations.
 
-    - \$(projectName)\\\$(projectName).gsi
+    - \$(projectName)\\javascript\\\$(projectName).gsi
 
         Binary data file containing information for tracking the code clones through the consecutive revisions of the analyzed software system.
 
+    - \$(projectName)\\javascript\\\$(DATE)\\\$(projectName).sarif
+
+        SARIF representation of the rule violations.
+
+    - \$(projectName)\\javascript\\\$(DATE)\\\$(projectName)-summary.graph
+
+        Binary representation of the summary result graph containing only the System component node.
+
+    - \$(projectName)\\javascript\\\$(DATE)\\\$(projectName)-summary.xml
+
+        XML representation of the summary result graph containing only the System component node.
+
+    - \$(projectName)\\javascript\\\$(DATE)\\\$(projectName)-summary.json
+
+        JSON representation of the summary result graph containing only the System component node.
+
 - Other files and directories created in the results directory:
 
-    - \$(projectName)\\\$(DATE)\\openstaticanalyzer
+    - \$(projectName)\\javascript\\\$(DATE)\\openstaticanalyzer
 
         Directory, which contains configuration, binary, ASG, log, and temporary files created during the source code analysis.
 
-    - \$(projectName)\\\$(DATE)\\openstaticanalyzer\\asg
+    - \$(projectName)\\javascript\\\$(DATE)\\openstaticanalyzer\\asg
 
         Directory, which contains backup copies of the linked ASG and LIM files, the corresponding filter files, and the GSI file.
 
-    - \$(projectName)\\\$(DATE)\\openstaticanalyzer\\graph
+    - \$(projectName)\\javascript\\\$(DATE)\\openstaticanalyzer\\graph
 
         Directory, which contains backup copies of the graph files.
 
-    - \$(projectName)\\\$(DATE)\\openstaticanalyzer\\log
+    - \$(projectName)\\javascript\\\$(DATE)\\openstaticanalyzer\\log
 
         Directory, which contains the log files created during the code analysis.
 
-    - \$(projectName)\\\$(DATE)\\openstaticanalyzer\\temp
+    - \$(projectName)\\javascript\\\$(DATE)\\openstaticanalyzer\\temp
 
         Directory, which contains the temporary files created during the code analysis.
 
@@ -351,13 +420,18 @@ Demo\\
 - Message: exec returned: 255
 
     If any of the log files in the the
-    \$(projectName)\\\$(DATE)\\openstaticanalyzer\\log directory starts with "Could not load a transcoding service", then the GCONV\_PATH should be set to the current gconv directory. Check the "Requirements" section of the user's guide.
+    \$(projectName)\\javascript\\\$(DATE)\\openstaticanalyzer\\log directory starts with "Could not load a transcoding service", then the GCONV\_PATH should be set to the current gconv directory. Check the "Requirements" section of the user's guide.
+
+- Message: exec returned: 6633
+
+    Solution: The installed version of Node.js is lower than the required minimum (see [Requirements](#requirements-section) section).
 
 # Known bugs and deficiencies
 
 Known bugs and deficiencies of OpenStaticAnalyzer for JavaScript.
 
 - OpenStaticAnalyzer places the results into the directory specified by the projectName parameter. If special characters (like '\<', '\>', etc.) are used in the parameter, the analysis will probably fail.
+- Variable usage edges are in experimental version. There are cases which are not handled perfectly.
 
 # FAQ
 

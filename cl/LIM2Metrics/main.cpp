@@ -62,9 +62,11 @@ static string graphFile;
 static string rulFile = "MET.rul";
 static string rulConfig;
 static bool pathLower = false;
+static bool convertInstances = false;
 static bool exportRul = false;
 static char csvSeparator = ',';
 static list<string> inputFiles;
+static string LCOMFile;
 
 static bool ppGraph( const common::Option *o, char *argv[] ) {
   graphFile = argv[0];
@@ -96,6 +98,11 @@ static bool ppRulConfig( const common::Option *o, char *argv[] ) {
   return true;
 }
 
+static bool ppConvertInstances( const common::Option *o, char *argv[] ) {
+  convertInstances = true;
+  return true;
+}
+
 static void ppFile( char *filename ) {
   inputFiles.push_back( filename );
 }
@@ -116,6 +123,7 @@ const common::Option OPTIONS_OBJ [] = {
   { false,  "-csv",                 1, "filename",        0, common::OT_WC,             ppCsv,                NULL,       "Create csv output file"},
   CL_CSVSEPARATOR
   { false,  "-pathlower",           0, "",                0, common::OT_NONE,           ppPathLower,          NULL,       "Paths are converted to lower case for writting out"},
+  { false,   "-convertInstancesToo",0, "",                0, common::OT_NONE,           ppConvertInstances,   NULL,       "Convert the instance nodes too into the graph."},
   CL_RUL_AND_RULCONFIG("MET.rul")
   CL_EXPORTRUL
   COMMON_CL_ARGS
@@ -131,15 +139,37 @@ void loadFilter(lim::asg::Factory& fact, const string& file) {
 
   try {
     fact.loadFilter(flt);
-  } catch (IOException e) {
+  } catch (const IOException&) {
     common::WriteMsg::write(CMSG_LIM2METRICS_FILTER_NOT_LOADED, flt.c_str());
     return;
   }
 }
 
+static inline void setStartTime(unsigned long *time) {
+  timestat usedtime= getProcessUsedTime();
+  *time= usedtime.user + usedtime.system;
+}
+
+static inline void setElapsedTime(unsigned long *time) {
+  timestat usedtime= getProcessUsedTime();
+  *time= usedtime.user + usedtime.system - *time;
+}
+
+static inline void updateMemStat(size_t *max_mem) {
+  memstat ms = getProcessUsedMemSize();
+  if (*max_mem < ms.size) {
+    *max_mem = ms.size;
+  }
+}
+
+
 int main(int argc, char *argv[]) {
 
   int exit_code = 0;
+  unsigned long totaltime = 0;
+  unsigned long calculatingtime = 0;
+  unsigned long exporttime = 0;
+  size_t mem = 0;
 
   MAIN_BEGIN
 
@@ -152,6 +182,9 @@ int main(int argc, char *argv[]) {
     if ( inputFiles.size() != 1 ) {
       clError();
     }
+
+    setStartTime( &totaltime );
+    updateMemStat( &mem );
 
     //
     // LOAD LIM
@@ -169,6 +202,9 @@ int main(int argc, char *argv[]) {
     header.push_back( &overrides );
     limFact.load( inputFiles.begin()->c_str(), header );
 
+    updateMemStat( &mem );
+
+
     //
     // LOAD FILTER
     //
@@ -178,6 +214,8 @@ int main(int argc, char *argv[]) {
     limFact.initializeFilter();
     loadFilter(limFact, inputFiles.begin()->c_str());
 
+    updateMemStat( &mem );
+
     //
     // CONVERT LIM TO GRAPH
     //
@@ -185,7 +223,9 @@ int main(int argc, char *argv[]) {
     common::WriteMsg::write( CMSG_LIM2METRICS_DEBUG_GRAPH_CONVERT );
 
     graph::Graph limGraph;
-    lim2graph::convertBaseGraph( limFact, limGraph, true, true, true, true, false );
+    lim2graph::convertBaseGraph( limFact, limGraph, true, true, true, true, convertInstances );
+    
+    updateMemStat( &mem );
 
     //
     // LOAD RUL
@@ -207,6 +247,8 @@ int main(int argc, char *argv[]) {
 
     rul::RulHandler rul( common::indep_fullpath( rulFile ), rulConfig, "eng" );
 
+    updateMemStat( &mem );
+
     //
     // COMPILE SHARED CONTAINERS
     //
@@ -221,20 +263,29 @@ int main(int argc, char *argv[]) {
 
     lim::metrics::LCOMMapType LCOMMap;
     shared.LCOMMap = nullptr;
+    if ( ! LCOMFile.empty() ) {
+      shared.LCOMMap = &LCOMMap;
+    }
 
     //
     // RUN VISITOR
     //
 
     common::WriteMsg::write( CMSG_LIM2METRICS_DEBUG_VISITOR_RUN );
-    lim::metrics::LimMetricsVisitor visitor( limFact, limGraph, rul, shared);
+    setStartTime( &calculatingtime );
+
+    lim::metrics::LimMetricsVisitor visitor( limFact, limGraph, rul, shared );
     visitor.run();
     
+    setElapsedTime( &calculatingtime );
+    updateMemStat( &mem );
     //
     // EXPORT RESULTS
     //
 
     common::WriteMsg::write( CMSG_LIM2METRICS_DEBUG_EXPORT_RESULTS );
+    setStartTime( &exporttime );
+
     if ( ! csvFile.empty() ) {
       cout << "CSV export to " << csvFile << endl;
       graphsupport::exportReadableMetricsCSV( limGraph, csvFile, csvSeparator );
@@ -249,6 +300,16 @@ int main(int argc, char *argv[]) {
       limGraph.saveBinary( graphFile );
     }
 
+    //
+    // STATS
+    //
+
+    setElapsedTime( &totaltime );
+    WriteMsg::write(CMSG_LIM2METRICS_STATISTICS);
+    WriteMsg::write(CMSG_LIM2METRICS_CALCULATION_TIME, ((float)calculatingtime)/100);
+    WriteMsg::write(CMSG_LIM2METRICS_EXPORT_TIME, ((float)exporttime)/100);
+    WriteMsg::write(CMSG_LIM2METRICS_TOTAL_TIME, ((float)totaltime)/100);
+    WriteMsg::write(CMSG_LIM2METRICS_PEAK_MEMORY, ((float)mem)/1048576);
   MAIN_END
 
   return exit_code;

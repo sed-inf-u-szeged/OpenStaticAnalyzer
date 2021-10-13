@@ -37,13 +37,14 @@
 #include "Visitors/JNodeEmbeddednessVisitor.h"
 #endif
 
+#ifdef SCHEMA_CSHARP
+#include "Visitors/CSNodeEmbeddednessVisitor.h"
+#endif
+
 #ifdef SCHEMA_PYTHON
 #include "Visitors/PNodeEmbeddednessVisitor.h"
 #endif
 
-#ifdef SCHEMA_CSHARP
-#include "Visitors/CSNodeEmbeddednessVisitor.h"
-#endif
 
 #ifdef SCHEMA_JAVASCRIPT
 #include "Visitors/JSNodeEmbeddedVisitor.h"
@@ -62,7 +63,6 @@ using namespace std;
 
 class AbstractFilter;
 
-
 namespace columbus { namespace dcf {
 
   enum DCFState {
@@ -74,7 +74,7 @@ namespace columbus { namespace dcf {
   struct CorrectedPos {
     CorrectedPos(
       const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned* node,
-      columbus::Key uniformPath):node(node),uniformPath(uniformPath) {
+      columbus::Key uniformPath) :node(node), uniformPath(uniformPath) {
 
     }
     const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned* node;
@@ -86,6 +86,9 @@ namespace columbus { namespace dcf {
       return (struct1->getComponent()->getId() < struct2->getComponent()->getId());
     }
   };
+
+void dump(const genealogy::CloneInstance& ci, std::ostream& out);
+
 
 class DuplicatedCodeMiner {
 private:
@@ -110,34 +113,36 @@ public:
    */
   virtual ~DuplicatedCodeMiner();
   
-  int getCloneClassNum()   const ;
+  int getCloneClassNum()   const;
   int getCloneInstanceNum()const;
   void saveGenealogy();
+
   void setStatementFilter(bool val);
 
+  int getNodeKindSequenceSize(); 
+  
 protected:
   bool statementFilter;
 
   // genealogy file name
-  Config&                                     config;
+  Config&                                         config;
   // string table for genealogy factory
-  columbus::RefDistributorStrTable*           strTable;
+  columbus::RefDistributorStrTable*               strTable;
   // genealogy factory
-  columbus::genealogy::Factory*               genealogyFact;
+  columbus::genealogy::Factory*                   genealogyFact;
   // the lim factory
-  columbus::lim::asg::Factory*                limFact;
-  NodeId                                      rootComponenetID;
-  std::set<NodeId>                            visitedLimNodes;
-  std::set<LineIdentifier>                    visitedLines;
-  std::set<LineIdentifier>                    logicalLines;
-  std::map<NodeId, std::set<  columbus::Key > >          fileNamesByComponent;
-  
+  columbus::lim::asg::Factory*                    limFact;
+  NodeId                                          rootComponenetID;
+  std::set<NodeId>                                visitedLimNodes;
+  std::set<LineIdentifier>                        visitedLines;
+  std::set<LineIdentifier>                        logicalLines;
+  std::map<NodeId, std::set<  columbus::Key > >   fileNamesByComponent;
   
   std::map<std::string, unsigned long long >  serializedAsgNodeNumberByComponenet;
   LimOrigin                                   limOrigin;
   
-  std::map<NodeId,std::set<NodeId> >          limNodeClineInstanceMap;
-  std::map<NodeId,std::set<NodeId> >          limComponentClineInstanceMap;
+  std::map<NodeId, std::set<NodeId> >          limNodeClineInstanceMap;
+  std::map<NodeId, std::set<NodeId> >          limComponentClineInstanceMap;
 
   //this map is conatin the version of lim node
   columbus::lim::asg::MangledNameKey2LimId nameMap;
@@ -150,7 +155,7 @@ protected:
   unsigned int currentSystemMaxNDC;
   // rul handler
   columbus::rul::RulHandler* rulHandler;
-  // the output graph
+  // output graph
   columbus::graph::Graph graph;
 
   // factory manager for asg-s
@@ -159,13 +164,13 @@ protected:
   // graph indexer
   columbus::graphsupport::GraphRangeIndexer* indexer;
 
-  //v1 vector will contain the sequence of node kinds
+  //v1 vector which contains the sequence of node kinds
   std::vector<int> nodeKindSequence;
 
-  //v2 vector will contain the sequence of nodeIds together with the depth information
+  //v2 vector which contains the sequence of nodeIds together with the depth information
   std::vector<ClonePositioned*> nodeIdSequence;
 
-  // there is the map for the node  and the connected nodes with is NDC-s
+  // map for the node and its connected nodes with NDCs
   NodeEmbeddednessVisitorBase::ConectedEdgesMap conectedEdgesMap;
 
   struct SerializedAsg {
@@ -178,35 +183,37 @@ protected:
   struct PotentialCloneInstance {
     unsigned startPosition;
     Interval I;
-    PotentialCloneInstance(unsigned startPosition, Interval I): startPosition(startPosition), I(I) { }
+    PotentialCloneInstance(unsigned startPosition, Interval I) : startPosition(startPosition), I(I) { }
     
     bool operator<(const PotentialCloneInstance& pci) const {
       return startPosition + I.a < pci.startPosition + pci.I.a;
     }
     
-    PotentialCloneInstance(const PotentialCloneInstance& pci): startPosition(pci.startPosition), I(pci.I) { }
+    PotentialCloneInstance(const PotentialCloneInstance& pci) : startPosition(pci.startPosition), I(pci.I) { }
 
     private:
       const PotentialCloneInstance& operator=(const PotentialCloneInstance& pci); // Intentionally not implemented!
 
   };
   
+  // maps a clone class to the set of its potential clone instances
   typedef std::map<columbus::NodeId, std::set<PotentialCloneInstance> > CloneClassPotentialCloneInstanceMap;
   
-  //the map of genealogy CloneInstance loaction to asg
+  // the map of genealogy CloneInstance location for asg
   std::map<std::string, SerializedAsg> serializedAsgMap;
   
 
-  //instead of MD% sum using just the sequence positions only
+
+  // instead of MD% sum using the sequence positions only
   std::map<std::string, genealogy::CloneClass*> cloneClassMap;
 
   // clone visitor
   CloneVisitorBase* theCloneVisitor;
-
   ostream* filterOut;
 
-  // number of trivial pairs at evolution mapping
+
 #ifdef GENEALOGY
+  // number of trivial pairs at evolution mapping
   unsigned int trivial_pairs;
   bool dumpGraphml;
 #endif
@@ -225,9 +232,12 @@ protected:
 
 protected:
 
+  void dumpNodeIdSequence(const std::string filename);
+  void dumpNodeKindSequence(const std::string filename);
+
   /**
    * \internal
-   * \brief update the memory usage statistic 
+   * \brief update the memory usage statistics
    */
   void updateMemoryStat();
   /**
@@ -238,14 +248,14 @@ protected:
    * \param needToSkip [inout] skipped paths
    * \param overlap [in] allow overlapped clone instances
    */
-  void detectClones(std::map<std::string, std::set<NodeId> >& coveredNodes, unsigned int maxCCSize, std::set<std::string>& needToSkip) ;
+  void detectClones(std::map<std::string, std::set<NodeId> >& coveredNodes, unsigned int maxCCSize, std::set<std::string>& needToSkip);
 
   bool isFilteredCC(const genealogy::CloneClass& cc);
 
   /**
    * \internal
    * \brief return true, if metric is turned on in rul file
-   * \return true, is metric calculation is needed, otherwise return false
+   * \return true if metric calculation is needed, otherwise return false
    */
   bool getIsNeeded(const std::string& id) const;
 
@@ -258,7 +268,7 @@ protected:
    * \param value [in] the metric value
    * \param sumUp [in] summarize metric to parents
    */
-  void addValue(const string& name, const std::list<columbus::graph::Edge::EdgeType>& relType, const columbus::graph::Node& node, int value, bool sumUp) ;
+  void addValue(const string& name, const std::list<columbus::graph::Edge::EdgeType>& relType, const columbus::graph::Node& node, int value, bool sumUp);
 
   /**
    * \internal
@@ -267,16 +277,16 @@ protected:
    * \param edgeType [in] get parents along edgetype edges
    * \param nodes [out] parents of the node
    */
-  void getParent(const columbus::graph::Node& node, const std::list<columbus::graph::Edge::EdgeType>& relType, std::list<columbus::graph::Node>& nodes) ;
+  void getParent(const columbus::graph::Node& node, const std::list<columbus::graph::Edge::EdgeType>& relType, std::list<columbus::graph::Node>& nodes);
 
-   /**
+  /**
    * \internal
-   * \brief get node parents and parenets parenet too 
+   * \brief get node parents and parenets' parenets too
    * \param node [in] the start node
    * \param edgeType [in] get parents along edgetype edges
    * \param nodes [out] parents of the node
    */
-  void getParentTransitve(const columbus::graph::Node& node, const std::list<columbus::graph::Edge::EdgeType>& relType, std::set<columbus::graph::Node>& nodes) ;
+  void getParentTransitve(const columbus::graph::Node& node, const std::list<columbus::graph::Edge::EdgeType>& relType, std::set<columbus::graph::Node>& nodes);
 
   /**
    * \internal
@@ -296,9 +306,9 @@ protected:
    * \internal
    * \brief build clones into output graph and calculate some metrics
    */
-  void build_clones_tree() ;
+  void build_clones_tree();
 
-  void incCSOnPrevCloneClass( columbus::genealogy::CloneInstance &ci );
+  void incCSOnPrevCloneClass(columbus::genealogy::CloneInstance &ci);
 
   /**
    * \internal
@@ -306,13 +316,17 @@ protected:
    * \param graph [inout] the output graph
    * \param coverage [in] covered nodes
    */
-  void finalize() ;
+  void finalize();
 
-  void calculateCLLOC();
+  void collectContainerFiles(const lim::asg::logical::Package &package, std::set<columbus::Key> &fileNames);
 
-  void collectContainerFiles( const lim::asg::logical::Package &package, std::set<columbus::Key> &fileNames );
-
-  void addParentComponents( std::set<NodeId> &componentsOfTheClass, NodeId currentComp );
+  /**
+   * \internal
+   * \brief save component and its parent components
+   * \param componentsOfTheClass [out] the output set of (parent) components
+   * \param currentComp [in] the current component to be added
+   */
+  void addParentComponents(std::set<NodeId> &componentsOfTheClass, NodeId currentComp);
 
   /**
    * \internal
@@ -334,7 +348,7 @@ protected:
   /**
    * \internal
    * \brief create clone class by position in serialized asg and length
-   * \param position [in] the start position in serialized asd
+   * \param position [in] the start position in serialized asg
    * \param length [in] clone class length
    * \param isNewClass [out] return true, if class instance is created, otherwise return false
    * \return clone class for specified position and length
@@ -349,7 +363,7 @@ protected:
    * \param parent [in] instance parent
    * \return created clone instance
    */
-  genealogy::CloneInstance* createCloneInstance(unsigned int position, unsigned int length, unsigned int intervalStart , std::vector<unsigned int>* intervals, genealogy::CloneClass& parent);
+  genealogy::CloneInstance* createCloneInstance(unsigned int position, unsigned int length, unsigned int intervalStart, std::vector<unsigned int>* intervals, genealogy::CloneClass& parent);
 
   /**
    * \internal
@@ -362,7 +376,7 @@ protected:
 
   /**
    * \internal
-   * \brief apply filter in founded clones
+   * \brief apply filter in found clones
    * \param filter [in] the clone filter
    */
   void applyFilter(AbstractFilter* filter);
@@ -387,14 +401,14 @@ protected:
 
   /**
    * \internal
-   * \brief compute covered nodes
-   * \param covertdNodes [out] covered nodes
+   * \brief compute nodes covered by clones
+   * \param coveredNodes [out] the covered nodes
    */
   void computeCoveredNodes(std::map<std::string, std::set<columbus::NodeId> >& coveredNodes);
 
   /**
    * \internal
-   * \brief evolution mapping
+   * \brief evolution mapping of clones
    * \brief systemRef [inout] current system
    * \brief genealogyBase [in] the project
    */
@@ -402,7 +416,7 @@ protected:
 
   /**
    * \internal
-   * \brief set clone classes and clone instances unique name
+   * \brief set the unique name of clone classes and clone instances
    */
   void setClonesUniqueName();
 
@@ -414,29 +428,29 @@ protected:
 
   /**
    * \internal
-   * \brief init genealogy graph
-   * \param errorAtLoad [out] true, it genealogy file load is failed
+   * \brief initialize genealogy graph
+   * \param errorAtLoad [out] true if genealogy file load failed
    * \return the created/loaded project
    */
   columbus::genealogy::Project& initGenealogy(bool& errorAtLoad);
+
   /**
-     * \internal
-     * \brief init/load lim graph
-     * \return the success
-     */
+   * \internal
+   * \brief initialize/load lim graph
+   * \return true if succeeded
+   */
   bool initLim();
 
-   /**
-     * \internal
-     * \brief createSystem node in the genelogy factory
-     * \return the created node
-     */
-
+  /**
+   * \internal
+   * \brief createSystem node in the genelogy factory
+   * \return the created node
+   */
   columbus::genealogy::System* createSystem();
 
   /**
    * \internal
-   * \brief compute coverage to asg-s and build output graph
+   * \brief compute coverage for asg-s and build output graph
    * \param cv2 [in] coverage visitor
    * \param  coveredNodes [in] the covered nodes
    */
@@ -451,48 +465,44 @@ protected:
 
   /**
    * \internal
-   * \brief use pattern filter and re serialize the asg.
+   * \brief use pattern filter and reserialize the asg.
    */
   void patternFilter();
 
-   /**
+  /**
    * \internal
-   * \brief serialize the all given asg-es.
+   * \brief serialize all the given asgs.
    * \param createComponent create new component for the genealogy
    */
-
   int serializeAsg(bool createComponent);
-
-  
-   /**
-   * \internal
-   * \brief serialize the a given asg. 
-            (This is used by the getInstanceIds to find the old instance of clones.)
-   * \param factory the asg factory which need to serialize 
-   * \param name the location of component.
-   * \param nodeKindSequence the vectors to fill
-   * \param nodeIdSequence the vectors to fill
-   * \param decDepthSign 
-   */
-  void serializeAsg(Factory& factory, NodeId componentLimId, std::vector<int>& nodeKindSequence, std::vector<ClonePositioned*>& nodeIdSequence, int& decDepthSign,columbus::lim::asg::Factory*  limFact);
-
-
-
 
   /**
    * \internal
-   * \brief The cpp schema is more complex the other. It has the position data structure which need to traversal to the right order of position nodes. 
-   *         This function is do the traversal of nodes by this structure. It call the visitor for all position nodes in the right order.
+   * \brief serialize the given asg.
+   *        (This is used by the getInstanceIds to find the old instance of clones.)
+   * \param factory the asg factory which needs to be serialized
+   * \param componentLimId the id of the component.
+   * \param nodeKindSequence the vectors to fill
+   * \param nodeIdSequence the vectors to fill
+   * \param decDepthSign 
+   * \param limFact
    */
-  void traversalPosiotionedNodes(LANGUAGE_NAMESPACE::Factory& rCurFact, LANGUAGE_NAMESPACE::VisitorAbstractNodes* cloneVisitor,const std::string& componentID, const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned* inner = NULL );
+  void serializeAsg(Factory& factory, NodeId componentLimId, std::vector<int>& nodeKindSequence, std::vector<ClonePositioned*>& nodeIdSequence, int& decDepthSign, columbus::lim::asg::Factory*  limFact);
 
-  void fillPositionnodesVektor( LANGUAGE_NAMESPACE::Factory &rCurFact, std::vector<CorrectedPos> &sortedPostitionNodes, const std::string& componenetId);
+  /**
+   * \internal
+   */
+  void traversalPosiotionedNodes(LANGUAGE_NAMESPACE::Factory& rCurFact, LANGUAGE_NAMESPACE::VisitorAbstractNodes* cloneVisitor, const std::string& componentID, const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned* inner = NULL);
 
-  bool isNodeAfter( const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned &reference , const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned &questionNode );
+  void fillPositionnodesVektor(LANGUAGE_NAMESPACE::Factory &rCurFact, std::vector<CorrectedPos> &sortedPostitionNodes, const std::string& componenetId);
+
+  bool isNodeAfter(const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned &reference, const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned &questionNode);
 
   bool PutBeginSignToNode( std::stack<const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned*> &nodeStack, const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned* node, LANGUAGE_NAMESPACE::VisitorAbstractNodes*  cloneVisitor);
 
   void PutEndSignToNode( std::stack<const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned*> &nodeStack,LANGUAGE_NAMESPACE::VisitorAbstractNodes*  cloneVisitor );
+
+
 
 
   std::vector<NodeId> getInstanceIds(const genealogy::CloneInstance&);
@@ -500,34 +510,94 @@ protected:
 
 #ifdef GENEALOGY
 
-
   /**
    * \internal
-   * \brief compute the F1...F6 atrtibutes on which the similarity is rested.
+   * \brief compute the F2 attribute of clone instance. F2: Position of the clone instance inside the clone class.
+   */
+  void computeF2Attribute(columbus::genealogy::CloneInstance& ci);
+  /**
+   * \internal
+   * \brief compute the F3 attribute of clone instance. F3: The unique name of the head node - if the unique name exists (just for named entities).
+   */
+  void computeF3Attribute(columbus::genealogy::CloneInstance& ci, Base& ciFirstRootNode);
+  /**
+   * \internal
+   * \brief compute the F4 attribute of clone instance. F4: Otherwise, the unique name of the first named ancestor in the AST.
+   */
+  Base* computeF4Attribute(columbus::genealogy::CloneInstance& ci, Base& ciFirstRootNode, NodeId& ciFirstRootId, Factory* factory);
+  /**
+   * \internal
+   * \brief compute the F5 attributes of clone instance. F5: The relative position of the code segment inside its first named ancestor.
+   */
+  void computeF5Attribute(columbus::genealogy::CloneInstance& ci, Base& ciFirstRootNode, NodeId& ciFirstRootId, Factory* factory, Base* namedAncestor);
+  /**
+   * \internal
+   * \brief compute the F6 attribute of clone instance. F6: Lexical structure of the clone instance.
+   */
+  void computeF6Attribute(columbus::genealogy::CloneInstance& ci, vector<NodeId>& ciRootsList, Factory* factory);
+  /**
+   * \internal
+   * \brief compute the F1, ..., F6 atrtibutes on which the similarity is rested.
    */
     
   void computeSimilarityAttributes(columbus::genealogy::CloneInstance& ci);
 
+  enum F_attributes { F1 = 1, F2, F3, F4, F5, F6 };
+  const std::string& getFString(F_attributes F, const columbus::genealogy::CloneInstance& ci) {
+    switch (F) {
+    case F1: return ci.getPath();
+    case F2: return NULL;
+    case F3: return ci.getF3_HeadNodeUniqueName();
+    case F4: return ci.getF4_AncestorUniqueName();
+    case F5: return ci.getF4_AncestorUniqueName();
+    case F6: return ci.getF6_LexicalStructure();
+    default: return NULL;
+    }
+  }
+  double getStringSimilarity(std::string& s1, std::string& s2, double& dist, double* alpha, unsigned int limit);
+  double distanceF(F_attributes F, const columbus::genealogy::CloneInstance& from, const columbus::genealogy::CloneInstance& to, double& dist, const double& bound, double* alpha);
+
+
+  /**
+   * \internal
+   * \brief compute F3 distance between clone intances
+   */
+  double distanceF3(const columbus::genealogy::CloneInstance& from, const columbus::genealogy::CloneInstance& to, double& dist, double& bound, double* alpha);
+
+  double distanceF1(const columbus::genealogy::CloneInstance& from, const columbus::genealogy::CloneInstance& to, double& dist, double& bound, double* alpha);
+
+  double distanceF4(const columbus::genealogy::CloneInstance& from, const columbus::genealogy::CloneInstance& to, double& dist, double& bound, double* alpha);
+
+  double distanceF2(const columbus::genealogy::CloneInstance& from, const columbus::genealogy::CloneInstance& to, double& dist, double& bound, double* alpha);
+
+  double distanceF5(const columbus::genealogy::CloneInstance& from, const columbus::genealogy::CloneInstance& to, double& dist, double& bound, double* alpha);
+
+  double distanceF6(const columbus::genealogy::CloneInstance& from, const columbus::genealogy::CloneInstance& to, double& dist, double& bound, double* alpha);
   /**
    * \internal
    * \brief compute similarity between clone instances
    */
   double similarity(const columbus::genealogy::CloneInstance& from, const columbus::genealogy::CloneInstance& to);
+
   /**
    * \internal
    * \return the id of the component or 0
    */
-  NodeId getLimComponenetIdByName(const std::string& name , const columbus::lim::asg::Factory& factory);
+  NodeId getLimComponenetIdByName(const std::string& name, const columbus::lim::asg::Factory& factory);
 
   const std::string& getAsgNameByLimId(columbus::NodeId limId, const columbus::lim::asg::Factory& factory) const;
   
+  /**
+   * \internal
+   * \brief get clone instances of 'system'
+   * \return vector of clone instances
+   */
   std::vector<genealogy::CloneInstance*> getInstancesOfaSystem(const genealogy::System& system) const;
   
 #endif
-public:
 
   
-
+public:
   /**
    * \brief start duplicate code mining
    * \param bpaths [inout] blocked paths
@@ -535,19 +605,16 @@ public:
    * \param backup [in] backup directory (empty string is disabled backup)
    */
   int dcminer(int maxCCSize, const std::string& backup);
-
-  bool isItFilteredInLim( NodeId compId,const columbus::LANGUAGE_NAMESPACE::BASE_NAMESPACE::Base& AsgNode ) const ;
-
-  NodeId getLimNodeIdByNode( NodeId compId, const columbus::LANGUAGE_NAMESPACE::BASE_NAMESPACE::Base& node ) const;
+  bool isItFilteredInLim(NodeId compId, const Base& AsgNode) const;
+  NodeId getLimNodeIdByNode(NodeId compId, const Base& node) const;
 
 #ifdef GENEALOGY
   /**
    * \internal
    * \brief set dump genealogy to graphml
    */
-  void setDumpgraphml( bool dump);
-
-  #endif
+  void setDumpgraphml(bool dump);
+#endif
 
   /**
    * \brief gives back node kind at 'position' from serialized asg
@@ -578,7 +645,7 @@ public:
   bool isDecDepthSign(int value) const;
 
   /**
-   * \brief return true, if id at sequencePosition is asg node (Not a special node kind ex: the end of node sign )
+   * \brief return true, if the id at 'sequencePosition' is an asg node (Not a special node kind ex: the end of node sign)
    * \param value [in] value parameter
    * \return true, if id at sequencePosition is node, otherwise is false
    */
@@ -610,7 +677,7 @@ public:
    */
   unsigned int getLength(NodeId id) const;
 
-  static columbus::Key getUniformPathKey(columbus::Key key, StrTable& strtable );
+  static columbus::Key getUniformPathKey(columbus::Key key, StrTable& strtable);
 
 
   /**
@@ -618,20 +685,44 @@ public:
    * \param cc [in] clone class
    * \return the clone class length
    */
-
   static unsigned int getLength(const genealogy::CloneClass& cc);
 
+  /**
+   * \brief get the number of the clone instances of 'cc' i.e. the parameter clone class
+   * \param cc [in] clone class
+   * \return the number of instances of 'cc'
+   */
   static unsigned int getRealNumberCi(const genealogy::CloneClass& cc);
+
+  /**
+   * \brief get the calculate number of the clone classes of 'sys' i.e. the parameter system
+   * \param sys [in] system
+   * \return the number of clone classes of 'sys'
+   */
   static unsigned int getRealNumberCC(const genealogy::System& sys);
 
+  /**
+   * \brief set filterout
+   * \param out [in] the filterout to be set
+   */
   void setFilterOut(std::ostream& out);
+
+  /**
+   * \brief compute covered lines of clones
+   */
   void computeCoveredLines();
-  void calculateCOOForLangASG( columbus::NodeId componenetId,const std::string& );
+
+  /**
+   * \brief calculate CCO metric
+   */
+  // TODO rename
+  void calculateCOOForLangASG(columbus::NodeId componenetId, const std::string&);
 
   friend class ProcessCC;
   friend class ProcessPatternFilter;
 
 };
+
 
 }}
 

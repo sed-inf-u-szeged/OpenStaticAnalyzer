@@ -41,6 +41,36 @@ public class ClassSaver {
 	private static final LoggerHandler logger = new LoggerHandler(ClassSaver.class,
 			OptionParser.getLoggerPropertyFile());
 
+	public static void saveMinXml(Factory fact, String xmlPath) {
+		AlgorithmPreorder preorder = new AlgorithmPreorder();
+		preorder.setVisitSpecialNodes(false, false);
+		VisitorSpecFilter visitor = new VisitorSpecFilter(fact);
+
+		fact.turnFilterOff();
+
+		Iterator it = fact.iterator();
+		while (it.hasNext()) {
+			Base node = it.next();
+			if (node.getParent() != null &&
+					((Common.getIsTypeDeclaration(node) && Common.getIsPackage(node.getParent()) && ((TypeDeclaration) node).getIsInCompilationUnit() != null) ||
+					Common.getIsCompilationUnit(node))
+					) {
+				visitor.addRoot(node);
+				if (Common.getIsTypeDeclaration(node))
+					visitor.addRef(((TypeDeclaration) node).getIsInCompilationUnit());
+			}
+		}
+
+		visitor.run();
+		visitor.createFilter();
+
+		fact.turnFilterOn();
+
+		saveToXml(fact, xmlPath);
+
+		visitor.restoreStrTable();
+	}
+
 	public static void saveClasses(Factory fact, String outDir, String extraAsg, CsiHeader header) {
 		AlgorithmPreorder preorder = new AlgorithmPreorder();
 		preorder.setVisitSpecialNodes(false, false);

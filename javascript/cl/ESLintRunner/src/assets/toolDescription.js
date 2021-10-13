@@ -23,5 +23,6 @@ module.exports.banner = "" +
     "| __>/ __>| |  <_>._ _ _| |_ | . \\ _ _ ._ _ ._ _  ___  _ _   \n" +
     "| _> \\__ \\| |_ | || ' | | |  |   /| | || ' || ' |/ ._>| '_> \n" +
     "|___><___/|___||_||_|_| |_|  |_\\_\\`___||_|_||_|_|\\___.|_|  \n";
+
 module.exports.header = 'EsLintRunner - A tool, which can parse the AST for ESLint';
-module.exports.description = 'The EsLintRunner can parse AST for ESLint, which can generate a OpenStaticAnalyzer-style ESLintToGraph XML.'
+module.exports.description = 'The EsLintRunner can parse AST for ESLint, which can generate a Columbus-style ESLintToGraph XML.'

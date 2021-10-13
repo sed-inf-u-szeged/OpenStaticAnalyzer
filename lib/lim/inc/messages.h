@@ -26,7 +26,7 @@
 #define  CMSG_SELECTOR_FUNCTION_IS_CHANGED              common::WriteMsg::mlDebug,    "Debug: Selector function is changed\n"
 #define  CMSG_NODE_CREATED_THE_MIRROR_OF                common::WriteMsg::mlDDDDebug, "DDDDebug: The %d node created the mirror of %d node in the src\n"
 #define  CMSG_NODE_PARENT_IS                            common::WriteMsg::mlDDDDebug, "DDDDebug: The parent of the %d node is %d node in the src\n"
-#define  CMSG_THE_PRE_ORDER_HAS_TOUCHED_A_NODE_TWICE    common::WriteMsg::mlDebug,    "Debug: The pre order has touched a node twice (id: %d, type: %s)\n"
+#define  CMSG_THE_PRE_ORDER_HAS_TOUCHED_A_NODE_TWICE    common::WriteMsg::mlDDebug,   "DDebug: The pre order has touched a node twice (id: %d, type: %s)\n"
 #define  CMSG_HAS_ALREADY_PARENT_THE_PARENT_WAS         common::WriteMsg::mlDDDebug,  "DDDebug: The %d (%s) already has a parent. The parent was %d (%s). The new parent is %d (%s)\n"
 #define  CMSG_SHOW_HEX_VALUE                            common::WriteMsg::mlDDDebug,  " [%X] "
 #define  CMSG_GET_THE_NODE_HASH_OF_NODE_BEGIN           common::WriteMsg::mlDDDebug,  "DDDebug: Get the node hash of %u node ["

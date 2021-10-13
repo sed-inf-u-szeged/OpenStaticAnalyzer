@@ -39,6 +39,7 @@ namespace expression {
   * Edges:
   *   - ArgumentList (structure::ArgumentListSyntax, single) : (missing)
   *   - Expression (expression::ExpressionSyntax, single) : (missing)
+  *   - LocalFunctionCall (statement::LocalFunctionStatementSyntax, single) : (missing)
   *   - MethodCall (structure::MethodDeclarationSyntax, single) : (missing)
   */
   class InvocationExpressionSyntax : public ExpressionSyntax {
@@ -117,6 +118,12 @@ namespace expression {
       expression::ExpressionSyntax* getExpression() const;
 
       /**
+      * \brief Gives back the pointer of the node the LocalFunctionCall edge points to.
+      * \return Returns the end point of the LocalFunctionCall edge.
+      */
+      statement::LocalFunctionStatementSyntax* getLocalFunctionCall() const;
+
+      /**
       * \brief Gives back the pointer of the node the MethodCall edge points to.
       * \return Returns the end point of the MethodCall edge.
       */
@@ -160,6 +167,23 @@ namespace expression {
       void removeExpression();
 
       /**
+      * \brief Sets the LocalFunctionCall edge.
+      * \param id [in] The new end point of the LocalFunctionCall edge.
+      */
+      void setLocalFunctionCall(NodeId id);
+
+      /**
+      * \brief Sets the LocalFunctionCall edge.
+      * \param node [in] The new end point of the LocalFunctionCall edge.
+      */
+      void setLocalFunctionCall(statement::LocalFunctionStatementSyntax *node);
+
+      /**
+      * \brief remove the LocalFunctionCall edge.
+      */
+      void removeLocalFunctionCall();
+
+      /**
       * \brief Sets the MethodCall edge.
       * \param id [in] The new end point of the MethodCall edge.
       */
@@ -185,6 +209,9 @@ namespace expression {
 
       /** \internal \brief The id of the node the Expression edge points to. */
       NodeId m_Expression;
+
+      /** \internal \brief The id of the node the LocalFunctionCall edge points to. */
+      NodeId m_LocalFunctionCall;
 
       /** \internal \brief The id of the node the MethodCall edge points to. */
       NodeId m_MethodCall;

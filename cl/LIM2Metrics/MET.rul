@@ -82,7 +82,7 @@
         <CalculatedFor>Enum</CalculatedFor>
         <CalculatedFor>Interface</CalculatedFor>
         <CalculatedFor>Namespace</CalculatedFor>
-        <CalculatedFor>Struct</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
       </Calculated>
     </Configuration>
     <Configuration name = "java">
@@ -151,7 +151,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of directly used other classes (e.g. by inheritance, function call, type reference, attribute reference). Classes using many other classes highly depend on their environment, so it is difficult to test or reuse them; furthermore, they are very sensitive to the changes in the system.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Union, Interface:&lt;/strong&gt; number of directly used other classes (e.g. by inheritance, function call, type reference, attribute reference). Classes using many other classes highly depend on their environment, so it is difficult to test or reuse them; furthermore, they are very sensitive to the changes in the system.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Union, Interface:&lt;/strong&gt; number of directly used other classes (e.g. by inheritance, function call, type reference, attribute reference). Classes using many other classes highly depend on their environment, so it is difficult to test or reuse them; furthermore, they are very sensitive to the changes in the system.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -357,6 +357,7 @@
       <Settings/>
       <Calculated>
         <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Delegate</CalculatedFor>
         <CalculatedFor>Method</CalculatedFor>
         <CalculatedFor>Namespace</CalculatedFor>
         <CalculatedFor>Structure</CalculatedFor>
@@ -461,6 +462,7 @@
       <Settings/>
       <Calculated>
         <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Delegate</CalculatedFor>
         <CalculatedFor>File</CalculatedFor>
         <CalculatedFor>Interface</CalculatedFor>
         <CalculatedFor>Method</CalculatedFor>
@@ -866,6 +868,7 @@
       <Settings/>
       <Calculated>
         <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Delegate</CalculatedFor>
         <CalculatedFor>Enum</CalculatedFor>
         <CalculatedFor>Interface</CalculatedFor>
         <CalculatedFor>Method</CalculatedFor>
@@ -1011,7 +1014,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method:&lt;/b&gt; Halstead Calculated Program Length</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;n1&lt;/em&gt;: number of distinct operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n2&lt;/em&gt;: number of distinct operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;The calculated program length is &lt;em&gt;n1 * log&lt;sub&gt;2&lt;/sub&gt;(n1) + n2 * log&lt;sub&gt;2&lt;/sub&gt;(n2)&lt;/em&gt;.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;n1&lt;/em&gt;: number of distinct operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n2&lt;/em&gt;: number of distinct operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;The calculated program length is &lt;em&gt;n1 * log&lt;sub&gt;2&lt;/sub&gt;(n1) + n2 * log&lt;sub&gt;2&lt;/sub&gt;(n2)&lt;/em&gt;.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -1095,7 +1098,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method:&lt;/b&gt; Halstead Difficulty</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;n1&lt;/em&gt;: number of distinct operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n2&lt;/em&gt;: number of distinct operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N2&lt;/em&gt;: total number of operands&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;The Halstead difficulty is &lt;em&gt;n1/2 * N2/n2&lt;/em&gt;.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;n1&lt;/em&gt;: number of distinct operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n2&lt;/em&gt;: number of distinct operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N2&lt;/em&gt;: total number of operands&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;The Halstead difficulty is &lt;em&gt;n1/2 * N2/n2&lt;/em&gt;.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -1179,7 +1182,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method:&lt;/b&gt; Halstead Effort</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;n1&lt;/em&gt;: number of distinct operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n2&lt;/em&gt;: number of distinct operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N1&lt;/em&gt;: total number of operators&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N2&lt;/em&gt;: total number of operands&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n : n1 + n2&lt;/em&gt; (program vocabulary)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N : N1 + N2&lt;/em&gt; (program length)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;V : N * log&lt;sub&gt;2&lt;/sub&gt;(n)&lt;/em&gt; (volume)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;D : n1/2 * N2/n2&lt;/em&gt; (difficulty)&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;The Halstead effort is &lt;em&gt;D * V&lt;/em&gt;.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;n1&lt;/em&gt;: number of distinct operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n2&lt;/em&gt;: number of distinct operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N1&lt;/em&gt;: total number of operators&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N2&lt;/em&gt;: total number of operands&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n : n1 + n2&lt;/em&gt; (program vocabulary)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N : N1 + N2&lt;/em&gt; (program length)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;V : N * log&lt;sub&gt;2&lt;/sub&gt;(n)&lt;/em&gt; (volume)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;D : n1/2 * N2/n2&lt;/em&gt; (difficulty)&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;The Halstead effort is &lt;em&gt;D * V&lt;/em&gt;.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -1263,7 +1266,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method:&lt;/b&gt; Halstead Number of Delivered Bugs</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;n1&lt;/em&gt;: number of distinct operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n2&lt;/em&gt;: number of distinct operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N1&lt;/em&gt;: total number of operators&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N2&lt;/em&gt;: total number of operands&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n : n1 + n2&lt;/em&gt; (program vocabulary)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N : N1 + N2&lt;/em&gt; (program length)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;V : N * log&lt;sub&gt;2&lt;/sub&gt;(n)&lt;/em&gt; (volume)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;D : n1/2 * N2/n2&lt;/em&gt; (difficulty)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;E : D * V&lt;/em&gt; (effort)&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;Number of delivered bugs is &lt;em&gt;E&lt;sup&gt;2/3&lt;/sup&gt;/3000&lt;/em&gt;.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;n1&lt;/em&gt;: number of distinct operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n2&lt;/em&gt;: number of distinct operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N1&lt;/em&gt;: total number of operators&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N2&lt;/em&gt;: total number of operands&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n : n1 + n2&lt;/em&gt; (program vocabulary)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N : N1 + N2&lt;/em&gt; (program length)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;V : N * log&lt;sub&gt;2&lt;/sub&gt;(n)&lt;/em&gt; (volume)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;D : n1/2 * N2/n2&lt;/em&gt; (difficulty)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;E : D * V&lt;/em&gt; (effort)&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;Number of delivered bugs is &lt;em&gt;E&lt;sup&gt;2/3&lt;/sup&gt;/3000&lt;/em&gt;.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -1347,7 +1350,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method:&lt;/b&gt; Halstead Program Length</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;N1&lt;/em&gt;: total number of operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N2&lt;/em&gt;: total number of operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;Halstead program length is &lt;em&gt;N1 + N2&lt;/em&gt;.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;N1&lt;/em&gt;: total number of operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N2&lt;/em&gt;: total number of operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;Halstead program length is &lt;em&gt;N1 + N2&lt;/em&gt;.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -1431,7 +1434,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method:&lt;/b&gt; Program Vocabulary</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;n1&lt;/em&gt;: number of distinct operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n2&lt;/em&gt;: number of distinct operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;Halstead program vocabulary is &lt;em&gt;n1 + n2&lt;/em&gt;.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;n1&lt;/em&gt;: number of distinct operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n2&lt;/em&gt;: number of distinct operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;Halstead program vocabulary is &lt;em&gt;n1 + n2&lt;/em&gt;.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -1515,7 +1518,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method:&lt;/b&gt; Halstead Time Required to Program</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;n1&lt;/em&gt;: number of distinct operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n2&lt;/em&gt;: number of distinct operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N1&lt;/em&gt;: total number of operators&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N2&lt;/em&gt;: total number of operands&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n : n1 + n2&lt;/em&gt; (program vocabulary)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N : N1 + N2&lt;/em&gt; (program length)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;V : N * log&lt;sub&gt;2&lt;/sub&gt;(n)&lt;/em&gt; (volume)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;D : n1/2 * N2/n2&lt;/em&gt; (difficulty)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;E : D * V&lt;/em&gt; (effort)&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;Halstead time required to program is &lt;em&gt;E/18&lt;/em&gt; seconds.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;n1&lt;/em&gt;: number of distinct operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n2&lt;/em&gt;: number of distinct operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N1&lt;/em&gt;: total number of operators&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N2&lt;/em&gt;: total number of operands&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n : n1 + n2&lt;/em&gt; (program vocabulary)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N : N1 + N2&lt;/em&gt; (program length)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;V : N * log&lt;sub&gt;2&lt;/sub&gt;(n)&lt;/em&gt; (volume)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;D : n1/2 * N2/n2&lt;/em&gt; (difficulty)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;E : D * V&lt;/em&gt; (effort)&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;Halstead time required to program is &lt;em&gt;E/18&lt;/em&gt; seconds.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -1600,7 +1603,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method:&lt;/b&gt; Halstead Volume</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;n1&lt;/em&gt;: number of distinct operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n2&lt;/em&gt;: number of distinct operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N1&lt;/em&gt;: total number of operators&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N2&lt;/em&gt;: total number of operands&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n : n1 + n2&lt;/em&gt; (program vocabulary)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N : N1 + N2&lt;/em&gt; (program length)&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;The Halstead volume is &lt;em&gt;N * log&lt;sub&gt;2&lt;/sub&gt;(n)&lt;/em&gt;.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt;&lt;/p&gt;&#x0A;&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;n1&lt;/em&gt;: number of distinct operators (semantic meanings of the reserved keywords, semicolons, blocks, and identifiers except in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n2&lt;/em&gt;: number of distinct operands (literals - e.g. character, string, and integer literals, - and the identifiers in their declarations)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N1&lt;/em&gt;: total number of operators&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N2&lt;/em&gt;: total number of operands&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;n : n1 + n2&lt;/em&gt; (program vocabulary)&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;N : N1 + N2&lt;/em&gt; (program length)&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;The Halstead volume is &lt;em&gt;N * log&lt;sub&gt;2&lt;/sub&gt;(n)&lt;/em&gt;.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -1753,7 +1756,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of functionalities of the class. One of the basic principles of object-oriented programming is encapsulation, meaning that attributes belonging together and the operations that use them should be organized into one class, and one class shall implement only one functionality, i.e. its attributes and methods should be coherent. This metric measures the lack of cohesion and computes into how many coherent classes the class could be split. It is calculated by taking a non-directed graph, where the nodes are the implemented local methods of the class and there is an edge between the two nodes if and only if a common (local or inherited) attribute or abstract method is used or a method invokes another. The value of the metric is the number of connected components in the graph except the ones that contain only constructors, destructors, getters or setters -- as they are integral parts of the class.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Union:&lt;/strong&gt; number of functionalities of the class. One of the basic principles of object-oriented programming is encapsulation, meaning that attributes belonging together and the operations that use them should be organized into one class, and one class shall implement only one functionality, i.e. its attributes and methods should be coherent. This metric measures the lack of cohesion and computes into how many coherent classes the class could be split. It is calculated by taking a non-directed graph, where the nodes are the implemented local methods of the class and there is an edge between the two nodes if and only if a common (local or inherited) attribute or abstract method is used or a method invokes another. The value of the metric is the number of connected components in the graph not counting those, which contain only constructors, destructors, getters, or setters.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Union:&lt;/strong&gt; number of functionalities of the class. One of the basic principles of object-oriented programming is encapsulation, meaning that attributes belonging together and the operations that use them should be organized into one class, and one class shall implement only one functionality, i.e. its attributes and methods should be coherent. This metric measures the lack of cohesion and computes into how many coherent classes the class could be split. It is calculated by taking a non-directed graph, where the nodes are the implemented local methods of the class and there is an edge between the two nodes if and only if a common (local or inherited) attribute or abstract method is used or a method invokes another. The value of the metric is the number of connected components in the graph not counting those, which contain only constructors, destructors, getters, or setters.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -1869,6 +1872,7 @@
       <Settings/>
       <Calculated>
         <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Delegate</CalculatedFor>
         <CalculatedFor>Enum</CalculatedFor>
         <CalculatedFor>File</CalculatedFor>
         <CalculatedFor>Interface</CalculatedFor>
@@ -1980,6 +1984,7 @@
       <Settings/>
       <Calculated>
         <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Delegate</CalculatedFor>
         <CalculatedFor>Enum</CalculatedFor>
         <CalculatedFor>File</CalculatedFor>
         <CalculatedFor>Interface</CalculatedFor>
@@ -2063,7 +2068,7 @@
       <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
-        <HelpText>&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;HVOL&lt;/em&gt;: Halstead Volume&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;McCC&lt;/em&gt;: McCabe’s cyclomatic complexity&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;LLOC&lt;/em&gt;: logical lines of code&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;The original Maintainability Index is computed by the following formula:&lt;/p&gt;&#x0A;&lt;p&gt;&lt;em&gt;MI = 171 - 5.2 * ln(HVOL) - 0.23 * (McCC) - 16.2 * ln(LLOC)&lt;/em&gt;&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;HVOL&lt;/em&gt;: Halstead Volume&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;McCC&lt;/em&gt;: McCabe&apos;s cyclomatic complexity&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;LLOC&lt;/em&gt;: logical lines of code&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;The original Maintainability Index is computed by the following formula:&lt;/p&gt;&#x0A;&lt;p&gt;&lt;em&gt;MI = 171 - 5.2 * ln(HVOL) - 0.23 * (McCC) - 16.2 * ln(LLOC)&lt;/em&gt;&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -2139,7 +2144,7 @@
       <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
-        <HelpText>&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;HVOL&lt;/em&gt;: Halstead Volume&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;McCC&lt;/em&gt;: McCabe’s cyclomatic complexity&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;LLOC&lt;/em&gt;: logical lines of code&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;The Maintainability Index used by Microsoft’s Visual Studio is computed by the following formula:&lt;/p&gt;&#x0A;&lt;p&gt;&lt;em&gt;MIMS = max(0,(171 - 5.2 * ln(HVOL) - 0.23 * (McCC) - 16.2 * ln(LLOC)) * 100 / 171)&lt;/em&gt;&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;HVOL&lt;/em&gt;: Halstead Volume&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;McCC&lt;/em&gt;: McCabe&apos;s cyclomatic complexity&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;LLOC&lt;/em&gt;: logical lines of code&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;The Maintainability Index used by Microsoft&apos;s Visual Studio is computed by the following formula:&lt;/p&gt;&#x0A;&lt;p&gt;&lt;em&gt;MIMS = max(0,(171 - 5.2 * ln(HVOL) - 0.23 * (McCC) - 16.2 * ln(LLOC)) * 100 / 171)&lt;/em&gt;&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -2215,7 +2220,7 @@
       <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
-        <HelpText>&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;HVOL&lt;/em&gt;: Halstead Volume&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;McCC&lt;/em&gt;: McCabe’s cyclomatic complexity&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;LLOC&lt;/em&gt;: logical lines of code&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;CD&lt;/em&gt;: comment density&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;The Maintainability Index derived by the Software Engineering Institute (SEI) is computed by the following formula:&lt;/p&gt;&#x0A;&lt;p&gt;&lt;em&gt;MISEI = 171 - 5.2 * log&lt;sub&gt;2&lt;/sub&gt;(HVOL) - 0.23 * McCC - 16.2 * log&lt;sub&gt;2&lt;/sub&gt;(LLOC) + 50 * sin(sqrt(2.4 * CD))&lt;/em&gt;&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;ul&gt;&#x0A;&lt;li&gt;&lt;em&gt;HVOL&lt;/em&gt;: Halstead Volume&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;McCC&lt;/em&gt;: McCabe&apos;s cyclomatic complexity&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;LLOC&lt;/em&gt;: logical lines of code&lt;/li&gt;&#x0A;&lt;li&gt;&lt;em&gt;CD&lt;/em&gt;: comment density&lt;/li&gt;&#x0A;&lt;/ul&gt;&#x0A;&lt;p&gt;The Maintainability Index derived by the Software Engineering Institute (SEI) is computed by the following formula:&lt;/p&gt;&#x0A;&lt;p&gt;&lt;em&gt;MISEI = 171 - 5.2 * log&lt;sub&gt;2&lt;/sub&gt;(HVOL) - 0.23 * McCC - 16.2 * log&lt;sub&gt;2&lt;/sub&gt;(LLOC) + 50 * sin(sqrt(2.4 * CD))&lt;/em&gt;&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -2368,7 +2373,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method:&lt;/b&gt; complexity of the method expressed as the number of independent control flow paths in it. It represents a lower bound for the number of possible execution paths in the source code and at the same time it is an upper bound for the minimum number of test cases needed for achieving full branch test coverage. The value of the metric is initially 1 which increases by 1 for each occurence of the following instructions: if, for, foreach, while, do-while, case label (label that belongs to a switch instruction), catch (handler that belongs to a try block), conditional statement (?:). Moreover, logical and (&amp;&amp;) and logical or (||) expressions also add to the final value because their short-circuit evalutaion can cause branching depending on the first operand. The following language elements do not increase the value: else, try, switch, default label (default label that belongs to a switch instruction), finally.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; complexity of the method expressed as the number of independent control flow paths in it. It represents a lower bound for the number of possible execution paths in the source code and at the same time it is an upper bound for the minimum number of test cases needed for achieving full branch test coverage. The value of the metric is calculated as the number of the following instructions plus 1: if, for, foreach, range-based for, while, do-while, case label (which belongs to a switch instruction), catch, conditional expression (?:). Moreover, logical “and” (&amp;amp;&amp;amp;) and logical “or” (||) expressions also add 1 to the value because their short-circuit evaluation can cause branching depending on the first operand. The following instructions are not included: else, switch, default label (which belongs to a switch instruction), try.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;File:&lt;/strong&gt; complexity of the file expressed as the number of independent control flow paths in it. It represents a lower bound for the number of possible execution paths in the source code and at the same time it is an upper bound for the minimum number of test cases needed for achieving full branch test coverage. The value of the metric is calculated as the number of the following instructions plus 1: if, for, foreach, range-based for, while, do-while, case label (which belongs to a switch instruction), catch, conditional expression (?:). Moreover, logical “and” (&amp;amp;&amp;amp;) and logical “or” (||) expressions also add 1 to the value because their short-circuit evaluation can cause branching depending on the first operand. The following instructions are not included: else, switch, default label (which belongs to a switch instruction), try.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; complexity of the method expressed as the number of independent control flow paths in it. It represents a lower bound for the number of possible execution paths in the source code and at the same time it is an upper bound for the minimum number of test cases needed for achieving full branch test coverage. The value of the metric is calculated as the number of the following instructions plus 1: if, for, foreach, range-based for, while, do-while, case label (which belongs to a switch instruction), catch, conditional expression (?:). Moreover, logical &amp;quot;and&amp;quot; (&amp;amp;&amp;amp;) and logical &amp;quot;or&amp;quot; (||) expressions also add 1 to the value because their short-circuit evaluation can cause branching depending on the first operand. The following instructions are not included: else, switch, default label (which belongs to a switch instruction), try.&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;File:&lt;/strong&gt; complexity of the file expressed as the number of independent control flow paths in it. It represents a lower bound for the number of possible execution paths in the source code and at the same time it is an upper bound for the minimum number of test cases needed for achieving full branch test coverage. The value of the metric is calculated as the number of the following instructions plus 1: if, for, foreach, range-based for, while, do-while, case label (which belongs to a switch instruction), catch, conditional expression (?:). Moreover, logical &amp;quot;and&amp;quot; (&amp;amp;&amp;amp;) and logical &amp;quot;or&amp;quot; (||) expressions also add 1 to the value because their short-circuit evaluation can cause branching depending on the first operand. The following instructions are not included: else, switch, default label (which belongs to a switch instruction), try.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -2858,7 +2863,7 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Function:&lt;/b&gt; number of other functions which directly call the function. If the function is invoked several times from the same function, it is counted only once.&lt;b&gt;Method:&lt;/b&gt; number of other methods which directly call the method. If the method is invoked several times from the same method, it is counted only once.&lt;br&gt;&lt;b&gt;Class:&lt;/b&gt; number of other methods which directly call the local methods of the class. If a method is invoked several times from the same method, it is counted only once.</Description>
@@ -3082,7 +3087,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) attributes in the class; however, the attributes of nested, anonymous, and local classes are not included.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) attributes in the class; however, the attributes of nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) attributes in the class; however, the attributes of nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -3172,7 +3177,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method:&lt;/b&gt; complexity of the method expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes, where in the if-else-if construct only the first if instruction is considered. The following instructions are taken into account: if, for, while, do-while, switch, conditional statement (?:). The following instructions do not increase the value by themselves; however, if additional embeddednesses can be found in their blocks, they are considered: else, else if (i.e. in the if-else-if construct the use of else-if does not increase the value of the metric), case and default label (which belong to a switch instruction), try, catch, finally.&lt;br&gt;&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes, where in the if-else-if construct only the first if instruction is considered. It is calculated as the maximum nesting level (NLE) of its local methods and init blocks.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; complexity of the method expressed as the depth of the maximum embeddedness of its conditional, iteration and exception handling block scopes, where in the if-else-if construct only the first if instruction is considered. The following instructions are taken into account: if, else, for, while, do-while, switch, try, catch and block statements that are directly inside another block statement. The following instructions do not increase the value by themselves; however, if additional embeddednesses can be found in their blocks, they are considered: else-if (i.e. in the if-else-if construct the use of else-if does not increase the value of the metric), case and default label (which belong to a switch instruction).&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class, Structure, Union:&lt;/strong&gt; complexity of the class expressed as the depth of the maximum embeddedness of its conditional, iteration and exception handling block scopes, where in the if-else-if construct only the first if instruction is considered. It is calculated as the maximum nesting level (NLE) of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Method, Function:&lt;/strong&gt; complexity of the method expressed as the depth of the maximum embeddedness of its conditional, iteration and exception handling block scopes, where in the if-else-if construct only the first if instruction and in case of multiply catch blocks only the first catch is considered. The following instructions are taken into account: if, else, for, while, do-while, switch, try, catch and block statements that are directly inside another block statement. The following instructions do not increase the value by themselves; however, if additional embeddednesses can be found in their blocks, they are considered: else-if (i.e. in the if-else-if construct the use of else-if does not increase the value of the metric), case and default label (which belong to a switch instruction).&lt;/p&gt;&#x0A;&lt;p&gt;&lt;strong&gt;Class, Structure, Union:&lt;/strong&gt; complexity of the class expressed as the depth of the maximum embeddedness of its conditional, iteration and exception handling block scopes, where in the if-else-if construct only the first if instruction is considered. It is calculated as the maximum nesting level (NLE) of its local methods.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -3269,7 +3274,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) getter methods in the class; however, the getter methods of its nested, anonymous, and local classes are not included. Methods that override abstract methods are not counted.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) getter methods in the class; however, the getter methods of its nested, anonymous, and local classes are not included. Methods that override abstract methods are not counted.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) getter methods in the class; however, the getter methods of its nested, anonymous, and local classes are not included. Methods that override abstract methods are not counted.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -3357,7 +3362,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) methods in the class; however, the methods of nested, anonymous, and local classes are not included.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) methods in the class; however, the methods of nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) methods in the class; however, the methods of nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -3447,7 +3452,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) public attributes in the class; however, the attributes of nested, anonymous, and local classes are not included.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) public attributes in the class; however, the attributes of nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) public attributes in the class; however, the attributes of nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -3533,7 +3538,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) public methods in the class; however, the methods of nested, anonymous, and local classes are not included.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) public methods in the class; however, the methods of nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) public methods in the class; however, the methods of nested, anonymous, and local classes are not included.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -3619,7 +3624,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) setter methods in the class; however, the setter methods of its nested, anonymous, and local classes are not included. Methods that override abstract methods are not counted.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) setter methods in the class; however, the setter methods of its nested, anonymous, and local classes are not included. Methods that override abstract methods are not counted.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) setter methods in the class; however, the setter methods of its nested, anonymous, and local classes are not included. Methods that override abstract methods are not counted.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -4118,7 +4123,7 @@
       </Calculated>
     </Configuration>
     <Configuration name = "javascript">
-      <Enabled>false</Enabled>
+      <Enabled>true</Enabled>
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Method, Function:&lt;/b&gt; number of directly called methods. If a method is invoked several times, it is counted only once.&lt;br&gt;&lt;b&gt;Class:&lt;/b&gt; number of directly called methods of other classes, including method invocations from attribute initializations. If a method is invoked several times, it is counted only once.</Description>
@@ -5139,7 +5144,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) methods in the class (NLM) plus the number of directly invoked other methods by its methods or attribute initializations (NOI).</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Union:&lt;/strong&gt; number of local (i.e. not inherited) methods in the class (NLM) plus the number of directly invoked other methods by its methods or attribute initializations (NOI).&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Union:&lt;/strong&gt; number of local (i.e. not inherited) methods in the class (NLM) plus the number of directly invoked other methods by its methods or attribute initializations (NOI).&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -5409,6 +5414,7 @@
       <Calculated>
         <CalculatedFor>Class</CalculatedFor>
         <CalculatedFor>Component</CalculatedFor>
+        <CalculatedFor>Delegate</CalculatedFor>
         <CalculatedFor>Method</CalculatedFor>
         <CalculatedFor>Namespace</CalculatedFor>
         <CalculatedFor>Structure</CalculatedFor>
@@ -5517,6 +5523,7 @@
       <Calculated>
         <CalculatedFor>Class</CalculatedFor>
         <CalculatedFor>Component</CalculatedFor>
+        <CalculatedFor>Delegate</CalculatedFor>
         <CalculatedFor>Interface</CalculatedFor>
         <CalculatedFor>Method</CalculatedFor>
         <CalculatedFor>Namespace</CalculatedFor>
@@ -5627,6 +5634,7 @@
       <Calculated>
         <CalculatedFor>Class</CalculatedFor>
         <CalculatedFor>Component</CalculatedFor>
+        <CalculatedFor>Delegate</CalculatedFor>
         <CalculatedFor>Enum</CalculatedFor>
         <CalculatedFor>Interface</CalculatedFor>
         <CalculatedFor>Method</CalculatedFor>
@@ -5738,6 +5746,7 @@
       <Calculated>
         <CalculatedFor>Class</CalculatedFor>
         <CalculatedFor>Component</CalculatedFor>
+        <CalculatedFor>Delegate</CalculatedFor>
         <CalculatedFor>Enum</CalculatedFor>
         <CalculatedFor>Interface</CalculatedFor>
         <CalculatedFor>Method</CalculatedFor>
@@ -6440,7 +6449,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) attributes in the class, including the attributes of its nested, anonymous, and local classes.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) attributes in the class, including the attributes of its nested, anonymous, and local classes.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) attributes in the class, including the attributes of its nested, anonymous, and local classes.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -6531,7 +6540,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) getter methods in the class, including the local getter methods of its nested, anonymous, and local classes.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) getter methods in the class, including the local getter methods of its nested, anonymous, and local classes.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) getter methods in the class, including the local getter methods of its nested, anonymous, and local classes.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -6620,7 +6629,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) methods in the class, including the local methods of its nested, anonymous, and local classes.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) methods in the class, including the local methods of its nested, anonymous, and local classes.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) methods in the class, including the local methods of its nested, anonymous, and local classes.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -6711,7 +6720,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) public attributes in the class, including the local public attributes of its nested, anonymous, and local classes.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) public attributes in the class, including the local public attributes of its nested, anonymous, and local classes.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) public attributes in the class, including the local public attributes of its nested, anonymous, and local classes.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -6796,7 +6805,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) public methods in the class, including the local methods of its nested, anonymous, and local classes.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) public methods in the class, including the local methods of its nested, anonymous, and local classes.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) public methods in the class, including the local methods of its nested, anonymous, and local classes.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -6881,7 +6890,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; number of local (i.e. not inherited) setter methods in the class, including the local setter methods of its nested, anonymous, and local classes.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) setter methods in the class, including the local setter methods of its nested, anonymous, and local classes.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; number of local (i.e. not inherited) setter methods in the class, including the local setter methods of its nested, anonymous, and local classes.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>
@@ -8256,7 +8265,7 @@
       <Language lang = "eng">
         <Warning>false</Warning>
         <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
-        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
       </Language>
       <Baselines/>
       <Settings/>

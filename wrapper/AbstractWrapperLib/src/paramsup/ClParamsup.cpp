@@ -26,6 +26,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include <algorithm>
 
 using namespace std;
 
@@ -44,34 +45,128 @@ static const char* unhandled_preproc_arguments_with_parameter[] = {
 
 // Unhandled compiler arguments without parameter.
 static const char* unhandled_compiler_arguments[] = {
-  "/zi",            // /Zi
-  "/zd",            // /Zd
-  "/z7",            // /Z7
   "/fd",            // /FD
   "/gs",            // /GS
   "/gf",            // /GF
   "/gt",            // /GT
   "/nologo",        // /nologo
+  "/WX-",           // Turn off treat warnings as errors
+  "/WX"             // Treat warnings as errors
 };
 
 // Unhandled compiler arguments with parameter(s)
 static const char* unhandled_compiler_arguments_with_parameter[] = {
   "/zm",            // /Zm[n]
-  "/w",             // /W[n], /Wall, /WX, /Wd[n], /We[n], /Wo[n], /WL, /WS
-  "/fp:",           // /Fp:[precise | except[-] | fast | strict ]
   "/errorreport:",  // /errorReport:[ none | prompt | queue | send ]
 };
 
 // Unhandled compiler arguments with/without parameters. These arguments are allowed to use without any parameters and with parameters too.
 static const char* unhandled_compiler_arguments_wo_parameter[] = {
   "/fd",            // /Fd[path]
-  "/gs",            // /Gs[size]
   "/gl",            // /GL[-]
   "/gm",            // /Gm[-]
-  "/gy",            // /Gy[-]
   "/analyze",       // /analyzer[:WX-]
+  "/Yc",
+  "/Yu",
+  "/Fp"
 };
 
+static vector<string> clang_simple_arguments{
+  "/Brepro-",
+  "/Brepro",
+  "/C",
+  "/c",
+  "/EP",
+  "/E",
+  "/fallback",
+  "/FA",
+  "/GA",
+  "/Gd",
+  "/GF-",
+  "/GR-",
+  "/GR",
+  "/Gr",
+  "/GS-",
+  "/GS",
+  "/Gv",
+  "/Gw-",
+  "/Gw",
+  "/GX-",
+  "/GX",
+  "/Gy-",
+  "/Gy",
+  "/Gz",
+  "/help",
+  "/J",
+  "/LDd",
+  "/LD",
+  "/MDd",
+  "/MD",
+  "/MTd",
+  "/MT",
+  "/Od",
+  "/Oi-",
+  "/Oi",
+  "/Os",
+  "/Ot",
+  "/P",
+  "/Qvec-",
+  "/Qvec",
+  "/showIncludes",
+  "/TC",
+  "/TP",
+  "/utf-8",
+  "/vmb",
+  "/vmg",
+  "/vmm",
+  "/vms",
+  "/vmv",
+  "/W0",
+  "/W1",
+  "/W2",
+  "/W3",
+  "/W4",
+  "/Wall",
+  "/w",
+  "/Y-",
+  "/Z7",
+  "/Zd",
+  "/Zi",
+  "/Zl",
+  "/Zp",
+  "/Zs"
+};
+
+static vector<string> clang_arguments_with_separate_value = {
+  "/D",
+  "/EH",
+  "/Fa",
+  "/Fe",
+  "/FI",
+  "/Fi",
+  "/Fo",
+  "/Gs",
+  "/imsvc",
+  "/I",
+  "/O",
+  "/o",
+  "/Tc",
+  "/Tp",
+  "/U",
+  "/vd",
+  "/Zp",
+  "/link"
+};
+
+static vector<string> clang_arguments_with_prefix = {
+  "/arch:",
+  "/execution-charset:",
+  "/fp:",
+  "/source-charset:",
+  "/std:",
+  "/volatile:",
+  "/Zc:",
+};
 
 ColumbusWrappers::ParErrorCode ColumbusWrappers::ClWrapperSup::examinePreprocArg(list<string>::iterator& args_it, const list<string>::const_iterator& args_end, Warnings& clWarnings, PreprocArgs& preprocArgs, Argument& actArg) {
 
@@ -132,11 +227,6 @@ ColumbusWrappers::ParErrorCode ColumbusWrappers::ClWrapperSup::examinePreprocArg
       return insertParameterOfArgumentIntoArgumentList(args_it, args_end, actArg, preprocArgs.prep_undefs, remain, true);
     }
 
-  } else if (*args_it == "/C") {
-
-    insertArgumentIntoArgumentList(actArg, preprocArgs.prep_args, string("-edg:--comments"));
-    return EC_FOUND;
-
   } else {
 
     return EC_NOT_FOUND;
@@ -149,18 +239,18 @@ ColumbusWrappers::ParErrorCode ColumbusWrappers::ClWrapperSup::examinePreprocArg
 
 ColumbusWrappers::ParErrorCode ColumbusWrappers::ClWrapperSup::examineLinkerArg(list<string>::iterator& args_it, const list<string>::const_iterator& args_end, LinkerArgs& linkerArgs, Argument& actArg) {
   string remain = "";
-  string tmparg = *args_it;
+  const string tmparg = *args_it;
 
-  if (common::isPrefix(common::stringLower(tmparg), "/libpath:", remain)) {
+  if (common::isPrefix(tmparg, "/libpath:", remain, false, false)) {
 
     return insertParameterOfArgumentIntoArgumentList(args_it, args_end, actArg, linkerArgs.linker_lib_paths, remain, false);
 
-  } else if (common::isPrefix(common::stringLower(tmparg), "/out:", remain)) {
+  } else if (common::isPrefix(tmparg, "/out:", remain, false, false)) {
 
     linkerArgs.no_output = false;
     return setParameterOfArgumentToArgument(args_it, args_end, actArg, linkerArgs.linker_output_file, remain, false);
 
-  } else if (common::isPrefix(common::stringLower(tmparg), "/export:", remain)) {
+  } else if (common::isPrefix(tmparg, "/export:", remain, false, false)) {
 
     linkerArgs.create_lib = true;
 
@@ -168,7 +258,7 @@ ColumbusWrappers::ParErrorCode ColumbusWrappers::ClWrapperSup::examineLinkerArg(
 
     linkerArgs.create_dll = true;
 
-  } else if (common::isPrefix(common::stringLower(tmparg), "/def:", remain)) {
+  } else if (common::isPrefix(tmparg, "/def:", remain, false, false)) {
 
     if(!remain.empty()) {
       string fname = remain;
@@ -189,7 +279,7 @@ ColumbusWrappers::ParErrorCode ColumbusWrappers::ClWrapperSup::examineLinkerArg(
     }
     return EC_FOUND;
 
-  } else if (common::isPrefix(common::stringLower(tmparg), "/implib:", remain)) {
+  } else if (common::isPrefix(tmparg, "/implib:", remain, false, false)) {
 
     actArg.name = remain;
     linkerArgs.import_lib_name = actArg;      //How can the CANLinker use this?
@@ -260,7 +350,7 @@ bool ColumbusWrappers::ClWrapperSup::compilerArguments(list<string> args, Warnin
       if (*args_it == "/Wp64") {
         continue;
       }
-      if (common::isPrefix(common::stringLower(tmpArg), unhandled_compiler_arguments_with_parameter[n], remain)) {
+      if (common::isPrefix(tmpArg, unhandled_compiler_arguments_with_parameter[n], remain, false, false)) {
         if (!remain.empty()) {
           recognized = true;
           break;
@@ -284,7 +374,7 @@ bool ColumbusWrappers::ClWrapperSup::compilerArguments(list<string> args, Warnin
       if (common::stringLower(tmpArg) == unhandled_compiler_arguments_wo_parameter[n]) {
         recognized = true;
         break;
-      } else if (common::isPrefix(common::stringLower(tmpArg), unhandled_compiler_arguments_wo_parameter[n], remain)) {
+      } else if (common::isPrefix(tmpArg, unhandled_compiler_arguments_wo_parameter[n], remain, false, false)) {
         if (!remain.empty()) {
           recognized = true;
           break;
@@ -331,12 +421,12 @@ bool ColumbusWrappers::ClWrapperSup::compilerArguments(list<string> args, Warnin
           if (isClang) {
             actArg.lang = "c";
           } else if (isCpplang) {
-            actArg.lang = "cpp";
+            actArg.lang = "c++";
           } else if (common::isclang(ext)) {
             actArg.lang = "c";
             wasClangInput = true;
           } else {
-            actArg.lang = "cpp";
+            actArg.lang = "c++";
           }
 
           //TODO resolve special chars.
@@ -357,7 +447,8 @@ bool ColumbusWrappers::ClWrapperSup::compilerArguments(list<string> args, Warnin
         compilerArgs.comp_output_file = actArg; // otherwise the output file is given
       } else {
         actualArgument = *args_it;
-        ret = EC_ERROR;
+        // No problem if /Fo doesnt have a value, it doesn't need to in cl.exe...
+        //ret = EC_ERROR;
         break;
       }
 
@@ -395,101 +486,6 @@ bool ColumbusWrappers::ClWrapperSup::compilerArguments(list<string> args, Warnin
 
       zaSet = true;
 
-    } else if (*args_it == "/Ze") {
-
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_MSC_EXTENSIONS=1"));
-
-    } else if (*args_it == "/J") {
-
-      insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-edg:--unsigned_chars"));
-
-    } else if (*args_it == "/GR") {
-
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_CPPRTTI"));
-
-    } else if (*args_it == "/GX") {
-
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_args, string("-edg:--exceptions"));
-      ++actArg.position;
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_CPPUNWIND"));
-
-    } else if (args_it->substr(0,3) == "/EH" && (args_it->length() == 4 || args_it->length() == 5 || args_it->length() == 6)) {
-
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_args, string("-edg:--exceptions"));
-      ++actArg.position;
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_CPPUNWIND"));
-
-    } else if (*args_it == "/LDd") {
-
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_DEBUG"));
-
-    } else if (*args_it == "/MDd") {
-
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_DEBUG"));
-      ++actArg.position;
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_DLL"));
-      ++actArg.position;
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_MT"));
-
-    } else if (*args_it == "/MD") {
-
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_DLL"));
-      ++actArg.position;
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_MT"));
-
-    } else if (*args_it == "/MLd") {
-
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_DEBUG"));
-
-    } else if (*args_it == "/MTd") {
-
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_DEBUG"));
-      ++actArg.position;
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_MT"));
-
-    } else if (*args_it == "/MT") {
-
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_MT"));
-
-    } else if (common::isPrefix(*args_it, "/clr", remain)) {
-
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_MANAGED=1"));
-
-    } else if (common::isPrefix(*args_it, "/RTC", remain)) {
-
-      insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("__MSVC_RUNTIME_CHECKS"));
-
-    } else if (common::isPrefix(*args_it, "/Zc:", remain)) {
-
-      list<string> ZcList;
-      common::split(remain, ZcList, ',');
-      for (list<string>::const_iterator ZcIt = ZcList.begin(); ZcIt != ZcList.end(); ZcIt++) {
-        if (*ZcIt == "wchar_t" || *ZcIt == "wchar_t-") {
-          insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-edg:--wchar_t_keyword"));
-        } else if (*ZcIt == "forScope" || *ZcIt == "forScope-") {
-          insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-edg:--old_for_init"));
-        } else if (*ZcIt == "auto" || *ZcIt == "auto-") {
-          insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-edg:--auto_type"));
-        } else {
-          clWarnings.unrec_args.push_back(*args_it);
-        }
-      }
-
-    } else if (*args_it == "/Gd") {
-
-      insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-edg:--default_calling_convention"));
-      insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-edg:__cdecl"));
-
-    } else if (*args_it == "/Gr") {
-
-      insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-edg:--default_calling_convention"));
-      insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-edg:__fastcall"));
-
-    } else if (*args_it == "/Gz") {
-
-      insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-edg:--default_calling_convention"));
-      insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-edg:__stdcall"));
-
     } else if (*args_it == "/Wp64") {
 
       insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("_Wp64"));
@@ -500,7 +496,7 @@ bool ColumbusWrappers::ClWrapperSup::compilerArguments(list<string> args, Warnin
 
     } else if (common::isPrefix(*args_it, "/Tp", remain)) {
 
-      actArg.lang = "cpp";
+      actArg.lang = "c++";
       if (!remain.empty()) {
         insertArgumentIntoArgumentList(actArg, compilerArgs.comp_input_files, remain);
       }
@@ -517,8 +513,6 @@ bool ColumbusWrappers::ClWrapperSup::compilerArguments(list<string> args, Warnin
         insertArgumentIntoArgumentList(actArg, compilerArgs.comp_input_files, remain);
       }
 
-    } else if (args_it->substr(0,3) == "/Fp" || args_it->substr(0,3) == "/Yc" || args_it->substr(0,3) == "/Yu" || args_it->substr(0,3) == "/Yx") {
-      //do nothing just recognize them
     } else if (*args_it == "/link") {
 
       list<string>::iterator prev;
@@ -549,7 +543,41 @@ bool ColumbusWrappers::ClWrapperSup::compilerArguments(list<string> args, Warnin
 
     } else {
 
-      clWarnings.unrec_args.push_back(*args_it);
+      // Assuming that the clang has the same parameters as the cl we put all the available clang parameters to comp_args
+      actArg.name = *args_it;
+      vector<string>::const_iterator found_it;
+      string remain;
+
+      if (find(clang_simple_arguments.begin(), clang_simple_arguments.end(), *args_it) != clang_simple_arguments.end())
+      {
+        compilerArgs.comp_args.push_back(actArg);
+      }
+      else if ((found_it = find_if(clang_arguments_with_prefix.begin(),
+        clang_arguments_with_prefix.end(),
+        [&](const string& s) { return common::isPrefix(*args_it, s, remain); })) != clang_arguments_with_prefix.end())
+      {
+        compilerArgs.comp_args.push_back(actArg);
+      }
+      else if ((found_it = find_if(clang_arguments_with_separate_value.begin(),
+        clang_arguments_with_separate_value.end(),
+        [&](const string& s) { return common::isPrefix(*args_it, s, remain); })) != clang_arguments_with_separate_value.end())
+      {
+        compilerArgs.comp_args.push_back(actArg);
+        if (remain.empty())
+        {
+          ++args_it;
+          if (args_it != args.end())
+          {
+            actArg.name = *args_it;
+            ++actArg.position;
+            compilerArgs.comp_args.push_back(actArg);
+          }
+        }
+      }
+      else
+      {
+        clWarnings.unrec_args.push_back(*args_it);
+      }
 
     }
 

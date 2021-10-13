@@ -31,8 +31,10 @@ import columbus.java.asg.base.Commentable;
  * @columbus.attr fileEncoding (String) : (missing)
  * @columbus.edge hasPackageDeclaration ({@link columbus.java.asg.struc.PackageDeclaration PackageDeclaration}, single) : (missing)
  * @columbus.edge hasImports ({@link columbus.java.asg.struc.Import Import}, multiple) : (missing)
- * @columbus.edge typeDeclarations ({@link columbus.java.asg.struc.TypeDeclaration TypeDeclaration}, multiple) : (missing)
  * @columbus.edge hasOthers ({@link columbus.java.asg.base.Positioned Positioned}, multiple) : (missing)
+ * @columbus.edge hasModuleDeclaration ({@link columbus.java.asg.struc.ModuleDeclaration ModuleDeclaration}, single) : (missing)
+ * @columbus.edge typeDeclarations ({@link columbus.java.asg.struc.TypeDeclaration TypeDeclaration}, multiple) : (missing)
+ * @columbus.edge isInModule ({@link columbus.java.asg.struc.Module Module}, single) : (missing)
  */
 public interface CompilationUnit extends PositionedWithoutComment, Commentable {
 
@@ -103,6 +105,54 @@ public interface CompilationUnit extends PositionedWithoutComment, Commentable {
 	public void addImports(Import node);
 
 	/**
+	 * Gives back iterator for the {@link columbus.java.asg.struc.CompilationUnit#edgeHasOthers hasOthers} edges.
+	 * @return Returns an iterator for the hasOthers edges.
+	 */
+	public EdgeIterator<Positioned> getOthersIterator();
+
+	/**
+	 * Tells whether the node has {@link columbus.java.asg.struc.CompilationUnit#edgeHasOthers hasOthers} edges or not.
+	 * @return Returns true if the node doesn't have any hasOthers edge.
+	 */
+	public boolean getOthersIsEmpty();
+
+	/**
+	 * Gives back how many {@link columbus.java.asg.struc.CompilationUnit#edgeHasOthers hasOthers} edges the node has.
+	 * @return Returns with the number of hasOthers edges.
+	 */
+	public int getOthersSize();
+
+	/**
+	 * Adds a new {@link columbus.java.asg.struc.CompilationUnit#edgeHasOthers hasOthers} edge to the node.
+	 * @param id The end point of the new hasOthers edge.
+	 */
+	public void addOthers(int id);
+
+	/**
+	 * Adds a new {@link columbus.java.asg.struc.CompilationUnit#edgeHasOthers hasOthers} edge to the node.
+	 * @param node The end point of the new hasOthers edge.
+	 */
+	public void addOthers(Positioned node);
+
+	/**
+	 * Gives back the reference of the node the {@link columbus.java.asg.struc.CompilationUnit#edgeHasModuleDeclaration hasModuleDeclaration} edge points to.
+	 * @return Returns the end point of the hasModuleDeclaration edge.
+	 */
+	public ModuleDeclaration getModuleDeclaration();
+
+	/**
+	 * Sets the {@link columbus.java.asg.struc.CompilationUnit#edgeHasModuleDeclaration hasModuleDeclaration} edge.
+	 * @param id The new end point of the hasModuleDeclaration edge.
+	 */
+	public void setModuleDeclaration(int id);
+
+	/**
+	 * Sets the {@link columbus.java.asg.struc.CompilationUnit#edgeHasModuleDeclaration hasModuleDeclaration} edge.
+	 * @param node The new end point of the hasModuleDeclaration edge.
+	 */
+	public void setModuleDeclaration(ModuleDeclaration node);
+
+	/**
 	 * Gives back iterator for the {@link columbus.java.asg.struc.CompilationUnit#edgeTypeDeclarations typeDeclarations} edges.
 	 * @return Returns an iterator for the typeDeclarations edges.
 	 */
@@ -133,34 +183,22 @@ public interface CompilationUnit extends PositionedWithoutComment, Commentable {
 	public void addTypeDeclarations(TypeDeclaration node);
 
 	/**
-	 * Gives back iterator for the {@link columbus.java.asg.struc.CompilationUnit#edgeHasOthers hasOthers} edges.
-	 * @return Returns an iterator for the hasOthers edges.
+	 * Gives back the reference of the node the {@link columbus.java.asg.struc.CompilationUnit#edgeIsInModule isInModule} edge points to.
+	 * @return Returns the end point of the isInModule edge.
 	 */
-	public EdgeIterator<Positioned> getOthersIterator();
+	public Module getIsInModule();
 
 	/**
-	 * Tells whether the node has {@link columbus.java.asg.struc.CompilationUnit#edgeHasOthers hasOthers} edges or not.
-	 * @return Returns true if the node doesn't have any hasOthers edge.
+	 * Sets the {@link columbus.java.asg.struc.CompilationUnit#edgeIsInModule isInModule} edge.
+	 * @param id The new end point of the isInModule edge.
 	 */
-	public boolean getOthersIsEmpty();
+	public void setIsInModule(int id);
 
 	/**
-	 * Gives back how many {@link columbus.java.asg.struc.CompilationUnit#edgeHasOthers hasOthers} edges the node has.
-	 * @return Returns with the number of hasOthers edges.
+	 * Sets the {@link columbus.java.asg.struc.CompilationUnit#edgeIsInModule isInModule} edge.
+	 * @param node The new end point of the isInModule edge.
 	 */
-	public int getOthersSize();
-
-	/**
-	 * Adds a new {@link columbus.java.asg.struc.CompilationUnit#edgeHasOthers hasOthers} edge to the node.
-	 * @param id The end point of the new hasOthers edge.
-	 */
-	public void addOthers(int id);
-
-	/**
-	 * Adds a new {@link columbus.java.asg.struc.CompilationUnit#edgeHasOthers hasOthers} edge to the node.
-	 * @param node The end point of the new hasOthers edge.
-	 */
-	public void addOthers(Positioned node);
+	public void setIsInModule(Module node);
 
 }
 

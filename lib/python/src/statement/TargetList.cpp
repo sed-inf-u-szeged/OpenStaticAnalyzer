@@ -113,7 +113,7 @@ namespace statement {
     if (&(_node->getFactory()) != this->factory)
       throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
 
-    if (!((_node->getNodeKind() == ndkList)  || (_node->getNodeKind() == ndkSubscription)  || (_node->getNodeKind() == ndkAttributeRef)  || Common::getIsSlicing(*_node) || (_node->getNodeKind() == ndkIdentifier) ))
+    if (!((_node->getNodeKind() == ndkAttributeRef)  || Common::getIsSlicing(*_node) || (_node->getNodeKind() == ndkIdentifier)  || (_node->getNodeKind() == ndkList)  || (_node->getNodeKind() == ndkSubscription) ))
       throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
 
     hasTargetContainer.push_back(_node->getId());

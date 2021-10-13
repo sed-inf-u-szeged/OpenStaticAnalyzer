@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var forStatement = factory.createForStatementWrapper(factory);
+        var forStatement = factory.createForStatementWrapper();
         globals.setPositionInfo(node, forStatement);
         return forStatement;
     } else {
@@ -34,57 +34,37 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.init != null) {
             var initWrapper = globals.getWrapperOfNode(node.init);
-            if (node.init.type !== "Literal") {
-                var initWrapperFunctionString = "setInit" + node.init.type;
-            } else {
-                var initWrapperFunctionString = "setInit" + globals.getLiteralType(node.init) + node.init.type;
-            }
             try {
-                forStatementWrapper[initWrapperFunctionString](initWrapper);
+                forStatementWrapper.setInit(initWrapper);
             } catch (e) {
-                console.error("FORSTATEMENT - Function not exist: forStatementWrapper." + initWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("FORSTATEMENT - Could not set init! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.test != null) {
             var testWrapper = globals.getWrapperOfNode(node.test);
-            if (node.test.type !== "Literal") {
-                var testWrapperFunctionString = "setTest" + node.test.type;
-            } else {
-                var testWrapperFunctionString = "setTest" + globals.getLiteralType(node.test) + node.test.type;
-            }
             try {
-                forStatementWrapper[testWrapperFunctionString](testWrapper);
+                forStatementWrapper.setTest(testWrapper);
             } catch (e) {
-                console.error("FORSTATEMENT - Function not exist: forStatementWrapper." + testWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("FORSTATEMENT - Could not set test! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.update != null) {
             var updateWrapper = globals.getWrapperOfNode(node.update);
-            if (node.update.type !== "Literal") {
-                var updateWrapperFunctionString = "setUpdate" + node.update.type;
-            } else {
-                var updateWrapperFunctionString = "setUpdate" + globals.getLiteralType(node.update) + node.update.type;
-            }
             try {
-                forStatementWrapper[updateWrapperFunctionString](updateWrapper);
+                forStatementWrapper.setUpdate(updateWrapper);
             } catch (e) {
-                console.error("FORSTATEMENT - Function not exist: forStatementWrapper." + updateWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("FORSTATEMENT - Could not set update! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.body != null) {
             var bodyWrapper = globals.getWrapperOfNode(node.body);
-            if (node.body.type !== "Literal") {
-                var bodyWrapperFunctionString = "setBody" + node.body.type;
-            } else {
-                var bodyWrapperFunctionString = "setBody" + globals.getLiteralType(node.body) + node.body.type;
-            }
             try {
-                forStatementWrapper[bodyWrapperFunctionString](bodyWrapper);
+                forStatementWrapper.setBody(bodyWrapper);
             } catch (e) {
-                console.error("FORSTATEMENT - Function not exist: forStatementWrapper." + bodyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("FORSTATEMENT - Could not set body! Reason of the error: " + e + "\n");
             }
         }
 

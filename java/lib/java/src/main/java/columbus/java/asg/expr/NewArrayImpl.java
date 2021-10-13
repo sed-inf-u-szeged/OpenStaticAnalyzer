@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class NewArrayImpl extends BaseImpl implements NewArray {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(NewArrayImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

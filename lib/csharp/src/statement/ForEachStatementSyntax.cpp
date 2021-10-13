@@ -34,10 +34,8 @@ typedef boost::crc_32_type  Crc_type;
 
 namespace statement { 
   ForEachStatementSyntax::ForEachStatementSyntax(NodeId _id, Factory *_factory) :
-    StatementSyntax(_id, _factory),
+    CommonForEachStatementSyntax(_id, _factory),
     m_identifier(0),
-    m_Expression(0),
-    m_Statement(0),
     m_Type(0)
   {
   }
@@ -46,10 +44,8 @@ namespace statement {
   }
 
   void ForEachStatementSyntax::prepareDelete(bool tryOnVirtualParent){
-    removeExpression();
-    removeStatement();
     removeType();
-    statement::StatementSyntax::prepareDelete(false);
+    statement::CommonForEachStatementSyntax::prepareDelete(false);
   }
 
   NodeKind ForEachStatementSyntax::getNodeKind() const {
@@ -72,26 +68,6 @@ namespace statement {
     m_identifier = factory->getStringTable().set(_identifier);
   }
 
-  expression::ExpressionSyntax* ForEachStatementSyntax::getExpression() const {
-    expression::ExpressionSyntax *_node = NULL;
-    if (m_Expression != 0)
-      _node = dynamic_cast<expression::ExpressionSyntax*>(factory->getPointer(m_Expression));
-    if ( (_node == NULL) || factory->getIsFiltered(_node))
-      return NULL;
-
-    return _node;
-  }
-
-  statement::StatementSyntax* ForEachStatementSyntax::getStatement() const {
-    statement::StatementSyntax *_node = NULL;
-    if (m_Statement != 0)
-      _node = dynamic_cast<statement::StatementSyntax*>(factory->getPointer(m_Statement));
-    if ( (_node == NULL) || factory->getIsFiltered(_node))
-      return NULL;
-
-    return _node;
-  }
-
   expression::TypeSyntax* ForEachStatementSyntax::getType() const {
     expression::TypeSyntax *_node = NULL;
     if (m_Type != 0)
@@ -104,19 +80,13 @@ namespace statement {
 
   bool ForEachStatementSyntax::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
-      case edkForEachStatementSyntax_Expression:
-        setExpression(edgeEnd);
-        return true;
-      case edkForEachStatementSyntax_Statement:
-        setStatement(edgeEnd);
-        return true;
       case edkForEachStatementSyntax_Type:
         setType(edgeEnd);
         return true;
       default:
         break;
     }
-    if (statement::StatementSyntax::setEdge(edgeKind, edgeEnd, false)) {
+    if (statement::CommonForEachStatementSyntax::setEdge(edgeKind, edgeEnd, false)) {
       return true;
     }
     return false;
@@ -124,114 +94,16 @@ namespace statement {
 
   bool ForEachStatementSyntax::removeEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
-      case edkForEachStatementSyntax_Expression:
-        removeExpression();
-        return true;
-      case edkForEachStatementSyntax_Statement:
-        removeStatement();
-        return true;
       case edkForEachStatementSyntax_Type:
         removeType();
         return true;
       default:
         break;
     }
-    if (statement::StatementSyntax::removeEdge(edgeKind, edgeEnd, false)) {
+    if (statement::CommonForEachStatementSyntax::removeEdge(edgeKind, edgeEnd, false)) {
       return true;
     }
     return false;
-  }
-
-  void ForEachStatementSyntax::setExpression(NodeId _id) {
-    expression::ExpressionSyntax *_node = NULL;
-    if (_id) {
-      if (!factory->getExist(_id))
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
-
-      _node = dynamic_cast<expression::ExpressionSyntax*> (factory->getPointer(_id));
-      if ( _node == NULL) {
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
-      }
-      if (&(_node->getFactory()) != this->factory)
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
-
-      if (m_Expression) {
-        removeParentEdge(m_Expression);
-        if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_Expression, m_id, edkForEachStatementSyntax_Expression);
-      }
-      m_Expression = _node->getId();
-      if (m_Expression != 0)
-        setParentEdge(factory->getPointer(m_Expression), edkForEachStatementSyntax_Expression);
-      if (factory->getExistsReverseEdges())
-        factory->reverseEdges->insertEdge(m_Expression, this->getId(), edkForEachStatementSyntax_Expression);
-    } else {
-      if (m_Expression) {
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
-      }
-    }
-  }
-
-  void ForEachStatementSyntax::setExpression(expression::ExpressionSyntax *_node) {
-    if (_node == NULL)
-      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
-
-    setExpression(_node->getId());
-  }
-
-  void ForEachStatementSyntax::removeExpression() {
-      if (m_Expression) {
-        removeParentEdge(m_Expression);
-        if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_Expression, m_id, edkForEachStatementSyntax_Expression);
-      }
-      m_Expression = 0;
-  }
-
-  void ForEachStatementSyntax::setStatement(NodeId _id) {
-    statement::StatementSyntax *_node = NULL;
-    if (_id) {
-      if (!factory->getExist(_id))
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
-
-      _node = dynamic_cast<statement::StatementSyntax*> (factory->getPointer(_id));
-      if ( _node == NULL) {
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
-      }
-      if (&(_node->getFactory()) != this->factory)
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
-
-      if (m_Statement) {
-        removeParentEdge(m_Statement);
-        if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_Statement, m_id, edkForEachStatementSyntax_Statement);
-      }
-      m_Statement = _node->getId();
-      if (m_Statement != 0)
-        setParentEdge(factory->getPointer(m_Statement), edkForEachStatementSyntax_Statement);
-      if (factory->getExistsReverseEdges())
-        factory->reverseEdges->insertEdge(m_Statement, this->getId(), edkForEachStatementSyntax_Statement);
-    } else {
-      if (m_Statement) {
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
-      }
-    }
-  }
-
-  void ForEachStatementSyntax::setStatement(statement::StatementSyntax *_node) {
-    if (_node == NULL)
-      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
-
-    setStatement(_node->getId());
-  }
-
-  void ForEachStatementSyntax::removeStatement() {
-      if (m_Statement) {
-        removeParentEdge(m_Statement);
-        if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_Statement, m_id, edkForEachStatementSyntax_Statement);
-      }
-      m_Statement = 0;
   }
 
   void ForEachStatementSyntax::setType(NodeId _id) {
@@ -340,29 +212,19 @@ namespace statement {
   }
 
   void ForEachStatementSyntax::save(io::BinaryIO &binIo,bool withVirtualBase  /*= true*/) const {
-    StatementSyntax::save(binIo,false);
+    CommonForEachStatementSyntax::save(binIo,false);
 
     factory->getStringTable().setType(m_identifier, StrTable::strToSave);
     binIo.writeUInt4(m_identifier);
 
-    binIo.writeUInt4(m_Expression);
-    binIo.writeUInt4(m_Statement);
     binIo.writeUInt4(m_Type);
 
   }
 
   void ForEachStatementSyntax::load(io::BinaryIO &binIo, bool withVirtualBase /*= true*/) {
-    StatementSyntax::load(binIo,false);
+    CommonForEachStatementSyntax::load(binIo,false);
 
     m_identifier = binIo.readUInt4();
-
-    m_Expression =  binIo.readUInt4();
-    if (m_Expression != 0)
-      setParentEdge(factory->getPointer(m_Expression),edkForEachStatementSyntax_Expression);
-
-    m_Statement =  binIo.readUInt4();
-    if (m_Statement != 0)
-      setParentEdge(factory->getPointer(m_Statement),edkForEachStatementSyntax_Statement);
 
     m_Type =  binIo.readUInt4();
     if (m_Type != 0)

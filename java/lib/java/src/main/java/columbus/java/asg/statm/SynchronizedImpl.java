@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class SynchronizedImpl extends BaseImpl implements Synchronized {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(SynchronizedImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

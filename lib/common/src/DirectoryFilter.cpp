@@ -27,7 +27,7 @@
 
 using namespace common;
 
-bool DirectoryFilter::isFilteredOut( std::string path )
+bool DirectoryFilter::isFilteredOut(const std::string& path ) const
 {
   if (filter_list.empty())
     return false;
@@ -44,7 +44,7 @@ bool DirectoryFilter::isFilteredOut( std::string path )
       std::string tmp = rit->substr(1, std::string::npos);
 
 
-#ifdef __unix__
+#if defined(__linux__)
       boost::regex re(tmp, boost::regex::extended);
 #endif
 
@@ -59,7 +59,7 @@ bool DirectoryFilter::isFilteredOut( std::string path )
         break;
       }
     }
-    catch (boost::bad_expression e ){
+    catch (const boost::bad_expression& e){
       WriteMsg::write(CMSG_CANT_PARSE,rit->c_str(),e.what());
     }
   }

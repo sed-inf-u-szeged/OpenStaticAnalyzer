@@ -38,6 +38,7 @@ namespace structure {
     AccessedEnumMembersContainer(),
     AttributeListsContainer(),
     m_Body(0),
+    m_ExpressionBody(0),
     m_ParameterList(0)
   {
   }
@@ -60,6 +61,7 @@ namespace structure {
       AttributeListsContainer.pop_front();
     }
     removeBody();
+    removeExpressionBody();
     removeParameterList();
     structure::MemberDeclarationSyntax::prepareDelete(false);
   }
@@ -116,6 +118,16 @@ namespace structure {
     return _node;
   }
 
+  structure::ArrowExpressionClauseSyntax* BaseMethodDeclarationSyntax::getExpressionBody() const {
+    structure::ArrowExpressionClauseSyntax *_node = NULL;
+    if (m_ExpressionBody != 0)
+      _node = dynamic_cast<structure::ArrowExpressionClauseSyntax*>(factory->getPointer(m_ExpressionBody));
+    if ( (_node == NULL) || factory->getIsFiltered(_node))
+      return NULL;
+
+    return _node;
+  }
+
   structure::ParameterListSyntax* BaseMethodDeclarationSyntax::getParameterList() const {
     structure::ParameterListSyntax *_node = NULL;
     if (m_ParameterList != 0)
@@ -136,6 +148,9 @@ namespace structure {
         return true;
       case edkBaseMethodDeclarationSyntax_Body:
         setBody(edgeEnd);
+        return true;
+      case edkBaseMethodDeclarationSyntax_ExpressionBody:
+        setExpressionBody(edgeEnd);
         return true;
       case edkBaseMethodDeclarationSyntax_ParameterList:
         setParameterList(edgeEnd);
@@ -159,6 +174,9 @@ namespace structure {
         return true;
       case edkBaseMethodDeclarationSyntax_Body:
         removeBody();
+        return true;
+      case edkBaseMethodDeclarationSyntax_ExpressionBody:
+        removeExpressionBody();
         return true;
       case edkBaseMethodDeclarationSyntax_ParameterList:
         removeParameterList();
@@ -310,6 +328,52 @@ namespace structure {
       m_Body = 0;
   }
 
+  void BaseMethodDeclarationSyntax::setExpressionBody(NodeId _id) {
+    structure::ArrowExpressionClauseSyntax *_node = NULL;
+    if (_id) {
+      if (!factory->getExist(_id))
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+      _node = dynamic_cast<structure::ArrowExpressionClauseSyntax*> (factory->getPointer(_id));
+      if ( _node == NULL) {
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      }
+      if (&(_node->getFactory()) != this->factory)
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+
+      if (m_ExpressionBody) {
+        removeParentEdge(m_ExpressionBody);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_ExpressionBody, m_id, edkBaseMethodDeclarationSyntax_ExpressionBody);
+      }
+      m_ExpressionBody = _node->getId();
+      if (m_ExpressionBody != 0)
+        setParentEdge(factory->getPointer(m_ExpressionBody), edkBaseMethodDeclarationSyntax_ExpressionBody);
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->insertEdge(m_ExpressionBody, this->getId(), edkBaseMethodDeclarationSyntax_ExpressionBody);
+    } else {
+      if (m_ExpressionBody) {
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      }
+    }
+  }
+
+  void BaseMethodDeclarationSyntax::setExpressionBody(structure::ArrowExpressionClauseSyntax *_node) {
+    if (_node == NULL)
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+
+    setExpressionBody(_node->getId());
+  }
+
+  void BaseMethodDeclarationSyntax::removeExpressionBody() {
+      if (m_ExpressionBody) {
+        removeParentEdge(m_ExpressionBody);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_ExpressionBody, m_id, edkBaseMethodDeclarationSyntax_ExpressionBody);
+      }
+      m_ExpressionBody = 0;
+  }
+
   void BaseMethodDeclarationSyntax::setParameterList(NodeId _id) {
     structure::ParameterListSyntax *_node = NULL;
     if (_id) {
@@ -391,6 +455,7 @@ namespace structure {
     MemberDeclarationSyntax::save(binIo,false);
 
     binIo.writeUInt4(m_Body);
+    binIo.writeUInt4(m_ExpressionBody);
     binIo.writeUInt4(m_ParameterList);
 
 
@@ -411,6 +476,10 @@ namespace structure {
     m_Body =  binIo.readUInt4();
     if (m_Body != 0)
       setParentEdge(factory->getPointer(m_Body),edkBaseMethodDeclarationSyntax_Body);
+
+    m_ExpressionBody =  binIo.readUInt4();
+    if (m_ExpressionBody != 0)
+      setParentEdge(factory->getPointer(m_ExpressionBody),edkBaseMethodDeclarationSyntax_ExpressionBody);
 
     m_ParameterList =  binIo.readUInt4();
     if (m_ParameterList != 0)

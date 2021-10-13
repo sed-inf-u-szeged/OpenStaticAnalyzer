@@ -36,7 +36,6 @@ VisitorCSHARPML::~VisitorCSHARPML() {
 
 void VisitorCSHARPML::beginVisit() {
   ofs << "<?xml version='1.0' encoding=\"utf-8\"?>\n";
-  ofs << "<!DOCTYPE Project SYSTEM 'csharp-0.9.dtd'>\n";
   ofs << "<Project name='" << projectName << "'"
       << " xmlns:base='columbus_csharp_schema/base'"
       << " xmlns:expression='columbus_csharp_schema/expression'"
@@ -232,6 +231,20 @@ void VisitorCSHARPML::visitEnd(const expression::ConditionalExpressionSyntax& no
   ofs << "</expression:ConditionalExpressionSyntax>\n";
 }
 
+void VisitorCSHARPML::visit(const expression::DeclarationExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:DeclarationExpressionSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const expression::DeclarationExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:DeclarationExpressionSyntax>\n";
+}
+
 void VisitorCSHARPML::visit(const expression::DefaultExpressionSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<expression:DefaultExpressionSyntax";
@@ -330,6 +343,20 @@ void VisitorCSHARPML::visitEnd(const expression::ImplicitElementAccessSyntax& no
   ofs << "</expression:ImplicitElementAccessSyntax>\n";
 }
 
+void VisitorCSHARPML::visit(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:ImplicitStackAllocArrayCreationExpressionSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:ImplicitStackAllocArrayCreationExpressionSyntax>\n";
+}
+
 void VisitorCSHARPML::visit(const expression::InitializerExpressionSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<expression:InitializerExpressionSyntax";
@@ -370,6 +397,20 @@ void VisitorCSHARPML::visit(const expression::InvocationExpressionSyntax& node ,
 void VisitorCSHARPML::visitEnd(const expression::InvocationExpressionSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</expression:InvocationExpressionSyntax>\n";
+}
+
+void VisitorCSHARPML::visit(const expression::IsPatternExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:IsPatternExpressionSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const expression::IsPatternExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:IsPatternExpressionSyntax>\n";
 }
 
 void VisitorCSHARPML::visit(const expression::LiteralExpressionSyntax& node , bool callVirtualBase) {
@@ -596,6 +637,34 @@ void VisitorCSHARPML::visitEnd(const expression::QueryExpressionSyntax& node , b
   ofs << "</expression:QueryExpressionSyntax>\n";
 }
 
+void VisitorCSHARPML::visit(const expression::RangeExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:RangeExpressionSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const expression::RangeExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:RangeExpressionSyntax>\n";
+}
+
+void VisitorCSHARPML::visit(const expression::RefExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:RefExpressionSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const expression::RefExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:RefExpressionSyntax>\n";
+}
+
 void VisitorCSHARPML::visit(const expression::RefTypeExpressionSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<expression:RefTypeExpressionSyntax";
@@ -608,6 +677,20 @@ void VisitorCSHARPML::visit(const expression::RefTypeExpressionSyntax& node , bo
 void VisitorCSHARPML::visitEnd(const expression::RefTypeExpressionSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</expression:RefTypeExpressionSyntax>\n";
+}
+
+void VisitorCSHARPML::visit(const expression::RefTypeSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:RefTypeSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const expression::RefTypeSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:RefTypeSyntax>\n";
 }
 
 void VisitorCSHARPML::visit(const expression::RefValueExpressionSyntax& node , bool callVirtualBase) {
@@ -666,6 +749,20 @@ void VisitorCSHARPML::visitEnd(const expression::StackAllocArrayCreationExpressi
   ofs << "</expression:StackAllocArrayCreationExpressionSyntax>\n";
 }
 
+void VisitorCSHARPML::visit(const expression::SwitchExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:SwitchExpressionSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const expression::SwitchExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:SwitchExpressionSyntax>\n";
+}
+
 void VisitorCSHARPML::visit(const expression::ThisExpressionSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<expression:ThisExpressionSyntax";
@@ -678,6 +775,48 @@ void VisitorCSHARPML::visit(const expression::ThisExpressionSyntax& node , bool 
 void VisitorCSHARPML::visitEnd(const expression::ThisExpressionSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</expression:ThisExpressionSyntax>\n";
+}
+
+void VisitorCSHARPML::visit(const expression::ThrowExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:ThrowExpressionSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const expression::ThrowExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:ThrowExpressionSyntax>\n";
+}
+
+void VisitorCSHARPML::visit(const expression::TupleExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:TupleExpressionSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const expression::TupleExpressionSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:TupleExpressionSyntax>\n";
+}
+
+void VisitorCSHARPML::visit(const expression::TupleTypeSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:TupleTypeSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const expression::TupleTypeSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:TupleTypeSyntax>\n";
 }
 
 void VisitorCSHARPML::visit(const expression::TypeOfExpressionSyntax& node , bool callVirtualBase) {
@@ -820,6 +959,20 @@ void VisitorCSHARPML::visitEnd(const statement::ForEachStatementSyntax& node , b
   ofs << "</statement:ForEachStatementSyntax>\n";
 }
 
+void VisitorCSHARPML::visit(const statement::ForEachVariableStatementSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<statement:ForEachVariableStatementSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const statement::ForEachVariableStatementSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</statement:ForEachVariableStatementSyntax>\n";
+}
+
 void VisitorCSHARPML::visit(const statement::ForStatementSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<statement:ForStatementSyntax";
@@ -888,6 +1041,20 @@ void VisitorCSHARPML::visit(const statement::LocalDeclarationStatementSyntax& no
 void VisitorCSHARPML::visitEnd(const statement::LocalDeclarationStatementSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</statement:LocalDeclarationStatementSyntax>\n";
+}
+
+void VisitorCSHARPML::visit(const statement::LocalFunctionStatementSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<statement:LocalFunctionStatementSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const statement::LocalFunctionStatementSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</statement:LocalFunctionStatementSyntax>\n";
 }
 
 void VisitorCSHARPML::visit(const statement::LockStatementSyntax& node , bool callVirtualBase) {
@@ -1226,6 +1393,20 @@ void VisitorCSHARPML::visitEnd(const structure::BracketedParameterListSyntax& no
   ofs << "</structure:BracketedParameterListSyntax>\n";
 }
 
+void VisitorCSHARPML::visit(const structure::CasePatternSwitchLabelSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:CasePatternSwitchLabelSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const structure::CasePatternSwitchLabelSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:CasePatternSwitchLabelSyntax>\n";
+}
+
 void VisitorCSHARPML::visit(const structure::CaseSwitchLabelSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<structure:CaseSwitchLabelSyntax";
@@ -1322,6 +1503,20 @@ void VisitorCSHARPML::visit(const structure::CompilationUnitSyntax& node , bool 
 void VisitorCSHARPML::visitEnd(const structure::CompilationUnitSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</structure:CompilationUnitSyntax>\n";
+}
+
+void VisitorCSHARPML::visit(const structure::ConstantPatternSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:ConstantPatternSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const structure::ConstantPatternSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:ConstantPatternSyntax>\n";
 }
 
 void VisitorCSHARPML::visit(const structure::ConstructorConstraintSyntax& node , bool callVirtualBase) {
@@ -1436,6 +1631,20 @@ void VisitorCSHARPML::visitEnd(const structure::CrefParameterSyntax& node , bool
   ofs << "</structure:CrefParameterSyntax>\n";
 }
 
+void VisitorCSHARPML::visit(const structure::DeclarationPatternSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:DeclarationPatternSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const structure::DeclarationPatternSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:DeclarationPatternSyntax>\n";
+}
+
 void VisitorCSHARPML::visit(const structure::DefaultSwitchLabelSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<structure:DefaultSwitchLabelSyntax";
@@ -1476,6 +1685,34 @@ void VisitorCSHARPML::visit(const structure::DestructorDeclarationSyntax& node ,
 void VisitorCSHARPML::visitEnd(const structure::DestructorDeclarationSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</structure:DestructorDeclarationSyntax>\n";
+}
+
+void VisitorCSHARPML::visit(const structure::DiscardDesignationSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:DiscardDesignationSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const structure::DiscardDesignationSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:DiscardDesignationSyntax>\n";
+}
+
+void VisitorCSHARPML::visit(const structure::DiscardPatternSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:DiscardPatternSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const structure::DiscardPatternSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:DiscardPatternSyntax>\n";
 }
 
 void VisitorCSHARPML::visit(const structure::ElseClauseSyntax& node , bool callVirtualBase) {
@@ -1968,6 +2205,34 @@ void VisitorCSHARPML::visitEnd(const structure::ParameterSyntax& node , bool cal
   ofs << "</structure:ParameterSyntax>\n";
 }
 
+void VisitorCSHARPML::visit(const structure::ParenthesizedVariableDesignationSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:ParenthesizedVariableDesignationSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const structure::ParenthesizedVariableDesignationSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:ParenthesizedVariableDesignationSyntax>\n";
+}
+
+void VisitorCSHARPML::visit(const structure::PositionalPatternClauseSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:PositionalPatternClauseSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const structure::PositionalPatternClauseSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:PositionalPatternClauseSyntax>\n";
+}
+
 void VisitorCSHARPML::visit(const structure::PropertyDeclarationSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<structure:PropertyDeclarationSyntax";
@@ -1980,6 +2245,20 @@ void VisitorCSHARPML::visit(const structure::PropertyDeclarationSyntax& node , b
 void VisitorCSHARPML::visitEnd(const structure::PropertyDeclarationSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</structure:PropertyDeclarationSyntax>\n";
+}
+
+void VisitorCSHARPML::visit(const structure::PropertyPatternClauseSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:PropertyPatternClauseSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const structure::PropertyPatternClauseSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:PropertyPatternClauseSyntax>\n";
 }
 
 void VisitorCSHARPML::visit(const structure::QualifiedCrefSyntax& node , bool callVirtualBase) {
@@ -2024,6 +2303,20 @@ void VisitorCSHARPML::visitEnd(const structure::QueryContinuationSyntax& node , 
   ofs << "</structure:QueryContinuationSyntax>\n";
 }
 
+void VisitorCSHARPML::visit(const structure::RecursivePatternSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:RecursivePatternSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const structure::RecursivePatternSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:RecursivePatternSyntax>\n";
+}
+
 void VisitorCSHARPML::visit(const structure::SelectClauseSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<structure:SelectClauseSyntax";
@@ -2052,6 +2345,20 @@ void VisitorCSHARPML::visitEnd(const structure::SimpleBaseTypeSyntax& node , boo
   ofs << "</structure:SimpleBaseTypeSyntax>\n";
 }
 
+void VisitorCSHARPML::visit(const structure::SingleVariableDesignationSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:SingleVariableDesignationSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const structure::SingleVariableDesignationSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:SingleVariableDesignationSyntax>\n";
+}
+
 void VisitorCSHARPML::visit(const structure::StructDeclarationSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<structure:StructDeclarationSyntax";
@@ -2064,6 +2371,34 @@ void VisitorCSHARPML::visit(const structure::StructDeclarationSyntax& node , boo
 void VisitorCSHARPML::visitEnd(const structure::StructDeclarationSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</structure:StructDeclarationSyntax>\n";
+}
+
+void VisitorCSHARPML::visit(const structure::SubpatternSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:SubpatternSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const structure::SubpatternSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:SubpatternSyntax>\n";
+}
+
+void VisitorCSHARPML::visit(const structure::SwitchExpressionArmSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:SwitchExpressionArmSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const structure::SwitchExpressionArmSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:SwitchExpressionArmSyntax>\n";
 }
 
 void VisitorCSHARPML::visit(const structure::SwitchSectionSyntax& node , bool callVirtualBase) {
@@ -2092,6 +2427,20 @@ void VisitorCSHARPML::visit(const structure::SyntaxToken& node , bool callVirtua
 void VisitorCSHARPML::visitEnd(const structure::SyntaxToken& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</structure:SyntaxToken>\n";
+}
+
+void VisitorCSHARPML::visit(const structure::TupleElementSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:TupleElementSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const structure::TupleElementSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:TupleElementSyntax>\n";
 }
 
 void VisitorCSHARPML::visit(const structure::TypeArgumentListSyntax& node , bool callVirtualBase) {
@@ -2192,6 +2541,20 @@ void VisitorCSHARPML::visitEnd(const structure::UsingDirectiveSyntax& node , boo
   ofs << "</structure:UsingDirectiveSyntax>\n";
 }
 
+void VisitorCSHARPML::visit(const structure::VarPatternSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:VarPatternSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const structure::VarPatternSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:VarPatternSyntax>\n";
+}
+
 void VisitorCSHARPML::visit(const structure::VariableDeclarationSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<structure:VariableDeclarationSyntax";
@@ -2218,6 +2581,20 @@ void VisitorCSHARPML::visit(const structure::VariableDeclaratorSyntax& node , bo
 void VisitorCSHARPML::visitEnd(const structure::VariableDeclaratorSyntax& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</structure:VariableDeclaratorSyntax>\n";
+}
+
+void VisitorCSHARPML::visit(const structure::WhenClauseSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:WhenClauseSyntax";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorCSHARPML::visitEnd(const structure::WhenClauseSyntax& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:WhenClauseSyntax>\n";
 }
 
 void VisitorCSHARPML::visit(const structure::WhereClauseSyntax& node , bool callVirtualBase) {
@@ -2440,16 +2817,28 @@ void VisitorCSHARPML::visitEndAliasQualifiedNameSyntax_Name(const expression::Al
   ofs << "</AliasQualifiedNameSyntax_Name>\n";
 }
 
-void VisitorCSHARPML::visitAnonymousFunctionExpressionSyntax_Body(const expression::AnonymousFunctionExpressionSyntax& begin, const base::Positioned& end) {
+void VisitorCSHARPML::visitAnonymousFunctionExpressionSyntax_Block(const expression::AnonymousFunctionExpressionSyntax& begin, const statement::BlockSyntax& end) {
   createIndentation();
-  ofs << "<AnonymousFunctionExpressionSyntax_Body>\n";
+  ofs << "<AnonymousFunctionExpressionSyntax_Block>\n";
   incDepth();
 }
 
-void VisitorCSHARPML::visitEndAnonymousFunctionExpressionSyntax_Body(const expression::AnonymousFunctionExpressionSyntax& begin, const base::Positioned& end) {
+void VisitorCSHARPML::visitEndAnonymousFunctionExpressionSyntax_Block(const expression::AnonymousFunctionExpressionSyntax& begin, const statement::BlockSyntax& end) {
   decDepth();
   createIndentation();
-  ofs << "</AnonymousFunctionExpressionSyntax_Body>\n";
+  ofs << "</AnonymousFunctionExpressionSyntax_Block>\n";
+}
+
+void VisitorCSHARPML::visitAnonymousFunctionExpressionSyntax_ExpressionBody(const expression::AnonymousFunctionExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  createIndentation();
+  ofs << "<AnonymousFunctionExpressionSyntax_ExpressionBody>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndAnonymousFunctionExpressionSyntax_ExpressionBody(const expression::AnonymousFunctionExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</AnonymousFunctionExpressionSyntax_ExpressionBody>\n";
 }
 
 void VisitorCSHARPML::visitAnonymousMethodExpressionSyntax_ParameterList(const expression::AnonymousMethodExpressionSyntax& begin, const structure::ParameterListSyntax& end) {
@@ -2724,6 +3113,30 @@ void VisitorCSHARPML::visitEndConditionalExpressionSyntax_WhenTrue(const express
   ofs << "</ConditionalExpressionSyntax_WhenTrue>\n";
 }
 
+void VisitorCSHARPML::visitDeclarationExpressionSyntax_Designation(const expression::DeclarationExpressionSyntax& begin, const structure::VariableDesignationSyntax& end) {
+  createIndentation();
+  ofs << "<DeclarationExpressionSyntax_Designation>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndDeclarationExpressionSyntax_Designation(const expression::DeclarationExpressionSyntax& begin, const structure::VariableDesignationSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</DeclarationExpressionSyntax_Designation>\n";
+}
+
+void VisitorCSHARPML::visitDeclarationExpressionSyntax_Type(const expression::DeclarationExpressionSyntax& begin, const expression::TypeSyntax& end) {
+  createIndentation();
+  ofs << "<DeclarationExpressionSyntax_Type>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndDeclarationExpressionSyntax_Type(const expression::DeclarationExpressionSyntax& begin, const expression::TypeSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</DeclarationExpressionSyntax_Type>\n";
+}
+
 void VisitorCSHARPML::visitDefaultExpressionSyntax_Type(const expression::DefaultExpressionSyntax& begin, const expression::TypeSyntax& end) {
   createIndentation();
   ofs << "<DefaultExpressionSyntax_Type>\n";
@@ -2841,6 +3254,18 @@ void VisitorCSHARPML::visitEndImplicitElementAccessSyntax_ArgumentList(const exp
   ofs << "</ImplicitElementAccessSyntax_ArgumentList>\n";
 }
 
+void VisitorCSHARPML::visitImplicitStackAllocArrayCreationExpressionSyntax_Initializer(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end) {
+  createIndentation();
+  ofs << "<ImplicitStackAllocArrayCreationExpressionSyntax_Initializer>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndImplicitStackAllocArrayCreationExpressionSyntax_Initializer(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</ImplicitStackAllocArrayCreationExpressionSyntax_Initializer>\n";
+}
+
 void VisitorCSHARPML::visitInitializerExpressionSyntax_Expressions(const expression::InitializerExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
   createIndentation();
   ofs << "<InitializerExpressionSyntax_Expressions>\n";
@@ -2889,6 +3314,17 @@ void VisitorCSHARPML::visitEndInvocationExpressionSyntax_Expression(const expres
   ofs << "</InvocationExpressionSyntax_Expression>\n";
 }
 
+void VisitorCSHARPML::visitInvocationExpressionSyntax_LocalFunctionCall(const expression::InvocationExpressionSyntax& begin, const statement::LocalFunctionStatementSyntax& end) {
+  createIndentation();
+  ofs << "<InvocationExpressionSyntax_LocalFunctionCall ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
+}
+
+void VisitorCSHARPML::visitEndInvocationExpressionSyntax_LocalFunctionCall(const expression::InvocationExpressionSyntax& begin, const statement::LocalFunctionStatementSyntax& end) {
+}
+
 void VisitorCSHARPML::visitInvocationExpressionSyntax_MethodCall(const expression::InvocationExpressionSyntax& begin, const structure::MethodDeclarationSyntax& end) {
   createIndentation();
   ofs << "<InvocationExpressionSyntax_MethodCall ref='";
@@ -2898,6 +3334,30 @@ void VisitorCSHARPML::visitInvocationExpressionSyntax_MethodCall(const expressio
 }
 
 void VisitorCSHARPML::visitEndInvocationExpressionSyntax_MethodCall(const expression::InvocationExpressionSyntax& begin, const structure::MethodDeclarationSyntax& end) {
+}
+
+void VisitorCSHARPML::visitIsPatternExpressionSyntax_Expression(const expression::IsPatternExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  createIndentation();
+  ofs << "<IsPatternExpressionSyntax_Expression>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndIsPatternExpressionSyntax_Expression(const expression::IsPatternExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</IsPatternExpressionSyntax_Expression>\n";
+}
+
+void VisitorCSHARPML::visitIsPatternExpressionSyntax_Pattern(const expression::IsPatternExpressionSyntax& begin, const structure::PatternSyntax& end) {
+  createIndentation();
+  ofs << "<IsPatternExpressionSyntax_Pattern>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndIsPatternExpressionSyntax_Pattern(const expression::IsPatternExpressionSyntax& begin, const structure::PatternSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</IsPatternExpressionSyntax_Pattern>\n";
 }
 
 void VisitorCSHARPML::visitMakeRefExpressionSyntax_Expression(const expression::MakeRefExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
@@ -3137,6 +3597,42 @@ void VisitorCSHARPML::visitEndQueryExpressionSyntax_FromClause(const expression:
   ofs << "</QueryExpressionSyntax_FromClause>\n";
 }
 
+void VisitorCSHARPML::visitRangeExpressionSyntax_LeftOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  createIndentation();
+  ofs << "<RangeExpressionSyntax_LeftOperand>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndRangeExpressionSyntax_LeftOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</RangeExpressionSyntax_LeftOperand>\n";
+}
+
+void VisitorCSHARPML::visitRangeExpressionSyntax_RightOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  createIndentation();
+  ofs << "<RangeExpressionSyntax_RightOperand>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndRangeExpressionSyntax_RightOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</RangeExpressionSyntax_RightOperand>\n";
+}
+
+void VisitorCSHARPML::visitRefExpressionSyntax_Expression(const expression::RefExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  createIndentation();
+  ofs << "<RefExpressionSyntax_Expression>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndRefExpressionSyntax_Expression(const expression::RefExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</RefExpressionSyntax_Expression>\n";
+}
+
 void VisitorCSHARPML::visitRefTypeExpressionSyntax_Expression(const expression::RefTypeExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
   createIndentation();
   ofs << "<RefTypeExpressionSyntax_Expression>\n";
@@ -3147,6 +3643,18 @@ void VisitorCSHARPML::visitEndRefTypeExpressionSyntax_Expression(const expressio
   decDepth();
   createIndentation();
   ofs << "</RefTypeExpressionSyntax_Expression>\n";
+}
+
+void VisitorCSHARPML::visitRefTypeSyntax_Type(const expression::RefTypeSyntax& begin, const expression::TypeSyntax& end) {
+  createIndentation();
+  ofs << "<RefTypeSyntax_Type>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndRefTypeSyntax_Type(const expression::RefTypeSyntax& begin, const expression::TypeSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</RefTypeSyntax_Type>\n";
 }
 
 void VisitorCSHARPML::visitRefValueExpressionSyntax_Expression(const expression::RefValueExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
@@ -3197,6 +3705,18 @@ void VisitorCSHARPML::visitEndSizeOfExpressionSyntax_Type(const expression::Size
   ofs << "</SizeOfExpressionSyntax_Type>\n";
 }
 
+void VisitorCSHARPML::visitStackAllocArrayCreationExpressionSyntax_Initializer(const expression::StackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end) {
+  createIndentation();
+  ofs << "<StackAllocArrayCreationExpressionSyntax_Initializer>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndStackAllocArrayCreationExpressionSyntax_Initializer(const expression::StackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</StackAllocArrayCreationExpressionSyntax_Initializer>\n";
+}
+
 void VisitorCSHARPML::visitStackAllocArrayCreationExpressionSyntax_Type(const expression::StackAllocArrayCreationExpressionSyntax& begin, const expression::TypeSyntax& end) {
   createIndentation();
   ofs << "<StackAllocArrayCreationExpressionSyntax_Type>\n";
@@ -3207,6 +3727,66 @@ void VisitorCSHARPML::visitEndStackAllocArrayCreationExpressionSyntax_Type(const
   decDepth();
   createIndentation();
   ofs << "</StackAllocArrayCreationExpressionSyntax_Type>\n";
+}
+
+void VisitorCSHARPML::visitSwitchExpressionSyntax_Arms(const expression::SwitchExpressionSyntax& begin, const structure::SwitchExpressionArmSyntax& end) {
+  createIndentation();
+  ofs << "<SwitchExpressionSyntax_Arms>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndSwitchExpressionSyntax_Arms(const expression::SwitchExpressionSyntax& begin, const structure::SwitchExpressionArmSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</SwitchExpressionSyntax_Arms>\n";
+}
+
+void VisitorCSHARPML::visitSwitchExpressionSyntax_GoverningExpression(const expression::SwitchExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  createIndentation();
+  ofs << "<SwitchExpressionSyntax_GoverningExpression>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndSwitchExpressionSyntax_GoverningExpression(const expression::SwitchExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</SwitchExpressionSyntax_GoverningExpression>\n";
+}
+
+void VisitorCSHARPML::visitThrowExpressionSyntax_Expression(const expression::ThrowExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  createIndentation();
+  ofs << "<ThrowExpressionSyntax_Expression>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndThrowExpressionSyntax_Expression(const expression::ThrowExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</ThrowExpressionSyntax_Expression>\n";
+}
+
+void VisitorCSHARPML::visitTupleExpressionSyntax_Arguments(const expression::TupleExpressionSyntax& begin, const structure::ArgumentSyntax& end) {
+  createIndentation();
+  ofs << "<TupleExpressionSyntax_Arguments>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndTupleExpressionSyntax_Arguments(const expression::TupleExpressionSyntax& begin, const structure::ArgumentSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</TupleExpressionSyntax_Arguments>\n";
+}
+
+void VisitorCSHARPML::visitTupleTypeSyntax_Elements(const expression::TupleTypeSyntax& begin, const structure::TupleElementSyntax& end) {
+  createIndentation();
+  ofs << "<TupleTypeSyntax_Elements>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndTupleTypeSyntax_Elements(const expression::TupleTypeSyntax& begin, const structure::TupleElementSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</TupleTypeSyntax_Elements>\n";
 }
 
 void VisitorCSHARPML::visitTypeOfExpressionSyntax_Type(const expression::TypeOfExpressionSyntax& begin, const expression::TypeSyntax& end) {
@@ -3254,6 +3834,30 @@ void VisitorCSHARPML::visitEndCheckedStatementSyntax_Block(const statement::Chec
   decDepth();
   createIndentation();
   ofs << "</CheckedStatementSyntax_Block>\n";
+}
+
+void VisitorCSHARPML::visitCommonForEachStatementSyntax_Expression(const statement::CommonForEachStatementSyntax& begin, const expression::ExpressionSyntax& end) {
+  createIndentation();
+  ofs << "<CommonForEachStatementSyntax_Expression>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndCommonForEachStatementSyntax_Expression(const statement::CommonForEachStatementSyntax& begin, const expression::ExpressionSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</CommonForEachStatementSyntax_Expression>\n";
+}
+
+void VisitorCSHARPML::visitCommonForEachStatementSyntax_Statement(const statement::CommonForEachStatementSyntax& begin, const statement::StatementSyntax& end) {
+  createIndentation();
+  ofs << "<CommonForEachStatementSyntax_Statement>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndCommonForEachStatementSyntax_Statement(const statement::CommonForEachStatementSyntax& begin, const statement::StatementSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</CommonForEachStatementSyntax_Statement>\n";
 }
 
 void VisitorCSHARPML::visitDoStatementSyntax_Condition(const statement::DoStatementSyntax& begin, const expression::ExpressionSyntax& end) {
@@ -3316,30 +3920,6 @@ void VisitorCSHARPML::visitEndFixedStatementSyntax_Statement(const statement::Fi
   ofs << "</FixedStatementSyntax_Statement>\n";
 }
 
-void VisitorCSHARPML::visitForEachStatementSyntax_Expression(const statement::ForEachStatementSyntax& begin, const expression::ExpressionSyntax& end) {
-  createIndentation();
-  ofs << "<ForEachStatementSyntax_Expression>\n";
-  incDepth();
-}
-
-void VisitorCSHARPML::visitEndForEachStatementSyntax_Expression(const statement::ForEachStatementSyntax& begin, const expression::ExpressionSyntax& end) {
-  decDepth();
-  createIndentation();
-  ofs << "</ForEachStatementSyntax_Expression>\n";
-}
-
-void VisitorCSHARPML::visitForEachStatementSyntax_Statement(const statement::ForEachStatementSyntax& begin, const statement::StatementSyntax& end) {
-  createIndentation();
-  ofs << "<ForEachStatementSyntax_Statement>\n";
-  incDepth();
-}
-
-void VisitorCSHARPML::visitEndForEachStatementSyntax_Statement(const statement::ForEachStatementSyntax& begin, const statement::StatementSyntax& end) {
-  decDepth();
-  createIndentation();
-  ofs << "</ForEachStatementSyntax_Statement>\n";
-}
-
 void VisitorCSHARPML::visitForEachStatementSyntax_Type(const statement::ForEachStatementSyntax& begin, const expression::TypeSyntax& end) {
   createIndentation();
   ofs << "<ForEachStatementSyntax_Type>\n";
@@ -3350,6 +3930,18 @@ void VisitorCSHARPML::visitEndForEachStatementSyntax_Type(const statement::ForEa
   decDepth();
   createIndentation();
   ofs << "</ForEachStatementSyntax_Type>\n";
+}
+
+void VisitorCSHARPML::visitForEachVariableStatementSyntax_Variable(const statement::ForEachVariableStatementSyntax& begin, const expression::ExpressionSyntax& end) {
+  createIndentation();
+  ofs << "<ForEachVariableStatementSyntax_Variable>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndForEachVariableStatementSyntax_Variable(const statement::ForEachVariableStatementSyntax& begin, const expression::ExpressionSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</ForEachVariableStatementSyntax_Variable>\n";
 }
 
 void VisitorCSHARPML::visitForStatementSyntax_Condition(const statement::ForStatementSyntax& begin, const expression::ExpressionSyntax& end) {
@@ -3484,6 +4076,78 @@ void VisitorCSHARPML::visitEndLocalDeclarationStatementSyntax_Declaration(const 
   ofs << "</LocalDeclarationStatementSyntax_Declaration>\n";
 }
 
+void VisitorCSHARPML::visitLocalFunctionStatementSyntax_Body(const statement::LocalFunctionStatementSyntax& begin, const statement::BlockSyntax& end) {
+  createIndentation();
+  ofs << "<LocalFunctionStatementSyntax_Body>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndLocalFunctionStatementSyntax_Body(const statement::LocalFunctionStatementSyntax& begin, const statement::BlockSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</LocalFunctionStatementSyntax_Body>\n";
+}
+
+void VisitorCSHARPML::visitLocalFunctionStatementSyntax_ConstraintClauses(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterConstraintClauseSyntax& end) {
+  createIndentation();
+  ofs << "<LocalFunctionStatementSyntax_ConstraintClauses>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndLocalFunctionStatementSyntax_ConstraintClauses(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterConstraintClauseSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</LocalFunctionStatementSyntax_ConstraintClauses>\n";
+}
+
+void VisitorCSHARPML::visitLocalFunctionStatementSyntax_ExpressionBody(const statement::LocalFunctionStatementSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
+  createIndentation();
+  ofs << "<LocalFunctionStatementSyntax_ExpressionBody>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndLocalFunctionStatementSyntax_ExpressionBody(const statement::LocalFunctionStatementSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</LocalFunctionStatementSyntax_ExpressionBody>\n";
+}
+
+void VisitorCSHARPML::visitLocalFunctionStatementSyntax_ParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::ParameterListSyntax& end) {
+  createIndentation();
+  ofs << "<LocalFunctionStatementSyntax_ParameterList>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndLocalFunctionStatementSyntax_ParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::ParameterListSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</LocalFunctionStatementSyntax_ParameterList>\n";
+}
+
+void VisitorCSHARPML::visitLocalFunctionStatementSyntax_ReturnType(const statement::LocalFunctionStatementSyntax& begin, const expression::TypeSyntax& end) {
+  createIndentation();
+  ofs << "<LocalFunctionStatementSyntax_ReturnType>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndLocalFunctionStatementSyntax_ReturnType(const statement::LocalFunctionStatementSyntax& begin, const expression::TypeSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</LocalFunctionStatementSyntax_ReturnType>\n";
+}
+
+void VisitorCSHARPML::visitLocalFunctionStatementSyntax_TypeParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterListSyntax& end) {
+  createIndentation();
+  ofs << "<LocalFunctionStatementSyntax_TypeParameterList>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndLocalFunctionStatementSyntax_TypeParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterListSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</LocalFunctionStatementSyntax_TypeParameterList>\n";
+}
+
 void VisitorCSHARPML::visitLockStatementSyntax_Expression(const statement::LockStatementSyntax& begin, const expression::ExpressionSyntax& end) {
   createIndentation();
   ofs << "<LockStatementSyntax_Expression>\n";
@@ -3518,6 +4182,18 @@ void VisitorCSHARPML::visitEndReturnStatementSyntax_Expression(const statement::
   decDepth();
   createIndentation();
   ofs << "</ReturnStatementSyntax_Expression>\n";
+}
+
+void VisitorCSHARPML::visitStatementSyntax_AttributeLists(const statement::StatementSyntax& begin, const structure::AttributeListSyntax& end) {
+  createIndentation();
+  ofs << "<StatementSyntax_AttributeLists>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndStatementSyntax_AttributeLists(const statement::StatementSyntax& begin, const structure::AttributeListSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</StatementSyntax_AttributeLists>\n";
 }
 
 void VisitorCSHARPML::visitSwitchStatementSyntax_Expression(const statement::SwitchStatementSyntax& begin, const expression::ExpressionSyntax& end) {
@@ -3698,6 +4374,18 @@ void VisitorCSHARPML::visitEndAccessorDeclarationSyntax_Body(const structure::Ac
   decDepth();
   createIndentation();
   ofs << "</AccessorDeclarationSyntax_Body>\n";
+}
+
+void VisitorCSHARPML::visitAccessorDeclarationSyntax_ExpressionBody(const structure::AccessorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
+  createIndentation();
+  ofs << "<AccessorDeclarationSyntax_ExpressionBody>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndAccessorDeclarationSyntax_ExpressionBody(const structure::AccessorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</AccessorDeclarationSyntax_ExpressionBody>\n";
 }
 
 void VisitorCSHARPML::visitAccessorListSyntax_Accessors(const structure::AccessorListSyntax& begin, const structure::AccessorDeclarationSyntax& end) {
@@ -3975,6 +4663,18 @@ void VisitorCSHARPML::visitEndBaseMethodDeclarationSyntax_Body(const structure::
   ofs << "</BaseMethodDeclarationSyntax_Body>\n";
 }
 
+void VisitorCSHARPML::visitBaseMethodDeclarationSyntax_ExpressionBody(const structure::BaseMethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
+  createIndentation();
+  ofs << "<BaseMethodDeclarationSyntax_ExpressionBody>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndBaseMethodDeclarationSyntax_ExpressionBody(const structure::BaseMethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</BaseMethodDeclarationSyntax_ExpressionBody>\n";
+}
+
 void VisitorCSHARPML::visitBaseMethodDeclarationSyntax_ParameterList(const structure::BaseMethodDeclarationSyntax& begin, const structure::ParameterListSyntax& end) {
   createIndentation();
   ofs << "<BaseMethodDeclarationSyntax_ParameterList>\n";
@@ -4081,6 +4781,30 @@ void VisitorCSHARPML::visitEndBaseTypeSyntax_Type(const structure::BaseTypeSynta
   decDepth();
   createIndentation();
   ofs << "</BaseTypeSyntax_Type>\n";
+}
+
+void VisitorCSHARPML::visitCasePatternSwitchLabelSyntax_Pattern(const structure::CasePatternSwitchLabelSyntax& begin, const structure::PatternSyntax& end) {
+  createIndentation();
+  ofs << "<CasePatternSwitchLabelSyntax_Pattern>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndCasePatternSwitchLabelSyntax_Pattern(const structure::CasePatternSwitchLabelSyntax& begin, const structure::PatternSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</CasePatternSwitchLabelSyntax_Pattern>\n";
+}
+
+void VisitorCSHARPML::visitCasePatternSwitchLabelSyntax_WhenClause(const structure::CasePatternSwitchLabelSyntax& begin, const structure::WhenClauseSyntax& end) {
+  createIndentation();
+  ofs << "<CasePatternSwitchLabelSyntax_WhenClause>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndCasePatternSwitchLabelSyntax_WhenClause(const structure::CasePatternSwitchLabelSyntax& begin, const structure::WhenClauseSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</CasePatternSwitchLabelSyntax_WhenClause>\n";
 }
 
 void VisitorCSHARPML::visitCaseSwitchLabelSyntax_Value(const structure::CaseSwitchLabelSyntax& begin, const expression::ExpressionSyntax& end) {
@@ -4203,6 +4927,18 @@ void VisitorCSHARPML::visitEndCompilationUnitSyntax_Usings(const structure::Comp
   ofs << "</CompilationUnitSyntax_Usings>\n";
 }
 
+void VisitorCSHARPML::visitConstantPatternSyntax_Expression(const structure::ConstantPatternSyntax& begin, const expression::ExpressionSyntax& end) {
+  createIndentation();
+  ofs << "<ConstantPatternSyntax_Expression>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndConstantPatternSyntax_Expression(const structure::ConstantPatternSyntax& begin, const expression::ExpressionSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</ConstantPatternSyntax_Expression>\n";
+}
+
 void VisitorCSHARPML::visitConstructorDeclarationSyntax_Initializer(const structure::ConstructorDeclarationSyntax& begin, const structure::ConstructorInitializerSyntax& end) {
   createIndentation();
   ofs << "<ConstructorDeclarationSyntax_Initializer>\n";
@@ -4236,18 +4972,6 @@ void VisitorCSHARPML::visitConstructorInitializerSyntax_ConstructorCall(const st
 }
 
 void VisitorCSHARPML::visitEndConstructorInitializerSyntax_ConstructorCall(const structure::ConstructorInitializerSyntax& begin, const structure::ConstructorDeclarationSyntax& end) {
-}
-
-void VisitorCSHARPML::visitConversionOperatorDeclarationSyntax_ExpressionBody(const structure::ConversionOperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
-  createIndentation();
-  ofs << "<ConversionOperatorDeclarationSyntax_ExpressionBody>\n";
-  incDepth();
-}
-
-void VisitorCSHARPML::visitEndConversionOperatorDeclarationSyntax_ExpressionBody(const structure::ConversionOperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
-  decDepth();
-  createIndentation();
-  ofs << "</ConversionOperatorDeclarationSyntax_ExpressionBody>\n";
 }
 
 void VisitorCSHARPML::visitConversionOperatorDeclarationSyntax_Type(const structure::ConversionOperatorDeclarationSyntax& begin, const expression::TypeSyntax& end) {
@@ -4296,6 +5020,30 @@ void VisitorCSHARPML::visitEndCrefParameterSyntax_Type(const structure::CrefPara
   decDepth();
   createIndentation();
   ofs << "</CrefParameterSyntax_Type>\n";
+}
+
+void VisitorCSHARPML::visitDeclarationPatternSyntax_Designation(const structure::DeclarationPatternSyntax& begin, const structure::VariableDesignationSyntax& end) {
+  createIndentation();
+  ofs << "<DeclarationPatternSyntax_Designation>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndDeclarationPatternSyntax_Designation(const structure::DeclarationPatternSyntax& begin, const structure::VariableDesignationSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</DeclarationPatternSyntax_Designation>\n";
+}
+
+void VisitorCSHARPML::visitDeclarationPatternSyntax_Type(const structure::DeclarationPatternSyntax& begin, const expression::TypeSyntax& end) {
+  createIndentation();
+  ofs << "<DeclarationPatternSyntax_Type>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndDeclarationPatternSyntax_Type(const structure::DeclarationPatternSyntax& begin, const expression::TypeSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</DeclarationPatternSyntax_Type>\n";
 }
 
 void VisitorCSHARPML::visitDelegateDeclarationSyntax_AttributeLists(const structure::DelegateDeclarationSyntax& begin, const structure::AttributeListSyntax& end) {
@@ -4694,18 +5442,6 @@ void VisitorCSHARPML::visitEndMethodDeclarationSyntax_ExplicitInterfaceSpecifier
   ofs << "</MethodDeclarationSyntax_ExplicitInterfaceSpecifier>\n";
 }
 
-void VisitorCSHARPML::visitMethodDeclarationSyntax_ExpressionBody(const structure::MethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
-  createIndentation();
-  ofs << "<MethodDeclarationSyntax_ExpressionBody>\n";
-  incDepth();
-}
-
-void VisitorCSHARPML::visitEndMethodDeclarationSyntax_ExpressionBody(const structure::MethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
-  decDepth();
-  createIndentation();
-  ofs << "</MethodDeclarationSyntax_ExpressionBody>\n";
-}
-
 void VisitorCSHARPML::visitMethodDeclarationSyntax_ReturnType(const structure::MethodDeclarationSyntax& begin, const expression::TypeSyntax& end) {
   createIndentation();
   ofs << "<MethodDeclarationSyntax_ReturnType>\n";
@@ -4814,18 +5550,6 @@ void VisitorCSHARPML::visitEndNamespaceDeclarationSyntax_Usings(const structure:
   ofs << "</NamespaceDeclarationSyntax_Usings>\n";
 }
 
-void VisitorCSHARPML::visitOperatorDeclarationSyntax_ExpressionBody(const structure::OperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
-  createIndentation();
-  ofs << "<OperatorDeclarationSyntax_ExpressionBody>\n";
-  incDepth();
-}
-
-void VisitorCSHARPML::visitEndOperatorDeclarationSyntax_ExpressionBody(const structure::OperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
-  decDepth();
-  createIndentation();
-  ofs << "</OperatorDeclarationSyntax_ExpressionBody>\n";
-}
-
 void VisitorCSHARPML::visitOperatorDeclarationSyntax_ReturnType(const structure::OperatorDeclarationSyntax& begin, const expression::TypeSyntax& end) {
   createIndentation();
   ofs << "<OperatorDeclarationSyntax_ReturnType>\n";
@@ -4910,6 +5634,30 @@ void VisitorCSHARPML::visitEndParameterSyntax_Type(const structure::ParameterSyn
   ofs << "</ParameterSyntax_Type>\n";
 }
 
+void VisitorCSHARPML::visitParenthesizedVariableDesignationSyntax_Variables(const structure::ParenthesizedVariableDesignationSyntax& begin, const structure::VariableDesignationSyntax& end) {
+  createIndentation();
+  ofs << "<ParenthesizedVariableDesignationSyntax_Variables>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndParenthesizedVariableDesignationSyntax_Variables(const structure::ParenthesizedVariableDesignationSyntax& begin, const structure::VariableDesignationSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</ParenthesizedVariableDesignationSyntax_Variables>\n";
+}
+
+void VisitorCSHARPML::visitPositionalPatternClauseSyntax_Subpatterns(const structure::PositionalPatternClauseSyntax& begin, const structure::SubpatternSyntax& end) {
+  createIndentation();
+  ofs << "<PositionalPatternClauseSyntax_Subpatterns>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndPositionalPatternClauseSyntax_Subpatterns(const structure::PositionalPatternClauseSyntax& begin, const structure::SubpatternSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</PositionalPatternClauseSyntax_Subpatterns>\n";
+}
+
 void VisitorCSHARPML::visitPropertyDeclarationSyntax_ExpressionBody(const structure::PropertyDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
   createIndentation();
   ofs << "<PropertyDeclarationSyntax_ExpressionBody>\n";
@@ -4932,6 +5680,18 @@ void VisitorCSHARPML::visitEndPropertyDeclarationSyntax_Initializer(const struct
   decDepth();
   createIndentation();
   ofs << "</PropertyDeclarationSyntax_Initializer>\n";
+}
+
+void VisitorCSHARPML::visitPropertyPatternClauseSyntax_Subpatterns(const structure::PropertyPatternClauseSyntax& begin, const structure::SubpatternSyntax& end) {
+  createIndentation();
+  ofs << "<PropertyPatternClauseSyntax_Subpatterns>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndPropertyPatternClauseSyntax_Subpatterns(const structure::PropertyPatternClauseSyntax& begin, const structure::SubpatternSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</PropertyPatternClauseSyntax_Subpatterns>\n";
 }
 
 void VisitorCSHARPML::visitQualifiedCrefSyntax_Container(const structure::QualifiedCrefSyntax& begin, const expression::TypeSyntax& end) {
@@ -5006,6 +5766,54 @@ void VisitorCSHARPML::visitEndQueryContinuationSyntax_Body(const structure::Quer
   ofs << "</QueryContinuationSyntax_Body>\n";
 }
 
+void VisitorCSHARPML::visitRecursivePatternSyntax_Designation(const structure::RecursivePatternSyntax& begin, const structure::VariableDesignationSyntax& end) {
+  createIndentation();
+  ofs << "<RecursivePatternSyntax_Designation>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndRecursivePatternSyntax_Designation(const structure::RecursivePatternSyntax& begin, const structure::VariableDesignationSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</RecursivePatternSyntax_Designation>\n";
+}
+
+void VisitorCSHARPML::visitRecursivePatternSyntax_PositionalPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PositionalPatternClauseSyntax& end) {
+  createIndentation();
+  ofs << "<RecursivePatternSyntax_PositionalPatternClause>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndRecursivePatternSyntax_PositionalPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PositionalPatternClauseSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</RecursivePatternSyntax_PositionalPatternClause>\n";
+}
+
+void VisitorCSHARPML::visitRecursivePatternSyntax_PropertyPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PropertyPatternClauseSyntax& end) {
+  createIndentation();
+  ofs << "<RecursivePatternSyntax_PropertyPatternClause>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndRecursivePatternSyntax_PropertyPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PropertyPatternClauseSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</RecursivePatternSyntax_PropertyPatternClause>\n";
+}
+
+void VisitorCSHARPML::visitRecursivePatternSyntax_Type(const structure::RecursivePatternSyntax& begin, const expression::TypeSyntax& end) {
+  createIndentation();
+  ofs << "<RecursivePatternSyntax_Type>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndRecursivePatternSyntax_Type(const structure::RecursivePatternSyntax& begin, const expression::TypeSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</RecursivePatternSyntax_Type>\n";
+}
+
 void VisitorCSHARPML::visitSelectClauseSyntax_Expression(const structure::SelectClauseSyntax& begin, const expression::ExpressionSyntax& end) {
   createIndentation();
   ofs << "<SelectClauseSyntax_Expression>\n";
@@ -5016,6 +5824,54 @@ void VisitorCSHARPML::visitEndSelectClauseSyntax_Expression(const structure::Sel
   decDepth();
   createIndentation();
   ofs << "</SelectClauseSyntax_Expression>\n";
+}
+
+void VisitorCSHARPML::visitSubpatternSyntax_Pattern(const structure::SubpatternSyntax& begin, const structure::PatternSyntax& end) {
+  createIndentation();
+  ofs << "<SubpatternSyntax_Pattern>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndSubpatternSyntax_Pattern(const structure::SubpatternSyntax& begin, const structure::PatternSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</SubpatternSyntax_Pattern>\n";
+}
+
+void VisitorCSHARPML::visitSwitchExpressionArmSyntax_Expression(const structure::SwitchExpressionArmSyntax& begin, const expression::ExpressionSyntax& end) {
+  createIndentation();
+  ofs << "<SwitchExpressionArmSyntax_Expression>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndSwitchExpressionArmSyntax_Expression(const structure::SwitchExpressionArmSyntax& begin, const expression::ExpressionSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</SwitchExpressionArmSyntax_Expression>\n";
+}
+
+void VisitorCSHARPML::visitSwitchExpressionArmSyntax_Pattern(const structure::SwitchExpressionArmSyntax& begin, const structure::PatternSyntax& end) {
+  createIndentation();
+  ofs << "<SwitchExpressionArmSyntax_Pattern>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndSwitchExpressionArmSyntax_Pattern(const structure::SwitchExpressionArmSyntax& begin, const structure::PatternSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</SwitchExpressionArmSyntax_Pattern>\n";
+}
+
+void VisitorCSHARPML::visitSwitchExpressionArmSyntax_WhenClause(const structure::SwitchExpressionArmSyntax& begin, const structure::WhenClauseSyntax& end) {
+  createIndentation();
+  ofs << "<SwitchExpressionArmSyntax_WhenClause>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndSwitchExpressionArmSyntax_WhenClause(const structure::SwitchExpressionArmSyntax& begin, const structure::WhenClauseSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</SwitchExpressionArmSyntax_WhenClause>\n";
 }
 
 void VisitorCSHARPML::visitSwitchSectionSyntax_Labels(const structure::SwitchSectionSyntax& begin, const structure::SwitchLabelSyntax& end) {
@@ -5040,6 +5896,18 @@ void VisitorCSHARPML::visitEndSwitchSectionSyntax_Statements(const structure::Sw
   decDepth();
   createIndentation();
   ofs << "</SwitchSectionSyntax_Statements>\n";
+}
+
+void VisitorCSHARPML::visitTupleElementSyntax_Type(const structure::TupleElementSyntax& begin, const expression::TypeSyntax& end) {
+  createIndentation();
+  ofs << "<TupleElementSyntax_Type>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndTupleElementSyntax_Type(const structure::TupleElementSyntax& begin, const expression::TypeSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</TupleElementSyntax_Type>\n";
 }
 
 void VisitorCSHARPML::visitTypeArgumentListSyntax_Arguments(const structure::TypeArgumentListSyntax& begin, const expression::TypeSyntax& end) {
@@ -5140,13 +6008,14 @@ void VisitorCSHARPML::visitEndTypeParameterConstraintClauseSyntax_Name(const str
 
 void VisitorCSHARPML::visitTypeParameterListSyntax_Parameters(const structure::TypeParameterListSyntax& begin, const structure::TypeParameterSyntax& end) {
   createIndentation();
-  ofs << "<TypeParameterListSyntax_Parameters ref='";
-  if (!noId)
-    ofs << "id" << end.getId();
-  ofs << "'/>\n";
+  ofs << "<TypeParameterListSyntax_Parameters>\n";
+  incDepth();
 }
 
 void VisitorCSHARPML::visitEndTypeParameterListSyntax_Parameters(const structure::TypeParameterListSyntax& begin, const structure::TypeParameterSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</TypeParameterListSyntax_Parameters>\n";
 }
 
 void VisitorCSHARPML::visitTypeParameterSyntax_AttributeLists(const structure::TypeParameterSyntax& begin, const structure::AttributeListSyntax& end) {
@@ -5183,6 +6052,18 @@ void VisitorCSHARPML::visitEndUsingDirectiveSyntax_Name(const structure::UsingDi
   decDepth();
   createIndentation();
   ofs << "</UsingDirectiveSyntax_Name>\n";
+}
+
+void VisitorCSHARPML::visitVarPatternSyntax_Designation(const structure::VarPatternSyntax& begin, const structure::VariableDesignationSyntax& end) {
+  createIndentation();
+  ofs << "<VarPatternSyntax_Designation>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndVarPatternSyntax_Designation(const structure::VarPatternSyntax& begin, const structure::VariableDesignationSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</VarPatternSyntax_Designation>\n";
 }
 
 void VisitorCSHARPML::visitVariableDeclarationSyntax_Type(const structure::VariableDeclarationSyntax& begin, const expression::TypeSyntax& end) {
@@ -5231,6 +6112,18 @@ void VisitorCSHARPML::visitEndVariableDeclaratorSyntax_Initializer(const structu
   decDepth();
   createIndentation();
   ofs << "</VariableDeclaratorSyntax_Initializer>\n";
+}
+
+void VisitorCSHARPML::visitWhenClauseSyntax_Condition(const structure::WhenClauseSyntax& begin, const expression::ExpressionSyntax& end) {
+  createIndentation();
+  ofs << "<WhenClauseSyntax_Condition>\n";
+  incDepth();
+}
+
+void VisitorCSHARPML::visitEndWhenClauseSyntax_Condition(const structure::WhenClauseSyntax& begin, const expression::ExpressionSyntax& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</WhenClauseSyntax_Condition>\n";
 }
 
 void VisitorCSHARPML::visitWhereClauseSyntax_Condition(const structure::WhereClauseSyntax& begin, const expression::ExpressionSyntax& end) {
@@ -5543,6 +6436,11 @@ void VisitorCSHARPML::writeAttributes(const expression::ConditionalExpressionSyn
 
 }
 
+void VisitorCSHARPML::writeAttributes(const expression::DeclarationExpressionSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::ExpressionSyntax&)node,composite,false);
+
+}
+
 void VisitorCSHARPML::writeAttributes(const expression::DefaultExpressionSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((expression::ExpressionSyntax&)node,composite,false);
 
@@ -5583,6 +6481,11 @@ void VisitorCSHARPML::writeAttributes(const expression::ImplicitElementAccessSyn
 
 }
 
+void VisitorCSHARPML::writeAttributes(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::ExpressionSyntax&)node,composite,false);
+
+}
+
 void VisitorCSHARPML::writeAttributes(const expression::InitializerExpressionSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((expression::ExpressionSyntax&)node,composite,false);
 
@@ -5599,6 +6502,11 @@ void VisitorCSHARPML::writeAttributes(const expression::InterpolatedStringExpres
 }
 
 void VisitorCSHARPML::writeAttributes(const expression::InvocationExpressionSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::ExpressionSyntax&)node,composite,false);
+
+}
+
+void VisitorCSHARPML::writeAttributes(const expression::IsPatternExpressionSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((expression::ExpressionSyntax&)node,composite,false);
 
 }
@@ -5696,8 +6604,23 @@ void VisitorCSHARPML::writeAttributes(const expression::QueryExpressionSyntax& n
 
 }
 
+void VisitorCSHARPML::writeAttributes(const expression::RangeExpressionSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::ExpressionSyntax&)node,composite,false);
+
+}
+
+void VisitorCSHARPML::writeAttributes(const expression::RefExpressionSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::ExpressionSyntax&)node,composite,false);
+
+}
+
 void VisitorCSHARPML::writeAttributes(const expression::RefTypeExpressionSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((expression::ExpressionSyntax&)node,composite,false);
+
+}
+
+void VisitorCSHARPML::writeAttributes(const expression::RefTypeSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::TypeSyntax&)node,composite,false);
 
 }
 
@@ -5729,8 +6652,28 @@ void VisitorCSHARPML::writeAttributes(const expression::StackAllocArrayCreationE
 
 }
 
+void VisitorCSHARPML::writeAttributes(const expression::SwitchExpressionSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::ExpressionSyntax&)node,composite,false);
+
+}
+
 void VisitorCSHARPML::writeAttributes(const expression::ThisExpressionSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((expression::InstanceExpressionSyntax&)node,composite,false);
+
+}
+
+void VisitorCSHARPML::writeAttributes(const expression::ThrowExpressionSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::ExpressionSyntax&)node,composite,false);
+
+}
+
+void VisitorCSHARPML::writeAttributes(const expression::TupleExpressionSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::ExpressionSyntax&)node,composite,false);
+
+}
+
+void VisitorCSHARPML::writeAttributes(const expression::TupleTypeSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::TypeSyntax&)node,composite,false);
 
 }
 
@@ -5755,6 +6698,11 @@ void VisitorCSHARPML::writeAttributes(const statement::BreakStatementSyntax& nod
 }
 
 void VisitorCSHARPML::writeAttributes(const statement::CheckedStatementSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((statement::StatementSyntax&)node,composite,false);
+
+}
+
+void VisitorCSHARPML::writeAttributes(const statement::CommonForEachStatementSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((statement::StatementSyntax&)node,composite,false);
 
 }
@@ -5785,11 +6733,16 @@ void VisitorCSHARPML::writeAttributes(const statement::FixedStatementSyntax& nod
 }
 
 void VisitorCSHARPML::writeAttributes(const statement::ForEachStatementSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
-  writeAttributes((statement::StatementSyntax&)node,composite,false);
+  writeAttributes((statement::CommonForEachStatementSyntax&)node,composite,false);
 
   if (!composite) {
     ofs << " identifier='" << chk(node.getIdentifier()) << "'";
   }
+}
+
+void VisitorCSHARPML::writeAttributes(const statement::ForEachVariableStatementSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((statement::CommonForEachStatementSyntax&)node,composite,false);
+
 }
 
 void VisitorCSHARPML::writeAttributes(const statement::ForStatementSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
@@ -5818,6 +6771,14 @@ void VisitorCSHARPML::writeAttributes(const statement::LabeledStatementSyntax& n
 void VisitorCSHARPML::writeAttributes(const statement::LocalDeclarationStatementSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((statement::StatementSyntax&)node,composite,false);
 
+}
+
+void VisitorCSHARPML::writeAttributes(const statement::LocalFunctionStatementSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((statement::StatementSyntax&)node,composite,false);
+
+  if (!composite) {
+    ofs << " identifier='" << chk(node.getIdentifier()) << "'";
+  }
 }
 
 void VisitorCSHARPML::writeAttributes(const statement::LockStatementSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
@@ -5994,6 +6955,11 @@ void VisitorCSHARPML::writeAttributes(const structure::BracketedParameterListSyn
 
 }
 
+void VisitorCSHARPML::writeAttributes(const structure::CasePatternSwitchLabelSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((structure::SwitchLabelSyntax&)node,composite,false);
+
+}
+
 void VisitorCSHARPML::writeAttributes(const structure::CaseSwitchLabelSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((structure::SwitchLabelSyntax&)node,composite,false);
 
@@ -6026,6 +6992,11 @@ void VisitorCSHARPML::writeAttributes(const structure::ClassOrStructConstraintSy
 
 void VisitorCSHARPML::writeAttributes(const structure::CompilationUnitSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((base::Positioned&)node,composite,false);
+
+}
+
+void VisitorCSHARPML::writeAttributes(const structure::ConstantPatternSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((structure::PatternSyntax&)node,composite,false);
 
 }
 
@@ -6077,6 +7048,11 @@ void VisitorCSHARPML::writeAttributes(const structure::CrefSyntax& node,bool com
 
 }
 
+void VisitorCSHARPML::writeAttributes(const structure::DeclarationPatternSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((structure::PatternSyntax&)node,composite,false);
+
+}
+
 void VisitorCSHARPML::writeAttributes(const structure::DefaultSwitchLabelSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((structure::SwitchLabelSyntax&)node,composite,false);
 
@@ -6096,6 +7072,16 @@ void VisitorCSHARPML::writeAttributes(const structure::DestructorDeclarationSynt
   if (!composite) {
     ofs << " identifier='" << chk(node.getIdentifier()) << "'";
   }
+}
+
+void VisitorCSHARPML::writeAttributes(const structure::DiscardDesignationSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((structure::VariableDesignationSyntax&)node,composite,false);
+
+}
+
+void VisitorCSHARPML::writeAttributes(const structure::DiscardPatternSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((structure::PatternSyntax&)node,composite,false);
+
 }
 
 void VisitorCSHARPML::writeAttributes(const structure::ElseClauseSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
@@ -6315,12 +7301,32 @@ void VisitorCSHARPML::writeAttributes(const structure::ParameterSyntax& node,boo
   }
 }
 
+void VisitorCSHARPML::writeAttributes(const structure::ParenthesizedVariableDesignationSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((structure::VariableDesignationSyntax&)node,composite,false);
+
+}
+
+void VisitorCSHARPML::writeAttributes(const structure::PatternSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((base::Positioned&)node,composite,false);
+
+}
+
+void VisitorCSHARPML::writeAttributes(const structure::PositionalPatternClauseSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((base::Positioned&)node,composite,false);
+
+}
+
 void VisitorCSHARPML::writeAttributes(const structure::PropertyDeclarationSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((structure::BasePropertyDeclarationSyntax&)node,composite,false);
 
   if (!composite) {
     ofs << " identifier='" << chk(node.getIdentifier()) << "'";
   }
+}
+
+void VisitorCSHARPML::writeAttributes(const structure::PropertyPatternClauseSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((base::Positioned&)node,composite,false);
+
 }
 
 void VisitorCSHARPML::writeAttributes(const structure::QualifiedCrefSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
@@ -6346,6 +7352,11 @@ void VisitorCSHARPML::writeAttributes(const structure::QueryContinuationSyntax& 
   }
 }
 
+void VisitorCSHARPML::writeAttributes(const structure::RecursivePatternSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((structure::PatternSyntax&)node,composite,false);
+
+}
+
 void VisitorCSHARPML::writeAttributes(const structure::SelectClauseSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((structure::SelectOrGroupClauseSyntax&)node,composite,false);
 
@@ -6361,8 +7372,26 @@ void VisitorCSHARPML::writeAttributes(const structure::SimpleBaseTypeSyntax& nod
 
 }
 
+void VisitorCSHARPML::writeAttributes(const structure::SingleVariableDesignationSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((structure::VariableDesignationSyntax&)node,composite,false);
+
+  if (!composite) {
+    ofs << " identifier='" << chk(node.getIdentifier()) << "'";
+  }
+}
+
 void VisitorCSHARPML::writeAttributes(const structure::StructDeclarationSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((structure::TypeDeclarationSyntax&)node,composite,false);
+
+}
+
+void VisitorCSHARPML::writeAttributes(const structure::SubpatternSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((base::Positioned&)node,composite,false);
+
+}
+
+void VisitorCSHARPML::writeAttributes(const structure::SwitchExpressionArmSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((base::Positioned&)node,composite,false);
 
 }
 
@@ -6379,6 +7408,14 @@ void VisitorCSHARPML::writeAttributes(const structure::SwitchSectionSyntax& node
 void VisitorCSHARPML::writeAttributes(const structure::SyntaxToken& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((base::Positioned&)node,composite,false);
 
+}
+
+void VisitorCSHARPML::writeAttributes(const structure::TupleElementSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((base::Positioned&)node,composite,false);
+
+  if (!composite) {
+    ofs << " identifier='" << chk(node.getIdentifier()) << "'";
+  }
 }
 
 void VisitorCSHARPML::writeAttributes(const structure::TypeArgumentListSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
@@ -6429,6 +7466,11 @@ void VisitorCSHARPML::writeAttributes(const structure::UsingDirectiveSyntax& nod
 
 }
 
+void VisitorCSHARPML::writeAttributes(const structure::VarPatternSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((structure::PatternSyntax&)node,composite,false);
+
+}
+
 void VisitorCSHARPML::writeAttributes(const structure::VariableDeclarationSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((base::Positioned&)node,composite,false);
 
@@ -6440,6 +7482,16 @@ void VisitorCSHARPML::writeAttributes(const structure::VariableDeclaratorSyntax&
   if (!composite) {
     ofs << " identifier='" << chk(node.getIdentifier()) << "'";
   }
+}
+
+void VisitorCSHARPML::writeAttributes(const structure::VariableDesignationSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((base::Positioned&)node,composite,false);
+
+}
+
+void VisitorCSHARPML::writeAttributes(const structure::WhenClauseSyntax& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((base::Positioned&)node,composite,false);
+
 }
 
 void VisitorCSHARPML::writeAttributes(const structure::WhereClauseSyntax& node,bool composite, bool bWithParent /*= true*/ ) {

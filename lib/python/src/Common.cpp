@@ -56,6 +56,7 @@ bool getIsPositioned(const base::Base& node) {
     ndk == ndkAlias ||
     ndk == ndkParameter ||
     ndk == ndkArgumentList ||
+    ndk == ndkAwait ||
     ndk == ndkAttributeRef ||
     ndk == ndkBinaryArithmetic ||
     ndk == ndkBinaryLogical ||
@@ -65,16 +66,21 @@ bool getIsPositioned(const base::Base& node) {
     ndk == ndkGeneratorExpression ||
     ndk == ndkIdentifier ||
     ndk == ndkIfExpression ||
+    ndk == ndkJoinedStr ||
     ndk == ndkLambda ||
     ndk == ndkList ||
     ndk == ndkListComp ||
+    ndk == ndkBytesLiteral ||
     ndk == ndkFloatNumber ||
+    ndk == ndkFormattedValue ||
     ndk == ndkImagNumber ||
     ndk == ndkIntegerLiteral ||
     ndk == ndkLongInteger ||
     ndk == ndkStringLiteral ||
+    ndk == ndkNamedExpr ||
     ndk == ndkSet ||
     ndk == ndkSetComp ||
+    ndk == ndkStarred ||
     ndk == ndkStringConversion ||
     ndk == ndkCall ||
     ndk == ndkEllipsis ||
@@ -88,17 +94,17 @@ bool getIsPositioned(const base::Base& node) {
     ndk == ndkKeyValue ||
     ndk == ndkKeyword ||
     ndk == ndkBaseSpecifier ||
+    ndk == ndkHandler ||
     ndk == ndkClassDef ||
     ndk == ndkFunctionDef ||
     ndk == ndkIf ||
     ndk == ndkFor ||
     ndk == ndkWhile ||
-    ndk == ndkTryExcept ||
-    ndk == ndkTryFinal ||
+    ndk == ndkTry ||
     ndk == ndkWith ||
-    ndk == ndkHandler ||
     ndk == ndkAssert ||
     ndk == ndkAssign ||
+    ndk == ndkAnnAssign ||
     ndk == ndkAugAssign ||
     ndk == ndkBreak ||
     ndk == ndkContinue ||
@@ -107,12 +113,14 @@ bool getIsPositioned(const base::Base& node) {
     ndk == ndkGlobal ||
     ndk == ndkImportStatement ||
     ndk == ndkImportFrom ||
+    ndk == ndkNonlocal ||
     ndk == ndkPass ||
     ndk == ndkPrint ||
     ndk == ndkRaise ||
     ndk == ndkReturn ||
     ndk == ndkSuite ||
-    ndk == ndkTargetList;
+    ndk == ndkTargetList ||
+    ndk == ndkWithItem;
 }
 
 bool getIsArgumentList(const base::Base& node) {
@@ -125,6 +133,12 @@ bool getIsAttributeRef(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkAttributeRef;
+}
+
+bool getIsAwait(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkAwait;
 }
 
 bool getIsBinary(const base::Base& node) {
@@ -146,6 +160,12 @@ bool getIsBinaryLogical(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkBinaryLogical;
+}
+
+bool getIsBytesLiteral(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkBytesLiteral;
 }
 
 bool getIsCall(const base::Base& node) {
@@ -176,6 +196,7 @@ bool getIsExpression(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkExpression ||
+    ndk == ndkAwait ||
     ndk == ndkAttributeRef ||
     ndk == ndkBinaryArithmetic ||
     ndk == ndkBinaryLogical ||
@@ -185,16 +206,21 @@ bool getIsExpression(const base::Base& node) {
     ndk == ndkGeneratorExpression ||
     ndk == ndkIdentifier ||
     ndk == ndkIfExpression ||
+    ndk == ndkJoinedStr ||
     ndk == ndkLambda ||
     ndk == ndkList ||
     ndk == ndkListComp ||
+    ndk == ndkBytesLiteral ||
     ndk == ndkFloatNumber ||
+    ndk == ndkFormattedValue ||
     ndk == ndkImagNumber ||
     ndk == ndkIntegerLiteral ||
     ndk == ndkLongInteger ||
     ndk == ndkStringLiteral ||
+    ndk == ndkNamedExpr ||
     ndk == ndkSet ||
     ndk == ndkSetComp ||
+    ndk == ndkStarred ||
     ndk == ndkStringConversion ||
     ndk == ndkCall ||
     ndk == ndkEllipsis ||
@@ -222,6 +248,12 @@ bool getIsFloatNumber(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkFloatNumber;
+}
+
+bool getIsFormattedValue(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkFormattedValue;
 }
 
 bool getIsGenerator(const base::Base& node) {
@@ -266,6 +298,12 @@ bool getIsIntegerLiteral(const base::Base& node) {
     ndk == ndkIntegerLiteral;
 }
 
+bool getIsJoinedStr(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkJoinedStr;
+}
+
 bool getIsKeyValue(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
@@ -300,7 +338,9 @@ bool getIsLiteral(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkLiteral ||
+    ndk == ndkBytesLiteral ||
     ndk == ndkFloatNumber ||
+    ndk == ndkFormattedValue ||
     ndk == ndkImagNumber ||
     ndk == ndkIntegerLiteral ||
     ndk == ndkLongInteger ||
@@ -311,6 +351,12 @@ bool getIsLongInteger(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkLongInteger;
+}
+
+bool getIsNamedExpr(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkNamedExpr;
 }
 
 bool getIsSet(const base::Base& node) {
@@ -339,6 +385,12 @@ bool getIsSlicing(const base::Base& node) {
     ndk == ndkExtSlice ||
     ndk == ndkIndex ||
     ndk == ndkSlice;
+}
+
+bool getIsStarred(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkStarred;
 }
 
 bool getIsStringConversion(const base::Base& node) {
@@ -408,6 +460,12 @@ bool getIsAlias(const base::Base& node) {
     ndk == ndkAlias;
 }
 
+bool getIsAnnAssign(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkAnnAssign;
+}
+
 bool getIsAssert(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
@@ -418,6 +476,7 @@ bool getIsAssign(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkAssign ||
+    ndk == ndkAnnAssign ||
     ndk == ndkAugAssign;
 }
 
@@ -454,8 +513,7 @@ bool getIsCompoundStatement(const base::Base& node) {
     ndk == ndkIf ||
     ndk == ndkFor ||
     ndk == ndkWhile ||
-    ndk == ndkTryExcept ||
-    ndk == ndkTryFinal ||
+    ndk == ndkTry ||
     ndk == ndkWith;
 }
 
@@ -528,6 +586,12 @@ bool getIsIteration(const base::Base& node) {
     ndk == ndkWhile;
 }
 
+bool getIsNonlocal(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkNonlocal;
+}
+
 bool getIsParameter(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
@@ -564,6 +628,7 @@ bool getIsSimpleStatement(const base::Base& node) {
     ndk == ndkSimpleStatement ||
     ndk == ndkAssert ||
     ndk == ndkAssign ||
+    ndk == ndkAnnAssign ||
     ndk == ndkAugAssign ||
     ndk == ndkBreak ||
     ndk == ndkContinue ||
@@ -572,6 +637,7 @@ bool getIsSimpleStatement(const base::Base& node) {
     ndk == ndkGlobal ||
     ndk == ndkImportStatement ||
     ndk == ndkImportFrom ||
+    ndk == ndkNonlocal ||
     ndk == ndkPass ||
     ndk == ndkPrint ||
     ndk == ndkRaise ||
@@ -587,12 +653,11 @@ bool getIsStatement(const base::Base& node) {
     ndk == ndkIf ||
     ndk == ndkFor ||
     ndk == ndkWhile ||
-    ndk == ndkTryExcept ||
-    ndk == ndkTryFinal ||
+    ndk == ndkTry ||
     ndk == ndkWith ||
-    ndk == ndkHandler ||
     ndk == ndkAssert ||
     ndk == ndkAssign ||
+    ndk == ndkAnnAssign ||
     ndk == ndkAugAssign ||
     ndk == ndkBreak ||
     ndk == ndkContinue ||
@@ -601,6 +666,7 @@ bool getIsStatement(const base::Base& node) {
     ndk == ndkGlobal ||
     ndk == ndkImportStatement ||
     ndk == ndkImportFrom ||
+    ndk == ndkNonlocal ||
     ndk == ndkPass ||
     ndk == ndkPrint ||
     ndk == ndkRaise ||
@@ -622,21 +688,7 @@ bool getIsTargetList(const base::Base& node) {
 bool getIsTry(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
-    ndk == ndkTry ||
-    ndk == ndkTryExcept ||
-    ndk == ndkTryFinal;
-}
-
-bool getIsTryExcept(const base::Base& node) {
-  NodeKind ndk = node.getNodeKind();
-  return
-    ndk == ndkTryExcept;
-}
-
-bool getIsTryFinal(const base::Base& node) {
-  NodeKind ndk = node.getNodeKind();
-  return
-    ndk == ndkTryFinal;
+    ndk == ndkTry;
 }
 
 bool getIsWhile(const base::Base& node) {
@@ -649,6 +701,12 @@ bool getIsWith(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkWith;
+}
+
+bool getIsWithItem(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkWithItem;
 }
 
 bool getIsDictType(const base::Base& node) {
@@ -707,6 +765,7 @@ bool getIsNotComposite(const base::Base& node) {
     ndk == ndkDocstring ||
     ndk == ndkAlias ||
     ndk == ndkIdentifier ||
+    ndk == ndkBytesLiteral ||
     ndk == ndkFloatNumber ||
     ndk == ndkImagNumber ||
     ndk == ndkIntegerLiteral ||
@@ -747,12 +806,16 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkPositioned, base);
       case ndkAttributeRef:
         return getIsBaseClassKind(ndkBinary, base);
+      case ndkAwait:
+        return getIsBaseClassKind(ndkExpression, base);
       case ndkBinary:
         return getIsBaseClassKind(ndkExpression, base);
       case ndkBinaryArithmetic:
         return getIsBaseClassKind(ndkBinary, base);
       case ndkBinaryLogical:
         return getIsBaseClassKind(ndkBinary, base);
+      case ndkBytesLiteral:
+        return getIsBaseClassKind(ndkLiteral, base);
       case ndkCall:
         return getIsBaseClassKind(ndkUnary, base);
       case ndkDictComp:
@@ -769,6 +832,8 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkSlicing, base);
       case ndkFloatNumber:
         return getIsBaseClassKind(ndkLiteral, base);
+      case ndkFormattedValue:
+        return getIsBaseClassKind(ndkLiteral, base);
       case ndkGenerator:
         return getIsBaseClassKind(ndkPositioned, base);
       case ndkGeneratorExpression:
@@ -783,6 +848,8 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkSlicing, base);
       case ndkIntegerLiteral:
         return getIsBaseClassKind(ndkLiteral, base);
+      case ndkJoinedStr:
+        return getIsBaseClassKind(ndkExpression, base);
       case ndkKeyValue:
         return getIsBaseClassKind(ndkPositioned, base);
       case ndkKeyword:
@@ -797,6 +864,8 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkExpression, base);
       case ndkLongInteger:
         return getIsBaseClassKind(ndkLiteral, base);
+      case ndkNamedExpr:
+        return getIsBaseClassKind(ndkExpression, base);
       case ndkSet:
         return getIsBaseClassKind(ndkExpression, base);
       case ndkSetComp:
@@ -805,6 +874,8 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkSlicing, base);
       case ndkSlicing:
         return getIsBaseClassKind(ndkUnary, base);
+      case ndkStarred:
+        return getIsBaseClassKind(ndkExpression, base);
       case ndkStringConversion:
         return getIsBaseClassKind(ndkExpression, base);
       case ndkStringLiteral:
@@ -825,6 +896,8 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkBase, base);
       case ndkAlias:
         return getIsBaseClassKind(ndkNamed, base);
+      case ndkAnnAssign:
+        return getIsBaseClassKind(ndkAssign, base);
       case ndkAssert:
         return getIsBaseClassKind(ndkSimpleStatement, base);
       case ndkAssign:
@@ -852,7 +925,7 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
       case ndkGlobal:
         return getIsBaseClassKind(ndkSimpleStatement, base);
       case ndkHandler:
-        return getIsBaseClassKind(ndkStatement, base);
+        return getIsBaseClassKind(ndkPositioned, base);
       case ndkIf:
         return getIsBaseClassKind(ndkCompoundStatement, base);
       case ndkImportFrom:
@@ -861,6 +934,8 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkSimpleStatement, base);
       case ndkIteration:
         return getIsBaseClassKind(ndkCompoundStatement, base);
+      case ndkNonlocal:
+        return getIsBaseClassKind(ndkSimpleStatement, base);
       case ndkParameter:
         return getIsBaseClassKind(ndkNamed, base);
       case ndkPass:
@@ -881,14 +956,12 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkPositioned, base);
       case ndkTry:
         return getIsBaseClassKind(ndkCompoundStatement, base);
-      case ndkTryExcept:
-        return getIsBaseClassKind(ndkTry, base);
-      case ndkTryFinal:
-        return getIsBaseClassKind(ndkTry, base);
       case ndkWhile:
         return getIsBaseClassKind(ndkIteration, base);
       case ndkWith:
         return getIsBaseClassKind(ndkCompoundStatement, base);
+      case ndkWithItem:
+        return getIsBaseClassKind(ndkPositioned, base);
       case ndkDictType:
         return getIsBaseClassKind(ndkType, base);
       case ndkReferenceType:
@@ -910,6 +983,7 @@ const std::string toString(AssignmentKind kind) {
     case askAdd: return "askAdd";
     case askSub: return "askSub";
     case askMult: return "askMult";
+    case askMatMult: return "askMatMult";
     case askDiv: return "askDiv";
     case askMod: return "askMod";
     case askPow: return "askPow";
@@ -926,6 +1000,7 @@ const std::string toString(AssignmentKind kind) {
 const std::string toString(BinaryArithmeticKind kind) {
   switch (kind) {
     case bakMultiplication: return "bakMultiplication";
+    case bakMatrixMultiplication: return "bakMatrixMultiplication";
     case bakDivision: return "bakDivision";
     case bakFloorDivision: return "bakFloorDivision";
     case bakModulo: return "bakModulo";
@@ -972,6 +1047,8 @@ const std::string toString(ParameterKind kind) {
     case pmkNormal: return "pmkNormal";
     case pmkKwarg: return "pmkKwarg";
     case pmkVararg: return "pmkVararg";
+    case pmkKwonlyarg: return "pmkKwonlyarg";
+    case pmkPosonlyarg: return "pmkPosonlyarg";
     default: throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
@@ -1017,9 +1094,11 @@ const std::string toString(NodeKind kind) {
     case ndkPositioned: return "ndkPositioned";
     case ndkArgumentList: return "ndkArgumentList";
     case ndkAttributeRef: return "ndkAttributeRef";
+    case ndkAwait: return "ndkAwait";
     case ndkBinary: return "ndkBinary";
     case ndkBinaryArithmetic: return "ndkBinaryArithmetic";
     case ndkBinaryLogical: return "ndkBinaryLogical";
+    case ndkBytesLiteral: return "ndkBytesLiteral";
     case ndkCall: return "ndkCall";
     case ndkDictComp: return "ndkDictComp";
     case ndkDictionary: return "ndkDictionary";
@@ -1028,6 +1107,7 @@ const std::string toString(NodeKind kind) {
     case ndkExpressionList: return "ndkExpressionList";
     case ndkExtSlice: return "ndkExtSlice";
     case ndkFloatNumber: return "ndkFloatNumber";
+    case ndkFormattedValue: return "ndkFormattedValue";
     case ndkGenerator: return "ndkGenerator";
     case ndkGeneratorExpression: return "ndkGeneratorExpression";
     case ndkIdentifier: return "ndkIdentifier";
@@ -1035,6 +1115,7 @@ const std::string toString(NodeKind kind) {
     case ndkImagNumber: return "ndkImagNumber";
     case ndkIndex: return "ndkIndex";
     case ndkIntegerLiteral: return "ndkIntegerLiteral";
+    case ndkJoinedStr: return "ndkJoinedStr";
     case ndkKeyValue: return "ndkKeyValue";
     case ndkKeyword: return "ndkKeyword";
     case ndkLambda: return "ndkLambda";
@@ -1042,10 +1123,12 @@ const std::string toString(NodeKind kind) {
     case ndkListComp: return "ndkListComp";
     case ndkLiteral: return "ndkLiteral";
     case ndkLongInteger: return "ndkLongInteger";
+    case ndkNamedExpr: return "ndkNamedExpr";
     case ndkSet: return "ndkSet";
     case ndkSetComp: return "ndkSetComp";
     case ndkSlice: return "ndkSlice";
     case ndkSlicing: return "ndkSlicing";
+    case ndkStarred: return "ndkStarred";
     case ndkStringConversion: return "ndkStringConversion";
     case ndkStringLiteral: return "ndkStringLiteral";
     case ndkSubscription: return "ndkSubscription";
@@ -1056,6 +1139,7 @@ const std::string toString(NodeKind kind) {
     case ndkObject: return "ndkObject";
     case ndkPackage: return "ndkPackage";
     case ndkAlias: return "ndkAlias";
+    case ndkAnnAssign: return "ndkAnnAssign";
     case ndkAssert: return "ndkAssert";
     case ndkAssign: return "ndkAssign";
     case ndkAugAssign: return "ndkAugAssign";
@@ -1074,6 +1158,7 @@ const std::string toString(NodeKind kind) {
     case ndkImportFrom: return "ndkImportFrom";
     case ndkImportStatement: return "ndkImportStatement";
     case ndkIteration: return "ndkIteration";
+    case ndkNonlocal: return "ndkNonlocal";
     case ndkParameter: return "ndkParameter";
     case ndkPass: return "ndkPass";
     case ndkPrint: return "ndkPrint";
@@ -1084,10 +1169,9 @@ const std::string toString(NodeKind kind) {
     case ndkSuite: return "ndkSuite";
     case ndkTargetList: return "ndkTargetList";
     case ndkTry: return "ndkTry";
-    case ndkTryExcept: return "ndkTryExcept";
-    case ndkTryFinal: return "ndkTryFinal";
     case ndkWhile: return "ndkWhile";
     case ndkWith: return "ndkWith";
+    case ndkWithItem: return "ndkWithItem";
     case ndkDictType: return "ndkDictType";
     case ndkReferenceType: return "ndkReferenceType";
     case ndkSequenceType: return "ndkSequenceType";
@@ -1104,6 +1188,7 @@ const std::string toString(EdgeKind kind) {
     case edkArgumentList_HasDictionary: return "edkArgumentList_HasDictionary";
     case edkArgumentList_HasKeyword: return "edkArgumentList_HasKeyword";
     case edkArgumentList_HasTuple: return "edkArgumentList_HasTuple";
+    case edkAwait_HasValue: return "edkAwait_HasValue";
     case edkBinary_HasLeftExpression: return "edkBinary_HasLeftExpression";
     case edkBinary_HasRightExpression: return "edkBinary_HasRightExpression";
     case edkCall_HasArgumentList: return "edkCall_HasArgumentList";
@@ -1114,6 +1199,8 @@ const std::string toString(EdgeKind kind) {
     case edkExpression_HasType: return "edkExpression_HasType";
     case edkExpressionList_HasExpression: return "edkExpressionList_HasExpression";
     case edkExtSlice_HasItem: return "edkExtSlice_HasItem";
+    case edkFormattedValue_HasValue: return "edkFormattedValue_HasValue";
+    case edkFormattedValue_HasFormatSpec: return "edkFormattedValue_HasFormatSpec";
     case edkGenerator_HasCondition: return "edkGenerator_HasCondition";
     case edkGenerator_HasIter: return "edkGenerator_HasIter";
     case edkGenerator_HasTarget: return "edkGenerator_HasTarget";
@@ -1123,6 +1210,7 @@ const std::string toString(EdgeKind kind) {
     case edkIfExpression_HasBody: return "edkIfExpression_HasBody";
     case edkIfExpression_HasElseBody: return "edkIfExpression_HasElseBody";
     case edkIfExpression_HasTest: return "edkIfExpression_HasTest";
+    case edkJoinedStr_HasValue: return "edkJoinedStr_HasValue";
     case edkKeyValue_HasKey: return "edkKeyValue_HasKey";
     case edkKeyValue_HasValue: return "edkKeyValue_HasValue";
     case edkKeyword_HasKey: return "edkKeyword_HasKey";
@@ -1133,16 +1221,19 @@ const std::string toString(EdgeKind kind) {
     case edkList_HasExpression: return "edkList_HasExpression";
     case edkListComp_HasExpression: return "edkListComp_HasExpression";
     case edkListComp_HasGenerator: return "edkListComp_HasGenerator";
+    case edkNamedExpr_HasTarget: return "edkNamedExpr_HasTarget";
+    case edkNamedExpr_HasValue: return "edkNamedExpr_HasValue";
     case edkSet_HasExpression: return "edkSet_HasExpression";
     case edkSetComp_HasExpression: return "edkSetComp_HasExpression";
     case edkSetComp_HasGenerator: return "edkSetComp_HasGenerator";
     case edkSlice_HasLowerBound: return "edkSlice_HasLowerBound";
     case edkSlice_HasStride: return "edkSlice_HasStride";
     case edkSlice_HasUpperBound: return "edkSlice_HasUpperBound";
+    case edkStarred_HasValue: return "edkStarred_HasValue";
     case edkStringConversion_HasExpressionList: return "edkStringConversion_HasExpressionList";
     case edkSubscription_HasSlicing: return "edkSubscription_HasSlicing";
     case edkUnary_HasExpression: return "edkUnary_HasExpression";
-    case edkYieldExpression_HasYieldExpression: return "edkYieldExpression_HasYieldExpression";
+    case edkYieldExpression_HasExpression: return "edkYieldExpression_HasExpression";
     case edkModule_HasObject: return "edkModule_HasObject";
     case edkModule_HasStatement: return "edkModule_HasStatement";
     case edkModule_Docstring: return "edkModule_Docstring";
@@ -1151,6 +1242,7 @@ const std::string toString(EdgeKind kind) {
     case edkPackage_HasModule: return "edkPackage_HasModule";
     case edkPackage_HasPackage: return "edkPackage_HasPackage";
     case edkAlias_RefersTo: return "edkAlias_RefersTo";
+    case edkAnnAssign_HasAnnotation: return "edkAnnAssign_HasAnnotation";
     case edkAssert_HasMsgExpression: return "edkAssert_HasMsgExpression";
     case edkAssert_HasTestExpression: return "edkAssert_HasTestExpression";
     case edkAssign_HasExpression: return "edkAssign_HasExpression";
@@ -1159,6 +1251,7 @@ const std::string toString(EdgeKind kind) {
     case edkBaseSpecifier_DerivesFrom: return "edkBaseSpecifier_DerivesFrom";
     case edkClassDef_HasObject: return "edkClassDef_HasObject";
     case edkClassDef_HasBaseSpecifier: return "edkClassDef_HasBaseSpecifier";
+    case edkClassDef_HasKeyword: return "edkClassDef_HasKeyword";
     case edkClassDef_HasDecorator: return "edkClassDef_HasDecorator";
     case edkClassDef_RefersTo: return "edkClassDef_RefersTo";
     case edkClassDef_Docstring: return "edkClassDef_Docstring";
@@ -1172,6 +1265,7 @@ const std::string toString(EdgeKind kind) {
     case edkFunctionDef_HasDecorator: return "edkFunctionDef_HasDecorator";
     case edkFunctionDef_HasObject: return "edkFunctionDef_HasObject";
     case edkFunctionDef_HasParameter: return "edkFunctionDef_HasParameter";
+    case edkFunctionDef_HasReturnAnnotation: return "edkFunctionDef_HasReturnAnnotation";
     case edkFunctionDef_RefersTo: return "edkFunctionDef_RefersTo";
     case edkFunctionDef_ReturnType: return "edkFunctionDef_ReturnType";
     case edkFunctionDef_Docstring: return "edkFunctionDef_Docstring";
@@ -1183,23 +1277,27 @@ const std::string toString(EdgeKind kind) {
     case edkIf_HasTestExpression: return "edkIf_HasTestExpression";
     case edkImportStatement_HasAlias: return "edkImportStatement_HasAlias";
     case edkIteration_HasElseBody: return "edkIteration_HasElseBody";
+    case edkNonlocal_HasIdentifier: return "edkNonlocal_HasIdentifier";
     case edkParameter_HasDefaultValue: return "edkParameter_HasDefaultValue";
+    case edkParameter_HasAnnotation: return "edkParameter_HasAnnotation";
     case edkParameter_RefersTo: return "edkParameter_RefersTo";
     case edkPrint_HasExpressionList: return "edkPrint_HasExpressionList";
     case edkPrint_HasDestination: return "edkPrint_HasDestination";
-    case edkRaise_HasTracebackExpression: return "edkRaise_HasTracebackExpression";
-    case edkRaise_HasTypeExpression: return "edkRaise_HasTypeExpression";
-    case edkRaise_HasValueExpression: return "edkRaise_HasValueExpression";
+    case edkRaise_HasType: return "edkRaise_HasType";
+    case edkRaise_HasValue: return "edkRaise_HasValue";
+    case edkRaise_HasTraceback: return "edkRaise_HasTraceback";
+    case edkRaise_HasException: return "edkRaise_HasException";
+    case edkRaise_HasCause: return "edkRaise_HasCause";
     case edkReturn_HasExpression: return "edkReturn_HasExpression";
     case edkSuite_HasStatement: return "edkSuite_HasStatement";
     case edkTargetList_HasTarget: return "edkTargetList_HasTarget";
-    case edkTryExcept_HasElseBody: return "edkTryExcept_HasElseBody";
-    case edkTryExcept_HasHandler: return "edkTryExcept_HasHandler";
-    case edkTryExcept_HasFinallyBody: return "edkTryExcept_HasFinallyBody";
-    case edkTryFinal_HasFinallyBody: return "edkTryFinal_HasFinallyBody";
+    case edkTry_HasHandler: return "edkTry_HasHandler";
+    case edkTry_HasElseBody: return "edkTry_HasElseBody";
+    case edkTry_HasFinallyBody: return "edkTry_HasFinallyBody";
     case edkWhile_HasTestExpression: return "edkWhile_HasTestExpression";
-    case edkWith_HasExpression: return "edkWith_HasExpression";
-    case edkWith_HasTargetList: return "edkWith_HasTargetList";
+    case edkWith_HasWithItem: return "edkWith_HasWithItem";
+    case edkWithItem_HasContext: return "edkWithItem_HasContext";
+    case edkWithItem_HasTarget: return "edkWithItem_HasTarget";
     case edkReferenceType_RefersTo: return "edkReferenceType_RefersTo";
     default: throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }

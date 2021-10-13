@@ -1,84 +1,117 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
+﻿using System;
+using System.Collections;
 using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
-using System.Linq;
+using Columbus.CSAN.Extensions;
 
 namespace Columbus.CSAN.Utils
 {
-    class SymbolMap<T>
+    class SymbolMap<T> : IDictionary<ISymbol, T>
     {
-        private Dictionary<ISymbol, T> map;
+        private readonly Dictionary<ISymbol, T> map;
 
         public SymbolMap()
         {
-            map = new Dictionary<ISymbol, T>(new AnonymousClassSymbolEqualityComparer());
+            map = new Dictionary<ISymbol, T>(new SymbolEqualityComparer());
         }
 
-        public void Add(ISymbol symbol, T limNodeId)
-        {
-            map.Add(symbol, limNodeId);
-        }
+        public void Add(ISymbol symbol, T limNodeId) => map.Add(symbol, limNodeId);
 
-        public bool ContainsKey(ISymbol symbol)
-        {
-            return map.ContainsKey(symbol);
-        }
+        public bool ContainsKey(ISymbol symbol) => map.ContainsKey(symbol);
+        public bool Remove(ISymbol key) => map.Remove(key);
 
         public T this[ISymbol symbol]
         {
-            get
-            {
-                return map[symbol];
-            }
+            get => map[symbol];
+            set => map[symbol] = value;
         }
 
-        public bool TryGetValue(ISymbol node, out T id)
-        {
-            return map.TryGetValue(node, out id);
-        }
+        public ICollection<ISymbol> Keys => map.Keys;
 
-        public ISymbol GetValueByKey(T key)
-        {
-            return map.FirstOrDefault(x => x.Value.Equals(key)).Key;
-        }
+        public ICollection<T> Values => map.Values;
 
-        class AnonymousClassSymbolEqualityComparer : EqualityComparer<ISymbol>
+        public bool TryGetValue(ISymbol node, out T id) => map.TryGetValue(node, out id);
+
+
+        public IEnumerator<KeyValuePair<ISymbol, T>> GetEnumerator() => map.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)map).GetEnumerator();
+
+        public void Add(KeyValuePair<ISymbol, T> item) => ((ICollection<KeyValuePair<ISymbol, T>>)map).Add(item);
+
+        public void Clear() => map.Clear();
+
+        public bool Contains(KeyValuePair<ISymbol, T> item) => ((ICollection<KeyValuePair<ISymbol, T>>)map).Contains(item);
+
+        public void CopyTo(KeyValuePair<ISymbol, T>[] array, int arrayIndex) => ((ICollection<KeyValuePair<ISymbol, T>>)map).CopyTo(array, arrayIndex);
+
+        public bool Remove(KeyValuePair<ISymbol, T> item) => ((ICollection<KeyValuePair<ISymbol, T>>)map).Remove(item);
+
+        public int Count => map.Count;
+
+        public bool IsReadOnly => false;
+
+        class SymbolEqualityComparer : EqualityComparer<ISymbol>
         {
             public override bool Equals(ISymbol x, ISymbol y)
             {
-                if (x.Kind == SymbolKind.NamedType)
+                if (ReferenceEquals(x, y))
+                    return true;
+
+                if (ReferenceEquals(x, null) ||
+                    ReferenceEquals(y, null) ||
+                    x.Kind != y.Kind ||
+                    x.CanBeReferencedByName != y.CanBeReferencedByName)
+                    return false;
+
+                if (!x.CanBeReferencedByName && x.Kind == SymbolKind.Method)
                 {
-                    if (((INamedTypeSymbol)x).IsAnonymousType)
-                    {
-                        return x.DeclaringSyntaxReferences[0].Span.CompareTo(y.DeclaringSyntaxReferences[0].Span) == 0;
-                    }
+                    // lambdas and delegates
+                    if (string.IsNullOrEmpty(x.Name))
+                        return Equals(x.DeclaringSyntaxReferences[0].Span, y.DeclaringSyntaxReferences[0].Span) &&
+                               Equals(x.DeclaringSyntaxReferences[0].SyntaxTree.FilePath, y.DeclaringSyntaxReferences[0].SyntaxTree.FilePath);
+                    // anonymous class property accessors
+                    return Equals(x.ContainingSymbol, y.ContainingSymbol) && Equals(x.ToString(), y.ToString());
                 }
 
-                return x.Equals(y);
+                if (x.Kind == SymbolKind.Parameter && !Equals(x.ContainingSymbol, y.ContainingSymbol))
+                    return false;
+
+                return x.Name == y.Name &&
+                       x.MetadataName == y.MetadataName &&
+                       Equals(x.ToString().TrimEnd('?'), y.ToString().TrimEnd('?'));
             }
 
             public override int GetHashCode(ISymbol obj)
             {
-                return obj.GetHashCode();
+                var hashCode = new HashCode();
+
+                if (!obj.CanBeReferencedByName && obj.Kind == SymbolKind.Method)
+                {
+                    // delegates and lambdas
+                    if (string.IsNullOrEmpty(obj.Name))
+                    {
+                        hashCode.Add(obj.DeclaringSyntaxReferences[0].Span.GetHashCode());
+                        hashCode.Add(obj.DeclaringSyntaxReferences[0].SyntaxTree.FilePath);
+                    }
+                    // anonymous type property getters
+                    else
+                    {
+                        hashCode.Add(GetHashCode(obj.ContainingSymbol));
+                        hashCode.Add(obj.ToString());
+                    }
+                    return hashCode.ToHashCode();
+                }
+
+                if (obj.Kind == SymbolKind.Parameter)
+                    hashCode.Add(GetHashCode(obj.ContainingSymbol));
+
+                hashCode.Add(obj.Kind);
+                hashCode.Add(obj.Name);
+                hashCode.Add(obj.MetadataName);
+                hashCode.Add(obj.ToString().TrimEnd('?'));
+
+                return hashCode.ToHashCode();
             }
         }
     }

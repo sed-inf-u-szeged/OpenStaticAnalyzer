@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var ifStatement = factory.createIfStatementWrapper(factory);
+        var ifStatement = factory.createIfStatementWrapper();
         globals.setPositionInfo(node, ifStatement);
         return ifStatement;
     } else {
@@ -35,43 +35,28 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.consequent != null) {
             var consequentWrapper = globals.getWrapperOfNode(node.consequent);
-            if (node.consequent.type !== "Literal") {
-                var consequentWrapperFunctionString = "setConsequent" + node.consequent.type;
-            } else {
-                var consequentWrapperFunctionString = "setConsequent" + globals.getLiteralType(node.consequent) + node.consequent.type;
-            }
             try {
-                ifStatementWrapper[consequentWrapperFunctionString](consequentWrapper);
+                ifStatementWrapper.setConsequent(consequentWrapper);
             } catch (e) {
-                console.error("IFSTATEMENT - Function not exist: ifStatementWrapper." + consequentWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("IFSTATEMENT - Could not set consequent! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.test != null) {
             var testWrapper = globals.getWrapperOfNode(node.test);
-            if (node.test.type !== "Literal") {
-                var testWrapperFunctionString = "setTest" + node.test.type;
-            } else {
-                var testWrapperFunctionString = "setTest" + globals.getLiteralType(node.test) + node.test.type;
-            }
             try {
-                ifStatementWrapper[testWrapperFunctionString](testWrapper);
+                ifStatementWrapper.setTest(testWrapper);
             } catch (e) {
-                console.error("IFSTATEMENT - Function not exist: ifStatementWrapper." + testWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("IFSTATEMENT - Could not set test! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.alternate != null) {
             var alternateWrapper = globals.getWrapperOfNode(node.alternate);
-            if (node.alternate.type !== "Literal") {
-                var alternateWrapperFunctionString = "setAlternate" + node.alternate.type;
-            } else {
-                var alternateWrapperFunctionString = "setAlternate" + globals.getLiteralType(node.alternate) + node.alternate.type;
-            }
             try {
-                ifStatementWrapper[alternateWrapperFunctionString](alternateWrapper);
+                ifStatementWrapper.setAlternate(alternateWrapper);
             } catch (e) {
-                console.error("IFSTATEMENT - Function not exist: ifStatementWrapper." + alternateWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("IFSTATEMENT - Could not set alternate! Reason of the error: " + e + "\n");
             }
         }
 

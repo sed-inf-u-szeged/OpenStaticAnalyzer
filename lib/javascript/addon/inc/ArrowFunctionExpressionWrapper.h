@@ -22,77 +22,35 @@
 #define _JAVASCRIPT_ArrowFunctionExpressionWrapper_H_
 
 #include "javascript/inc/javascript.h"
-#include <node.h>
-#include <node_object_wrap.h>
+#include <node_api.h>
+#include "BaseWrapper.h"
 #include "../Factory.h"
-
-using namespace v8;
 
 namespace columbus { namespace javascript { namespace asg { namespace addon {
   class Factory;
 
-  class ArrowFunctionExpressionWrapper : public node::ObjectWrap {
+  class ArrowFunctionExpressionWrapper : BaseWrapper{
     public:
-      columbus::javascript::asg::expression::ArrowFunctionExpression* ArrowFunctionExpression;
-      static void Init(v8::Handle<v8::Object> exports);
-      ArrowFunctionExpressionWrapper(const ArrowFunctionExpressionWrapper&);
-      ArrowFunctionExpressionWrapper(Factory* fact);
-      virtual ~ArrowFunctionExpressionWrapper();
-      static void NewInstance(const v8::FunctionCallbackInfo<v8::Value>& args);
-      void wrap(const v8::FunctionCallbackInfo<v8::Value>& args){ this->Wrap(args.Holder()); }
-      static v8::Persistent<v8::Function> constructor;
+      static napi_value Init(napi_env env, napi_value& exports);
+      static void Destructor(napi_env env, void* nativeObject, void* finalize_hint);
+      static napi_status NewInstance(napi_env env, expression::ArrowFunctionExpression* arg, napi_value* instance);
     private:
-      static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-
-      static void addCommentsComment(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addParamsIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addParamsMemberExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addParamsArrayPattern(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addParamsAssignmentPattern(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addParamsObjectPattern(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addParamsRestElement(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyBlockStatement(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyArrayExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyArrowFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyAssignmentExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyAwaitExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyBinaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyCallExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyClassExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyConditionalExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyBooleanLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyNullLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyNumberLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyRegExpLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyStringLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyLogicalExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyMemberExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyMetaProperty(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyNewExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyObjectExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodySequenceExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyTaggedTemplateExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyTemplateLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyThisExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyUnaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyUpdateExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyYieldExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setIdentifierIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPath(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setEndLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setEndCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideEndLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideEndCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setGenerator(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setAsync(const v8::FunctionCallbackInfo<v8::Value>& args);
-}; //end of ArrowFunctionExpressionWrapper
+      explicit ArrowFunctionExpressionWrapper(); // Constructor
+      ~ArrowFunctionExpressionWrapper();
+      static napi_ref constructor;
+      static napi_value New(napi_env env, napi_callback_info info);
+      napi_env env_;
+      napi_ref wrapper_;
+      static napi_value addComments(napi_env env, napi_callback_info info);
+      static napi_value addParams(napi_env env, napi_callback_info info);
+      static napi_value setBody(napi_env env, napi_callback_info info);
+      static napi_value setIdentifier(napi_env env, napi_callback_info info);
+      static napi_value setExpression(napi_env env, napi_callback_info info);
+      static napi_value setPath(napi_env env, napi_callback_info info);
+      static napi_value setPosition(napi_env env, napi_callback_info info);
+      static napi_value setGenerator(napi_env env, napi_callback_info info);
+      static napi_value setAsync(napi_env env, napi_callback_info info);
+  }; //end of ArrowFunctionExpressionWrapper
 
 }}}}//end of namespaces
 #endif

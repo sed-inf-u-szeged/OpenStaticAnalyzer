@@ -27,7 +27,11 @@ using namespace columbus::graphsupport::graphconstants;
 namespace columbus { namespace lim { namespace metrics {
 
   InheritanceBase::InheritanceBase( const std::string& name, MetricDataTypes type, bool enabled, SharedContainers* shared ) :
-    MetricHandler( name, type, enabled, shared ) {}
+    MetricHandler( name, type, enabled, shared ) {
+      registerHandler(phaseVisit, NTYPE_LIM_STRUCTURE, limLangC, false, [this](NodeWrapper& node) {
+          setInvalid(node);
+      });
+  }
 
   const string& InheritanceBase::translateLevel( Language language, const string& level ) const {
     const string& newLevel = MetricHandler::translateLevel( language, level );

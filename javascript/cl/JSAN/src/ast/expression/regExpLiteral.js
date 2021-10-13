@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var regExpLiteral = factory.createRegExpLiteralWrapper(factory);
+        var regExpLiteral = factory.createRegExpLiteralWrapper();
         globals.setPositionInfo(node, regExpLiteral);
         regExpLiteral.setPattern(node.pattern);
         regExpLiteral.setFlags(node.flags);

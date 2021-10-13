@@ -32,6 +32,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <ctime>
 
 #ifdef _WIN32
 #define LowerStringOnWindows(str) stringLower(str)
@@ -178,7 +179,7 @@ namespace common {
   std::string articulateNumber(long num);
 
   /**
-  * \brief Splits the string by the separator character and puts the first maxSplits elements into strList vector.
+  * \brief Splits the string by the separator character and puts the elements into strList vector.
   * \param str       [in]      The string which is split.
   * \param strList   [in, out] Vector which contains the parts of the string.
   * \param separator [in]      The separator character.
@@ -355,11 +356,26 @@ namespace common {
   void upperDriveLetter(std::string& path);
 
   /**
+   * \brief Gives back the current time and date.
+   * \return            The tm structure filled with the current time and date.
+   */
+  std::tm getCurrentTimeAndDate();
+
+  /**
    * \brief Gives back the current time and date in the given format.The length of the formatted string is maximum 200 character.
    * \param format [in] Formatter string. (Described in the manual of the strftime function.)
    * \return            The preformatted date and time.
    */
   std::string getCurrentTimeAndDate(const char* format);
+
+  /**
+   * \brief Gives back the time and date stored in the `td` parameter in the given format .The length of the formatted string is maximum 200 character.
+   * \param format [in] Formatter string. (Described in the manual of the strftime function.)
+   * \param td     [in] The time and date to be formatted.
+   * \return            The preformatted date and time.
+   */
+  std::string getCurrentTimeAndDate(const char* format, const std::tm& td);
+
 
   /**
    * \brief Returns whether the name is a "getter", i.e. it must be

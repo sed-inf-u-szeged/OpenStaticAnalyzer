@@ -34,6 +34,7 @@ import columbus.logger.LoggerHandler;
  */
 public class LowerBoundedWildcardTypeImpl extends BaseImpl implements LowerBoundedWildcardType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(LowerBoundedWildcardTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected int _bound;
 

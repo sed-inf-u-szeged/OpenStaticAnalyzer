@@ -22,94 +22,32 @@
 #define _JAVASCRIPT_NewExpressionWrapper_H_
 
 #include "javascript/inc/javascript.h"
-#include <node.h>
-#include <node_object_wrap.h>
+#include <node_api.h>
+#include "BaseWrapper.h"
 #include "../Factory.h"
-
-using namespace v8;
 
 namespace columbus { namespace javascript { namespace asg { namespace addon {
   class Factory;
 
-  class NewExpressionWrapper : public node::ObjectWrap {
+  class NewExpressionWrapper : BaseWrapper{
     public:
-      columbus::javascript::asg::expression::NewExpression* NewExpression;
-      static void Init(v8::Handle<v8::Object> exports);
-      NewExpressionWrapper(const NewExpressionWrapper&);
-      NewExpressionWrapper(Factory* fact);
-      virtual ~NewExpressionWrapper();
-      static void NewInstance(const v8::FunctionCallbackInfo<v8::Value>& args);
-      void wrap(const v8::FunctionCallbackInfo<v8::Value>& args){ this->Wrap(args.Holder()); }
-      static v8::Persistent<v8::Function> constructor;
+      static napi_value Init(napi_env env, napi_value& exports);
+      static void Destructor(napi_env env, void* nativeObject, void* finalize_hint);
+      static napi_status NewInstance(napi_env env, expression::NewExpression* arg, napi_value* instance);
     private:
-      static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-
-      static void setCalleeArrayExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeArrowFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeAssignmentExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeAwaitExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeBinaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeCallExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeClassExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeConditionalExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeBooleanLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeNullLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeNumberLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeRegExpLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeStringLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeLogicalExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeMemberExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeMetaProperty(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeNewExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeObjectExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeSequenceExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeTaggedTemplateExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeTemplateLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeThisExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeUnaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeUpdateExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCalleeYieldExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsArrayExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsArrowFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsAssignmentExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsAwaitExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsBinaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsCallExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsClassExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsConditionalExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsBooleanLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsNullLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsNumberLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsRegExpLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsStringLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsLogicalExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsMemberExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsMetaProperty(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsNewExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsObjectExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsSequenceExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsTaggedTemplateExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsTemplateLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsThisExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsUnaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsUpdateExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsYieldExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addArgumentsSpreadElement(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addCommentsComment(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPath(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setEndLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setEndCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideEndLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideEndCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-}; //end of NewExpressionWrapper
+      explicit NewExpressionWrapper(); // Constructor
+      ~NewExpressionWrapper();
+      static napi_ref constructor;
+      static napi_value New(napi_env env, napi_callback_info info);
+      napi_env env_;
+      napi_ref wrapper_;
+      static napi_value setCallee(napi_env env, napi_callback_info info);
+      static napi_value addArguments(napi_env env, napi_callback_info info);
+      static napi_value addCalls(napi_env env, napi_callback_info info);
+      static napi_value addComments(napi_env env, napi_callback_info info);
+      static napi_value setPath(napi_env env, napi_callback_info info);
+      static napi_value setPosition(napi_env env, napi_callback_info info);
+  }; //end of NewExpressionWrapper
 
 }}}}//end of namespaces
 #endif

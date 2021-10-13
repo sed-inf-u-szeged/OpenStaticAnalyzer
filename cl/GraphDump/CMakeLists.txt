@@ -2,7 +2,7 @@ set (PROGRAM_NAME GraphDump)
 
 set (SOURCES
     src/main.cpp
-    
+
     inc/messages.h
 )
 

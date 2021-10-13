@@ -1,145 +1,196 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Loader;
 using SysIO = System.IO;
 using System.Threading.Tasks;
+using Columbus.CSAN.Exceptions;
 using Microsoft.CodeAnalysis.MSBuild;
+using Microsoft.Build.Locator;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Emit;
 
 namespace Columbus.CSAN.RoslynParser
 {
-    enum Type { None, File, Project, Solution }
-
     abstract class AbstractOpen : IDisposable
     {
-        protected string filePath;
-        protected MSBuildWorkspace msbuildWorkspace;
-        private static AbstractOpen instance;
-        private string ext;
+        private readonly string filePath;
+        protected readonly MSBuildWorkspace msbuildWorkspace;
+        protected readonly EventHandler<WorkspaceDiagnosticEventArgs> workspaceFailedHandler = (sender, args) => throw new MsBuildException(args.Diagnostic.Message);
 
-        public string Path
+        public string CssiExtension { get; protected set; }
+
+        public Solution Solution { get; protected set; }
+
+        public List<Project> TopologicallySortedProjectDependencies { get; protected set; } = new List<Project>();
+
+        protected string Path
         {
             get
             {
                 var fullPath = SysIO.Path.GetFullPath(filePath);
-                return string.IsNullOrWhiteSpace(fullPath) ? string.Empty : fullPath/*.ToLowerInvariant()*/;
+                return String.IsNullOrWhiteSpace(fullPath) ? String.Empty : fullPath;
             }
         }
 
         protected AbstractOpen(string path, string configuration, string platform)
         {
-            if (string.IsNullOrEmpty(path))
-            {
-                throw new ArgumentNullException("path");
-            }
+            if (String.IsNullOrEmpty(path))
+                throw new ArgumentNullException(nameof(path));
 
             filePath = path;
-            ext = SysIO.Path.GetExtension(path);
-            msbuildWorkspace = MSBuildWorkspace.Create(new Dictionary<string, string> {
+
+            RegisterVisualStudioInstance();
+
+            msbuildWorkspace = MSBuildWorkspace.Create(new Dictionary<string, string>
+            {
                 { "CheckForSystemRuntimeDependency", "true" },
-                { "DesignTimeBuild",                 "true" },
-                { "BuildingInsideVisualStudio",      "true" },
+                //{ "DesignTimeBuild",                 "false" },
+                //{ "BuildingInsideVisualStudio",      "true" },
                 { "Configuration",                   configuration },
                 { "Platform",                        platform }
             });
             msbuildWorkspace.SkipUnrecognizedProjects = true;
             msbuildWorkspace.LoadMetadataForReferencedProjects = true;
-            TopologicallySortedProjectDependencies = new List<Microsoft.CodeAnalysis.Project>();
+            msbuildWorkspace.WorkspaceFailed += workspaceFailedHandler;
+        }
 
+        private static void RegisterVisualStudioInstance()
+        {
+            var instances = MSBuildLocator.QueryVisualStudioInstances().ToList();
+            WriteMsg.WriteLine("Found VisualStudio and MSBuild instances:", WriteMsg.MsgLevel.DDebug);
+            instances.ForEach(i => WriteMsg.WriteLine($"    {i.Name} {i.Version} {i.VisualStudioRootPath} {i.MSBuildPath}", WriteMsg.MsgLevel.DDebug));
+
+            VisualStudioInstance registered = null;
+
+            foreach (var instance in instances)
+            {
+                try
+                {
+                    MSBuildLocator.RegisterInstance(instance);
+                    WriteMsg.WriteLine("Registered VisualStudio and MSBuild instance:", WriteMsg.MsgLevel.DDebug);
+                    WriteMsg.WriteLine($"{instance.Name} {instance.Version} {instance.VisualStudioRootPath} {instance.MSBuildPath}", WriteMsg.MsgLevel.DDebug);
+                    registered = instance;
+                    break;
+                }
+                catch (ArgumentException e)
+                {
+                    WriteMsg.WriteLine($"Failed to register VS instance: {instance.Name} {instance.Version} {instance.VisualStudioRootPath} {instance.MSBuildPath}", WriteMsg.MsgLevel.DDebug);
+                    WriteMsg.WriteLine(e.Message, WriteMsg.MsgLevel.DDebug);
+                    WriteMsg.WriteLine(e.StackTrace, WriteMsg.MsgLevel.DDDebug);
+                }
+            }
+
+            if (registered == null)
+                throw new MsBuildException($"Could not locate MsBuild. Make sure that you have installed the appropriate tools listed in the User's Guide.");
+
+            // Workaround for NuGet binaries on Core.
+            // https://github.com/microsoft/MSBuildLocator/issues/86#issuecomment-640275377
+            AssemblyLoadContext.Default.Resolving += (assemblyLoadContext, assemblyName) =>
+            {
+                var path = SysIO.Path.Combine(registered.MSBuildPath, assemblyName.Name + ".dll");
+                return SysIO.File.Exists(path) ? assemblyLoadContext.LoadFromAssemblyPath(path) : null;
+            };
         }
 
         /// <summary>
         /// Factory method to create the appropriate instance for the path given (.cs/.csproj/.xproj/.sln)
         /// </summary>
         /// <param name="path">Path of the source, project or solution file</param>
+        /// <param name="configuration"></param>
+        /// <param name="platform"></param>
         public static AbstractOpen CreateInstance(string path, string configuration, string platform)
         {
             string ext = SysIO.Path.GetExtension(path);
             switch (ext)
             {
                 case ".sln":
-                    instance = new SolutionOpen(path, configuration, platform);
-                    break;
+                    return new SolutionOpen(path, configuration, platform);
                 case ".csproj":
                 case ".xproj":
-                    instance = new ProjectOpen(path, configuration, platform);
-                    break;
+                    return new ProjectOpen(path, configuration, platform);
                 case ".cs":
-                    instance = new FileOpen(path, configuration, platform);
-                    break;
+                    return new FileOpen(path, configuration, platform);
                 default:
-                    throw new Exception("Invalid file type!");
+                    throw new ArgumentException("Invalid file type: " + ext); // TODO more user friendly handling for this
             }
-            return instance;
         }
 
-        protected async Task<Microsoft.CodeAnalysis.Emit.EmitResult> EmitProject(Microsoft.CodeAnalysis.Project project)
+        protected async Task<EmitResult> EmitProject(Project project)
         {
+            if (String.IsNullOrWhiteSpace(project.OutputFilePath))
+                throw new ColumbusException(nameof(EmitProject), $"Output path for poject ${project} is empty!");
+
             var compilation = await project.GetCompilationAsync();
-            string pdbPath = SysIO.Path.Combine(SysIO.Path.GetDirectoryName(project.OutputFilePath), SysIO.Path.GetFileNameWithoutExtension(project.OutputFilePath) + ".pdb");
+
+            string directory = SysIO.Path.GetDirectoryName(project.OutputFilePath);
+            string pdbPath = SysIO.Path.Combine(directory, SysIO.Path.GetFileNameWithoutExtension(project.OutputFilePath) + ".pdb");
+
+            if (!SysIO.Directory.Exists(directory))
+                SysIO.Directory.CreateDirectory(directory);
 
             using (var fileStream = SysIO.File.Create(project.OutputFilePath))
             using (var pdbStream = SysIO.File.Create(pdbPath))
                 return compilation.Emit(fileStream, pdbStream);
         }
 
-        public Microsoft.CodeAnalysis.Solution Solution { get; protected set; }
-
-        public List<Microsoft.CodeAnalysis.Project> TopologicallySortedProjectDependencies { get; protected set; }
-
         public abstract Task<bool> BuildSoulution();
 
         public abstract void Parse();
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    msbuildWorkspace.CloseSolution();
-                }
-
-                disposedValue = true;
-            }
+            if (disposing)
+                msbuildWorkspace?.Dispose();
         }
 
-        // override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        ~AbstractOpen()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(false);
-        }
-
-        // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(true);
             GC.SuppressFinalize(this);
         }
         #endregion
 
+        protected static IEnumerable<MetadataReference> GetGlobalReferences()
+        {
+            var assemblies = new[] 
+            {
+                /*Making sure all MEF assemblies are loaded*/
+                typeof(System.Composition.Convention.AttributedModelProvider).Assembly, //System.Composition.AttributeModel
+                typeof(System.Composition.Convention.ConventionBuilder).Assembly,   //System.Composition.Convention
+                typeof(System.Composition.Hosting.CompositionHost).Assembly,        //System.Composition.Hosting
+                typeof(System.Composition.CompositionContext).Assembly,             //System.Composition.Runtime
+                typeof(System.Composition.CompositionContextExtensions).Assembly,   //System.Composition.TypedParts
+
+                /*Used for the GeneratedCode attribute*/
+                //typeof(System.CodeDom.Compiler.CodeCompiler).Assembly,              //System.CodeDom.Compiler
+
+                typeof(ValueTask<object>).Assembly,                                 //corlib or System.Threading.Tasks.Extensions
+                typeof(System.Linq.Enumerable).Assembly,                            //corlib or System.Linq
+            };
+
+            var returnSet = (from a in assemblies
+                select MetadataReference.CreateFromFile(a.Location)).ToHashSet();
+
+            //The location of the .NET assemblies
+            var coreLibLocation = typeof(object).Assembly.Location;
+            var assemblyPath = SysIO.Path.GetDirectoryName(coreLibLocation);
+
+            /*
+             * Adding some necessary .NET assemblies
+             * These assemblies couldn't be loaded correctly via the same construction as above,
+             * in specific the System.Runtime.
+             */
+            returnSet.Add(MetadataReference.CreateFromFile(coreLibLocation));
+            returnSet.Add(MetadataReference.CreateFromFile(SysIO.Path.Combine(assemblyPath, "System.dll")));
+            returnSet.Add(MetadataReference.CreateFromFile(SysIO.Path.Combine(assemblyPath, "System.Console.dll")));
+            returnSet.Add(MetadataReference.CreateFromFile(SysIO.Path.Combine(assemblyPath, "System.Core.dll")));
+            returnSet.Add(MetadataReference.CreateFromFile(SysIO.Path.Combine(assemblyPath, "System.Runtime.dll")));
+
+            returnSet.Add(MetadataReference.CreateFromFile(typeof(ValueTask<object>).Assembly.Location));
+
+            return returnSet;
+        }
     }
 }

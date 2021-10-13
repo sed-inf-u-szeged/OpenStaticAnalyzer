@@ -235,7 +235,11 @@ namespace columbus { namespace lim { namespace metrics {
               const logical::Class& refClass = (const logical::Class&)*refBase;
               if(refClass.getId() == node.getId())
                 continue;
-              usedClasses.insert(&refClass);
+
+              if (refClass.getDeclares() != nullptr)
+                usedClasses.insert(dynamic_cast<logical::Class*>(refClass.getDeclares()));
+              else
+                usedClasses.insert(&refClass);
             }
             break;
 

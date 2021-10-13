@@ -36,6 +36,7 @@ namespace ColumbusWrappers {
     enum WrapperModes {
       wrapper_gcc,
       wrapper_cl,
+      wrapper_clang,
       wrapper_lib,
       wrapper_ar,
       wrapper_armcc,
@@ -172,6 +173,15 @@ namespace ColumbusWrappers {
      * @return                    The exit code.
      */
     int systemCall (const std::string& cmd, const std::string& filename="") const ;
+
+    /**
+     * @brief Wraps common::run function.
+     * @param executable     [in] Executable to be invoked.
+     * @param arguments      [in] Arguments of the executable.
+     * @param filename       [in] Name of the given log file.
+     * @return                    The exit code.
+     */
+    int systemCall (const std::string& executable, const std::vector<std::string>& arguments, const std::string& filename="") const ;
 
     /**
      * @brief Wraps common::run function without any logging.

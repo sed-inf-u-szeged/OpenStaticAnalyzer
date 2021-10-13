@@ -9,8 +9,8 @@ set (SOURCES
     inc/Types.h
     src/ListIterator.cpp
     inc/ListIterator.h
-    src/JavaScriptException.cpp
-    inc/JavaScriptException.h
+    src/JavascriptException.cpp
+    inc/JavascriptException.h
     src/Common.cpp
     inc/Common.h
     src/ReverseEdges.cpp
@@ -220,8 +220,6 @@ set (SOURCES
 
 add_library (${LIBNAME} STATIC ${SOURCES})
 add_dependencies (${LIBNAME} boost)
-set_target_properties(${LIBNAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/inc/${LIBNAME}.h")
-add_pch_generation(${LIBNAME} boost)
 set_visual_studio_project_folder(${LIBNAME} TRUE)
 
 
@@ -229,17 +227,19 @@ set_visual_studio_project_folder(${LIBNAME} TRUE)
 
 set (ADDON_NAME ${LIBNAME}Addon)
 set (ADDON_SUBDIR addon)
-set (ADDON_BINARY ${LIBRARY_OUTPUT_PATH}/${ADDON_NAME}.node)
+set (ADDON_BINARY ${EXECUTABLE_OUTPUT_PATH}/${ADDON_NAME}.node)
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
   set(GYP_CONFIG "--debug")
 endif()
 
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/osa.gyp ${CMAKE_CURRENT_SOURCE_DIR}/${ADDON_SUBDIR}/osa.gyp)
+
 add_custom_command(
   OUTPUT ${ADDON_BINARY}
-  DEPENDS ${LIBNAME} common csi strtable io
-  COMMAND npm install --configuration=${CMAKE_BUILD_TYPE} --bin_dir=${CMAKE_BINARY_DIR} ${GYP_CONFIG} ${MSVS_VERSION} > ${CMAKE_CURRENT_BINARY_DIR}/${ADDON_NAME}-build.log 2>&1
+  DEPENDS javascript common csi strtable io ${CMAKE_CURRENT_SOURCE_DIR}/osa.gyp
+  COMMAND npm install ${MSVS_VERSION} ${GYP_CONFIG} > ${CMAKE_CURRENT_BINARY_DIR}/${ADDON_NAME}-build.log 2>&1
   COMMAND ${CMAKE_COMMAND} -E touch_nocreate ${ADDON_BINARY}
   COMMENT "Creating ${ADDON_BINARY}"
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${ADDON_SUBDIR}

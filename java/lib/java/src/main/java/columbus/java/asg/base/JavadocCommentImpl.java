@@ -32,6 +32,7 @@ import columbus.logger.LoggerHandler;
  */
 public class JavadocCommentImpl extends BaseImpl implements JavadocComment {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(JavadocCommentImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected Object position;
 

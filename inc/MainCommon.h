@@ -76,6 +76,20 @@ static void ppFile(char *filename);
 #define CL_CSVDECIMALMARK \
  { false, "-csvdecimalmark", 1, CL_KIND_CHAR, 0, common::OT_WC,    ppCsvDecimalMark, NULL, "Set the decimal mark character for floating point values of the csv output."},
 
+#define CL_SARIFSEVERITY \
+ { false, "-sarifseverity", 1, CL_KIND_STRING, 0, common::OT_WC,    ppSarifSeverity, NULL, "This parameter sets the severity levels to be saved in the SARIF output:\n"\
+                                                                                           "1 - convert the Info level severity\n"\
+                                                                                           "2 - convert the Minor level severity\n"\
+                                                                                           "3 - convert the Major level severity\n"\
+                                                                                           "4 - convert the Critical level severity\n"\
+                                                                                           "5 - convert the Blocker level severity\n" \
+                                                                                           "c/C - convert CloneClasses\n"\
+                                                                                           "The value should not be placed in quotation marks (e.g. -sarifseverity=2345c).\n"\
+                                                                                           "The default value is 2345c\n" },
+
+#define CL_LIM2PATTERNS \
+ { false, "-pattern",    1, CL_KIND_FILENAME, 2, common::OT_WC, ppGetPattern,  NULL,   "The pattern file/directory. Can be list of files/directories. E.g. -pattern:path/to/dir1,path/to/dir2,path/to/patternFile.py"},
+
 #define CL_SAFEMODE \
  { false, "-safemode",   0, "",               0, common::OT_NONE,  ppSafemode,     NULL, "Turns on safe mode, which prevents endless visiting in case of any circle in the graph."},
 
@@ -117,6 +131,26 @@ static void ppFile(char *filename);
  CL_MESSAGELEVEL       \
  CL_VERSION            \
  CL_LAST
+
+#define CL_UDM_OPTIONS \
+ { false,   "-runUDM",               1, CL_KIND_BOOL,     0, OT_WE | OT_WC,     ppRunUDM,                NULL, "This parameter turns on or off the UserDefinedMetrics module. Its value can be \"true\" (turn this feature on) or \"false\" (turn this feature off). The default value is \"false\"" },
+
+//Defining the Sonar2Graph command line arguments
+
+#define CL_SONAR2GRAPH_RUN \
+  { false,  "-runSQ",                1, CL_KIND_BOOL,     0, OT_WE | OT_WC,     ppRunSonar2Graph,        NULL, "Import issues from SonarQube server."},
+
+#define CL_SONAR2GRAPH_ARGS \
+  { false,  "-SQHost",               1, CL_KIND_STRING,   0, OT_WE | OT_WC,     ppHost,                  NULL, "The URL address of the SonarQube server."}, \
+  { false,  "-SQPort",               1, CL_KIND_STRING,   0, OT_WE | OT_WC,     ppPort,                  NULL, "The port of the SonarQube server."}, \
+  { false,  "-SQProjectKey",         1, CL_KIND_STRING,   0, OT_WE | OT_WC,     ppProjectKey,            NULL, "The key of the project in the SonarQube server."}, \
+  { false,  "-SQProjectPrefix",      1, CL_KIND_DIR,      0, OT_WE | OT_WC,     ppProjectPrefix,         NULL, "Prefix path of the project's base directory (the path of the sonar-project.properties file)."}, \
+  { true,   "-jsonPath",             1, CL_KIND_FILE,     0, OT_WE | OT_WC,     ppJsonPath,              NULL, "For testing only."}, \
+  { false,  "-SQUserName",           1, CL_KIND_STRING,   0, OT_WE | OT_WC,     ppSqUsername,            NULL, "The user name for the SonarQube server."}, \
+  { false,  "-SQPassword",           1, CL_KIND_STRING,   0, OT_WE | OT_WC,     ppSqPassword,            NULL, "The password for the SonarQube server."},\
+  { false,  "-SQLanguageKey",        1, CL_KIND_STRING,   0, OT_WE | OT_WC,     ppLanguageKey,           NULL, "The key of the language in SonarQube."}, \
+  { true,   "-SQStrict",             1, CL_KIND_BOOL,     0, OT_WE | OT_WC,     ppStrict,                NULL, "The REST API of SonarQube gives back up to 10,000 elements for any query. This means that if a file contains more than 10,000 issues, OpenStaticAnalyzer is not able to collect all issues and some of them will be lost. If the SQStrict parameter is \"true\", this handled as an error and the analysis fails, otherwise (if the value is \"false\") this problem is ignored. The default value is \"false\"."},
+
 
 //Defining the try-catch blocks of the main() method
 #ifdef NDEBUG
@@ -178,6 +212,21 @@ extern const common::Option OPTIONS_OBJ [];
 */
 static bool ppVersion(const common::Option *o, char *argv[]) {
   exit(EXIT_SUCCESS);
+}
+
+#define CL_PPSARIFSEVERITY \
+bool ppSarifSeverity(const common::Option *o, char *argv[]) {\
+    props.sarifSeverityLevel = "";\
+    for (char *c = argv[0]; *c; c++) {\
+        if ((*c >= '1' && *c <= '5') || (*c == 'c' || *c == 'C')) {\
+            props.sarifSeverityLevel += *c;\
+        }\
+        else {\
+            props.sarifSeverityLevel = "";\
+            break;\
+        }\
+    }\
+    return true;\
 }
 
 /**

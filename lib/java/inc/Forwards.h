@@ -35,6 +35,7 @@ namespace columbus { namespace java { namespace asg {
   class Visitor;
   class VisitorAbstractNodes;
   class VisitorAsgStat;
+  class VisitorGraphml;
   class VisitorJAVAML;
   class VisitorFilter;
   class VisitorReverseEdges;
@@ -61,6 +62,7 @@ namespace columbus { namespace java { namespace asg {
   }
 
   namespace expr {
+    class AnnotatedTypeExpression;
     class Annotation;
     class ArrayAccess;
     class ArrayTypeExpression;
@@ -77,13 +79,16 @@ namespace columbus { namespace java { namespace asg {
     class ExternalTypeExpression;
     class FieldAccess;
     class FloatLiteral;
+    class FunctionalExpression;
     class Identifier;
     class InfixExpression;
     class InstanceOf;
     class IntegerLiteral;
+    class Lambda;
     class Literal;
     class LongLiteral;
     class MarkerAnnotation;
+    class MemberReference;
     class MethodInvocation;
     class NewArray;
     class NewClass;
@@ -91,6 +96,7 @@ namespace columbus { namespace java { namespace asg {
     class NullLiteral;
     class NumberLiteral;
     class ParenthesizedExpression;
+    class PolyExpression;
     class PostfixExpression;
     class PrefixExpression;
     class PrimitiveTypeExpression;
@@ -103,9 +109,19 @@ namespace columbus { namespace java { namespace asg {
     class TypeApplyExpression;
     class TypeCast;
     class TypeExpression;
+    class TypeIntersectionExpression;
     class TypeUnionExpression;
     class Unary;
     class WildcardExpression;
+  }
+
+  namespace module {
+    class Exports;
+    class ModuleDirective;
+    class Opens;
+    class Provides;
+    class Requires;
+    class Uses;
   }
 
   namespace statm {
@@ -160,6 +176,8 @@ namespace columbus { namespace java { namespace asg {
     class Method;
     class MethodDeclaration;
     class MethodGeneric;
+    class Module;
+    class ModuleDeclaration;
     class NamedDeclaration;
     class NormalMethod;
     class Package;
@@ -184,9 +202,11 @@ namespace columbus { namespace java { namespace asg {
     class ErrorType;
     class FloatType;
     class IntType;
+    class IntersectionType;
     class LongType;
     class LowerBoundedWildcardType;
     class MethodType;
+    class ModuleType;
     class NoType;
     class NullType;
     class PackageType;

@@ -57,7 +57,7 @@
 
 //PMDStrategy-rul.cpp messages
 #define CMSG_PMD2GRAPH_COULDNT_FIND_REF                      WriteMsg::mlError, "Error: Could not find the referenced element for rul ref: %s\n"
-#define CMSG_PMD2GRAPH_PROCESSING_FILE                       WriteMsg::mlDebug, "Debug: Processing file \"%s\""
+#define CMSG_PMD2GRAPH_PROCESSING_FILE                       WriteMsg::mlDebug, "Debug: Processing file \"%s\"\n"
 
 //PMDStrategy-config.cpp messages
 #define CMSG_PMD2GRAPH_ERROR_DURING_INIT                     WriteMsg::mlError, "Error: Initialization error: '%s'\n"

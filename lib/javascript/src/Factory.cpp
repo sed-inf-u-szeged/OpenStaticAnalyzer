@@ -108,7 +108,7 @@ void Factory::save(io::ZippedIO& zipIo, std::list<HeaderData*> &headerDataList, 
   for (std::vector<std::pair<unsigned short, std::vector< unsigned char > > >::const_iterator unknownDataIt = unknownHeaderData.begin(); unknownDataIt != unknownHeaderData.end(); ++unknownDataIt) {
     for (  std::list<HeaderData*>::iterator givenDataIt = headerDataList.begin(); givenDataIt != headerDataList.end(); givenDataIt++ )
       if ((*givenDataIt)->getType() == unknownDataIt->first)
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_HEADER_DATA_ALREADY_LOADED(unknownDataIt->first));
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_HEADER_DATA_ALREADY_LOADED(unknownDataIt->first));
     if (unknownDataIt->first == hdkPropertyData) {
       hasUnkownPropertyData = true;
       break;
@@ -167,7 +167,7 @@ void Factory::loadHeader(const std::string &filename, const std::list<HeaderData
   char tag[4];
   binIo.readData (tag,4);
   if (strcmp(tag,"csi") && strcmp(tag,"zsi"))
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_MISSING_FILE_TYPE_INFORMATION);
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_MISSING_FILE_TYPE_INFORMATION);
   loadHeader(binIo, headerDataList);
   binIo.close();
 }
@@ -213,21 +213,21 @@ void Factory::checkPropertyData( PropertyData& propertyData) {
   // Checking the type
   std::string type;
   if (!propertyData.get(PropertyData::csih_Type, type))
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_MISSING_FILE_TYPE_INFORMATION);
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_MISSING_FILE_TYPE_INFORMATION);
   if (type != "JavaScriptLanguage")
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_WRONG_FILE_TYPE_INFORMATION);
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_WRONG_FILE_TYPE_INFORMATION);
   // Checking API version
   std::string apiVersion;
   if (!propertyData.get(PropertyData::csih_APIVersion, apiVersion))
-    throw JavaScriptException(COLUMBUS_LOCATION,CMSG_EX_MISSING_API_VERSION_INFORMATION );
+    throw JavascriptException(COLUMBUS_LOCATION,CMSG_EX_MISSING_API_VERSION_INFORMATION );
   if (apiVersion != APIVersion)
-       throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_WRONG_API_VERSION(APIVersion,apiVersion));
+       throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_WRONG_API_VERSION(APIVersion,apiVersion));
   // Checking binary version
   std::string binVersion;
   if (!propertyData.get(PropertyData::csih_BinaryVersion, binVersion))
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_MISSING_BINARY_VERSION_INFORMATION);
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_MISSING_BINARY_VERSION_INFORMATION);
   if (binVersion != BinaryVersion)
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_WRONG_BINARY_VERSION(BinaryVersion,binVersion));
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_WRONG_BINARY_VERSION(BinaryVersion,binVersion));
   }
 
 void Factory::load( io::ZippedIO &zipIo, const std::list<HeaderData*> &headerDataList)
@@ -237,7 +237,7 @@ void Factory::load( io::ZippedIO &zipIo, const std::list<HeaderData*> &headerDat
   char tag[4];
   zipIo.readData (tag,4);
   if ( strcmp(tag,"csi") && strcmp(tag,"zsi") ) {
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_MISSING_FILE_TYPE_INFORMATION);
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_MISSING_FILE_TYPE_INFORMATION);
   } else if (strcmp(tag,"zsi") == 0) {
     zip = true;
   }
@@ -321,7 +321,7 @@ base::Base& Factory::getRef(NodeId id) const {
   if (id < container.size())
     p = container[id];
   if (!p)
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
   return *p;
 }
 
@@ -329,8 +329,8 @@ base::Base* Factory::getPointer(NodeId id) const {
   base::Base* p = NULL;
   try {
     p = container.at(id);
-  } catch (std::out_of_range e) {
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
+  } catch (const std::out_of_range&) {
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
   }
   return p;
 }
@@ -341,10 +341,10 @@ RefDistributorStrTable& Factory::getStringTable() const {
 
 void Factory::destroyNode(NodeId id) {
   if (!reverseEdges)
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_YOU_MUST_ENABLE_THE_REVERSE_EDGE_FIRST);
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_YOU_MUST_ENABLE_THE_REVERSE_EDGE_FIRST);
 
   if (!getExist(id))
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_DOES_NOT_EXISTS);
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_DOES_NOT_EXISTS);
 
   std::list<NodeId> nodesToDelete;
   VisitorSubtreeCollector visitor(nodesToDelete);
@@ -368,10 +368,10 @@ void Factory::destroyNode(NodeId id) {
 
 void Factory::destroyThisNodeOnly(NodeId id) {
   if (!reverseEdges)
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_YOU_MUST_ENABLE_THE_REVERSE_EDGE_FIRST);
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_YOU_MUST_ENABLE_THE_REVERSE_EDGE_FIRST);
 
   if (id >= container.size())
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_DOES_NOT_EXISTS);
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_DOES_NOT_EXISTS);
 
   if (!container[id])
     return;
@@ -408,7 +408,7 @@ const base::Base& Factory::ConstIterator::next() {
   while (i != container->end()  &&  (!*i  ||  factory->getIsFiltered(*i)))
      ++i;
   if (i == container->end())
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_NEXT_ELEMENT_DOES_NOT_EXIST);
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_NEXT_ELEMENT_DOES_NOT_EXIST);
   return **i++;
 }
 
@@ -502,7 +502,7 @@ void Factory::loadFilter(const std::string &filename){
   filter->load(&binIo);
 
   if (container.size() > filter->container.size())
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_LOADED_FILTER_DOES_NOT_MATCH_TO_THE_CURRENT);
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_LOADED_FILTER_DOES_NOT_MATCH_TO_THE_CURRENT);
 
   binIo.close();
 }
@@ -572,7 +572,7 @@ bool Factory::getExistsReverseEdges() const {
     common::WriteMsg::write(common::WriteMsg::mlNormal, "Memory used by nodes: %d (%d KB)\n\n", totalMemUsage, totalMemUsage );
     if (edgeStat) {
       common::WriteMsg::write(common::WriteMsg::mlNormal, "Edges,Cardinality\n");
-      for (int i = 0; i < 93; ++i)
+      for (int i = 0; i < 95; ++i)
         common::WriteMsg::write(common::WriteMsg::mlNormal, "%s,%d\n", Common::toString((EdgeKind)i).c_str(), vas.edgeStat[i]);
       common::WriteMsg::write(common::WriteMsg::mlNormal, "\n\n");
     }
@@ -664,7 +664,7 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkImportNamespaceSpecifier: p = new structure::ImportNamespaceSpecifier(id, this); break;
     case ndkImportSpecifier: p = new structure::ImportSpecifier(id, this); break;
     case ndkMethodDefinition: p = new structure::MethodDefinition(id, this); break;
-    default: throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 
   if (container.size() <= id)
@@ -760,7 +760,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkImportNamespaceSpecifier: p = new structure::ImportNamespaceSpecifier(i,this); break;
     case ndkImportSpecifier: p = new structure::ImportSpecifier(i,this); break;
     case ndkMethodDefinition: p = new structure::MethodDefinition(i,this); break;
-    default: throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 
   if (container.size() <= i)

@@ -35,6 +35,11 @@ namespace statement {
   /**
   * \brief Try class, which represents the statement::Try node.
   * (missing)
+  * 
+  * Edges:
+  *   - hasHandler (statement::Handler, multiple) : (missing)
+  *   - hasElseBody (statement::Suite, single) : (missing)
+  *   - hasFinallyBody (statement::Suite, single) : (missing)
   */
   class Try : public CompoundStatement {
     protected:
@@ -68,7 +73,7 @@ namespace statement {
       * \brief Gives back the NodeKind of the node.
       * \return Returns with the NodeKind.
       */
-      virtual NodeKind getNodeKind() const = 0;
+      virtual NodeKind getNodeKind() const;
 
       /**
       * \brief Delete all edge.
@@ -97,19 +102,133 @@ namespace statement {
 
     public:
 
-      // ---------- Accept functions for Visitor it now pure virtual ----------
+      // ---------- Edge getter function(s) ----------
 
       /**
-      * \brief It calls the appropriate visit method of the given visitor in the child nodes.
-      * \param visitor [in] The used visitor.
+      * \brief Gives back iterator for the hasHandler edges.
+      * \return Returns an iterator for the hasHandler edges.
       */
-      virtual void accept(Visitor& visitor) const = 0;
+      ListIterator<statement::Handler> getHandlerListIteratorBegin() const;
 
       /**
-      * \brief It calls the appropriate visitEnd method of the given visitor in the child nodes.
+      * \brief Gives back iterator for the hasHandler edges.
+      * \return Returns an iterator for the hasHandler edges.
+      */
+      ListIterator<statement::Handler> getHandlerListIteratorEnd() const;
+
+      /**
+      * \brief Tells whether the node has hasHandler edges or not.
+      * \return Returns true if the node doesn't have any hasHandler edge.
+      */
+      bool getHandlerIsEmpty() const;
+
+      /**
+      * \brief Gives back how many hasHandler edges the node has.
+      * \return Returns with the number of hasHandler edges.
+      */
+      unsigned getHandlerSize() const;
+
+      /**
+      * \brief Gives back the pointer of the node the hasElseBody edge points to.
+      * \return Returns the end point of the hasElseBody edge.
+      */
+      statement::Suite* getElseBody() const;
+
+      /**
+      * \brief Gives back the pointer of the node the hasFinallyBody edge points to.
+      * \return Returns the end point of the hasFinallyBody edge.
+      */
+      statement::Suite* getFinallyBody() const;
+
+
+      // ---------- Edge setter function(s) ----------
+
+      /**
+      * \brief Adds a new hasHandler edge to the node and inserts it after the other ones.
+      * \param node [in] The end point of the new hasHandler edge.
+      */
+      void addHandler(const Handler *node);
+
+      /**
+      * \brief Adds a new hasHandler edge to the node and inserts it after the other ones.
+      * \param id [in] The end point of the new hasHandler edge.
+      */
+      void addHandler(NodeId id);
+
+      /**
+      * \brief Remove the hasHandler edge by id from the node.
+      * \param id [in] The end point of the hasHandler edge.
+      */
+      void removeHandler(NodeId id);
+
+      /**
+      * \brief Remove the hasHandler edge from the node.
+      * \param node [in] The end point of the hasHandler edge.
+      */
+      void removeHandler(Handler *node);
+
+      /**
+      * \brief Sets the hasElseBody edge.
+      * \param id [in] The new end point of the hasElseBody edge.
+      */
+      void setElseBody(NodeId id);
+
+      /**
+      * \brief Sets the hasElseBody edge.
+      * \param node [in] The new end point of the hasElseBody edge.
+      */
+      void setElseBody(Suite *node);
+
+      /**
+      * \brief remove the hasElseBody edge.
+      */
+      void removeElseBody();
+
+      /**
+      * \brief Sets the hasFinallyBody edge.
+      * \param id [in] The new end point of the hasFinallyBody edge.
+      */
+      void setFinallyBody(NodeId id);
+
+      /**
+      * \brief Sets the hasFinallyBody edge.
+      * \param node [in] The new end point of the hasFinallyBody edge.
+      */
+      void setFinallyBody(Suite *node);
+
+      /**
+      * \brief remove the hasFinallyBody edge.
+      */
+      void removeFinallyBody();
+
+    protected:
+
+      // ---------- Edges ----------
+
+      /** \internal \brief Container stores the id of the nodes the hasHandler edge points to. */
+      ListIterator<statement::Handler>::Container hasHandlerContainer;
+
+      /** \internal \brief The id of the node the hasElseBody edge points to. */
+      NodeId m_hasElseBody;
+
+      /** \internal \brief The id of the node the hasFinallyBody edge points to. */
+      NodeId m_hasFinallyBody;
+
+    public:
+
+      // ---------- Accept fundtions for Visitor ----------
+
+      /**
+      * \brief It calls the appropriate visit method of the given visitor.
       * \param visitor [in] The used visitor.
       */
-      virtual void acceptEnd(Visitor& visitor) const = 0;
+      virtual void accept(Visitor& visitor) const;
+
+      /**
+      * \brief It calls the appropriate visitEnd method of the given visitor.
+      * \param visitor [in] The used visitor.
+      */
+      virtual void acceptEnd(Visitor& visitor) const;
 
       /**
       * \internal

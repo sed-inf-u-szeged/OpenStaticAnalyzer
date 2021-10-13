@@ -83,26 +83,36 @@ namespace columbus { namespace graphsupport {
   
   void sumAttributes(Node& node, Graph& graph, const set<string>& metrics) {
     // sum warning attributes
-    Attribute::AttributeIterator attributeIt =  node.getAttributes();
-    while(attributeIt.hasNext()) {
+    Attribute::AttributeIterator attributeIt = node.getAttributes();
+    unordered_map<string, Attribute&> warningToMetricMap;
+    list<string> warnings;
+
+    while (attributeIt.hasNext()) {
       Attribute& attr = attributeIt.next();
 
-      if( (attr.getType() == Attribute::atComposite) && (attr.getContext() == graphconstants::CONTEXT_WARNING) ) {
-        const string& attrName = attr.getName();
-        if (!metrics.empty() && metrics.find(attrName) == metrics.end())
-          continue;
+      const string& attrName = attr.getName();
+      if (!metrics.empty() && metrics.find(attrName) == metrics.end())
+        continue;
         
-        Attribute::AttributeIterator cumAttrIt = node.findAttribute(Attribute::atInt, attrName, graphconstants::CONTEXT_METRIC);
+      if ((attr.getType() == Attribute::atComposite) && (attr.getContext() == graphconstants::CONTEXT_WARNING))
+        warnings.push_back(attrName);
+      else if ((attr.getType() == Attribute::atInt) && (attr.getContext() == graphconstants::CONTEXT_METRIC)) {
+        auto insertionResult = warningToMetricMap.insert(std::pair<string, Attribute&>(attrName, attr));
 
-        if(!cumAttrIt.hasNext()) {
-          node.addAttribute(graph.createAttributeInt(attrName, graphconstants::CONTEXT_METRIC, 1));
-        } else {
-          Attribute& cumAttr =  cumAttrIt.next();
-          if(cumAttrIt.hasNext())
-            throw graph::GraphException( COLUMBUS_LOCATION, CMSG_EX_FOUND_MORE_METRIC_ATTRIBUTE( attrName, node.getUID()));
-          ((AttributeInt&) cumAttr).incValue(1);
-        }
+        // There should only be one Metric attribute so one cannot already exist for the warning
+        if (!insertionResult.second)
+          throw graph::GraphException(COLUMBUS_LOCATION, CMSG_EX_FOUND_MORE_METRIC_ATTRIBUTE(attrName, node.getUID()));
       }
+
+    }
+
+    for (string warning : warnings)
+    {
+      auto it = warningToMetricMap.find(warning);
+      if (it == warningToMetricMap.end())
+        warningToMetricMap.insert(std::pair<string, Attribute&>(warning, node.addAttribute(graph.createAttributeInt(warning, graphconstants::CONTEXT_METRIC, 1))));
+      else
+        ((AttributeInt&)(it->second)).incValue(1);
     }
   }
 
@@ -141,10 +151,30 @@ namespace columbus { namespace graphsupport {
     }
   }
 
-  void cumSum(Graph& graph, const Edge::EdgeType& edgeType, bool sumWarnings, const set<string>& metrics) {
+  void cumSum(Graph& graph, const Edge::EdgeType& edgeType, bool sumWarnings, const set<string>& metrics, bool cumulateToSystemComponent) {
     postOrderedNodes.clear();
     addedNodes.clear();
     topologicalShort(graph,edgeType);
+
+    Node systemComponentNode;
+
+    if (cumulateToSystemComponent)
+    {
+      auto componentNodeIt = graph.findNodes(Node::NodeType(graphconstants::NTYPE_LIM_COMPONENT));
+      while (componentNodeIt.hasNext())
+      {
+        string longName;
+        Node nextNode = componentNodeIt.next();
+        if (getNodeLongNameAttribute(nextNode, longName) && longName == "<System>")
+        {
+          systemComponentNode = nextNode;
+          break;
+        }
+      }
+    }
+
+
+
 
     for(list<Node>::iterator it = postOrderedNodes.begin(); it != postOrderedNodes.end(); it++) {
       Node node = (*it);
@@ -153,11 +183,19 @@ namespace columbus { namespace graphsupport {
       Edge::EdgeIterator edgeIt = node.findOutEdges(edgeType);
       if(sumWarnings)
         sumAttributes(node, graph, metrics) ;
+
+      if (edgeIt.hasNext() && (systemComponentNode != Graph::invalidNode))
+      {
+        cumAttributes(node, systemComponentNode, graph, metrics);
+      }
+
+
       while(edgeIt.hasNext()) {
         Edge edge = edgeIt.next();
         Node toNode = edge.getToNode();
         cumAttributes(node,toNode, graph, metrics);
       }
+
     }
  
   }

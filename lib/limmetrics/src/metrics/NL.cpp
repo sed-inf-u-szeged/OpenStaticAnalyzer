@@ -30,6 +30,14 @@ namespace columbus { namespace lim { namespace metrics {
 
   NLBase::NLBase( const string& name, MetricDataTypes type, bool enabled ) : MetricHandler( name, type, enabled ) {
 
+    // C vs. C++ compat
+    registerHandler( phaseVisit, NTYPE_LIM_STRUCTURE, limLangC, false, [this] ( NodeWrapper& node ) {
+      setInvalid( node );
+    });
+    registerHandler( phaseVisit, NTYPE_LIM_UNION, limLangC, false, [this] ( NodeWrapper& node ) {
+      setInvalid( node );
+    });
+
     // Method level
     this->registerHandler( phaseVisit, NTYPE_LIM_METHOD, limLangOther, false, [this]( NodeWrapper& node ) {
       addMetric( node, getValue( node.getLimNode<logical::Method>() ) );

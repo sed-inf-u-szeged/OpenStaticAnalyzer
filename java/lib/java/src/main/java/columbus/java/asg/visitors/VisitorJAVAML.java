@@ -38,6 +38,7 @@ import columbus.java.asg.base.Named;
 import columbus.java.asg.base.NonJavadocComment;
 import columbus.java.asg.base.Positioned;
 import columbus.java.asg.base.PositionedWithoutComment;
+import columbus.java.asg.expr.AnnotatedTypeExpression;
 import columbus.java.asg.expr.Annotation;
 import columbus.java.asg.expr.ArrayAccess;
 import columbus.java.asg.expr.ArrayTypeExpression;
@@ -54,13 +55,16 @@ import columbus.java.asg.expr.Expression;
 import columbus.java.asg.expr.ExternalTypeExpression;
 import columbus.java.asg.expr.FieldAccess;
 import columbus.java.asg.expr.FloatLiteral;
+import columbus.java.asg.expr.FunctionalExpression;
 import columbus.java.asg.expr.Identifier;
 import columbus.java.asg.expr.InfixExpression;
 import columbus.java.asg.expr.InstanceOf;
 import columbus.java.asg.expr.IntegerLiteral;
+import columbus.java.asg.expr.Lambda;
 import columbus.java.asg.expr.Literal;
 import columbus.java.asg.expr.LongLiteral;
 import columbus.java.asg.expr.MarkerAnnotation;
+import columbus.java.asg.expr.MemberReference;
 import columbus.java.asg.expr.MethodInvocation;
 import columbus.java.asg.expr.NewArray;
 import columbus.java.asg.expr.NewClass;
@@ -68,6 +72,7 @@ import columbus.java.asg.expr.NormalAnnotation;
 import columbus.java.asg.expr.NullLiteral;
 import columbus.java.asg.expr.NumberLiteral;
 import columbus.java.asg.expr.ParenthesizedExpression;
+import columbus.java.asg.expr.PolyExpression;
 import columbus.java.asg.expr.PostfixExpression;
 import columbus.java.asg.expr.PrefixExpression;
 import columbus.java.asg.expr.PrimitiveTypeExpression;
@@ -80,9 +85,16 @@ import columbus.java.asg.expr.This;
 import columbus.java.asg.expr.TypeApplyExpression;
 import columbus.java.asg.expr.TypeCast;
 import columbus.java.asg.expr.TypeExpression;
+import columbus.java.asg.expr.TypeIntersectionExpression;
 import columbus.java.asg.expr.TypeUnionExpression;
 import columbus.java.asg.expr.Unary;
 import columbus.java.asg.expr.WildcardExpression;
+import columbus.java.asg.module.Exports;
+import columbus.java.asg.module.ModuleDirective;
+import columbus.java.asg.module.Opens;
+import columbus.java.asg.module.Provides;
+import columbus.java.asg.module.Requires;
+import columbus.java.asg.module.Uses;
 import columbus.java.asg.statm.Assert;
 import columbus.java.asg.statm.BasicFor;
 import columbus.java.asg.statm.Block;
@@ -131,6 +143,8 @@ import columbus.java.asg.struc.Member;
 import columbus.java.asg.struc.Method;
 import columbus.java.asg.struc.MethodDeclaration;
 import columbus.java.asg.struc.MethodGeneric;
+import columbus.java.asg.struc.Module;
+import columbus.java.asg.struc.ModuleDeclaration;
 import columbus.java.asg.struc.NamedDeclaration;
 import columbus.java.asg.struc.NormalMethod;
 import columbus.java.asg.struc.Package;
@@ -152,9 +166,11 @@ import columbus.java.asg.type.DoubleType;
 import columbus.java.asg.type.ErrorType;
 import columbus.java.asg.type.FloatType;
 import columbus.java.asg.type.IntType;
+import columbus.java.asg.type.IntersectionType;
 import columbus.java.asg.type.LongType;
 import columbus.java.asg.type.LowerBoundedWildcardType;
 import columbus.java.asg.type.MethodType;
+import columbus.java.asg.type.ModuleType;
 import columbus.java.asg.type.NoType;
 import columbus.java.asg.type.NullType;
 import columbus.java.asg.type.PackageType;
@@ -217,6 +233,7 @@ public class VisitorJAVAML extends Visitor {
 		ofs.print("<Project name='" + projectName + "'");
 		ofs.print(" xmlns:base='columbus_java_schema/base'");
 		ofs.print(" xmlns:expr='columbus_java_schema/expr'");
+		ofs.print(" xmlns:module='columbus_java_schema/module'");
 		ofs.print(" xmlns:statm='columbus_java_schema/statm'");
 		ofs.print(" xmlns:struc='columbus_java_schema/struc'");
 		ofs.print(" xmlns:type='columbus_java_schema/type'");
@@ -311,6 +328,32 @@ public class VisitorJAVAML extends Visitor {
 	public void visitEnd(LineComment node, boolean callVirtualBase) {
 		createIndentation();
 		ofs.println("</base:LineComment>");
+	}
+
+	/**
+	 * Writes the XML representation of the {@link columbus.java.asg.expr.AnnotatedTypeExpression AnnotatedTypeExpression} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(AnnotatedTypeExpression node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.print("<expr:AnnotatedTypeExpression");
+		writeAttributes(node, true);
+		ofs.println(">");
+
+		writeCompositeAttributes(node, true);
+	}
+
+	/**
+	 * Writes the end part of XML representation of the {@link columbus.java.asg.expr.AnnotatedTypeExpression AnnotatedTypeExpression} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(AnnotatedTypeExpression node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.println("</expr:AnnotatedTypeExpression>");
 	}
 
 	/**
@@ -756,6 +799,32 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes the XML representation of the {@link columbus.java.asg.expr.Lambda Lambda} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(Lambda node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.print("<expr:Lambda");
+		writeAttributes(node, true);
+		ofs.println(">");
+
+		writeCompositeAttributes(node, true);
+	}
+
+	/**
+	 * Writes the end part of XML representation of the {@link columbus.java.asg.expr.Lambda Lambda} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Lambda node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.println("</expr:Lambda>");
+	}
+
+	/**
 	 * Writes the XML representation of the {@link columbus.java.asg.expr.LongLiteral LongLiteral} node into the output file.
 	 * @param node The node which is visited.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
@@ -805,6 +874,32 @@ public class VisitorJAVAML extends Visitor {
 	public void visitEnd(MarkerAnnotation node, boolean callVirtualBase) {
 		createIndentation();
 		ofs.println("</expr:MarkerAnnotation>");
+	}
+
+	/**
+	 * Writes the XML representation of the {@link columbus.java.asg.expr.MemberReference MemberReference} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(MemberReference node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.print("<expr:MemberReference");
+		writeAttributes(node, true);
+		ofs.println(">");
+
+		writeCompositeAttributes(node, true);
+	}
+
+	/**
+	 * Writes the end part of XML representation of the {@link columbus.java.asg.expr.MemberReference MemberReference} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(MemberReference node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.println("</expr:MemberReference>");
 	}
 
 	/**
@@ -1250,6 +1345,32 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes the XML representation of the {@link columbus.java.asg.expr.TypeIntersectionExpression TypeIntersectionExpression} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(TypeIntersectionExpression node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.print("<expr:TypeIntersectionExpression");
+		writeAttributes(node, true);
+		ofs.println(">");
+
+		writeCompositeAttributes(node, true);
+	}
+
+	/**
+	 * Writes the end part of XML representation of the {@link columbus.java.asg.expr.TypeIntersectionExpression TypeIntersectionExpression} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(TypeIntersectionExpression node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.println("</expr:TypeIntersectionExpression>");
+	}
+
+	/**
 	 * Writes the XML representation of the {@link columbus.java.asg.expr.TypeUnionExpression TypeUnionExpression} node into the output file.
 	 * @param node The node which is visited.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
@@ -1299,6 +1420,136 @@ public class VisitorJAVAML extends Visitor {
 	public void visitEnd(WildcardExpression node, boolean callVirtualBase) {
 		createIndentation();
 		ofs.println("</expr:WildcardExpression>");
+	}
+
+	/**
+	 * Writes the XML representation of the {@link columbus.java.asg.module.Exports Exports} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(Exports node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.print("<module:Exports");
+		writeAttributes(node, true);
+		ofs.println(">");
+
+		writeCompositeAttributes(node, true);
+	}
+
+	/**
+	 * Writes the end part of XML representation of the {@link columbus.java.asg.module.Exports Exports} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Exports node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.println("</module:Exports>");
+	}
+
+	/**
+	 * Writes the XML representation of the {@link columbus.java.asg.module.Opens Opens} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(Opens node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.print("<module:Opens");
+		writeAttributes(node, true);
+		ofs.println(">");
+
+		writeCompositeAttributes(node, true);
+	}
+
+	/**
+	 * Writes the end part of XML representation of the {@link columbus.java.asg.module.Opens Opens} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Opens node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.println("</module:Opens>");
+	}
+
+	/**
+	 * Writes the XML representation of the {@link columbus.java.asg.module.Provides Provides} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(Provides node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.print("<module:Provides");
+		writeAttributes(node, true);
+		ofs.println(">");
+
+		writeCompositeAttributes(node, true);
+	}
+
+	/**
+	 * Writes the end part of XML representation of the {@link columbus.java.asg.module.Provides Provides} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Provides node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.println("</module:Provides>");
+	}
+
+	/**
+	 * Writes the XML representation of the {@link columbus.java.asg.module.Requires Requires} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(Requires node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.print("<module:Requires");
+		writeAttributes(node, true);
+		ofs.println(">");
+
+		writeCompositeAttributes(node, true);
+	}
+
+	/**
+	 * Writes the end part of XML representation of the {@link columbus.java.asg.module.Requires Requires} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Requires node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.println("</module:Requires>");
+	}
+
+	/**
+	 * Writes the XML representation of the {@link columbus.java.asg.module.Uses Uses} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(Uses node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.print("<module:Uses");
+		writeAttributes(node, true);
+		ofs.println(">");
+
+		writeCompositeAttributes(node, true);
+	}
+
+	/**
+	 * Writes the end part of XML representation of the {@link columbus.java.asg.module.Uses Uses} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Uses node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.println("</module:Uses>");
 	}
 
 	/**
@@ -2186,6 +2437,58 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes the XML representation of the {@link columbus.java.asg.struc.Module Module} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(Module node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.print("<struc:Module");
+		writeAttributes(node, true);
+		ofs.println(">");
+
+		writeCompositeAttributes(node, true);
+	}
+
+	/**
+	 * Writes the end part of XML representation of the {@link columbus.java.asg.struc.Module Module} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Module node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.println("</struc:Module>");
+	}
+
+	/**
+	 * Writes the XML representation of the {@link columbus.java.asg.struc.ModuleDeclaration ModuleDeclaration} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(ModuleDeclaration node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.print("<struc:ModuleDeclaration");
+		writeAttributes(node, true);
+		ofs.println(">");
+
+		writeCompositeAttributes(node, true);
+	}
+
+	/**
+	 * Writes the end part of XML representation of the {@link columbus.java.asg.struc.ModuleDeclaration ModuleDeclaration} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(ModuleDeclaration node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.println("</struc:ModuleDeclaration>");
+	}
+
+	/**
 	 * Writes the XML representation of the {@link columbus.java.asg.struc.Package Package} node into the output file.
 	 * @param node The node which is visited.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
@@ -2562,6 +2865,32 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes the XML representation of the {@link columbus.java.asg.type.IntersectionType IntersectionType} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(IntersectionType node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.print("<type:IntersectionType");
+		writeAttributes(node, true);
+		ofs.println(">");
+
+		writeCompositeAttributes(node, true);
+	}
+
+	/**
+	 * Writes the end part of XML representation of the {@link columbus.java.asg.type.IntersectionType IntersectionType} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(IntersectionType node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.println("</type:IntersectionType>");
+	}
+
+	/**
 	 * Writes the XML representation of the {@link columbus.java.asg.type.LongType LongType} node into the output file.
 	 * @param node The node which is visited.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
@@ -2635,6 +2964,32 @@ public class VisitorJAVAML extends Visitor {
 	public void visitEnd(MethodType node, boolean callVirtualBase) {
 		createIndentation();
 		ofs.println("</type:MethodType>");
+	}
+
+	/**
+	 * Writes the XML representation of the {@link columbus.java.asg.type.ModuleType ModuleType} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(ModuleType node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.print("<type:ModuleType");
+		writeAttributes(node, true);
+		ofs.println(">");
+
+		writeCompositeAttributes(node, true);
+	}
+
+	/**
+	 * Writes the end part of XML representation of the {@link columbus.java.asg.type.ModuleType ModuleType} node into the output file.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(ModuleType node, boolean callVirtualBase) {
+		createIndentation();
+		ofs.println("</type:ModuleType>");
 	}
 
 	/**
@@ -2913,6 +3268,54 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes the XML representation of the 'hasAnnotations' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitAnnotatedTypeExpression_HasAnnotations(AnnotatedTypeExpression begin, Annotation end) {
+		createIndentation();
+		ofs.println("<AnnotatedTypeExpression_HasAnnotations>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasAnnotations' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndAnnotatedTypeExpression_HasAnnotations(AnnotatedTypeExpression begin, Annotation end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</AnnotatedTypeExpression_HasAnnotations>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasUnderlyingType' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitAnnotatedTypeExpression_HasUnderlyingType(AnnotatedTypeExpression begin, TypeExpression end) {
+		createIndentation();
+		ofs.println("<AnnotatedTypeExpression_HasUnderlyingType>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasUnderlyingType' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndAnnotatedTypeExpression_HasUnderlyingType(AnnotatedTypeExpression begin, TypeExpression end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</AnnotatedTypeExpression_HasUnderlyingType>");
+	}
+
+	/**
 	 * Writes the XML representation of the 'hasAnnotationName' edge into the output file.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
@@ -3176,6 +3579,29 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes the XML representation of the 'target' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitFunctionalExpression_Target(FunctionalExpression begin, Type end) {
+		createIndentation();
+		ofs.print("<FunctionalExpression_Target ref='");
+		if (!noId)
+			ofs.print("id" + end.getId());
+		ofs.println("'/>");
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'target' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndFunctionalExpression_Target(FunctionalExpression begin, Type end) {
+	}
+
+	/**
 	 * Writes the XML representation of the 'refersTo' edge into the output file.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
@@ -3220,6 +3646,125 @@ public class VisitorJAVAML extends Visitor {
 		decDepth();
 		createIndentation();
 		ofs.println("</InstanceOf_HasTypeOperand>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasParameters' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitLambda_HasParameters(Lambda begin, Parameter end) {
+		createIndentation();
+		ofs.println("<Lambda_HasParameters>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasParameters' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndLambda_HasParameters(Lambda begin, Parameter end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</Lambda_HasParameters>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasBody' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitLambda_HasBody(Lambda begin, Positioned end) {
+		createIndentation();
+		ofs.println("<Lambda_HasBody>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasBody' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndLambda_HasBody(Lambda begin, Positioned end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</Lambda_HasBody>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasQualifierExpression' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitMemberReference_HasQualifierExpression(MemberReference begin, Expression end) {
+		createIndentation();
+		ofs.println("<MemberReference_HasQualifierExpression>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasQualifierExpression' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndMemberReference_HasQualifierExpression(MemberReference begin, Expression end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</MemberReference_HasQualifierExpression>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasTypeArguments' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitMemberReference_HasTypeArguments(MemberReference begin, TypeExpression end) {
+		createIndentation();
+		ofs.println("<MemberReference_HasTypeArguments>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasTypeArguments' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndMemberReference_HasTypeArguments(MemberReference begin, TypeExpression end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</MemberReference_HasTypeArguments>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'referredMethod' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitMemberReference_ReferredMethod(MemberReference begin, MethodDeclaration end) {
+		createIndentation();
+		ofs.print("<MemberReference_ReferredMethod ref='");
+		if (!noId)
+			ofs.print("id" + end.getId());
+		ofs.println("'/>");
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'referredMethod' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndMemberReference_ReferredMethod(MemberReference begin, MethodDeclaration end) {
 	}
 
 	/**
@@ -3677,6 +4222,30 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes the XML representation of the 'hasBounds' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitTypeIntersectionExpression_HasBounds(TypeIntersectionExpression begin, TypeExpression end) {
+		createIndentation();
+		ofs.println("<TypeIntersectionExpression_HasBounds>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasBounds' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndTypeIntersectionExpression_HasBounds(TypeIntersectionExpression begin, TypeExpression end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</TypeIntersectionExpression_HasBounds>");
+	}
+
+	/**
 	 * Writes the XML representation of the 'hasAlternatives' edge into the output file.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
@@ -3746,6 +4315,198 @@ public class VisitorJAVAML extends Visitor {
 		decDepth();
 		createIndentation();
 		ofs.println("</WildcardExpression_HasBound>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasPackageName' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitExports_HasPackageName(Exports begin, Expression end) {
+		createIndentation();
+		ofs.println("<Exports_HasPackageName>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasPackageName' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndExports_HasPackageName(Exports begin, Expression end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</Exports_HasPackageName>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasModuleNames' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitExports_HasModuleNames(Exports begin, Expression end) {
+		createIndentation();
+		ofs.println("<Exports_HasModuleNames>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasModuleNames' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndExports_HasModuleNames(Exports begin, Expression end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</Exports_HasModuleNames>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasPackageName' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitOpens_HasPackageName(Opens begin, Expression end) {
+		createIndentation();
+		ofs.println("<Opens_HasPackageName>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasPackageName' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndOpens_HasPackageName(Opens begin, Expression end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</Opens_HasPackageName>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasModuleNames' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitOpens_HasModuleNames(Opens begin, Expression end) {
+		createIndentation();
+		ofs.println("<Opens_HasModuleNames>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasModuleNames' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndOpens_HasModuleNames(Opens begin, Expression end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</Opens_HasModuleNames>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasServiceName' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitProvides_HasServiceName(Provides begin, Expression end) {
+		createIndentation();
+		ofs.println("<Provides_HasServiceName>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasServiceName' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndProvides_HasServiceName(Provides begin, Expression end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</Provides_HasServiceName>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasImplementationNames' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitProvides_HasImplementationNames(Provides begin, Expression end) {
+		createIndentation();
+		ofs.println("<Provides_HasImplementationNames>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasImplementationNames' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndProvides_HasImplementationNames(Provides begin, Expression end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</Provides_HasImplementationNames>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasModuleName' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitRequires_HasModuleName(Requires begin, Expression end) {
+		createIndentation();
+		ofs.println("<Requires_HasModuleName>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasModuleName' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndRequires_HasModuleName(Requires begin, Expression end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</Requires_HasModuleName>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasServiceName' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitUses_HasServiceName(Uses begin, Expression end) {
+		createIndentation();
+		ofs.println("<Uses_HasServiceName>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasServiceName' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndUses_HasServiceName(Uses begin, Expression end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</Uses_HasServiceName>");
 	}
 
 	/**
@@ -4353,7 +5114,7 @@ public class VisitorJAVAML extends Visitor {
 	 * @param end   The reference of the node the edge points to.
 	 */
 	@Override
-	public void visitTry_HasResources(Try begin, Variable end) {
+	public void visitTry_HasResources(Try begin, Base end) {
 		createIndentation();
 		ofs.println("<Try_HasResources>");
 		incDepth();
@@ -4365,7 +5126,7 @@ public class VisitorJAVAML extends Visitor {
 	 * @param end   The reference of the node the edge points to.
 	 */
 	@Override
-	public void visitEndTry_HasResources(Try begin, Variable end) {
+	public void visitEndTry_HasResources(Try begin, Base end) {
 		decDepth();
 		createIndentation();
 		ofs.println("</Try_HasResources>");
@@ -4564,6 +5325,54 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes the XML representation of the 'hasOthers' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitCompilationUnit_HasOthers(CompilationUnit begin, Positioned end) {
+		createIndentation();
+		ofs.println("<CompilationUnit_HasOthers>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasOthers' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndCompilationUnit_HasOthers(CompilationUnit begin, Positioned end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</CompilationUnit_HasOthers>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasModuleDeclaration' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitCompilationUnit_HasModuleDeclaration(CompilationUnit begin, ModuleDeclaration end) {
+		createIndentation();
+		ofs.println("<CompilationUnit_HasModuleDeclaration>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasModuleDeclaration' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndCompilationUnit_HasModuleDeclaration(CompilationUnit begin, ModuleDeclaration end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</CompilationUnit_HasModuleDeclaration>");
+	}
+
+	/**
 	 * Writes the XML representation of the 'typeDeclarations' edge into the output file.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
@@ -4587,27 +5396,26 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
-	 * Writes the XML representation of the 'hasOthers' edge into the output file.
+	 * Writes the XML representation of the 'isInModule' edge into the output file.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
 	 */
 	@Override
-	public void visitCompilationUnit_HasOthers(CompilationUnit begin, Positioned end) {
+	public void visitCompilationUnit_IsInModule(CompilationUnit begin, Module end) {
 		createIndentation();
-		ofs.println("<CompilationUnit_HasOthers>");
-		incDepth();
+		ofs.print("<CompilationUnit_IsInModule ref='");
+		if (!noId)
+			ofs.print("id" + end.getId());
+		ofs.println("'/>");
 	}
 
 	/**
-	 * Writes the end part of XML representation of the 'hasOthers' edge into the output file.
+	 * Writes the end part of XML representation of the 'isInModule' edge into the output file.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
 	 */
 	@Override
-	public void visitEndCompilationUnit_HasOthers(CompilationUnit begin, Positioned end) {
-		decDepth();
-		createIndentation();
-		ofs.println("</CompilationUnit_HasOthers>");
+	public void visitEndCompilationUnit_IsInModule(CompilationUnit begin, Module end) {
 	}
 
 	/**
@@ -4777,6 +5585,123 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes the XML representation of the 'packages' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitModule_Packages(Module begin, Package end) {
+		createIndentation();
+		ofs.print("<Module_Packages ref='");
+		if (!noId)
+			ofs.print("id" + end.getId());
+		ofs.println("'/>");
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'packages' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndModule_Packages(Module begin, Package end) {
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasName' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitModuleDeclaration_HasName(ModuleDeclaration begin, Expression end) {
+		createIndentation();
+		ofs.println("<ModuleDeclaration_HasName>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasName' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndModuleDeclaration_HasName(ModuleDeclaration begin, Expression end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</ModuleDeclaration_HasName>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'hasDirectives' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitModuleDeclaration_HasDirectives(ModuleDeclaration begin, ModuleDirective end) {
+		createIndentation();
+		ofs.println("<ModuleDeclaration_HasDirectives>");
+		incDepth();
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'hasDirectives' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndModuleDeclaration_HasDirectives(ModuleDeclaration begin, ModuleDirective end) {
+		decDepth();
+		createIndentation();
+		ofs.println("</ModuleDeclaration_HasDirectives>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'moduleType' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitModuleDeclaration_ModuleType(ModuleDeclaration begin, ModuleType end) {
+		createIndentation();
+		ofs.print("<ModuleDeclaration_ModuleType ref='");
+		if (!noId)
+			ofs.print("id" + end.getId());
+		ofs.println("'/>");
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'moduleType' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndModuleDeclaration_ModuleType(ModuleDeclaration begin, ModuleType end) {
+	}
+
+	/**
+	 * Writes the XML representation of the 'refersTo' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitModuleDeclaration_RefersTo(ModuleDeclaration begin, Module end) {
+		createIndentation();
+		ofs.print("<ModuleDeclaration_RefersTo ref='");
+		if (!noId)
+			ofs.print("id" + end.getId());
+		ofs.println("'/>");
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'refersTo' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndModuleDeclaration_RefersTo(ModuleDeclaration begin, Module end) {
+	}
+
+	/**
 	 * Writes the XML representation of the 'hasParameters' edge into the output file.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
@@ -4873,6 +5798,29 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes the XML representation of the 'isInModule' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitPackage_IsInModule(Package begin, Module end) {
+		createIndentation();
+		ofs.print("<Package_IsInModule ref='");
+		if (!noId)
+			ofs.print("id" + end.getId());
+		ofs.println("'/>");
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'isInModule' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndPackage_IsInModule(Package begin, Module end) {
+	}
+
+	/**
 	 * Writes the XML representation of the 'hasPackageName' edge into the output file.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
@@ -4941,29 +5889,6 @@ public class VisitorJAVAML extends Visitor {
 		decDepth();
 		createIndentation();
 		ofs.println("</Scope_HasMembers>");
-	}
-
-	/**
-	 * Writes the XML representation of the 'isInCompilationUnit' edge into the output file.
-	 * @param begin The reference of the node the edge starts from.
-	 * @param end   The reference of the node the edge points to.
-	 */
-	@Override
-	public void visitTypeDeclaration_IsInCompilationUnit(TypeDeclaration begin, CompilationUnit end) {
-		createIndentation();
-		ofs.print("<TypeDeclaration_IsInCompilationUnit ref='");
-		if (!noId)
-			ofs.print("id" + end.getId());
-		ofs.println("'/>");
-	}
-
-	/**
-	 * Writes the end part of XML representation of the 'isInCompilationUnit' edge into the output file.
-	 * @param begin The reference of the node the edge starts from.
-	 * @param end   The reference of the node the edge points to.
-	 */
-	@Override
-	public void visitEndTypeDeclaration_IsInCompilationUnit(TypeDeclaration begin, CompilationUnit end) {
 	}
 
 	/**
@@ -5036,6 +5961,52 @@ public class VisitorJAVAML extends Visitor {
 		decDepth();
 		createIndentation();
 		ofs.println("</TypeDeclaration_HasOthers>");
+	}
+
+	/**
+	 * Writes the XML representation of the 'isInCompilationUnit' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitTypeDeclaration_IsInCompilationUnit(TypeDeclaration begin, CompilationUnit end) {
+		createIndentation();
+		ofs.print("<TypeDeclaration_IsInCompilationUnit ref='");
+		if (!noId)
+			ofs.print("id" + end.getId());
+		ofs.println("'/>");
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'isInCompilationUnit' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndTypeDeclaration_IsInCompilationUnit(TypeDeclaration begin, CompilationUnit end) {
+	}
+
+	/**
+	 * Writes the XML representation of the 'isInModule' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitTypeDeclaration_IsInModule(TypeDeclaration begin, Module end) {
+		createIndentation();
+		ofs.print("<TypeDeclaration_IsInModule ref='");
+		if (!noId)
+			ofs.print("id" + end.getId());
+		ofs.println("'/>");
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'isInModule' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndTypeDeclaration_IsInModule(TypeDeclaration begin, Module end) {
 	}
 
 	/**
@@ -5157,6 +6128,29 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes the XML representation of the 'bounds' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitIntersectionType_Bounds(IntersectionType begin, Type end) {
+		createIndentation();
+		ofs.print("<IntersectionType_Bounds ref='");
+		if (!noId)
+			ofs.print("id" + end.getId());
+		ofs.println("'/>");
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'bounds' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndIntersectionType_Bounds(IntersectionType begin, Type end) {
+	}
+
+	/**
 	 * Writes the XML representation of the 'returnType' edge into the output file.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
@@ -5223,6 +6217,29 @@ public class VisitorJAVAML extends Visitor {
 	 */
 	@Override
 	public void visitEndMethodType_ThrownTypes(MethodType begin, Type end) {
+	}
+
+	/**
+	 * Writes the XML representation of the 'refersTo' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitModuleType_RefersTo(ModuleType begin, Module end) {
+		createIndentation();
+		ofs.print("<ModuleType_RefersTo ref='");
+		if (!noId)
+			ofs.print("id" + end.getId());
+		ofs.println("'/>");
+	}
+
+	/**
+	 * Writes the end part of XML representation of the 'refersTo' edge into the output file.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	@Override
+	public void visitEndModuleType_RefersTo(ModuleType begin, Module end) {
 	}
 
 	/**
@@ -5542,6 +6559,18 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.expr.AnnotatedTypeExpression AnnotatedTypeExpression} node.
+	 */
+	protected void writeAttributes(AnnotatedTypeExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeAttributes((Commentable)node, false);
+		writeAttributes((TypeExpression)node, false);
+
+	}
+
+	/**
 	 * Writes out the attributes of the {@link columbus.java.asg.expr.Annotation Annotation} node.
 	 */
 	protected void writeAttributes(Annotation node, boolean callVirtualBase) {
@@ -5740,6 +6769,18 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.expr.FunctionalExpression FunctionalExpression} node.
+	 */
+	protected void writeAttributes(FunctionalExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeAttributes((Commentable)node, false);
+		writeAttributes((PolyExpression)node, false);
+
+	}
+
+	/**
 	 * Writes out the attributes of the {@link columbus.java.asg.expr.Identifier Identifier} node.
 	 */
 	protected void writeAttributes(Identifier node, boolean callVirtualBase) {
@@ -5791,6 +6832,21 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.expr.Lambda Lambda} node.
+	 */
+	protected void writeAttributes(Lambda node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeAttributes((Commentable)node, false);
+		writeAttributes((FunctionalExpression)node, false);
+
+		ofs.print(" lloc='" + node.getLloc() + "'");
+		ofs.print(" paramKind='" + node.getParamKind() + "'");
+		ofs.print(" bodyKind='" + node.getBodyKind() + "'");
+	}
+
+	/**
 	 * Writes out the attributes of the {@link columbus.java.asg.expr.Literal Literal} node.
 	 */
 	protected void writeAttributes(Literal node, boolean callVirtualBase) {
@@ -5825,6 +6881,22 @@ public class VisitorJAVAML extends Visitor {
 			writeAttributes((Commentable)node, false);
 		writeAttributes((Annotation)node, false);
 
+	}
+
+	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.expr.MemberReference MemberReference} node.
+	 */
+	protected void writeAttributes(MemberReference node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeAttributes((Commentable)node, false);
+		writeAttributes((FunctionalExpression)node, false);
+
+		ofs.print(" name='" + chk(node.getName()) + "'");
+		ofs.print(" mode='" + node.getMode() + "'");
+		ofs.print(" referenceKind='" + node.getReferenceKind() + "'");
+		ofs.print(" overloadKind='" + node.getOverloadKind() + "'");
 	}
 
 	/**
@@ -5910,6 +6982,19 @@ public class VisitorJAVAML extends Visitor {
 			writeAttributes((Commentable)node, false);
 		writeAttributes((Unary)node, false);
 
+	}
+
+	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.expr.PolyExpression PolyExpression} node.
+	 */
+	protected void writeAttributes(PolyExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeAttributes((Commentable)node, false);
+		writeAttributes((Expression)node, false);
+
+		ofs.print(" polyKind='" + node.getPolyKind() + "'");
 	}
 
 	/**
@@ -6063,6 +7148,18 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.expr.TypeIntersectionExpression TypeIntersectionExpression} node.
+	 */
+	protected void writeAttributes(TypeIntersectionExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeAttributes((Commentable)node, false);
+		writeAttributes((TypeExpression)node, false);
+
+	}
+
+	/**
 	 * Writes out the attributes of the {@link columbus.java.asg.expr.TypeUnionExpression TypeUnionExpression} node.
 	 */
 	protected void writeAttributes(TypeUnionExpression node, boolean callVirtualBase) {
@@ -6097,6 +7194,80 @@ public class VisitorJAVAML extends Visitor {
 		writeAttributes((TypeExpression)node, false);
 
 		ofs.print(" kind='" + node.getKind() + "'");
+	}
+
+	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.module.Exports Exports} node.
+	 */
+	protected void writeAttributes(Exports node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeAttributes((Commentable)node, false);
+		writeAttributes((ModuleDirective)node, false);
+
+	}
+
+	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.module.ModuleDirective ModuleDirective} node.
+	 */
+	protected void writeAttributes(ModuleDirective node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeAttributes((Commentable)node, false);
+		writeAttributes((Positioned)node, false);
+
+	}
+
+	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.module.Opens Opens} node.
+	 */
+	protected void writeAttributes(Opens node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeAttributes((Commentable)node, false);
+		writeAttributes((ModuleDirective)node, false);
+
+	}
+
+	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.module.Provides Provides} node.
+	 */
+	protected void writeAttributes(Provides node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeAttributes((Commentable)node, false);
+		writeAttributes((ModuleDirective)node, false);
+
+	}
+
+	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.module.Requires Requires} node.
+	 */
+	protected void writeAttributes(Requires node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeAttributes((Commentable)node, false);
+		writeAttributes((ModuleDirective)node, false);
+
+		ofs.print(" isTransitive='" + node.getIsTransitive() + "'");
+		ofs.print(" isStatic='" + node.getIsStatic() + "'");
+	}
+
+	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.module.Uses Uses} node.
+	 */
+	protected void writeAttributes(Uses node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeAttributes((Commentable)node, false);
+		writeAttributes((ModuleDirective)node, false);
+
 	}
 
 	/**
@@ -6595,6 +7766,7 @@ public class VisitorJAVAML extends Visitor {
 			writeAttributes((Member)node, false);
 		writeAttributes((Declaration)node, false);
 
+		ofs.print(" lloc='" + node.getLloc() + "'");
 	}
 
 	/**
@@ -6692,6 +7864,7 @@ public class VisitorJAVAML extends Visitor {
 			writeAttributes((Member)node, false);
 		writeAttributes((NamedDeclaration)node, false);
 
+		ofs.print(" lloc='" + node.getLloc() + "'");
 		ofs.print(" isAbstract='" + node.getIsAbstract() + "'");
 		ofs.print(" isStrictfp='" + node.getIsStrictfp() + "'");
 	}
@@ -6709,6 +7882,29 @@ public class VisitorJAVAML extends Visitor {
 		writeAttributes((NormalMethod)node, false);
 		writeAttributes((GenericDeclaration)node, false);
 
+	}
+
+	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.struc.Module Module} node.
+	 */
+	protected void writeAttributes(Module node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeAttributes((Base)node, false);
+		writeAttributes((Named)node, false);
+
+	}
+
+	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.struc.ModuleDeclaration ModuleDeclaration} node.
+	 */
+	protected void writeAttributes(ModuleDeclaration node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeAttributes((Commentable)node, false);
+		writeAttributes((Positioned)node, false);
+
+		ofs.print(" moduleKind='" + node.getModuleKind() + "'");
 	}
 
 	/**
@@ -6744,6 +7940,7 @@ public class VisitorJAVAML extends Visitor {
 		ofs.print(" methodKind='" + node.getMethodKind() + "'");
 		ofs.print(" isSynchronized='" + node.getIsSynchronized() + "'");
 		ofs.print(" isNative='" + node.getIsNative() + "'");
+		ofs.print(" isDefault='" + node.getIsDefault() + "'");
 	}
 
 	/**
@@ -6829,6 +8026,7 @@ public class VisitorJAVAML extends Visitor {
 		writeAttributes((NamedDeclaration)node, false);
 		writeAttributes((Scope)node, false);
 
+		ofs.print(" lloc='" + node.getLloc() + "'");
 		ofs.print(" isAbstract='" + node.getIsAbstract() + "'");
 		ofs.print(" isStrictfp='" + node.getIsStrictfp() + "'");
 		ofs.print(" binaryName='" + chk(node.getBinaryName()) + "'");
@@ -6959,6 +8157,14 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.type.IntersectionType IntersectionType} node.
+	 */
+	protected void writeAttributes(IntersectionType node, boolean callVirtualBase) {
+		writeAttributes((Type)node, false);
+
+	}
+
+	/**
 	 * Writes out the attributes of the {@link columbus.java.asg.type.LongType LongType} node.
 	 */
 	protected void writeAttributes(LongType node, boolean callVirtualBase) {
@@ -6978,6 +8184,14 @@ public class VisitorJAVAML extends Visitor {
 	 * Writes out the attributes of the {@link columbus.java.asg.type.MethodType MethodType} node.
 	 */
 	protected void writeAttributes(MethodType node, boolean callVirtualBase) {
+		writeAttributes((Type)node, false);
+
+	}
+
+	/**
+	 * Writes out the attributes of the {@link columbus.java.asg.type.ModuleType ModuleType} node.
+	 */
+	protected void writeAttributes(ModuleType node, boolean callVirtualBase) {
 		writeAttributes((Type)node, false);
 
 	}
@@ -7194,6 +8408,18 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.expr.AnnotatedTypeExpression AnnotatedTypeExpression} node.
+	 */
+	protected void writeCompositeAttributes(AnnotatedTypeExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeCompositeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeCompositeAttributes((Commentable)node, false);
+		writeCompositeAttributes((TypeExpression)node, false);
+
+	}
+
+	/**
 	 * Writes out the composite attributes of the {@link columbus.java.asg.expr.Annotation Annotation} node.
 	 */
 	protected void writeCompositeAttributes(Annotation node, boolean callVirtualBase) {
@@ -7388,6 +8614,18 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.expr.FunctionalExpression FunctionalExpression} node.
+	 */
+	protected void writeCompositeAttributes(FunctionalExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeCompositeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeCompositeAttributes((Commentable)node, false);
+		writeCompositeAttributes((PolyExpression)node, false);
+
+	}
+
+	/**
 	 * Writes out the composite attributes of the {@link columbus.java.asg.expr.Identifier Identifier} node.
 	 */
 	protected void writeCompositeAttributes(Identifier node, boolean callVirtualBase) {
@@ -7436,6 +8674,18 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.expr.Lambda Lambda} node.
+	 */
+	protected void writeCompositeAttributes(Lambda node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeCompositeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeCompositeAttributes((Commentable)node, false);
+		writeCompositeAttributes((FunctionalExpression)node, false);
+
+	}
+
+	/**
 	 * Writes out the composite attributes of the {@link columbus.java.asg.expr.Literal Literal} node.
 	 */
 	protected void writeCompositeAttributes(Literal node, boolean callVirtualBase) {
@@ -7468,6 +8718,18 @@ public class VisitorJAVAML extends Visitor {
 		if (callVirtualBase)
 			writeCompositeAttributes((Commentable)node, false);
 		writeCompositeAttributes((Annotation)node, false);
+
+	}
+
+	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.expr.MemberReference MemberReference} node.
+	 */
+	protected void writeCompositeAttributes(MemberReference node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeCompositeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeCompositeAttributes((Commentable)node, false);
+		writeCompositeAttributes((FunctionalExpression)node, false);
 
 	}
 
@@ -7554,6 +8816,18 @@ public class VisitorJAVAML extends Visitor {
 		if (callVirtualBase)
 			writeCompositeAttributes((Commentable)node, false);
 		writeCompositeAttributes((Unary)node, false);
+
+	}
+
+	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.expr.PolyExpression PolyExpression} node.
+	 */
+	protected void writeCompositeAttributes(PolyExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeCompositeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeCompositeAttributes((Commentable)node, false);
+		writeCompositeAttributes((Expression)node, false);
 
 	}
 
@@ -7702,6 +8976,18 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.expr.TypeIntersectionExpression TypeIntersectionExpression} node.
+	 */
+	protected void writeCompositeAttributes(TypeIntersectionExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeCompositeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeCompositeAttributes((Commentable)node, false);
+		writeCompositeAttributes((TypeExpression)node, false);
+
+	}
+
+	/**
 	 * Writes out the composite attributes of the {@link columbus.java.asg.expr.TypeUnionExpression TypeUnionExpression} node.
 	 */
 	protected void writeCompositeAttributes(TypeUnionExpression node, boolean callVirtualBase) {
@@ -7734,6 +9020,78 @@ public class VisitorJAVAML extends Visitor {
 		if (callVirtualBase)
 			writeCompositeAttributes((Commentable)node, false);
 		writeCompositeAttributes((TypeExpression)node, false);
+
+	}
+
+	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.module.Exports Exports} node.
+	 */
+	protected void writeCompositeAttributes(Exports node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeCompositeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeCompositeAttributes((Commentable)node, false);
+		writeCompositeAttributes((ModuleDirective)node, false);
+
+	}
+
+	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.module.ModuleDirective ModuleDirective} node.
+	 */
+	protected void writeCompositeAttributes(ModuleDirective node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeCompositeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeCompositeAttributes((Commentable)node, false);
+		writeCompositeAttributes((Positioned)node, false);
+
+	}
+
+	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.module.Opens Opens} node.
+	 */
+	protected void writeCompositeAttributes(Opens node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeCompositeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeCompositeAttributes((Commentable)node, false);
+		writeCompositeAttributes((ModuleDirective)node, false);
+
+	}
+
+	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.module.Provides Provides} node.
+	 */
+	protected void writeCompositeAttributes(Provides node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeCompositeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeCompositeAttributes((Commentable)node, false);
+		writeCompositeAttributes((ModuleDirective)node, false);
+
+	}
+
+	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.module.Requires Requires} node.
+	 */
+	protected void writeCompositeAttributes(Requires node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeCompositeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeCompositeAttributes((Commentable)node, false);
+		writeCompositeAttributes((ModuleDirective)node, false);
+
+	}
+
+	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.module.Uses Uses} node.
+	 */
+	protected void writeCompositeAttributes(Uses node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeCompositeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeCompositeAttributes((Commentable)node, false);
+		writeCompositeAttributes((ModuleDirective)node, false);
 
 	}
 
@@ -8394,6 +9752,28 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.struc.Module Module} node.
+	 */
+	protected void writeCompositeAttributes(Module node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeCompositeAttributes((Base)node, false);
+		writeCompositeAttributes((Named)node, false);
+
+	}
+
+	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.struc.ModuleDeclaration ModuleDeclaration} node.
+	 */
+	protected void writeCompositeAttributes(ModuleDeclaration node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			writeCompositeAttributes((Base)node, false);
+		if (callVirtualBase)
+			writeCompositeAttributes((Commentable)node, false);
+		writeCompositeAttributes((Positioned)node, false);
+
+	}
+
+	/**
 	 * Writes out the composite attributes of the {@link columbus.java.asg.struc.NamedDeclaration NamedDeclaration} node.
 	 */
 	protected void writeCompositeAttributes(NamedDeclaration node, boolean callVirtualBase) {
@@ -8661,6 +10041,14 @@ public class VisitorJAVAML extends Visitor {
 	}
 
 	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.type.IntersectionType IntersectionType} node.
+	 */
+	protected void writeCompositeAttributes(IntersectionType node, boolean callVirtualBase) {
+		writeCompositeAttributes((Type)node, false);
+
+	}
+
+	/**
 	 * Writes out the composite attributes of the {@link columbus.java.asg.type.LongType LongType} node.
 	 */
 	protected void writeCompositeAttributes(LongType node, boolean callVirtualBase) {
@@ -8680,6 +10068,14 @@ public class VisitorJAVAML extends Visitor {
 	 * Writes out the composite attributes of the {@link columbus.java.asg.type.MethodType MethodType} node.
 	 */
 	protected void writeCompositeAttributes(MethodType node, boolean callVirtualBase) {
+		writeCompositeAttributes((Type)node, false);
+
+	}
+
+	/**
+	 * Writes out the composite attributes of the {@link columbus.java.asg.type.ModuleType ModuleType} node.
+	 */
+	protected void writeCompositeAttributes(ModuleType node, boolean callVirtualBase) {
 		writeCompositeAttributes((Type)node, false);
 
 	}

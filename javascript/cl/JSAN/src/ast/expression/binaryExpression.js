@@ -27,7 +27,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var binaryExpression = factory.createBinaryExpressionWrapper(factory);
+        var binaryExpression = factory.createBinaryExpressionWrapper();
         globals.setPositionInfo(node, binaryExpression);
         binaryExpression.setOperator(conversions.convertOperatorToString(node.operator));
         return binaryExpression;
@@ -36,29 +36,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.left != null) {
             var leftWrapper = globals.getWrapperOfNode(node.left);
-            if (node.left.type !== "Literal") {
-                var leftWrapperFunctionString = "setLeft" + node.left.type;
-            } else {
-                var leftWrapperFunctionString = "setLeft" + globals.getLiteralType(node.left) + node.left.type;
-            }
             try {
-                binaryExpressionWrapper[leftWrapperFunctionString](leftWrapper);
+                binaryExpressionWrapper.setLeft(leftWrapper);
             } catch (e) {
-                console.error("BINARYEXPRESSION - Function not exist: binaryExpressionWrapper." + leftWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("BINARYEXPRESSION - Could not set left! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.right != null) {
             var rightWrapper = globals.getWrapperOfNode(node.right);
-            if (node.right.type !== "Literal") {
-                var rightWrapperFunctionString = "setRight" + node.right.type;
-            } else {
-                var rightWrapperFunctionString = "setRight" + globals.getLiteralType(node.right) + node.right.type;
-            }
             try {
-                binaryExpressionWrapper[rightWrapperFunctionString](rightWrapper);
+                binaryExpressionWrapper.setRight(rightWrapper);
             } catch (e) {
-                console.error("BINARYEXPRESSION - Function not exist: binaryExpressionWrapper." + rightWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("BINARYEXPRESSION - Could not set right! Reason of the error: " + e + "\n");
             }
         }
 

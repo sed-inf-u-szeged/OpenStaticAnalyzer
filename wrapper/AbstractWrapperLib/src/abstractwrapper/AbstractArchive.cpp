@@ -30,6 +30,7 @@
 #include <common/inc/PlatformDependentDefines.h>
 #include <common/inc/WriteMessage.h>
 #include <fstream>
+#include <iostream>
 
 using namespace std;
 using namespace common;
@@ -50,7 +51,7 @@ namespace ColumbusWrappers {
                                                         archive_tool()
   {
     readConfig();
-    archive_tool = CL_PAR_PLUS + wrapper_bin_dir + DIRDIVSTRING + LIB_TOOL + CL_PAR_PLUS;
+    archive_tool = wrapper_bin_dir + DIRDIVSTRING + LIB_TOOL;
   }
 
   void AbstractArchive::readConfig() {
@@ -67,166 +68,116 @@ namespace ColumbusWrappers {
 
 
 // CANLib archive_mode [modifiers] [operations] archive_file [position_asg] input_files
-  bool AbstractArchive::executeArchive(ArchiveArgs& arArgs) const {
-    if (arArgs.input_files.empty() && arArgs.asgMemberName.empty() && !arArgs.delete_or_extract) {
-      writeWarningMsg(ABSTRACT_ARCHIVE, CMSG_ARCHIVE_HAS_NO_INPUT);
-      return true;
-    }
+  bool AbstractArchive::executeArchive(ColumbusWrappers::ArchiveArgs& arArgs) const {
+    if (arArgs.input_files.empty())
+      writeWarningMsg(ABSTRACT_ARCHIVE, CMSG_ARCHIVE_HAS_NO_INPUT); // in case of extraction it is a valid usage
+
     if (!archive_needtorun) {
       writeWarningMsg(ABSTRACT_ARCHIVE, CMSG_ARCHIVE_NO_NEED_TO_RUN);
       return true;
     }
 
-    writeDebugMsg(ABSTRACT_ARCHIVE, CMSG_DEBUG_ARCHIVE_EXECUTION, archive_tool.c_str(), arArgs.archive_mode.c_str());
+    string aastFileName = objectNameToAstName(arArgs.archive_file);
+    writeDebugMsg(ABSTRACT_ARCHIVE, CMSG_DEBUG_ARCHIVE_EXECUTION, archive_tool.c_str());
 
-    string sys_cmd = archive_tool;
+    vector<string> args;
 
-    sys_cmd += " " CL_PAR_PLUS + arArgs.archive_mode + CL_PAR_PLUS;
+    args.push_back("-ml:" + toString(archive_ml));
 
-    for (list<string>::const_iterator it_m = arArgs.archive_modifiers.begin(); it_m != arArgs.archive_modifiers.end(); it_m++) {
-      writeDebugMsg(ABSTRACT_ARCHIVE, CMSG_DEBUG_ARCHIVE_MODIFIER, it_m->c_str());
-      sys_cmd += " " CL_PAR_PLUS + *it_m + CL_PAR_PLUS;
+    for (const string& operation : arArgs.archive_operations)
+    {
+      writeDebugMsg(ABSTRACT_ARCHIVE, CMSG_DEBUG_ARCHIVE_OPERATION, operation.c_str());
+      args.push_back(operation);
+      if (operation == "-add")
+        args.push_back("-onelevelonly");
     }
 
-    for (list<string>::const_iterator it_o = arArgs.archive_operations.begin(); it_o != arArgs.archive_operations.end(); it_o++) {
-      writeDebugMsg(ABSTRACT_ARCHIVE, CMSG_DEBUG_ARCHIVE_OPERATION, it_o->c_str());
-      sys_cmd += " " CL_PAR_PLUS + *it_o + CL_PAR_PLUS;
+    for (const string& modifier : arArgs.archive_modifiers)
+    {
+      writeDebugMsg(ABSTRACT_ARCHIVE, CMSG_DEBUG_ARCHIVE_MODIFIER, modifier.c_str());
+      args.push_back(modifier);
     }
 
-    string output;
-    if (!arArgs.no_output) {
-      output = arArgs.archive_file;
-    } else {
-      output = arArgs.first_input;
-      string tmpdir, tmpfile;
-      common::splitPath(output, tmpdir, tmpfile);
-      output = tmpfile;
-    }
-    writeDebugMsg(ABSTRACT_ARCHIVE, CMSG_DEBUG_ARCHIVE_OUTPUT, output.c_str());
-    replaceQuoteForQuoteWithBackslash(output);
-    insertDir(output, true);
-    if (arArgs.need_create) {
-      if (!arArgs.archive_mode.compare("-w")) {
-        sys_cmd += " " CL_PAR_PLUS "-a" CL_PAR_PLUS;
-      }
-      sys_cmd += " " CL_PAR_PLUS "-c" CL_PAR_PLUS;
-    }
+    args.push_back(aastFileName);
  
-    if (arArgs.original_dates) {
+    list<string> inputFileList;
+    for (const string& inputFilename : arArgs.input_files)
+    {
+      writeDebugMsg(ABSTRACT_ARCHIVE, CMSG_DEBUG_ARCHIVE_INPUT, inputFilename.c_str());
+      string astName = objectNameToAstName(inputFilename);
+      inputFileList.push_back(astName);
       
-      sys_cmd += " " CL_PAR_PLUS "-t" CL_PAR_PLUS;
-    }
-
-
-    if (!arArgs.archive_mode.compare("-w") && arArgs.delete_or_extract ) {
-
-      if (!arArgs.asgMemberName.empty()) {
-        sys_cmd += " " CL_PAR_PLUS;
-        sys_cmd += arArgs.asgMemberName + ".csi";
-        sys_cmd += CL_PAR_PLUS;
+      // handling of .comment files
+      string commentFile = astName + ".comment";
+      if (common::pathFileExists(commentFile))
+      {
+        inputFileList.push_back(commentFile);
       }
     }
 
-    sys_cmd += " " CL_PAR_PLUS + output + ".acsi" CL_PAR_PLUS;
-
-    if (!arArgs.archive_mode.compare("-w") && arArgs.delete_or_extract && !arArgs.asg_file.empty()) {
-      sys_cmd += " " CL_PAR_PLUS;
-      sys_cmd += "-out";
-      sys_cmd += CL_PAR_PLUS;
+    string inputfile_list = wrapper_temp_dir + DIRDIVSTRING + common::toString(getCurrentProcessId()) + "input.list";
+    ofstream inputlist(inputfile_list.c_str(), ios::trunc);
+    if (inputlist.is_open())
+    {
+      for (const string& inputFilename : inputFileList)
+        inputlist << inputFilename << "\n";
+      inputlist.close();
     }
 
-    if (!arArgs.asg_file.empty()) {
-      writeDebugMsg(ABSTRACT_ARCHIVE, CMSG_DEBUG_ARCHIVE_POSITION_ASG, arArgs.asg_file.c_str());
-      sys_cmd += " " CL_PAR_PLUS + objectNameToCsiName(arArgs.asg_file ) + CL_PAR_PLUS;
+    if (archive_needstat)
+    {
+      string statfile = wrapper_log_dir + DIRDIVSTRING + "statCANLib.csv";
+      args.push_back("-stat:" + statfile);
     }
 
-    list<string> inputFileList;
-    for (list<string>::const_iterator it_i = arArgs.input_files.begin(); it_i != arArgs.input_files.end(); it_i++) {
-      writeDebugMsg(ABSTRACT_ARCHIVE, CMSG_DEBUG_ARCHIVE_INPUT, it_i->c_str());
-      
-      inputFileList.push_back( arArgs.delete_or_extract ? *it_i + ".csi": objectNameToCsiName( *it_i ) );
-
-    }
+    args.push_back("-inputlist:" + inputfile_list);
 
     string currentWorkDir = common::getCwd();
-    string inputfile_list = wrapper_temp_dir + DIRDIVSTRING + common::toString(getCurrentProcessId()) + "input.list";
-    for (list<string>::iterator it_inputfiles = inputFileList.begin(); it_inputfiles != inputFileList.end(); ++it_inputfiles) {
-      ofstream inputlist(inputfile_list.c_str(), ios::app);
-      if (inputlist.is_open()) {
-        if (!arArgs.delete_or_extract){
-          inputlist << indepFullpath(*it_inputfiles) << endl;
-        } else {
-          inputlist << *it_inputfiles << endl;
-        }
-        inputlist.flush();
-        inputlist.close();
-      }
-    }
-
-    if(archive_needstat) {
-      string statfile = wrapper_log_dir + DIRDIVSTRING + "statCANLib.csv";
-      replaceQuoteForQuoteWithBackslash(statfile);
-      sys_cmd += " " CL_PAR_PLUS "-stat:" + statfile + CL_PAR_PLUS;
-    }
-
-    sys_cmd += " -ml:" + toString(archive_ml);
-
-    sys_cmd += " " CL_PAR_PLUS "-ilist:" + inputfile_list + CL_PAR_PLUS;
-
-
-     
-
-    if ((mode == wrapper_gcc || mode == wrapper_ar) && arArgs.delete_or_extract &&  arArgs.archive_operations.front() == "-e") {
-      sys_cmd += " " CL_PAR_PLUS;
-      sys_cmd += "-out";
-      sys_cmd += CL_PAR_PLUS;
-
-      sys_cmd += " " CL_PAR_PLUS;
-      sys_cmd += outputdir;
-      sys_cmd += CL_PAR_PLUS;
-      makeDirectory(outputdir);
-    }
-
-
     writeInfoMsg(ABSTRACT_ARCHIVE, CMSG_CURRENT_WORKDIR, currentWorkDir.c_str());
-    writeInfoMsg(ABSTRACT_ARCHIVE, CMSG_ANALYZER_WRAPPER_COMMAND, sys_cmd.c_str());
-    int ret = systemCall(sys_cmd);
-    if (ret != 0) {
+
+    for (const string& arg : args)
+      writeInfoMsg(ABSTRACT_ARCHIVE, "[%s]", arg.c_str());
+
+    int ret = systemCall(archive_tool, args);
+    if (ret != 0)
+    {
       writeErrorMsg(ABSTRACT_ARCHIVE, CMSG_TOOL_RETURNS, archive_tool.c_str(), ret);
       return false;
-    } else {
-      string acsi_list = wrapper_log_dir + DIRDIVSTRING + "acsi.list";
-      string lockFile = getLockFileName(acsi_list);
-      ofstream acsilist(acsi_list.c_str(), ios::app);
+    }
+    else
+    {
+      string aast_list = wrapper_log_dir + DIRDIVSTRING + "aast.list";
+      string lockFile = getLockFileName(aast_list);
+      ofstream aastlist(aast_list.c_str(), ios::app);
       ofstream lock(lockFile.c_str());
 
       file_lock f_lock(lockFile.c_str());
 
-      if (acsilist.is_open()) {
+      if (aastlist.is_open()) {
         //sets an exclusive lock on the file (no other processes can read or write it)
         scoped_lock<file_lock> e_lock(f_lock);
 
-        acsilist << indepFullpath(output+".acsi") << endl;
-        acsilist.flush();
-        acsilist.close();
+        aastlist << indepFullpath(aastFileName) << endl;
+        aastlist.flush();
+        aastlist.close();
       }
       lock.close();
 
-      systemCall(DEL_COMMAND " " CL_PAR_PLUS + inputfile_list + CL_PAR_PLUS);
+      pathDeleteFile(inputfile_list);
     }
 
     return true;
   }
 
-  std::string AbstractArchive::objectNameToCsiName( const std::string& objectName ) const
+  std::string AbstractArchive::objectNameToAstName( const std::string& objectName ) const
   {
     string tmp_input = objectName;
     replaceQuoteForQuoteWithBackslash(tmp_input);
     insertDir(tmp_input, false);
     if (isArchiveFile(tmp_input)) {
-      return  tmp_input+".acsi" ;
+      return  tmp_input + ".aast" ;
     }
-    return  tmp_input+".csi" ;
+    return  tmp_input + ".ast" ;
   }
 
 }

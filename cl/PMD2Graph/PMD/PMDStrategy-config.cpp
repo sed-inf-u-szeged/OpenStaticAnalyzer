@@ -45,7 +45,7 @@ XERCES_CPP_NAMESPACE_USE
 void PMDStrategy::makeConfig(File_Names& file_names, string& rul, string& rulConfig, std::string& configFile)
 {
   std::string iniFileName = ((common::pathFindFileName(rul) == rul) ? "." + string(DIRDIVSTRING) : "") + rul;
-  rul::RulHandler* xRulHandler = new rul::RulHandler(iniFileName, rulConfig, "eng", "ISO-8859-1");
+  rul::RulHandler* xRulHandler = new rul::RulHandler(iniFileName, rulConfig, "eng");
 
   map<string, string> ruleset2xmlfile;
   map<string, set<string> > rulesets;
@@ -55,7 +55,7 @@ void PMDStrategy::makeConfig(File_Names& file_names, string& rul, string& rulCon
     if (doc && doc->getDocumentElement()) {
       DOMElement* root = doc->getDocumentElement();
       string groupname = pmd2InternalGroupName(X(root->getAttribute(X("name"))));
-      string xmlfile = "rulesets/java/" + common::pathFindFileName(*it);
+      string xmlfile = "category/java/" + common::pathFindFileName(*it);
       ruleset2xmlfile[groupname] = xmlfile;
     }
   }
@@ -65,13 +65,13 @@ void PMDStrategy::makeConfig(File_Names& file_names, string& rul, string& rulCon
   xRulHandler->getGroupIdList(groupIds);
   for(it = groupIds.begin(); it != groupIds.end(); it++)
   {
-    if (getIsNeeded(it->c_str(), *xRulHandler)) {
+    if (xRulHandler->getIsEnabled(*it)) {
       set<string> excludes;
       set<string> groupMembers;
       xRulHandler->getGroupMembers(*it, groupMembers);
       for(it2 = groupMembers.begin(); it2 != groupMembers.end(); it2++)
       {
-        if(!getIsNeeded(*it2, *xRulHandler)) {
+        if (!xRulHandler->getIsEnabled(*it2)) {
           string name = xRulHandler->getDisplayName(*it2);
           name.erase( std::remove_if( name.begin(), name.end(), ::isspace ), name.end() );
           excludes.insert(name);

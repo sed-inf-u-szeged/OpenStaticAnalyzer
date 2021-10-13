@@ -32,12 +32,12 @@ namespace columbus { namespace java { namespace asg {
   /**
   * \brief The API version of the schema.
   */
-  const std::string APIVersion = "2.0.40";
+  const std::string APIVersion = "3.0.12";
 
   /**
   * \brief The binary version of the schema.
   */
-  const std::string BinaryVersion = "2.0.40";
+  const std::string BinaryVersion = "3.0.12";
 
   /**
   * \brief The name of the root package.

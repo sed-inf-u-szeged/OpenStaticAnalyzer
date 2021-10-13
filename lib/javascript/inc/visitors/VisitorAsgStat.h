@@ -711,6 +711,13 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitCallExpression_HasArguments(const expression::CallExpression& begin, const base::Positioned& end);
 
       /**
+      * \brief Edge visitor for calls edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end);
+
+      /**
       * \brief Edge  visitor for hasAlternate edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -795,11 +802,18 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitNewExpression_HasArguments(const expression::NewExpression& begin, const base::Positioned& end);
 
       /**
+      * \brief Edge visitor for calls edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitNewExpression_Calls(const expression::NewExpression& begin, const statement::Function& end);
+
+      /**
       * \brief Edge  visitor for hasProperties edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitObjectExpression_HasProperties(const expression::ObjectExpression& begin, const expression::Property& end);
+      virtual void visitObjectExpression_HasProperties(const expression::ObjectExpression& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasValue edge which is called when the subtree of this edge is started.
@@ -1051,7 +1065,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitObjectPattern_HasProperties(const statement::ObjectPattern& begin, const expression::Property& end);
+      virtual void visitObjectPattern_HasProperties(const statement::ObjectPattern& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasArgument edge which is called when the subtree of this edge is started.
@@ -1222,7 +1236,7 @@ namespace columbus { namespace javascript { namespace asg {
       unsigned int nodeStatParent[86];
 
       /** \internal \brief Contains statistics about edges. */
-      unsigned int edgeStat[93];
+      unsigned int edgeStat[95];
 
       friend class Factory;
 

@@ -37,6 +37,7 @@ namespace statement {
     Named(_id, _factory),
     m_kind(pmkNormal),
     m_hasDefaultValue(0),
+    m_hasAnnotation(0),
     m_refersTo(0)
   {
   }
@@ -46,6 +47,7 @@ namespace statement {
 
   void Parameter::prepareDelete(bool tryOnVirtualParent){
     removeDefaultValue();
+    removeAnnotation();
     removeRefersTo();
     base::Named::prepareDelete(false);
   }
@@ -72,6 +74,16 @@ namespace statement {
     return _node;
   }
 
+  expression::Expression* Parameter::getAnnotation() const {
+    expression::Expression *_node = NULL;
+    if (m_hasAnnotation != 0)
+      _node = dynamic_cast<expression::Expression*>(factory->getPointer(m_hasAnnotation));
+    if ( (_node == NULL) || factory->getIsFiltered(_node))
+      return NULL;
+
+    return _node;
+  }
+
   module::Object* Parameter::getRefersTo() const {
     module::Object *_node = NULL;
     if (m_refersTo != 0)
@@ -86,6 +98,9 @@ namespace statement {
     switch (edgeKind) {
       case edkParameter_HasDefaultValue:
         setDefaultValue(edgeEnd);
+        return true;
+      case edkParameter_HasAnnotation:
+        setAnnotation(edgeEnd);
         return true;
       case edkParameter_RefersTo:
         setRefersTo(edgeEnd);
@@ -103,6 +118,9 @@ namespace statement {
     switch (edgeKind) {
       case edkParameter_HasDefaultValue:
         removeDefaultValue();
+        return true;
+      case edkParameter_HasAnnotation:
+        removeAnnotation();
         return true;
       case edkParameter_RefersTo:
         removeRefersTo();
@@ -160,6 +178,52 @@ namespace statement {
           factory->reverseEdges->removeEdge(m_hasDefaultValue, m_id, edkParameter_HasDefaultValue);
       }
       m_hasDefaultValue = 0;
+  }
+
+  void Parameter::setAnnotation(NodeId _id) {
+    expression::Expression *_node = NULL;
+    if (_id) {
+      if (!factory->getExist(_id))
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+      _node = dynamic_cast<expression::Expression*> (factory->getPointer(_id));
+      if ( _node == NULL) {
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      }
+      if (&(_node->getFactory()) != this->factory)
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+
+      if (m_hasAnnotation) {
+        removeParentEdge(m_hasAnnotation);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_hasAnnotation, m_id, edkParameter_HasAnnotation);
+      }
+      m_hasAnnotation = _node->getId();
+      if (m_hasAnnotation != 0)
+        setParentEdge(factory->getPointer(m_hasAnnotation), edkParameter_HasAnnotation);
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->insertEdge(m_hasAnnotation, this->getId(), edkParameter_HasAnnotation);
+    } else {
+      if (m_hasAnnotation) {
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      }
+    }
+  }
+
+  void Parameter::setAnnotation(expression::Expression *_node) {
+    if (_node == NULL)
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+
+    setAnnotation(_node->getId());
+  }
+
+  void Parameter::removeAnnotation() {
+      if (m_hasAnnotation) {
+        removeParentEdge(m_hasAnnotation);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_hasAnnotation, m_id, edkParameter_HasAnnotation);
+      }
+      m_hasAnnotation = 0;
   }
 
   void Parameter::setRefersTo(NodeId _id) {
@@ -268,6 +332,7 @@ namespace statement {
     binIo.writeUByte1(m_kind);
 
     binIo.writeUInt4(m_hasDefaultValue);
+    binIo.writeUInt4(m_hasAnnotation);
     binIo.writeUInt4(m_refersTo);
 
   }
@@ -280,6 +345,10 @@ namespace statement {
     m_hasDefaultValue =  binIo.readUInt4();
     if (m_hasDefaultValue != 0)
       setParentEdge(factory->getPointer(m_hasDefaultValue),edkParameter_HasDefaultValue);
+
+    m_hasAnnotation =  binIo.readUInt4();
+    if (m_hasAnnotation != 0)
+      setParentEdge(factory->getPointer(m_hasAnnotation),edkParameter_HasAnnotation);
 
     m_refersTo =  binIo.readUInt4();
 

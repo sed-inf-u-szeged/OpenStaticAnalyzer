@@ -22,30 +22,27 @@
 #define _JAVASCRIPT_SystemWrapper_H_
 
 #include "javascript/inc/javascript.h"
-#include <node.h>
-#include <node_object_wrap.h>
+#include <node_api.h>
+#include "BaseWrapper.h"
 #include "../Factory.h"
-
-using namespace v8;
 
 namespace columbus { namespace javascript { namespace asg { namespace addon {
   class Factory;
 
-  class SystemWrapper : public node::ObjectWrap {
+  class SystemWrapper : BaseWrapper{
     public:
-      columbus::javascript::asg::base::System* System;
-      static void Init(v8::Handle<v8::Object> exports);
-      SystemWrapper(const SystemWrapper&);
-      SystemWrapper(Factory* fact);
-      virtual ~SystemWrapper();
-      static void NewInstance(const v8::FunctionCallbackInfo<v8::Value>& args);
-      void wrap(const v8::FunctionCallbackInfo<v8::Value>& args){ this->Wrap(args.Holder()); }
-      static v8::Persistent<v8::Function> constructor;
+      static napi_value Init(napi_env env, napi_value& exports);
+      static void Destructor(napi_env env, void* nativeObject, void* finalize_hint);
+      static napi_status NewInstance(napi_env env, base::System* arg, napi_value* instance);
     private:
-      static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-
-      static void addProgramsProgram(const v8::FunctionCallbackInfo<v8::Value>& args);
-}; //end of SystemWrapper
+      explicit SystemWrapper(); // Constructor
+      ~SystemWrapper();
+      static napi_ref constructor;
+      static napi_value New(napi_env env, napi_callback_info info);
+      napi_env env_;
+      napi_ref wrapper_;
+      static napi_value addPrograms(napi_env env, napi_callback_info info);
+  }; //end of SystemWrapper
 
 }}}}//end of namespaces
 #endif

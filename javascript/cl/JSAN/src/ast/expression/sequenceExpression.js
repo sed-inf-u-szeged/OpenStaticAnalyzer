@@ -27,7 +27,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var sequenceExpression = factory.createSequenceExpressionWrapper(factory);
+        var sequenceExpression = factory.createSequenceExpressionWrapper();
         globals.setPositionInfo(node, sequenceExpression);
         return sequenceExpression;
     } else {
@@ -36,15 +36,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.expressions.length; i++) {
                 if (node.expressions[i] != null) {
                     var expressionsWrapper = globals.getWrapperOfNode(node.expressions[i]);
-                    if (node.expressions[i].type !== "Literal") {
-                        var expressionsWrapperFunctionString = "addExpressions" + node.expressions[i].type;
-                    } else {
-                        var expressionsWrapperFunctionString = "addExpressions" + globals.getLiteralType(node.expressions[i]) + node.expressions[i].type;
-                    }
                     try {
-                        sequenceExpressionWrapper[expressionsWrapperFunctionString](expressionsWrapper);
+                        sequenceExpressionWrapper.addExpressions(expressionsWrapper);
                     } catch (e) {
-                        console.error("SEQUENCEEXPRESSION - Function not exist: sequenceExpressionWrapper." + expressionsWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("SEQUENCEEXPRESSION - Could not add expression! Reason of the error: " + e + "\n");
                     }
                 }
             }

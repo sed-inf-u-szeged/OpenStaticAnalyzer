@@ -81,6 +81,7 @@ namespace columbus { namespace graphsupport {
 
 
   typedef set<string> StringSet;
+  typedef map<string, string> StringMap;
   typedef vector<string> StringVector;
   typedef map<string, StringSet> StringStringSetMap;
   typedef map<string, StringVector> StringStringVectorMap;
@@ -91,9 +92,14 @@ namespace columbus { namespace graphsupport {
   }
 
 
-  static void writeMetricsHeader(const StringVector& metrics, io::CsvIO& csvHeader) {
-    for (StringVector::const_iterator metricsIterator = metrics.begin(); metricsIterator != metrics.end(); ++metricsIterator) {
-      csvHeader.writeColumn(*metricsIterator);
+  static void writeMetricsHeader(const StringVector& metrics, const StringMap& idMap, io::CsvIO& csvHeader) {
+    for (StringVector::const_iterator metricsIterator = metrics.begin(); metricsIterator != metrics.end(); ++metricsIterator)
+    {
+      const auto displayNameIt = idMap.find(*metricsIterator);
+      if (displayNameIt != idMap.end())
+        csvHeader.writeColumn(displayNameIt->second);
+      else
+        csvHeader.writeColumn(*metricsIterator);
     }
   }
 
@@ -196,6 +202,7 @@ namespace columbus { namespace graphsupport {
     StringSet warningMetricsWithoutCalculatedFor;
     StringStringStringSetMap orderMap; // tool = > group => metrics set    
     StringSet warningMetricGroupsWithCollectedCalculatedFor;  // These are those warning groups which calculatedFor properties are collected from their group members
+    StringMap groupIDDisplayNameMap; // group ID => display name
     
     Node::NodeIterator allNodes = graph.findNodes(graphconstants::NTYPE_RUL_METRIC);
     while (allNodes.hasNext()) {
@@ -210,6 +217,10 @@ namespace columbus { namespace graphsupport {
             Edge edge = groupMembersIt.next();
             grouppedMetrics.insert(edge.getToNode().getUID());
           }
+
+          auto displayNameIt = node.findAttributeByName(graphconstants::ATTR_RUL_DISPLAYNAME);
+          if (displayNameIt.hasNext())
+            groupIDDisplayNameMap[node.getUID()] = displayNameIt.next().getStringValue();
         } 
 
         // store the group state and the tool for reordering
@@ -349,6 +360,7 @@ namespace columbus { namespace graphsupport {
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ENUM].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_INTERFACE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_STRUCTURE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
+      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_DELEGATE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_METHOD].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ATTRIBUTE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_COMPONENT].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
@@ -364,6 +376,7 @@ namespace columbus { namespace graphsupport {
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FUNCTION].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ATTRIBUTE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_COMPONENT].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
+      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_PACKAGE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
 
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FILE];
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FOLDER];
@@ -405,6 +418,7 @@ namespace columbus { namespace graphsupport {
     for (StringStringVectorMap::iterator nodeTypeIterator = reorderedMetricsMap.begin(); nodeTypeIterator != reorderedMetricsMap.end(); ++nodeTypeIterator) {
       if (nodeTypeIterator->first == graphconstants::NTYPE_LIM_CLASS ||
         nodeTypeIterator->first == graphconstants::NTYPE_LIM_STRUCTURE ||
+        nodeTypeIterator->first == graphconstants::NTYPE_LIM_DELEGATE ||
         nodeTypeIterator->first == graphconstants::NTYPE_LIM_UNION ||
         nodeTypeIterator->first == graphconstants::NTYPE_LIM_ENUM ||
         nodeTypeIterator->first == graphconstants::NTYPE_LIM_INTERFACE ||
@@ -436,7 +450,7 @@ namespace columbus { namespace graphsupport {
         csvHeader.writeColumn(graphconstants::ATTR_ENDLINE);
         csvHeader.writeColumn(graphconstants::ATTR_ENDCOLUMN);
        
-        writeMetricsHeader(nodeTypeIterator->second, csvHeader);
+        writeMetricsHeader(nodeTypeIterator->second, groupIDDisplayNameMap, csvHeader);
         csvHeader.writeNewLine();
         csvHeader.close();
 
@@ -446,7 +460,7 @@ namespace columbus { namespace graphsupport {
         csvHeader.writeColumn(IDColumn);
         csvHeader.writeColumn(graphconstants::ATTR_NAME);
         csvHeader.writeColumn(graphconstants::NTYPE_LIM_COMPONENT);
-        writeMetricsHeader(nodeTypeIterator->second, csvHeader);
+        writeMetricsHeader(nodeTypeIterator->second, groupIDDisplayNameMap, csvHeader);
         csvHeader.writeNewLine();
         csvHeader.close();
 
@@ -464,7 +478,7 @@ namespace columbus { namespace graphsupport {
         csvHeader.writeColumn(graphconstants::ATTR_ENDLINE);
         csvHeader.writeColumn(graphconstants::ATTR_ENDCOLUMN);
 
-        writeMetricsHeader(nodeTypeIterator->second, csvHeader);
+        writeMetricsHeader(nodeTypeIterator->second, groupIDDisplayNameMap, csvHeader);
         csvHeader.writeNewLine();
         csvHeader.close();
 
@@ -474,7 +488,7 @@ namespace columbus { namespace graphsupport {
         csvHeader.writeColumn(IDColumn);
         csvHeader.writeColumn(graphconstants::ATTR_NAME);
         csvHeader.writeColumn(graphconstants::ATTR_LONGNAME);
-        writeMetricsHeader(nodeTypeIterator->second, csvHeader);
+        writeMetricsHeader(nodeTypeIterator->second, groupIDDisplayNameMap, csvHeader);
         csvHeader.writeNewLine();
         csvHeader.close();
 
@@ -489,7 +503,7 @@ namespace columbus { namespace graphsupport {
         csvHeader.writeColumn(graphconstants::ATTR_LONGNAME);
         csvHeader.writeColumn(ParentColumn);
         csvHeader.writeColumn(graphconstants::NTYPE_LIM_COMPONENT);
-        writeMetricsHeader(nodeTypeIterator->second, csvHeader);
+        writeMetricsHeader(nodeTypeIterator->second, groupIDDisplayNameMap, csvHeader);
         csvHeader.writeNewLine();
         csvHeader.close();
       } else if (nodeTypeIterator->first == graphconstants::NTYPE_LIM_FILE ||
@@ -501,7 +515,7 @@ namespace columbus { namespace graphsupport {
         csvHeader.writeColumn(graphconstants::ATTR_NAME);
         csvHeader.writeColumn(graphconstants::ATTR_LONGNAME);
         csvHeader.writeColumn(ParentColumn);
-        writeMetricsHeader(nodeTypeIterator->second, csvHeader);
+        writeMetricsHeader(nodeTypeIterator->second, groupIDDisplayNameMap, csvHeader);
         csvHeader.writeNewLine();
         csvHeader.close();
       }
@@ -514,6 +528,7 @@ namespace columbus { namespace graphsupport {
       string nodeType = node.getType().getType();
       if (nodeType == graphconstants::NTYPE_LIM_CLASS ||
         nodeType == graphconstants::NTYPE_LIM_STRUCTURE ||
+        nodeType == graphconstants::NTYPE_LIM_DELEGATE ||
         nodeType == graphconstants::NTYPE_LIM_UNION ||
         nodeType == graphconstants::NTYPE_LIM_ENUM ||
         nodeType == graphconstants::NTYPE_LIM_INTERFACE ||

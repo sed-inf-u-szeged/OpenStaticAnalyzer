@@ -27,7 +27,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var methodDefinition = factory.createMethodDefinitionWrapper(factory);
+        var methodDefinition = factory.createMethodDefinitionWrapper();
         globals.setPositionInfo(node, methodDefinition);
         methodDefinition.setKind(conversions.convertMethodDefinitionKind(node.kind));
         methodDefinition.setComputed(node.computed);
@@ -38,29 +38,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.key != null) {
             var keyWrapper = globals.getWrapperOfNode(node.key);
-            if (node.key.type !== "Literal") {
-                var keyWrapperFunctionString = "setKey" + node.key.type;
-            } else {
-                var keyWrapperFunctionString = "setKey" + globals.getLiteralType(node.key) + node.key.type;
-            }
             try {
-                methodDefinitionWrapper[keyWrapperFunctionString](keyWrapper);
+                methodDefinitionWrapper.setKey(keyWrapper);
             } catch (e) {
-                console.error("METHODDEFINITION - Function not exist: methodDefinitionWrapper." + keyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("METHODDEFINITION - Could not set key! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.value != null) {
             var valueWrapper = globals.getWrapperOfNode(node.value);
-            if (node.value.type !== "Literal") {
-                var valueWrapperFunctionString = "setValue" + node.value.type;
-            } else {
-                var valueWrapperFunctionString = "setValue" + globals.getLiteralType(node.value) + node.value.type;
-            }
             try {
-                methodDefinitionWrapper[valueWrapperFunctionString](valueWrapper);
+                methodDefinitionWrapper.setValue(valueWrapper);
             } catch (e) {
-                console.error("METHODDEFINITION - Function not exist: methodDefinitionWrapper." + valueWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("METHODDEFINITION - Could not set value! Reason of the error: " + e + "\n");
             }
         }
 

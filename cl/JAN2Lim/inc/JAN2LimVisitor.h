@@ -98,6 +98,8 @@ namespace columbus { namespace JAN2Lim
     virtual void visitEnd ( const java::asg::struc::TypeParameter&, bool );
     virtual void visit    ( const java::asg::struc::Parameter&, bool );
     virtual void visitEnd ( const java::asg::struc::Parameter&, bool );
+    virtual void visit    ( const java::asg::expr::Lambda&, bool );
+    virtual void visitEnd ( const java::asg::expr::Lambda&, bool );
 
     // other visitors
     virtual void visit    ( const java::asg::base::Commentable&, bool );
@@ -105,6 +107,7 @@ namespace columbus { namespace JAN2Lim
     virtual void visit    ( const java::asg::expr::MethodInvocation&, bool );
     virtual void visit    ( const java::asg::expr::Identifier&, bool );
     virtual void visit    ( const java::asg::expr::NewClass&, bool );
+    virtual void visit    ( const java::asg::expr::MemberReference&, bool );
     virtual void visit    ( const java::asg::statm::Throw&, bool );
     virtual void visit    ( const java::asg::struc::InstanceInitializerBlock&, bool );
     virtual void visitEnd ( const java::asg::struc::InstanceInitializerBlock&, bool );
@@ -278,11 +281,11 @@ namespace columbus { namespace JAN2Lim
 
     template<class L, class J> L* buildDispatch( const java::asg::base::Base& );                    ///< Shared build and fill logic
     bool hasPosition( const java::asg::base::Base& javaNode );                                      ///< For correct linking
-    void fillMemberData( lim::asg::logical::Member&, const java::asg::struc::Member& );             ///< Fills Member-related data
-    void fillScopeData( lim::asg::logical::Scope&, const java::asg::struc::Member& );               ///< Fills Scope-related data
+    void fillMemberData( lim::asg::logical::Member&, const java::asg::base::Base& );                ///< Fills Member-related data
+    void fillScopeData( lim::asg::logical::Scope&, const java::asg::base::Base& );                  ///< Fills Scope-related data
     void fillData( lim::asg::logical::Package&, const java::asg::struc::Package& );                 ///< Fills Package-related data
     void fillData( lim::asg::logical::Class&, const java::asg::struc::TypeDeclaration& );           ///< Fills Class-related data
-    void fillData( lim::asg::logical::Method&, const java::asg::struc::Declaration& );              ///< Fills Method-related data
+    void fillData( lim::asg::logical::Method&, const java::asg::base::Base& );                      ///< Fills Method-related data
     void fillData( lim::asg::logical::Attribute&, const java::asg::struc::VariableDeclaration& );   ///< Fills Attribute-related data
     void fillData( lim::asg::logical::GenericParameter&, const java::asg::struc::TypeParameter& );  ///< Fills GenericParameter-related data
     void fillData( lim::asg::logical::Parameter&, const java::asg::struc::Parameter& );             ///< Fills Parameter-related data
@@ -369,7 +372,6 @@ namespace columbus { namespace JAN2Lim
 
   private:
     VisitStat& classStats;
-    bool scc;
 
     void oldVersionLinking( const java::asg::base::Base& node );
     void addLogicalLineOfComponent( Key pathKey, unsigned line , NodeId);

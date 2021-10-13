@@ -110,12 +110,12 @@ namespace base {
 
     private:
       /**
-      * \brief This function always throws a JavaScriptException due to copying is not allowed!
+      * \brief This function always throws a JavascriptException due to copying is not allowed!
       */
       Base & operator=(const Base&);
 
       /**
-      * \brief This function always throws a JavaScriptException due to copying is not allowed!
+      * \brief This function always throws a JavascriptException due to copying is not allowed!
       */
       Base(const Base&);
 

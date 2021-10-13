@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var thisExpression = factory.createThisExpressionWrapper(factory);
+        var thisExpression = factory.createThisExpressionWrapper();
         globals.setPositionInfo(node, thisExpression);
         return thisExpression;
     } else {
@@ -34,15 +34,10 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.body != null) {
             var bodyWrapper = globals.getWrapperOfNode(node.body);
-            if (node.body.type !== "Literal") {
-                var bodyWrapperFunctionString = "setBody" + node.body.type;
-            } else {
-                var bodyWrapperFunctionString = "setBody" + globals.getLiteralType(node.body) + node.body.type;
-            }
             try {
-                thisExpressionWrapper[bodyWrapperFunctionString](bodyWrapper);
+                thisExpressionWrapper.setBody(bodyWrapper);
             } catch (e) {
-                console.error("THISEXPRESSION - Function not exist: thisExpressionWrapper." + bodyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("THISEXPRESSION - Could not set body! Reason of the error: " + e + "\n");
             }
         }
 

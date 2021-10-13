@@ -1,349 +1,297 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
 #include "../inc/IdentifierWrapper.h"
-#include <sstream>  
 #include <string>   
-#include <iomanip>  
-#include <algorithm>
-#include <cctype>   
-
-#include <nan.h>   
-
-using namespace v8;
-
 namespace columbus { namespace javascript { namespace asg { namespace addon {
 
-Persistent<Function> IdentifierWrapper::constructor;
+napi_ref IdentifierWrapper::constructor;
 
-void IdentifierWrapper::Init(Handle<v8::Object> exports) {
-  Isolate* isolate = Isolate::GetCurrent();                                
-                                                                           
-  // Prepare constructor template                                          
-  Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);       
-  tpl->SetClassName(v8::String::NewFromUtf8(isolate, "IdentifierWrapper"));             
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);                       
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setRefersToIdentifier", setRefersToIdentifier);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setRefersToMemberExpression", setRefersToMemberExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setRefersToArrayPattern", setRefersToArrayPattern);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setRefersToAssignmentPattern", setRefersToAssignmentPattern);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setRefersToObjectPattern", setRefersToObjectPattern);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setRefersToRestElement", setRefersToRestElement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setRefersToVariableDeclarator", setRefersToVariableDeclarator);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setRefersToFunction", setRefersToFunction);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setRefersToFunctionDeclaration", setRefersToFunctionDeclaration);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setRefersToArrowFunctionExpression", setRefersToArrowFunctionExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setRefersToFunctionExpression", setRefersToFunctionExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addCommentsComment", addCommentsComment);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setPath", setPath);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setLine", setLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setCol", setCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setEndLine", setEndLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setEndCol", setEndCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideLine", setWideLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideCol", setWideCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideEndLine", setWideEndLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideEndCol", setWideEndCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setName", setName);
-                                                                           
-  constructor.Reset(isolate, tpl->GetFunction());                          
-  exports->Set(v8::String::NewFromUtf8(isolate, "IdentifierWrapper"),                   
-               tpl->GetFunction());                                        
-}                                                                          
+IdentifierWrapper::IdentifierWrapper(): env_(nullptr), wrapper_(nullptr) {}
 
+IdentifierWrapper::~IdentifierWrapper(){ napi_delete_reference(env_, wrapper_); }
 
-void IdentifierWrapper::New(const FunctionCallbackInfo<Value>& args) {                             
-  Isolate* isolate = Isolate::GetCurrent();                                         
-  HandleScope scope(isolate);                                                       
-                                                                                    
-  if (args.IsConstructCall()) {                                                     
-    // Invoked as constructor: `new IdentifierWrapper(...)`                                        
-    Factory* fact = Nan::ObjectWrap::Unwrap<Factory>(args[0]->ToObject()); 
-    IdentifierWrapper* obj = new IdentifierWrapper(fact);                                                         
-    obj->Wrap(args.This());                                                         
-    args.GetReturnValue().Set(args.This());                                         
-  } else {                                                                          
-    // Invoked as plain function `IdentifierWrapper(...)`, turn into construct call.               
-    const int argc = 1;                                                             
-    Handle<v8::Value> argv[argc] = { args[0] };                                         
-    Local<v8::Function> cons = Local<v8::Function>::New(isolate, constructor);              
-    args.GetReturnValue().Set(Nan::NewInstance(cons, argc, argv).ToLocalChecked()); 
-  }                                                                                 
-}                                                                                   
-
-
-IdentifierWrapper::IdentifierWrapper(Factory* fact)                        
-{                                                   
-  Identifier = fact->getFactory()->createIdentifierNode();          
-}                                                   
-
-IdentifierWrapper::~IdentifierWrapper()
-{        
-}        
-
-void IdentifierWrapper::NewInstance(const FunctionCallbackInfo<Value>& args) {              
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  const unsigned argc = 1;                                                   
-  Handle<Value> argv[argc] = { args[0] };                                    
-  Local<v8::Function> cons = Local<v8::Function>::New(isolate, constructor);         
-  Local<v8::Object> instance = Nan::NewInstance(cons, argc, argv).ToLocalChecked();  
-  args.GetReturnValue().Set(instance);                                       
-}                                                                            
-
-void IdentifierWrapper::setRefersToIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  IdentifierWrapper* _Identifier1 = ObjectWrap::Unwrap<IdentifierWrapper>(args[0]->ToObject());
-  IdentifierWrapper* _Identifier2 = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-
-  _Identifier2->Identifier->setRefersTo(_Identifier1->Identifier);
+void IdentifierWrapper::Destructor(napi_env env, void* nativeObject, void* ){
+  IdentifierWrapper* obj = reinterpret_cast<IdentifierWrapper*>(nativeObject);
+  //delete obj->_nativeObj;
+  obj->~IdentifierWrapper();
 }
-void IdentifierWrapper::setRefersToMemberExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  MemberExpressionWrapper* _MemberExpression1 = ObjectWrap::Unwrap<MemberExpressionWrapper>(args[0]->ToObject());
-  IdentifierWrapper* _Identifier2 = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
+napi_value IdentifierWrapper::Init(napi_env env, napi_value& exports) {
+  napi_status status;
+  napi_property_descriptor props [] = {
+  DECLARE_NAPI_METHOD( "setRefersTo", setRefersTo),
+  DECLARE_NAPI_METHOD( "addComments", addComments),
+    DECLARE_NAPI_METHOD("setPath", setPath),
+    DECLARE_NAPI_METHOD("setPosition", setPosition),
+    DECLARE_NAPI_METHOD("setName", setName),
+  };
 
-  _Identifier2->Identifier->setRefersTo(_MemberExpression1->MemberExpression);
+  napi_value cons;
+  status = napi_define_class(env, "IdentifierWrapper", NAPI_AUTO_LENGTH, New, nullptr, sizeof(props) / sizeof(*props), props, &cons );
+  assert(status == napi_ok);
+
+  status = napi_create_reference(env, cons, 1, &constructor);
+  assert(status == napi_ok);
+
+  return exports;
 }
-void IdentifierWrapper::setRefersToArrayPattern(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ArrayPatternWrapper* _ArrayPattern1 = ObjectWrap::Unwrap<ArrayPatternWrapper>(args[0]->ToObject());
-  IdentifierWrapper* _Identifier2 = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
+napi_value IdentifierWrapper::New(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
 
-  _Identifier2->Identifier->setRefersTo(_ArrayPattern1->ArrayPattern);
-}
-void IdentifierWrapper::setRefersToAssignmentPattern(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  AssignmentPatternWrapper* _AssignmentPattern1 = ObjectWrap::Unwrap<AssignmentPatternWrapper>(args[0]->ToObject());
-  IdentifierWrapper* _Identifier2 = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
+  status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
+  assert(status == napi_ok);
 
-  _Identifier2->Identifier->setRefersTo(_AssignmentPattern1->AssignmentPattern);
-}
-void IdentifierWrapper::setRefersToObjectPattern(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ObjectPatternWrapper* _ObjectPattern1 = ObjectWrap::Unwrap<ObjectPatternWrapper>(args[0]->ToObject());
-  IdentifierWrapper* _Identifier2 = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
+  IdentifierWrapper* obj = new IdentifierWrapper();
+  obj->env_ = env;
+  status = napi_wrap(env, jsthis, reinterpret_cast<void*>(obj), IdentifierWrapper::Destructor, nullptr, &obj->wrapper_);
+  assert(status == napi_ok);
 
-  _Identifier2->Identifier->setRefersTo(_ObjectPattern1->ObjectPattern);
-}
-void IdentifierWrapper::setRefersToRestElement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  RestElementWrapper* _RestElement1 = ObjectWrap::Unwrap<RestElementWrapper>(args[0]->ToObject());
-  IdentifierWrapper* _Identifier2 = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-
-  _Identifier2->Identifier->setRefersTo(_RestElement1->RestElement);
-}
-void IdentifierWrapper::setRefersToVariableDeclarator(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  VariableDeclaratorWrapper* _VariableDeclarator1 = ObjectWrap::Unwrap<VariableDeclaratorWrapper>(args[0]->ToObject());
-  IdentifierWrapper* _Identifier2 = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-
-  _Identifier2->Identifier->setRefersTo(_VariableDeclarator1->VariableDeclarator);
-}
-void IdentifierWrapper::setRefersToFunction(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  FunctionWrapper* _Function1 = ObjectWrap::Unwrap<FunctionWrapper>(args[0]->ToObject());
-  IdentifierWrapper* _Identifier2 = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-
-  _Identifier2->Identifier->setRefersTo(_Function1->Function);
-}
-void IdentifierWrapper::setRefersToFunctionDeclaration(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  FunctionDeclarationWrapper* _FunctionDeclaration1 = ObjectWrap::Unwrap<FunctionDeclarationWrapper>(args[0]->ToObject());
-  IdentifierWrapper* _Identifier2 = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-
-  _Identifier2->Identifier->setRefersTo(_FunctionDeclaration1->FunctionDeclaration);
-}
-void IdentifierWrapper::setRefersToArrowFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ArrowFunctionExpressionWrapper* _ArrowFunctionExpression1 = ObjectWrap::Unwrap<ArrowFunctionExpressionWrapper>(args[0]->ToObject());
-  IdentifierWrapper* _Identifier2 = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-
-  _Identifier2->Identifier->setRefersTo(_ArrowFunctionExpression1->ArrowFunctionExpression);
-}
-void IdentifierWrapper::setRefersToFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  FunctionExpressionWrapper* _FunctionExpression1 = ObjectWrap::Unwrap<FunctionExpressionWrapper>(args[0]->ToObject());
-  IdentifierWrapper* _Identifier2 = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-
-  _Identifier2->Identifier->setRefersTo(_FunctionExpression1->FunctionExpression);
-}
-void IdentifierWrapper::addCommentsComment(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  CommentWrapper* _Comment1 = ObjectWrap::Unwrap<CommentWrapper>(args[0]->ToObject());
-  IdentifierWrapper* _Identifier2 = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-
-  _Identifier2->Identifier->addComments(_Comment1->Comment);
-}
-void IdentifierWrapper::setPath(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);
-
-  IdentifierWrapper* _Identifier = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );
-  std::string param(*utfStr);
-  Range range = _Identifier->Identifier->getPosition();
-  range.setPath( param );
-  _Identifier->Identifier->setPosition( range );
+  return jsthis;
 }
 
-void IdentifierWrapper::setLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  IdentifierWrapper* _Identifier = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _Identifier->Identifier->getPosition();
-  range.setLine( ui );
-  _Identifier->Identifier->setPosition( range );
+
+napi_status IdentifierWrapper::NewInstance(napi_env env, expression::Identifier* arg, napi_value* instance) {
+
+  napi_status status;
+  napi_value cons;
+
+  status = napi_get_reference_value(env, constructor, &cons);
+  if(status != napi_ok) return status;
+
+  status = napi_new_instance(env, cons, 0, nullptr, instance);
+  if(status != napi_ok) return status;
+
+  IdentifierWrapper* obj;
+  status = napi_unwrap(env, *instance, reinterpret_cast<void**>(&obj));
+  obj->_nativeObj = arg;
+  return napi_ok;
 }
 
-void IdentifierWrapper::setCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  IdentifierWrapper* _Identifier = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _Identifier->Identifier->getPosition();
-  range.setCol( ui );
-  _Identifier->Identifier->setPosition( range );
+napi_value IdentifierWrapper::setRefersTo(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
+
+  IdentifierWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
+
+  columbus::javascript::asg::expression::Identifier* source = dynamic_cast<columbus::javascript::asg::expression::Identifier*>(obj->_nativeObj);
+  columbus::javascript::asg::base::Positioned* target = dynamic_cast<columbus::javascript::asg::base::Positioned*>(param->_nativeObj);
+
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast expression::Identifier" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast base::Positioned" );
+  }
+
+  source->setRefersTo(target);
+  return nullptr;
+}
+napi_value IdentifierWrapper::addComments(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
+
+  IdentifierWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
+
+  columbus::javascript::asg::expression::Identifier* source = dynamic_cast<columbus::javascript::asg::expression::Identifier*>(obj->_nativeObj);
+  columbus::javascript::asg::base::Comment* target = dynamic_cast<columbus::javascript::asg::base::Comment*>(param->_nativeObj);
+
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast expression::Identifier" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast base::Comment" );
+  }
+
+  source->addComments(target);
+  return nullptr;
+}
+napi_value IdentifierWrapper::setPath(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments");
+    return nullptr;
+  }
+
+  IdentifierWrapper* obj;
+  napi_valuetype valuetype;
+  status = napi_typeof(env, args[0], &valuetype);
+  assert(status == napi_ok);
+
+  if (valuetype != napi_string) {
+    napi_throw_type_error(env, nullptr, "Argument should be a string!");
+    return nullptr;
+  }
+
+  char buffer[1024];
+  size_t buffer_size = 1024, result_size = 0;
+  status = napi_get_value_string_utf8(env, args[0], buffer, buffer_size, &result_size);
+  assert(status == napi_ok);
+
+  std::string path(buffer);
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  Range range = dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->getPosition();
+  range.setPath( path );
+  dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->setPosition( range );
+  return nullptr;
 }
 
-void IdentifierWrapper::setEndLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  IdentifierWrapper* _Identifier = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _Identifier->Identifier->getPosition();
-  range.setEndLine( ui );
-  _Identifier->Identifier->setPosition( range );
+
+napi_value IdentifierWrapper::setPosition(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 8;
+  napi_value args[8];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1 && argc != 8) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments. Use a simple object with the positions or pass 8 parameters: line, col, endline, endcol and their wide equivalents!");
+    return nullptr;
+  }
+
+  IdentifierWrapper* obj;
+  napi_valuetype valuetype[8];
+  int32_t position[8];
+  bool hasProp[8];
+  if(argc == 1){
+    status = napi_typeof(env, args[0], &valuetype[0]);
+    assert(status == napi_ok);
+
+    if(valuetype[0] != napi_object){
+      napi_throw_type_error(env, nullptr, "Argument should be an object!");
+      return nullptr;
+    }
+
+    std::string props[] = {"line", "col", "endline", "endcol", "wideline", "widecol", "wideendline", "wideendcol",};
+
+    for(int i = 0; i < 8; ++i){
+      status = napi_has_named_property(env, args[0], props[i].c_str(), &hasProp[i]);
+      assert(status == napi_ok);
+      napi_value value;
+      if(hasProp[i]){
+        status = napi_get_named_property(env, args[0], props[i].c_str(), &value);
+        assert(status == napi_ok);
+        status = napi_get_value_int32(env, value, &position[i]);
+        assert(status == napi_ok);
+      }
+
+    }
+  }
+  else{
+    for(int i = 0; i < 8; ++i){
+      status = napi_typeof(env, args[i], &valuetype[i]);
+      assert(status == napi_ok);
+      if(valuetype[i] != napi_number){
+        napi_throw_type_error(env, nullptr, "Argument should be an integer!");
+        return nullptr;
+      }
+      status = napi_get_value_int32(env, args[i], &position[i]);
+      assert(status == napi_ok);
+    }
+    for(int i = 0; i < 8; ++i){
+      hasProp[i] = true;
+    }
+  }
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  Range range = dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->getPosition();
+
+  if(hasProp[0])
+    range.setLine( (int)position[0] );
+  if(hasProp[1])
+    range.setCol( (int)position[1] );
+  if(hasProp[2])
+    range.setEndLine( (int)position[2] );
+  if(hasProp[3])
+    range.setEndCol( (int)position[3] );
+  if(hasProp[4])
+    range.setWideLine( (int)position[4] );
+  if(hasProp[5])
+    range.setWideCol( (int)position[5] );
+  if(hasProp[6])
+    range.setWideEndLine( (int)position[6] );
+  if(hasProp[7])
+    range.setWideEndCol( (int)position[7] );
+  dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->setPosition( range );
+  return nullptr;
 }
 
-void IdentifierWrapper::setEndCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  IdentifierWrapper* _Identifier = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _Identifier->Identifier->getPosition();
-  range.setEndCol( ui );
-  _Identifier->Identifier->setPosition( range );
-}
 
-void IdentifierWrapper::setWideLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  IdentifierWrapper* _Identifier = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _Identifier->Identifier->getPosition();
-  range.setWideLine( ui );
-  _Identifier->Identifier->setPosition( range );
-}
+napi_value IdentifierWrapper::setName(napi_env env, napi_callback_info info){ 
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
 
-void IdentifierWrapper::setWideCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  IdentifierWrapper* _Identifier = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _Identifier->Identifier->getPosition();
-  range.setWideCol( ui );
-  _Identifier->Identifier->setPosition( range );
-}
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
 
-void IdentifierWrapper::setWideEndLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  IdentifierWrapper* _Identifier = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _Identifier->Identifier->getPosition();
-  range.setWideEndLine( ui );
-  _Identifier->Identifier->setPosition( range );
-}
+  IdentifierWrapper* obj;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
 
-void IdentifierWrapper::setWideEndCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  IdentifierWrapper* _Identifier = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _Identifier->Identifier->getPosition();
-  range.setWideEndCol( ui );
-  _Identifier->Identifier->setPosition( range );
-}
+  napi_valuetype paramtype;
+  status = napi_typeof(env, args[0], &paramtype);
+  assert(status == napi_ok);
 
-void IdentifierWrapper::setName(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  IdentifierWrapper* _Identifier = ObjectWrap::Unwrap<IdentifierWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  _Identifier->Identifier->setName( param );
+  if(paramtype != napi_string && paramtype != napi_null){
+    napi_throw_type_error(env, nullptr, "Argument should be a string!"); 
+    return nullptr;
+  }
+
+  if(paramtype == napi_null){
+    dynamic_cast<columbus::javascript::asg::base::Named*>(obj->_nativeObj)->setName( std::string("null") );
+  }
+  else{
+    char buffer[1024];
+    size_t buffer_size = 1024, result_size = 0;
+    status = napi_get_value_string_utf8(env, args[0], buffer, buffer_size, &result_size);
+    assert(status == napi_ok);
+
+    std::string param(buffer);
+    dynamic_cast<columbus::javascript::asg::base::Named*>(obj->_nativeObj)->setName( param );
+  }
+  return nullptr;
 }
 }}}} //end of namespaces

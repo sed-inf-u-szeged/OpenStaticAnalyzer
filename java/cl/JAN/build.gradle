@@ -5,15 +5,24 @@ jar.baseName = 'JAN'
 buildDir = file (buildDir.getPath() + "/$jar.baseName")
 jar.destinationDir = file(buildDir.getPath() + '/bin')
 dependencies {
-    compile project(JAVA)
-    compile project(LANGTOOLS)
-    compile project(COLUMBUSLOGGER)
-    compile project(REVISION)
+    compile project(':java')
+    compile project(':ColumbusLogger')
+    compile project(':revision')
+    compileOnly project('openjdk')
     compile files(EXT + 'jewelcli-0.8.5.jar', EXT + 'guessencoding-1.4.jar')
+}
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+            '-Xlint:all'
+        ]
+    }
 }
 
 task dist(type: Copy, dependsOn: 'jar') {
     from 'toolchain.ini'
+    from configurations.compileOnly
     into buildDir.getPath() + '/bin'
 }
 
@@ -27,5 +36,4 @@ jar {
     } {
         exclude 'logback.xml' // from java lib
     }
-
 }

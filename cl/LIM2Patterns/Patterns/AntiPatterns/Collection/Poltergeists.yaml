@@ -1,0 +1,13 @@
+#source: https://sourcemaking.com/antipatterns/poltergeists
+name : Poltergeists
+kind : ndkClass
+role : poltergeistsClass
+category : AntiPattern
+priority : Minor
+displayName : Functional Decomposition
+description : "Also Known As: Gypsy , Proliferation of Classes , and Big DoIt Controller Class<br>Poltergeists are classes with limited responsibilities and roles to play in the system; therefore, their effective life cycle is quite brief. Poltergeists clutter software designs, creating unnecessary abstractions; they are excessively complex, hard to understand, and hard to maintain."
+filters:
+  - classKind != clkInterface
+conditions:
+  #Stateless classes.
+  - NA == 0

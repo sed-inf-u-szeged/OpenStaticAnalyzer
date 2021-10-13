@@ -263,6 +263,7 @@ namespace columbus { namespace python { namespace asg {
       friend class expression::ExtSlice;
       friend class expression::Generator;
       friend class expression::GeneratorExpression;
+      friend class expression::JoinedStr;
       friend class expression::Lambda;
       friend class expression::List;
       friend class expression::ListComp;
@@ -275,9 +276,11 @@ namespace columbus { namespace python { namespace asg {
       friend class statement::FunctionDef;
       friend class statement::Global;
       friend class statement::ImportStatement;
+      friend class statement::Nonlocal;
       friend class statement::Suite;
       friend class statement::TargetList;
-      friend class statement::TryExcept;
+      friend class statement::Try;
+      friend class statement::With;
   }; // ListIterator
 
 

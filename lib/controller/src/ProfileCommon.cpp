@@ -175,7 +175,7 @@ namespace controller
       }
 
       string tool("-");
-      if (mi != row->second.size())
+      if ((mi != row->second.size()) && (mi < tableTools.size()))
         tool = tableTools[mi];
 
       // enable/disable rule
@@ -283,6 +283,135 @@ namespace controller
     }
     outFile.writeEndElement();
     outFile.close();
+  }
+
+  void baseUDMSetup(rul::RulHandler& rul, const string& metric, const string& config) {
+    rul.createConfiguration(metric, config);
+    rul.setConfig(config);
+    rul.createLanguage(metric, "eng");
+    rul.setIsEnabled(metric, true);
+    rul.setHasWarningText(metric, false);
+  }
+
+  bool profileProcessUDM(const ProfileHandler& profHand, const string& rulPath, const string& rulconfig) {
+
+    bool result = false;
+
+    if (profHand.getIsToolSettings("UDM") && profHand.getIsToolEnabled("UDM")) {
+
+      //
+      //  CREATING THE RUL FILE SETTINGS
+      //
+
+      rul::RulHandler rulH(rulconfig, "eng");
+      rulH.setToolDescription("ID", "UDM", "Default");
+      rulH.setConfigParent("cpp", "Default");
+      rulH.setConfigParent("csharp", "Default");
+      rulH.setConfigParent("java", "Default");
+      rulH.setConfigParent("javascript", "Default");
+      rulH.setConfigParent("python", "Default");
+
+      //
+      //  CREATING THE GROUP METRICS
+      //
+      
+      set<string> groups = profHand.getUDMGroupMembers(rulconfig);    // getting the used GROUPs
+      for (set<string>::const_iterator gro = groups.begin(); gro != groups.end(); ++gro) {
+        rulH.defineMetric(*gro);
+        baseUDMSetup(rulH, *gro, "Default");
+        rulH.setGroupType(*gro, "visual");
+        rulH.setIsVisible(*gro, true);
+        if (*gro == "UserDefinedMetrics"){   // extra setup for the UDM group 
+          rulH.setDisplayName(*gro, "User Defined Metrics");
+          rulH.setDescription(*gro, "Custom metrics defined by the user through the profile XML");
+          rulH.setHelpText(*gro, "Custom metrics defined by the user through the profile XML");
+        }
+        baseUDMSetup(rulH, *gro, rulconfig);
+      }
+
+      //
+      //  CREATING THE USER-DEFINED METRICS
+      //
+
+      list<string> ids = profHand.getUDMIDs();    //getting all the UDMs' ids from the .xml
+      result = !ids.empty();
+      list<string>::const_iterator itID = ids.begin();
+      for (; itID != ids.end(); ++itID) {
+        rulH.defineMetric(*itID);
+        bool currentConfigFound = false;
+        list<string> configs = profHand.getUDMConfigs(*itID);   //getting an exact UDM's configurations
+        for (list<string>::const_iterator itC = configs.begin(); itC != configs.end(); ++itC) {
+          
+          if (*itC == rulconfig) {
+            currentConfigFound = true;
+          }
+
+          //
+          // GETTING THE CONFIG'S ATTRIBUTES FROM THE XML
+          //
+
+          ProfileHandler::UDMConfig config(profHand.getUDMAttributes(*itID, *itC));
+
+          //
+          //  ADDING THE ATTRIBUTES TO THE RUL FILE
+          //
+
+          baseUDMSetup(rulH, *itID, *itC);
+
+          if (!config.description.empty()) {
+            rulH.setDescription(*itID, config.description);
+          }
+
+          if (!config.displayName.empty()) {
+            rulH.setDisplayName(*itID, config.displayName);
+          }
+
+          if (!config.formula.empty()) {
+            rulH.setSettingValue(*itID, "Formula", config.formula, false);
+          }
+
+          if (!config.type.empty()) {
+            rulH.setSettingValue(*itID, "Type", config.type, false);
+          }
+
+          if (!config.helptext.empty()) {
+            rulH.setHelpText(*itID, config.helptext);
+          }
+
+          if (!config.groupMember.empty()) {
+            rulH.addMetricGroupMembers(*itID, config.groupMember);
+          }
+          else {
+            // non-empty default value
+            rulH.addMetricGroupMembers(*itID, "UserDefinedMetrics");
+          }
+
+          if (!config.calculatedFor.empty()) {
+            rulH.setCalculatedForSet(*itID, config.calculatedFor);
+          }
+
+        }
+        rulH.setGroupType(*itID, "Default", "false");
+        rulH.setIsVisible(*itID, "Default", true);
+
+        // if the current config was not explicitly set in the profile, we generate a stub
+        if (!currentConfigFound) {
+          baseUDMSetup(rulH, *itID, rulconfig);
+        }
+      }
+      rulH.saveRul(rulPath);
+    }
+
+    return result;
+  }
+
+  bool profileProcessLIM2Patterns(const ProfileHandler & profile, const std::string& toolName, std::map<std::string, std::string>& parameters)
+  {
+      if (profile.getIsToolSettings(toolName) && profile.getIsToolEnabled(toolName)) {
+          parameters = profile.getLIM2PatternsAttributes(toolName);
+          return true;
+      }
+      return false;
   }
 
 } // namespace controller

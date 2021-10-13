@@ -431,10 +431,13 @@ const std::string toString(AnalysisTimeKind kind) {
 const std::string toString(ClassKind kind) {
   switch (kind) {
     case clkAnnotation: return "clkAnnotation";
+    case clkCategory: return "clkCategory";
     case clkClass: return "clkClass";
     case clkDelegate: return "clkDelegate";
     case clkEnum: return "clkEnum";
+    case clkExtension: return "clkExtension";
     case clkInterface: return "clkInterface";
+    case clkProtocol: return "clkProtocol";
     case clkStruct: return "clkStruct";
     case clkUnion: return "clkUnion";
     default: throw LimException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
@@ -596,6 +599,7 @@ const std::string toString(NodeKind kind) {
 
 const std::string toString(EdgeKind kind) {
   switch (kind) {
+    case edkComponent_CompilationUnit: return "edkComponent_CompilationUnit";
     case edkComponent_Contains: return "edkComponent_Contains";
     case edkComponent_HasFiles: return "edkComponent_HasFiles";
     case edkControlFlowBlock_Calls: return "edkControlFlowBlock_Calls";
@@ -604,6 +608,7 @@ const std::string toString(EdgeKind kind) {
     case edkAttribute_Calls: return "edkAttribute_Calls";
     case edkAttribute_HasType: return "edkAttribute_HasType";
     case edkAttributeAccess_Attribute: return "edkAttributeAccess_Attribute";
+    case edkClass_Extends: return "edkClass_Extends";
     case edkClass_GrantsFriendship: return "edkClass_GrantsFriendship";
     case edkClass_IsSubclass: return "edkClass_IsSubclass";
     case edkClassGeneric_HasGenericParameter: return "edkClassGeneric_HasGenericParameter";

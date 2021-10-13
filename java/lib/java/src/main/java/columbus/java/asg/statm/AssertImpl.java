@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class AssertImpl extends BaseImpl implements Assert {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(AssertImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

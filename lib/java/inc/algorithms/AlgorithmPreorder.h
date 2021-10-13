@@ -173,6 +173,12 @@ namespace columbus { namespace java { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const expr::AnnotatedTypeExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const expr::ArrayAccess& node , bool callVirtualBase = true);
 
       /**
@@ -275,6 +281,12 @@ namespace columbus { namespace java { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const expr::Lambda& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const expr::LongLiteral& node , bool callVirtualBase = true);
 
       /**
@@ -282,6 +294,12 @@ namespace columbus { namespace java { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const expr::MarkerAnnotation& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const expr::MemberReference& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -389,6 +407,12 @@ namespace columbus { namespace java { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const expr::TypeIntersectionExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const expr::TypeUnionExpression& node , bool callVirtualBase = true);
 
       /**
@@ -396,6 +420,36 @@ namespace columbus { namespace java { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const expr::WildcardExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const module::Exports& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const module::Opens& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const module::Provides& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const module::Requires& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const module::Uses& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -605,6 +659,18 @@ namespace columbus { namespace java { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const struc::Module& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const struc::ModuleDeclaration& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const struc::Package& node , bool callVirtualBase = true);
 
       /**
@@ -695,6 +761,12 @@ namespace columbus { namespace java { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const type::IntersectionType& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const type::LongType& node , bool callVirtualBase = true);
 
       /**
@@ -708,6 +780,12 @@ namespace columbus { namespace java { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const type::MethodType& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const type::ModuleType& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -857,6 +935,14 @@ namespace columbus { namespace java { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const expr::AnnotatedTypeExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const expr::Annotation& node , bool callVirtualBase = true);
 
       /**
@@ -985,6 +1071,14 @@ namespace columbus { namespace java { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const expr::FunctionalExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const expr::Identifier& node , bool callVirtualBase = true);
 
       /**
@@ -1017,6 +1111,14 @@ namespace columbus { namespace java { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const expr::Lambda& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const expr::Literal& node , bool callVirtualBase = true);
 
       /**
@@ -1034,6 +1136,14 @@ namespace columbus { namespace java { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const expr::MarkerAnnotation& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const expr::MemberReference& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -1090,6 +1200,14 @@ namespace columbus { namespace java { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const expr::ParenthesizedExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const expr::PolyExpression& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -1193,6 +1311,14 @@ namespace columbus { namespace java { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const expr::TypeIntersectionExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const expr::TypeUnionExpression& node , bool callVirtualBase = true);
 
       /**
@@ -1210,6 +1336,54 @@ namespace columbus { namespace java { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const expr::WildcardExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const module::Exports& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const module::ModuleDirective& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const module::Opens& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const module::Provides& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const module::Requires& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const module::Uses& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -1601,6 +1775,22 @@ namespace columbus { namespace java { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const struc::Module& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const struc::ModuleDeclaration& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const struc::NamedDeclaration& node , bool callVirtualBase = true);
 
       /**
@@ -1769,6 +1959,14 @@ namespace columbus { namespace java { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const type::IntersectionType& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const type::LongType& node , bool callVirtualBase = true);
 
       /**
@@ -1786,6 +1984,14 @@ namespace columbus { namespace java { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const type::MethodType& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const type::ModuleType& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -1956,7 +2162,7 @@ namespace columbus { namespace java { namespace asg {
 
       Factory* fact;
 
-      bool traversaldCrossEdges[105];
+      bool traversaldCrossEdges[133];
 
   }; // AlgorithmPreorder
 

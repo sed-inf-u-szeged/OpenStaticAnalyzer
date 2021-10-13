@@ -41,7 +41,7 @@ public:
   * \param path       [in] The given path.
   * \return           True, if the given path is filtered. Default is false.
   */
-  bool isFilteredOut(std::string path);
+  bool isFilteredOut(const std::string& path) const;
 
   /**
   * \return           True, if the filter_list is empty, false otherwise.
@@ -50,7 +50,7 @@ public:
 
 private:
   std::list<std::string> filter_list;
-  std::map<std::string, bool> filter_cache;
+  mutable std::map<std::string, bool> filter_cache;
 };
 
 #endif

@@ -64,7 +64,7 @@ void ColumbusWrappers::indepFullpath(const char* path, std::string& str_path) {
   std::string new_can_path;
 
   if (!common::pathCanonicalize(new_can_path, newpath)) {
-    writeDebugMsg("Wrapper",CMSG_PATH_CANONICALIZE_WRONG);
+    writeDebugMsg("Wrapper",CMSG_PATH_CANONICALIZE_WRONG, newpath.c_str(), new_can_path.c_str());
     str_path = newpath;
   } else {
     str_path = new_can_path;

@@ -36,6 +36,7 @@ import columbus.java.asg.algorithms.AlgorithmPreorder;
 import columbus.java.asg.base.Base;
 import columbus.java.asg.enums.NodeKind;
 import columbus.java.asg.expr.Identifier;
+import columbus.java.asg.expr.MemberReference;
 import columbus.java.asg.expr.MethodInvocation;
 import columbus.java.asg.expr.NewClass;
 import columbus.java.asg.statm.Break;
@@ -51,6 +52,7 @@ import com.sun.tools.javac.code.Kinds;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.Context;
@@ -76,6 +78,10 @@ public class CrossEdges {
 
 		logger.debug("debug.jan.CrossEdges.setNewClassConstr");
 		connectEdges(symMaps.getMethodDeclarationMap(), symMaps.getNewClassConstructorMap(), EdgeType.NEWCLASS);
+
+		logger.debug("debug.jan.CrossEdges.setMemberRef");
+		//Connecting the referred method to the member reference node.
+		connectEdges(symMaps.getMethodDeclarationMap(), symMaps.getMemberReferenceMap(), EdgeType.MEMBER_REF);
 
 		logger.debug("debug.jan.CrossEdges.setIdsTarget");
 		Map<Symbol, Integer> idTargetMap = new LinkedHashMap<>(symMaps.getVariableDeclarationMap());
@@ -117,7 +123,12 @@ public class CrossEdges {
 			HashSet<ClassSymbol> visitedInterfaces) {
 		boolean foundClassOverride = false;
 		boolean foundInterfaceOverride;
+		HashSet<ClassSymbol> visitedClasses = new HashSet<ClassSymbol>();
 		while (!foundClassOverride && classSym != null) {
+			if (!visitedClasses.add(classSym)) {
+				break;
+			}
+
 			// super classes
 			if (!foundClassOverride) {
 				foundClassOverride = checkMethodOverrides(methodSym, id, (ClassSymbol) classSym.getSuperclass().tsym);
@@ -147,11 +158,12 @@ public class CrossEdges {
 		}
 
 		for (Symbol enclosed : classSym.getEnclosedElements()) {
-			if (enclosed.kind == Kinds.MTH && methodSym.name.toString().equals(enclosed.name.toString())) {
+			// Java 10 support
+			if (enclosed.kind == Kinds.Kind.MTH && methodSym.name.toString().equals(enclosed.name.toString()) ) {
 				if (methodSym.overrides(enclosed, classSym, types, true)) {
-
 					MethodDeclaration methodDeclaration = (MethodDeclaration) fact.getRef(id);
 					Integer overridedMethodId = symMaps.getMethodDeclarationMap().get(enclosed);
+					
 					if (logger.isDebugEnabled()) {
 						logger.debug("debug.jan.CrossEdges.setOverrideEdge", classSym.toString(), enclosed.toString());
 					}
@@ -169,6 +181,7 @@ public class CrossEdges {
 				}
 			}
 		}
+		
 		return false;
 	}
 
@@ -185,8 +198,13 @@ public class CrossEdges {
 					}
 					continue;
 				}
-				Integer declId = declarationMap.get(refSym);
-				Symbol declSym = refSym;
+
+				Integer declId = null;
+				if (refSym instanceof PackageSymbol)
+					declId = symMaps.findPackage((PackageSymbol) refSym);
+				else
+					declId = declarationMap.get(refSym);
+
 				if (declId == null) {
 					tryToConnectByName(declarationMap, refSym, refId, e);
 					continue;
@@ -196,11 +214,11 @@ public class CrossEdges {
 				case METHOD:
 					try {
 						MethodInvocation methodInvocationNode = (MethodInvocation) fact.getRef(refId);
-						methodInvocationNode.setInvokes(declarationMap.get(declSym));
-						break;
+						methodInvocationNode.setInvokes(declId);
 					} catch (Exception ex) {
 						logger.error("error.jan.CrossEdges.errorInCrossEdges", ex);
 					}
+					break;
 				case NEWCLASS:
 					NewClass newClassNode = (NewClass) fact.getRef(refId);
 					newClassNode.setConstructor(declId);
@@ -209,6 +227,15 @@ public class CrossEdges {
 					Base base = fact.getRef(refId);
 					if (base.getNodeKind() == NodeKind.ndkIdentifier) {
 						((Identifier) base).setRefersTo(declId);
+					}
+					break;
+				case MEMBER_REF:
+					try {
+						//Connect the crossedge to the member reference node.
+						MemberReference memberRefNode = (MemberReference) fact.getRef(refId);
+						memberRefNode.setReferredMethod(declId);
+					} catch (Exception ex) {
+						logger.error("error.jan.CrossEdges.errorInCrossEdges", ex);
 					}
 					break;
 				default:
@@ -256,6 +283,10 @@ public class CrossEdges {
 			if (base.getNodeKind() == NodeKind.ndkIdentifier) {
 				((Identifier) base).setRefersTo(id);
 			}
+			break;
+		case MEMBER_REF:
+			MemberReference memberRefNode = (MemberReference) fact.getRef(refId);
+			memberRefNode.setReferredMethod(id);
 			break;
 		default:
 			logger.error("error.jan.CrossEdges.notHandledCrossEdgeType");

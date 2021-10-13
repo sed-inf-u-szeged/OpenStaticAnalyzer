@@ -430,6 +430,10 @@ void Visitor::visitCallExpression_HasArguments(const expression::CallExpression&
 
 void Visitor::visitEndCallExpression_HasArguments(const expression::CallExpression& begin, const base::Positioned& end) { }
 
+void Visitor::visitCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end) { }
+
+void Visitor::visitEndCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end) { }
+
 void Visitor::visitConditionalExpression_HasAlternate(const expression::ConditionalExpression& begin, const expression::Expression& end) { }
 
 void Visitor::visitEndConditionalExpression_HasAlternate(const expression::ConditionalExpression& begin, const expression::Expression& end) { }
@@ -478,9 +482,13 @@ void Visitor::visitNewExpression_HasArguments(const expression::NewExpression& b
 
 void Visitor::visitEndNewExpression_HasArguments(const expression::NewExpression& begin, const base::Positioned& end) { }
 
-void Visitor::visitObjectExpression_HasProperties(const expression::ObjectExpression& begin, const expression::Property& end) { }
+void Visitor::visitNewExpression_Calls(const expression::NewExpression& begin, const statement::Function& end) { }
 
-void Visitor::visitEndObjectExpression_HasProperties(const expression::ObjectExpression& begin, const expression::Property& end) { }
+void Visitor::visitEndNewExpression_Calls(const expression::NewExpression& begin, const statement::Function& end) { }
+
+void Visitor::visitObjectExpression_HasProperties(const expression::ObjectExpression& begin, const base::Positioned& end) { }
+
+void Visitor::visitEndObjectExpression_HasProperties(const expression::ObjectExpression& begin, const base::Positioned& end) { }
 
 void Visitor::visitProperty_HasValue(const expression::Property& begin, const base::Positioned& end) { }
 
@@ -622,9 +630,9 @@ void Visitor::visitLabeledStatement_HasBody(const statement::LabeledStatement& b
 
 void Visitor::visitEndLabeledStatement_HasBody(const statement::LabeledStatement& begin, const statement::Statement& end) { }
 
-void Visitor::visitObjectPattern_HasProperties(const statement::ObjectPattern& begin, const expression::Property& end) { }
+void Visitor::visitObjectPattern_HasProperties(const statement::ObjectPattern& begin, const base::Positioned& end) { }
 
-void Visitor::visitEndObjectPattern_HasProperties(const statement::ObjectPattern& begin, const expression::Property& end) { }
+void Visitor::visitEndObjectPattern_HasProperties(const statement::ObjectPattern& begin, const base::Positioned& end) { }
 
 void Visitor::visitRestElement_HasArgument(const statement::RestElement& begin, const statement::Pattern& end) { }
 

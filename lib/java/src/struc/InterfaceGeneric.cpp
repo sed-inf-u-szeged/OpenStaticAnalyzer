@@ -156,6 +156,7 @@ namespace struc {
       if(node.getAccessibility() == getAccessibility()) ++matchAttrs;
       if(node.getIsStatic() == getIsStatic()) ++matchAttrs;
       if(node.getIsFinal() == getIsFinal()) ++matchAttrs;
+      if(node.getLloc() == getLloc()) ++matchAttrs;
       if(node.getIsAbstract() == getIsAbstract()) ++matchAttrs;
       if(node.getIsStrictfp() == getIsStrictfp()) ++matchAttrs;
       str1 = getBinaryName();
@@ -165,7 +166,7 @@ namespace struc {
       if (strSim < Common::SimilarityMinForStrings)
         return 0.0;
       matchAttrs += strSim;
-      return matchAttrs / (9 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
+      return matchAttrs / (10 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
     }

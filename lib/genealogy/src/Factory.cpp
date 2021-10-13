@@ -207,7 +207,7 @@ Base* Factory::getPointer(NodeId id) const {
   Base* p = NULL;
   try {
     p = container.at(id);
-  } catch (std::out_of_range e) {
+  } catch (const std::out_of_range&) {
     throw GenealogyException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
   }
   return p;

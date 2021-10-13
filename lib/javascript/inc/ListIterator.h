@@ -66,35 +66,35 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Copies a ListIteratorBase.
       * \param otherIt                            [in] The other ListIteratorBase which initializes this one.
-      * \throw JavaScriptInvalidIteratorException If the other iterator is invalid JavaScriptInvalidIteratorException is thrown.
+      * \throw JavascriptInvalidIteratorException If the other iterator is invalid JavascriptInvalidIteratorException is thrown.
       * \return Returns a reference to a ListIteratorBase.
       */
       ListIteratorBase& operator=(const ListIteratorBase& otherIt);
 
       /**
       * \brief This is a * operator of ListIteratorBase.
-      * \throw JavaScriptInvalidIteratorException If the other iterator is invalid JavaScriptInvalidIteratorException is thrown.
+      * \throw JavascriptInvalidIteratorException If the other iterator is invalid JavascriptInvalidIteratorException is thrown.
       * \return Returns a reference to a node.
       */
       virtual const T& operator*();
 
       /**
       * \brief This is a -> operator of ListIteratorBase.
-      * \throw JavaScriptInvalidIteratorException If the other iterator is invalid JavaScriptInvalidIteratorException is thrown.
+      * \throw JavascriptInvalidIteratorException If the other iterator is invalid JavascriptInvalidIteratorException is thrown.
       * \return Returns a pointer to a node.
       */
       virtual const T* operator->();
 
       /**
       * \brief This is a ++ operator of ListIteratorBase.
-      * \throw JavaScriptInvalidIteratorException If the other iterator is invalid JavaScriptInvalidIteratorException is thrown.
+      * \throw JavascriptInvalidIteratorException If the other iterator is invalid JavascriptInvalidIteratorException is thrown.
       * \return Returns a reference to a ListIteratorBase.
       */
       virtual ListIteratorBase& operator++();
 
       /**
       * \brief This is a -- operator of ListIteratorBase.
-      * \throw JavaScriptInvalidIteratorException If the other iterator is invalid JavaScriptInvalidIteratorException is thrown.
+      * \throw JavascriptInvalidIteratorException If the other iterator is invalid JavascriptInvalidIteratorException is thrown.
       * \return Returns a reference to a ListIteratorBase.
       */
       virtual ListIteratorBase& operator--();
@@ -102,7 +102,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief This is a == operator of ListIteratorBase.
       * \param rhs                                [in] The iterator is compared to it.
-      * \throw JavaScriptInvalidIteratorException If the other iterator is invalid JavaScriptInvalidIteratorException is thrown.
+      * \throw JavascriptInvalidIteratorException If the other iterator is invalid JavascriptInvalidIteratorException is thrown.
       * \return Return true if the both iteratis is same
       */
       virtual bool operator==(const ListIteratorBase& rhs) const;
@@ -110,7 +110,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief This is a != operator of ListIteratorBase.
       * \param rhs                                [in] The iterator is compared to it.
-      * \throw JavaScriptInvalidIteratorException If the other iterator is invalid JavaScriptInvalidIteratorException is thrown.
+      * \throw JavascriptInvalidIteratorException If the other iterator is invalid JavascriptInvalidIteratorException is thrown.
       * \return Return true if the both iteratis is not same
       */
       virtual bool operator!=(const ListIteratorBase& rhs) const;
@@ -118,7 +118,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Compares the two iterators.
       * \param otherIt                            [in] The iterator is compared to it.
-      * \throw JavaScriptInvalidIteratorException If the iterator is invalid JavaScriptInvalidIteratorException is thrown.
+      * \throw JavascriptInvalidIteratorException If the iterator is invalid JavascriptInvalidIteratorException is thrown.
       * \return Returns true if the two iterators would give back the same elements with the next previous() and next() calls.
       */
       virtual bool equals(const ListIteratorBase& otherIt) const;
@@ -126,8 +126,8 @@ namespace columbus { namespace javascript { namespace asg {
     private:
       /**
       * \brief Returns the next element in the list.
-      * \throw JavaScriptNoSuchElementException   If the iteration has no next element JavaScriptNoSuchElementException is thrown.
-      * \throw JavaScriptInvalidIteratorException If the iterator is invalid JavaScriptInvalidIteratorException is thrown.
+      * \throw JavascriptNoSuchElementException   If the iteration has no next element JavascriptNoSuchElementException is thrown.
+      * \throw JavascriptInvalidIteratorException If the iterator is invalid JavascriptInvalidIteratorException is thrown.
       * \return Returns the next element in the list.
       *
       * This method may be called repeatedly to iterate through the list, or intermixed with calls to previous() to go back and forth.
@@ -137,8 +137,8 @@ namespace columbus { namespace javascript { namespace asg {
 
       /**
       * \brief Returns the previous element in the list.
-      * \throw JavaScriptNoSuchElementException   If the iteration has no previous element JavaScriptNoSuchElementException is thrown.
-      * \throw JavaScriptInvalidIteratorException If the iterator is invalid JavaScriptInvalidIteratorException is thrown.
+      * \throw JavascriptNoSuchElementException   If the iteration has no previous element JavascriptNoSuchElementException is thrown.
+      * \throw JavascriptInvalidIteratorException If the iterator is invalid JavascriptInvalidIteratorException is thrown.
       * \return Returns the previous element in the list.
       *
       * This method may be called repeatedly to iterate through the list backwards, or intermixed with calls to next() to go back and forth.
@@ -165,7 +165,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \internal
       * \brief Gives back the next element.
-      * \throw JavaScriptInvalidIteratorException If the iterator is invalid JavaScriptInvalidIteratorException is thrown.
+      * \throw JavascriptInvalidIteratorException If the iterator is invalid JavascriptInvalidIteratorException is thrown.
       * \return Returns the next element (or the end of the container if there is no next element).
       */
       typename Container::const_iterator nextItem();
@@ -189,7 +189,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \internal
       * \brief Gives back the previous element.
-      * \throw JavaScriptInvalidIteratorException If the iterator is invalid JavaScriptInvalidIteratorException is thrown.
+      * \throw JavascriptInvalidIteratorException If the iterator is invalid JavascriptInvalidIteratorException is thrown.
       * \return Returns the previous element (or the end of the container if there is no previous element).
       */
       typename Container::const_iterator previousItem();
@@ -246,7 +246,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Copies a ListIterator.
       * \param otherIt                            [in] The other ListIterator which initializes this one.
-      * \throw JavaScriptInvalidIteratorException If the other iterator is invalid JavaScriptInvalidIteratorException is thrown.
+      * \throw JavascriptInvalidIteratorException If the other iterator is invalid JavascriptInvalidIteratorException is thrown.
       * \return Returns a reference to a ListIterator.
       */
       ListIterator& operator=(const ListIterator& otherIt);

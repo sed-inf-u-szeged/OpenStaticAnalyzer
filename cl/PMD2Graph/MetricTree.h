@@ -30,6 +30,7 @@
 #include <common/inc/FileSup.h>
 #include <graph/inc/graph.h>
 #include <graphsupport/inc/GraphRangeIndexer.h>
+#include <graphsupport/inc/Metric.h>
 #include <common/inc/PlatformDependentDefines.h>
 
 #include <iostream>
@@ -42,7 +43,7 @@ public:
   virtual ~MetricTree();
   void buildtree();
 
-  void addWarningToNode(const std::string& path, int line, int col, int endline, int endcol, const std::string& groupID, const std::string& warningID, const std::string& warningText, bool we_is_component, FILE *f);
+  void addWarningToNode(const std::string& path, int line, int col, int endline, int endcol, const std::string& groupID, const std::string& warningID, const std::string& warningText, FILE *f);
 
 protected:
   std::string& fileName;
@@ -52,8 +53,10 @@ protected:
 
   columbus::graph::Graph& graph;
   columbus::graphsupport::GraphRangeIndexer& graphIndexer;
+  columbus::graphsupport::WarningCache warningCache;
 
   friend class CheckerStrategy;
+
 
 };
 

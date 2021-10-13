@@ -176,10 +176,15 @@ public abstract class JANFlags {
 			case EFFECTIVELY_FINAL:
 			case BRIDGE:
 			case CLASS_SEEN:
+			case PROPRIETARY:
 				// dont needed
 				break;
-			// TODO java 1.8 new flags
+			//java 1.8 new flags
 			case DEFAULT:
+				if (Common.getIsNormalMethod(memberNode)) {
+					((NormalMethod) memberNode).setIsDefault(true);
+				}
+				break;
 			case MANDATED:
 			case AUXILIARY:
 			case NOT_IN_PROFILE:
@@ -189,8 +194,17 @@ public abstract class JANFlags {
 			case LAMBDA_METHOD:
 			case TYPE_TRANSLATED:
 				break;
+			//java 9 support (new flags)
+			case MODULE:
+			case AUTOMATIC_MODULE:
+			case SYSTEM_MODULE:
+			case DEPRECATED_ANNOTATION:
+			case DEPRECATED_REMOVAL:
+			case HAS_RESOURCE:
+				break;
 			default:
 				logger.warn("warn.jan.JANFlags.modifierIsntHandled", f);
+				break;
 			}
 		}
 

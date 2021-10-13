@@ -26,22 +26,17 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var continueStatement = factory.createContinueStatementWrapper(factory);
+        var continueStatement = factory.createContinueStatementWrapper();
         globals.setPositionInfo(node, continueStatement);
         return continueStatement;
     } else {
         var continueStatementWrapper = globals.getWrapperOfNode(node);
         if (node.label != null) {
             var labelWrapper = globals.getWrapperOfNode(node.label);
-            if (node.label.type !== "Literal") {
-                var labelWrapperFunctionString = "setLabel" + node.label.type;
-            } else {
-                var labelWrapperFunctionString = "setLabel" + globals.getLiteralType(node.label) + node.label.type;
-            }
             try {
-                continueStatementWrapper[labelWrapperFunctionString](labelWrapper);
+                continueStatementWrapper.setLabel(labelWrapper);
             } catch (e) {
-                console.error("CONTINUESTATEMENT - Function not exist: continueStatementWrapper." + labelWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("CONTINUESTATEMENT - Could not set label! Reason of the error: " + e + "\n");
             }
         }
 

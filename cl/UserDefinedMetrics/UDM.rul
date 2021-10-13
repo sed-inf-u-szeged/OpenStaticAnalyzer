@@ -1,0 +1,728 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This file is part of OpenStaticAnalyzer.
+
+  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
+
+  Licensed under Version 1.2 of the EUPL (the "Licence");
+
+  You may not use this work except in compliance with the Licence.
+
+  You may obtain a copy of the Licence in the LICENSE file or at:
+
+  https://joinup.ec.europa.eu/software/page/eupl
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the Licence is distributed on an "AS IS" basis,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the Licence for the specific language governing permissions and
+  limitations under the Licence.
+-->
+<Rul xmlns = "OpenStaticAnalyzer" xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance">
+  <ToolDescription>
+    <Configuration name = "Default">
+      <ToolDescriptionItem name = "ID">UDM</ToolDescriptionItem>
+    </Configuration>
+  </ToolDescription>
+  <Configurations>
+    <config name = "cpp" redefine = "Default"/>
+    <config name = "csharp" redefine = "Default"/>
+    <config name = "java" redefine = "Default"/>
+    <config name = "javascript" redefine = "Default"/>
+    <config name = "python" redefine = "Default"/>
+  </Configurations>
+  <Views/>
+  <Edges/>
+  <Metric id = "Documentation">
+    <Configuration name = "Default">
+      <Enabled>true</Enabled>
+      <Visible>true</Visible>
+      <Group>visual</Group>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <DisplayName>Documentation metrics</DisplayName>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated/>
+    </Configuration>
+    <Configuration name = "cpp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Documentation metrics:&lt;/b&gt; measure the amount of comments and documentation of source code elements in the system.</Description>
+        <HelpText>&lt;b&gt;Documentation metrics:&lt;/b&gt; measure the amount of comments and documentation of source code elements in the system.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated/>
+    </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Documentation metrics:&lt;/b&gt; measure the amount of comments and documentation of source code elements in the system.</Description>
+        <HelpText>&lt;b&gt;Documentation metrics:&lt;/b&gt; measure the amount of comments and documentation of source code elements in the system.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated/>
+    </Configuration>
+    <Configuration name = "java">
+      <Enabled>false</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Documentation metrics:&lt;/b&gt; measure the amount of comments and documentation of source code elements in the system.</Description>
+        <HelpText>&lt;b&gt;Documentation metrics:&lt;/b&gt; measure the amount of comments and documentation of source code elements in the system.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated/>
+    </Configuration>
+    <Configuration name = "javascript">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Documentation metrics:&lt;/b&gt; measure the amount of comments and documentation of source code elements in the system.</Description>
+        <HelpText>&lt;b&gt;Documentation metrics:&lt;/b&gt; measure the amount of comments and documentation of source code elements in the system.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated/>
+    </Configuration>
+    <Configuration name = "python">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Documentation metrics:&lt;/b&gt; measure the amount of comments and documentation of source code elements in the system.</Description>
+        <HelpText>&lt;b&gt;Documentation metrics:&lt;/b&gt; measure the amount of comments and documentation of source code elements in the system.</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated/>
+    </Configuration>
+  </Metric>
+  <Metric id = "DENES">
+    <Configuration name = "Default">
+      <Enabled>true</Enabled>
+      <Visible>true</Visible>
+      <Group>false</Group>
+      <GroupMember>Documentation</GroupMember>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <DisplayName>API Documentation</DisplayName>
+      </Language>
+      <Baselines/>
+      <Settings>
+        <Setting name = "Formula" editable = "false">AD+2</Setting>
+      </Settings>
+      <Calculated/>
+    </Configuration>
+    <Configuration name = "cpp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings>
+        <Setting name = "Formula" editable = "false">5</Setting>
+      </Settings>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "java">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods and init blocks.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Annotation</CalculatedFor>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Enum</CalculatedFor>
+        <CalculatedFor>Interface</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "javascript">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "python">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+      </Calculated>
+    </Configuration>
+  </Metric>
+  <Metric id = "BALAZS">
+    <Configuration name = "Default">
+      <Enabled>true</Enabled>
+      <Visible>true</Visible>
+      <Group>false</Group>
+      <GroupMember>Documentation</GroupMember>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <DisplayName>API Documentation</DisplayName>
+      </Language>
+      <Baselines/>
+      <Settings>
+        <Setting name = "Formula" editable = "false">AD+2</Setting>
+      </Settings>
+      <Calculated/>
+    </Configuration>
+    <Configuration name = "cpp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings>
+        <Setting name = "Formula" editable = "false">CI+DENES</Setting>
+      </Settings>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "java">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods and init blocks.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Annotation</CalculatedFor>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Enum</CalculatedFor>
+        <CalculatedFor>Interface</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "javascript">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "python">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+      </Calculated>
+    </Configuration>
+  </Metric>
+  <Metric id = "ZOLTAN">
+    <Configuration name = "Default">
+      <Enabled>true</Enabled>
+      <Visible>true</Visible>
+      <Group>false</Group>
+      <GroupMember>Documentation</GroupMember>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <DisplayName>API Documentation</DisplayName>
+      </Language>
+      <Baselines/>
+      <Settings>
+        <Setting name = "Formula" editable = "false">AD+2</Setting>
+      </Settings>
+      <Calculated/>
+    </Configuration>
+    <Configuration name = "cpp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings>
+        <Setting name = "Formula" editable = "false">BALAZS+GABOR+CI</Setting>
+      </Settings>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "java">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods and init blocks.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Annotation</CalculatedFor>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Enum</CalculatedFor>
+        <CalculatedFor>Interface</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "javascript">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "python">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+      </Calculated>
+    </Configuration>
+  </Metric>
+  <Metric id = "GABOR">
+    <Configuration name = "Default">
+      <Enabled>true</Enabled>
+      <Visible>true</Visible>
+      <Group>false</Group>
+      <GroupMember>Documentation</GroupMember>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <DisplayName>API Documentation</DisplayName>
+      </Language>
+      <Baselines/>
+      <Settings>
+        <Setting name = "Formula" editable = "false">AD+2</Setting>
+      </Settings>
+      <Calculated/>
+    </Configuration>
+    <Configuration name = "cpp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings>
+        <Setting name = "Formula" editable = "false">TAMAS+2</Setting>
+      </Settings>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "java">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods and init blocks.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Annotation</CalculatedFor>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Enum</CalculatedFor>
+        <CalculatedFor>Interface</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "javascript">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "python">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+      </Calculated>
+    </Configuration>
+  </Metric>
+  <Metric id = "TAMAS">
+    <Configuration name = "Default">
+      <Enabled>true</Enabled>
+      <Visible>true</Visible>
+      <Group>false</Group>
+      <GroupMember>Documentation</GroupMember>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <DisplayName>API Documentation</DisplayName>
+      </Language>
+      <Baselines/>
+      <Settings>
+        <Setting name = "Formula" editable = "false">AD+2</Setting>
+      </Settings>
+      <Calculated/>
+    </Configuration>
+    <Configuration name = "cpp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings>
+        <Setting name = "Formula" editable = "false">IBOLYA+5</Setting>
+      </Settings>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "java">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods and init blocks.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Annotation</CalculatedFor>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Enum</CalculatedFor>
+        <CalculatedFor>Interface</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "javascript">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "python">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+      </Calculated>
+    </Configuration>
+  </Metric>
+  <Metric id = "IBOLYA">
+    <Configuration name = "Default">
+      <Enabled>true</Enabled>
+      <Visible>true</Visible>
+      <Group>false</Group>
+      <GroupMember>Documentation</GroupMember>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <DisplayName>API Documentation</DisplayName>
+      </Language>
+      <Baselines/>
+      <Settings>
+        <Setting name = "Formula" editable = "false">AD+2</Setting>
+      </Settings>
+      <Calculated/>
+    </Configuration>
+    <Configuration name = "cpp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings>
+        <Setting name = "Formula" editable = "false">CI+5</Setting>
+      </Settings>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "java">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods and init blocks.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Annotation</CalculatedFor>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Enum</CalculatedFor>
+        <CalculatedFor>Interface</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "javascript">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "python">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+      </Calculated>
+    </Configuration>
+  </Metric>
+  <Metric id = "BLA">
+    <Configuration name = "Default">
+      <Enabled>true</Enabled>
+      <Visible>true</Visible>
+      <Group>false</Group>
+      <GroupMember>Documentation</GroupMember>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <DisplayName>API Documentation</DisplayName>
+      </Language>
+      <Baselines/>
+      <Settings>
+        <Setting name = "Formula" editable = "false">AD+2</Setting>
+      </Settings>
+      <Calculated/>
+    </Configuration>
+    <Configuration name = "cpp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure, Interface:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings>
+        <Setting name = "Formula" editable = "false">ZOLTAN+5</Setting>
+      </Settings>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "csharp">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class, Structure:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Structure</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "java">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods and init blocks.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods and init blocks.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Annotation</CalculatedFor>
+        <CalculatedFor>Class</CalculatedFor>
+        <CalculatedFor>Enum</CalculatedFor>
+        <CalculatedFor>Interface</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "javascript">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+      </Calculated>
+    </Configuration>
+    <Configuration name = "python">
+      <Enabled>true</Enabled>
+      <Language lang = "eng">
+        <Warning>false</Warning>
+        <Description>&lt;b&gt;Class:&lt;/b&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe&apos;s Cyclomatic Complexity (McCC) values of its local methods.</Description>
+        <HelpText>&lt;p&gt;&lt;strong&gt;Class:&lt;/strong&gt; complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.&lt;/p&gt;&#x0A;</HelpText>
+      </Language>
+      <Baselines/>
+      <Settings/>
+      <Calculated>
+        <CalculatedFor>Class</CalculatedFor>
+      </Calculated>
+    </Configuration>
+  </Metric>
+</Rul>

@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var yieldExpression = factory.createYieldExpressionWrapper(factory);
+        var yieldExpression = factory.createYieldExpressionWrapper();
         globals.setPositionInfo(node, yieldExpression);
         yieldExpression.setDelegate(node.delegate);
         return yieldExpression;
@@ -35,15 +35,10 @@ module.exports = function (node, parent, firstVisit) {
         yieldExpressionWrapper.setDelegate(node.delegate);
         if (node.argument != null) {
             var argumentWrapper = globals.getWrapperOfNode(node.argument);
-            if (node.argument.type !== "Literal") {
-                var argumentWrapperFunctionString = "setArgument" + node.argument.type;
-            } else {
-                var argumentWrapperFunctionString = "setArgument" + globals.getLiteralType(node.argument) + node.argument.type;
-            }
             try {
-                yieldExpressionWrapper[argumentWrapperFunctionString](argumentWrapper);
+                yieldExpressionWrapper.setArgument(argumentWrapper);
             } catch (e) {
-                console.error("YIELDEXPRESSION - Function not exist: yieldExpressionWrapper." + argumentWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("YIELDEXPRESSION - Could not set argument! Reason of the error: " + e + "\n");
             }
         }
 

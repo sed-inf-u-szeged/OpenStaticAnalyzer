@@ -55,7 +55,7 @@ namespace columbus { namespace javascript { namespace asg {
       return *this;
 
     if (otherIt.invalid)
-      throw JavaScriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
+      throw JavascriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
 
     fact = otherIt.fact;
     container = otherIt.container;
@@ -102,7 +102,7 @@ namespace columbus { namespace javascript { namespace asg {
   template <typename B, typename T>
   void ListIteratorBase<B,T>::next() {
     if (invalid)
-      throw JavaScriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
+      throw JavascriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
 
     it = nextItem();
   }
@@ -110,7 +110,7 @@ namespace columbus { namespace javascript { namespace asg {
   template <typename B, typename T>
   void ListIteratorBase<B,T>::previous() {
     if (invalid)
-      throw JavaScriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
+      throw JavascriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
 
     it = previousItem();
   }
@@ -118,7 +118,7 @@ namespace columbus { namespace javascript { namespace asg {
   template <typename B, typename T>
   bool ListIteratorBase<B,T>::equals(const ListIteratorBase& otherIt) const {
     if (invalid)
-      throw JavaScriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
+      throw JavascriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
 
     return (it == otherIt.it) ;
   }
@@ -201,7 +201,7 @@ namespace columbus { namespace javascript { namespace asg {
   template class ListIterator<structure::ExportSpecifier>;
   template class ListIterator<structure::ImpSpecifier>;
   template class ListIterator<declaration::VariableDeclarator>;
-  template class ListIterator<expression::Property>;
+  template class ListIterator<statement::Function>;
   template class ListIterator<expression::Expression>;
   template class ListIterator<expression::TemplateElement>;
   template class ListIterator<statement::Pattern>;

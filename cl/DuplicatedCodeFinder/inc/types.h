@@ -25,12 +25,13 @@
 #include "genealogy/inc/genealogy.h"
 
 typedef columbus::NodeId NodeId;
+
 typedef columbus::LANGUAGE_NAMESPACE::Factory Factory;
 typedef columbus::LANGUAGE_NAMESPACE::NodeKind NodeKind;
 
 typedef columbus::LANGUAGE_NAMESPACE::BASE_NAMESPACE::Base Base;
-
 typedef columbus::LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned Positioned;
+
 #if defined(SCHEMA_JAVA) || defined(SCHEMA_PYTHON) || defined (SCHEMA_JAVASCRIPT)
 typedef columbus::LANGUAGE_NAMESPACE::BASE_NAMESPACE::Named Named;
 #elif defined(SCHEMA_CSHARP)
@@ -53,15 +54,6 @@ typedef columbus::LANGUAGE_NAMESPACE::VisitorAbstractNodes VisitorAbstractNodes;
   #define UNIQUE_NAME_FOR_MEMBER AlgorithmCommon::getUniqueNameForBase
   #define NAMED_VISITOR NamedVisitor
 
-#elif defined(SCHEMA_PYTHON)
-  #define FILTER_FILE_EXTENSION ".fpsi"
-  #define FILTER_FILE_EXTENSION_W L".fpsi"
-  #define LANGUAGE columbus::python::PythonLanguage
-  #define LANGUAGE_NS columbus::python
-  #define getUniqueName_v1 AlgorithmCommon::getUniqueNameForBase
-  #define UNIQUE_NAME_FOR_MEMBER AlgorithmCommon::getUniqueName
-  #define NAMED_VISITOR NamedVisitor
-
 #elif defined(SCHEMA_JAVASCRIPT)
   #define FILTER_FILE_EXTENSION ".fjssi"
   #define FILTER_FILE_EXTENSION_W L".fjssi"
@@ -77,6 +69,14 @@ typedef columbus::LANGUAGE_NAMESPACE::VisitorAbstractNodes VisitorAbstractNodes;
   #define UNIQUE_NAME_FOR_MEMBER getUniqueNameForMember
   #define NAMED_VISITOR CSharpNamedVisitor
 
+#elif defined(SCHEMA_PYTHON)
+  #define FILTER_FILE_EXTENSION ".fpsi"
+  #define FILTER_FILE_EXTENSION_W L".fpsi"
+  #define LANGUAGE columbus::python::PythonLanguage
+  #define LANGUAGE_NS columbus::python
+  #define getUniqueName_v1 AlgorithmCommon::getUniqueNameForBase
+  #define UNIQUE_NAME_FOR_MEMBER AlgorithmCommon::getUniqueName
+  #define NAMED_VISITOR NamedVisitor
 #endif
 
 #endif

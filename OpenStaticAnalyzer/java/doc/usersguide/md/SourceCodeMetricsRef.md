@@ -34,7 +34,7 @@ The following table summarizes the metrics, their abbreviations and their corres
                          Maintainability Index (Microsoft version)    MIMS                                                                     X                 
                          Maintainability Index (Original version)     MI                                                                       X                 
                          Maintainability Index (SEI version)          MISEI                                                                    X                 
-                         Maintainability Index (OpenStaticAnalyzer version)      MISM                                                                     X
+                         Maintainability Index (OpenStaticAnalyzer version)  MISM                                                                     X                 
                          McCabe's Cyclomatic Complexity               McCC                                                  X                  X                 
                          Nesting Level                                NL            X            X                   X             X           X                 
                          Nesting Level Else-If                        NLE           X            X                   X             X           X                 

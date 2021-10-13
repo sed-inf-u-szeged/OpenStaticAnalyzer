@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var spreadElement = factory.createSpreadElementWrapper(factory);
+        var spreadElement = factory.createSpreadElementWrapper();
         globals.setPositionInfo(node, spreadElement);
         return spreadElement;
     } else {
@@ -34,15 +34,10 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.argument != null) {
             var argumentWrapper = globals.getWrapperOfNode(node.argument);
-            if (node.argument.type !== "Literal") {
-                var argumentWrapperFunctionString = "setArgument" + node.argument.type;
-            } else {
-                var argumentWrapperFunctionString = "setArgument" + globals.getLiteralType(node.argument) + node.argument.type;
-            }
             try {
-                spreadElementWrapper[argumentWrapperFunctionString](argumentWrapper);
+                spreadElementWrapper.setArgument(argumentWrapper);
             } catch (e) {
-                console.error("SPREADELEMENT - Function not exist: spreadElementWrapper." + argumentWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("SPREADELEMENT - Could not add argument! Reason of the error: " + e + "\n");
             }
         }
 

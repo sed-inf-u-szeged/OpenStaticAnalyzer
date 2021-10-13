@@ -1,0 +1,10 @@
+name : LongParamSize
+kind : ndkMethod
+role : tooManyParam
+category: AntiPattern
+displayName: Long Parameter Size
+description: In object-oriented programing we do not have to pass every parameter to a function or a method, only the ones that are necessary for the good operation. Long parameter lists can be hard to understand, they become inconsistent and hard to change. If a function has at least 'Min' parameters, we consider it a Long Parameter List bad smell.
+priority : Minor
+conditions :
+  #LPL_min = 7
+  - parameterSize >= 7

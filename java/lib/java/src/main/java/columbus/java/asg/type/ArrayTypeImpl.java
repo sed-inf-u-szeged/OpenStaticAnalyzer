@@ -34,6 +34,7 @@ import columbus.logger.LoggerHandler;
  */
 public class ArrayTypeImpl extends BaseImpl implements ArrayType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(ArrayTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected int size;
 

@@ -22,95 +22,32 @@
 #define _JAVASCRIPT_MemberExpressionWrapper_H_
 
 #include "javascript/inc/javascript.h"
-#include <node.h>
-#include <node_object_wrap.h>
+#include <node_api.h>
+#include "BaseWrapper.h"
 #include "../Factory.h"
-
-using namespace v8;
 
 namespace columbus { namespace javascript { namespace asg { namespace addon {
   class Factory;
 
-  class MemberExpressionWrapper : public node::ObjectWrap {
+  class MemberExpressionWrapper : BaseWrapper{
     public:
-      columbus::javascript::asg::expression::MemberExpression* MemberExpression;
-      static void Init(v8::Handle<v8::Object> exports);
-      MemberExpressionWrapper(const MemberExpressionWrapper&);
-      MemberExpressionWrapper(Factory* fact);
-      virtual ~MemberExpressionWrapper();
-      static void NewInstance(const v8::FunctionCallbackInfo<v8::Value>& args);
-      void wrap(const v8::FunctionCallbackInfo<v8::Value>& args){ this->Wrap(args.Holder()); }
-      static v8::Persistent<v8::Function> constructor;
+      static napi_value Init(napi_env env, napi_value& exports);
+      static void Destructor(napi_env env, void* nativeObject, void* finalize_hint);
+      static napi_status NewInstance(napi_env env, expression::MemberExpression* arg, napi_value* instance);
     private:
-      static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-
-      static void setPropertyArrayExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyArrowFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyAssignmentExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyAwaitExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyBinaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyCallExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyClassExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyConditionalExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyBooleanLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyNullLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyNumberLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyRegExpLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyStringLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyLogicalExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyMemberExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyMetaProperty(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyNewExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyObjectExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertySequenceExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyTaggedTemplateExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyTemplateLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyThisExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyUnaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyUpdateExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPropertyYieldExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectSuper(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectArrayExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectArrowFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectAssignmentExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectAwaitExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectBinaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectCallExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectClassExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectConditionalExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectBooleanLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectNullLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectNumberLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectRegExpLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectStringLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectLogicalExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectMemberExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectMetaProperty(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectNewExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectObjectExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectSequenceExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectTaggedTemplateExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectTemplateLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectThisExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectUnaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectUpdateExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setObjectYieldExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addCommentsComment(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setComputed(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPath(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setEndLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setEndCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideEndLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideEndCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-}; //end of MemberExpressionWrapper
+      explicit MemberExpressionWrapper(); // Constructor
+      ~MemberExpressionWrapper();
+      static napi_ref constructor;
+      static napi_value New(napi_env env, napi_callback_info info);
+      napi_env env_;
+      napi_ref wrapper_;
+      static napi_value setProperty(napi_env env, napi_callback_info info);
+      static napi_value setObject(napi_env env, napi_callback_info info);
+      static napi_value addComments(napi_env env, napi_callback_info info);
+      static napi_value setComputed(napi_env env, napi_callback_info info);
+      static napi_value setPath(napi_env env, napi_callback_info info);
+      static napi_value setPosition(napi_env env, napi_callback_info info);
+  }; //end of MemberExpressionWrapper
 
 }}}}//end of namespaces
 #endif

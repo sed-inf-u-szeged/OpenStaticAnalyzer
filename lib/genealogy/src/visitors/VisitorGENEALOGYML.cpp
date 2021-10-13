@@ -36,7 +36,6 @@ VisitorGENEALOGYML::~VisitorGENEALOGYML() {
 
 void VisitorGENEALOGYML::beginVisit() {
   ofs << "<?xml version='1.0' encoding=\"utf-8\"?>\n";
-  ofs << "<!DOCTYPE Project SYSTEM 'genealogy-1.3.19.dtd'>\n";
   ofs << "<Project name='" << projectName << "'"
       << ">\n";
 }

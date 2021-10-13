@@ -5,6 +5,7 @@ set (SOURCES
     src/ProfileCommon.cpp
     src/ProfileHandler.cpp
     src/Task.cpp
+    src/DirectedAcyclicGraph.cpp
 
     inc/messages.h
     inc/Controller.h
@@ -12,6 +13,7 @@ set (SOURCES
     inc/ProfileHandler.h
     inc/Properties.h
     inc/Task.h
+    inc/DirectedAcyclicGraph.h
 )
 
 add_library (${LIBNAME} STATIC ${SOURCES})

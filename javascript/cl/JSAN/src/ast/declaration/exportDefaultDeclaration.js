@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var exportDefaultDeclaration = factory.createExportDefaultDeclarationWrapper(factory);
+        var exportDefaultDeclaration = factory.createExportDefaultDeclarationWrapper();
         globals.setPositionInfo(node, exportDefaultDeclaration);
         return exportDefaultDeclaration;
     } else {
@@ -34,15 +34,10 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.declaration != null) {
             var declarationWrapper = globals.getWrapperOfNode(node.declaration);
-            if (node.declaration.type !== "Literal") {
-                var declarationWrapperFunctionString = "setDeclaration" + node.declaration.type;
-            } else {
-                var declarationWrapperFunctionString = "setDeclaration" + globals.getLiteralType(node.declaration) + node.declaration.type;
-            }
             try {
-                exportDefaultDeclarationWrapper[declarationWrapperFunctionString](declarationWrapper);
+                exportDefaultDeclarationWrapper.setDeclaration(declarationWrapper);
             } catch (e) {
-                console.error("EXPORTDEFAULTDECLARATION - Function not exist: exportDefaultDeclarationWrapper." + declarationWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("EXPORTDEFAULTDECLARATION - Could not set declaration! Reason of the error: " + e + "\n");
             }
         }
 

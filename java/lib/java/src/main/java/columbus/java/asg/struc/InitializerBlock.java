@@ -25,9 +25,22 @@ import columbus.java.asg.statm.Block;
 /**
  * Interface InitializerBlock, which represents the {@link columbus.java.asg.struc.InitializerBlock InitializerBlock} node.
  * @columbus.node (missing)
+ * @columbus.attr lloc (int) : (missing)
  * @columbus.edge hasBody ({@link columbus.java.asg.statm.Block Block}, single) : (missing)
  */
 public interface InitializerBlock extends Declaration {
+
+	/**
+	 * Gives back the {@link columbus.java.asg.struc.InitializerBlock#attributeLloc lloc} of the node.
+	 * @return Returns with the lloc.
+	 */
+	public int getLloc();
+
+	/**
+	 * Sets the {@link columbus.java.asg.struc.InitializerBlock#attributeLloc lloc} of the node.
+	 * @param value The new value of the lloc.
+	 */
+	public void setLloc(int value);
 
 	/**
 	 * Gives back the reference of the node the {@link columbus.java.asg.struc.InitializerBlock#edgeHasBody hasBody} edge points to.

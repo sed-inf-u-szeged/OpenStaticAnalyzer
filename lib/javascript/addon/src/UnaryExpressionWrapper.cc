@@ -1,527 +1,346 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
 #include "../inc/UnaryExpressionWrapper.h"
-#include <sstream>  
 #include <string>   
-#include <iomanip>  
-#include <algorithm>
-#include <cctype>   
-
-#include <nan.h>   
-
-using namespace v8;
-
 namespace columbus { namespace javascript { namespace asg { namespace addon {
 
-Persistent<Function> UnaryExpressionWrapper::constructor;
+napi_ref UnaryExpressionWrapper::constructor;
 
-void UnaryExpressionWrapper::Init(Handle<v8::Object> exports) {
-  Isolate* isolate = Isolate::GetCurrent();                                
-                                                                           
-  // Prepare constructor template                                          
-  Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);       
-  tpl->SetClassName(v8::String::NewFromUtf8(isolate, "UnaryExpressionWrapper"));             
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);                       
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentArrayExpression", setArgumentArrayExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentArrowFunctionExpression", setArgumentArrowFunctionExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentAssignmentExpression", setArgumentAssignmentExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentAwaitExpression", setArgumentAwaitExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentBinaryExpression", setArgumentBinaryExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentCallExpression", setArgumentCallExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentClassExpression", setArgumentClassExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentConditionalExpression", setArgumentConditionalExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentFunctionExpression", setArgumentFunctionExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentIdentifier", setArgumentIdentifier);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentBooleanLiteral", setArgumentBooleanLiteral);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentNullLiteral", setArgumentNullLiteral);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentNumberLiteral", setArgumentNumberLiteral);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentRegExpLiteral", setArgumentRegExpLiteral);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentStringLiteral", setArgumentStringLiteral);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentLogicalExpression", setArgumentLogicalExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentMemberExpression", setArgumentMemberExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentMetaProperty", setArgumentMetaProperty);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentNewExpression", setArgumentNewExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentObjectExpression", setArgumentObjectExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentSequenceExpression", setArgumentSequenceExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentTaggedTemplateExpression", setArgumentTaggedTemplateExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentTemplateLiteral", setArgumentTemplateLiteral);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentThisExpression", setArgumentThisExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentUnaryExpression", setArgumentUnaryExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentUpdateExpression", setArgumentUpdateExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setArgumentYieldExpression", setArgumentYieldExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addCommentsComment", addCommentsComment);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setOperator", setOperator);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setPrefix", setPrefix);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setPath", setPath);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setLine", setLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setCol", setCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setEndLine", setEndLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setEndCol", setEndCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideLine", setWideLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideCol", setWideCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideEndLine", setWideEndLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideEndCol", setWideEndCol);
-                                                                           
-  constructor.Reset(isolate, tpl->GetFunction());                          
-  exports->Set(v8::String::NewFromUtf8(isolate, "UnaryExpressionWrapper"),                   
-               tpl->GetFunction());                                        
-}                                                                          
+UnaryExpressionWrapper::UnaryExpressionWrapper(): env_(nullptr), wrapper_(nullptr) {}
 
+UnaryExpressionWrapper::~UnaryExpressionWrapper(){ napi_delete_reference(env_, wrapper_); }
 
-void UnaryExpressionWrapper::New(const FunctionCallbackInfo<Value>& args) {                             
-  Isolate* isolate = Isolate::GetCurrent();                                         
-  HandleScope scope(isolate);                                                       
-                                                                                    
-  if (args.IsConstructCall()) {                                                     
-    // Invoked as constructor: `new UnaryExpressionWrapper(...)`                                        
-    Factory* fact = Nan::ObjectWrap::Unwrap<Factory>(args[0]->ToObject()); 
-    UnaryExpressionWrapper* obj = new UnaryExpressionWrapper(fact);                                                         
-    obj->Wrap(args.This());                                                         
-    args.GetReturnValue().Set(args.This());                                         
-  } else {                                                                          
-    // Invoked as plain function `UnaryExpressionWrapper(...)`, turn into construct call.               
-    const int argc = 1;                                                             
-    Handle<v8::Value> argv[argc] = { args[0] };                                         
-    Local<v8::Function> cons = Local<v8::Function>::New(isolate, constructor);              
-    args.GetReturnValue().Set(Nan::NewInstance(cons, argc, argv).ToLocalChecked()); 
-  }                                                                                 
-}                                                                                   
-
-
-UnaryExpressionWrapper::UnaryExpressionWrapper(Factory* fact)                        
-{                                                   
-  UnaryExpression = fact->getFactory()->createUnaryExpressionNode();          
-}                                                   
-
-UnaryExpressionWrapper::~UnaryExpressionWrapper()
-{        
-}        
-
-void UnaryExpressionWrapper::NewInstance(const FunctionCallbackInfo<Value>& args) {              
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  const unsigned argc = 1;                                                   
-  Handle<Value> argv[argc] = { args[0] };                                    
-  Local<v8::Function> cons = Local<v8::Function>::New(isolate, constructor);         
-  Local<v8::Object> instance = Nan::NewInstance(cons, argc, argv).ToLocalChecked();  
-  args.GetReturnValue().Set(instance);                                       
-}                                                                            
-
-void UnaryExpressionWrapper::setArgumentArrayExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ArrayExpressionWrapper* _ArrayExpression1 = ObjectWrap::Unwrap<ArrayExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
-
-  _UnaryExpression2->UnaryExpression->setArgument(_ArrayExpression1->ArrayExpression);
+void UnaryExpressionWrapper::Destructor(napi_env env, void* nativeObject, void* ){
+  UnaryExpressionWrapper* obj = reinterpret_cast<UnaryExpressionWrapper*>(nativeObject);
+  //delete obj->_nativeObj;
+  obj->~UnaryExpressionWrapper();
 }
-void UnaryExpressionWrapper::setArgumentArrowFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ArrowFunctionExpressionWrapper* _ArrowFunctionExpression1 = ObjectWrap::Unwrap<ArrowFunctionExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+napi_value UnaryExpressionWrapper::Init(napi_env env, napi_value& exports) {
+  napi_status status;
+  napi_property_descriptor props [] = {
+  DECLARE_NAPI_METHOD( "setArgument", setArgument),
+  DECLARE_NAPI_METHOD( "addComments", addComments),
+    DECLARE_NAPI_METHOD("setOperator", setOperator),
+    DECLARE_NAPI_METHOD("setPrefix", setPrefix),
+    DECLARE_NAPI_METHOD("setPath", setPath),
+    DECLARE_NAPI_METHOD("setPosition", setPosition),
+  };
 
-  _UnaryExpression2->UnaryExpression->setArgument(_ArrowFunctionExpression1->ArrowFunctionExpression);
-}
-void UnaryExpressionWrapper::setArgumentAssignmentExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  AssignmentExpressionWrapper* _AssignmentExpression1 = ObjectWrap::Unwrap<AssignmentExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  napi_value cons;
+  status = napi_define_class(env, "UnaryExpressionWrapper", NAPI_AUTO_LENGTH, New, nullptr, sizeof(props) / sizeof(*props), props, &cons );
+  assert(status == napi_ok);
 
-  _UnaryExpression2->UnaryExpression->setArgument(_AssignmentExpression1->AssignmentExpression);
-}
-void UnaryExpressionWrapper::setArgumentAwaitExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  AwaitExpressionWrapper* _AwaitExpression1 = ObjectWrap::Unwrap<AwaitExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  status = napi_create_reference(env, cons, 1, &constructor);
+  assert(status == napi_ok);
 
-  _UnaryExpression2->UnaryExpression->setArgument(_AwaitExpression1->AwaitExpression);
+  return exports;
 }
-void UnaryExpressionWrapper::setArgumentBinaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  BinaryExpressionWrapper* _BinaryExpression1 = ObjectWrap::Unwrap<BinaryExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+napi_value UnaryExpressionWrapper::New(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
 
-  _UnaryExpression2->UnaryExpression->setArgument(_BinaryExpression1->BinaryExpression);
-}
-void UnaryExpressionWrapper::setArgumentCallExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  CallExpressionWrapper* _CallExpression1 = ObjectWrap::Unwrap<CallExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
+  assert(status == napi_ok);
 
-  _UnaryExpression2->UnaryExpression->setArgument(_CallExpression1->CallExpression);
-}
-void UnaryExpressionWrapper::setArgumentClassExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ClassExpressionWrapper* _ClassExpression1 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  UnaryExpressionWrapper* obj = new UnaryExpressionWrapper();
+  obj->env_ = env;
+  status = napi_wrap(env, jsthis, reinterpret_cast<void*>(obj), UnaryExpressionWrapper::Destructor, nullptr, &obj->wrapper_);
+  assert(status == napi_ok);
 
-  _UnaryExpression2->UnaryExpression->setArgument(_ClassExpression1->ClassExpression);
+  return jsthis;
 }
-void UnaryExpressionWrapper::setArgumentConditionalExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ConditionalExpressionWrapper* _ConditionalExpression1 = ObjectWrap::Unwrap<ConditionalExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
 
-  _UnaryExpression2->UnaryExpression->setArgument(_ConditionalExpression1->ConditionalExpression);
-}
-void UnaryExpressionWrapper::setArgumentFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  FunctionExpressionWrapper* _FunctionExpression1 = ObjectWrap::Unwrap<FunctionExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
 
-  _UnaryExpression2->UnaryExpression->setArgument(_FunctionExpression1->FunctionExpression);
-}
-void UnaryExpressionWrapper::setArgumentIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  IdentifierWrapper* _Identifier1 = ObjectWrap::Unwrap<IdentifierWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+napi_status UnaryExpressionWrapper::NewInstance(napi_env env, expression::UnaryExpression* arg, napi_value* instance) {
 
-  _UnaryExpression2->UnaryExpression->setArgument(_Identifier1->Identifier);
-}
-void UnaryExpressionWrapper::setArgumentBooleanLiteral(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  BooleanLiteralWrapper* _BooleanLiteral1 = ObjectWrap::Unwrap<BooleanLiteralWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  napi_status status;
+  napi_value cons;
 
-  _UnaryExpression2->UnaryExpression->setArgument(_BooleanLiteral1->BooleanLiteral);
-}
-void UnaryExpressionWrapper::setArgumentNullLiteral(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  NullLiteralWrapper* _NullLiteral1 = ObjectWrap::Unwrap<NullLiteralWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  status = napi_get_reference_value(env, constructor, &cons);
+  if(status != napi_ok) return status;
 
-  _UnaryExpression2->UnaryExpression->setArgument(_NullLiteral1->NullLiteral);
-}
-void UnaryExpressionWrapper::setArgumentNumberLiteral(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  NumberLiteralWrapper* _NumberLiteral1 = ObjectWrap::Unwrap<NumberLiteralWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  status = napi_new_instance(env, cons, 0, nullptr, instance);
+  if(status != napi_ok) return status;
 
-  _UnaryExpression2->UnaryExpression->setArgument(_NumberLiteral1->NumberLiteral);
+  UnaryExpressionWrapper* obj;
+  status = napi_unwrap(env, *instance, reinterpret_cast<void**>(&obj));
+  obj->_nativeObj = arg;
+  return napi_ok;
 }
-void UnaryExpressionWrapper::setArgumentRegExpLiteral(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  RegExpLiteralWrapper* _RegExpLiteral1 = ObjectWrap::Unwrap<RegExpLiteralWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
 
-  _UnaryExpression2->UnaryExpression->setArgument(_RegExpLiteral1->RegExpLiteral);
-}
-void UnaryExpressionWrapper::setArgumentStringLiteral(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  StringLiteralWrapper* _StringLiteral1 = ObjectWrap::Unwrap<StringLiteralWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+napi_value UnaryExpressionWrapper::setArgument(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
 
-  _UnaryExpression2->UnaryExpression->setArgument(_StringLiteral1->StringLiteral);
-}
-void UnaryExpressionWrapper::setArgumentLogicalExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  LogicalExpressionWrapper* _LogicalExpression1 = ObjectWrap::Unwrap<LogicalExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
 
-  _UnaryExpression2->UnaryExpression->setArgument(_LogicalExpression1->LogicalExpression);
-}
-void UnaryExpressionWrapper::setArgumentMemberExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  MemberExpressionWrapper* _MemberExpression1 = ObjectWrap::Unwrap<MemberExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  UnaryExpressionWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
 
-  _UnaryExpression2->UnaryExpression->setArgument(_MemberExpression1->MemberExpression);
-}
-void UnaryExpressionWrapper::setArgumentMetaProperty(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  MetaPropertyWrapper* _MetaProperty1 = ObjectWrap::Unwrap<MetaPropertyWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
 
-  _UnaryExpression2->UnaryExpression->setArgument(_MetaProperty1->MetaProperty);
-}
-void UnaryExpressionWrapper::setArgumentNewExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  NewExpressionWrapper* _NewExpression1 = ObjectWrap::Unwrap<NewExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  columbus::javascript::asg::expression::UnaryExpression* source = dynamic_cast<columbus::javascript::asg::expression::UnaryExpression*>(obj->_nativeObj);
+  columbus::javascript::asg::expression::Expression* target = dynamic_cast<columbus::javascript::asg::expression::Expression*>(param->_nativeObj);
 
-  _UnaryExpression2->UnaryExpression->setArgument(_NewExpression1->NewExpression);
-}
-void UnaryExpressionWrapper::setArgumentObjectExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ObjectExpressionWrapper* _ObjectExpression1 = ObjectWrap::Unwrap<ObjectExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast expression::UnaryExpression" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast expression::Expression" );
+  }
 
-  _UnaryExpression2->UnaryExpression->setArgument(_ObjectExpression1->ObjectExpression);
+  source->setArgument(target);
+  return nullptr;
 }
-void UnaryExpressionWrapper::setArgumentSequenceExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  SequenceExpressionWrapper* _SequenceExpression1 = ObjectWrap::Unwrap<SequenceExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+napi_value UnaryExpressionWrapper::addComments(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
 
-  _UnaryExpression2->UnaryExpression->setArgument(_SequenceExpression1->SequenceExpression);
-}
-void UnaryExpressionWrapper::setArgumentTaggedTemplateExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  TaggedTemplateExpressionWrapper* _TaggedTemplateExpression1 = ObjectWrap::Unwrap<TaggedTemplateExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
 
-  _UnaryExpression2->UnaryExpression->setArgument(_TaggedTemplateExpression1->TaggedTemplateExpression);
-}
-void UnaryExpressionWrapper::setArgumentTemplateLiteral(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  TemplateLiteralWrapper* _TemplateLiteral1 = ObjectWrap::Unwrap<TemplateLiteralWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  UnaryExpressionWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
 
-  _UnaryExpression2->UnaryExpression->setArgument(_TemplateLiteral1->TemplateLiteral);
-}
-void UnaryExpressionWrapper::setArgumentThisExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ThisExpressionWrapper* _ThisExpression1 = ObjectWrap::Unwrap<ThisExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
 
-  _UnaryExpression2->UnaryExpression->setArgument(_ThisExpression1->ThisExpression);
-}
-void UnaryExpressionWrapper::setArgumentUnaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  UnaryExpressionWrapper* _UnaryExpression1 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  columbus::javascript::asg::expression::UnaryExpression* source = dynamic_cast<columbus::javascript::asg::expression::UnaryExpression*>(obj->_nativeObj);
+  columbus::javascript::asg::base::Comment* target = dynamic_cast<columbus::javascript::asg::base::Comment*>(param->_nativeObj);
 
-  _UnaryExpression2->UnaryExpression->setArgument(_UnaryExpression1->UnaryExpression);
-}
-void UnaryExpressionWrapper::setArgumentUpdateExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  UpdateExpressionWrapper* _UpdateExpression1 = ObjectWrap::Unwrap<UpdateExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast expression::UnaryExpression" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast base::Comment" );
+  }
 
-  _UnaryExpression2->UnaryExpression->setArgument(_UpdateExpression1->UpdateExpression);
+  source->addComments(target);
+  return nullptr;
 }
-void UnaryExpressionWrapper::setArgumentYieldExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  YieldExpressionWrapper* _YieldExpression1 = ObjectWrap::Unwrap<YieldExpressionWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+napi_value UnaryExpressionWrapper::setOperator(napi_env env, napi_callback_info info){ 
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
 
-  _UnaryExpression2->UnaryExpression->setArgument(_YieldExpression1->YieldExpression);
-}
-void UnaryExpressionWrapper::addCommentsComment(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  CommentWrapper* _Comment1 = ObjectWrap::Unwrap<CommentWrapper>(args[0]->ToObject());
-  UnaryExpressionWrapper* _UnaryExpression2 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
 
-  _UnaryExpression2->UnaryExpression->addComments(_Comment1->Comment);
-}
-void UnaryExpressionWrapper::setOperator(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  UnaryExpressionWrapper* _UnaryExpression = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
+  UnaryExpressionWrapper* obj;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  napi_valuetype paramtype;
+  status = napi_typeof(env, args[0], &paramtype);
+  assert(status == napi_ok);
+
+  if(paramtype != napi_string){
+    napi_throw_type_error(env, nullptr, "Argument should be a string!"); 
+    return nullptr;
+  }
+
+  char buffer[1024];
+  size_t buffer_size = 1024, result_size = 0;
+  status = napi_get_value_string_utf8(env, args[0], buffer, buffer_size, &result_size);
+  assert(status == napi_ok);
+
+  std::string param(buffer);
+
   if( param == "unoMinus" ){
-    _UnaryExpression->UnaryExpression->setOperator( unoMinus );
+    dynamic_cast<columbus::javascript::asg::expression::UnaryExpression*>(obj->_nativeObj)->setOperator( unoMinus );
   }
   if( param == "unoPlus" ){
-    _UnaryExpression->UnaryExpression->setOperator( unoPlus );
+    dynamic_cast<columbus::javascript::asg::expression::UnaryExpression*>(obj->_nativeObj)->setOperator( unoPlus );
   }
   if( param == "unoNot" ){
-    _UnaryExpression->UnaryExpression->setOperator( unoNot );
+    dynamic_cast<columbus::javascript::asg::expression::UnaryExpression*>(obj->_nativeObj)->setOperator( unoNot );
   }
   if( param == "unoTypeOf" ){
-    _UnaryExpression->UnaryExpression->setOperator( unoTypeOf );
+    dynamic_cast<columbus::javascript::asg::expression::UnaryExpression*>(obj->_nativeObj)->setOperator( unoTypeOf );
   }
   if( param == "unoVoid" ){
-    _UnaryExpression->UnaryExpression->setOperator( unoVoid );
+    dynamic_cast<columbus::javascript::asg::expression::UnaryExpression*>(obj->_nativeObj)->setOperator( unoVoid );
   }
   if( param == "unoDelete" ){
-    _UnaryExpression->UnaryExpression->setOperator( unoDelete );
+    dynamic_cast<columbus::javascript::asg::expression::UnaryExpression*>(obj->_nativeObj)->setOperator( unoDelete );
   }
   if( param == "unoBitwiseNot" ){
-    _UnaryExpression->UnaryExpression->setOperator( unoBitwiseNot );
+    dynamic_cast<columbus::javascript::asg::expression::UnaryExpression*>(obj->_nativeObj)->setOperator( unoBitwiseNot );
   }
+  return nullptr;
 }
-void UnaryExpressionWrapper::setPrefix(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  UnaryExpressionWrapper* _UnaryExpression = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::transform(param.begin(), param.end(), param.begin(), ::tolower);
-  std::istringstream is(param);                                    
-  bool b;                                                        
-  is >> std::boolalpha >> b;                                     
-  _UnaryExpression->UnaryExpression->setPrefix( b );
-}
-void UnaryExpressionWrapper::setPath(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);
+napi_value UnaryExpressionWrapper::setPrefix(napi_env env, napi_callback_info info){ 
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
 
-  UnaryExpressionWrapper* _UnaryExpression = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );
-  std::string param(*utfStr);
-  Range range = _UnaryExpression->UnaryExpression->getPosition();
-  range.setPath( param );
-  _UnaryExpression->UnaryExpression->setPosition( range );
-}
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
 
-void UnaryExpressionWrapper::setLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  UnaryExpressionWrapper* _UnaryExpression = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _UnaryExpression->UnaryExpression->getPosition();
-  range.setLine( ui );
-  _UnaryExpression->UnaryExpression->setPosition( range );
-}
+  UnaryExpressionWrapper* obj;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
 
-void UnaryExpressionWrapper::setCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  UnaryExpressionWrapper* _UnaryExpression = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _UnaryExpression->UnaryExpression->getPosition();
-  range.setCol( ui );
-  _UnaryExpression->UnaryExpression->setPosition( range );
-}
+  napi_valuetype paramtype;
+  status = napi_typeof(env, args[0], &paramtype);
+  assert(status == napi_ok);
 
-void UnaryExpressionWrapper::setEndLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  UnaryExpressionWrapper* _UnaryExpression = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _UnaryExpression->UnaryExpression->getPosition();
-  range.setEndLine( ui );
-  _UnaryExpression->UnaryExpression->setPosition( range );
-}
+  if(paramtype != napi_boolean){
+    napi_throw_type_error(env, nullptr, "Argument should be a boolean!"); 
+    return nullptr;
+  }
 
-void UnaryExpressionWrapper::setEndCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  UnaryExpressionWrapper* _UnaryExpression = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _UnaryExpression->UnaryExpression->getPosition();
-  range.setEndCol( ui );
-  _UnaryExpression->UnaryExpression->setPosition( range );
+  bool b;
+  status = napi_get_value_bool(env, args[0], &b);
+  assert(status == napi_ok);
+  dynamic_cast<columbus::javascript::asg::expression::UnaryExpression*>(obj->_nativeObj)->setPrefix( b );
+  return nullptr;
+}
+napi_value UnaryExpressionWrapper::setPath(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments");
+    return nullptr;
+  }
+
+  UnaryExpressionWrapper* obj;
+  napi_valuetype valuetype;
+  status = napi_typeof(env, args[0], &valuetype);
+  assert(status == napi_ok);
+
+  if (valuetype != napi_string) {
+    napi_throw_type_error(env, nullptr, "Argument should be a string!");
+    return nullptr;
+  }
+
+  char buffer[1024];
+  size_t buffer_size = 1024, result_size = 0;
+  status = napi_get_value_string_utf8(env, args[0], buffer, buffer_size, &result_size);
+  assert(status == napi_ok);
+
+  std::string path(buffer);
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  Range range = dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->getPosition();
+  range.setPath( path );
+  dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->setPosition( range );
+  return nullptr;
 }
 
-void UnaryExpressionWrapper::setWideLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  UnaryExpressionWrapper* _UnaryExpression = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _UnaryExpression->UnaryExpression->getPosition();
-  range.setWideLine( ui );
-  _UnaryExpression->UnaryExpression->setPosition( range );
+
+napi_value UnaryExpressionWrapper::setPosition(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 8;
+  napi_value args[8];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1 && argc != 8) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments. Use a simple object with the positions or pass 8 parameters: line, col, endline, endcol and their wide equivalents!");
+    return nullptr;
+  }
+
+  UnaryExpressionWrapper* obj;
+  napi_valuetype valuetype[8];
+  int32_t position[8];
+  bool hasProp[8];
+  if(argc == 1){
+    status = napi_typeof(env, args[0], &valuetype[0]);
+    assert(status == napi_ok);
+
+    if(valuetype[0] != napi_object){
+      napi_throw_type_error(env, nullptr, "Argument should be an object!");
+      return nullptr;
+    }
+
+    std::string props[] = {"line", "col", "endline", "endcol", "wideline", "widecol", "wideendline", "wideendcol",};
+
+    for(int i = 0; i < 8; ++i){
+      status = napi_has_named_property(env, args[0], props[i].c_str(), &hasProp[i]);
+      assert(status == napi_ok);
+      napi_value value;
+      if(hasProp[i]){
+        status = napi_get_named_property(env, args[0], props[i].c_str(), &value);
+        assert(status == napi_ok);
+        status = napi_get_value_int32(env, value, &position[i]);
+        assert(status == napi_ok);
+      }
+
+    }
+  }
+  else{
+    for(int i = 0; i < 8; ++i){
+      status = napi_typeof(env, args[i], &valuetype[i]);
+      assert(status == napi_ok);
+      if(valuetype[i] != napi_number){
+        napi_throw_type_error(env, nullptr, "Argument should be an integer!");
+        return nullptr;
+      }
+      status = napi_get_value_int32(env, args[i], &position[i]);
+      assert(status == napi_ok);
+    }
+    for(int i = 0; i < 8; ++i){
+      hasProp[i] = true;
+    }
+  }
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  Range range = dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->getPosition();
+
+  if(hasProp[0])
+    range.setLine( (int)position[0] );
+  if(hasProp[1])
+    range.setCol( (int)position[1] );
+  if(hasProp[2])
+    range.setEndLine( (int)position[2] );
+  if(hasProp[3])
+    range.setEndCol( (int)position[3] );
+  if(hasProp[4])
+    range.setWideLine( (int)position[4] );
+  if(hasProp[5])
+    range.setWideCol( (int)position[5] );
+  if(hasProp[6])
+    range.setWideEndLine( (int)position[6] );
+  if(hasProp[7])
+    range.setWideEndCol( (int)position[7] );
+  dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->setPosition( range );
+  return nullptr;
 }
 
-void UnaryExpressionWrapper::setWideCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  UnaryExpressionWrapper* _UnaryExpression = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _UnaryExpression->UnaryExpression->getPosition();
-  range.setWideCol( ui );
-  _UnaryExpression->UnaryExpression->setPosition( range );
-}
-
-void UnaryExpressionWrapper::setWideEndLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  UnaryExpressionWrapper* _UnaryExpression = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _UnaryExpression->UnaryExpression->getPosition();
-  range.setWideEndLine( ui );
-  _UnaryExpression->UnaryExpression->setPosition( range );
-}
-
-void UnaryExpressionWrapper::setWideEndCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  UnaryExpressionWrapper* _UnaryExpression = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _UnaryExpression->UnaryExpression->getPosition();
-  range.setWideEndCol( ui );
-  _UnaryExpression->UnaryExpression->setPosition( range );
-}
 
 }}}} //end of namespaces

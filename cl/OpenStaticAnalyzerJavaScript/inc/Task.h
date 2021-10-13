@@ -18,8 +18,8 @@
  *  limitations under the Licence.
  */
 
-#ifndef _SMJ_CONTR_TASK_H_
-#define _SMJ_CONTR_TASK_H_
+#ifndef _OSAJS_CONTR_TASK_H_
+#define _OSAJS_CONTR_TASK_H_
 
 #include <vector>
 #include <string>
@@ -42,20 +42,20 @@ DEFINETASK(GraphDumpTask)
 DEFINETASK(MetricHunterTask)
 DEFINETASK(ProfileTask)
 DEFINETASK(RunESLintTask)
+DEFINETASK(Sonar2GraphTask)
+DEFINETASK(LIM2PatternsTask)
 
-class AddLicenceTask : public columbus::controller::Task
+class UserDefinedMetricsTask : public columbus::controller::Task
 {
 private:
-  const std::list<std::string>& inactives;
+  std::list<std::string>& inactives;
 public:
   const static std::string name;
-  AddLicenceTask(const std::list<std::string>& inactives, const Properties& properties);
+  UserDefinedMetricsTask(std::list<std::string>& inactives, const Properties& properties);
   virtual ExecutionResult execute();
   virtual const std::string& getName() const {
     return name;
   }
 };
-
-
 
 #endif

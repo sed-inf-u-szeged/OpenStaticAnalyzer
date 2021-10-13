@@ -1,25 +1,7 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -37,35 +19,59 @@ namespace Columbus.CSAN
     /// </summary>
     class Filter
     {
-        protected List<FilterLine> Lines;
+        /// <summary>
+        /// The FilterLines in REVERSED order to speed up pattern matching a little.
+        /// </summary>
+        private readonly List<FilterLine> lines = new List<FilterLine>();
 
-        protected enum LineKind { Include, Exclude, None }
+        private readonly Dictionary<string, bool> cache = new Dictionary<string, bool>();
 
         public Filter(string path)
         {
-            Lines = new List<FilterLine>();
+            if (!string.IsNullOrWhiteSpace(path))
+                ProcessFile(path);
+        }
+
+        private void ProcessFile(string path)
+        {
             StreamReader file = null;
             try
             {
                 file = new StreamReader(path);
-                string line;
-                while ((line = file.ReadLine()) != null)
+                int lineNo = 1;
+                for (string line; (line = file.ReadLine()) != null; lineNo++)
                 {
+                    if (string.IsNullOrWhiteSpace(line))
+                        continue;
+
                     if (line[0] == '-' || line[0] == '+')
                     {
-                        Lines.Add(ProcessLine(line));
+                        if (line.Length < 2)
+                        {
+                            WriteMsg.WriteLine($"Warning: empty filter line at \"{path}\":{lineNo}");
+                            continue;
+                        }
+
+                        lines.Add(ProcessLine(line));
+                    }
+                    else if (line[0] != '#')
+                    {
+                        WriteMsg.WriteLine(
+                            $"Warning: skipped malformed filter line at \"{path}\":{lineNo}. The first character of every line should either be + - or #.",
+                            WriteMsg.MsgLevel.Warning);
                     }
                 }
             }
-            catch(FileNotFoundException)
+            catch (FileNotFoundException)
             {
-                WriteMsg.WriteWithBreak("Warning: filter file \"{0}\" not found!", WriteMsg.MsgLevel.Warning, 0, path);
+                WriteMsg.WriteLine("Warning: filter file \"{0}\" not found!", WriteMsg.MsgLevel.Warning, path); // TODO shouldn't this be fatal and throw?
             }
             finally
             {
                 file?.Dispose();
             }
-            Lines.Reverse(); //we will check from the last line, and the first match determines if the file is needed or not
+
+            lines.Reverse(); //we will check from the last line, and the first match determines if the file is needed or not
         }
 
         /// <summary>
@@ -74,15 +80,25 @@ namespace Columbus.CSAN
         /// <param name="input">The path of a file or folder</param>
         public bool IsNecessaryToAnalyse(string input)
         {
-            foreach (var line in Lines)
+            if (string.IsNullOrEmpty(input))
+                return true;
+            if (cache.TryGetValue(input, out bool result))
+                return result;
+
+            result = true;
+            foreach (var line in lines)
             {
-                if (Regex.IsMatch(input, line.Expression, RegexOptions.IgnoreCase))
-                    return line.OpenMethod == LineKind.Include;
+                if (line.Expression.IsMatch(input))
+                {
+                    result = line.OpenMethod == LineKind.Include;
+                    break;
+                }
             }
-            return true;
+
+            return cache[input] = result;
         }
 
-        private FilterLine ProcessLine(string line)
+        private static FilterLine ProcessLine(string line)
         {
             FilterLine data = new FilterLine();
             switch (line[0])
@@ -94,63 +110,90 @@ namespace Columbus.CSAN
                     data.OpenMethod = LineKind.Include;
                     break;
                 default:
-                    data.OpenMethod = LineKind.None;
-                    break;
+                    throw new ArgumentException("A filter line must start with a - or +", nameof(line));
             }
-            data.Expression = ProcessEscapingAnchors(line.Substring(1, line.Length - 1));
+            data.Expression = ProcessRegexPattern(line.Substring(1, line.Length - 1));
             return data;
         }
 
         /// <summary>
-        /// Processes the \Q and \E anchors in regular expressions
+        /// Processes the \Q and \E tags providing Quoted Literals. This implementation aims to be on-par with Java's.
+        /// After a \Q opening tag everything is treated literally until a closing \E or the end of the string.
         /// </summary>
-        private static string ProcessEscapingAnchors(string regex)
+        /// <remarks>
+        /// <p>You cannot have \E or any other escape sequence appear inside a quoted literal, \Q\\E\E only matches the
+        /// \ character, nothing else, \Q\\E also matches a single \ character, \Q\\\E matches \\, etc.</p>
+        /// <p>A closing \E without an opening \Q is dropped, so it does not match anything, but a warning is issued.</p>
+        /// </remarks>
+        /// <param name="pattern">An otherwise C# compatible regular expression possibly containing \Q and \E tags</param>
+        /// <returns>A constructed <see cref="Regex"/> object with \Q and \E tags stripped, the substrings inside them escaped.</returns>
+        private static Regex ProcessRegexPattern(string pattern)
         {
-            if (string.IsNullOrEmpty(regex))
-                return regex;
+            if (string.IsNullOrEmpty(pattern))
+                throw new ArgumentException($"{nameof(pattern)} should not be empty");
 
             var sb = new StringBuilder();
             int i = 0, j = 0;
             bool open = false;
-            for (; i < regex.Length - 1; i++)
+            bool oddBackslashes = false;
+
+            for (; i < pattern.Length - 1; i++)
             {
-                if (!open && regex.Substring(i, 2) == "\\Q") //i a \-re mutat
+                if (pattern[i] == '\\')
+                    oddBackslashes = !oddBackslashes;
+                else
+                    oddBackslashes = false;
+
+                bool atQ = pattern.Substring(i, 2) == @"\Q";
+                bool atE = pattern.Substring(i, 2) == @"\E";
+
+                if (!open && oddBackslashes && atQ) // i points to the \
                 {
                     open = true;
                     if (i != 0)
-                        sb.Append(regex.Substring(j, i - j));
-                    i++; //i a Q-ra mutat, majd a ciklus végén lépteti egyel a for
-                    j = i + 1; //emiatt, a j-t i+1re állítjuk
+                        sb.Append(pattern.Substring(j, i - j));
+                    i++;       // i points to Q, then at the end of the loop it is incremented one more time
+                    j = i + 1; // thus j has to be i+1
+                    oddBackslashes = false;
                 }
-                else if (regex.Substring(i, 2) == "\\E")
+                else if (open && atE)
                 {
-                    if (!open)
-                        WriteMsg.WriteWithBreak("Warning: \\E anchor found without opening \\Q in one of the filter files. Ignoring it.", WriteMsg.MsgLevel.Warning);
-                    else
-                    {
-                        open = false;
-                        sb.Append(Regex.Escape(regex.Substring(j, i - j)));
-                        i++;
-                        j = i + 1;
-                    }
+                    open = false;
+                    sb.Append(Regex.Escape(pattern.Substring(j, i - j)));
+                    i++;
+                    j = i + 1;
+                    oddBackslashes = false;
+                }
+                else if (!open && oddBackslashes && atE)
+                {
+                    WriteMsg.WriteLine(@"Warning: \E anchor found without opening \Q which matches nothing.", WriteMsg.MsgLevel.Warning);
+                    if (i != 0)
+                        sb.Append(pattern.Substring(j, i - j));
+                    i++;       // i points to E, then at the end of the loop it is incremented one more time
+                    j = i + 1; // thus j has to be i+1
+                    oddBackslashes = false;
                 }
             }
+
             if (i != j)
             {
-                if (open)
-                    sb.Append(Regex.Escape(regex.Substring(j, i - j + 1)));
-                else
-                    sb.Append(regex.Substring(j, i - j + 1));
+                var substr = pattern.Substring(j, i - j + 1);
+                sb.Append(open ? Regex.Escape(substr) : substr); // It is valid for \Q to not have a closing \E, then the whole regex is quoted
             }
 
-            return sb.ToString();
+            return new Regex(sb.ToString(), RegexOptions.IgnoreCase); // TODO catch ArgumentException, throw something more informative
         }
 
-        protected class FilterLine
+        private enum LineKind
+        {
+            Include,
+            Exclude
+        }
+
+        private struct FilterLine
         {
             public LineKind OpenMethod { get; set; }
-            public string Expression { get; set; }
-
+            public Regex Expression { get; set; }
         }
     }
 }

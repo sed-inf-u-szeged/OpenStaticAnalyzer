@@ -25,6 +25,7 @@
 #include "GraphRangeIndexer.h"
 #include <string>
 #include <map>
+#include <set>
 
 /**
   \file Metric.h
@@ -45,6 +46,19 @@ namespace columbus { namespace graphsupport {
     int endline;
     int endcol;
   };
+
+  struct Warning
+  {
+    Position position;
+    std::string text;
+  };
+
+  struct WarningComparator
+  {
+    bool operator()(const Warning& a, const Warning& b) const;
+  };
+
+  typedef std::set<Warning, WarningComparator> WarningCache;
 
    /**
   * \brief  remove metric
@@ -93,10 +107,10 @@ namespace columbus { namespace graphsupport {
   * \param col [in] warning place in the file (start column)
   * \param endLine [in] warning place in the file (end line)
   * \param endCol [in] warning place in the file (end column)
-  * \param warningText [in] the warning description
+  * \param text [in] the warning description
   * \return return true, if the warning didn't exist
   */
-  bool addWarningOnce(graph::Graph& graph, graph::Node& node, const std::string& name, const std::string& path, int line, int col, int endLine, int endCol, const std::string& text);
+  bool addWarningOnce(graph::Graph& graph, graph::Node& node, const std::string& name, const std::string& path, int line, int col, int endLine, int endCol, const std::string& text, WarningCache* warningCache = nullptr);
 
   /**
   * \brief Adds a composite attribute to a node if it not exist.
@@ -111,7 +125,7 @@ namespace columbus { namespace graphsupport {
   * \param warningText [in] the warning description
   * \return return true, if the warning didn't exist
   */
-  bool addWarningOnce(graph::Graph& graph, const std::string& UID, const std::string& name, const std::string& path, int line, int col, int endLine, int endCol, const std::string& text);
+  bool addWarningOnce(graph::Graph& graph, const std::string& UID, const std::string& name, const std::string& path, int line, int col, int endLine, int endCol, const std::string& text, WarningCache* warningCache = nullptr);
 
   /**
   * \brief Adds a composite warning attribute to a node if it not exist.
@@ -127,7 +141,7 @@ namespace columbus { namespace graphsupport {
   * \param extraInfo [in] the extraInfo composite attribute 
   * \return return true, if the warning didn't exist
   */
-  bool addWarningOnce(graph::Graph& graph, graph::Node& node, const std::string& name, const std::string& path, int line, int col, int endLine, int endCol, const std::string& text, const graph::AttributeComposite& extraInfo);
+  bool addWarningOnce(graph::Graph& graph, graph::Node& node, const std::string& name, const std::string& path, int line, int col, int endLine, int endCol, const std::string& text, const graph::AttributeComposite& extraInfo, WarningCache* warningCache = nullptr);
 
   /**
   * \brief Adds a 'position' composite attribute to a node.
@@ -170,6 +184,14 @@ namespace columbus { namespace graphsupport {
   * \return return true, if all attribute is found
   */
   bool getPositionAttribute(const graph::Node& node, std::string& path, int& line, int& col, int& endLine, int& endCol, bool& realizationLevel, bool& definition);
+
+
+  /**
+  * \brief get the realization level of the given node
+  * \param node [in] the node
+  * \return return the realization level or empty string if the node does not have any
+  */
+  std::string getRealizationLevel(const graph::Node& node);
 
 
   /**

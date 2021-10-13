@@ -365,6 +365,22 @@ namespace columbus { namespace javascript { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge visitor for calls edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge visitor for calls edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge  visitor for hasAlternate edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -557,11 +573,27 @@ namespace columbus { namespace javascript { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge visitor for calls edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitNewExpression_Calls(const expression::NewExpression& begin, const statement::Function& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge visitor for calls edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndNewExpression_Calls(const expression::NewExpression& begin, const statement::Function& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge  visitor for hasProperties edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      void VisitorSimpleEdge::visitObjectExpression_HasProperties(const expression::ObjectExpression& begin, const expression::Property& end) {
+      void VisitorSimpleEdge::visitObjectExpression_HasProperties(const expression::ObjectExpression& begin, const base::Positioned& end) {
         visitAllEdge (begin, end);
       }
       /**
@@ -569,7 +601,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      void VisitorSimpleEdge::visitEndObjectExpression_HasProperties(const expression::ObjectExpression& begin, const expression::Property& end) {
+      void VisitorSimpleEdge::visitEndObjectExpression_HasProperties(const expression::ObjectExpression& begin, const base::Positioned& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -1137,7 +1169,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      void VisitorSimpleEdge::visitObjectPattern_HasProperties(const statement::ObjectPattern& begin, const expression::Property& end) {
+      void VisitorSimpleEdge::visitObjectPattern_HasProperties(const statement::ObjectPattern& begin, const base::Positioned& end) {
         visitAllEdge (begin, end);
       }
       /**
@@ -1145,7 +1177,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      void VisitorSimpleEdge::visitEndObjectPattern_HasProperties(const statement::ObjectPattern& begin, const expression::Property& end) {
+      void VisitorSimpleEdge::visitEndObjectPattern_HasProperties(const statement::ObjectPattern& begin, const base::Positioned& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**

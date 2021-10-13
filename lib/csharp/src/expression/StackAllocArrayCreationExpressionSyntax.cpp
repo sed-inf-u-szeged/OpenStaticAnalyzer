@@ -35,6 +35,7 @@ typedef boost::crc_32_type  Crc_type;
 namespace expression { 
   StackAllocArrayCreationExpressionSyntax::StackAllocArrayCreationExpressionSyntax(NodeId _id, Factory *_factory) :
     ExpressionSyntax(_id, _factory),
+    m_Initializer(0),
     m_Type(0)
   {
   }
@@ -43,12 +44,23 @@ namespace expression {
   }
 
   void StackAllocArrayCreationExpressionSyntax::prepareDelete(bool tryOnVirtualParent){
+    removeInitializer();
     removeType();
     expression::ExpressionSyntax::prepareDelete(false);
   }
 
   NodeKind StackAllocArrayCreationExpressionSyntax::getNodeKind() const {
     return ndkStackAllocArrayCreationExpressionSyntax;
+  }
+
+  expression::InitializerExpressionSyntax* StackAllocArrayCreationExpressionSyntax::getInitializer() const {
+    expression::InitializerExpressionSyntax *_node = NULL;
+    if (m_Initializer != 0)
+      _node = dynamic_cast<expression::InitializerExpressionSyntax*>(factory->getPointer(m_Initializer));
+    if ( (_node == NULL) || factory->getIsFiltered(_node))
+      return NULL;
+
+    return _node;
   }
 
   expression::TypeSyntax* StackAllocArrayCreationExpressionSyntax::getType() const {
@@ -63,6 +75,9 @@ namespace expression {
 
   bool StackAllocArrayCreationExpressionSyntax::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
+      case edkStackAllocArrayCreationExpressionSyntax_Initializer:
+        setInitializer(edgeEnd);
+        return true;
       case edkStackAllocArrayCreationExpressionSyntax_Type:
         setType(edgeEnd);
         return true;
@@ -77,6 +92,9 @@ namespace expression {
 
   bool StackAllocArrayCreationExpressionSyntax::removeEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
+      case edkStackAllocArrayCreationExpressionSyntax_Initializer:
+        removeInitializer();
+        return true;
       case edkStackAllocArrayCreationExpressionSyntax_Type:
         removeType();
         return true;
@@ -87,6 +105,52 @@ namespace expression {
       return true;
     }
     return false;
+  }
+
+  void StackAllocArrayCreationExpressionSyntax::setInitializer(NodeId _id) {
+    expression::InitializerExpressionSyntax *_node = NULL;
+    if (_id) {
+      if (!factory->getExist(_id))
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+      _node = dynamic_cast<expression::InitializerExpressionSyntax*> (factory->getPointer(_id));
+      if ( _node == NULL) {
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      }
+      if (&(_node->getFactory()) != this->factory)
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+
+      if (m_Initializer) {
+        removeParentEdge(m_Initializer);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_Initializer, m_id, edkStackAllocArrayCreationExpressionSyntax_Initializer);
+      }
+      m_Initializer = _node->getId();
+      if (m_Initializer != 0)
+        setParentEdge(factory->getPointer(m_Initializer), edkStackAllocArrayCreationExpressionSyntax_Initializer);
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->insertEdge(m_Initializer, this->getId(), edkStackAllocArrayCreationExpressionSyntax_Initializer);
+    } else {
+      if (m_Initializer) {
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      }
+    }
+  }
+
+  void StackAllocArrayCreationExpressionSyntax::setInitializer(expression::InitializerExpressionSyntax *_node) {
+    if (_node == NULL)
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+
+    setInitializer(_node->getId());
+  }
+
+  void StackAllocArrayCreationExpressionSyntax::removeInitializer() {
+      if (m_Initializer) {
+        removeParentEdge(m_Initializer);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_Initializer, m_id, edkStackAllocArrayCreationExpressionSyntax_Initializer);
+      }
+      m_Initializer = 0;
   }
 
   void StackAllocArrayCreationExpressionSyntax::setType(NodeId _id) {
@@ -177,12 +241,17 @@ namespace expression {
   void StackAllocArrayCreationExpressionSyntax::save(io::BinaryIO &binIo,bool withVirtualBase  /*= true*/) const {
     ExpressionSyntax::save(binIo,false);
 
+    binIo.writeUInt4(m_Initializer);
     binIo.writeUInt4(m_Type);
 
   }
 
   void StackAllocArrayCreationExpressionSyntax::load(io::BinaryIO &binIo, bool withVirtualBase /*= true*/) {
     ExpressionSyntax::load(binIo,false);
+
+    m_Initializer =  binIo.readUInt4();
+    if (m_Initializer != 0)
+      setParentEdge(factory->getPointer(m_Initializer),edkStackAllocArrayCreationExpressionSyntax_Initializer);
 
     m_Type =  binIo.readUInt4();
     if (m_Type != 0)

@@ -24,6 +24,10 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
     
     - FxCop coding rule violations
 
+    - SONARQUBE™ platform 8.0 (“SonarQube” in the following) coding rule violations
+
+    - Roslyn Analyzer coding rule violations
+
 - Clone detection (copy-pasted source code fragments) extended with clone tracking and "clone smells"
 
     - Syntax-based, so-called Type-2 clones
@@ -36,6 +40,8 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
 
     - Coding rule violation metrics
 
+[SONARQUBE™]:https://www.sonarqube.org
+
 By continuous static analysis, the software developers can:
 
 - reduce the software erosion rate and this way decrease development costs;
@@ -44,10 +50,13 @@ By continuous static analysis, the software developers can:
 
 - the number of errors in delivered software can be reduced, so the operational risks can be decreased, increasing the company's reputation.
 
-OpenStaticAnalyzer can analyze source code conforming to C# 6.0.
-The following can be analyzed: a solution (.sln), a project (.csproj) or a single source file (.cs). In case of a project or a solution, it is recommended to build it with pdb generation enabled before analyzing, therefore FxCop can be run on the binaries in parallel. See more on this in the FxCop appendix.
+OpenStaticAnalyzer can analyze source code conforming to C# 8.
+The following can be analyzed: a solution (.sln), a project (.csproj) or a single source file (.cs). In case of a project or a solution, it is recommended to build it with pdb generation enabled before analysing, therefore FxCop can be run on the binaries in parallel. See more on this in the FxCop appendix.
 
 With the help of the filtering mechanism it is possible to specify a certain part of the ASG to be used (or not to be used) during the analysis, hence the results can be made more focused and the usage of memory and CPU can be reduced (e.g. generated source files or test code can be filtered out).
+
+[OWASP]:https://www.owasp.org
+[Department of Software Engineering]:http://www.sed.inf.u-szeged.hu/softwarequality
 
 ## Background
 
@@ -57,29 +66,24 @@ During the static analysis, an Abstract Semantic Graph (ASG) is constructed from
 
 ## Supported platforms
 
-OpenStaticAnalyzer supports the following x86 and x86-64 platforms:
+OpenStaticAnalyzer supports the following x64 platforms:
 
-- Microsoft Windows 7, 8, 8.1, and 10
+- Microsoft Windows 7 SP1 or newer
 
-- Microsoft Windows 2008 R2 Server
+- Microsoft Windows Server 2012 or newer
 
-- Microsoft Windows 2012 Server
+- GNU/Linux with kernel version 2.6.18 and GNU C library 2.11 or newer
 
 ## Requirements
 
 The following software packages are required to be installed:
 
-- [Microsoft .NET Framework 4.5.2 Developer Pack]
+- [.NET Core SDK 3.1]
 
-- [Microsoft Build Tools 2015]
+- [Microsoft Visual C++ 2017 Redistributable Package] - on Windows
 
-- [Microsoft Visual C++ 2015  Redistributable Package]
-
-[Microsoft .NET Framework 4.5.2 Developer Pack]:http://www.microsoft.com/en-ca/download/details.aspx?id=42637
-[Microsoft Build Tools 2015]:https://www.microsoft.com/en-us/download/details.aspx?id=48159
-[Visual Studio 2013]:https://www.visualstudio.com/en-us/downloads/download-visual-studio-vs.aspx
-[Visual Studio 2013 SDK]:https://www.microsoft.com/en-us/download/details.aspx?id=40758
-[Microsoft Visual C++ 2015  Redistributable Package]:https://www.microsoft.com/en-us/download/details.aspx?id=48145
+[.NET Core SDK 3.1]:https://dotnet.microsoft.com/download/visual-studio-sdks
+[Microsoft Visual C++ 2017 Redistributable Package]:https://aka.ms/vs/15/release/VC_redist.x64.exe
 
 ## Installation package
 
@@ -88,6 +92,7 @@ It can be executed with the command line program OpenStaticAnalyzerCsharp.
 
 The OpenStaticAnalyzer for C# package contains the following directories and files:
 
+Windows:
 
 |                              |                                |                                             |
 |------------------------------|--------------------------------|---------------------------------------------|
@@ -97,20 +102,47 @@ The OpenStaticAnalyzer for C# package contains the following directories and fil
 |                              | OpenStaticAnalyzerCsharp.exe   | \# Program file to execute the analysis     |
 |                              | UsersGuide.html                | \# User's guide                             |
 
+Linux:
+
+|                              |                                |                                             |
+|------------------------------|--------------------------------|---------------------------------------------|
+| OpenStaticAnalyzer/Csharp/   |                                |                                             |
+|                              | Demo                           | \# Example project directory                |
+|                              | WindowsTools                   | \# ASG checker and exporter tools directory |
+|                              | OpenStaticAnalyzerCsharp       | \# Program file to execute the analysis     |
+|                              | UsersGuide.html                | \# User's guide                             |
+
 # Preconditions
 
 ## Solution or Project analysis
 
-The software system shall be compilable with C# 6.0 and the build process with MSBuild.
+The software system shall be compilable with C# 8 and the build process with MSBuild 16.
 
-In order to use OpenStaticAnalyzer for C# it is necessary to meet all the requirements of your project's build process. Before starting the analysis, it is recommended to open your solution in Visual Studio and start a build. If it completed successfully, you can proceed with OpenStaticAnalyzer.
-If these conditions are not met, the solution and project files must be modified accordingly.  
+In order to use OpenStaticAnalyzer for C# it is necessary to meet all the requirements of your project's build process.
+Before starting the analysis, it is recommended to build your solution using Visual Studio or the .NET Core SDK commandline tools.
+If it failed, check that the following are installed:
 
-OpenStaticAnalyzer creates the ASG files in the result directory.
+ - Git submodules
+ - NuGet packages or other external dependencies
+ - The required MsBuild workloads, Targeting Packs, SDKs
+
+If it completed successfully, you can proceed with OpenStaticAnalyzer.
+
+FxCop operates on binaries, therefore you **must** build the project before running OpenStaticAnalyzer in order to have FxCop results.
+
+If your projects reference Roslyn Analyzers, their results will be imported into the OpenStaticAnalyzer's results by default.
+
+### Version constraints
+
+- C# language up to 8
+
+- Solution and project file formats up to Visual Studio 2019 (16.0)
+
+- The targeted .NET Framework does not matter, but the corresponding targeting pack and/or SDK must be installed. The project can target other runtimes like .NET Core and .NET Standard as well.
 
 ## Single file analysis
 
-It is possible to analyze a single source file (.cs), which can be provided instead of a solution or project. Analyzing multiple source files without a project is not supported.
+It is possible to analyze a single source file (.cs), which can be provided instead of a solution or project. The file will be assumed to target `netcoreapp3.1`. Analyzing multiple source files without a project is not supported.
 
 # Command line parameters
 
@@ -130,7 +162,7 @@ OpenStaticAnalyzer can be executed with the following parameters:
   
 **-input**
   
-  : The solution (.sln), project (.csproj) or C# source (.cs) file to analyze.
+  : The solution (.sln), project (.csproj) or C# source (.cs) file to analyse.
 
 **-externalHardFilter**
 
@@ -174,9 +206,13 @@ Source code elements in the files marked with darker background will not be cons
 
   : This parameter turns on or off the Metric module. With this feature, OpenStaticAnalyzer computes source code metrics. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is "true".
 
+**-runRoslynAnalyzers**
+
+  : This parameter turns on or off the importing of Roslyn Analyzers' results. With this feature, OpenStaticAnalyzer will run the projects' referenced analyzers and incorporate their results into the output. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is "true".
+
 **-profileXML**
 
-  : Global configuration file for OpenStaticAnalyzer. Its *tool-options* tag can be used to override the default metric thresholds for the MetricHunter tool. Furthermore, its *rule-options* tag can enable/disable or modify the priorities of multiple rules. An example profile xml file is shown below:
+  : Global configuration file for OpenStaticAnalyzer. Its *tool-options* tag can be used to override the default metric thresholds for the MetricHunter tool or define custom metric formulas for the UserDefinedMetrics tool. Furthermore, its *rule-options* tag can enable/disable or modify the priorities of multiple rules. An example profile xml file is shown below:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.xml}
 <openstaticanalyzer-profile>
@@ -198,6 +234,9 @@ Source code elements in the files marked with darker background will not be cons
 </openstaticanalyzer-profile>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+**-runUDM**
+
+  : This parameter turns on or off the UserDefinedMetrics module. With this feature, OpenStaticAnalyzer computes custom source code metrics based on other, previously computed metrics. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is dependent on the presence of custom metric definitions in the profile xml.
 
 **-cloneGenealogy**
 
@@ -215,6 +254,10 @@ Source code elements in the files marked with darker background will not be cons
 
   : This parameter sets the decimal mark character in the CSV outputs. The default is locale dependent. The character set here must be placed in quotation marks (e.g. -csvDecimalMark=",")
 
+**-sarifseverity**
+
+  : This parameter sets the severity levels to be saved in the SARIF output. (1 - Info, 2 - Minor, 3 - Major, 4 - Critical, 5 - Blocker, c/C - CloneClass). The value should not be placed in quotation marks (e.g. -sarifseverity=2345c). The default value is 2345c.
+
 **-maximumThreads**
 
   : This parameter sets the maximum number of parallel tasks the controller can start. The default value is the number of available CPU cores on the current system.
@@ -229,7 +272,7 @@ Source code elements in the files marked with darker background will not be cons
 
 **-runFxCop**
 
-  : This parameter turns on or off the FxCop coding rule violation checking. With this feature, OpenStaticAnalyzer lists coding rule violations detected by FxCop. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is "true". FxCop is only able to run if there was a successfull build of the given project with pdb files generated.
+  : This parameter turns on or off the FxCop coding rule violation checking. With this feature, OpenStaticAnalyzer lists coding rule violations detected by FxCop. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is "true". FxCop is only able to run if there was a successful build of the given project with pdb files generated.
   
 **-FxCopPath**
   
@@ -242,10 +285,50 @@ Source code elements in the files marked with darker background will not be cons
 **-platform**
 
   : The name of the target platform.
+
+**-runSQ**
+
+  : Import issues from SonarQube server.
+
+**-SQHost**
+
+  : The URL address of the SonarQube server.
+
+**-SQPort**
+
+  : The port of the SonarQube server.
+
+**-SQProjectKey**
+
+  : The key of the project in the SonarQube server.
+
+**-SQProjectPrefix**
+
+  : Prefix path of the project's base directory (the path of the sonar-project.properties file).
+
+**-SQUserName**
+
+  : The user name for the SonarQube server.
+
+**-SQPassword**
+
+  : The password for the SonarQube server.
+
+**-SQLanguageKey**
+
+  : The key of the language in SonarQube.
+
+**-runLIM2Patterns**
+
+  : This parameter can be used to enable or disable the LIM2Patterns module during analysis (default = on). 
+
+**-pattern**
+
+  : The pattern file or pattern directory for LIM2Patterns. By default it searches for the predefined Anti Patterns found in Tools/Patterns/AntiPatterns.
   
 # Usage
 
-Execute the following command to analyze the source code of a software system:
+Execute the following command to analyse the source code of a software system:
 
     OpenStaticAnalyzerCsharp.exe -input="c:\My Project\MyProject.sln" -projectName=MyProject -resultsDir=Results
       -configuration=Debug -platform=AnyCPU
@@ -286,7 +369,23 @@ Component, File, Namespace, Class, Interface, Structure, Enum, Method, and Attri
 
     - \$(projectName)\\csharp\\\$(projectName).gsi
 
-        Binary data file containing information for tracking the code clones through the consecutive revisions of the analyzed software system.
+        Binary data file containing information for tracking the code clones through the consecutive revisions of the analysed software system.
+
+    - \$(projectName)\\csharp\\\$(DATE)\\\$(projectName).sarif
+
+        SARIF representation of the rule violations.
+
+    - \$(projectName)\\csharp\\\$(DATE)\\\$(projectName)-summary.graph
+
+        Binary representation of the summary result graph containing only the System component node.
+
+    - \$(projectName)\\csharp\\\$(DATE)\\\$(projectName)-summary.xml
+
+        XML representation of the summary result graph containing only the System component node.
+
+    - \$(projectName)\\csharp\\\$(DATE)\\\$(projectName)-summary.json
+
+        JSON representation of the summary result graph containing only the System component node.
 
 - Other files and directories created in the results directory:
 
@@ -323,22 +422,23 @@ The warnings of MetricHunter cannot be suppressed at the moment.
 
 # Demo
 
-The Demo directory of the installation package contains the directory structure, the build and analyzer scripts for the analysis of an example project.
+The Demo directory of the installation package contains an example project and scripts to run an analysis.
 The log4net open source C# program is included as the example project, which can also be downloaded from the following URL:
 
-[http://archive.apache.org/dist/logging/log4net/source/log4net-1.2.13-src.zip](http://archive.apache.org/dist/logging/log4net/source/log4net-1.2.13-src.zip)
+[http://archive.apache.org/dist/logging/log4net/source/log4net-2.0.10-src.zip](http://archive.apache.org/dist/logging/log4net/source/log4net-2.0.10-src.zip)
 
-To perform the source code analysis of the demo project, execute the analyze.bat file.
+To perform the source code analysis of the demo project, execute the `analyze.bat` or `analyze.sh` file depending on your platform.
+The script will try to build log4net with the .NET Core SDK, then run the analysis on it.
 
 Contents of the Demo directory:
 
--------------  -----------------------  --------------------------------------
+-------------  -----------------------  ----------------------------------------
 Demo\\
-               log4net-1.2.13           \# source code of log4net version 1.2.13
+               log4net-2.0.10           \# source code of log4net version 2.0.10
                hardfilter               \# example hardfilter file, see above
                softfilter               \# example softfilter file, see above
                analyze.bat              \# batch file to run the demo analysis
--------------  -----------------------  --------------------------------------
+-------------  -----------------------  ----------------------------------------
 
 # Error messages
 
@@ -350,6 +450,10 @@ Demo\\
 
     Solution: The projectName parameter must be set.
 
+- Message: error NETSDK1064: Package Some.Dependency.Package, version 1.0.0 was not found. It might have been deleted since NuGet restore. Otherwise, NuGet restore might have only partially completed, which might have been due to maximum path length restrictions.
+
+    Soltuion: Restore NuGet packages before starting the analysis.
+
 # Known bugs and deficiencies
 
 Known bugs and deficiencies of OpenStaticAnalyzer for C#.
@@ -357,6 +461,14 @@ Known bugs and deficiencies of OpenStaticAnalyzer for C#.
 - OpenStaticAnalyzer places the results into the directory specified by the projectName parameter. If special characters (like '\<', '\>', etc.) are used in the parameter, the analysis will probably fail.
 
 - FxCop may not run if placed in a directory containing special characters. To be safe, run OpenStaticAnalyzer and FxCop from a directory containing english letters, numbers, hyphen and underscore only.
+
+- Due to [limitations of the underlying Roslyn API], OpenStaticAnalyzer for C# ignores build configuration and platform mappings specified in solution files' ProjectConfigurationPlatforms section.
+  The specified configuration and platform are used for every project.
+  This can cause invalid preprocessor directives and thus code parts being included or omitted which would not be in a normal build.
+  Also most of the time the OutputPath of a project is dependent on the configuration and the platform, resulting in that FxCop will not be run, because OpenStaticAnalyzer can not determine the correct path.
+  To mitigate this problem, use the same configuration and platform values in every project in a solution.
+
+[limitations of the underlying Roslyn API]:https://github.com/dotnet/roslyn/issues/6535#issuecomment-273821725
 
 # FAQ
 

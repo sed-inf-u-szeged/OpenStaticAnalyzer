@@ -205,7 +205,7 @@ int main(int argc, char **argv) {
   casesensitive = false;
 #endif
 
-#ifdef __unix__
+#ifdef __linux__
   casesensitive = true;
 #endif
 
@@ -290,7 +290,7 @@ int main(int argc, char **argv) {
   getWrapperTool(wrtool, called_prog, wrapperworkdirname);
 #endif
 
-#ifdef __unix__
+#ifdef __linux__
   getWrapperTool(wrtool, argv[0], wrapperworkdirname);
 #endif
 

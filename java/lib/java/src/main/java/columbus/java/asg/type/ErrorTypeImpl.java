@@ -33,6 +33,7 @@ import columbus.logger.LoggerHandler;
  */
 public class ErrorTypeImpl extends BaseImpl implements ErrorType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(ErrorTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	public ErrorTypeImpl(int id, Factory factory) {
 		super(id, factory);

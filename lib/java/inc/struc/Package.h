@@ -44,6 +44,7 @@ namespace struc {
   * 
   * Edges:
   *   - hasCompilationUnits (struc::CompilationUnit, multiple) : (missing)
+  *   - isInModule (struc::Module, multiple) : (missing)
   */
   class Package : public base::Named, public Scope {
     protected:
@@ -178,6 +179,30 @@ namespace struc {
       */
       unsigned getCompilationUnitsSize() const;
 
+      /**
+      * \brief Gives back iterator for the isInModule edges.
+      * \return Returns an iterator for the isInModule edges.
+      */
+      ListIterator<struc::Module> getIsInModuleListIteratorBegin() const;
+
+      /**
+      * \brief Gives back iterator for the isInModule edges.
+      * \return Returns an iterator for the isInModule edges.
+      */
+      ListIterator<struc::Module> getIsInModuleListIteratorEnd() const;
+
+      /**
+      * \brief Tells whether the node has isInModule edges or not.
+      * \return Returns true if the node doesn't have any isInModule edge.
+      */
+      bool getIsInModuleIsEmpty() const;
+
+      /**
+      * \brief Gives back how many isInModule edges the node has.
+      * \return Returns with the number of isInModule edges.
+      */
+      unsigned getIsInModuleSize() const;
+
 
       // ---------- Edge setter function(s) ----------
 
@@ -205,12 +230,39 @@ namespace struc {
       */
       void removeCompilationUnits(CompilationUnit *node);
 
+      /**
+      * \brief Adds a new isInModule edge to the node and inserts it after the other ones.
+      * \param node [in] The end point of the new isInModule edge.
+      */
+      void addIsInModule(const Module *node);
+
+      /**
+      * \brief Adds a new isInModule edge to the node and inserts it after the other ones.
+      * \param id [in] The end point of the new isInModule edge.
+      */
+      void addIsInModule(NodeId id);
+
+      /**
+      * \brief Remove the isInModule edge by id from the node.
+      * \param id [in] The end point of the isInModule edge.
+      */
+      void removeIsInModule(NodeId id);
+
+      /**
+      * \brief Remove the isInModule edge from the node.
+      * \param node [in] The end point of the isInModule edge.
+      */
+      void removeIsInModule(Module *node);
+
     protected:
 
       // ---------- Edges ----------
 
       /** \internal \brief Container stores the id of the nodes the hasCompilationUnits edge points to. */
       ListIterator<struc::CompilationUnit>::Container hasCompilationUnitsContainer;
+
+      /** \internal \brief Container stores the id of the nodes the isInModule edge points to. */
+      ListIterator<struc::Module>::Container isInModuleContainer;
 
     public:
 

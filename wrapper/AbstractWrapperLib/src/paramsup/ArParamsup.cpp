@@ -18,25 +18,19 @@
  *  limitations under the Licence.
  */
 
-#include "AbstractWrapperLib/inc/paramsup/ArParamsup.h"
-#include "AbstractWrapperLib/inc/messages.h"
+#include <AbstractWrapperLib/inc/paramsup/ArParamsup.h>
+#include <AbstractWrapperLib/inc/messages.h>
 #include <common/inc/StringSup.h>
 #include <common/inc/FileSup.h>
 #include <common/inc/WriteMessage.h>
 
 #include <list>
 #include <string>
+#include <cstring>
 
 using namespace std;
 
 #define AR_PARAMSUP "ArParamsup"
-
-// These arguments haven't got any equivalent arguments in CANLib so these are not handled yet.
-static char not_handled_ar_args[] = {
-  'p','t','s','I','N','o','P','D',
-  'f','S','T','u','v','V'
-};
-
 
 bool ColumbusWrappers::ArWrapperSup::isObjectFile(string filename) {
   string file, ext;
@@ -48,7 +42,6 @@ bool ColumbusWrappers::ArWrapperSup::isObjectFile(string filename) {
   return false;
 }
 
-
 bool ColumbusWrappers::ArWrapperSup::isArchiveFile(string filename) {
   string file, ext;
   if (common::splitExt(filename, file, ext)) {
@@ -59,147 +52,137 @@ bool ColumbusWrappers::ArWrapperSup::isArchiveFile(string filename) {
   return false;
 }
 
+bool ColumbusWrappers::ArWrapperSup::archiveArguments(list<string> args, ColumbusWrappers::ArchiveArgs& archiveArgs, ColumbusWrappers::Warnings& arWarnings)
+{
+  bool operationSpecified = false;
+  bool relposNeeded = false;
+  bool countNeeded = false;
+  bool archiveFound = false;
 
-void ColumbusWrappers::ArWrapperSup::examineArgument(const list<string>::iterator& it, ArchiveArgs& archiveArgs, Warnings& arWarnings) {
-
-  string tmp;
-  if ((*it)[0] == '-') {
-    tmp = it->substr(1);
-  } else {
-    tmp = *it;
-  }
-
-  if (tmp.find_first_of("a") != string::npos) {
-    archiveArgs.put_after = true;
-  }
-
-  if (tmp.find_first_of("bi") != string::npos) {
-    archiveArgs.put_before = true;
-  }
-
-  for (size_t i = 0; i != tmp.length(); i++) {
-
-    for (size_t j = 0; j < sizeof(not_handled_ar_args)/sizeof(char); j++) {
-      if (tmp[i] == not_handled_ar_args[j]) {
-        archiveArgs.not_handled_args.push_back(string(1,tmp[i]));
-      }
-    } 
-
-    if (tmp[i] == 'o') {
-       archiveArgs.original_dates = true;
-    } else if (tmp[i] == 'c') {
-
-      archiveArgs.need_create = true;
-
-    } else if (tmp[i] == 'd') {
-
-      archiveArgs.archive_operations.push_back("-d");
-      archiveArgs.delete_or_extract = true;
-
-    } else if (tmp[i] == 'm') {
-
-      archiveArgs.archive_operations.push_back("-h");
-
-    } else if (tmp[i] == 'q') {
-
-      archiveArgs.archive_modifiers.push_back("-R");
-      if (archiveArgs.put_before) {
-        archiveArgs.archive_modifiers.push_back("-b");
-        archiveArgs.archive_operations.push_back("-p");
-      } else if (archiveArgs.put_after) {
-        archiveArgs.archive_modifiers.push_back("-B");
-        archiveArgs.archive_operations.push_back("-p");
-      } else {
-        archiveArgs.archive_operations.push_back("-a");
-      }
-
-    } else if (tmp[i] == 'r') {
-
-      archiveArgs.archive_modifiers.push_back("-r");
-      if (archiveArgs.put_before) {
-        archiveArgs.archive_modifiers.push_back("-b");
-        archiveArgs.archive_operations.push_back("-p");
-      } else if (archiveArgs.put_after) {
-        archiveArgs.archive_modifiers.push_back("-B");
-        archiveArgs.archive_operations.push_back("-p");
-      } else {
-        archiveArgs.archive_operations.push_back("-a");
-      }
-
-    } else if (tmp[i] == 'x') {
-
-      archiveArgs.archive_operations.push_back("-e");
-      archiveArgs.delete_or_extract = true;
-
-    } else if (tmp[i] == 'a' || tmp[i] == 'b' || tmp[i] == 'i') {
-      //do nothing it has set previously
-    } else {
-      arWarnings.unrec_args.push_back(string(1,tmp[i]));
-    }
-  }
-
-}
-
-
-bool ColumbusWrappers::ArWrapperSup::archiveArguments(list<string> args, ArchiveArgs& archiveArgs, Warnings& arWarnings) {
-  archiveArgs.archive_mode = "-l";
-
-  for (list<string>::iterator args_it = args.begin(); args_it != args.end(); args_it++) {
-
-    if ((*args_it)[0] != '-') {
-
-      if (isObjectFile(*args_it)) {
-
-        list<string>::iterator tmp_it = args_it;
-        tmp_it++;
-        if (tmp_it != args.end()) {
-          if (isArchiveFile(*tmp_it)) {
-            archiveArgs.asg_file = *args_it;
-          } else {
-            archiveArgs.input_files.push_back(*args_it);
-          }
-        } else {
-          archiveArgs.input_files.push_back(*args_it);
-        }
-
-      } else if (isArchiveFile(*args_it)) {
-
-        archiveArgs.no_output = false;
-        archiveArgs.archive_file = *args_it;
-
-      } else {
-
-        ColumbusWrappers::ArWrapperSup::examineArgument(args_it, archiveArgs, arWarnings);
-
-      }
-
-    } else {
-
-      if ((args_it->length() >= 2) && (*args_it)[1] == '-') {
-        arWarnings.unrec_args.push_back(*args_it);
-
-        // skip the argument of the --???? parameter
-        args_it++;
-        if (args_it == args.end())
-          break;
-
-        arWarnings.unrec_args.push_back(*args_it);
+  for (list<string>::iterator args_it = args.begin(); args_it != args.end(); args_it++)
+  {
+    const char* arg = args_it->c_str();
+    bool processingOption = false;
+    if (arg[0] == '-')
+    {
+      if (strcmp(arg, "-X32_64") == 0)
         continue;
 
-      } else  {
-
-        ColumbusWrappers::ArWrapperSup::examineArgument(args_it, archiveArgs, arWarnings);
-
+      if (arg[1] == '-')
+      {
+        if (strcmp(arg, "--plugin") && strcmp(arg, "--target"))
+        {
+          ++args_it; // skip the next argument;
+          continue;
+        }
+        else if (strcmp(arg, "--help") && strcmp(arg, "--version"))
+        {
+          continue;
+        }
+        else
+        {
+          arWarnings.unrec_args.push_back(arg);
+          continue;
+        }
       }
 
+      processingOption = true;
+      arg += 1;
+    } 
+
+    if (processingOption || !operationSpecified)
+    {
+      while (arg[0] != 0)
+      {
+        switch (arg[0])
+        {
+          case 'd':
+            archiveArgs.archive_operations.push_back("-delete");
+            operationSpecified = true;
+            break;
+
+          case 'm':
+          case 'p':
+            operationSpecified = true;
+            archiveArgs.needToWrap = false;
+            break;
+
+          case 'q':
+          case 'r':
+            archiveArgs.archive_operations.push_back("-add");
+            operationSpecified = true;
+            break;
+
+          case 's':
+          case 't':
+            operationSpecified = true;
+            archiveArgs.needToWrap = false;
+            break;
+
+          case 'x':
+            archiveArgs.archive_operations.push_back("-extract");
+            operationSpecified = true;
+            break;
+
+          case 'a':
+          case 'b':
+          case 'i':
+            relposNeeded = true;
+            break;
+
+          case 'c':
+          case 'D':
+          case 'f':
+          case 'l':
+            break;
+
+          case 'N':
+            arWarnings.can_warning.push_back("N modifier is used!");
+            countNeeded = true;
+            break;
+
+          case 'o':
+          case 'P':
+          case 'S':
+          case 'T':
+            break;
+
+          case 'u':
+            // At the moment the CANLib unconditionally overwrites the older contnent.
+            // The actual zip library does not stores the file creation date hence
+            // this behavour can not be implemented.
+            arWarnings.can_warning.push_back("u modifier is used!");
+            break;
+
+          case 'U':
+          case 'v':
+          case 'V':
+            break;
+
+          default:
+            arWarnings.unrec_args.push_back(arg);
+            break;
+        }
+        ++arg;
+      }
     }
-
+    else if (relposNeeded)
+    {
+      relposNeeded = false;
+    }
+    else if (countNeeded)
+    {
+      countNeeded = false;
+    }
+    else if (archiveFound)
+    {
+      archiveArgs.input_files.push_back(arg);
+    }
+    else
+    {
+      archiveArgs.archive_file = arg;
+      archiveFound = true;
+    }
   }
-
-  if (archiveArgs.archive_file.empty() && !archiveArgs.input_files.empty()) {
-    ColumbusWrappers::writeErrorMsg(AR_PARAMSUP, CMSG_AR_PARAMSUP_NO_OUTPUT_ARCHIVE_FILE);
-    return false;
-  }
-
   return true;
 }

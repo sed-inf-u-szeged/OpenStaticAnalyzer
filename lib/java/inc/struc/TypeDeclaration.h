@@ -40,6 +40,7 @@ namespace struc {
   * (missing)
   * 
   * Attributes:
+  *   - lloc (int) : (missing)
   *   - typeNamePosition (Range) : (missing)
   *   - isAbstract (boolean) : (missing)
   *   - abstractPosition (Range) : (missing)
@@ -51,10 +52,11 @@ namespace struc {
   *   - bodyStartPosition (Range) : (missing)
   * 
   * Edges:
-  *   - isInCompilationUnit (struc::CompilationUnit, single) : (missing)
   *   - hasSuperClass (expr::TypeExpression, single) : (missing)
   *   - hasSuperInterfaces (expr::TypeExpression, multiple) : (missing)
   *   - hasOthers (base::Positioned, multiple) : (missing)
+  *   - isInCompilationUnit (struc::CompilationUnit, single) : (missing)
+  *   - isInModule (struc::Module, single) : (missing)
   */
   class TypeDeclaration : public NamedDeclaration, public Scope {
     protected:
@@ -104,6 +106,12 @@ namespace struc {
 
 
       // ---------- Attribute getter function(s) ----------
+
+      /**
+      * \brief Gives back the lloc of the node.
+      * \return Returns with the lloc.
+      */
+      int getLloc() const;
 
       /**
       * \brief Gives back the typeNamePosition of the node.
@@ -206,6 +214,13 @@ namespace struc {
 
       /**
       * \internal
+      * \brief Sets the lloc of the node.
+      * \param lloc [in] The new value of the lloc.
+      */
+      void setLloc(int _lloc);
+
+      /**
+      * \internal
       * \brief Sets the typeNamePosition of the node.
       * \param typeNamePosition [in] The new value of the typeNamePosition.
       */
@@ -284,6 +299,9 @@ namespace struc {
       /** \internal \brief Stores whether the node is `Strictfp` or not. */
       bool m_isStrictfp : 1;
 
+      /** \internal \brief The value of the `lloc`. */
+      int m_lloc;
+
       /** \internal \brief todo (unknown). */
       MultiRange m_typeNamePosition;
 
@@ -328,12 +346,6 @@ namespace struc {
     public:
 
       // ---------- Edge getter function(s) ----------
-
-      /**
-      * \brief Gives back the pointer of the node the isInCompilationUnit edge points to.
-      * \return Returns the end point of the isInCompilationUnit edge.
-      */
-      struc::CompilationUnit* getIsInCompilationUnit() const;
 
       /**
       * \brief Gives back the pointer of the node the hasSuperClass edge points to.
@@ -389,25 +401,20 @@ namespace struc {
       */
       unsigned getOthersSize() const;
 
+      /**
+      * \brief Gives back the pointer of the node the isInCompilationUnit edge points to.
+      * \return Returns the end point of the isInCompilationUnit edge.
+      */
+      struc::CompilationUnit* getIsInCompilationUnit() const;
+
+      /**
+      * \brief Gives back the pointer of the node the isInModule edge points to.
+      * \return Returns the end point of the isInModule edge.
+      */
+      struc::Module* getIsInModule() const;
+
 
       // ---------- Edge setter function(s) ----------
-
-      /**
-      * \brief Sets the isInCompilationUnit edge.
-      * \param id [in] The new end point of the isInCompilationUnit edge.
-      */
-      void setIsInCompilationUnit(NodeId id);
-
-      /**
-      * \brief Sets the isInCompilationUnit edge.
-      * \param node [in] The new end point of the isInCompilationUnit edge.
-      */
-      void setIsInCompilationUnit(CompilationUnit *node);
-
-      /**
-      * \brief remove the isInCompilationUnit edge.
-      */
-      void removeIsInCompilationUnit();
 
       /**
       * \brief Sets the hasSuperClass edge.
@@ -474,12 +481,43 @@ namespace struc {
       */
       void removeOthers(base::Positioned *node);
 
+      /**
+      * \brief Sets the isInCompilationUnit edge.
+      * \param id [in] The new end point of the isInCompilationUnit edge.
+      */
+      void setIsInCompilationUnit(NodeId id);
+
+      /**
+      * \brief Sets the isInCompilationUnit edge.
+      * \param node [in] The new end point of the isInCompilationUnit edge.
+      */
+      void setIsInCompilationUnit(CompilationUnit *node);
+
+      /**
+      * \brief remove the isInCompilationUnit edge.
+      */
+      void removeIsInCompilationUnit();
+
+      /**
+      * \brief Sets the isInModule edge.
+      * \param id [in] The new end point of the isInModule edge.
+      */
+      void setIsInModule(NodeId id);
+
+      /**
+      * \brief Sets the isInModule edge.
+      * \param node [in] The new end point of the isInModule edge.
+      */
+      void setIsInModule(Module *node);
+
+      /**
+      * \brief remove the isInModule edge.
+      */
+      void removeIsInModule();
+
     protected:
 
       // ---------- Edges ----------
-
-      /** \internal \brief The id of the node the isInCompilationUnit edge points to. */
-      NodeId m_isInCompilationUnit;
 
       /** \internal \brief The id of the node the hasSuperClass edge points to. */
       NodeId m_hasSuperClass;
@@ -489,6 +527,12 @@ namespace struc {
 
       /** \internal \brief Container stores the id of the nodes the hasOthers edge points to. */
       ListIterator<base::Positioned>::Container hasOthersContainer;
+
+      /** \internal \brief The id of the node the isInCompilationUnit edge points to. */
+      NodeId m_isInCompilationUnit;
+
+      /** \internal \brief The id of the node the isInModule edge points to. */
+      NodeId m_isInModule;
 
     public:
 

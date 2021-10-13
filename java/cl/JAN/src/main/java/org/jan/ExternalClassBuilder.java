@@ -161,7 +161,8 @@ public class ExternalClassBuilder {
 					continue;
 				}
 
-				if (sym == symtab.boundClass || sym == symtab.arrayClass || sym == symtab.methodClass || sym == symtab.unknownSymbol) {
+				if (sym == symtab.boundClass || sym == symtab.arrayClass || sym == symtab.methodClass || sym == symtab.unknownSymbol ||
+						(sym.type != null && sym.type == symtab.botType)) {
 					if (logger.isDebugEnabled()) {
 						logger.debug("debug.jan.ExternalClassBuilder.dontBuildBuiltinSymbol", sym.name);
 					}
@@ -342,7 +343,7 @@ public class ExternalClassBuilder {
 					methodDecl = methodNode;
 				}
 				symMaps.getMethodDeclarationMap().put(methodSym, methodDecl.getId());
-				symMaps.addNodeType(methodSym.type, methodDecl.getId());
+				symMaps.addMethodType(methodSym.type, methodDecl.getId());
 
 				if (methodSym.getKind() != ElementKind.CONSTRUCTOR) { // don't build return type for constructors
 					if (methodSym.getReturnType() != null) {

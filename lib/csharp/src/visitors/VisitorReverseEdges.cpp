@@ -41,8 +41,12 @@ void VisitorReverseEdges::visitAliasQualifiedNameSyntax_Name(const expression::A
   revEdges->insertEdge(&end, &begin, edkAliasQualifiedNameSyntax_Name);
 }
 
-void VisitorReverseEdges::visitAnonymousFunctionExpressionSyntax_Body(const expression::AnonymousFunctionExpressionSyntax& begin, const base::Positioned& end) {
-  revEdges->insertEdge(&end, &begin, edkAnonymousFunctionExpressionSyntax_Body);
+void VisitorReverseEdges::visitAnonymousFunctionExpressionSyntax_Block(const expression::AnonymousFunctionExpressionSyntax& begin, const statement::BlockSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkAnonymousFunctionExpressionSyntax_Block);
+}
+
+void VisitorReverseEdges::visitAnonymousFunctionExpressionSyntax_ExpressionBody(const expression::AnonymousFunctionExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkAnonymousFunctionExpressionSyntax_ExpressionBody);
 }
 
 void VisitorReverseEdges::visitAnonymousMethodExpressionSyntax_ParameterList(const expression::AnonymousMethodExpressionSyntax& begin, const structure::ParameterListSyntax& end) {
@@ -137,6 +141,14 @@ void VisitorReverseEdges::visitConditionalExpressionSyntax_WhenTrue(const expres
   revEdges->insertEdge(&end, &begin, edkConditionalExpressionSyntax_WhenTrue);
 }
 
+void VisitorReverseEdges::visitDeclarationExpressionSyntax_Designation(const expression::DeclarationExpressionSyntax& begin, const structure::VariableDesignationSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkDeclarationExpressionSyntax_Designation);
+}
+
+void VisitorReverseEdges::visitDeclarationExpressionSyntax_Type(const expression::DeclarationExpressionSyntax& begin, const expression::TypeSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkDeclarationExpressionSyntax_Type);
+}
+
 void VisitorReverseEdges::visitDefaultExpressionSyntax_Type(const expression::DefaultExpressionSyntax& begin, const expression::TypeSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkDefaultExpressionSyntax_Type);
 }
@@ -177,6 +189,10 @@ void VisitorReverseEdges::visitImplicitElementAccessSyntax_ArgumentList(const ex
   revEdges->insertEdge(&end, &begin, edkImplicitElementAccessSyntax_ArgumentList);
 }
 
+void VisitorReverseEdges::visitImplicitStackAllocArrayCreationExpressionSyntax_Initializer(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkImplicitStackAllocArrayCreationExpressionSyntax_Initializer);
+}
+
 void VisitorReverseEdges::visitInitializerExpressionSyntax_Expressions(const expression::InitializerExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkInitializerExpressionSyntax_Expressions);
 }
@@ -193,8 +209,20 @@ void VisitorReverseEdges::visitInvocationExpressionSyntax_Expression(const expre
   revEdges->insertEdge(&end, &begin, edkInvocationExpressionSyntax_Expression);
 }
 
+void VisitorReverseEdges::visitInvocationExpressionSyntax_LocalFunctionCall(const expression::InvocationExpressionSyntax& begin, const statement::LocalFunctionStatementSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkInvocationExpressionSyntax_LocalFunctionCall);
+}
+
 void VisitorReverseEdges::visitInvocationExpressionSyntax_MethodCall(const expression::InvocationExpressionSyntax& begin, const structure::MethodDeclarationSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkInvocationExpressionSyntax_MethodCall);
+}
+
+void VisitorReverseEdges::visitIsPatternExpressionSyntax_Expression(const expression::IsPatternExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkIsPatternExpressionSyntax_Expression);
+}
+
+void VisitorReverseEdges::visitIsPatternExpressionSyntax_Pattern(const expression::IsPatternExpressionSyntax& begin, const structure::PatternSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkIsPatternExpressionSyntax_Pattern);
 }
 
 void VisitorReverseEdges::visitMakeRefExpressionSyntax_Expression(const expression::MakeRefExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
@@ -277,8 +305,24 @@ void VisitorReverseEdges::visitQueryExpressionSyntax_FromClause(const expression
   revEdges->insertEdge(&end, &begin, edkQueryExpressionSyntax_FromClause);
 }
 
+void VisitorReverseEdges::visitRangeExpressionSyntax_LeftOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkRangeExpressionSyntax_LeftOperand);
+}
+
+void VisitorReverseEdges::visitRangeExpressionSyntax_RightOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkRangeExpressionSyntax_RightOperand);
+}
+
+void VisitorReverseEdges::visitRefExpressionSyntax_Expression(const expression::RefExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkRefExpressionSyntax_Expression);
+}
+
 void VisitorReverseEdges::visitRefTypeExpressionSyntax_Expression(const expression::RefTypeExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkRefTypeExpressionSyntax_Expression);
+}
+
+void VisitorReverseEdges::visitRefTypeSyntax_Type(const expression::RefTypeSyntax& begin, const expression::TypeSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkRefTypeSyntax_Type);
 }
 
 void VisitorReverseEdges::visitRefValueExpressionSyntax_Expression(const expression::RefValueExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
@@ -297,8 +341,32 @@ void VisitorReverseEdges::visitSizeOfExpressionSyntax_Type(const expression::Siz
   revEdges->insertEdge(&end, &begin, edkSizeOfExpressionSyntax_Type);
 }
 
+void VisitorReverseEdges::visitStackAllocArrayCreationExpressionSyntax_Initializer(const expression::StackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkStackAllocArrayCreationExpressionSyntax_Initializer);
+}
+
 void VisitorReverseEdges::visitStackAllocArrayCreationExpressionSyntax_Type(const expression::StackAllocArrayCreationExpressionSyntax& begin, const expression::TypeSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkStackAllocArrayCreationExpressionSyntax_Type);
+}
+
+void VisitorReverseEdges::visitSwitchExpressionSyntax_Arms(const expression::SwitchExpressionSyntax& begin, const structure::SwitchExpressionArmSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkSwitchExpressionSyntax_Arms);
+}
+
+void VisitorReverseEdges::visitSwitchExpressionSyntax_GoverningExpression(const expression::SwitchExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkSwitchExpressionSyntax_GoverningExpression);
+}
+
+void VisitorReverseEdges::visitThrowExpressionSyntax_Expression(const expression::ThrowExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkThrowExpressionSyntax_Expression);
+}
+
+void VisitorReverseEdges::visitTupleExpressionSyntax_Arguments(const expression::TupleExpressionSyntax& begin, const structure::ArgumentSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkTupleExpressionSyntax_Arguments);
+}
+
+void VisitorReverseEdges::visitTupleTypeSyntax_Elements(const expression::TupleTypeSyntax& begin, const structure::TupleElementSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkTupleTypeSyntax_Elements);
 }
 
 void VisitorReverseEdges::visitTypeOfExpressionSyntax_Type(const expression::TypeOfExpressionSyntax& begin, const expression::TypeSyntax& end) {
@@ -315,6 +383,14 @@ void VisitorReverseEdges::visitBlockSyntax_Statements(const statement::BlockSynt
 
 void VisitorReverseEdges::visitCheckedStatementSyntax_Block(const statement::CheckedStatementSyntax& begin, const statement::BlockSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkCheckedStatementSyntax_Block);
+}
+
+void VisitorReverseEdges::visitCommonForEachStatementSyntax_Expression(const statement::CommonForEachStatementSyntax& begin, const expression::ExpressionSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkCommonForEachStatementSyntax_Expression);
+}
+
+void VisitorReverseEdges::visitCommonForEachStatementSyntax_Statement(const statement::CommonForEachStatementSyntax& begin, const statement::StatementSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkCommonForEachStatementSyntax_Statement);
 }
 
 void VisitorReverseEdges::visitDoStatementSyntax_Condition(const statement::DoStatementSyntax& begin, const expression::ExpressionSyntax& end) {
@@ -337,16 +413,12 @@ void VisitorReverseEdges::visitFixedStatementSyntax_Statement(const statement::F
   revEdges->insertEdge(&end, &begin, edkFixedStatementSyntax_Statement);
 }
 
-void VisitorReverseEdges::visitForEachStatementSyntax_Expression(const statement::ForEachStatementSyntax& begin, const expression::ExpressionSyntax& end) {
-  revEdges->insertEdge(&end, &begin, edkForEachStatementSyntax_Expression);
-}
-
-void VisitorReverseEdges::visitForEachStatementSyntax_Statement(const statement::ForEachStatementSyntax& begin, const statement::StatementSyntax& end) {
-  revEdges->insertEdge(&end, &begin, edkForEachStatementSyntax_Statement);
-}
-
 void VisitorReverseEdges::visitForEachStatementSyntax_Type(const statement::ForEachStatementSyntax& begin, const expression::TypeSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkForEachStatementSyntax_Type);
+}
+
+void VisitorReverseEdges::visitForEachVariableStatementSyntax_Variable(const statement::ForEachVariableStatementSyntax& begin, const expression::ExpressionSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkForEachVariableStatementSyntax_Variable);
 }
 
 void VisitorReverseEdges::visitForStatementSyntax_Condition(const statement::ForStatementSyntax& begin, const expression::ExpressionSyntax& end) {
@@ -393,6 +465,30 @@ void VisitorReverseEdges::visitLocalDeclarationStatementSyntax_Declaration(const
   revEdges->insertEdge(&end, &begin, edkLocalDeclarationStatementSyntax_Declaration);
 }
 
+void VisitorReverseEdges::visitLocalFunctionStatementSyntax_Body(const statement::LocalFunctionStatementSyntax& begin, const statement::BlockSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkLocalFunctionStatementSyntax_Body);
+}
+
+void VisitorReverseEdges::visitLocalFunctionStatementSyntax_ConstraintClauses(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterConstraintClauseSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkLocalFunctionStatementSyntax_ConstraintClauses);
+}
+
+void VisitorReverseEdges::visitLocalFunctionStatementSyntax_ExpressionBody(const statement::LocalFunctionStatementSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkLocalFunctionStatementSyntax_ExpressionBody);
+}
+
+void VisitorReverseEdges::visitLocalFunctionStatementSyntax_ParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::ParameterListSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkLocalFunctionStatementSyntax_ParameterList);
+}
+
+void VisitorReverseEdges::visitLocalFunctionStatementSyntax_ReturnType(const statement::LocalFunctionStatementSyntax& begin, const expression::TypeSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkLocalFunctionStatementSyntax_ReturnType);
+}
+
+void VisitorReverseEdges::visitLocalFunctionStatementSyntax_TypeParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterListSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkLocalFunctionStatementSyntax_TypeParameterList);
+}
+
 void VisitorReverseEdges::visitLockStatementSyntax_Expression(const statement::LockStatementSyntax& begin, const expression::ExpressionSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkLockStatementSyntax_Expression);
 }
@@ -403,6 +499,10 @@ void VisitorReverseEdges::visitLockStatementSyntax_Statement(const statement::Lo
 
 void VisitorReverseEdges::visitReturnStatementSyntax_Expression(const statement::ReturnStatementSyntax& begin, const expression::ExpressionSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkReturnStatementSyntax_Expression);
+}
+
+void VisitorReverseEdges::visitStatementSyntax_AttributeLists(const statement::StatementSyntax& begin, const structure::AttributeListSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkStatementSyntax_AttributeLists);
 }
 
 void VisitorReverseEdges::visitSwitchStatementSyntax_Expression(const statement::SwitchStatementSyntax& begin, const expression::ExpressionSyntax& end) {
@@ -463,6 +563,10 @@ void VisitorReverseEdges::visitAccessorDeclarationSyntax_AttributeLists(const st
 
 void VisitorReverseEdges::visitAccessorDeclarationSyntax_Body(const structure::AccessorDeclarationSyntax& begin, const statement::BlockSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkAccessorDeclarationSyntax_Body);
+}
+
+void VisitorReverseEdges::visitAccessorDeclarationSyntax_ExpressionBody(const structure::AccessorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkAccessorDeclarationSyntax_ExpressionBody);
 }
 
 void VisitorReverseEdges::visitAccessorListSyntax_Accessors(const structure::AccessorListSyntax& begin, const structure::AccessorDeclarationSyntax& end) {
@@ -557,6 +661,10 @@ void VisitorReverseEdges::visitBaseMethodDeclarationSyntax_Body(const structure:
   revEdges->insertEdge(&end, &begin, edkBaseMethodDeclarationSyntax_Body);
 }
 
+void VisitorReverseEdges::visitBaseMethodDeclarationSyntax_ExpressionBody(const structure::BaseMethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkBaseMethodDeclarationSyntax_ExpressionBody);
+}
+
 void VisitorReverseEdges::visitBaseMethodDeclarationSyntax_ParameterList(const structure::BaseMethodDeclarationSyntax& begin, const structure::ParameterListSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkBaseMethodDeclarationSyntax_ParameterList);
 }
@@ -591,6 +699,14 @@ void VisitorReverseEdges::visitBaseTypeDeclarationSyntax_BaseList(const structur
 
 void VisitorReverseEdges::visitBaseTypeSyntax_Type(const structure::BaseTypeSyntax& begin, const expression::TypeSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkBaseTypeSyntax_Type);
+}
+
+void VisitorReverseEdges::visitCasePatternSwitchLabelSyntax_Pattern(const structure::CasePatternSwitchLabelSyntax& begin, const structure::PatternSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkCasePatternSwitchLabelSyntax_Pattern);
+}
+
+void VisitorReverseEdges::visitCasePatternSwitchLabelSyntax_WhenClause(const structure::CasePatternSwitchLabelSyntax& begin, const structure::WhenClauseSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkCasePatternSwitchLabelSyntax_WhenClause);
 }
 
 void VisitorReverseEdges::visitCaseSwitchLabelSyntax_Value(const structure::CaseSwitchLabelSyntax& begin, const expression::ExpressionSyntax& end) {
@@ -633,6 +749,10 @@ void VisitorReverseEdges::visitCompilationUnitSyntax_Usings(const structure::Com
   revEdges->insertEdge(&end, &begin, edkCompilationUnitSyntax_Usings);
 }
 
+void VisitorReverseEdges::visitConstantPatternSyntax_Expression(const structure::ConstantPatternSyntax& begin, const expression::ExpressionSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkConstantPatternSyntax_Expression);
+}
+
 void VisitorReverseEdges::visitConstructorDeclarationSyntax_Initializer(const structure::ConstructorDeclarationSyntax& begin, const structure::ConstructorInitializerSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkConstructorDeclarationSyntax_Initializer);
 }
@@ -643,10 +763,6 @@ void VisitorReverseEdges::visitConstructorInitializerSyntax_ArgumentList(const s
 
 void VisitorReverseEdges::visitConstructorInitializerSyntax_ConstructorCall(const structure::ConstructorInitializerSyntax& begin, const structure::ConstructorDeclarationSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkConstructorInitializerSyntax_ConstructorCall);
-}
-
-void VisitorReverseEdges::visitConversionOperatorDeclarationSyntax_ExpressionBody(const structure::ConversionOperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
-  revEdges->insertEdge(&end, &begin, edkConversionOperatorDeclarationSyntax_ExpressionBody);
 }
 
 void VisitorReverseEdges::visitConversionOperatorDeclarationSyntax_Type(const structure::ConversionOperatorDeclarationSyntax& begin, const expression::TypeSyntax& end) {
@@ -663,6 +779,14 @@ void VisitorReverseEdges::visitConversionOperatorMemberCrefSyntax_Type(const str
 
 void VisitorReverseEdges::visitCrefParameterSyntax_Type(const structure::CrefParameterSyntax& begin, const expression::TypeSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkCrefParameterSyntax_Type);
+}
+
+void VisitorReverseEdges::visitDeclarationPatternSyntax_Designation(const structure::DeclarationPatternSyntax& begin, const structure::VariableDesignationSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkDeclarationPatternSyntax_Designation);
+}
+
+void VisitorReverseEdges::visitDeclarationPatternSyntax_Type(const structure::DeclarationPatternSyntax& begin, const expression::TypeSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkDeclarationPatternSyntax_Type);
 }
 
 void VisitorReverseEdges::visitDelegateDeclarationSyntax_AttributeLists(const structure::DelegateDeclarationSyntax& begin, const structure::AttributeListSyntax& end) {
@@ -797,10 +921,6 @@ void VisitorReverseEdges::visitMethodDeclarationSyntax_ExplicitInterfaceSpecifie
   revEdges->insertEdge(&end, &begin, edkMethodDeclarationSyntax_ExplicitInterfaceSpecifier);
 }
 
-void VisitorReverseEdges::visitMethodDeclarationSyntax_ExpressionBody(const structure::MethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
-  revEdges->insertEdge(&end, &begin, edkMethodDeclarationSyntax_ExpressionBody);
-}
-
 void VisitorReverseEdges::visitMethodDeclarationSyntax_ReturnType(const structure::MethodDeclarationSyntax& begin, const expression::TypeSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkMethodDeclarationSyntax_ReturnType);
 }
@@ -837,10 +957,6 @@ void VisitorReverseEdges::visitNamespaceDeclarationSyntax_Usings(const structure
   revEdges->insertEdge(&end, &begin, edkNamespaceDeclarationSyntax_Usings);
 }
 
-void VisitorReverseEdges::visitOperatorDeclarationSyntax_ExpressionBody(const structure::OperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
-  revEdges->insertEdge(&end, &begin, edkOperatorDeclarationSyntax_ExpressionBody);
-}
-
 void VisitorReverseEdges::visitOperatorDeclarationSyntax_ReturnType(const structure::OperatorDeclarationSyntax& begin, const expression::TypeSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkOperatorDeclarationSyntax_ReturnType);
 }
@@ -869,12 +985,24 @@ void VisitorReverseEdges::visitParameterSyntax_Type(const structure::ParameterSy
   revEdges->insertEdge(&end, &begin, edkParameterSyntax_Type);
 }
 
+void VisitorReverseEdges::visitParenthesizedVariableDesignationSyntax_Variables(const structure::ParenthesizedVariableDesignationSyntax& begin, const structure::VariableDesignationSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkParenthesizedVariableDesignationSyntax_Variables);
+}
+
+void VisitorReverseEdges::visitPositionalPatternClauseSyntax_Subpatterns(const structure::PositionalPatternClauseSyntax& begin, const structure::SubpatternSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkPositionalPatternClauseSyntax_Subpatterns);
+}
+
 void VisitorReverseEdges::visitPropertyDeclarationSyntax_ExpressionBody(const structure::PropertyDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkPropertyDeclarationSyntax_ExpressionBody);
 }
 
 void VisitorReverseEdges::visitPropertyDeclarationSyntax_Initializer(const structure::PropertyDeclarationSyntax& begin, const structure::EqualsValueClauseSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkPropertyDeclarationSyntax_Initializer);
+}
+
+void VisitorReverseEdges::visitPropertyPatternClauseSyntax_Subpatterns(const structure::PropertyPatternClauseSyntax& begin, const structure::SubpatternSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkPropertyPatternClauseSyntax_Subpatterns);
 }
 
 void VisitorReverseEdges::visitQualifiedCrefSyntax_Container(const structure::QualifiedCrefSyntax& begin, const expression::TypeSyntax& end) {
@@ -901,8 +1029,40 @@ void VisitorReverseEdges::visitQueryContinuationSyntax_Body(const structure::Que
   revEdges->insertEdge(&end, &begin, edkQueryContinuationSyntax_Body);
 }
 
+void VisitorReverseEdges::visitRecursivePatternSyntax_Designation(const structure::RecursivePatternSyntax& begin, const structure::VariableDesignationSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkRecursivePatternSyntax_Designation);
+}
+
+void VisitorReverseEdges::visitRecursivePatternSyntax_PositionalPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PositionalPatternClauseSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkRecursivePatternSyntax_PositionalPatternClause);
+}
+
+void VisitorReverseEdges::visitRecursivePatternSyntax_PropertyPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PropertyPatternClauseSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkRecursivePatternSyntax_PropertyPatternClause);
+}
+
+void VisitorReverseEdges::visitRecursivePatternSyntax_Type(const structure::RecursivePatternSyntax& begin, const expression::TypeSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkRecursivePatternSyntax_Type);
+}
+
 void VisitorReverseEdges::visitSelectClauseSyntax_Expression(const structure::SelectClauseSyntax& begin, const expression::ExpressionSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkSelectClauseSyntax_Expression);
+}
+
+void VisitorReverseEdges::visitSubpatternSyntax_Pattern(const structure::SubpatternSyntax& begin, const structure::PatternSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkSubpatternSyntax_Pattern);
+}
+
+void VisitorReverseEdges::visitSwitchExpressionArmSyntax_Expression(const structure::SwitchExpressionArmSyntax& begin, const expression::ExpressionSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkSwitchExpressionArmSyntax_Expression);
+}
+
+void VisitorReverseEdges::visitSwitchExpressionArmSyntax_Pattern(const structure::SwitchExpressionArmSyntax& begin, const structure::PatternSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkSwitchExpressionArmSyntax_Pattern);
+}
+
+void VisitorReverseEdges::visitSwitchExpressionArmSyntax_WhenClause(const structure::SwitchExpressionArmSyntax& begin, const structure::WhenClauseSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkSwitchExpressionArmSyntax_WhenClause);
 }
 
 void VisitorReverseEdges::visitSwitchSectionSyntax_Labels(const structure::SwitchSectionSyntax& begin, const structure::SwitchLabelSyntax& end) {
@@ -911,6 +1071,10 @@ void VisitorReverseEdges::visitSwitchSectionSyntax_Labels(const structure::Switc
 
 void VisitorReverseEdges::visitSwitchSectionSyntax_Statements(const structure::SwitchSectionSyntax& begin, const statement::StatementSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkSwitchSectionSyntax_Statements);
+}
+
+void VisitorReverseEdges::visitTupleElementSyntax_Type(const structure::TupleElementSyntax& begin, const expression::TypeSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkTupleElementSyntax_Type);
 }
 
 void VisitorReverseEdges::visitTypeArgumentListSyntax_Arguments(const structure::TypeArgumentListSyntax& begin, const expression::TypeSyntax& end) {
@@ -961,6 +1125,10 @@ void VisitorReverseEdges::visitUsingDirectiveSyntax_Name(const structure::UsingD
   revEdges->insertEdge(&end, &begin, edkUsingDirectiveSyntax_Name);
 }
 
+void VisitorReverseEdges::visitVarPatternSyntax_Designation(const structure::VarPatternSyntax& begin, const structure::VariableDesignationSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkVarPatternSyntax_Designation);
+}
+
 void VisitorReverseEdges::visitVariableDeclarationSyntax_Type(const structure::VariableDeclarationSyntax& begin, const expression::TypeSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkVariableDeclarationSyntax_Type);
 }
@@ -975,6 +1143,10 @@ void VisitorReverseEdges::visitVariableDeclaratorSyntax_ArgumentList(const struc
 
 void VisitorReverseEdges::visitVariableDeclaratorSyntax_Initializer(const structure::VariableDeclaratorSyntax& begin, const structure::EqualsValueClauseSyntax& end) {
   revEdges->insertEdge(&end, &begin, edkVariableDeclaratorSyntax_Initializer);
+}
+
+void VisitorReverseEdges::visitWhenClauseSyntax_Condition(const structure::WhenClauseSyntax& begin, const expression::ExpressionSyntax& end) {
+  revEdges->insertEdge(&end, &begin, edkWhenClauseSyntax_Condition);
 }
 
 void VisitorReverseEdges::visitWhereClauseSyntax_Condition(const structure::WhereClauseSyntax& begin, const expression::ExpressionSyntax& end) {

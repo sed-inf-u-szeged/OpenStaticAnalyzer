@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class AssignmentImpl extends BaseImpl implements Assignment {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(AssignmentImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

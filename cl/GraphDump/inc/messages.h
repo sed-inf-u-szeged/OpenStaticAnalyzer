@@ -26,5 +26,7 @@
 #define CMSG_LOAD_FILE            WriteMsg::mlNormal, "Loading: %s\n"
 #define CMSG_CSV_DUMP             WriteMsg::mlNormal, "Creating csv dump ...\n"
 #define CMSG_XML_DUMP             WriteMsg::mlNormal, "Creating xml dump ...\n"
+#define CMSG_JSON_DUMP             WriteMsg::mlNormal, "Creating json dump ...\n"
+#define CMSG_SARIF_DUMP           WriteMsg::mlNormal, "Creating sarif dump ...\n"
 
 #endif

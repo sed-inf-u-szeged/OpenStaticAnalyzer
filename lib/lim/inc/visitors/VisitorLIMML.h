@@ -400,6 +400,20 @@ namespace columbus { namespace lim { namespace asg {
       virtual void visitEnd(const type::TypeFormerType& node, bool callVirtualBase = true);
 
       /**
+      * \brief Edge visitor for compilationUnit edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitComponent_CompilationUnit(const base::Component& begin, const physical::File& end);
+
+      /**
+      * \brief Edge visitor for compilationUnit edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndComponent_CompilationUnit(const base::Component& begin, const physical::File& end);
+
+      /**
       * \brief Edge visitor for contains edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -512,6 +526,20 @@ namespace columbus { namespace lim { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitEndAttributeAccess_Attribute(const logical::AttributeAccess& begin, const logical::Attribute& end);
+
+      /**
+      * \brief Edge visitor for extends edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitClass_Extends(const logical::Class& begin, const logical::Class& end);
+
+      /**
+      * \brief Edge visitor for extends edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndClass_Extends(const logical::Class& begin, const logical::Class& end);
 
       /**
       * \brief Edge visitor for grantsFriendship edge which.

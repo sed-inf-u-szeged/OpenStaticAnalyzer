@@ -72,12 +72,14 @@ Task::ExecutionResult SolutionAnalysisTask::execute()
     if(!props.projectName.empty())
         sv.push_back("-limName:" + props.projectName);
 
+#ifndef __unix__
     if (props.runFxCop) {
         sv.push_back("-runFxCop:true");
         sv.push_back("-fxCopPath:" + props.fxcopBinaryPath.string());
         sv.push_back("-fxCopOut:" + props.fxcopOutPath.string());
     }
     else
+#endif
         sv.push_back("-runFxCop:false");
 
     if(!props.config.empty())
@@ -92,6 +94,9 @@ Task::ExecutionResult SolutionAnalysisTask::execute()
         sv.push_back("-csvseparator:" + string(1, props.csvSeparator));
     if(props.csvDecimalmark)
         sv.push_back("-csvdecimalmark:" + string(1, props.csvDecimalmark));
+
+    sv.push_back(string("-runAnalyzers:") + (props.runRoslynAnalyzers ? "true" : "false"));
+    sv.push_back("-analyzersOut:" + props.roslynAnalyzersOutPath.string());
 
     checkedExec(props.toolsDir / "CSAN", sv, logger);
 
@@ -113,6 +118,7 @@ Task::ExecutionResult ProfileTask::execute()
   ExecutionLogger logger(this, result);
   try {
 
+#ifndef __unix__
     // original rul files
     path FxCopRulFileOrig = props.toolsDir / "FxCop.rul";
 
@@ -122,12 +128,14 @@ Task::ExecutionResult ProfileTask::execute()
     // copy original rul files into temp
     if (exists(FxCopRulFileOrig))
       copy_file(FxCopRulFileOrig, FxCopRulFile);
+#endif
 
     // data
     ProfileHandler profile;
     map<string, rul::RulHandler*> rulHandlers; // for rul files
     map<string, bool> runTool; // running tools
 
+#ifndef __unix__
     // load profile
     if(!props.profileXML.empty())
       profile.parseXML(props.profileXML.string());
@@ -142,6 +150,7 @@ Task::ExecutionResult ProfileTask::execute()
 
     //process rules csv
     profileProcessRulesCSV(profile, rulHandlers, runTool, props.rulesCSV.string());
+#endif
 
     path MetricHunterThresholdsFileOrig = props.toolsDir / "MetricHunter.threshold";
     path MetricHunterThresholdsFile = props.tempDir / "MetricHunter.threshold";
@@ -149,7 +158,32 @@ Task::ExecutionResult ProfileTask::execute()
     //process thresholds
     profileProcessToolThresholds(profile, "MetricHunter", MetricHunterThresholdsFileOrig.string(), MetricHunterThresholdsFile.string());
 
+    //process udm metrics
+    bool UDM_result = profileProcessUDM(profile, (props.tempDir / "UDM.rul").string(), "csharp");
+    if (!props.runUDMExplicit) {
+      // if runUDM wasn't explicitly set, we decide by the presence of UDM metrics in the profile
+      props.runUDM = UDM_result;
+    }
+    else if (props.runUDMExplicit && props.runUDM && !UDM_result) {
+      // if, however, runUDM was explicitly set to true, but there are no valid UDM metrics, we abort
+      throw Exception(COLUMBUS_LOCATION, "UDM explicitly set to run without corresponding setup in the profile XML");
+    }
 
+    //process lim2patterns parameters
+    if (props.runLIM2Patterns) {
+      map<string, string> parameters;
+      if (profileProcessLIM2Patterns(profile, "LIM2Patterns", parameters)) {
+        if (parameters.find("whitelist") != parameters.end()) {
+          props.whitelist = parameters["whitelist"];
+        }
+        if (parameters.find("blacklist") != parameters.end()) {
+          props.blacklist = parameters["blacklist"];
+        }
+        if (parameters.find("pattern_directories") != parameters.end()) {
+          props.patternFile = parameters["pattern_directories"];
+        }
+      }
+    }
   } HANDLE_TASK_EXCEPTIONS
   return result;
 }
@@ -160,6 +194,7 @@ ProfileTask::ProfileTask(const Properties& properties) : Task(properties)
 }
 
 
+#ifndef __unix__
 TASK_NAME_DEF(FxCop2GraphTask);
 
 Task::ExecutionResult FxCop2GraphTask::execute()
@@ -191,6 +226,8 @@ FxCop2GraphTask::FxCop2GraphTask(const Properties& properties) : Task(properties
   addDependsOn(SolutionAnalysisTask::name);
   addDependsOn(ProfileTask::name);
 }
+
+#endif
 
 TASK_NAME_DEF(Lim2metricsTask);
 
@@ -280,6 +317,7 @@ Task::ExecutionResult GraphMergeTask::execute()
     }
     sort(sv.begin(), sv.end());
     sv.push_back("-out:" + (props.projectTimedResultDir /  (props.projectName + ".graph")).string());
+    sv.push_back("-summary");
 
     if (props.createStats)
       sv.push_back("-stat:" + (props.logDir / "statGraphMerge.csv").string());
@@ -294,9 +332,13 @@ Task::ExecutionResult GraphMergeTask::execute()
 
 GraphMergeTask::GraphMergeTask(const Properties& properties) : Task(properties)
 {
+#ifndef __unix__
   addDependsOn(FxCop2GraphTask::name);
+#endif
   addDependsOn(Lim2metricsTask::name);
   addDependsOn(DcfTask::name);
+  addDependsOn(Sonar2GraphTask::name);
+  addDependsOn(Roslyn2GraphTask::name);
 }
 
 
@@ -306,20 +348,32 @@ Task::ExecutionResult GraphDumpTask::execute()
 {
   ExecutionResult result;
   ExecutionLogger logger(this, result);
-  try {
+  try
+  {
+    {
+      vector<string> sv ;
 
-    vector<string> sv ;
+      sv.push_back((props.projectTimedResultDir /  (props.projectName + ".graph")).string());
+      sv.push_back("-csv");
+      sv.push_back("-xml");
+      sv.push_back("-csvseparator:" + string(1, props.csvSeparator));
+      sv.push_back("-csvdecimalmark:" + string(1, props.csvDecimalmark));
+      sv.push_back("-sarif");
+      sv.push_back("-sarifseverity:" + props.sarifSeverityLevel);
 
-    sv.push_back((props.projectTimedResultDir /  (props.projectName + ".graph")).string());
-    sv.push_back("-csv");
-    sv.push_back("-xml");
-    sv.push_back("-csvseparator:" + string(1, props.csvSeparator));
-    sv.push_back("-csvdecimalmark:" + string(1, props.csvDecimalmark));
+      checkedExec(props.toolsDir / "GraphDump", sv, logger);
+    }
 
-    if (props.createStats)
-      sv.push_back("-stat:" + (props.logDir / "statGraphDump.csv").string());
+    {
+      vector<string> sv;
+      addMessageLevel(sv);
 
-    checkedExec(props.toolsDir / "GraphDump", sv, logger);
+      sv.push_back((props.projectTimedResultDir / (props.projectName + "-summary.graph")).string());
+      sv.push_back("-xml");
+      sv.push_back("-json");
+
+      checkedExec(props.toolsDir / "GraphDump", sv, logger);
+    }
 
   } HANDLE_TASK_EXCEPTIONS
 
@@ -330,6 +384,9 @@ GraphDumpTask::GraphDumpTask(const Properties& properties) : Task(properties)
 {
   addDependsOn(GraphMergeTask::name);
   addDependsOn(MetricHunterTask::name);
+  addDependsOn(UserDefinedMetricsTask::name);
+  addDependsOn(LIM2PatternsTask::name);
+  addDependsOn(Roslyn2GraphTask::name);
 }
 
 TASK_NAME_DEF(CleanResultsTask);
@@ -411,3 +468,106 @@ MetricHunterTask::MetricHunterTask(const Properties& properties) : Task(properti
   addDependsOn(GraphMergeTask::name);
 }
 
+TASK_NAME_DEF(UserDefinedMetricsTask);
+
+Task::ExecutionResult UserDefinedMetricsTask::execute()
+{
+  ExecutionResult result;
+  if (!props.runUDM) {
+    inactives.push_back("UserDefinedMetrics");
+    return result;
+  }
+
+  ExecutionLogger logger(this, result);
+
+  try {
+    vector<string> sv;
+    sv.push_back((props.projectTimedResultDir / (props.projectName + ".graph")).string());
+    if (props.createStats)
+      sv.push_back("-stat:" + (props.logDir / "statUDM.csv").string());
+    sv.push_back("-rul:" + (props.tempDir / "UDM.rul").string());
+    sv.push_back("-rulconfig:csharp");
+    sv.push_back("-graph:" + (props.projectTimedResultDir / (props.projectName + ".graph")).string());
+
+    checkedExec(props.toolsDir / "UserDefinedMetrics", sv, logger);
+
+  } HANDLE_TASK_EXCEPTIONS
+
+  return result;
+}
+
+UserDefinedMetricsTask::UserDefinedMetricsTask(list<string>& inactives, const Properties& properties) : Task(properties), inactives(inactives)
+{
+  addDependsOn(GraphMergeTask::name);
+  addDependsOn(MetricHunterTask::name);
+}
+
+SONAR2GRAPH_TASK(cs)
+
+Sonar2GraphTask::Sonar2GraphTask(const Properties& properties) : Task(properties)
+{
+  addDependsOn(SolutionAnalysisTask::name);
+}
+
+TASK_NAME_DEF(LIM2PatternsTask);
+
+Task::ExecutionResult LIM2PatternsTask::execute()
+{
+    ExecutionResult result;
+    ExecutionLogger logger(this, result);
+    try {
+        vector<string> sv;
+
+        sv.push_back("-graph:" + (props.projectTimedResultDir / (props.projectName + ".graph")).string());
+        sv.push_back("-lim:" + (props.asgDir / (props.projectName + ".lim")).string());
+        sv.push_back("-pattern:" + props.patternFile + (!props.patternFile.empty() ? "," : "") + (props.toolsDir / "Patterns" / "AntiPatterns").string());
+        sv.push_back("-metrics:" + (props.toolsDir / "MET.rul").string());
+        sv.push_back("-out:" + (props.projectTimedResultDir / (props.projectName + ".txt")).string());
+
+        if (!props.whitelist.empty()) {
+            sv.push_back("-whitelist:" + props.whitelist);
+        }
+        if (!props.blacklist.empty()) {
+            sv.push_back("-blacklist:" + props.blacklist);
+        }
+
+        checkedExec(props.toolsDir / "LIM2Patterns", sv, logger);
+
+    } HANDLE_TASK_EXCEPTIONS
+
+        return result;
+}
+
+LIM2PatternsTask::LIM2PatternsTask(const Properties& properties) : Task(properties) {
+  addDependsOn(GraphMergeTask::name);
+  addDependsOn(MetricHunterTask::name);
+  addDependsOn(UserDefinedMetricsTask::name);
+}
+
+TASK_NAME_DEF(Roslyn2GraphTask);
+
+Roslyn2GraphTask::Roslyn2GraphTask(const Properties& properties) : Task(properties) {
+  addDependsOn(SolutionAnalysisTask::name);
+}
+
+Task::ExecutionResult Roslyn2GraphTask::execute() {
+  ExecutionResult result;
+  ExecutionLogger logger(this, result);
+
+  try {
+    vector<string> sv ;
+
+    sv.push_back("-graph:" + (props.graphDir / (props.projectName + "-Roslyn.graph")).string());
+    sv.push_back("-lim:" + (props.asgDir / (props.projectName + ".lim")).string());
+
+    if (props.txtoutput)
+      sv.push_back("-out:" + (props.projectTimedResultDir  / (props.projectName + "-Roslyn.txt")).string());
+
+    sv.push_back(props.roslynAnalyzersOutPath.string());
+
+    checkedExec(props.toolsDir / "Roslyn2Graph", sv, logger);
+
+  } HANDLE_TASK_EXCEPTIONS
+
+  return result;
+}

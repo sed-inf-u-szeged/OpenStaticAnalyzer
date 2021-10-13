@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class ThrowImpl extends BaseImpl implements Throw {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(ThrowImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

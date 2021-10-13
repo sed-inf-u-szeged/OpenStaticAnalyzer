@@ -3,111 +3,121 @@
 
   <description>This ruleset was created from PMD.rul</description>
 
-  <rule ref="rulesets/java/basic.xml">
-    <exclude name="EmptyInitializer"/>
-    <exclude name="UnnecessaryFinalModifier"/>
-    <exclude name="UnnecessaryReturn"/>
-    <exclude name="UselessParentheses"/>
+  <rule ref="category/java/bestpractices.xml">
+    <exclude name="AccessorClassGeneration"/>
+    <exclude name="JUnit4SuitesShouldUseSuiteAnnotation"/>
+    <exclude name="JUnit4TestShouldUseAfterAnnotation"/>
+    <exclude name="JUnit4TestShouldUseBeforeAnnotation"/>
+    <exclude name="JUnit4TestShouldUseTestAnnotation"/>
+    <exclude name="JUnitUseExpected"/>
+    <exclude name="PositionLiteralsFirstInCaseInsensitiveComparisons"/>
+    <exclude name="PositionLiteralsFirstInComparisons"/>
+    <exclude name="ReplaceEnumerationWithIterator"/>
+    <exclude name="ReplaceHashtableWithMap"/>
+    <exclude name="ReplaceVectorWithList"/>
+    <exclude name="UnusedFormalParameter"/>
   </rule>
 
-  <rule ref="rulesets/java/braces.xml"/>
-
-  <rule ref="rulesets/java/clone.xml">
-    <exclude name="CloneMethodMustImplementCloneable"/>
-  </rule>
-
-  <rule ref="rulesets/java/controversial.xml">
+  <rule ref="category/java/codestyle.xml">
+    <exclude name="AbstractNaming"/>
     <exclude name="AtLeastOneConstructor"/>
     <exclude name="AvoidFinalLocalVariable"/>
-    <exclude name="AvoidLiteralsInIfCondition"/>
-    <exclude name="AvoidUsingShortType"/>
-    <exclude name="AvoidUsingVolatile"/>
-    <exclude name="BooleanInversion"/>
     <exclude name="CallSuperInConstructor"/>
-    <exclude name="DataflowAnomalyAnalysis"/>
-    <exclude name="NullAssignment"/>
+    <exclude name="ClassNamingConventions"/>
+    <exclude name="CommentDefaultAccessModifier"/>
+    <exclude name="ConfusingTernary"/>
+    <exclude name="FieldNamingConventions"/>
+    <exclude name="ForLoopsMustUseBraces"/>
+    <exclude name="FormalParameterNamingConventions"/>
+    <exclude name="IfElseStmtsMustUseBraces"/>
+    <exclude name="IfStmtsMustUseBraces"/>
+    <exclude name="LinguisticNaming"/>
+    <exclude name="LocalVariableCouldBeFinal"/>
+    <exclude name="LocalVariableNamingConventions"/>
+    <exclude name="LongVariable"/>
+    <exclude name="MIsLeadingVariableName"/>
+    <exclude name="MethodArgumentCouldBeFinal"/>
+    <exclude name="MethodNamingConventions"/>
     <exclude name="OnlyOneReturn"/>
-    <exclude name="UnnecessaryParentheses"/>
-    <exclude name="UseConcurrentHashMap"/>
-    <exclude name="UseObjectForClearerAPI"/>
+    <exclude name="PrematureDeclaration"/>
+    <exclude name="ShortVariable"/>
+    <exclude name="UnnecessaryReturn"/>
+    <exclude name="UselessParentheses"/>
+    <exclude name="VariableNamingConventions"/>
+    <exclude name="WhileLoopsMustUseBraces"/>
   </rule>
 
-  <rule ref="rulesets/java/design.xml">
-    <exclude name="AccessorClassGeneration"/>
+  <rule ref="category/java/design.xml">
     <exclude name="AvoidDeeplyNestedIfStmts"/>
-    <exclude name="CompareObjectsWithEquals"/>
-    <exclude name="ConfusingTernary"/>
+    <exclude name="CouplingBetweenObjects"/>
+    <exclude name="CyclomaticComplexity"/>
+    <exclude name="ExcessiveClassLength"/>
+    <exclude name="ExcessiveImports"/>
+    <exclude name="ExcessiveMethodLength"/>
+    <exclude name="ExcessiveParameterList"/>
+    <exclude name="ExcessivePublicCount"/>
     <exclude name="GodClass"/>
+    <exclude name="LawOfDemeter"/>
+    <exclude name="LoosePackageCoupling"/>
+    <exclude name="ModifiedCyclomaticComplexity"/>
+    <exclude name="NPathComplexity"/>
+    <exclude name="NcssConstructorCount"/>
+    <exclude name="NcssCount"/>
+    <exclude name="NcssMethodCount"/>
+    <exclude name="NcssTypeCount"/>
+    <exclude name="StdCyclomaticComplexity"/>
     <exclude name="SwitchDensity"/>
+    <exclude name="TooManyFields"/>
+    <exclude name="TooManyMethods"/>
+    <exclude name="UseObjectForClearerAPI"/>
     <exclude name="UseUtilityClass"/>
   </rule>
 
-  <rule ref="rulesets/java/empty.xml">
+  <rule ref="category/java/documentation.xml">
+    <exclude name="CommentContent"/>
+    <exclude name="CommentRequired"/>
+    <exclude name="CommentSize"/>
+  </rule>
+
+  <rule ref="category/java/errorprone.xml">
+    <exclude name="AvoidAssertAsIdentifier"/>
+    <exclude name="AvoidEnumAsIdentifier"/>
+    <exclude name="AvoidLiteralsInIfCondition"/>
+    <exclude name="BeanMembersShouldSerialize"/>
+    <exclude name="CallSuperFirst"/>
+    <exclude name="CallSuperLast"/>
+    <exclude name="CompareObjectsWithEquals"/>
+    <exclude name="DataflowAnomalyAnalysis"/>
+    <exclude name="DoNotCallSystemExit"/>
+    <exclude name="DoNotHardCodeSDCard"/>
     <exclude name="EmptyInitializer"/>
-  </rule>
-
-  <rule ref="rulesets/java/finalizers.xml"/>
-
-  <rule ref="rulesets/java/imports.xml">
-    <exclude name="UnusedImports"/>
-  </rule>
-
-  <rule ref="rulesets/java/j2ee.xml">
-    <exclude name="DoNotUseThreads"/>
+    <exclude name="InvalidSlf4jMessageFormat"/>
+    <exclude name="NullAssignment"/>
     <exclude name="UseProperClassLoader"/>
   </rule>
 
-  <rule ref="rulesets/java/javabeans.xml">
-    <exclude name="BeanMembersShouldSerialize"/>
+  <rule ref="category/java/multithreading.xml">
+    <exclude name="AvoidUsingVolatile"/>
+    <exclude name="DoNotUseThreads"/>
+    <exclude name="UseConcurrentHashMap"/>
   </rule>
 
-  <rule ref="rulesets/java/junit.xml"/>
-
-  <rule ref="rulesets/java/logging-jakarta-commons.xml"/>
-
-  <rule ref="rulesets/java/logging-java.xml"/>
-
-  <rule ref="rulesets/java/naming.xml">
-    <exclude name="AbstractNaming"/>
-    <exclude name="LongVariable"/>
-    <exclude name="MisleadingVariableName"/>
-    <exclude name="ShortVariable"/>
-  </rule>
-
-  <rule ref="rulesets/java/optimizations.xml">
-    <exclude name="AvoidInstantiatingObjectsInLoops"/>
-    <exclude name="LocalVariableCouldBeFinal"/>
-    <exclude name="MethodArgumentCouldBeFinal"/>
-    <exclude name="PrematureDeclaration"/>
-    <exclude name="SimplifyStartsWith"/>
-  </rule>
-
-  <rule ref="rulesets/java/strictexception.xml">
-    <exclude name="SignatureDeclareThrowsException"/>
-  </rule>
-
-  <rule ref="rulesets/java/strings.xml">
+  <rule ref="category/java/performance.xml">
     <exclude name="AppendCharacterWithChar"/>
+    <exclude name="AvoidInstantiatingObjectsInLoops"/>
+    <exclude name="AvoidUsingShortType"/>
+    <exclude name="ByteInstantiation"/>
     <exclude name="InefficientEmptyStringCheck"/>
     <exclude name="InsufficientStringBufferDeclaration"/>
+    <exclude name="IntegerInstantiation"/>
+    <exclude name="LongInstantiation"/>
+    <exclude name="ShortInstantiation"/>
+    <exclude name="SimplifyStartsWith"/>
     <exclude name="UseIndexOfChar"/>
     <exclude name="UseStringBufferLength"/>
     <exclude name="UselessStringValueOf"/>
   </rule>
 
-  <rule ref="rulesets/java/sunsecure.xml"/>
-
-  <rule ref="rulesets/java/typeresolution.xml"/>
-
-  <rule ref="rulesets/java/unnecessary.xml">
-    <exclude name="UnnecessaryFinalModifier"/>
-    <exclude name="UnnecessaryReturn"/>
-    <exclude name="UselessParentheses"/>
-  </rule>
-
-  <rule ref="rulesets/java/unusedcode.xml">
-    <exclude name="UnusedFormalParameter"/>
-    <exclude name="UnusedModifier"/>
-  </rule>
+  <rule ref="category/java/security.xml"/>
 
 </ruleset>

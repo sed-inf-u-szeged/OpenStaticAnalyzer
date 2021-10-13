@@ -67,7 +67,6 @@
 #define CMSG_STATISTICS                 common::WriteMsg::mlNormal, "\nStatistics:\n\
 \tConverting time              : %10.2fs\n\
 \tSaving asg time              : %10.2fs\n\
-\tDumping limml time           : %10.2fs\n\
 \tTotal time                   : %10.2fs\n\
 \tPeak memory usage            : %10.2fMB\n\
 \tNumber of not existed files  : %10d\n\n"

@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class PostfixExpressionImpl extends BaseImpl implements PostfixExpression {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(PostfixExpressionImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

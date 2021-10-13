@@ -195,13 +195,14 @@ namespace columbus { namespace lim { namespace asg {
   }
 
   template class ListIterator<base::Base>;
-  template class ListIterator<base::Component>;
   template class ListIterator<physical::File>;
+  template class ListIterator<base::Component>;
   template class ListIterator<logical::Method>;
   template class ListIterator<base::ControlFlowBlock>;
   template class ListIteratorBase<AssocEdge<NodeId,Key>,base::Named>;
   template class ListIterator<logical::MethodCall>;
   template class ListIterator<type::Type>;
+  template class ListIterator<logical::Class>;
   template class ListIterator<logical::Friendship>;
   template class ListIterator<logical::GenericParameter>;
   template class ListIteratorBase<AssocEdge<NodeId,TypeArgumentConstraintKind>,type::Type>;

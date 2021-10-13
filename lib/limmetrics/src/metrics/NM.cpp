@@ -36,6 +36,24 @@ namespace columbus { namespace lim { namespace metrics {
   NMBase::NMBase( const string& name, bool local, bool total, bool enabled, SharedContainers* shared ) :
     MetricHandler( name, mdtInt, enabled, shared ), localMetric( local ), totalMetric( total )
   {
+
+    // setting invalid values where there would be differences between C++ and C structs/unions
+    set<string> common_invalids = {"NG", "TNG", "NM", "TNM", "NPM", "TNPM", "NS", "TNS"};
+    if (common_invalids.find(name) != common_invalids.end()) {
+      registerHandler( phaseVisit, NTYPE_LIM_STRUCTURE, limLangC, false, [this] ( NodeWrapper& node ) {
+        setInvalid( node );
+      });
+      registerHandler( phaseVisit, NTYPE_LIM_UNION, limLangC, false, [this] ( NodeWrapper& node ) {
+        setInvalid( node );
+      });
+    }
+    set<string> struct_invalids = {"NLG", "NLM", "NLPM", "NLS", "TNLG", "TNLM", "TNLPM", "TNLS"};
+    if (struct_invalids.find(name) != struct_invalids.end()) {
+      registerHandler( phaseVisit, NTYPE_LIM_STRUCTURE, limLangC, false, [this] ( NodeWrapper& node ) {
+        setInvalid( node );
+      });
+    }
+
     if ( name == "NM" ) {
 
       registerHandler( phaseVisit, NTYPE_LIM_CLASS, limLangOther, false, [this] ( NodeWrapper& node ) {

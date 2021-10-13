@@ -45,7 +45,7 @@ AlgorithmPreorder::AlgorithmPreorder()
   fact(NULL),
   traversaldCrossEdges()
 {
-  memset(traversaldCrossEdges,false,sizeof(bool)*49);
+  memset(traversaldCrossEdges,false,sizeof(bool)*51);
 }
 
 AlgorithmPreorder::~AlgorithmPreorder() {
@@ -205,6 +205,36 @@ void AlgorithmPreorder::visitAllEdges(const base::Component& node, bool callFirs
   visitAllEdges(dynamic_cast<const base::Named&>(node),false);
 
   std::list<Visitor*>::iterator itVisitors;
+
+  // edge: compilationUnit
+  for (ListIterator<physical::File> it = node.getCompilationUnitListIteratorBegin(); it != node.getCompilationUnitListIteratorEnd(); ++it) {
+    const physical::File& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitComponent_CompilationUnit(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot) {
+        if (visitCrossEdgeTree || (visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef))) {
+          unvisitedNodes[endNodeRef.getId()] = true;
+        }
+      }
+      if (traversaldCrossEdges[edkComponent_CompilationUnit]) {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndComponent_CompilationUnit(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
 
   // edge: contains
   for (ListIterator<base::Component> it = node.getContainsListIteratorBegin(); it != node.getContainsListIteratorEnd(); ++it) {
@@ -609,6 +639,36 @@ void AlgorithmPreorder::visitAllEdges(const logical::Class& node, bool callFirst
   visitAllEdges(dynamic_cast<const logical::Scope&>(node),false);
 
   std::list<Visitor*>::iterator itVisitors;
+
+  // edge: extends
+  for (ListIterator<logical::Class> it = node.getExtendsListIteratorBegin(); it != node.getExtendsListIteratorEnd(); ++it) {
+    const logical::Class& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitClass_Extends(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot) {
+        if (visitCrossEdgeTree || (visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef))) {
+          unvisitedNodes[endNodeRef.getId()] = true;
+        }
+      }
+      if (traversaldCrossEdges[edkClass_Extends]) {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndClass_Extends(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
 
   // edge: grantsFriendship
   for (ListIterator<logical::Friendship> it = node.getGrantsFriendshipListIteratorBegin(); it != node.getGrantsFriendshipListIteratorEnd(); ++it) {

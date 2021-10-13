@@ -75,6 +75,8 @@ set (SOURCES
     inc/expression/ConditionalAccessExpressionSyntax.h
     src/expression/ConditionalExpressionSyntax.cpp
     inc/expression/ConditionalExpressionSyntax.h
+    src/expression/DeclarationExpressionSyntax.cpp
+    inc/expression/DeclarationExpressionSyntax.h
     src/expression/DefaultExpressionSyntax.cpp
     inc/expression/DefaultExpressionSyntax.h
     src/expression/ElementAccessExpressionSyntax.cpp
@@ -91,6 +93,8 @@ set (SOURCES
     inc/expression/ImplicitArrayCreationExpressionSyntax.h
     src/expression/ImplicitElementAccessSyntax.cpp
     inc/expression/ImplicitElementAccessSyntax.h
+    src/expression/ImplicitStackAllocArrayCreationExpressionSyntax.cpp
+    inc/expression/ImplicitStackAllocArrayCreationExpressionSyntax.h
     src/expression/InitializerExpressionSyntax.cpp
     inc/expression/InitializerExpressionSyntax.h
     src/expression/InstanceExpressionSyntax.cpp
@@ -99,6 +103,8 @@ set (SOURCES
     inc/expression/InterpolatedStringExpressionSyntax.h
     src/expression/InvocationExpressionSyntax.cpp
     inc/expression/InvocationExpressionSyntax.h
+    src/expression/IsPatternExpressionSyntax.cpp
+    inc/expression/IsPatternExpressionSyntax.h
     src/expression/LambdaExpressionSyntax.cpp
     inc/expression/LambdaExpressionSyntax.h
     src/expression/LiteralExpressionSyntax.cpp
@@ -135,8 +141,14 @@ set (SOURCES
     inc/expression/QualifiedNameSyntax.h
     src/expression/QueryExpressionSyntax.cpp
     inc/expression/QueryExpressionSyntax.h
+    src/expression/RangeExpressionSyntax.cpp
+    inc/expression/RangeExpressionSyntax.h
+    src/expression/RefExpressionSyntax.cpp
+    inc/expression/RefExpressionSyntax.h
     src/expression/RefTypeExpressionSyntax.cpp
     inc/expression/RefTypeExpressionSyntax.h
+    src/expression/RefTypeSyntax.cpp
+    inc/expression/RefTypeSyntax.h
     src/expression/RefValueExpressionSyntax.cpp
     inc/expression/RefValueExpressionSyntax.h
     src/expression/SimpleLambdaExpressionSyntax.cpp
@@ -147,8 +159,16 @@ set (SOURCES
     inc/expression/SizeOfExpressionSyntax.h
     src/expression/StackAllocArrayCreationExpressionSyntax.cpp
     inc/expression/StackAllocArrayCreationExpressionSyntax.h
+    src/expression/SwitchExpressionSyntax.cpp
+    inc/expression/SwitchExpressionSyntax.h
     src/expression/ThisExpressionSyntax.cpp
     inc/expression/ThisExpressionSyntax.h
+    src/expression/ThrowExpressionSyntax.cpp
+    inc/expression/ThrowExpressionSyntax.h
+    src/expression/TupleExpressionSyntax.cpp
+    inc/expression/TupleExpressionSyntax.h
+    src/expression/TupleTypeSyntax.cpp
+    inc/expression/TupleTypeSyntax.h
     src/expression/TypeOfExpressionSyntax.cpp
     inc/expression/TypeOfExpressionSyntax.h
     src/expression/TypeSyntax.cpp
@@ -159,6 +179,8 @@ set (SOURCES
     inc/statement/BreakStatementSyntax.h
     src/statement/CheckedStatementSyntax.cpp
     inc/statement/CheckedStatementSyntax.h
+    src/statement/CommonForEachStatementSyntax.cpp
+    inc/statement/CommonForEachStatementSyntax.h
     src/statement/ContinueStatementSyntax.cpp
     inc/statement/ContinueStatementSyntax.h
     src/statement/DoStatementSyntax.cpp
@@ -171,6 +193,8 @@ set (SOURCES
     inc/statement/FixedStatementSyntax.h
     src/statement/ForEachStatementSyntax.cpp
     inc/statement/ForEachStatementSyntax.h
+    src/statement/ForEachVariableStatementSyntax.cpp
+    inc/statement/ForEachVariableStatementSyntax.h
     src/statement/ForStatementSyntax.cpp
     inc/statement/ForStatementSyntax.h
     src/statement/GotoStatementSyntax.cpp
@@ -181,6 +205,8 @@ set (SOURCES
     inc/statement/LabeledStatementSyntax.h
     src/statement/LocalDeclarationStatementSyntax.cpp
     inc/statement/LocalDeclarationStatementSyntax.h
+    src/statement/LocalFunctionStatementSyntax.cpp
+    inc/statement/LocalFunctionStatementSyntax.h
     src/statement/LockStatementSyntax.cpp
     inc/statement/LockStatementSyntax.h
     src/statement/ReturnStatementSyntax.cpp
@@ -247,6 +273,8 @@ set (SOURCES
     inc/structure/BracketedArgumentListSyntax.h
     src/structure/BracketedParameterListSyntax.cpp
     inc/structure/BracketedParameterListSyntax.h
+    src/structure/CasePatternSwitchLabelSyntax.cpp
+    inc/structure/CasePatternSwitchLabelSyntax.h
     src/structure/CaseSwitchLabelSyntax.cpp
     inc/structure/CaseSwitchLabelSyntax.h
     src/structure/CatchClauseSyntax.cpp
@@ -261,6 +289,8 @@ set (SOURCES
     inc/structure/ClassOrStructConstraintSyntax.h
     src/structure/CompilationUnitSyntax.cpp
     inc/structure/CompilationUnitSyntax.h
+    src/structure/ConstantPatternSyntax.cpp
+    inc/structure/ConstantPatternSyntax.h
     src/structure/ConstructorConstraintSyntax.cpp
     inc/structure/ConstructorConstraintSyntax.h
     src/structure/ConstructorDeclarationSyntax.cpp
@@ -279,12 +309,18 @@ set (SOURCES
     inc/structure/CrefParameterSyntax.h
     src/structure/CrefSyntax.cpp
     inc/structure/CrefSyntax.h
+    src/structure/DeclarationPatternSyntax.cpp
+    inc/structure/DeclarationPatternSyntax.h
     src/structure/DefaultSwitchLabelSyntax.cpp
     inc/structure/DefaultSwitchLabelSyntax.h
     src/structure/DelegateDeclarationSyntax.cpp
     inc/structure/DelegateDeclarationSyntax.h
     src/structure/DestructorDeclarationSyntax.cpp
     inc/structure/DestructorDeclarationSyntax.h
+    src/structure/DiscardDesignationSyntax.cpp
+    inc/structure/DiscardDesignationSyntax.h
+    src/structure/DiscardPatternSyntax.cpp
+    inc/structure/DiscardPatternSyntax.h
     src/structure/ElseClauseSyntax.cpp
     inc/structure/ElseClauseSyntax.h
     src/structure/EnumDeclarationSyntax.cpp
@@ -361,8 +397,16 @@ set (SOURCES
     inc/structure/ParameterListSyntax.h
     src/structure/ParameterSyntax.cpp
     inc/structure/ParameterSyntax.h
+    src/structure/ParenthesizedVariableDesignationSyntax.cpp
+    inc/structure/ParenthesizedVariableDesignationSyntax.h
+    src/structure/PatternSyntax.cpp
+    inc/structure/PatternSyntax.h
+    src/structure/PositionalPatternClauseSyntax.cpp
+    inc/structure/PositionalPatternClauseSyntax.h
     src/structure/PropertyDeclarationSyntax.cpp
     inc/structure/PropertyDeclarationSyntax.h
+    src/structure/PropertyPatternClauseSyntax.cpp
+    inc/structure/PropertyPatternClauseSyntax.h
     src/structure/QualifiedCrefSyntax.cpp
     inc/structure/QualifiedCrefSyntax.h
     src/structure/QueryBodySyntax.cpp
@@ -371,20 +415,30 @@ set (SOURCES
     inc/structure/QueryClauseSyntax.h
     src/structure/QueryContinuationSyntax.cpp
     inc/structure/QueryContinuationSyntax.h
+    src/structure/RecursivePatternSyntax.cpp
+    inc/structure/RecursivePatternSyntax.h
     src/structure/SelectClauseSyntax.cpp
     inc/structure/SelectClauseSyntax.h
     src/structure/SelectOrGroupClauseSyntax.cpp
     inc/structure/SelectOrGroupClauseSyntax.h
     src/structure/SimpleBaseTypeSyntax.cpp
     inc/structure/SimpleBaseTypeSyntax.h
+    src/structure/SingleVariableDesignationSyntax.cpp
+    inc/structure/SingleVariableDesignationSyntax.h
     src/structure/StructDeclarationSyntax.cpp
     inc/structure/StructDeclarationSyntax.h
+    src/structure/SubpatternSyntax.cpp
+    inc/structure/SubpatternSyntax.h
+    src/structure/SwitchExpressionArmSyntax.cpp
+    inc/structure/SwitchExpressionArmSyntax.h
     src/structure/SwitchLabelSyntax.cpp
     inc/structure/SwitchLabelSyntax.h
     src/structure/SwitchSectionSyntax.cpp
     inc/structure/SwitchSectionSyntax.h
     src/structure/SyntaxToken.cpp
     inc/structure/SyntaxToken.h
+    src/structure/TupleElementSyntax.cpp
+    inc/structure/TupleElementSyntax.h
     src/structure/TypeArgumentListSyntax.cpp
     inc/structure/TypeArgumentListSyntax.h
     src/structure/TypeConstraintSyntax.cpp
@@ -407,6 +461,12 @@ set (SOURCES
     inc/structure/VariableDeclarationSyntax.h
     src/structure/VariableDeclaratorSyntax.cpp
     inc/structure/VariableDeclaratorSyntax.h
+    src/structure/VariableDesignationSyntax.cpp
+    inc/structure/VariableDesignationSyntax.h
+    src/structure/VarPatternSyntax.cpp
+    inc/structure/VarPatternSyntax.h
+    src/structure/WhenClauseSyntax.cpp
+    inc/structure/WhenClauseSyntax.h
     src/structure/WhereClauseSyntax.cpp
     inc/structure/WhereClauseSyntax.h
     src/structure/XmlAttributeSyntax.cpp
@@ -444,6 +504,4 @@ set (SOURCES
 
 add_library (${LIBNAME} STATIC ${SOURCES})
 add_dependencies (${LIBNAME} boost)
-set_target_properties(${LIBNAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/inc/${LIBNAME}.h")
-add_pch_generation(${LIBNAME} boost)
 set_visual_studio_project_folder(${LIBNAME} TRUE)

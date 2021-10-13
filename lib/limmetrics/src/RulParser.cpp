@@ -116,6 +116,7 @@ namespace columbus { namespace lim { namespace metrics {
 
   MetricHandler* RulParser::matchHandler( const string& id, bool enabled ) {
 
+
       // CBO.h
       MATCH_SHARED( CBOI )
 
@@ -130,6 +131,14 @@ namespace columbus { namespace lim { namespace metrics {
       MATCH_SHARED( CD )
       MATCH_SHARED( TCD )
     
+      // Halstead.h
+      MATCH_SHARED( HCPL )
+      MATCH_SHARED( HVOL )
+      MATCH_SHARED( HDIF )
+      MATCH_SHARED( HEFF )
+      MATCH_SHARED( HTRP )
+      MATCH_SHARED( HNDB )
+
       // Inheritance.h
       MATCH_SHARED( NOP )
       MATCH_SHARED( NOA )
@@ -216,12 +225,6 @@ namespace columbus { namespace lim { namespace metrics {
     // Halstead.h
     MATCH_SHARED( HPV )
     MATCH_SHARED( HPL )
-    MATCH_SHARED( HCPL )
-    MATCH_SHARED( HVOL )
-    MATCH_SHARED( HDIF )
-    MATCH_SHARED( HEFF )
-    MATCH_SHARED( HTRP )
-    MATCH_SHARED( HNDB )
     // CBO.h
     MATCH_SHARED( CBO )
     MATCH_SHARED( TCBO )

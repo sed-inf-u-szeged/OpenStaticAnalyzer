@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var exportAllDeclaration = factory.createExportAllDeclarationWrapper(factory);
+        var exportAllDeclaration = factory.createExportAllDeclarationWrapper();
         globals.setPositionInfo(node, exportAllDeclaration);
         return exportAllDeclaration;
     } else {
@@ -34,15 +34,10 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.source != null) {
             var sourceWrapper = globals.getWrapperOfNode(node.source);
-            if (node.source.type !== "Literal") {
-                var sourceWrapperFunctionString = "setSource" + node.source.type;
-            } else {
-                var sourceWrapperFunctionString = "setSource" + globals.getLiteralType(node.source) + node.source.type;
-            }
             try {
-                exportAllDeclarationWrapper[sourceWrapperFunctionString](sourceWrapper);
+                exportAllDeclarationWrapper.setSource(sourceWrapper);
             } catch (e) {
-                console.error("EXPORTALLDECLARATION - Function not exist: exportAllDeclarationWrapper." + sourceWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("EXPORTALLDECLARATION - Could not set source! Reason of the error: " + e + "\n");
             }
         }
 

@@ -252,8 +252,7 @@ int main(int argc, char* argv[]) {
   set<string> metrics;
   rlh.getRuleIdList(metrics);
 
-  graphsupport::cumSum(graph, Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENT, Edge::edtDirectional), true, metrics);
-  graphsupport::cumSum(graph, Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENTTREE, Edge::edtReverse), false, metrics);
+  graphsupport::cumSum(graph, Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENT, Edge::edtDirectional), true, metrics, true);
   graphsupport::cumSum(graph, Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_LOGICALTREE, Edge::edtReverse), false, metrics);
   
 

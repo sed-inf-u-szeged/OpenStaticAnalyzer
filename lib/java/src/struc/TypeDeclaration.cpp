@@ -42,6 +42,7 @@ namespace struc {
     Scope(_id, _factory),
     m_isAbstract(false),
     m_isStrictfp(false),
+    m_lloc(0),
     m_typeNamePosition(),
     m_abstractPosition(),
     m_strictfpPosition(),
@@ -49,10 +50,11 @@ namespace struc {
     m_extendsPosition(),
     m_implementsPosition(),
     m_bodyStartPosition(),
-    m_isInCompilationUnit(0),
     m_hasSuperClass(0),
     hasSuperInterfacesContainer(),
-    hasOthersContainer()
+    hasOthersContainer(),
+    m_isInCompilationUnit(0),
+    m_isInModule(0)
   {
     m_typeNamePosition.posInfo.path = 0;
     m_typeNamePosition.posInfo.line = 0;
@@ -126,6 +128,7 @@ namespace struc {
     struc::NamedDeclaration::clone(other, false);
     struc::Scope::clone(other, false);
 
+    m_lloc = other.m_lloc;
     m_typeNamePosition.posInfo = other.m_typeNamePosition.posInfo;
     m_isAbstract = other.m_isAbstract;
     m_abstractPosition.posInfo = other.m_abstractPosition.posInfo;
@@ -135,14 +138,14 @@ namespace struc {
     m_extendsPosition.posInfo = other.m_extendsPosition.posInfo;
     m_implementsPosition.posInfo = other.m_implementsPosition.posInfo;
     m_bodyStartPosition.posInfo = other.m_bodyStartPosition.posInfo;
-    m_isInCompilationUnit = other.m_isInCompilationUnit;
     m_hasSuperClass = other.m_hasSuperClass;
     hasSuperInterfacesContainer = other.hasSuperInterfacesContainer;
     hasOthersContainer = other.hasOthersContainer;
+    m_isInCompilationUnit = other.m_isInCompilationUnit;
+    m_isInModule = other.m_isInModule;
   }
 
   void TypeDeclaration::prepareDelete(bool tryOnVirtualParent){
-    removeIsInCompilationUnit();
     removeSuperClass();
     while (!hasSuperInterfacesContainer.empty()) {
       const NodeId id = *hasSuperInterfacesContainer.begin();
@@ -158,6 +161,8 @@ namespace struc {
         factory->reverseEdges->removeEdge(id, this->getId(), edkTypeDeclaration_HasOthers);
       hasOthersContainer.pop_front();
     }
+    removeIsInCompilationUnit();
+    removeIsInModule();
     if (tryOnVirtualParent) {
       base::Base::prepareDelete(false);
     }
@@ -169,6 +174,10 @@ namespace struc {
     }
     struc::NamedDeclaration::prepareDelete(false);
     struc::Scope::prepareDelete(false);
+  }
+
+  int TypeDeclaration::getLloc() const {
+    return m_lloc;
   }
 
   const Range TypeDeclaration::getTypeNamePosition() const {
@@ -343,6 +352,10 @@ namespace struc {
     return 0;
   }
 
+  void TypeDeclaration::setLloc(int _lloc) {
+    m_lloc = _lloc;
+  }
+
   void TypeDeclaration::setTypeNamePosition(const Range& _typeNamePosition) {
     m_typeNamePosition.posInfo = _typeNamePosition.positionInfo;
     if (_typeNamePosition.strTable != &factory->getStringTable())
@@ -393,16 +406,6 @@ namespace struc {
     m_bodyStartPosition.posInfo = _bodyStartPosition.positionInfo;
     if (_bodyStartPosition.strTable != &factory->getStringTable())
       m_bodyStartPosition.posInfo.path = factory->getStringTable().set(_bodyStartPosition.getPath());
-  }
-
-  struc::CompilationUnit* TypeDeclaration::getIsInCompilationUnit() const {
-    struc::CompilationUnit *_node = NULL;
-    if (m_isInCompilationUnit != 0)
-      _node = dynamic_cast<struc::CompilationUnit*>(factory->getPointer(m_isInCompilationUnit));
-    if ( (_node == NULL) || factory->getIsFiltered(_node))
-      return NULL;
-
-    return _node;
   }
 
   expr::TypeExpression* TypeDeclaration::getSuperClass() const {
@@ -457,11 +460,28 @@ namespace struc {
     return size;
   }
 
+  struc::CompilationUnit* TypeDeclaration::getIsInCompilationUnit() const {
+    struc::CompilationUnit *_node = NULL;
+    if (m_isInCompilationUnit != 0)
+      _node = dynamic_cast<struc::CompilationUnit*>(factory->getPointer(m_isInCompilationUnit));
+    if ( (_node == NULL) || factory->getIsFiltered(_node))
+      return NULL;
+
+    return _node;
+  }
+
+  struc::Module* TypeDeclaration::getIsInModule() const {
+    struc::Module *_node = NULL;
+    if (m_isInModule != 0)
+      _node = dynamic_cast<struc::Module*>(factory->getPointer(m_isInModule));
+    if ( (_node == NULL) || factory->getIsFiltered(_node))
+      return NULL;
+
+    return _node;
+  }
+
   bool TypeDeclaration::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
-      case edkTypeDeclaration_IsInCompilationUnit:
-        setIsInCompilationUnit(edgeEnd);
-        return true;
       case edkTypeDeclaration_HasSuperClass:
         setSuperClass(edgeEnd);
         return true;
@@ -470,6 +490,12 @@ namespace struc {
         return true;
       case edkTypeDeclaration_HasOthers:
         addOthers(edgeEnd);
+        return true;
+      case edkTypeDeclaration_IsInCompilationUnit:
+        setIsInCompilationUnit(edgeEnd);
+        return true;
+      case edkTypeDeclaration_IsInModule:
+        setIsInModule(edgeEnd);
         return true;
       default:
         break;
@@ -500,9 +526,6 @@ namespace struc {
 
   bool TypeDeclaration::removeEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
-      case edkTypeDeclaration_IsInCompilationUnit:
-        removeIsInCompilationUnit();
-        return true;
       case edkTypeDeclaration_HasSuperClass:
         removeSuperClass();
         return true;
@@ -511,6 +534,12 @@ namespace struc {
         return true;
       case edkTypeDeclaration_HasOthers:
         removeOthers(edgeEnd);
+        return true;
+      case edkTypeDeclaration_IsInCompilationUnit:
+        removeIsInCompilationUnit();
+        return true;
+      case edkTypeDeclaration_IsInModule:
+        removeIsInModule();
         return true;
       default:
         break;
@@ -537,48 +566,6 @@ namespace struc {
       return true;
     }
     return false;
-  }
-
-  void TypeDeclaration::setIsInCompilationUnit(NodeId _id) {
-    struc::CompilationUnit *_node = NULL;
-    if (_id) {
-      if (!factory->getExist(_id))
-        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
-
-      _node = dynamic_cast<struc::CompilationUnit*> (factory->getPointer(_id));
-      if ( _node == NULL) {
-        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
-      }
-      if (&(_node->getFactory()) != this->factory)
-        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
-
-      if (m_isInCompilationUnit) {
-        if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_isInCompilationUnit, m_id, edkTypeDeclaration_IsInCompilationUnit);
-      }
-      m_isInCompilationUnit = _node->getId();
-      if (factory->getExistsReverseEdges())
-        factory->reverseEdges->insertEdge(m_isInCompilationUnit, this->getId(), edkTypeDeclaration_IsInCompilationUnit);
-    } else {
-      if (m_isInCompilationUnit) {
-        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
-      }
-    }
-  }
-
-  void TypeDeclaration::setIsInCompilationUnit(struc::CompilationUnit *_node) {
-    if (_node == NULL)
-      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
-
-    setIsInCompilationUnit(_node->getId());
-  }
-
-  void TypeDeclaration::removeIsInCompilationUnit() {
-      if (m_isInCompilationUnit) {
-        if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_isInCompilationUnit, m_id, edkTypeDeclaration_IsInCompilationUnit);
-      }
-      m_isInCompilationUnit = 0;
   }
 
   void TypeDeclaration::setSuperClass(NodeId _id) {
@@ -723,6 +710,90 @@ namespace struc {
     removeOthers(_node->getId());
   }
 
+  void TypeDeclaration::setIsInCompilationUnit(NodeId _id) {
+    struc::CompilationUnit *_node = NULL;
+    if (_id) {
+      if (!factory->getExist(_id))
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+      _node = dynamic_cast<struc::CompilationUnit*> (factory->getPointer(_id));
+      if ( _node == NULL) {
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      }
+      if (&(_node->getFactory()) != this->factory)
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+
+      if (m_isInCompilationUnit) {
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_isInCompilationUnit, m_id, edkTypeDeclaration_IsInCompilationUnit);
+      }
+      m_isInCompilationUnit = _node->getId();
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->insertEdge(m_isInCompilationUnit, this->getId(), edkTypeDeclaration_IsInCompilationUnit);
+    } else {
+      if (m_isInCompilationUnit) {
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      }
+    }
+  }
+
+  void TypeDeclaration::setIsInCompilationUnit(struc::CompilationUnit *_node) {
+    if (_node == NULL)
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+
+    setIsInCompilationUnit(_node->getId());
+  }
+
+  void TypeDeclaration::removeIsInCompilationUnit() {
+      if (m_isInCompilationUnit) {
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_isInCompilationUnit, m_id, edkTypeDeclaration_IsInCompilationUnit);
+      }
+      m_isInCompilationUnit = 0;
+  }
+
+  void TypeDeclaration::setIsInModule(NodeId _id) {
+    struc::Module *_node = NULL;
+    if (_id) {
+      if (!factory->getExist(_id))
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+      _node = dynamic_cast<struc::Module*> (factory->getPointer(_id));
+      if ( _node == NULL) {
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      }
+      if (&(_node->getFactory()) != this->factory)
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+
+      if (m_isInModule) {
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_isInModule, m_id, edkTypeDeclaration_IsInModule);
+      }
+      m_isInModule = _node->getId();
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->insertEdge(m_isInModule, this->getId(), edkTypeDeclaration_IsInModule);
+    } else {
+      if (m_isInModule) {
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      }
+    }
+  }
+
+  void TypeDeclaration::setIsInModule(struc::Module *_node) {
+    if (_node == NULL)
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+
+    setIsInModule(_node->getId());
+  }
+
+  void TypeDeclaration::removeIsInModule() {
+      if (m_isInModule) {
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_isInModule, m_id, edkTypeDeclaration_IsInModule);
+      }
+      m_isInModule = 0;
+  }
+
   double TypeDeclaration::getSimilarity(const base::Base& base){
     if(base.getNodeKind() == getNodeKind()) {
       const TypeDeclaration& node = dynamic_cast<const TypeDeclaration&>(base);
@@ -742,6 +813,7 @@ namespace struc {
       if(node.getAccessibility() == getAccessibility()) ++matchAttrs;
       if(node.getIsStatic() == getIsStatic()) ++matchAttrs;
       if(node.getIsFinal() == getIsFinal()) ++matchAttrs;
+      if(node.getLloc() == getLloc()) ++matchAttrs;
       if(node.getIsAbstract() == getIsAbstract()) ++matchAttrs;
       if(node.getIsStrictfp() == getIsStrictfp()) ++matchAttrs;
       str1 = getBinaryName();
@@ -751,7 +823,7 @@ namespace struc {
       if (strSim < Common::SimilarityMinForStrings)
         return 0.0;
       matchAttrs += strSim;
-      return matchAttrs / (9 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
+      return matchAttrs / (10 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
     }
@@ -827,6 +899,7 @@ namespace struc {
     if (m_isStrictfp) 
       boolValues |= 1;
     binIo.writeUByte1(boolValues);
+    binIo.writeUInt4(m_lloc);
     factory->getStringTable().setType(m_typeNamePosition.posInfo.path, StrTable::strToSave);
     binIo.writeUInt4(m_typeNamePosition.posInfo.path);
     binIo.writeUInt4(m_typeNamePosition.posInfo.line);
@@ -890,8 +963,9 @@ namespace struc {
     binIo.writeUInt4(m_bodyStartPosition.posInfo.wideEndLine);
     binIo.writeUInt4(m_bodyStartPosition.posInfo.wideEndCol);
 
-    binIo.writeUInt4(m_isInCompilationUnit);
     binIo.writeUInt4(m_hasSuperClass);
+    binIo.writeUInt4(m_isInCompilationUnit);
+    binIo.writeUInt4(m_isInModule);
 
 
     for (ListIterator<expr::TypeExpression>::Container::const_iterator it = hasSuperInterfacesContainer.begin(); it != hasSuperInterfacesContainer.end(); ++it) {
@@ -924,6 +998,7 @@ namespace struc {
     boolValues >>= 1;
     m_isAbstract = boolValues & 1;
     boolValues >>= 1;
+    m_lloc = binIo.readUInt4();
     m_typeNamePosition.posInfo.path = binIo.readUInt4();
     m_typeNamePosition.posInfo.line = binIo.readUInt4();
     m_typeNamePosition.posInfo.col = binIo.readUInt4();
@@ -980,11 +1055,13 @@ namespace struc {
     m_bodyStartPosition.posInfo.wideEndLine = binIo.readUInt4();
     m_bodyStartPosition.posInfo.wideEndCol = binIo.readUInt4();
 
-    m_isInCompilationUnit =  binIo.readUInt4();
-
     m_hasSuperClass =  binIo.readUInt4();
     if (m_hasSuperClass != 0)
       setParentEdge(factory->getPointer(m_hasSuperClass),edkTypeDeclaration_HasSuperClass);
+
+    m_isInCompilationUnit =  binIo.readUInt4();
+
+    m_isInModule =  binIo.readUInt4();
 
     NodeId _id;
 

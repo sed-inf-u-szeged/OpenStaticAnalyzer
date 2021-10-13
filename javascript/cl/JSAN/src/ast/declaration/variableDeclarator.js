@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var variableDeclarator = factory.createVariableDeclaratorWrapper(factory);
+        var variableDeclarator = factory.createVariableDeclaratorWrapper();
         globals.setPositionInfo(node, variableDeclarator);
 
 
@@ -36,29 +36,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.init != null) {
             var initWrapper = globals.getWrapperOfNode(node.init);
-            if (node.init.type !== "Literal") {
-                var initWrapperFunctionString = "setInit" + node.init.type;
-            } else {
-                var initWrapperFunctionString = "setInit" + globals.getLiteralType(node.init) + node.init.type;
-            }
             try {
-                variableDeclaratorWrapper[initWrapperFunctionString](initWrapper);
+                variableDeclaratorWrapper.setInit(initWrapper);
             } catch (e) {
-                console.error("VARIABLEDECLARATOR - Function not exist: variableDeclaratorWrapper." + initWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("VARIABLEDECLARATOR - Could not set init! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.id != null) {
             var identifierWrapper = globals.getWrapperOfNode(node.id);
-            if (node.id.type !== "Literal") {
-                var identifierWrapperFunctionString = "setIdentifier" + node.id.type;
-            } else {
-                var identifierWrapperFunctionString = "setIdentifier" + globals.getLiteralType(node.id) + node.id.type;
-            }
             try {
-                variableDeclaratorWrapper[identifierWrapperFunctionString](identifierWrapper);
+                variableDeclaratorWrapper.setIdentifier(identifierWrapper);
             } catch (e) {
-                console.error("VARIABLEDECLARATOR - Function not exist: variableDeclaratorWrapper." + identifierWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("VARIABLEDECLARATOR - Could not set identifier! Reason of the error: " + e + "\n");
             }
         }
 

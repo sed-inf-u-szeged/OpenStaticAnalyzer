@@ -46,7 +46,7 @@ namespace columbus { namespace lim { namespace metrics {
   LimMetricsVisitor::LimMetricsVisitor( Factory& factory, graph::Graph& graph, rul::RulHandler& rul, SharedContainers& shared) :
     factory( factory ),
     graph( graph ),
-    rul( RulParser( rul, shared ) ),
+    rul( RulParser( rul, shared) ),
     reverseEdges( factory.getReverseEdges() ),
     phase( phaseVisit ),
     useVisitEnd( true )

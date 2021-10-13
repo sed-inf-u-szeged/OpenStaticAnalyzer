@@ -38,7 +38,7 @@
 #include <Windows.h>
 #endif
 
-#ifdef __unix__
+#if defined(__linux__) || defined(__APPLE__)
 #include <unistd.h>
 #endif
 
@@ -112,7 +112,7 @@ namespace ColumbusWrappers {
 
   int AbstractWrapper::getConfigInt(const char* section, const char* key, int def) {
     bool casesensitive = false;
-#ifdef __unix__
+#if defined(__linux__) || defined(__APPLE__)
     casesensitive = true;
 #endif
     return getPrivateProfileInt(section, key, def, configfile.c_str(), casesensitive);
@@ -121,7 +121,7 @@ namespace ColumbusWrappers {
 
   string AbstractWrapper::getConfigString(const char* section, const char* key, const char* def) {
     bool casesensitive = false;
-#ifdef __unix__
+#if defined(__linux__) || defined(__APPLE__)
     casesensitive = true;
 #endif
     char buffer[8192];
@@ -172,7 +172,7 @@ namespace ColumbusWrappers {
       return false;
     }
 
-    if (mode == wrapper_gcc || mode == wrapper_ar) {
+    if (mode == wrapper_gcc || mode == wrapper_ar || mode == wrapper_clang) {
       if (ext == ".o" || ext == ".ao" || ext == ".lo") {
         return true;
       }
@@ -194,7 +194,7 @@ namespace ColumbusWrappers {
       return false;
     }
 
-    if (mode == wrapper_gcc || mode == wrapper_ar) {
+    if (mode == wrapper_gcc || mode == wrapper_ar || mode == wrapper_clang) {
       if (ext == ".a") {
         return true;
       }
@@ -209,7 +209,7 @@ namespace ColumbusWrappers {
 
 
   std::string AbstractWrapper::getObjectFileExtension() const {
-    return (mode==wrapper_gcc ? ".o" : ".obj");
+    return ((mode == wrapper_gcc || mode == wrapper_clang) ? ".o" : ".obj");
   }
 
 
@@ -257,8 +257,11 @@ namespace ColumbusWrappers {
   }
 
 
-  void AbstractWrapper::replaceQuoteForQuoteWithBackslash(string& param) const {
-#ifdef __unix__
+  void AbstractWrapper::replaceQuoteForQuoteWithBackslash(string& param) const
+  {
+    if (param.empty())
+      return;
+#if defined(__linux__) || defined(__APPLE__)
     param = replace(param.c_str(), "'", "'\\''");
 #endif
 
@@ -272,7 +275,7 @@ namespace ColumbusWrappers {
 
 
   void AbstractWrapper::corrigateParamList(list<string>& paramlist) const {
-#ifdef __unix__
+#if defined(__linux__) || defined(__APPLE__)
     for (list<string>::iterator it = paramlist.begin(); it != paramlist.end(); it++) {
       replaceQuoteForQuoteWithBackslash(*it);
     }
@@ -286,7 +289,11 @@ namespace ColumbusWrappers {
   }
 
 
-  void AbstractWrapper::setParams(int argc, char **argv, list<string>& paramlist, set<pair<string, int> > paramtoskip) {
+  void AbstractWrapper::setParams(int argc, char **argv, list<string>& paramlist, set<pair<string, int> > paramtoskip)
+  {
+    if (argc == 0)
+      return;
+
     wrappedExe = argv[0];
     writeDebugMsg(ABSTRACT_WRAPPER, CMSG_ABSTRACT_WRAPPER_ORIGINAL_WRAPPED_TOOL, argv[0]);
 
@@ -499,13 +506,25 @@ namespace ColumbusWrappers {
 
   int AbstractWrapper::systemCall(const string& cmd, const string& filename) const {
     if (filename != "") {
-      string tmp = common::getCwd();
       std::ofstream f(filename.c_str(), ios::out);
       f << cmd;
       f.close();
       return common::run(cmd, false, filename);
     } else {
       return common::run(cmd, false);
+    }
+  }
+
+  int AbstractWrapper::systemCall(const string& executable, const vector<string>& arguments, const string& filename) const {
+    if (filename != "") {
+      std::ofstream f(filename.c_str(), ios::out);
+      f << executable << "\n";
+      for (const auto& arg : arguments)
+        f << arg << "\n";
+      f.close();
+      return common::run(executable, arguments, filename);
+    } else {
+      return common::run(executable, arguments);
     }
   }
 
@@ -521,7 +540,7 @@ namespace ColumbusWrappers {
 #ifdef _WIN32
     procId = GetCurrentProcessId();
 #endif
-#ifdef __unix__
+#if defined(__linux__) || defined(__APPLE__)
     procId = (unsigned long)getpid();
 #endif
     return procId;

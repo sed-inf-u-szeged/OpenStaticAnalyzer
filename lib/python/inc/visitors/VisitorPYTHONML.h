@@ -112,6 +112,18 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEnd(const expression::AttributeRef& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the XML representation of the expression::Await node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::Await& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the end part of XML representation of the expression::Await node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::Await& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the XML representation of the expression::BinaryArithmetic node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -134,6 +146,18 @@ namespace columbus { namespace python { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::BinaryLogical& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the XML representation of the expression::BytesLiteral node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::BytesLiteral& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the end part of XML representation of the expression::BytesLiteral node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::BytesLiteral& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the XML representation of the expression::Call node into the output file.
@@ -220,6 +244,18 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEnd(const expression::FloatNumber& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the XML representation of the expression::FormattedValue node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::FormattedValue& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the end part of XML representation of the expression::FormattedValue node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::FormattedValue& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the XML representation of the expression::Generator node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -304,6 +340,18 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEnd(const expression::IntegerLiteral& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the XML representation of the expression::JoinedStr node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::JoinedStr& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the end part of XML representation of the expression::JoinedStr node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::JoinedStr& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the XML representation of the expression::KeyValue node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -376,6 +424,18 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEnd(const expression::LongInteger& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the XML representation of the expression::NamedExpr node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::NamedExpr& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the end part of XML representation of the expression::NamedExpr node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::NamedExpr& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the XML representation of the expression::Set node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -410,6 +470,18 @@ namespace columbus { namespace python { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::Slice& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the XML representation of the expression::Starred node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::Starred& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the end part of XML representation of the expression::Starred node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::Starred& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the XML representation of the expression::StringConversion node into the output file.
@@ -518,6 +590,18 @@ namespace columbus { namespace python { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const statement::Alias& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the XML representation of the statement::AnnAssign node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const statement::AnnAssign& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the end part of XML representation of the statement::AnnAssign node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const statement::AnnAssign& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the XML representation of the statement::Assert node into the output file.
@@ -712,6 +796,18 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEnd(const statement::ImportStatement& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the XML representation of the statement::Nonlocal node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const statement::Nonlocal& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the end part of XML representation of the statement::Nonlocal node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const statement::Nonlocal& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the XML representation of the statement::Parameter node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -796,28 +892,16 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEnd(const statement::TargetList& node, bool callVirtualBase = true);
 
       /**
-      * \brief Writes the XML representation of the statement::TryExcept node into the output file.
+      * \brief Writes the XML representation of the statement::Try node into the output file.
       * \param node [in] The node which is visited.
       */
-      virtual void visit(const statement::TryExcept& node, bool callVirtualBase = true);
+      virtual void visit(const statement::Try& node, bool callVirtualBase = true);
 
       /**
-      * \brief Writes the end part of XML representation of the statement::TryExcept node into the output file.
+      * \brief Writes the end part of XML representation of the statement::Try node into the output file.
       * \param node [in] The node which is visited.
       */
-      virtual void visitEnd(const statement::TryExcept& node, bool callVirtualBase = true);
-
-      /**
-      * \brief Writes the XML representation of the statement::TryFinal node into the output file.
-      * \param node [in] The node which is visited.
-      */
-      virtual void visit(const statement::TryFinal& node, bool callVirtualBase = true);
-
-      /**
-      * \brief Writes the end part of XML representation of the statement::TryFinal node into the output file.
-      * \param node [in] The node which is visited.
-      */
-      virtual void visitEnd(const statement::TryFinal& node, bool callVirtualBase = true);
+      virtual void visitEnd(const statement::Try& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the XML representation of the statement::While node into the output file.
@@ -842,6 +926,18 @@ namespace columbus { namespace python { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const statement::With& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the XML representation of the statement::WithItem node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const statement::WithItem& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the end part of XML representation of the statement::WithItem node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const statement::WithItem& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the XML representation of the type::DictType node into the output file.
@@ -960,6 +1056,20 @@ namespace columbus { namespace python { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitEndArgumentList_HasTuple(const expression::ArgumentList& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasValue edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitAwait_HasValue(const expression::Await& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasValue edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndAwait_HasValue(const expression::Await& begin, const expression::Expression& end);
 
       /**
       * \brief Edge  visitor for hasLeftExpression edge which is called when the subtree of this edge is started.
@@ -1102,6 +1212,34 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEndExtSlice_HasItem(const expression::ExtSlice& begin, const expression::Slicing& end);
 
       /**
+      * \brief Edge  visitor for hasValue edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitFormattedValue_HasValue(const expression::FormattedValue& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasValue edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndFormattedValue_HasValue(const expression::FormattedValue& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasFormatSpec edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitFormattedValue_HasFormatSpec(const expression::FormattedValue& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasFormatSpec edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndFormattedValue_HasFormatSpec(const expression::FormattedValue& begin, const expression::Expression& end);
+
+      /**
       * \brief Edge  visitor for hasCondition edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1226,6 +1364,20 @@ namespace columbus { namespace python { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitEndIfExpression_HasTest(const expression::IfExpression& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasValue edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitJoinedStr_HasValue(const expression::JoinedStr& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasValue edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndJoinedStr_HasValue(const expression::JoinedStr& begin, const expression::Expression& end);
 
       /**
       * \brief Edge  visitor for hasKey edge which is called when the subtree of this edge is started.
@@ -1368,6 +1520,34 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEndListComp_HasGenerator(const expression::ListComp& begin, const expression::Generator& end);
 
       /**
+      * \brief Edge  visitor for hasTarget edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitNamedExpr_HasTarget(const expression::NamedExpr& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasTarget edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndNamedExpr_HasTarget(const expression::NamedExpr& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasValue edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitNamedExpr_HasValue(const expression::NamedExpr& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasValue edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndNamedExpr_HasValue(const expression::NamedExpr& begin, const expression::Expression& end);
+
+      /**
       * \brief Edge  visitor for hasExpression edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1452,6 +1632,20 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEndSlice_HasUpperBound(const expression::Slice& begin, const expression::Expression& end);
 
       /**
+      * \brief Edge  visitor for hasValue edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitStarred_HasValue(const expression::Starred& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasValue edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndStarred_HasValue(const expression::Starred& begin, const expression::Expression& end);
+
+      /**
       * \brief Edge  visitor for hasExpressionList edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1494,18 +1688,18 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEndUnary_HasExpression(const expression::Unary& begin, const expression::Expression& end);
 
       /**
-      * \brief Edge  visitor for hasYieldExpression edge which is called when the subtree of this edge is started.
+      * \brief Edge  visitor for hasExpression edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitYieldExpression_HasYieldExpression(const expression::YieldExpression& begin, const expression::ExpressionList& end);
+      virtual void visitYieldExpression_HasExpression(const expression::YieldExpression& begin, const expression::Expression& end);
 
       /**
-      * \brief Edge end visitor for hasYieldExpression edge which is called when the subtree of this edge is started.
+      * \brief Edge end visitor for hasExpression edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitEndYieldExpression_HasYieldExpression(const expression::YieldExpression& begin, const expression::ExpressionList& end);
+      virtual void visitEndYieldExpression_HasExpression(const expression::YieldExpression& begin, const expression::Expression& end);
 
       /**
       * \brief Edge  visitor for hasObject edge which is called when the subtree of this edge is started.
@@ -1620,6 +1814,20 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEndAlias_RefersTo(const statement::Alias& begin, const base::Base& end);
 
       /**
+      * \brief Edge  visitor for hasAnnotation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitAnnAssign_HasAnnotation(const statement::AnnAssign& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasAnnotation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndAnnAssign_HasAnnotation(const statement::AnnAssign& begin, const expression::Expression& end);
+
+      /**
       * \brief Edge  visitor for hasMsgExpression edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1730,6 +1938,20 @@ namespace columbus { namespace python { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitEndClassDef_HasBaseSpecifier(const statement::ClassDef& begin, const statement::BaseSpecifier& end);
+
+      /**
+      * \brief Edge  visitor for hasKeyword edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitClassDef_HasKeyword(const statement::ClassDef& begin, const expression::Keyword& end);
+
+      /**
+      * \brief Edge end visitor for hasKeyword edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndClassDef_HasKeyword(const statement::ClassDef& begin, const expression::Keyword& end);
 
       /**
       * \brief Edge  visitor for hasDecorator edge which is called when the subtree of this edge is started.
@@ -1914,6 +2136,20 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEndFunctionDef_HasParameter(const statement::FunctionDef& begin, const statement::Parameter& end);
 
       /**
+      * \brief Edge  visitor for hasReturnAnnotation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitFunctionDef_HasReturnAnnotation(const statement::FunctionDef& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasReturnAnnotation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndFunctionDef_HasReturnAnnotation(const statement::FunctionDef& begin, const expression::Expression& end);
+
+      /**
       * \brief Edge visitor for refersTo edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -2068,6 +2304,20 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEndIteration_HasElseBody(const statement::Iteration& begin, const statement::Suite& end);
 
       /**
+      * \brief Edge  visitor for hasIdentifier edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitNonlocal_HasIdentifier(const statement::Nonlocal& begin, const expression::Identifier& end);
+
+      /**
+      * \brief Edge end visitor for hasIdentifier edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndNonlocal_HasIdentifier(const statement::Nonlocal& begin, const expression::Identifier& end);
+
+      /**
       * \brief Edge  visitor for hasDefaultValue edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -2080,6 +2330,20 @@ namespace columbus { namespace python { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitEndParameter_HasDefaultValue(const statement::Parameter& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasAnnotation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitParameter_HasAnnotation(const statement::Parameter& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasAnnotation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndParameter_HasAnnotation(const statement::Parameter& begin, const expression::Expression& end);
 
       /**
       * \brief Edge visitor for refersTo edge which.
@@ -2124,46 +2388,74 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEndPrint_HasDestination(const statement::Print& begin, const expression::Expression& end);
 
       /**
-      * \brief Edge  visitor for hasTracebackExpression edge which is called when the subtree of this edge is started.
+      * \brief Edge  visitor for hasType edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitRaise_HasTracebackExpression(const statement::Raise& begin, const expression::Expression& end);
+      virtual void visitRaise_HasType(const statement::Raise& begin, const expression::Expression& end);
 
       /**
-      * \brief Edge end visitor for hasTracebackExpression edge which is called when the subtree of this edge is started.
+      * \brief Edge end visitor for hasType edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitEndRaise_HasTracebackExpression(const statement::Raise& begin, const expression::Expression& end);
+      virtual void visitEndRaise_HasType(const statement::Raise& begin, const expression::Expression& end);
 
       /**
-      * \brief Edge  visitor for hasTypeExpression edge which is called when the subtree of this edge is started.
+      * \brief Edge  visitor for hasValue edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitRaise_HasTypeExpression(const statement::Raise& begin, const expression::Expression& end);
+      virtual void visitRaise_HasValue(const statement::Raise& begin, const expression::Expression& end);
 
       /**
-      * \brief Edge end visitor for hasTypeExpression edge which is called when the subtree of this edge is started.
+      * \brief Edge end visitor for hasValue edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitEndRaise_HasTypeExpression(const statement::Raise& begin, const expression::Expression& end);
+      virtual void visitEndRaise_HasValue(const statement::Raise& begin, const expression::Expression& end);
 
       /**
-      * \brief Edge  visitor for hasValueExpression edge which is called when the subtree of this edge is started.
+      * \brief Edge  visitor for hasTraceback edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitRaise_HasValueExpression(const statement::Raise& begin, const expression::Expression& end);
+      virtual void visitRaise_HasTraceback(const statement::Raise& begin, const expression::Expression& end);
 
       /**
-      * \brief Edge end visitor for hasValueExpression edge which is called when the subtree of this edge is started.
+      * \brief Edge end visitor for hasTraceback edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitEndRaise_HasValueExpression(const statement::Raise& begin, const expression::Expression& end);
+      virtual void visitEndRaise_HasTraceback(const statement::Raise& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasException edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitRaise_HasException(const statement::Raise& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasException edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndRaise_HasException(const statement::Raise& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasCause edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitRaise_HasCause(const statement::Raise& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasCause edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndRaise_HasCause(const statement::Raise& begin, const expression::Expression& end);
 
       /**
       * \brief Edge  visitor for hasExpression edge which is called when the subtree of this edge is started.
@@ -2208,60 +2500,46 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEndTargetList_HasTarget(const statement::TargetList& begin, const expression::Expression& end);
 
       /**
-      * \brief Edge  visitor for hasElseBody edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      virtual void visitTryExcept_HasElseBody(const statement::TryExcept& begin, const statement::Suite& end);
-
-      /**
-      * \brief Edge end visitor for hasElseBody edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      virtual void visitEndTryExcept_HasElseBody(const statement::TryExcept& begin, const statement::Suite& end);
-
-      /**
       * \brief Edge  visitor for hasHandler edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitTryExcept_HasHandler(const statement::TryExcept& begin, const statement::Handler& end);
+      virtual void visitTry_HasHandler(const statement::Try& begin, const statement::Handler& end);
 
       /**
       * \brief Edge end visitor for hasHandler edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitEndTryExcept_HasHandler(const statement::TryExcept& begin, const statement::Handler& end);
+      virtual void visitEndTry_HasHandler(const statement::Try& begin, const statement::Handler& end);
+
+      /**
+      * \brief Edge  visitor for hasElseBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitTry_HasElseBody(const statement::Try& begin, const statement::Suite& end);
+
+      /**
+      * \brief Edge end visitor for hasElseBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndTry_HasElseBody(const statement::Try& begin, const statement::Suite& end);
 
       /**
       * \brief Edge  visitor for hasFinallyBody edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitTryExcept_HasFinallyBody(const statement::TryExcept& begin, const statement::Suite& end);
+      virtual void visitTry_HasFinallyBody(const statement::Try& begin, const statement::Suite& end);
 
       /**
       * \brief Edge end visitor for hasFinallyBody edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitEndTryExcept_HasFinallyBody(const statement::TryExcept& begin, const statement::Suite& end);
-
-      /**
-      * \brief Edge  visitor for hasFinallyBody edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      virtual void visitTryFinal_HasFinallyBody(const statement::TryFinal& begin, const statement::Suite& end);
-
-      /**
-      * \brief Edge end visitor for hasFinallyBody edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      virtual void visitEndTryFinal_HasFinallyBody(const statement::TryFinal& begin, const statement::Suite& end);
+      virtual void visitEndTry_HasFinallyBody(const statement::Try& begin, const statement::Suite& end);
 
       /**
       * \brief Edge  visitor for hasTestExpression edge which is called when the subtree of this edge is started.
@@ -2278,32 +2556,46 @@ namespace columbus { namespace python { namespace asg {
       virtual void visitEndWhile_HasTestExpression(const statement::While& begin, const expression::Expression& end);
 
       /**
-      * \brief Edge  visitor for hasExpression edge which is called when the subtree of this edge is started.
+      * \brief Edge  visitor for hasWithItem edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitWith_HasExpression(const statement::With& begin, const expression::Expression& end);
+      virtual void visitWith_HasWithItem(const statement::With& begin, const statement::WithItem& end);
 
       /**
-      * \brief Edge end visitor for hasExpression edge which is called when the subtree of this edge is started.
+      * \brief Edge end visitor for hasWithItem edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitEndWith_HasExpression(const statement::With& begin, const expression::Expression& end);
+      virtual void visitEndWith_HasWithItem(const statement::With& begin, const statement::WithItem& end);
 
       /**
-      * \brief Edge  visitor for hasTargetList edge which is called when the subtree of this edge is started.
+      * \brief Edge  visitor for hasContext edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitWith_HasTargetList(const statement::With& begin, const statement::TargetList& end);
+      virtual void visitWithItem_HasContext(const statement::WithItem& begin, const expression::Expression& end);
 
       /**
-      * \brief Edge end visitor for hasTargetList edge which is called when the subtree of this edge is started.
+      * \brief Edge end visitor for hasContext edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitEndWith_HasTargetList(const statement::With& begin, const statement::TargetList& end);
+      virtual void visitEndWithItem_HasContext(const statement::WithItem& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasTarget edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitWithItem_HasTarget(const statement::WithItem& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasTarget edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndWithItem_HasTarget(const statement::WithItem& begin, const expression::Expression& end);
 
       /**
       * \brief Edge visitor for refersTo edge which.
@@ -2383,6 +2675,12 @@ namespace columbus { namespace python { namespace asg {
 
       /**
       * \internal
+      * \brief Writes out the attributes of the expression::Await node.
+      */
+      virtual void writeAttributes(const expression::Await& node, bool composite, bool bWithParent = true);
+
+      /**
+      * \internal
       * \brief Writes out the attributes of the expression::Binary node.
       */
       virtual void writeAttributes(const expression::Binary& node, bool composite, bool bWithParent = true);
@@ -2398,6 +2696,12 @@ namespace columbus { namespace python { namespace asg {
       * \brief Writes out the attributes of the expression::BinaryLogical node.
       */
       virtual void writeAttributes(const expression::BinaryLogical& node, bool composite, bool bWithParent = true);
+
+      /**
+      * \internal
+      * \brief Writes out the attributes of the expression::BytesLiteral node.
+      */
+      virtual void writeAttributes(const expression::BytesLiteral& node, bool composite, bool bWithParent = true);
 
       /**
       * \internal
@@ -2449,6 +2753,12 @@ namespace columbus { namespace python { namespace asg {
 
       /**
       * \internal
+      * \brief Writes out the attributes of the expression::FormattedValue node.
+      */
+      virtual void writeAttributes(const expression::FormattedValue& node, bool composite, bool bWithParent = true);
+
+      /**
+      * \internal
       * \brief Writes out the attributes of the expression::Generator node.
       */
       virtual void writeAttributes(const expression::Generator& node, bool composite, bool bWithParent = true);
@@ -2488,6 +2798,12 @@ namespace columbus { namespace python { namespace asg {
       * \brief Writes out the attributes of the expression::IntegerLiteral node.
       */
       virtual void writeAttributes(const expression::IntegerLiteral& node, bool composite, bool bWithParent = true);
+
+      /**
+      * \internal
+      * \brief Writes out the attributes of the expression::JoinedStr node.
+      */
+      virtual void writeAttributes(const expression::JoinedStr& node, bool composite, bool bWithParent = true);
 
       /**
       * \internal
@@ -2533,6 +2849,12 @@ namespace columbus { namespace python { namespace asg {
 
       /**
       * \internal
+      * \brief Writes out the attributes of the expression::NamedExpr node.
+      */
+      virtual void writeAttributes(const expression::NamedExpr& node, bool composite, bool bWithParent = true);
+
+      /**
+      * \internal
       * \brief Writes out the attributes of the expression::Set node.
       */
       virtual void writeAttributes(const expression::Set& node, bool composite, bool bWithParent = true);
@@ -2554,6 +2876,12 @@ namespace columbus { namespace python { namespace asg {
       * \brief Writes out the attributes of the expression::Slicing node.
       */
       virtual void writeAttributes(const expression::Slicing& node, bool composite, bool bWithParent = true);
+
+      /**
+      * \internal
+      * \brief Writes out the attributes of the expression::Starred node.
+      */
+      virtual void writeAttributes(const expression::Starred& node, bool composite, bool bWithParent = true);
 
       /**
       * \internal
@@ -2614,6 +2942,12 @@ namespace columbus { namespace python { namespace asg {
       * \brief Writes out the attributes of the statement::Alias node.
       */
       virtual void writeAttributes(const statement::Alias& node, bool composite, bool bWithParent = true);
+
+      /**
+      * \internal
+      * \brief Writes out the attributes of the statement::AnnAssign node.
+      */
+      virtual void writeAttributes(const statement::AnnAssign& node, bool composite, bool bWithParent = true);
 
       /**
       * \internal
@@ -2725,6 +3059,12 @@ namespace columbus { namespace python { namespace asg {
 
       /**
       * \internal
+      * \brief Writes out the attributes of the statement::Nonlocal node.
+      */
+      virtual void writeAttributes(const statement::Nonlocal& node, bool composite, bool bWithParent = true);
+
+      /**
+      * \internal
       * \brief Writes out the attributes of the statement::Parameter node.
       */
       virtual void writeAttributes(const statement::Parameter& node, bool composite, bool bWithParent = true);
@@ -2785,18 +3125,6 @@ namespace columbus { namespace python { namespace asg {
 
       /**
       * \internal
-      * \brief Writes out the attributes of the statement::TryExcept node.
-      */
-      virtual void writeAttributes(const statement::TryExcept& node, bool composite, bool bWithParent = true);
-
-      /**
-      * \internal
-      * \brief Writes out the attributes of the statement::TryFinal node.
-      */
-      virtual void writeAttributes(const statement::TryFinal& node, bool composite, bool bWithParent = true);
-
-      /**
-      * \internal
       * \brief Writes out the attributes of the statement::While node.
       */
       virtual void writeAttributes(const statement::While& node, bool composite, bool bWithParent = true);
@@ -2806,6 +3134,12 @@ namespace columbus { namespace python { namespace asg {
       * \brief Writes out the attributes of the statement::With node.
       */
       virtual void writeAttributes(const statement::With& node, bool composite, bool bWithParent = true);
+
+      /**
+      * \internal
+      * \brief Writes out the attributes of the statement::WithItem node.
+      */
+      virtual void writeAttributes(const statement::WithItem& node, bool composite, bool bWithParent = true);
 
       /**
       * \internal

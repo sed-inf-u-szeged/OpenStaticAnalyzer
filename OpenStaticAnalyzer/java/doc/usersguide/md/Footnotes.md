@@ -1,5 +1,7 @@
 # Footnotes
 
+[^3]: This product includes software developed in part by support from the Defense Advanced Research Project Agency (DARPA)
+
 [^1]: Be careful with the path separator character of the classpath option because it is platform dependent.
 
 [^2]: POSIX Extended Regular Expressions

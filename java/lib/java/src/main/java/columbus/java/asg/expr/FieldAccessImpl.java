@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class FieldAccessImpl extends BaseImpl implements FieldAccess {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(FieldAccessImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

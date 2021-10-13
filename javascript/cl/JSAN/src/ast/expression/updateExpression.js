@@ -27,7 +27,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var updateExpression = factory.createUpdateExpressionWrapper(factory);
+        var updateExpression = factory.createUpdateExpressionWrapper();
         globals.setPositionInfo(node, updateExpression);
         updateExpression.setOperator(conversions.convertOperatorToString(node.operator));
         updateExpression.setPrefix(node.prefix);
@@ -37,15 +37,10 @@ module.exports = function (node, parent, firstVisit) {
         var updateExpressionWrapper = globals.getWrapperOfNode(node);
         if (node.argument != null) {
             var argumentWrapper = globals.getWrapperOfNode(node.argument);
-            if (node.argument.type !== "Literal") {
-                var argumentWrapperFunctionString = "setArgument" + node.argument.type;
-            } else {
-                var argumentWrapperFunctionString = "setArgument" + globals.getLiteralType(node.argument) + node.argument.type;
-            }
             try {
-                updateExpressionWrapper[argumentWrapperFunctionString](argumentWrapper);
+                updateExpressionWrapper.setArgument(argumentWrapper);
             } catch (e) {
-                console.error("UPDATEEXPRESSION - Function not exist: updateExpressionWrapper." + argumentWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("UPDATEEXPRESSION - Could not st argument! Reason of the error: " + e + "\n");
             }
         }
 

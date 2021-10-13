@@ -49,9 +49,6 @@ static bool exportRul = false;
 static string fList;
 static list<string> listOfFile;
 
-static string changePathFrom = "";
-static string changePathTo = "";
-
 static bool ppMakeRul(const Option *o, char *argv[]) {
   errorListFileName = argv[0];
   return true;
@@ -130,7 +127,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Converting eslint output
-    ResultConverter converter(limFileName, outputFileName, rul_s, rulConfig, exportRul, changePathFrom, changePathTo);
+    ResultConverter converter(limFileName, outputFileName, rul_s, rulConfig, exportRul, "", "");
     updateMemoryStat();
     for(list<string>::iterator file = listOfFile.begin(); file != listOfFile.end(); ++file){
       if(pathFileExists(*file, false))
@@ -140,7 +137,6 @@ int main(int argc, char* argv[]) {
     }
     updateMemoryStat();
     converter.aggregateWarnings();
-    converter.addLicenseTypeToTheGraphHeader(EXECUTABLE_NAME);
     converter.saveResultGraph(graphFileName, false);
 
     updateMemoryStat();

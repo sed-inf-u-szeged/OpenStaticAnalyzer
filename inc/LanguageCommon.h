@@ -21,10 +21,17 @@
 #ifndef LANGUAGECOMMON_H
 #define LANGUAGECOMMON_H
 
+
 #define HAS_LANGUAGE_CONFIG
 
 #ifdef SCHEMA_JAVA
   #define LANGUAGE_STR "Java"
+#elif defined SCHEMA_JAVASCRIPT
+  #define LANGUAGE_STR "JavaScript"
+#elif defined SCHEMA_PYTHON
+  #define LANGUAGE_STR "Python"
+#elif defined SCHEMA_CSHARP
+  #define LANGUAGE_STR "C#"
 #else
   #define LANGUAGE_STR ""
   #undef HAS_LANGUAGE_CONFIG

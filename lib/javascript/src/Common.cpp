@@ -929,7 +929,7 @@ const std::string toString(AssignmentOperator kind) {
     case asoBitwiseXor: return "asoBitwiseXor";
     case asoBitwiseAnd: return "asoBitwiseAnd";
     case asoExponentiation: return "asoExponentiation";
-    default: throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
 
@@ -957,7 +957,7 @@ const std::string toString(BinaryOperator kind) {
     case bioIn: return "bioIn";
     case bioInstanceOf: return "bioInstanceOf";
     case bioExponentiation: return "bioExponentiation";
-    default: throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
 
@@ -965,7 +965,7 @@ const std::string toString(CommentLocation kind) {
   switch (kind) {
     case clTrailing: return "clTrailing";
     case clLeading: return "clLeading";
-    default: throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
 
@@ -973,7 +973,7 @@ const std::string toString(CommentType kind) {
   switch (kind) {
     case ctLine: return "ctLine";
     case ctBlock: return "ctBlock";
-    default: throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
 
@@ -982,7 +982,7 @@ const std::string toString(DeclarationKind kind) {
     case dkVar: return "dkVar";
     case dkLet: return "dkLet";
     case dkConst: return "dkConst";
-    default: throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
 
@@ -990,7 +990,7 @@ const std::string toString(LogicalOperator kind) {
   switch (kind) {
     case looAnd: return "looAnd";
     case looOr: return "looOr";
-    default: throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
 
@@ -1000,7 +1000,7 @@ const std::string toString(MethodDefinitionKind kind) {
     case mdkMethod: return "mdkMethod";
     case mdkGet: return "mdkGet";
     case mdkSet: return "mdkSet";
-    default: throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
 
@@ -1008,7 +1008,7 @@ const std::string toString(ProgramSourceType kind) {
   switch (kind) {
     case pstScript: return "pstScript";
     case pstModule: return "pstModule";
-    default: throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
 
@@ -1017,7 +1017,7 @@ const std::string toString(PropertyKind kind) {
     case pkInit: return "pkInit";
     case pkGet: return "pkGet";
     case pkSet: return "pkSet";
-    default: throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
 
@@ -1030,7 +1030,7 @@ const std::string toString(UnaryOperator kind) {
     case unoVoid: return "unoVoid";
     case unoDelete: return "unoDelete";
     case unoBitwiseNot: return "unoBitwiseNot";
-    default: throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
 
@@ -1038,7 +1038,7 @@ const std::string toString(UpdateOperator kind) {
   switch (kind) {
     case upoIncrement: return "upoIncrement";
     case upoDecrement: return "upoDecrement";
-    default: throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
 
@@ -1130,7 +1130,7 @@ const std::string toString(NodeKind kind) {
     case ndkImportSpecifier: return "ndkImportSpecifier";
     case ndkMethodDefinition: return "ndkMethodDefinition";
     case ndkModuleSpecifier: return "ndkModuleSpecifier";
-    default: throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
 
@@ -1157,6 +1157,7 @@ const std::string toString(EdgeKind kind) {
     case edkBinaryExpression_HasRight: return "edkBinaryExpression_HasRight";
     case edkCallExpression_HasCallee: return "edkCallExpression_HasCallee";
     case edkCallExpression_HasArguments: return "edkCallExpression_HasArguments";
+    case edkCallExpression_Calls: return "edkCallExpression_Calls";
     case edkConditionalExpression_HasAlternate: return "edkConditionalExpression_HasAlternate";
     case edkConditionalExpression_HasConsequent: return "edkConditionalExpression_HasConsequent";
     case edkConditionalExpression_HasTest: return "edkConditionalExpression_HasTest";
@@ -1169,6 +1170,7 @@ const std::string toString(EdgeKind kind) {
     case edkMetaProperty_HasProperty: return "edkMetaProperty_HasProperty";
     case edkNewExpression_HasCallee: return "edkNewExpression_HasCallee";
     case edkNewExpression_HasArguments: return "edkNewExpression_HasArguments";
+    case edkNewExpression_Calls: return "edkNewExpression_Calls";
     case edkObjectExpression_HasProperties: return "edkObjectExpression_HasProperties";
     case edkProperty_HasValue: return "edkProperty_HasValue";
     case edkProperty_HasKey: return "edkProperty_HasKey";
@@ -1229,7 +1231,7 @@ const std::string toString(EdgeKind kind) {
     case edkMethodDefinition_HasKey: return "edkMethodDefinition_HasKey";
     case edkMethodDefinition_HasValue: return "edkMethodDefinition_HasValue";
     case edkModuleSpecifier_HasLocal: return "edkModuleSpecifier_HasLocal";
-    default: throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
 
@@ -1267,6 +1269,29 @@ void setSimilarityMinForEdges(double value) {
   SimilarityMinForEdges = value;
 }
 
+
+
+std::string getLongName(const base::Base& node) {
+    std::string name("[");
+
+    if (getIsPositioned(node)) {
+        auto& positioned = dynamic_cast<const asg::base::Positioned&>(node).getPosition();
+
+        name += positioned.getPath();
+        name += ":" + std::to_string(positioned.getLine()) + ":" + std::to_string(positioned.getCol());
+        name += "<";
+        name += javascript::asg::Common::toString(node.getNodeKind());
+        name += ">";
+    }
+    else {
+        name += "UNKNOWN ";
+        name += std::to_string(node.getId());
+    }
+
+    name += "]";
+
+    return name;
+}
 } // Common 
 
 }}}

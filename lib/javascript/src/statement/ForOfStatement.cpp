@@ -35,7 +35,8 @@ typedef boost::crc_32_type  Crc_type;
 namespace statement { 
   ForOfStatement::ForOfStatement(NodeId _id, Factory *_factory) :
          Positioned(_id, _factory),
-    ForInStatement(_id, _factory)
+    ForInStatement(_id, _factory),
+    m_async(false)
   {
   }
 
@@ -51,6 +52,14 @@ namespace statement {
 
   NodeKind ForOfStatement::getNodeKind() const {
     return ndkForOfStatement;
+  }
+
+  bool ForOfStatement::getAsync() const {
+    return m_async;
+  }
+
+  void ForOfStatement::setAsync(bool _async) {
+    m_async = _async;
   }
 
   bool ForOfStatement::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
@@ -87,7 +96,10 @@ namespace statement {
 
   double ForOfStatement::getSimilarity(const base::Base& base){
     if(base.getNodeKind() == getNodeKind()) {
-      return 1.0;
+      const ForOfStatement& node = dynamic_cast<const ForOfStatement&>(base);
+      double matchAttrs = 0;
+      if(node.getAsync() == getAsync()) ++matchAttrs;
+      return matchAttrs / (1 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
     }
@@ -120,6 +132,12 @@ namespace statement {
 
     ForInStatement::save(binIo,false);
 
+    unsigned char boolValues = 0;
+    boolValues <<= 1;
+    if (m_async) 
+      boolValues |= 1;
+    binIo.writeUByte1(boolValues);
+
   }
 
   void ForOfStatement::load(io::BinaryIO &binIo, bool withVirtualBase /*= true*/) {
@@ -127,6 +145,10 @@ namespace statement {
       Positioned::load(binIo, false);
 
     ForInStatement::load(binIo,false);
+
+    unsigned char boolValues = binIo.readUByte1();
+    m_async = boolValues & 1;
+    boolValues >>= 1;
 
   }
 

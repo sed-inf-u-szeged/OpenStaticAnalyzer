@@ -46,6 +46,7 @@ namespace struc {
   *   - isNative (boolean) : (missing)
   *   - nativePosition (Range) : (missing)
   *   - throwsPosition (Range) : (missing)
+  *   - isDefault (boolean) : (missing)
   * 
   * Edges:
   *   - hasParameters (struc::Parameter, multiple) : (missing)
@@ -155,6 +156,12 @@ namespace struc {
       */
       virtual int compareByThrowsPosition(const NormalMethod& other) const;
 
+      /**
+      * \brief Gives back the isDefault of the node.
+      * \return Returns with the isDefault.
+      */
+      bool getIsDefault() const;
+
 
       // ---------- Attribute setter function(s) ----------
 
@@ -200,6 +207,13 @@ namespace struc {
       */
       virtual void setThrowsPosition(const Range& _throwsPosition);
 
+      /**
+      * \internal
+      * \brief Sets the isDefault of the node.
+      * \param isDefault [in] The new value of the isDefault.
+      */
+      void setIsDefault(bool _isDefault);
+
     protected:
 
       // ---------- Attribute(s) ----------
@@ -209,6 +223,9 @@ namespace struc {
 
       /** \internal \brief Stores whether the node is `Native` or not. */
       bool m_isNative : 1;
+
+      /** \internal \brief Stores whether the node is `Default` or not. */
+      bool m_isDefault : 1;
 
       /** \internal \brief The MethodKind of the node. */
       MethodKind m_methodKind;

@@ -29,6 +29,7 @@
 #include <graph/inc/graph.h>
 #include <graphsupport/inc/MetricSum.h>
 #include <graphsupport/inc/Metric.h>
+#include <graphsupport/inc/GraphConstants.h>
 #include <io/inc/CsvIO.h>
 #include <common/inc/Stat.h>
 #include "common/inc/Arguments.h"
@@ -42,7 +43,8 @@ using namespace columbus::graphsupport;
 
 static vector<string> files;
 static string out;
-static bool saveXml;
+static bool saveXml = false;
+static bool generateSummary = false;
 
 static void ppFile(char *filename) {
   files.push_back(filename);
@@ -53,6 +55,11 @@ static bool ppOut(const Option *o, char *argv[]) {
   return true;
 }
 
+static bool ppSummary(const Option *o, char *argv[]) {
+  generateSummary = true;
+  return true;
+}
+
 static bool ppSaveXML (const common::Option *o, char *argv[]) {
   saveXml = true;
   return true;
@@ -60,6 +67,7 @@ static bool ppSaveXML (const common::Option *o, char *argv[]) {
 
 const Option OPTIONS_OBJ [] = {
   { false,  "-out",         1, "filename",      1, OT_WC,    ppOut,             NULL, "The merged output graph."},
+  { false,  "-summary",     0, "",              1, OT_WC,    ppSummary,         NULL, "Save SM dependent summary graph too."},
   { false,  "-dumpxml",     0, "",              0, OT_NONE,  ppSaveXML,         NULL, "Dump the graph in xml format."},
   COMMON_CL_ARGS
 };
@@ -91,6 +99,30 @@ int main(int argc, char** argv) {
     g.saveBinary(out);
     if (saveXml) {
       g.saveXML(common::pathRemoveExtension(out) + ".xml");
+    }
+
+    if (generateSummary)
+    {
+      Graph summaryGraph;
+      for (auto key : g.getHeaderKeys())
+        summaryGraph.setHeaderInfo(key, g.getHeaderInfo(key));
+
+      auto componentIt = g.findNodes(graphconstants::NTYPE_LIM_COMPONENT);
+      while (componentIt.hasNext())
+      {
+        auto componentNode = componentIt.next();
+        string componentName;
+        if (getNodeNameAttribute(componentNode, componentName) && (componentName == "<System>"))
+        {
+          summaryGraph.addNode(componentNode);
+          break;
+        }
+      }
+      const string summaryGraphFilename = common::pathRemoveExtension(out) + "-summary." + common::pathFindExtension(out);
+      summaryGraph.saveBinary(summaryGraphFilename);
+
+      if (saveXml)
+        summaryGraph.saveXML(common::pathRemoveExtension(summaryGraphFilename) + ".xml");
     }
     
   MAIN_END

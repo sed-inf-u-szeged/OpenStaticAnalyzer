@@ -25,11 +25,34 @@ const fs = require('fs');
 const espree = require('espree');
 const path = require('path');
 const JSONStream = require('JSONStream');
-const memwatch = require('memwatch-next');
+const jcg = require('@persper/js-callgraph/src/runner');
 
-var globals = require('./src/globals');
+let globals = require('./src/globals');
+
+const NODEJS_MINIMUM_VERSION = 8;
 
 globals.setOptions(clOptions.parse());
+
+class Memory {
+    static init() {
+        this.used = process.memoryUsage().heapUsed / 1024 / 1024;
+        this.peak = this.used;
+    }
+
+    static check() {
+        this.used = process.memoryUsage().heapUsed / 1024 / 1024;
+        if (this.used > this.peak) {
+            this.peak = this.used;
+        }
+        return this.used;
+    }
+
+    static result() {
+        return this.peak;
+    }
+}
+
+Memory.init();
 
 /**
  * This method make the parsing with Espree
@@ -38,9 +61,9 @@ globals.setOptions(clOptions.parse());
  * @param type The code, what we want parse
  * @returns {*} The result of parsing
  */
-var parsingOptions;
-var parsing = function (code, type) {
-    var options = {
+let parsingOptions;
+let parseCode = function (filePath, code, type) {
+    const options = {
         sourceType: type,
         comment: true,
         tolerant: true,
@@ -48,18 +71,27 @@ var parsing = function (code, type) {
         raw: true,
         tokens: true,
         range: true,
-        ecmaVersion: 9,
+        ecmaVersion: 2018,
         attachComment: true,
     };
+
     try {
-        return { success: true, ast: espree.parse(code, options), options: options };
+        let rawAst = espree.parse(code, options);
+        console.log("Succesfully parsed as " + type + ": " + filePath.absolute);
+        return {success: true, ast: rawAst, options: options, sourceType: type};
     } catch (e) {
-        if (type !== 'module') {
-            return parsing(code, 'module');
+        if (type !== 'script') {
+            console.log("Failed to parse as " + type + ": " + filePath.absolute);
+            console.error(e);
+            console.log("Trying to parse as script.");
+            return parseCode(filePath, code, 'script');
         } else {
-            return { success: false, error: e };
+            console.log("Failed to parse: " + filePath.absolute);
+            console.error(e);
+            return {success: false, error: e};
         }
     }
+
 };
 
 /**
@@ -70,15 +102,17 @@ var parsing = function (code, type) {
  * @param code The code, what we want parse
  * @returns {number|*}
  */
-var makeAstFromCode = function (filePath, code) {
-    const rawAst = parsing(code, 'script');
+let makeAstFromCode = function (filePath, code) {
+    const rawAst = parseCode(filePath, code, 'module');
+    Memory.check();
     if (rawAst.success) {
-		parsingOptions = rawAst.options;
-        var ast = rawAst.ast;
+        parsingOptions = rawAst.options;
+        let ast = rawAst.ast;
         ast.filename = globals.getOption('useRelativePath') ? filePath.relative : filePath.absolute;
+        ast.sourceType = rawAst.sourceType;
         return ast;
     } else {
-        throw new Error('The parsing of code was unsucessful: ' + rawAst.error);
+        throw new Error('The parsing of code was unsuccessful: ' + rawAst.error);
     }
 };
 
@@ -89,15 +123,35 @@ var makeAstFromCode = function (filePath, code) {
  * @param code The code, what we want analyze
  * @returns {*}
  */
-var makeAnalyzeCodeResult = function (filePath, code) {
+let makeAnalyzeCodeResult = function (filePath, code) {
     try {
-        var ast = makeAstFromCode(filePath, code);
-        astTransformer.transform(ast, parsingOptions);
-        return { success: true, ast: ast };
+        Memory.check();
+        let ast = makeAstFromCode(filePath, code);
+        return {success: true, ast: ast};
     } catch (e) {
-        return { success: false, error: e };
+        return {success: false, error: e};
     }
 };
+
+/**
+ * Trim shebang to avoid parse error
+ * Doing it this way will preserve the original absolute positions
+ * This snippet is taken from: https://github.com/jquery/esprima/issues/1151#issuecomment-85706244
+ * @param code the loaded code that might include starting shebang
+ * @returns the stripped source code
+ */
+function trimHashbang(code) {
+    if (code.substring(0, 2) === '#!') {
+        let end = code.indexOf('\n');
+        let filler = '';
+        for (let i = 0; i < end; ++i) {
+           filler += ' ';
+        }
+        code = filler + code.substring(end, code.length);
+        console.log("Leading shebang was removed");
+    }
+    return code;
+}
 
 /**
  * The loadCode method traverse the files, which
@@ -109,43 +163,69 @@ var makeAnalyzeCodeResult = function (filePath, code) {
  */
 function loadCode(files) {
     console.time('Total time of loading code');
-    var result = [];
+    let result = [];
+    Memory.check();
+    let successfullyParsedFiles = [];
     files.forEach(function (file) {
-        if(path.isAbsolute(file)){
-            var filePath = {
+        let filePath = {
+            absolute: null,
+            relative: null
+        };
+        if (path.isAbsolute(file)) {
+            filePath = {
                 absolute: path.normalize(file),
                 relative: path.relative(process.cwd(), file)
             };
         }
-        else{
-            var filePath = {
+        else {
+            filePath = {
                 absolute: path.join(process.cwd(), file),
                 relative: path.normalize(file)
             };
         }
 
-        var code;
+        let code;
 
         globals.setActualFile(globals.getOption('useRelativePath') ? filePath.relative : filePath.absolute);
+
+        if (!fs.existsSync(filePath.relative)) {
+            console.log(filePath.absolute + " does not exists. It will be omitted from the analysis");
+            return;
+        }
+
         if (path.extname(filePath.relative) === '.js') {
-            code = fs.readFileSync(filePath.relative);
-            code = String(code);
-            if (code[0] === '#' && code[1] === '!') {
-                var end = code.indexOf('\n');
-                code = '' + code.substring(end, code.length);
+            try {
+                code = fs.readFileSync(filePath.absolute);
+                code = String(code);
+            } catch (err) {
+                console.log("Error while loading the code from file: " + filePath.absolute);
+                console.log(err);
+                return;
             }
         } else if (path.extname(filePath.relative) === '.html') {
             code = htmlExtractor.extractJSToString(filePath.relative);
+            Memory.check();
         }
-        var analyzeResult = makeAnalyzeCodeResult(filePath, code);
+
+        // Preprocessing steps
+        const preprocessors = [trimHashbang];
+        preprocessors.forEach(function (preprocessorFunction) {
+            code = preprocessorFunction(code);
+        });
+
+        let analyzeResult = makeAnalyzeCodeResult(filePath, code);
         if (analyzeResult.success) {
+            if (analyzeResult.ast.sourceType === 'module') {
+                successfullyParsedFiles.push(filePath.absolute);
+            }
             result.push(analyzeResult.ast);
         } else {
             console.error(analyzeResult.error);
         }
     });
+    Memory.check();
     console.timeEnd('Total time of loading code');
-    return { result: result };
+    return {result: result, successfullyParsedFiles: successfullyParsedFiles};
 }
 
 /**
@@ -155,17 +235,20 @@ function loadCode(files) {
  */
 function saveToAST(target, result) {
     "use strict";
+    /* TODO: remove this code once JSAN and ESLintRunner is merged
     if (globals.getOption('saveEspreeAst')) {
-        var transformStream = JSONStream.stringify();
-        var outputStream = fs.createWriteStream(target + '.ast');
+        let transformStream = JSONStream.stringify();
+        let outputStream = fs.createWriteStream(target + '.ast');
         transformStream.pipe(outputStream);
         result.forEach(transformStream.write);
         transformStream.end();
+        Memory.check();
 
         outputStream.on('finish', function handleFinish() {
             console.log('Saving AST to file is done');
         });
     }
+     */
     astTransformer.saveAST(target, globals.getOption('dumpjsml'));
 }
 
@@ -177,9 +260,44 @@ function analysis() {
     if (!globals.getOption('inputList')) {
         return;
     }
-    var resultOfAnalyze = loadCode(globals.getOption('inputList'));
+    Memory.check();
+    let resultOfAnalyze = loadCode(globals.getOption('inputList'));
+    let successfullyParsedFiles = resultOfAnalyze.successfullyParsedFiles;
+    Memory.check();
+    if (successfullyParsedFiles.length === 0){
+       console.log("CrossReference binding is being skipped as there are no modules in the input.");
+    } else {
+        try {
+            //jcg.setFiles(globals.getOption('inputList'));
+            jcg.setFiles(successfullyParsedFiles);
+            jcg.setArgs({
+                fg: null,
+                cg: [],
+                time: null,
+                strategy: 'ONESHOT',
+                countCB: null,
+                reqJs: null,
+                output: null,
+                filter: null
+            });
+            jcg.setConsoleOutput(false);
+            let resultOfACG = jcg.build();
+            Memory.check();
+            astTransformer.transform(resultOfAnalyze.result, parsingOptions);
+            Memory.check();
+            let resultOfVU = astTransformer.variableUsages(resultOfAnalyze.result);
+            Memory.check();
+            astTransformer.binder("ACG", resultOfAnalyze.result, resultOfACG, "addCalls");
+            astTransformer.binder("VU", resultOfAnalyze.result, resultOfVU, "setRefersTo");
+            Memory.check();
+        } catch (e) {
+            console.warn(e);
+            console.warn("CrossReference Binding was failed.");
+        }
+    }
+
     saveToAST(globals.getOption('out'), resultOfAnalyze.result);
-    memwatch.gc(); // This will trigger one stat event at least
+    Memory.check();
 }
 
 /**
@@ -188,55 +306,24 @@ function analysis() {
  */
 function wrappedAnalysis() {
     "use strict";
-    var peakHeap = 0;
-
-    memwatch.on('stats', function (stats) {
-        var currentPeakHeap = stats.max / 1e6;
-
-        if (currentPeakHeap > peakHeap) {
-            peakHeap = currentPeakHeap;
-        }
-    });
-
     const start = process.hrtime();
 
     analysis();
-
+    Memory.check();
     const elapsed = process.hrtime(start);
-    const used = process.memoryUsage().heapUsed / 1024 / 1024;
     const sec = elapsed[0] + (elapsed[1] / 1e9);
 
     console.log('Total time of JSAN was %d s.', sec);
+    console.log('Peak memory usage was %f MB', Memory.result());
 
-    /**
-     * Waits for statistics and write it to a file.
-     *
-     * This is needed because both process.memoryUsage() and memwatch can be inaccurate and
-     * can show false statistics. So we measure heap usage with process.memoryUsage() and then
-     * we wait for a "stat" event from memwatch which shows a bigger used heap than we
-     * have now. If this happens in 20 cycles, we use that for statistics. Otherwise we use
-     * statistics from process.memoryUsage()
-     *
-     * @param numOfTries - number of tries we have
-     */
-    function waitAndWriteStats(numOfTries) {
-        if (peakHeap < used && numOfTries > 0) {
-            setTimeout(waitAndWriteStats, 300, numOfTries-1);
-            return;
-        }
+    const csv = [
+        'Run time (s);Peak memory usage (MB)',
+        sec + ';' + Memory.result()
+    ];
 
-        console.log('Peak memory usage was %f MB', peakHeap);
-        const csv = [
-            'Run time (s);Peak memory usage (MB)',
-            sec + ';' + peakHeap
-        ];
-
-        fs.writeFile(globals.getOption('stat'), csv.join('\n'), function (err) {
-            if (err) throw err;
-        });
-    }
-
-    waitAndWriteStats(20);
+    fs.writeFile(globals.getOption('stat'), csv.join('\n'), function (err) {
+        if (err) throw err;
+    });
 }
 
 /**
@@ -246,6 +333,12 @@ function wrappedAnalysis() {
  */
 function analyzeMain() {
     "use strict";
+    if (process.version.split(".")[0].substring(1) < NODEJS_MINIMUM_VERSION) {  // check Node.js version
+        console.log("Failed to start JSAN as the minimum required Node.js version cannot be found!");
+        console.log("Minimum version: " + NODEJS_MINIMUM_VERSION);
+        console.log("Your version: " + process.version.split(".")[0].substring(1));
+        process.exit(6633);
+    }
     if (globals.getOption('stat')) {
         wrappedAnalysis();
     } else {
@@ -253,4 +346,8 @@ function analyzeMain() {
     }
 }
 
-analyzeMain();
+try {
+    analyzeMain();
+}catch (e) {
+    console.log(e);
+}

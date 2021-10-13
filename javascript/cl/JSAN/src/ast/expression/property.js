@@ -27,7 +27,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var property = factory.createPropertyWrapper(factory);
+        var property = factory.createPropertyWrapper();
         globals.setPositionInfo(node, property);
         property.setKind(conversions.convertPropertyKind(node.kind));
         property.setMethod(node.method);
@@ -39,29 +39,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.key != null) {
             var keyWrapper = globals.getWrapperOfNode(node.key);
-            if (node.key.type !== "Literal") {
-                var keyWrapperFunctionString = "setKey" + node.key.type;
-            } else {
-                var keyWrapperFunctionString = "setKey" + globals.getLiteralType(node.key) + node.key.type;
-            }
             try {
-                propertyWrapper[keyWrapperFunctionString](keyWrapper);
+                propertyWrapper.setKey(keyWrapper);
             } catch (e) {
-                console.error("PROPERTY - Function not exist: propertyWrapper." + keyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("PROPERTY - Could not set key! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.value != null) {
             var valueWrapper = globals.getWrapperOfNode(node.value);
-            if (node.value.type !== "Literal") {
-                var valueWrapperFunctionString = "setValue" + node.value.type;
-            } else {
-                var valueWrapperFunctionString = "setValue" + globals.getLiteralType(node.value) + node.value.type;
-            }
             try {
-                propertyWrapper[valueWrapperFunctionString](valueWrapper);
+                propertyWrapper.setValue(valueWrapper);
             } catch (e) {
-                console.error("PROPERTY - Function not exist: propertyWrapper." + valueWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("PROPERTY - Could not set value! Reason of the error: " + e + "\n");
             }
         }
 

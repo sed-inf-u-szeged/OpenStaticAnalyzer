@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var functionDeclaration = factory.createFunctionDeclarationWrapper(factory);
+        var functionDeclaration = factory.createFunctionDeclarationWrapper();
         globals.setPositionInfo(node, functionDeclaration);
         functionDeclaration.setGenerator(node.generator);
         functionDeclaration.setAsync(node.async);
@@ -38,15 +38,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.params.length; i++) {
                 if (node.params[i] != null) {
                     var paramsWrapper = globals.getWrapperOfNode(node.params[i]);
-                    if (node.params[i].type !== "Literal") {
-                        var paramsWrapperFunctionString = "addParams" + node.params[i].type;
-                    } else {
-                        var paramsWrapperFunctionString = "addParams" + globals.getLiteralType(node.params[i]) + node.params[i].type;
-                    }
                     try {
-                        functionDeclarationWrapper[paramsWrapperFunctionString](paramsWrapper);
+                        functionDeclarationWrapper.addParams(paramsWrapper);
                     } catch (e) {
-                        console.error("FUNCTIONDECLARATION - Function not exist: functionDeclarationWrapper." + paramsWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("FUNCTIONDECLARATION - Could not add param! Reason of the error: " + e + "\n");
                     }
                 }
             }
@@ -54,43 +49,28 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.declaration != null) {
             var declarationWrapper = globals.getWrapperOfNode(node.declaration);
-            if (node.declaration.type !== "Literal") {
-                var declarationWrapperFunctionString = "setDeclaration" + node.declaration.type;
-            } else {
-                var declarationWrapperFunctionString = "setDeclaration" + globals.getLiteralType(node.declaration) + node.declaration.type;
-            }
             try {
-                functionDeclarationWrapper[declarationWrapperFunctionString](declarationWrapper);
+                functionDeclarationWrapper.setDeclaration(declarationWrapper);
             } catch (e) {
-                console.error("FUNCTIONDECLARATION - Function not exist: functionDeclarationWrapper." + declarationWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("FUNCTIONDECLARATION - Could not set declaration! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.body != null) {
             var bodyWrapper = globals.getWrapperOfNode(node.body);
-            if (node.body.type !== "Literal") {
-                var bodyWrapperFunctionString = "setBody" + node.body.type;
-            } else {
-                var bodyWrapperFunctionString = "setBody" + globals.getLiteralType(node.body) + node.body.type;
-            }
             try {
-                functionDeclarationWrapper[bodyWrapperFunctionString](bodyWrapper);
+                functionDeclarationWrapper.setBody(bodyWrapper);
             } catch (e) {
-                console.error("FUNCTIONDECLARATION - Function not exist: functionDeclarationWrapper." + bodyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("FUNCTIONDECLARATION - Could not set body! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.id != null) {
             var identifierWrapper = globals.getWrapperOfNode(node.id);
-            if (node.id.type !== "Literal") {
-                var identifierWrapperFunctionString = "setIdentifier" + node.id.type;
-            } else {
-                var identifierWrapperFunctionString = "setIdentifier" + globals.getLiteralType(node.id) + node.id.type;
-            }
             try {
-                functionDeclarationWrapper[identifierWrapperFunctionString](identifierWrapper);
+                functionDeclarationWrapper.setIdentifier(identifierWrapper);
             } catch (e) {
-                console.error("FUNCTIONDECLARATION - Function not exist: functionDeclarationWrapper." + identifierWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("FUNCTIONDECLARATION - Could not set identifier! Reason of the error: " + e + "\n");
             }
         }
 

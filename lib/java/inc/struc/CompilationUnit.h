@@ -43,8 +43,10 @@ namespace struc {
   * Edges:
   *   - hasPackageDeclaration (struc::PackageDeclaration, single) : (missing)
   *   - hasImports (struc::Import, multiple) : (missing)
-  *   - typeDeclarations (struc::TypeDeclaration, multiple) : (missing)
   *   - hasOthers (base::Positioned, multiple) : (missing)
+  *   - hasModuleDeclaration (struc::ModuleDeclaration, single) : (missing)
+  *   - typeDeclarations (struc::TypeDeclaration, multiple) : (missing)
+  *   - isInModule (struc::Module, single) : (missing)
   */
   class CompilationUnit : public base::PositionedWithoutComment, public base::Commentable {
     protected:
@@ -186,6 +188,36 @@ namespace struc {
       unsigned getImportsSize() const;
 
       /**
+      * \brief Gives back iterator for the hasOthers edges.
+      * \return Returns an iterator for the hasOthers edges.
+      */
+      ListIterator<base::Positioned> getOthersListIteratorBegin() const;
+
+      /**
+      * \brief Gives back iterator for the hasOthers edges.
+      * \return Returns an iterator for the hasOthers edges.
+      */
+      ListIterator<base::Positioned> getOthersListIteratorEnd() const;
+
+      /**
+      * \brief Tells whether the node has hasOthers edges or not.
+      * \return Returns true if the node doesn't have any hasOthers edge.
+      */
+      bool getOthersIsEmpty() const;
+
+      /**
+      * \brief Gives back how many hasOthers edges the node has.
+      * \return Returns with the number of hasOthers edges.
+      */
+      unsigned getOthersSize() const;
+
+      /**
+      * \brief Gives back the pointer of the node the hasModuleDeclaration edge points to.
+      * \return Returns the end point of the hasModuleDeclaration edge.
+      */
+      struc::ModuleDeclaration* getModuleDeclaration() const;
+
+      /**
       * \brief Gives back iterator for the typeDeclarations edges.
       * \return Returns an iterator for the typeDeclarations edges.
       */
@@ -210,28 +242,10 @@ namespace struc {
       unsigned getTypeDeclarationsSize() const;
 
       /**
-      * \brief Gives back iterator for the hasOthers edges.
-      * \return Returns an iterator for the hasOthers edges.
+      * \brief Gives back the pointer of the node the isInModule edge points to.
+      * \return Returns the end point of the isInModule edge.
       */
-      ListIterator<base::Positioned> getOthersListIteratorBegin() const;
-
-      /**
-      * \brief Gives back iterator for the hasOthers edges.
-      * \return Returns an iterator for the hasOthers edges.
-      */
-      ListIterator<base::Positioned> getOthersListIteratorEnd() const;
-
-      /**
-      * \brief Tells whether the node has hasOthers edges or not.
-      * \return Returns true if the node doesn't have any hasOthers edge.
-      */
-      bool getOthersIsEmpty() const;
-
-      /**
-      * \brief Gives back how many hasOthers edges the node has.
-      * \return Returns with the number of hasOthers edges.
-      */
-      unsigned getOthersSize() const;
+      struc::Module* getIsInModule() const;
 
 
       // ---------- Edge setter function(s) ----------
@@ -278,6 +292,47 @@ namespace struc {
       void removeImports(Import *node);
 
       /**
+      * \brief Adds a new hasOthers edge to the node and inserts it after the other ones.
+      * \param node [in] The end point of the new hasOthers edge.
+      */
+      void addOthers(const base::Positioned *node);
+
+      /**
+      * \brief Adds a new hasOthers edge to the node and inserts it after the other ones.
+      * \param id [in] The end point of the new hasOthers edge.
+      */
+      void addOthers(NodeId id);
+
+      /**
+      * \brief Remove the hasOthers edge by id from the node.
+      * \param id [in] The end point of the hasOthers edge.
+      */
+      void removeOthers(NodeId id);
+
+      /**
+      * \brief Remove the hasOthers edge from the node.
+      * \param node [in] The end point of the hasOthers edge.
+      */
+      void removeOthers(base::Positioned *node);
+
+      /**
+      * \brief Sets the hasModuleDeclaration edge.
+      * \param id [in] The new end point of the hasModuleDeclaration edge.
+      */
+      void setModuleDeclaration(NodeId id);
+
+      /**
+      * \brief Sets the hasModuleDeclaration edge.
+      * \param node [in] The new end point of the hasModuleDeclaration edge.
+      */
+      void setModuleDeclaration(ModuleDeclaration *node);
+
+      /**
+      * \brief remove the hasModuleDeclaration edge.
+      */
+      void removeModuleDeclaration();
+
+      /**
       * \brief Adds a new typeDeclarations edge to the node and inserts it after the other ones.
       * \param node [in] The end point of the new typeDeclarations edge.
       */
@@ -302,28 +357,21 @@ namespace struc {
       void removeTypeDeclarations(TypeDeclaration *node);
 
       /**
-      * \brief Adds a new hasOthers edge to the node and inserts it after the other ones.
-      * \param node [in] The end point of the new hasOthers edge.
+      * \brief Sets the isInModule edge.
+      * \param id [in] The new end point of the isInModule edge.
       */
-      void addOthers(const base::Positioned *node);
+      void setIsInModule(NodeId id);
 
       /**
-      * \brief Adds a new hasOthers edge to the node and inserts it after the other ones.
-      * \param id [in] The end point of the new hasOthers edge.
+      * \brief Sets the isInModule edge.
+      * \param node [in] The new end point of the isInModule edge.
       */
-      void addOthers(NodeId id);
+      void setIsInModule(Module *node);
 
       /**
-      * \brief Remove the hasOthers edge by id from the node.
-      * \param id [in] The end point of the hasOthers edge.
+      * \brief remove the isInModule edge.
       */
-      void removeOthers(NodeId id);
-
-      /**
-      * \brief Remove the hasOthers edge from the node.
-      * \param node [in] The end point of the hasOthers edge.
-      */
-      void removeOthers(base::Positioned *node);
+      void removeIsInModule();
 
     protected:
 
@@ -335,11 +383,17 @@ namespace struc {
       /** \internal \brief Container stores the id of the nodes the hasImports edge points to. */
       ListIterator<struc::Import>::Container hasImportsContainer;
 
+      /** \internal \brief Container stores the id of the nodes the hasOthers edge points to. */
+      ListIterator<base::Positioned>::Container hasOthersContainer;
+
+      /** \internal \brief The id of the node the hasModuleDeclaration edge points to. */
+      NodeId m_hasModuleDeclaration;
+
       /** \internal \brief Container stores the id of the nodes the typeDeclarations edge points to. */
       ListIterator<struc::TypeDeclaration>::Container typeDeclarationsContainer;
 
-      /** \internal \brief Container stores the id of the nodes the hasOthers edge points to. */
-      ListIterator<base::Positioned>::Container hasOthersContainer;
+      /** \internal \brief The id of the node the isInModule edge points to. */
+      NodeId m_isInModule;
 
     public:
 

@@ -45,6 +45,7 @@ namespace structure {
   void TypeParameterListSyntax::prepareDelete(bool tryOnVirtualParent){
     while (!ParametersContainer.empty()) {
       const NodeId id = *ParametersContainer.begin();
+      removeParentEdge(id);
       if (factory->getExistsReverseEdges())
         factory->reverseEdges->removeEdge(id, this->getId(), edkTypeParameterListSyntax_Parameters);
       ParametersContainer.pop_front();
@@ -116,6 +117,8 @@ namespace structure {
       throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
 
     ParametersContainer.push_back(_node->getId());
+    setParentEdge(_node,edkTypeParameterListSyntax_Parameters);
+
     if (factory->reverseEdges)
       factory->reverseEdges->insertEdge(_node, this, edkTypeParameterListSyntax_Parameters);
   }
@@ -137,6 +140,8 @@ namespace structure {
       throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
     ParametersContainer.erase(it);
+
+    removeParentEdge(id);
 
     if (factory->getExistsReverseEdges())
       factory->reverseEdges->removeEdge(id, this->getId(), edkTypeParameterListSyntax_Parameters);
@@ -206,6 +211,7 @@ namespace structure {
     _id = binIo.readUInt4();
     while (_id) {
       ParametersContainer.push_back(_id);
+      setParentEdge(factory->getPointer(_id),edkTypeParameterListSyntax_Parameters);
       _id = binIo.readUInt4();
     }
   }

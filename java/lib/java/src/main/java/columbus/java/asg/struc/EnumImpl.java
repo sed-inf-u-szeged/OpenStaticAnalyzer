@@ -38,6 +38,7 @@ import columbus.logger.LoggerHandler;
  */
 public class EnumImpl extends BaseImpl implements Enum {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(EnumImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 
@@ -67,6 +68,8 @@ public class EnumImpl extends BaseImpl implements Enum {
 
 	protected EdgeList<Member> _hasMembers;
 
+	protected int lloc;
+
 	protected Object typeNamePosition;
 
 	protected boolean isAbstract;
@@ -85,13 +88,15 @@ public class EnumImpl extends BaseImpl implements Enum {
 
 	protected Object bodyStartPosition;
 
-	protected int _isInCompilationUnit;
-
 	protected int _hasSuperClass;
 
 	protected EdgeList<TypeExpression> _hasSuperInterfaces;
 
 	protected EdgeList<Positioned> _hasOthers;
+
+	protected int _isInCompilationUnit;
+
+	protected int _isInModule;
 
 	protected Object semiPosition;
 
@@ -247,6 +252,11 @@ public class EnumImpl extends BaseImpl implements Enum {
 	}
 
 	@Override
+	public int getLloc() {
+		return lloc;
+	}
+
+	@Override
 	public Range getTypeNamePosition() {
 		return (Range)typeNamePosition;
 	}
@@ -294,6 +304,11 @@ public class EnumImpl extends BaseImpl implements Enum {
 	@Override
 	public Range getBodyStartPosition() {
 		return (Range)bodyStartPosition;
+	}
+
+	@Override
+	public void setLloc(int _lloc) {
+		lloc = _lloc;
 	}
 
 	@Override
@@ -515,15 +530,6 @@ public class EnumImpl extends BaseImpl implements Enum {
 	}
 
 	@Override
-	public CompilationUnit getIsInCompilationUnit() {
-		if (_isInCompilationUnit == 0)
-			return null;
-		if (factory.getIsFiltered(_isInCompilationUnit))
-			return null;
-		return (CompilationUnit)factory.getRef(_isInCompilationUnit);
-	}
-
-	@Override
 	public TypeExpression getSuperClass() {
 		if (_hasSuperClass == 0)
 			return null;
@@ -581,27 +587,21 @@ public class EnumImpl extends BaseImpl implements Enum {
 	}
 
 	@Override
-	public void setIsInCompilationUnit(int _id) {
-		if (_isInCompilationUnit != 0)
-			throw new JavaException(logger.formatMessage("ex.java.Node.The_previous_end_point","isInCompilationUnit" ));
-
-		if (!factory.getExist(_id))
-			throw new JavaException(logger.formatMessage("ex.java.Node.No_end_point"));
-
-		Base _node = factory.getRef(_id);
-		if (_node.getNodeKind() == NodeKind.ndkCompilationUnit) {
-			_isInCompilationUnit = _id;
-		} else {
-			throw new JavaException(logger.formatMessage("ex.java.Node.Invalid","NodeKind", _node.getNodeKind() ));
-		}
+	public CompilationUnit getIsInCompilationUnit() {
+		if (_isInCompilationUnit == 0)
+			return null;
+		if (factory.getIsFiltered(_isInCompilationUnit))
+			return null;
+		return (CompilationUnit)factory.getRef(_isInCompilationUnit);
 	}
 
 	@Override
-	public void setIsInCompilationUnit(CompilationUnit _node) {
-		if (_isInCompilationUnit != 0)
-			throw new JavaException(logger.formatMessage("ex.java.Node.The_previous_end_point","isInCompilationUnit" ));
-
-		_isInCompilationUnit = _node.getId();
+	public Module getIsInModule() {
+		if (_isInModule == 0)
+			return null;
+		if (factory.getIsFiltered(_isInModule))
+			return null;
+		return (Module)factory.getRef(_isInModule);
 	}
 
 	@Override
@@ -676,6 +676,54 @@ public class EnumImpl extends BaseImpl implements Enum {
 			_hasOthers = new EdgeList<Positioned>(factory);
 		_hasOthers.add(_node);
 		setParentEdge(_node);
+	}
+
+	@Override
+	public void setIsInCompilationUnit(int _id) {
+		if (_isInCompilationUnit != 0)
+			throw new JavaException(logger.formatMessage("ex.java.Node.The_previous_end_point","isInCompilationUnit" ));
+
+		if (!factory.getExist(_id))
+			throw new JavaException(logger.formatMessage("ex.java.Node.No_end_point"));
+
+		Base _node = factory.getRef(_id);
+		if (_node.getNodeKind() == NodeKind.ndkCompilationUnit) {
+			_isInCompilationUnit = _id;
+		} else {
+			throw new JavaException(logger.formatMessage("ex.java.Node.Invalid","NodeKind", _node.getNodeKind() ));
+		}
+	}
+
+	@Override
+	public void setIsInCompilationUnit(CompilationUnit _node) {
+		if (_isInCompilationUnit != 0)
+			throw new JavaException(logger.formatMessage("ex.java.Node.The_previous_end_point","isInCompilationUnit" ));
+
+		_isInCompilationUnit = _node.getId();
+	}
+
+	@Override
+	public void setIsInModule(int _id) {
+		if (_isInModule != 0)
+			throw new JavaException(logger.formatMessage("ex.java.Node.The_previous_end_point","isInModule" ));
+
+		if (!factory.getExist(_id))
+			throw new JavaException(logger.formatMessage("ex.java.Node.No_end_point"));
+
+		Base _node = factory.getRef(_id);
+		if (_node.getNodeKind() == NodeKind.ndkModule) {
+			_isInModule = _id;
+		} else {
+			throw new JavaException(logger.formatMessage("ex.java.Node.Invalid","NodeKind", _node.getNodeKind() ));
+		}
+	}
+
+	@Override
+	public void setIsInModule(Module _node) {
+		if (_isInModule != 0)
+			throw new JavaException(logger.formatMessage("ex.java.Node.The_previous_end_point","isInModule" ));
+
+		_isInModule = _node.getId();
 	}
 
 
@@ -802,6 +850,7 @@ public class EnumImpl extends BaseImpl implements Enum {
 				boolValues |= 1;
 			io.writeByte1(boolValues);
 		}
+		io.writeInt4(lloc);
 		io.writeInt4(((Range)typeNamePosition).getPathKey());
 		io.writeInt4(((Range)typeNamePosition).getLine());
 		io.writeInt4(((Range)typeNamePosition).getCol());
@@ -859,9 +908,11 @@ public class EnumImpl extends BaseImpl implements Enum {
 		io.writeInt4(((Range)bodyStartPosition).getWideEndCol());
 
 
+		io.writeInt4(!factory.getIsFiltered(_hasSuperClass) ? _hasSuperClass : 0);
+
 		io.writeInt4(!factory.getIsFiltered(_isInCompilationUnit) ? _isInCompilationUnit : 0);
 
-		io.writeInt4(!factory.getIsFiltered(_hasSuperClass) ? _hasSuperClass : 0);
+		io.writeInt4(!factory.getIsFiltered(_isInModule) ? _isInModule : 0);
 
 		if (_hasSuperInterfaces != null) {
 			EdgeIterator<TypeExpression> it = getSuperInterfacesIterator();
@@ -1002,6 +1053,7 @@ public class EnumImpl extends BaseImpl implements Enum {
 			boolValues >>>= 1;
 		}
 
+		lloc = io.readInt4();
 		((Range)typeNamePosition).setPathKey(io.readInt4());
 		((Range)typeNamePosition).setLine(io.readInt4());
 		((Range)typeNamePosition).setCol(io.readInt4());
@@ -1058,11 +1110,13 @@ public class EnumImpl extends BaseImpl implements Enum {
 		((Range)bodyStartPosition).setWideEndLine(io.readInt4());
 		((Range)bodyStartPosition).setWideEndCol(io.readInt4());
 
-		_isInCompilationUnit = io.readInt4();
-
 		_hasSuperClass = io.readInt4();
 		if (_hasSuperClass != 0)
 			setParentEdge(_hasSuperClass);
+
+		_isInCompilationUnit = io.readInt4();
+
+		_isInModule = io.readInt4();
 
 
 		_id = io.readInt4();

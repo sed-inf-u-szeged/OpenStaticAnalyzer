@@ -23,6 +23,11 @@
 
 #define CMSG_LIM2METRICS_FLIM_OLDER_THAN_LIM              common::WriteMsg::mlWarning, "Warning: Filter file (%s) is older than the input file (.lim). Filter file is not used.\n"
 #define CMSG_LIM2METRICS_FILTER_NOT_LOADED                common::WriteMsg::mlWarning, "Warning: Filter file cannot be loaded (%s)\n"
+#define CMSG_LIM2METRICS_STATISTICS                       WriteMsg::mlNormal, "\nStatistics:\n"
+#define CMSG_LIM2METRICS_CALCULATION_TIME                 WriteMsg::mlNormal, "\tCalculation time         : %10.2fs\n"
+#define CMSG_LIM2METRICS_EXPORT_TIME                      WriteMsg::mlNormal, "\tExport time              : %10.2fs\n"
+#define CMSG_LIM2METRICS_TOTAL_TIME                       WriteMsg::mlNormal, "\tTotal time               : %10.2fs\n"
+#define CMSG_LIM2METRICS_PEAK_MEMORY                      WriteMsg::mlNormal, "\tPeak memory usage        : %10.2fMB\n"
 
 #define CMSG_LIM2METRICS_DEBUG_LIM_LOAD                   WriteMsg::mlDebug,   "Debug: Loading LIM\n"
 #define CMSG_LIM2METRICS_DEBUG_FILTER_LOAD                WriteMsg::mlDebug,   "Debug: Loading LIM Filter\n"

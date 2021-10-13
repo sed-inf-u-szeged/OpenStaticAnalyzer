@@ -46,7 +46,7 @@ namespace Graph.Model
 
 		List< Node > nodes = new List< Node >( );
 
-		public
+		internal
 		void Add(Node node)
 		{
 			ensureContainment( node );

@@ -230,7 +230,7 @@ base::Base* Factory::getPointer(NodeId id) const {
   base::Base* p = NULL;
   try {
     p = container.at(id);
-  } catch (std::out_of_range e) {
+  } catch (const std::out_of_range&) {
     throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
   }
   return p;
@@ -468,14 +468,14 @@ bool Factory::getExistsReverseEdges() const {
     ap.run(*this, vas);
     unsigned long totalMemUsage = 0; /* it is the sum of memory of nodes */
     common::WriteMsg::write(common::WriteMsg::mlNormal, "Nodes,All,This,Obj Size,Used Mem,Used Mem\n");
-    for (int i = 0; i < 141; ++i) {
+    for (int i = 0; i < 157; ++i) {
       totalMemUsage += vas.nodeStatSimple[i] * vas.nodeSizes[i];
       common::WriteMsg::write(common::WriteMsg::mlNormal, "%s,%d,%d,%d,%d,%d\n", vas.nodeNames[i], vas.nodeStatParent[i], vas.nodeStatSimple[i], vas.nodeSizes[i], vas.nodeStatSimple[i] * vas.nodeSizes[i], vas.nodeStatSimple[i] * vas.nodeSizes[i] / 1024);
     }    common::WriteMsg::write(common::WriteMsg::mlNormal, "\n");
     common::WriteMsg::write(common::WriteMsg::mlNormal, "Memory used by nodes: %d (%d KB)\n\n", totalMemUsage, totalMemUsage );
     if (edgeStat) {
       common::WriteMsg::write(common::WriteMsg::mlNormal, "Edges,Cardinality\n");
-      for (int i = 0; i < 105; ++i)
+      for (int i = 0; i < 133; ++i)
         common::WriteMsg::write(common::WriteMsg::mlNormal, "%s,%d\n", Common::toString((EdgeKind)i).c_str(), vas.edgeStat[i]);
       common::WriteMsg::write(common::WriteMsg::mlNormal, "\n\n");
     }
@@ -492,6 +492,7 @@ base::Base* Factory::createNode(NodeKind kind) {
     deletedNodeIdList.pop_front();
   }
   switch (kind) {
+    case ndkAnnotatedTypeExpression: p = new expr::AnnotatedTypeExpression(id, this); break;
     case ndkArrayAccess: p = new expr::ArrayAccess(id, this); break;
     case ndkArrayTypeExpression: p = new expr::ArrayTypeExpression(id, this); break;
     case ndkAssignment: p = new expr::Assignment(id, this); break;
@@ -509,8 +510,10 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkInfixExpression: p = new expr::InfixExpression(id, this); break;
     case ndkInstanceOf: p = new expr::InstanceOf(id, this); break;
     case ndkIntegerLiteral: p = new expr::IntegerLiteral(id, this); break;
+    case ndkLambda: p = new expr::Lambda(id, this); break;
     case ndkLongLiteral: p = new expr::LongLiteral(id, this); break;
     case ndkMarkerAnnotation: p = new expr::MarkerAnnotation(id, this); break;
+    case ndkMemberReference: p = new expr::MemberReference(id, this); break;
     case ndkMethodInvocation: p = new expr::MethodInvocation(id, this); break;
     case ndkNewArray: p = new expr::NewArray(id, this); break;
     case ndkNewClass: p = new expr::NewClass(id, this); break;
@@ -528,8 +531,14 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkThis: p = new expr::This(id, this); break;
     case ndkTypeApplyExpression: p = new expr::TypeApplyExpression(id, this); break;
     case ndkTypeCast: p = new expr::TypeCast(id, this); break;
+    case ndkTypeIntersectionExpression: p = new expr::TypeIntersectionExpression(id, this); break;
     case ndkTypeUnionExpression: p = new expr::TypeUnionExpression(id, this); break;
     case ndkWildcardExpression: p = new expr::WildcardExpression(id, this); break;
+    case ndkExports: p = new module::Exports(id, this); break;
+    case ndkOpens: p = new module::Opens(id, this); break;
+    case ndkProvides: p = new module::Provides(id, this); break;
+    case ndkRequires: p = new module::Requires(id, this); break;
+    case ndkUses: p = new module::Uses(id, this); break;
     case ndkAssert: p = new statm::Assert(id, this); break;
     case ndkBasicFor: p = new statm::BasicFor(id, this); break;
     case ndkBlock: p = new statm::Block(id, this); break;
@@ -564,12 +573,16 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkInterfaceGeneric: p = new struc::InterfaceGeneric(id, this); break;
     case ndkMethod: p = new struc::Method(id, this); break;
     case ndkMethodGeneric: p = new struc::MethodGeneric(id, this); break;
+    case ndkModule: p = new struc::Module(id, this); break;
+    case ndkModuleDeclaration: p = new struc::ModuleDeclaration(id, this); break;
     case ndkPackage: p = new struc::Package(id, this); break;
     case ndkPackageDeclaration: p = new struc::PackageDeclaration(id, this); break;
     case ndkParameter: p = new struc::Parameter(id, this); break;
     case ndkStaticInitializerBlock: p = new struc::StaticInitializerBlock(id, this); break;
     case ndkTypeParameter: p = new struc::TypeParameter(id, this); break;
     case ndkVariable: p = new struc::Variable(id, this); break;
+    case ndkIntersectionType: p = new type::IntersectionType(id, this); break;
+    case ndkModuleType: p = new type::ModuleType(id, this); break;
     default: throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 
@@ -594,6 +607,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkBlockComment: p = new base::BlockComment(i,this); break;
     case ndkJavadocComment: p = new base::JavadocComment(i,this); break;
     case ndkLineComment: p = new base::LineComment(i,this); break;
+    case ndkAnnotatedTypeExpression: p = new expr::AnnotatedTypeExpression(i,this); break;
     case ndkArrayAccess: p = new expr::ArrayAccess(i,this); break;
     case ndkArrayTypeExpression: p = new expr::ArrayTypeExpression(i,this); break;
     case ndkAssignment: p = new expr::Assignment(i,this); break;
@@ -611,8 +625,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkInfixExpression: p = new expr::InfixExpression(i,this); break;
     case ndkInstanceOf: p = new expr::InstanceOf(i,this); break;
     case ndkIntegerLiteral: p = new expr::IntegerLiteral(i,this); break;
+    case ndkLambda: p = new expr::Lambda(i,this); break;
     case ndkLongLiteral: p = new expr::LongLiteral(i,this); break;
     case ndkMarkerAnnotation: p = new expr::MarkerAnnotation(i,this); break;
+    case ndkMemberReference: p = new expr::MemberReference(i,this); break;
     case ndkMethodInvocation: p = new expr::MethodInvocation(i,this); break;
     case ndkNewArray: p = new expr::NewArray(i,this); break;
     case ndkNewClass: p = new expr::NewClass(i,this); break;
@@ -630,8 +646,14 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkThis: p = new expr::This(i,this); break;
     case ndkTypeApplyExpression: p = new expr::TypeApplyExpression(i,this); break;
     case ndkTypeCast: p = new expr::TypeCast(i,this); break;
+    case ndkTypeIntersectionExpression: p = new expr::TypeIntersectionExpression(i,this); break;
     case ndkTypeUnionExpression: p = new expr::TypeUnionExpression(i,this); break;
     case ndkWildcardExpression: p = new expr::WildcardExpression(i,this); break;
+    case ndkExports: p = new module::Exports(i,this); break;
+    case ndkOpens: p = new module::Opens(i,this); break;
+    case ndkProvides: p = new module::Provides(i,this); break;
+    case ndkRequires: p = new module::Requires(i,this); break;
+    case ndkUses: p = new module::Uses(i,this); break;
     case ndkAssert: p = new statm::Assert(i,this); break;
     case ndkBasicFor: p = new statm::BasicFor(i,this); break;
     case ndkBlock: p = new statm::Block(i,this); break;
@@ -666,6 +688,8 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkInterfaceGeneric: p = new struc::InterfaceGeneric(i,this); break;
     case ndkMethod: p = new struc::Method(i,this); break;
     case ndkMethodGeneric: p = new struc::MethodGeneric(i,this); break;
+    case ndkModule: p = new struc::Module(i,this); break;
+    case ndkModuleDeclaration: p = new struc::ModuleDeclaration(i,this); break;
     case ndkPackage: p = new struc::Package(i,this); break;
     case ndkPackageDeclaration: p = new struc::PackageDeclaration(i,this); break;
     case ndkParameter: p = new struc::Parameter(i,this); break;
@@ -681,9 +705,11 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkErrorType: p = new type::ErrorType(i,this); break;
     case ndkFloatType: p = new type::FloatType(i,this); break;
     case ndkIntType: p = new type::IntType(i,this); break;
+    case ndkIntersectionType: p = new type::IntersectionType(i,this); break;
     case ndkLongType: p = new type::LongType(i,this); break;
     case ndkLowerBoundedWildcardType: p = new type::LowerBoundedWildcardType(i,this); break;
     case ndkMethodType: p = new type::MethodType(i,this); break;
+    case ndkModuleType: p = new type::ModuleType(i,this); break;
     case ndkNoType: p = new type::NoType(i,this); break;
     case ndkNullType: p = new type::NullType(i,this); break;
     case ndkPackageType: p = new type::PackageType(i,this); break;
@@ -724,6 +750,10 @@ void Factory::sort() {
     }
   }
 }
+
+  expr::AnnotatedTypeExpression* Factory::createAnnotatedTypeExpressionNode(){
+    return  dynamic_cast <expr::AnnotatedTypeExpression*>( createNode(ndkAnnotatedTypeExpression));
+  }
 
   expr::ArrayAccess* Factory::createArrayAccessNode(){
     return  dynamic_cast <expr::ArrayAccess*>( createNode(ndkArrayAccess));
@@ -793,12 +823,20 @@ void Factory::sort() {
     return  dynamic_cast <expr::IntegerLiteral*>( createNode(ndkIntegerLiteral));
   }
 
+  expr::Lambda* Factory::createLambdaNode(){
+    return  dynamic_cast <expr::Lambda*>( createNode(ndkLambda));
+  }
+
   expr::LongLiteral* Factory::createLongLiteralNode(){
     return  dynamic_cast <expr::LongLiteral*>( createNode(ndkLongLiteral));
   }
 
   expr::MarkerAnnotation* Factory::createMarkerAnnotationNode(){
     return  dynamic_cast <expr::MarkerAnnotation*>( createNode(ndkMarkerAnnotation));
+  }
+
+  expr::MemberReference* Factory::createMemberReferenceNode(){
+    return  dynamic_cast <expr::MemberReference*>( createNode(ndkMemberReference));
   }
 
   expr::MethodInvocation* Factory::createMethodInvocationNode(){
@@ -869,12 +907,36 @@ void Factory::sort() {
     return  dynamic_cast <expr::TypeCast*>( createNode(ndkTypeCast));
   }
 
+  expr::TypeIntersectionExpression* Factory::createTypeIntersectionExpressionNode(){
+    return  dynamic_cast <expr::TypeIntersectionExpression*>( createNode(ndkTypeIntersectionExpression));
+  }
+
   expr::TypeUnionExpression* Factory::createTypeUnionExpressionNode(){
     return  dynamic_cast <expr::TypeUnionExpression*>( createNode(ndkTypeUnionExpression));
   }
 
   expr::WildcardExpression* Factory::createWildcardExpressionNode(){
     return  dynamic_cast <expr::WildcardExpression*>( createNode(ndkWildcardExpression));
+  }
+
+  module::Exports* Factory::createExportsNode(){
+    return  dynamic_cast <module::Exports*>( createNode(ndkExports));
+  }
+
+  module::Opens* Factory::createOpensNode(){
+    return  dynamic_cast <module::Opens*>( createNode(ndkOpens));
+  }
+
+  module::Provides* Factory::createProvidesNode(){
+    return  dynamic_cast <module::Provides*>( createNode(ndkProvides));
+  }
+
+  module::Requires* Factory::createRequiresNode(){
+    return  dynamic_cast <module::Requires*>( createNode(ndkRequires));
+  }
+
+  module::Uses* Factory::createUsesNode(){
+    return  dynamic_cast <module::Uses*>( createNode(ndkUses));
   }
 
   statm::Assert* Factory::createAssertNode(){
@@ -1013,6 +1075,14 @@ void Factory::sort() {
     return  dynamic_cast <struc::MethodGeneric*>( createNode(ndkMethodGeneric));
   }
 
+  struc::Module* Factory::createModuleNode(){
+    return  dynamic_cast <struc::Module*>( createNode(ndkModule));
+  }
+
+  struc::ModuleDeclaration* Factory::createModuleDeclarationNode(){
+    return  dynamic_cast <struc::ModuleDeclaration*>( createNode(ndkModuleDeclaration));
+  }
+
   struc::Package* Factory::createPackageNode(){
     return  dynamic_cast <struc::Package*>( createNode(ndkPackage));
   }
@@ -1037,10 +1107,19 @@ void Factory::sort() {
     return  dynamic_cast <struc::Variable*>( createNode(ndkVariable));
   }
 
+  type::IntersectionType* Factory::createIntersectionTypeNode(){
+    return  dynamic_cast <type::IntersectionType*>( createNode(ndkIntersectionType));
+  }
+
+  type::ModuleType* Factory::createModuleTypeNode(){
+    return  dynamic_cast <type::ModuleType*>( createNode(ndkModuleType));
+  }
+
   void Factory::printNodeSizes() {
     printf("base::BlockComment node: %dbyte(s)\n",(int)sizeof(base::BlockComment)); 
     printf("base::JavadocComment node: %dbyte(s)\n",(int)sizeof(base::JavadocComment)); 
     printf("base::LineComment node: %dbyte(s)\n",(int)sizeof(base::LineComment)); 
+    printf("expr::AnnotatedTypeExpression node: %dbyte(s)\n",(int)sizeof(expr::AnnotatedTypeExpression)); 
     printf("expr::ArrayAccess node: %dbyte(s)\n",(int)sizeof(expr::ArrayAccess)); 
     printf("expr::ArrayTypeExpression node: %dbyte(s)\n",(int)sizeof(expr::ArrayTypeExpression)); 
     printf("expr::Assignment node: %dbyte(s)\n",(int)sizeof(expr::Assignment)); 
@@ -1058,8 +1137,10 @@ void Factory::sort() {
     printf("expr::InfixExpression node: %dbyte(s)\n",(int)sizeof(expr::InfixExpression)); 
     printf("expr::InstanceOf node: %dbyte(s)\n",(int)sizeof(expr::InstanceOf)); 
     printf("expr::IntegerLiteral node: %dbyte(s)\n",(int)sizeof(expr::IntegerLiteral)); 
+    printf("expr::Lambda node: %dbyte(s)\n",(int)sizeof(expr::Lambda)); 
     printf("expr::LongLiteral node: %dbyte(s)\n",(int)sizeof(expr::LongLiteral)); 
     printf("expr::MarkerAnnotation node: %dbyte(s)\n",(int)sizeof(expr::MarkerAnnotation)); 
+    printf("expr::MemberReference node: %dbyte(s)\n",(int)sizeof(expr::MemberReference)); 
     printf("expr::MethodInvocation node: %dbyte(s)\n",(int)sizeof(expr::MethodInvocation)); 
     printf("expr::NewArray node: %dbyte(s)\n",(int)sizeof(expr::NewArray)); 
     printf("expr::NewClass node: %dbyte(s)\n",(int)sizeof(expr::NewClass)); 
@@ -1077,8 +1158,14 @@ void Factory::sort() {
     printf("expr::This node: %dbyte(s)\n",(int)sizeof(expr::This)); 
     printf("expr::TypeApplyExpression node: %dbyte(s)\n",(int)sizeof(expr::TypeApplyExpression)); 
     printf("expr::TypeCast node: %dbyte(s)\n",(int)sizeof(expr::TypeCast)); 
+    printf("expr::TypeIntersectionExpression node: %dbyte(s)\n",(int)sizeof(expr::TypeIntersectionExpression)); 
     printf("expr::TypeUnionExpression node: %dbyte(s)\n",(int)sizeof(expr::TypeUnionExpression)); 
     printf("expr::WildcardExpression node: %dbyte(s)\n",(int)sizeof(expr::WildcardExpression)); 
+    printf("module::Exports node: %dbyte(s)\n",(int)sizeof(module::Exports)); 
+    printf("module::Opens node: %dbyte(s)\n",(int)sizeof(module::Opens)); 
+    printf("module::Provides node: %dbyte(s)\n",(int)sizeof(module::Provides)); 
+    printf("module::Requires node: %dbyte(s)\n",(int)sizeof(module::Requires)); 
+    printf("module::Uses node: %dbyte(s)\n",(int)sizeof(module::Uses)); 
     printf("statm::Assert node: %dbyte(s)\n",(int)sizeof(statm::Assert)); 
     printf("statm::BasicFor node: %dbyte(s)\n",(int)sizeof(statm::BasicFor)); 
     printf("statm::Block node: %dbyte(s)\n",(int)sizeof(statm::Block)); 
@@ -1113,6 +1200,8 @@ void Factory::sort() {
     printf("struc::InterfaceGeneric node: %dbyte(s)\n",(int)sizeof(struc::InterfaceGeneric)); 
     printf("struc::Method node: %dbyte(s)\n",(int)sizeof(struc::Method)); 
     printf("struc::MethodGeneric node: %dbyte(s)\n",(int)sizeof(struc::MethodGeneric)); 
+    printf("struc::Module node: %dbyte(s)\n",(int)sizeof(struc::Module)); 
+    printf("struc::ModuleDeclaration node: %dbyte(s)\n",(int)sizeof(struc::ModuleDeclaration)); 
     printf("struc::Package node: %dbyte(s)\n",(int)sizeof(struc::Package)); 
     printf("struc::PackageDeclaration node: %dbyte(s)\n",(int)sizeof(struc::PackageDeclaration)); 
     printf("struc::Parameter node: %dbyte(s)\n",(int)sizeof(struc::Parameter)); 
@@ -1128,9 +1217,11 @@ void Factory::sort() {
     printf("type::ErrorType node: %dbyte(s)\n",(int)sizeof(type::ErrorType)); 
     printf("type::FloatType node: %dbyte(s)\n",(int)sizeof(type::FloatType)); 
     printf("type::IntType node: %dbyte(s)\n",(int)sizeof(type::IntType)); 
+    printf("type::IntersectionType node: %dbyte(s)\n",(int)sizeof(type::IntersectionType)); 
     printf("type::LongType node: %dbyte(s)\n",(int)sizeof(type::LongType)); 
     printf("type::LowerBoundedWildcardType node: %dbyte(s)\n",(int)sizeof(type::LowerBoundedWildcardType)); 
     printf("type::MethodType node: %dbyte(s)\n",(int)sizeof(type::MethodType)); 
+    printf("type::ModuleType node: %dbyte(s)\n",(int)sizeof(type::ModuleType)); 
     printf("type::NoType node: %dbyte(s)\n",(int)sizeof(type::NoType)); 
     printf("type::NullType node: %dbyte(s)\n",(int)sizeof(type::NullType)); 
     printf("type::PackageType node: %dbyte(s)\n",(int)sizeof(type::PackageType)); 

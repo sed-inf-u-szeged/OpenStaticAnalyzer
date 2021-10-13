@@ -27,6 +27,7 @@ import columbus.java.asg.type.MethodType;
 /**
  * Interface MethodDeclaration, which represents the {@link columbus.java.asg.struc.MethodDeclaration MethodDeclaration} node.
  * @columbus.node (missing)
+ * @columbus.attr lloc (int) : (missing)
  * @columbus.attr isAbstract (boolean) : (missing)
  * @columbus.attr abstractPosition (Range) : (missing)
  * @columbus.attr isStrictfp (boolean) : (missing)
@@ -38,6 +39,18 @@ import columbus.java.asg.type.MethodType;
  * @columbus.edge overrides ({@link columbus.java.asg.struc.MethodDeclaration MethodDeclaration}, multiple) : (missing)
  */
 public interface MethodDeclaration extends NamedDeclaration {
+
+	/**
+	 * Gives back the {@link columbus.java.asg.struc.MethodDeclaration#attributeLloc lloc} of the node.
+	 * @return Returns with the lloc.
+	 */
+	public int getLloc();
+
+	/**
+	 * Sets the {@link columbus.java.asg.struc.MethodDeclaration#attributeLloc lloc} of the node.
+	 * @param value The new value of the lloc.
+	 */
+	public void setLloc(int value);
 
 	/**
 	 * Gives back the {@link columbus.java.asg.struc.MethodDeclaration#attributeIsAbstract isAbstract} of the node.

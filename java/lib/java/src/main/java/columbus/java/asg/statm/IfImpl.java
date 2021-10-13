@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class IfImpl extends BaseImpl implements If {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(IfImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

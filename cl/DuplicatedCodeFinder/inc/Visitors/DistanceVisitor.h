@@ -32,6 +32,7 @@
 //when genealogy is maintained the previous factory is also needed
 
 //DistanceVisitor used only when genealogy is needed!!!
+
 class DistanceVisitor : public columbus::LANGUAGE_NAMESPACE::VisitorAbstractNodes {
 
     private:
@@ -73,6 +74,7 @@ class DistanceVisitor : public columbus::LANGUAGE_NAMESPACE::VisitorAbstractNode
         return l3;
       }
     };
+
 #endif
 
 #endif /* DISTANCEVISITOR_H_ */

@@ -27,11 +27,23 @@ import java.util.Map;
 
 import javax.lang.model.type.TypeMirror;
 
+import org.jan.SymbolMaps.TypeKinds;
+
+import com.sun.tools.javac.code.BoundKind;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.DelegatedType;
+import com.sun.tools.javac.code.Type.UnknownType;
+
 import columbus.java.asg.Common;
 import columbus.java.asg.Factory;
 import columbus.java.asg.JavaException;
 import columbus.java.asg.base.Base;
+import columbus.java.asg.enums.NodeKind;
 import columbus.java.asg.expr.Expression;
+import columbus.java.asg.expr.FunctionalExpression;
 import columbus.java.asg.struc.MethodDeclaration;
 import columbus.java.asg.type.ArrayType;
 import columbus.java.asg.type.BooleanType;
@@ -41,6 +53,7 @@ import columbus.java.asg.type.DoubleType;
 import columbus.java.asg.type.ErrorType;
 import columbus.java.asg.type.FloatType;
 import columbus.java.asg.type.IntType;
+import columbus.java.asg.type.IntersectionType;
 import columbus.java.asg.type.LongType;
 import columbus.java.asg.type.MethodType;
 import columbus.java.asg.type.NoType;
@@ -53,14 +66,6 @@ import columbus.java.asg.type.UnionType;
 import columbus.java.asg.type.VoidType;
 import columbus.java.asg.type.WildcardType;
 import columbus.logger.LoggerHandler;
-
-import com.sun.tools.javac.code.BoundKind;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.PackageSymbol;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Type.DelegatedType;
-import com.sun.tools.javac.code.Type.UnknownType;
 
 public class TypeBuilder {
 
@@ -81,38 +86,9 @@ public class TypeBuilder {
 	}
 
 	public void build() {
-		for (Map.Entry<Type, List<Integer>> entry : symMaps.getUsedTypesMap().entrySet()) {
-			int typeId = visit(entry.getKey());
-			if (typeId != 0) {
-				for (Integer id : entry.getValue()) {
-					Base b = fact.getRef(id);
-					if (b instanceof Expression) {
-						Expression expr = (Expression) b;
-						columbus.java.asg.type.Type t = expr.getType();
-						if (t == null) {
-							expr.setType(typeId);
-						} else if (t.getId() != typeId) {
-							if (logger.isDebugEnabled()) {
-								logger.debug("debug.jan.TypeBuilder.couldntSetExpTypeToAnother", id,
-										expr.getNodeKind(), t.getId(), typeId);
-							}
-						}
-					} else if (b instanceof MethodDeclaration) {
-						MethodDeclaration m = (MethodDeclaration) b;
-						m.setMethodType(typeId);
-					} else {
-						if (logger.isDebugEnabled()) {
-							logger.debug("debug.jan.TypeBuilder.unexpectedNodeIdForType", id, b.getNodeKind(), typeId,
-									fact.getNodeKind(typeId), entry.getKey());
-						}
-					}
-				}
-			} else {
-				if (logger.isDebugEnabled()) {
-					logger.debug("debug.jan.TypeBuilder.unknownType", entry.getKey());
-				}
-			}
-		}
+		buildTypes(symMaps.getUsedTypesMap(), TypeKinds.EXPR_TYPE);
+		buildTypes(symMaps.getMethodTypeMap(), TypeKinds.METHOD_TYPE);
+		buildTypes(symMaps.getFuncExprTargetMap(), TypeKinds.FUNC_EXPR_TARGET);
 
 		// create ClassType node for each TypeDeclaration
 		Factory.Iterator it = fact.iterator();
@@ -123,6 +99,63 @@ public class TypeBuilder {
 			}
 		}
 		classAndPackageTypes.clear();
+	}
+
+	public void buildTypes(Map<Type, List<Integer>> typeMap, TypeKinds typeKind) {
+		for (Map.Entry<Type, List<Integer>> entry : typeMap.entrySet()) {
+			int typeId = visit(entry.getKey());
+			if (typeId != 0) {
+				for (Integer id : entry.getValue()) {
+					Base b = fact.getRef(id);
+					boolean wrongNode = false;
+					switch (typeKind) {
+					case EXPR_TYPE:
+						if (b instanceof Expression) {
+							Expression expr = (Expression) b;
+							columbus.java.asg.type.Type t = expr.getType();
+							if (t == null) {
+								expr.setType(typeId);
+							} else if (t.getId() != typeId) {
+								if (logger.isDebugEnabled()) {
+									logger.debug("debug.jan.TypeBuilder.couldntSetExpTypeToAnother", id,
+											expr.getNodeKind(), t.getId(), typeId);
+								}
+							}
+						} else {
+							wrongNode = true;
+						}
+						break;
+					case METHOD_TYPE:
+						if (b instanceof MethodDeclaration) {
+							MethodDeclaration m = (MethodDeclaration) b;
+							m.setMethodType(typeId);
+						} else {
+							wrongNode = true;
+						}
+						break;
+					case FUNC_EXPR_TARGET:
+						if (b instanceof FunctionalExpression) {
+							FunctionalExpression expr = (FunctionalExpression) b;
+							// TODO is it possible, that the type of the expression and this target type are
+							// always the same?
+							expr.setTarget(typeId);
+						} else {
+							wrongNode = true;
+						}
+						break;
+					}
+
+					if (wrongNode) {
+						logger.error("error.jan.TypeBuilder.unexpectedNodeIdForType", id, b.getNodeKind(), typeId,
+								fact.getNodeKind(typeId), entry.getKey());
+					}
+				}
+			} else {
+				if (logger.isDebugEnabled()) {
+					logger.debug("debug.jan.TypeBuilder.unknownType", entry.getKey());
+				}
+			}
+		}
 	}
 
 	private int createClassOrPackageType(Base node) {
@@ -258,7 +291,7 @@ public class TypeBuilder {
 				}
 				case PACKAGE: {
 					int refersToId = 0;
-					Integer ref = symMaps.getPackageMap().get(type.tsym);
+					Integer ref = symMaps.findPackage(type.tsym.packge());
 					if (ref == null) {
 						if (logger.isDebugEnabled()) {
 							logger.debug("debug.jan.TypeBuilder.packageCouldntBeFound", type);
@@ -356,7 +389,8 @@ public class TypeBuilder {
 					} else {
 						Type erased = type.tsym.erasure_field;
 						if (erased == null) {
-							erased = new Type.ErasedClassType(type, type.tsym);
+							//Java 10 support
+							erased = new Type.ErasedClassType(type, type.tsym, type.getMetadata());
 						}
 						rawTypeId = visit(erased);
 
@@ -413,8 +447,7 @@ public class TypeBuilder {
 						DelegatedType delegated = ((DelegatedType) type);
 						ret = visit(delegated.qtype);
 					} else if (type instanceof UnknownType) {
-						// TODO java 1.8
-						// TODO Type.UnknownType e.g. <any?>
+						// TODO java 1.8 (Type.UnknownType e.g. <any?>)
 						logger.debug("ex.jan.TypeBuilder.errorTypeInsteadOfJava18Type", type.getKind());
 						ErrorType typeNode = fact.createErrorType();
 						ret = typeNode.getId();
@@ -423,14 +456,25 @@ public class TypeBuilder {
 						throw new JavaException(logger.formatMessage("ex.jan.TypeBuilder.unknownTypeKind", type.getKind()));
 					}
 					break;
-				// TODO java 1.8
 				case INTERSECTION: {
-					logger.debug("ex.jan.TypeBuilder.errorTypeInsteadOfJava18Type", type.getKind());
-					ErrorType typeNode = fact.createErrorType();
-					ret = typeNode.getId();
+					Type.IntersectionClassType intersectionType = (Type.IntersectionClassType) type;
+					IntersectionType intersectionTypeNode = (IntersectionType) fact.createNode(NodeKind.ndkIntersectionType);
+					
+					intersectionType.getBounds().forEach(bound -> intersectionTypeNode.addBounds(visit((Type) bound)));
+					
+					ret = intersectionTypeNode.getId();
 					builtTypeSymbols.put(type, ret);
+					
 					break;
 				}
+				
+				case MODULE:
+					Integer retId = symMaps.getModuleTypeMap().get(type);
+					if (retId != null) {
+						builtTypeSymbols.put(type, retId);
+						ret = retId;
+					}
+					break;
 				default:
 					throw new JavaException(logger.formatMessage("ex.jan.TypeBuilder.unknownTypeKind", type.getKind()));
 				}
@@ -443,5 +487,5 @@ public class TypeBuilder {
 
 		return ret;
 	}
-
+	
 }

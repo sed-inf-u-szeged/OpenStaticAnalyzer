@@ -179,7 +179,7 @@ namespace columbus { namespace thread {
     GetSystemInfo( &sysinfo );
     poolSize = sysinfo.dwNumberOfProcessors;
 #else
-#ifdef __unix__
+#ifdef __linux__
     poolSize = sysconf( _SC_NPROCESSORS_ONLN );
 #endif
 #endif

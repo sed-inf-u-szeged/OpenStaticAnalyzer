@@ -40,6 +40,10 @@ void VisitorFilter::visitEnd(const base::LineComment& node , bool callVirtualBas
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const expr::AnnotatedTypeExpression& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const expr::ArrayAccess& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
@@ -108,11 +112,19 @@ void VisitorFilter::visitEnd(const expr::IntegerLiteral& node , bool callVirtual
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const expr::Lambda& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const expr::LongLiteral& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
 void VisitorFilter::visitEnd(const expr::MarkerAnnotation& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const expr::MemberReference& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
@@ -184,11 +196,35 @@ void VisitorFilter::visitEnd(const expr::TypeCast& node , bool callVirtualBase /
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const expr::TypeIntersectionExpression& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const expr::TypeUnionExpression& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
 void VisitorFilter::visitEnd(const expr::WildcardExpression& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const module::Exports& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const module::Opens& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const module::Provides& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const module::Requires& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const module::Uses& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
@@ -328,6 +364,14 @@ void VisitorFilter::visitEnd(const struc::MethodGeneric& node , bool callVirtual
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const struc::Module& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const struc::ModuleDeclaration& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const struc::Package& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
@@ -388,6 +432,10 @@ void VisitorFilter::visitEnd(const type::IntType& node , bool callVirtualBase /*
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const type::IntersectionType& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const type::LongType& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
@@ -397,6 +445,10 @@ void VisitorFilter::visitEnd(const type::LowerBoundedWildcardType& node , bool c
 }
 
 void VisitorFilter::visitEnd(const type::MethodType& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const type::ModuleType& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 

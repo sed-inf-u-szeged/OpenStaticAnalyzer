@@ -39,8 +39,9 @@ namespace columbus {
   * \param edgeType [in] the type of edges
   * \param sumWarnings [in] if it is true, warning will be summarized, otherwise not
   * \param metrics [in] if it is not empty, then it summarizes the metrircs in the given set
+  * \param cumulateToSystemComponent [in] If it is true than it cumulates the metrics to the <system> component node too.
   */
-  void cumSum(graph::Graph& graph, const graph::Edge::EdgeType& edgeType, bool sumWarnings, const std::set<std::string>& metrics =  std::set<std::string>());
+  void cumSum(graph::Graph& graph, const graph::Edge::EdgeType& edgeType, bool sumWarnings, const std::set<std::string>& metrics =  std::set<std::string>(), bool cumulateToSystemComponent = false);
 
   /**
   * \brief Create attributeInt for groups of summarized and summarize metrics by groups (grups and metrics in rulx file)

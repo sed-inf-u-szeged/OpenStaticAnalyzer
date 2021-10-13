@@ -74,9 +74,6 @@ namespace columbus {  namespace eslint2graph {
      */
     virtual void startElement (const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname, const Attributes &attrs);
 
-    
-    void addLicenseTypeToTheGraphHeader(const std::string& toolName);
-
   private:
     XMLParser parser;
 
@@ -103,7 +100,9 @@ namespace columbus {  namespace eslint2graph {
     std::string id;
     std::string warningText;
     std::string currentFileName;
-    
+
+    graphsupport::WarningCache warningCache;
+
     /**
      * \brief Structure for a warning location.
      */

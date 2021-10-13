@@ -32,12 +32,12 @@ namespace columbus { namespace csharp { namespace asg {
   /**
   * \brief The API version of the schema.
   */
-  const std::string APIVersion = "0.9";
+  const std::string APIVersion = "0.11";
 
   /**
   * \brief The binary version of the schema.
   */
-  const std::string BinaryVersion = "0.9";
+  const std::string BinaryVersion = "0.11";
 
 
 }}}

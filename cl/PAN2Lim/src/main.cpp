@@ -67,6 +67,7 @@ namespace columbus { namespace PAN2Lim { namespace options
   // parameters
   static std::string listFile;      // file containing the files to be converted
   static std::list<std::string> inputFiles;     // the processed file list - together with ppFile
+  static std::string compStructFile;
 
   static std::string out;
 
@@ -206,7 +207,7 @@ void loadFilter( python::asg::Factory& fact, const string& file )
   {
     fact.loadFilter( flt );
   }
-  catch ( IOException e )
+  catch (const IOException&)
   {
     WriteMsg::write(CMSG_CANNOT_OPEN_FILTER_FILE, flt.c_str());
   }
@@ -273,7 +274,7 @@ int main( int argc, char* argv[] )
     {
       factory.load( it->c_str(), header );
     }
-    catch ( IOException e )
+    catch (const IOException&)
     {
       WriteMsg::write(CMSG_WARN_CANNOT_READ_FILE, it->c_str());
       exitCode = 1;
@@ -331,7 +332,7 @@ int main( int argc, char* argv[] )
   {
     limFactory.save( PAN2Lim::options::out, limHeader );
   }
-  catch  (IOException e)
+  catch (const IOException&)
   {
     WriteMsg::write(CMSG_WARN_CANNOT_WRITE_FILE, options::out.c_str());
   }
@@ -342,13 +343,12 @@ int main( int argc, char* argv[] )
   {
     limFactory.saveFilter(filterfile);
   }
-  catch  (IOException e)
+  catch (const IOException&)
   {
     WriteMsg::write(CMSG_WARN_CANNOT_WRITE_FILE, filterfile.c_str());
   }
 
   setElapsedTime( &saveTime );
-  setElapsedTime( &totalTime );
 
   WriteMsg::write(
       CMSG_STATISTICS,

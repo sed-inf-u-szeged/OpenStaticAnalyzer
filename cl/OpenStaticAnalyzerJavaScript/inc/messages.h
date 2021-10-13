@@ -18,8 +18,8 @@
  *  limitations under the Licence.
  */
 
-#ifndef _SMJ_CONTR_M_H_
-#define _SMJ_CONTR_M_H_
+#ifndef _OSAJS_CONTR_M_H_
+#define _OSAJS_CONTR_M_H_
 
 #define CMSG_ERROR_CREATE_DIR                             "ERROR: Can't create %s dir.\n"
 #define CMSG_ERROR_EXECUTION_FAILURE                      "ERROR: Execution failure! Exit:%d\n"
@@ -27,16 +27,8 @@
 #define CMSG_WARNING_ENVSET_OVERWRITE                     "WARNING: Overwriting '%s' environment variable!\n"
 #define CMSG_ERROR_DELETE_DIR                             "ERROR: Can't delete %s dir. %s.\n"
 
-#define CMSG_JAVA_CURR_VERSION                            WriteMsg::mlNormal, "Java version: %s\n"
-#define CMSG_ERROR_JAVA_VERSION                           WriteMsg::mlError, "ERROR: Required java version is 1.8 or later!\n"
-
-#define CMSG_ANT_CURR_VERSION                             WriteMsg::mlNormal, "Ant version: %s\n"
-#define CMSG_WARNING_ANT_VERSION                          WriteMsg::mlWarning, "WARNING: Required Ant version is 1.8.4 or later!\n"
-#define CMSG_WRAPPER_ERROR                                "ERROR: During the analysis at least one of the wrappers has reported error! For further details please check the openstaticanalyzer/temp/wrapper/log/wrapper.log file in the results directory."
+#define CMSG_ERROR_NODE_VERSION                           WriteMsg::mlError, "ERROR: Required Node version is %d.x.x or later!\n"
 
 #define CMSG_WARNING_FILE_MISSING                         WriteMsg::mlWarning, "WARNING: The '%s' file is missing!\n"
-#define CMSG_ERROR_LICENSE_ENVSET_FAILURE                 WriteMsg::mlError, CMSG_ERROR_ENVSET_FAILURE
-#define CMSG_PMD_ERROR                                    "PMD has failed! The PMD can be disabled with the -runPMD=false command line option."
-#define CMSG_FINDBUGS_ERROR                               "FindBugs has failed! The FindBugs can be disabled with the -runFB=false command line option."
 
 #endif

@@ -33,6 +33,7 @@ import columbus.logger.LoggerHandler;
  */
 public class FloatTypeImpl extends BaseImpl implements FloatType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(FloatTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	public FloatTypeImpl(int id, Factory factory) {
 		super(id, factory);

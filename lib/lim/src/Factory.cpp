@@ -373,7 +373,7 @@ base::Base* Factory::getPointer(NodeId id) const {
   base::Base* p = NULL;
   try {
     p = container.at(id);
-  } catch (std::out_of_range e) {
+  } catch (const std::out_of_range&) {
     throw LimException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
   }
   return p;
@@ -924,12 +924,8 @@ physical::File& Factory::createFile(const std::string& path, NodeId nodeId) {
       if (found) {
         break;
       }
-	  std::string tmpName = name;
-	  if (folder) {
-		//tmpName = folder->getName() + DIRDIVSTRING + tmpName;
-	  }
       const physical::FSEntry& entry = *it;
-      if (entry.getNodeKind() == ndkFolder && entry.getName() == tmpName) {
+      if (entry.getNodeKind() == ndkFolder && entry.getName() == name) {
         found = entry.getId();
       }
     }
@@ -940,16 +936,7 @@ physical::File& Factory::createFile(const std::string& path, NodeId nodeId) {
     } else {
       // creating a new Folder
       physical::Folder& newFolder = (physical::Folder&)createNode(ndkFolder, container.size());
-	  newFolder.setName(name);
-//      std::string uname = "";
-//      if (folder) {
-//        std::string foldUname = folder->getName();
-//        uname += foldUname;
-//        if (foldUname != "/" && foldUname != "\\") {
-//          uname += DIRDIVSTRING;
-//        }
-//      }
-//      newFolder.setName(uname + name);
+      newFolder.setName(name);
       if (fs) {
         fs->addFSEntry(&newFolder);
         fs = NULL;
@@ -979,12 +966,8 @@ physical::File& Factory::createFile(const std::string& path, NodeId nodeId) {
     if (found) {
       break;
     }
-	std::string tmpName = name;
-	if (folder) {
-	//tmpName = folder->getName() + DIRDIVSTRING + tmpName;
-	}
     const physical::FSEntry& entry = *it;
-    if (entry.getNodeKind() == ndkFile && entry.getName() == tmpName) {
+    if (entry.getNodeKind() == ndkFile && entry.getName() == name) {
       found = entry.getId();
     }
   }
@@ -996,15 +979,6 @@ physical::File& Factory::createFile(const std::string& path, NodeId nodeId) {
   // the File node is not found, creating a new one
   physical::File& file = (physical::File&)createNode(ndkFile, container.size());
   file.setName(name);
-//  std::string uname = name;
-//  if (folder) {
-//    uname = DIRDIVSTRING + uname;
-//    std::string foldUname = folder->getName();
-//    if (foldUname != "/" && foldUname != "\\") {
-//      uname = folder->getName() + uname;
-//    }
-//  }
-//  file.setName(uname);
   if (fs) {
     fs->addFSEntry(&file);
   } else {
@@ -1336,4 +1310,5 @@ base::Base* Factory::replaceNode(base::Base &node)
 
   return p;
 }
+
 }}}

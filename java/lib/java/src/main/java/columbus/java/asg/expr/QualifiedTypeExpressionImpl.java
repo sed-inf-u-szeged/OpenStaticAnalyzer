@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class QualifiedTypeExpressionImpl extends BaseImpl implements QualifiedTypeExpression {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(QualifiedTypeExpressionImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

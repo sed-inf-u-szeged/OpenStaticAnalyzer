@@ -97,22 +97,21 @@ module.exports.setPositionInfo = function (node, wrapper) {
 
         //A JS file always starts from 1,1 (line, column)
         if (node.type === "Program") {
-            wrapper.setLine(1);
-            wrapper.setCol(1);
-            wrapper.setWideLine(1);
-            wrapper.setWideCol(1);
+            wrapper.setPosition(1,0, node.loc.end.line, node.loc.end.column, 1, 0, node.loc.end.line, node.loc.end.column);
         }
         else {
-            wrapper.setLine(node.loc.start.line);
-            wrapper.setCol(node.loc.start.column);
-            wrapper.setWideLine(node.loc.start.line);
-            wrapper.setWideCol(node.loc.start.column);
+            wrapper.setPosition(
+                node.loc.start.line,
+                node.loc.start.column,
+                node.loc.end.line,
+                node.loc.end.column,
+                node.loc.start.line,
+                node.loc.start.column,
+                node.loc.end.line,
+                node.loc.end.column
+            );
         }
 
-        wrapper.setEndLine(node.loc.end.line);
-        wrapper.setEndCol(node.loc.end.column);
-        wrapper.setWideEndLine(node.loc.end.line);
-        wrapper.setWideEndCol(node.loc.end.column);
     } catch (e) {
         console.error(node.type + " - Position cannot be set! Reason of the error: " + e + "\n");
     }

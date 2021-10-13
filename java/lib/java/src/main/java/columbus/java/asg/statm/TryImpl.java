@@ -24,7 +24,6 @@ import columbus.IO;
 import columbus.java.asg.*;
 import columbus.java.asg.base.BaseImpl;
 import columbus.java.asg.base.Base;
-import columbus.java.asg.struc.Variable;
 import columbus.java.asg.base.Comment;
 import columbus.java.asg.enums.*;
 import columbus.java.asg.visitors.Visitor;
@@ -36,6 +35,7 @@ import columbus.logger.LoggerHandler;
  */
 public class TryImpl extends BaseImpl implements Try {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(TryImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 
@@ -51,7 +51,7 @@ public class TryImpl extends BaseImpl implements Try {
 
 	protected Object finallyPosition;
 
-	protected EdgeList<Variable> _hasResources;
+	protected EdgeList<Base> _hasResources;
 
 	protected int _hasBlock;
 
@@ -191,9 +191,9 @@ public class TryImpl extends BaseImpl implements Try {
 	}
 
 	@Override
-	public EdgeIterator<Variable> getResourcesIterator() {
+	public EdgeIterator<Base> getResourcesIterator() {
 		if (_hasResources == null)
-			return EdgeList.<Variable>emptyList().iterator();
+			return EdgeList.<Base>emptyList().iterator();
 		else
 			return _hasResources.iterator();
 	}
@@ -262,9 +262,9 @@ public class TryImpl extends BaseImpl implements Try {
 			throw new JavaException(logger.formatMessage("ex.java.Node.No_end_point"));
 
 		Base _node = factory.getRef(_id);
-		if (_node.getNodeKind() == NodeKind.ndkVariable) {
+		if (_node.getNodeKind() == NodeKind.ndkVariable || Common.getIsBaseClassKind(_node.getNodeKind(), NodeKind.ndkExpression)) {
 			if (_hasResources == null)
-				_hasResources = new EdgeList<Variable>(factory);
+				_hasResources = new EdgeList<Base>(factory);
 			_hasResources.add(_id);
 		} else {
 			throw new JavaException(logger.formatMessage("ex.java.Node.Invalid","NodeKind", _node.getNodeKind() ));
@@ -273,10 +273,14 @@ public class TryImpl extends BaseImpl implements Try {
 	}
 
 	@Override
-	public void addResources(Variable _node) {
-		if (_hasResources == null)
-			_hasResources = new EdgeList<Variable>(factory);
-		_hasResources.add(_node);
+	public void addResources(Base _node) {
+		if (_node.getNodeKind() == NodeKind.ndkVariable || Common.getIsBaseClassKind(_node.getNodeKind(), NodeKind.ndkExpression)) {
+			if (_hasResources == null)
+				_hasResources = new EdgeList<Base>(factory);
+			_hasResources.add(_node);
+		} else {
+			throw new JavaException(logger.formatMessage("ex.java.Node.Invalid","NodeKind", _node.getNodeKind() ));
+		}
 		setParentEdge(_node);
 	}
 
@@ -440,7 +444,7 @@ public class TryImpl extends BaseImpl implements Try {
 		io.writeInt4(!factory.getIsFiltered(_hasFinallyBlock) ? _hasFinallyBlock : 0);
 
 		if (_hasResources != null) {
-			EdgeIterator<Variable> it = getResourcesIterator();
+			EdgeIterator<Base> it = getResourcesIterator();
 			while (it.hasNext()) {
 				io.writeInt4(it.next().getId());
 			}
@@ -531,7 +535,7 @@ public class TryImpl extends BaseImpl implements Try {
 
 		_id = io.readInt4();
 		if (_id != 0) {
-			_hasResources = new EdgeList<Variable>(factory);
+			_hasResources = new EdgeList<Base>(factory);
 			while (_id != 0) {
 				_hasResources.add(_id);
 				setParentEdge(_id);

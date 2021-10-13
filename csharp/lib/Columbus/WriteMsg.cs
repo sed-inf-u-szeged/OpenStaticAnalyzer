@@ -1,24 +1,4 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
-using System;
+﻿using System;
 using System.IO;
 
 namespace Columbus
@@ -186,7 +166,7 @@ namespace Columbus
                 message += DateTime.Now.ToShortTimeString();
             if (DisplayMessageLevel)
                 message += level.ToDisplayString();
-            message += string.Format(format, args);
+            message += args.Length > 0 ? string.Format(format, args) : format;
             message += NewLine;
             Write(message);
         }
@@ -195,36 +175,31 @@ namespace Columbus
         /// Writes <paramref name="format"/> to the OutputStream with <paramref name="indent"/> characters
         /// of IndentationChars before and broke to new line after MaxLineLength characters.
         /// Format is processed by string.Format() with <paramref name="args"/> passed to it.
-        /// The message is always terminated by a newline.
         /// </summary>
-        /// <param name="level">The level of the message.</param>
         /// <param name="format">The message/format string for string.Format().</param>
+        /// <param name="level">The level of the message.</param>
         /// <param name="indent">Number of indentation to be inserted before every line.</param>
         /// <param name="args">List of parameters to be inserted in <paramref name="format"/> by string.Format()</param>
-        public static void WriteWithBreak(string format = "", MsgLevel level = MsgLevel.Normal, int indent = 0, params object[] args)
+        public static void WriteWithBreak(string format, MsgLevel level = MsgLevel.Normal, int indent = 0, params object[] args)
         {
-            if (MessageLevel == MsgLevel.Silent || level > MessageLevel)
+            if (MessageLevel == MsgLevel.Silent || level > MessageLevel || string.IsNullOrWhiteSpace(format))
                 return;
-            if (string.IsNullOrWhiteSpace(format))
-            {
-                Write(NewLine);
-                return;
-            }
-
-            string message = string.Format(format, args);
-            if (message.Length + indent <= MaxLineLength && !message.Contains("\n"))
-            {
-                if (indent > 0)
-                    Write(new string(IndentationChar, indent) + message + NewLine);
-                else
-                    Write(message + NewLine);
-                return;
-            }
 
             string indentStr = new string(IndentationChar, indent);
+            string message = args.Length > 0 ? string.Format(format, args) : format;
+            if (message.Length + indent <= MaxLineLength && !message.Contains("\n"))
+            {
+                Write(indentStr + message);
+                return;
+            }
+
+            bool first = true;
             foreach (var line in message.Replace("\r", "").Split('\n'))
             {
-                int currentLength = 0;                
+                if (!first)
+                    Write(NewLine);
+                first = false;
+                int currentLength = 0;
                 if (indent > 0)
                 {
                     Write(indentStr);
@@ -250,15 +225,37 @@ namespace Columbus
                         currentLength += word.Length + 1;
                     }
                 }
-                Write(NewLine);
             }
+        }
+
+        /// <summary>
+        /// Writes <paramref name="format"/> to the OutputStream with <paramref name="indent"/> characters
+        /// of IndentationChars before and broke to new line after MaxLineLength characters.
+        /// Format is processed by string.Format() with <paramref name="args"/> passed to it.
+        /// The message is terminated by a newline.
+        /// </summary>
+        /// <param name="format">The message/format string for string.Format().</param>
+        /// <param name="level">The level of the message.</param>
+        /// <param name="indent">Number of indentation to be inserted before every line.</param>
+        /// <param name="args">List of parameters to be inserted in <paramref name="format"/> by string.Format()</param>
+        public static void WriteLineWithBreak(string format = "", MsgLevel level = MsgLevel.Normal, int indent = 0, params object[] args)
+        {
+            if (MessageLevel == MsgLevel.Silent || level > MessageLevel)
+                return;
+
+            WriteWithBreak(format, level, indent, args);
+
+            Write(NewLine);
         }
 
         /// <summary>
         /// Writes <paramref name="message"/> to the output stream using the set encoding
         /// </summary>
-        private static void Write(string message)
+        public static void Write(string message, WriteMsg.MsgLevel level = MsgLevel.Normal)
         {
+            if (MessageLevel == MsgLevel.Silent || level > MessageLevel)
+                return;
+
             var buffer = OutputEncoding.GetBytes(message);
             OutputStream.Write(buffer, 0, buffer.Length);
             if (AutomaticFlush)
@@ -285,6 +282,50 @@ namespace Columbus
                     return "Debug L4: ";
                 default:
                     return string.Empty;
+            }
+        }
+
+        public class ProgressDisplay
+        {
+            private bool first;
+            private readonly int width;
+            private readonly string resetString;
+            private readonly bool disabled;
+
+            public int Current { get; set; }
+
+            public int Max { get; }
+
+            public bool ShowPercentage { get; }
+
+            public ProgressDisplay(int max, bool showPercentage = false, MsgLevel level = MsgLevel.Normal)
+            {
+                Max = max;
+                Current = 0;
+                width = (int)Math.Log10(max) + 1 + (showPercentage ? 5 : 0);
+                resetString = new string('\u0008', width * 2 + 1);
+                disabled = Console.IsOutputRedirected || MessageLevel == MsgLevel.Silent || level > MessageLevel;
+                first = true;
+                ShowPercentage = showPercentage;
+            }
+
+            public void AdvanceAndPrint()
+            {
+                ++Current;
+                Print();
+            }
+
+            public void Print()
+            {
+                if (disabled)
+                    return;
+                if (!first)
+                    Write(resetString);
+                first = false;
+
+                Write(string.Format($"{{0,{width}}}/{{1}}", Current, Max));  //$"{current,width}/{Max}"));
+                if (ShowPercentage)
+                    Write($" {(double)Current / Max,4:P0}");
             }
         }
     }

@@ -264,6 +264,20 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const expression::ConditionalExpressionSyntax& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::ExpressionSyntax,..) of the expression::DeclarationExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expression::DeclarationExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expression::ExpressionSyntax,..) of the expression::DeclarationExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expression::DeclarationExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::ExpressionSyntax,..) of the expression::DefaultExpressionSyntax node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -376,6 +390,20 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const expression::ImplicitElementAccessSyntax& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::ExpressionSyntax,..) of the expression::ImplicitStackAllocArrayCreationExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expression::ExpressionSyntax,..) of the expression::ImplicitStackAllocArrayCreationExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::ExpressionSyntax,..) of the expression::InitializerExpressionSyntax node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -430,6 +458,20 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const expression::InvocationExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::ExpressionSyntax,..) of the expression::IsPatternExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expression::IsPatternExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expression::ExpressionSyntax,..) of the expression::IsPatternExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expression::IsPatternExpressionSyntax& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::AnonymousFunctionExpressionSyntax,..) of the expression::LambdaExpressionSyntax node.
@@ -684,6 +726,34 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const expression::QueryExpressionSyntax& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::ExpressionSyntax,..) of the expression::RangeExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expression::RangeExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expression::ExpressionSyntax,..) of the expression::RangeExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expression::RangeExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::ExpressionSyntax,..) of the expression::RefExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expression::RefExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expression::ExpressionSyntax,..) of the expression::RefExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expression::RefExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::ExpressionSyntax,..) of the expression::RefTypeExpressionSyntax node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -696,6 +766,20 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const expression::RefTypeExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::TypeSyntax,..) of the expression::RefTypeSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expression::RefTypeSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expression::TypeSyntax,..) of the expression::RefTypeSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expression::RefTypeSyntax& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::ExpressionSyntax,..) of the expression::RefValueExpressionSyntax node.
@@ -768,6 +852,20 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const expression::StackAllocArrayCreationExpressionSyntax& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::ExpressionSyntax,..) of the expression::SwitchExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expression::SwitchExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expression::ExpressionSyntax,..) of the expression::SwitchExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expression::SwitchExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::InstanceExpressionSyntax,..) of the expression::ThisExpressionSyntax node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -780,6 +878,48 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const expression::ThisExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::ExpressionSyntax,..) of the expression::ThrowExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expression::ThrowExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expression::ExpressionSyntax,..) of the expression::ThrowExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expression::ThrowExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::ExpressionSyntax,..) of the expression::TupleExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expression::TupleExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expression::ExpressionSyntax,..) of the expression::TupleExpressionSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expression::TupleExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::TypeSyntax,..) of the expression::TupleTypeSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expression::TupleTypeSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expression::TypeSyntax,..) of the expression::TupleTypeSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expression::TupleTypeSyntax& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::ExpressionSyntax,..) of the expression::TypeOfExpressionSyntax node.
@@ -852,6 +992,20 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const statement::CheckedStatementSyntax& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (statement::StatementSyntax,..) of the statement::CommonForEachStatementSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const statement::CommonForEachStatementSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (statement::StatementSyntax,..) of the statement::CommonForEachStatementSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const statement::CommonForEachStatementSyntax& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (statement::StatementSyntax,..) of the statement::ContinueStatementSyntax node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -922,18 +1076,32 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const statement::FixedStatementSyntax& node , bool callVirtualBase = true);
 
       /**
-      * \brief Abstract visitor, which calls the visitor of the base class(es) (statement::StatementSyntax,..) of the statement::ForEachStatementSyntax node.
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (statement::CommonForEachStatementSyntax,..) of the statement::ForEachStatementSyntax node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visit(const statement::ForEachStatementSyntax& node , bool callVirtualBase = true);
 
       /**
-      * \brief Abstract end visitor, which calls the end visitor of the base class (statement::StatementSyntax,..) of the statement::ForEachStatementSyntax node.
+      * \brief Abstract end visitor, which calls the end visitor of the base class (statement::CommonForEachStatementSyntax,..) of the statement::ForEachStatementSyntax node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const statement::ForEachStatementSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (statement::CommonForEachStatementSyntax,..) of the statement::ForEachVariableStatementSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const statement::ForEachVariableStatementSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (statement::CommonForEachStatementSyntax,..) of the statement::ForEachVariableStatementSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const statement::ForEachVariableStatementSyntax& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (statement::StatementSyntax,..) of the statement::ForStatementSyntax node.
@@ -1004,6 +1172,20 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const statement::LocalDeclarationStatementSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (statement::StatementSyntax,..) of the statement::LocalFunctionStatementSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const statement::LocalFunctionStatementSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (statement::StatementSyntax,..) of the statement::LocalFunctionStatementSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const statement::LocalFunctionStatementSyntax& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (statement::StatementSyntax,..) of the statement::LockStatementSyntax node.
@@ -1468,6 +1650,20 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const structure::BracketedParameterListSyntax& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::SwitchLabelSyntax,..) of the structure::CasePatternSwitchLabelSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::CasePatternSwitchLabelSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (structure::SwitchLabelSyntax,..) of the structure::CasePatternSwitchLabelSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::CasePatternSwitchLabelSyntax& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::SwitchLabelSyntax,..) of the structure::CaseSwitchLabelSyntax node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -1564,6 +1760,20 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const structure::CompilationUnitSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::PatternSyntax,..) of the structure::ConstantPatternSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::ConstantPatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (structure::PatternSyntax,..) of the structure::ConstantPatternSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::ConstantPatternSyntax& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::TypeParameterConstraintSyntax,..) of the structure::ConstructorConstraintSyntax node.
@@ -1692,6 +1902,20 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const structure::CrefSyntax& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::PatternSyntax,..) of the structure::DeclarationPatternSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::DeclarationPatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (structure::PatternSyntax,..) of the structure::DeclarationPatternSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::DeclarationPatternSyntax& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::SwitchLabelSyntax,..) of the structure::DefaultSwitchLabelSyntax node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -1732,6 +1956,34 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const structure::DestructorDeclarationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::VariableDesignationSyntax,..) of the structure::DiscardDesignationSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::DiscardDesignationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (structure::VariableDesignationSyntax,..) of the structure::DiscardDesignationSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::DiscardDesignationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::PatternSyntax,..) of the structure::DiscardPatternSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::DiscardPatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (structure::PatternSyntax,..) of the structure::DiscardPatternSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::DiscardPatternSyntax& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the structure::ElseClauseSyntax node.
@@ -2266,6 +2518,48 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const structure::ParameterSyntax& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::VariableDesignationSyntax,..) of the structure::ParenthesizedVariableDesignationSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::ParenthesizedVariableDesignationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (structure::VariableDesignationSyntax,..) of the structure::ParenthesizedVariableDesignationSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::ParenthesizedVariableDesignationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the structure::PatternSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::PatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (base::Positioned,..) of the structure::PatternSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::PatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the structure::PositionalPatternClauseSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::PositionalPatternClauseSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (base::Positioned,..) of the structure::PositionalPatternClauseSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::PositionalPatternClauseSyntax& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::BasePropertyDeclarationSyntax,..) of the structure::PropertyDeclarationSyntax node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -2278,6 +2572,20 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const structure::PropertyDeclarationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the structure::PropertyPatternClauseSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::PropertyPatternClauseSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (base::Positioned,..) of the structure::PropertyPatternClauseSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::PropertyPatternClauseSyntax& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::CrefSyntax,..) of the structure::QualifiedCrefSyntax node.
@@ -2336,6 +2644,20 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const structure::QueryContinuationSyntax& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::PatternSyntax,..) of the structure::RecursivePatternSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::RecursivePatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (structure::PatternSyntax,..) of the structure::RecursivePatternSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::RecursivePatternSyntax& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::SelectOrGroupClauseSyntax,..) of the structure::SelectClauseSyntax node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -2378,6 +2700,20 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const structure::SimpleBaseTypeSyntax& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::VariableDesignationSyntax,..) of the structure::SingleVariableDesignationSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::SingleVariableDesignationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (structure::VariableDesignationSyntax,..) of the structure::SingleVariableDesignationSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::SingleVariableDesignationSyntax& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::TypeDeclarationSyntax,..) of the structure::StructDeclarationSyntax node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -2390,6 +2726,34 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const structure::StructDeclarationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the structure::SubpatternSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::SubpatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (base::Positioned,..) of the structure::SubpatternSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::SubpatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the structure::SwitchExpressionArmSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::SwitchExpressionArmSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (base::Positioned,..) of the structure::SwitchExpressionArmSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::SwitchExpressionArmSyntax& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the structure::SwitchLabelSyntax node.
@@ -2432,6 +2796,20 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const structure::SyntaxToken& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the structure::TupleElementSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::TupleElementSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (base::Positioned,..) of the structure::TupleElementSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::TupleElementSyntax& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the structure::TypeArgumentListSyntax node.
@@ -2560,6 +2938,20 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const structure::UsingDirectiveSyntax& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::PatternSyntax,..) of the structure::VarPatternSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::VarPatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (structure::PatternSyntax,..) of the structure::VarPatternSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::VarPatternSyntax& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the structure::VariableDeclarationSyntax node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -2586,6 +2978,34 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const structure::VariableDeclaratorSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the structure::VariableDesignationSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::VariableDesignationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (base::Positioned,..) of the structure::VariableDesignationSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::VariableDesignationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the structure::WhenClauseSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::WhenClauseSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (base::Positioned,..) of the structure::WhenClauseSyntax node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::WhenClauseSyntax& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (structure::QueryClauseSyntax,..) of the structure::WhereClauseSyntax node.

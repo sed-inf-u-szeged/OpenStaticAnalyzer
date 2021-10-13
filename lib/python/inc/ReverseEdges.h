@@ -188,7 +188,7 @@ namespace columbus { namespace python { namespace asg {
       RevEdgesContainer reContainer;
 
       /** \internal \brief The possible edges by nodes. */
-      static bool possibleEdges[83][102];
+      static bool possibleEdges[90][116];
 
       friend class Factory;
       friend class VisitorReverseEdges;
@@ -200,9 +200,11 @@ namespace columbus { namespace python { namespace asg {
       friend class base::Positioned;
       friend class expression::ArgumentList;
       friend class expression::AttributeRef;
+      friend class expression::Await;
       friend class expression::Binary;
       friend class expression::BinaryArithmetic;
       friend class expression::BinaryLogical;
+      friend class expression::BytesLiteral;
       friend class expression::Call;
       friend class expression::DictComp;
       friend class expression::Dictionary;
@@ -211,6 +213,7 @@ namespace columbus { namespace python { namespace asg {
       friend class expression::ExpressionList;
       friend class expression::ExtSlice;
       friend class expression::FloatNumber;
+      friend class expression::FormattedValue;
       friend class expression::Generator;
       friend class expression::GeneratorExpression;
       friend class expression::Identifier;
@@ -218,6 +221,7 @@ namespace columbus { namespace python { namespace asg {
       friend class expression::ImagNumber;
       friend class expression::Index;
       friend class expression::IntegerLiteral;
+      friend class expression::JoinedStr;
       friend class expression::KeyValue;
       friend class expression::Keyword;
       friend class expression::Lambda;
@@ -225,10 +229,12 @@ namespace columbus { namespace python { namespace asg {
       friend class expression::ListComp;
       friend class expression::Literal;
       friend class expression::LongInteger;
+      friend class expression::NamedExpr;
       friend class expression::Set;
       friend class expression::SetComp;
       friend class expression::Slice;
       friend class expression::Slicing;
+      friend class expression::Starred;
       friend class expression::StringConversion;
       friend class expression::StringLiteral;
       friend class expression::Subscription;
@@ -239,6 +245,7 @@ namespace columbus { namespace python { namespace asg {
       friend class module::Object;
       friend class module::Package;
       friend class statement::Alias;
+      friend class statement::AnnAssign;
       friend class statement::Assert;
       friend class statement::Assign;
       friend class statement::AugAssign;
@@ -257,6 +264,7 @@ namespace columbus { namespace python { namespace asg {
       friend class statement::ImportFrom;
       friend class statement::ImportStatement;
       friend class statement::Iteration;
+      friend class statement::Nonlocal;
       friend class statement::Parameter;
       friend class statement::Pass;
       friend class statement::Print;
@@ -267,10 +275,9 @@ namespace columbus { namespace python { namespace asg {
       friend class statement::Suite;
       friend class statement::TargetList;
       friend class statement::Try;
-      friend class statement::TryExcept;
-      friend class statement::TryFinal;
       friend class statement::While;
       friend class statement::With;
+      friend class statement::WithItem;
       friend class type::DictType;
       friend class type::ReferenceType;
       friend class type::SequenceType;

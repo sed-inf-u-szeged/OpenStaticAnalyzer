@@ -39,6 +39,7 @@ import columbus.logger.LoggerHandler;
  */
 public class MethodGenericImpl extends BaseImpl implements MethodGeneric {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(MethodGenericImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 
@@ -65,6 +66,8 @@ public class MethodGenericImpl extends BaseImpl implements MethodGeneric {
 	protected boolean isFinal;
 
 	protected Object finalPosition;
+
+	protected int lloc;
 
 	protected boolean isAbstract;
 
@@ -95,6 +98,8 @@ public class MethodGenericImpl extends BaseImpl implements MethodGeneric {
 	protected Object nativePosition;
 
 	protected Object throwsPosition;
+
+	protected boolean isDefault;
 
 	protected EdgeList<Parameter> _hasParameters;
 
@@ -256,6 +261,11 @@ public class MethodGenericImpl extends BaseImpl implements MethodGeneric {
 	}
 
 	@Override
+	public int getLloc() {
+		return lloc;
+	}
+
+	@Override
 	public boolean getIsAbstract() {
 		return isAbstract;
 	}
@@ -283,6 +293,11 @@ public class MethodGenericImpl extends BaseImpl implements MethodGeneric {
 	@Override
 	public Range getParametersEndPosition() {
 		return (Range)parametersEndPosition;
+	}
+
+	@Override
+	public void setLloc(int _lloc) {
+		lloc = _lloc;
 	}
 
 	@Override
@@ -358,6 +373,11 @@ public class MethodGenericImpl extends BaseImpl implements MethodGeneric {
 	}
 
 	@Override
+	public boolean getIsDefault() {
+		return isDefault;
+	}
+
+	@Override
 	public void setMethodKind(MethodKind _methodKind) {
 		methodKind = _methodKind;
 	}
@@ -394,6 +414,11 @@ public class MethodGenericImpl extends BaseImpl implements MethodGeneric {
 			throwsPosition = _throwsPosition;
 		else
 			throwsPosition = new Range(factory.getStringTable(), _throwsPosition);
+	}
+
+	@Override
+	public void setIsDefault(boolean _isDefault) {
+		isDefault = _isDefault;
 	}
 
 	@Override
@@ -899,6 +924,7 @@ public class MethodGenericImpl extends BaseImpl implements MethodGeneric {
 				boolValues |= 1;
 			io.writeByte1(boolValues);
 		}
+		io.writeInt4(lloc);
 		io.writeInt4(((Range)abstractPosition).getPathKey());
 		io.writeInt4(((Range)abstractPosition).getLine());
 		io.writeInt4(((Range)abstractPosition).getCol());
@@ -955,6 +981,9 @@ public class MethodGenericImpl extends BaseImpl implements MethodGeneric {
 				boolValues |= 1;
 			boolValues <<= 1;
 			if (isNative) 
+				boolValues |= 1;
+			boolValues <<= 1;
+			if (isDefault) 
 				boolValues |= 1;
 			io.writeByte1(boolValues);
 		}
@@ -1116,6 +1145,7 @@ public class MethodGenericImpl extends BaseImpl implements MethodGeneric {
 			boolValues >>>= 1;
 		}
 
+		lloc = io.readInt4();
 		((Range)abstractPosition).setPathKey(io.readInt4());
 		((Range)abstractPosition).setLine(io.readInt4());
 		((Range)abstractPosition).setCol(io.readInt4());
@@ -1170,6 +1200,8 @@ public class MethodGenericImpl extends BaseImpl implements MethodGeneric {
 		}
 		{
 			byte boolValues = io.readByte1();
+			isDefault = (boolValues & 1) != 0;
+			boolValues >>>= 1;
 			isNative = (boolValues & 1) != 0;
 			boolValues >>>= 1;
 			isSynchronized = (boolValues & 1) != 0;

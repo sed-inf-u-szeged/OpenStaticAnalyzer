@@ -28,12 +28,12 @@ public class Constant {
 	/**
 	 * The API version.
 	 */
-	public static final String APIVersion = "2.0.40";
+	public static final String APIVersion = "3.0.12";
 
 	/**
 	 * The binary version.
 	 */
-	public static final String BinaryVersion = "2.0.40";
+	public static final String BinaryVersion = "3.0.12";
 
 	/**
 	 * The messages resource file.

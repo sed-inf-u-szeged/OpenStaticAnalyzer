@@ -1,71 +1,123 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
+using Columbus.CSAN.Exceptions;
+using Columbus.CSAN.Utils;
 
 namespace Columbus.CSAN.RoslynParser
 {
     using Microsoft.CodeAnalysis;
     using System.Threading.Tasks;
-    using System.Reflection;
-    using Microsoft.CodeAnalysis.MSBuild;
 
     class SolutionOpen : AbstractOpen
     {
-        private List<Assembly> loadedAssembly;
-
-        public SolutionOpen(string path, string configuration, string platform) : base(path, configuration, platform) { }
+        public SolutionOpen(string path, string configuration, string platform) : base(path, configuration, platform)
+        {
+            CssiExtension = Constants.LCSSIEXTENSION;
+            msbuildWorkspace.WorkspaceFailed -= workspaceFailedHandler;
+        }
 
         public override void Parse()
         {
-            loadedAssembly = new List<Assembly>();
+            Solution = msbuildWorkspace.OpenSolutionAsync(Path).Result;
 
-            Solution solution = msbuildWorkspace.OpenSolutionAsync(Path).Result;
-            TopologicallySortedProjectDependencies = GetTopologicallySortedProjectDependencies(solution);
-            Solution = solution;
+            foreach (var diagnostic in msbuildWorkspace.Diagnostics)
+            {
+                switch (diagnostic.Kind)
+                {
+                    case WorkspaceDiagnosticKind.Warning:
+                        WriteMsg.WriteLine("MSBuild diagnostic warning: " + diagnostic.Message, WriteMsg.MsgLevel.Warning);
+                        break;
+                    case WorkspaceDiagnosticKind.Failure:
+                        var match = Regex.Match(diagnostic.Message, @"Cannot open project '([^']+)' because the file extension '([^']+)' is not associated with a language");
+                        if (match.Success)
+                        {
+                            if (match.Groups[2].EqualsAny(".csproj", ".xproj"))
+                                throw new MsBuildException(diagnostic.Message + " Are the required workloads installed properly?");
+
+                            WriteMsg.WriteLine($"Skipping project '{match.Groups[1]}'", WriteMsg.MsgLevel.Debug);
+                        }
+                        else if (msbuildWorkspace.CurrentSolution.ProjectIds.Count > 0)
+                            WriteMsg.WriteLine("MSBuild diagnostic warning: " + diagnostic.Message, WriteMsg.MsgLevel.Warning);
+                        else
+                            throw new MsBuildException(diagnostic.Message);
+                        break;
+                    default:
+                        throw new UnexpectedEnumValueException(diagnostic.Kind);
+                }
+            }
+
+            if (!Solution.ProjectIds.Any())
+                throw new EmptySolutionException("The opened solution does not contain any projects, there is nothing to analyze. This might be caused by an MsBuild loading error.");
+
+            if (Solution.Projects.All(project => !project.HasDocuments))
+                throw new EmptySolutionException("Every project in the opened solution seems to be empty, there is nothing to analyze. This might be caused by an MsBuild loading error.");
+
+            if (Solution.Projects.All(project => project.MetadataReferences.Count < 1))
+                throw new MsBuildException("Every project in the opened solution do not have metadata references. This might be caused by an MsBuild loading error.");
+
+            var emptyMetadataProjects = string.Join(", ", Solution.Projects.Where(project => project.MetadataReferences.Count < 1).Select(project => project.AssemblyName));
+            if (emptyMetadataProjects.Length > 0)
+                WriteMsg.WriteLine($"Failed loading project(s) {emptyMetadataProjects}. Metadata references are empty.", WriteMsg.MsgLevel.Warning);
+
+            ComputeTopologicallySortedProjectDependencies();
+            // AddGlobalMetadataReferences();
         }
 
         public override async Task<bool> BuildSoulution()
         {
-            bool[] results = new bool[TopologicallySortedProjectDependencies.Count];
-            int j = 0;
-            foreach (var project in TopologicallySortedProjectDependencies)
+            var tasks = new Task<Microsoft.CodeAnalysis.Emit.EmitResult>[TopologicallySortedProjectDependencies.Count];
+            for (int i = 0; i < TopologicallySortedProjectDependencies.Count; i++)
             {
-                var er = await EmitProject(project);
-                results[j++] = er.Success;
+                tasks[i] = EmitProject(TopologicallySortedProjectDependencies[i]);
             }
-            return results.Where(t => !t).Count() == 0;
+
+            await Task.WhenAll(tasks);
+            return tasks.Any(x => !x.Result.Success);
         }
 
-        private List<Project> GetTopologicallySortedProjectDependencies(Solution solution)
+        static readonly IReadOnlyDictionary<string, int> TargetFrameworkPriorities = new ReadOnlyDictionary<string, int>(new Dictionary<string, int> {
+            {"netstandard", 0},
+            {"netcoreapp", 1},
+            {"net", 2}
+        });
+
+        private void ComputeTopologicallySortedProjectDependencies()
         {
-            return solution
+            TopologicallySortedProjectDependencies = Solution
                     .GetProjectDependencyGraph()
                     .GetTopologicallySortedProjects()
-                    .Select(solution.GetProject)
-                    .Where(t => t.Language == "C#").ToList();
-
+                    .Select(Solution.GetProject)
+                    .Where(t => t.Language == "C#")
+                    .GroupBy(project => project.FilePath)
+                    .Select(projects =>
+                    {
+                        return projects.OrderBy(project =>
+                        {
+                            var match = Regex.Match(project.Name, @"\(([a-z]+)[^)]*\)$");
+                            return match.Success ? TargetFrameworkPriorities.GetValueOrDefault(match.Groups[1].Captures[0].Value, 99) : 100;
+                        }).First();
+                    }) // TODO let the user select via command line argument
+                    .ToList();
         }
 
-        public IEnumerable<Assembly> LoadedAssembly { get { return this.loadedAssembly; } }
-
+        private void AddGlobalMetadataReferences()
+        {
+            var globalReferences = GetGlobalReferences();
+            for (int i = 0; i < TopologicallySortedProjectDependencies.Count; i++)
+            {
+                var project = TopologicallySortedProjectDependencies[i];
+                if (project.MetadataReferences.Count > 0)
+                    continue;
+                // ReSharper disable once PossibleMultipleEnumeration
+                foreach (var globalReference in globalReferences)
+                {
+                    project = project.AddMetadataReference(globalReference);
+                    TopologicallySortedProjectDependencies[i] = project;
+                    Solution = project.Solution;
+                }
+            }
+        }
     }
 }

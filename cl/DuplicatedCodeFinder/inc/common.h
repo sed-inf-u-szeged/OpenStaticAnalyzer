@@ -47,35 +47,11 @@
   #define GET_END_COLUMN_OF_POSITIONS    getPosition().getEndCol()
   #define GET_FILE_KEY_OF_POSITIONS      getPosition().getPathKey()
   #define GET_END_FILE_KEY_OF_POSITIONS  getPosition().getPathKey()
-  #define GENEALOGY
 
-#elif defined SCHEMA_PYTHON
-  #include "python/inc/python.h"
-  #define LANGUAGE_NAMESPACE python::asg
-  #define BASE_NAMESPACE base
-  #define TOGRAPH columbus::lim2graph
-  #define GET_LINE_OF_POSITIONS          getPosition().getLine()
-  #define GET_COLUMN_OF_POSITIONS        getPosition().getCol()
-  #define GET_END_LINE_OF_POSITIONS      getPosition().getEndLine()
-  #define GET_END_COLUMN_OF_POSITIONS    getPosition().getEndCol()
-  #define GET_FILE_KEY_OF_POSITIONS      getPosition().getPathKey()
-  #define GET_END_FILE_KEY_OF_POSITIONS  getPosition().getPathKey()
   #define GENEALOGY
+#endif
   
-#elif defined SCHEMA_JAVASCRIPT
-  #include "javascript/inc/javascript.h"
-  #define LANGUAGE_NAMESPACE javascript::asg
-  #define BASE_NAMESPACE base
-  #define TOGRAPH columbus::lim2graph
-  #define GET_LINE_OF_POSITIONS          getPosition().getWideLine()
-  #define GET_COLUMN_OF_POSITIONS        getPosition().getWideCol()
-  #define GET_END_LINE_OF_POSITIONS      getPosition().getWideEndLine()
-  #define GET_END_COLUMN_OF_POSITIONS    getPosition().getWideEndCol()
-  #define GET_FILE_KEY_OF_POSITIONS      getPosition().getPathKey()
-  #define GET_END_FILE_KEY_OF_POSITIONS  getPosition().getPathKey()
-  #define GENEALOGY
-
-#elif SCHEMA_CSHARP
+#ifdef  SCHEMA_CSHARP
   #include "csharp/inc/csharp.h"
   #define LANGUAGE_NAMESPACE csharp::asg
   #define BASE_NAMESPACE base
@@ -86,6 +62,7 @@
   #define GET_END_COLUMN_OF_POSITIONS    getPosition().getEndColumn()
   #define GET_FILE_KEY_OF_POSITIONS      getPosition().getFileNameKey()
   #define GET_END_FILE_KEY_OF_POSITIONS  getPosition().getFileNameKey()
+
   #define GENEALOGY
 
   static std::string QualifiedNameSyntaxParser(columbus::LANGUAGE_NAMESPACE::expression::NameSyntax* nameSyntax, std::string ret) {
@@ -133,6 +110,40 @@
   }
 #endif
 
+#ifdef SCHEMA_PYTHON
+  #include "python/inc/python.h"
+  #define LANGUAGE_NAMESPACE python::asg
+  #define BASE_NAMESPACE base
+  #define TOGRAPH columbus::lim2graph
+  #define GET_LINE_OF_POSITIONS          getPosition().getLine()
+  #define GET_COLUMN_OF_POSITIONS        getPosition().getCol()
+  #define GET_END_LINE_OF_POSITIONS      getPosition().getEndLine()
+  #define GET_END_COLUMN_OF_POSITIONS    getPosition().getEndCol()
+  #define GET_FILE_KEY_OF_POSITIONS      getPosition().getPathKey()
+  #define GET_END_FILE_KEY_OF_POSITIONS  getPosition().getPathKey()
+
+  #define GENEALOGY
+#endif
+
+#ifdef SCHEMA_JAVASCRIPT
+  #include "javascript/inc/javascript.h"
+  #define LANGUAGE_NAMESPACE javascript::asg
+  #define BASE_NAMESPACE base
+  #define TOGRAPH columbus::lim2graph
+  #define GET_LINE_OF_POSITIONS          getPosition().getWideLine()
+  #define GET_COLUMN_OF_POSITIONS        getPosition().getWideCol()
+  #define GET_END_LINE_OF_POSITIONS      getPosition().getWideEndLine()
+  #define GET_END_COLUMN_OF_POSITIONS    getPosition().getWideEndCol()
+  #define GET_FILE_KEY_OF_POSITIONS      getPosition().getPathKey()
+  #define GET_END_FILE_KEY_OF_POSITIONS  getPosition().getPathKey()
+
+  #define GENEALOGY
+#endif
+
+#if !(defined(SCHEMA_JAVA) || defined(SCHEMA_CSHARP) || defined(SCHEMA_RPG) || defined(SCHEMA_PYTHON) || defined(SCHEMA_JAVASCRIPT))
+  #error "No schema language is defined!"
+#endif
+
 #include "types.h"
 #include "csi/inc/csi.h"
 #include "ErrorCodes.h"
@@ -145,19 +156,22 @@
 #include "ClonePositioned.h"
 #include "Visitors/CloneVisitorBase.h"
 #include "Visitors/CoverageVisitorBase.h"
-#include "Visitors/CSCoverageVisitor.h"
+
 #include "Visitors/PCoverageVisitor.h"
 #include "Visitors/JCoverageVisitor.h"
 #include "Visitors/JSCoverageVisitor.h"
+#include "Visitors/CSCoverageVisitor.h"
 #include "Visitors/NamedVisitor.h"
 #include "Visitors/CSharpNamedVisitor.h"
+
+#include "Visitors/DistanceVisitor.h"
+
 #include "Interval.h"
 #include "AbstractFilter.h"
 #include "Aligner.h"
 #include "CloneLengthFilter.h"
 #include "RepeatingLinesFilter.h"
 #include "CloneOccuranceFilter.h"
-#include "Visitors/DistanceVisitor.h"
 
 extern Config config;
 

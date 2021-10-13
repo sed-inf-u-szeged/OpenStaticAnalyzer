@@ -50,53 +50,50 @@ namespace ColumbusWrappers {
   };
 
   /**
+   * @brief Struct for ln arguments.
+   *
+   * input_files             String list for input files.
+   * output                  String for output file or directory.
+   */
+  struct LnArgs
+  {
+    LnArgs()
+      : force (false)
+      , noTargetDirectory (false)
+      , form (0)
+    {}
+
+    std::list<std::string> targets;
+    std::string linkName;
+    std::string targetDirectory;
+    bool force;
+    bool noTargetDirectory;
+    int form;
+  };
+
+
+
+  /**
    * @brief Struct for archive arguments.
    *
    * archive_modifiers       String list for CANLib modifier options.
    * archive_operations      String list for CANLib operations.
    * input_files             String list for input files.
    * archive_file            String for output archive file.
-   * asg_file                String for the name of asg (object) file where we want to insert another asg (object) file.
-   * not_handled_args        String list for recognized but not handled arguments.
-   * archive_mode            String for CANLib archive mode (-l or -w).
-   * put_before              True, if we want to insert asg (object) before the given asg_file.
-   * put_after               True, if we want to insert asg (object) after the given asg_file.
-   * delete_or_extract       True, it we want to delete an asg or extract one from the given archive file.
-   * need_create             True, if output archive file need to be created.
-   * no_output               True, if no output switch was given.
-   * first_input             The first lib or object file in the command line (needed to LIB wrapper).
+   * needToWrap              True if wrapping is needed, false otherwise
    */
   struct ArchiveArgs {
     ArchiveArgs() : archive_modifiers(),
                     archive_operations(),
                     input_files(),
                     archive_file(),
-                    asg_file(),
-                    asgMemberName(),
-                    not_handled_args(),
-                    archive_mode(),
-                    put_before(false),
-                    put_after(false),
-                    delete_or_extract(false),
-                    need_create(false),
-                    no_output(true),
-                    first_input(),
-                    original_dates(false ) {}
+                    needToWrap (true)
+                    {}
     std::list<std::string> archive_modifiers;
     std::list<std::string> archive_operations;
     std::list<std::string> input_files;
     std::string archive_file;
-    std::string asg_file;
-    std::string asgMemberName;
-    std::list<std::string> not_handled_args;
-    std::string archive_mode;
-    bool put_before;
-    bool put_after;
-    bool delete_or_extract;
-    bool need_create;
-    bool no_output;
-    std::string first_input;
-    bool original_dates;
+    bool needToWrap;
   };
 
   /**

@@ -23,6 +23,7 @@
 
 #include "common/inc/WriteMessage.h"
 #include "graphsupport/inc/GraphConstants.h"
+#include "graphsupport/inc/Metric.h"
 #include "lim2graph/inc/VisitorGraphConverter.h"
 
 using namespace std;
@@ -121,22 +122,19 @@ namespace columbus { namespace lim { namespace metrics {
 
   void NodeWrapper::addMetric( const std::string& metric, int value ) {
     //cout << "  " << limNode->getId() << "(" << Common::to_string(limNode->getNodeKind()) << ") --> " << metric << "= " << value << endl;
-    graph::Attribute::AttributeIterator aIt = graphNode.findAttributeByName( metric );
-    if ( aIt.hasNext() ) {
-      ((graph::AttributeInt&)aIt.next()).incValue( value );
-    } else {
-      graphNode.addAttribute( graph->createAttributeInt( metric, CONTEXT_METRIC, value ) );
-    }
+    columbus::graphsupport::incMetricInt(*graph, graphNode, metric, value);
   }
 
   void NodeWrapper::addMetric( const std::string& metric, float value ) {
     //cout << "  " << limNode->getId() << "(" << Common::to_string(limNode->getNodeKind()) << ") --> " << metric << "= " << value << endl;
-    graph::Attribute::AttributeIterator aIt = graphNode.findAttributeByName( metric );
-    if ( aIt.hasNext() ) {
-      ((graph::AttributeFloat&)aIt.next()).incValue( value );
-    } else {
-      graphNode.addAttribute( graph->createAttributeFloat( metric, CONTEXT_METRIC, value ) );
-    }
+    if (std::isnan(value))
+      columbus::graphsupport::setMetricINVALID(*graph, graphNode, metric);
+    else
+      columbus::graphsupport::incMetricFloat(*graph, graphNode, metric, value);
+  }
+
+  void NodeWrapper::setInvalid( const std::string& metric ) {
+    columbus::graphsupport::setMetricINVALID(*graph, graphNode, metric);
   }
 
   int NodeWrapper::getIntMetric(const std::string& metric) {

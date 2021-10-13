@@ -98,6 +98,10 @@ void Visitor::visit(const expression::ConditionalExpressionSyntax& node , bool c
 
 void Visitor::visitEnd(const expression::ConditionalExpressionSyntax& node , bool callVirtualBase) { }
 
+void Visitor::visit(const expression::DeclarationExpressionSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::DeclarationExpressionSyntax& node , bool callVirtualBase) { }
+
 void Visitor::visit(const expression::DefaultExpressionSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expression::DefaultExpressionSyntax& node , bool callVirtualBase) { }
@@ -126,6 +130,10 @@ void Visitor::visit(const expression::ImplicitElementAccessSyntax& node , bool c
 
 void Visitor::visitEnd(const expression::ImplicitElementAccessSyntax& node , bool callVirtualBase) { }
 
+void Visitor::visit(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& node , bool callVirtualBase) { }
+
 void Visitor::visit(const expression::InitializerExpressionSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expression::InitializerExpressionSyntax& node , bool callVirtualBase) { }
@@ -137,6 +145,10 @@ void Visitor::visitEnd(const expression::InterpolatedStringExpressionSyntax& nod
 void Visitor::visit(const expression::InvocationExpressionSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expression::InvocationExpressionSyntax& node , bool callVirtualBase) { }
+
+void Visitor::visit(const expression::IsPatternExpressionSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::IsPatternExpressionSyntax& node , bool callVirtualBase) { }
 
 void Visitor::visit(const expression::LiteralExpressionSyntax& node , bool callVirtualBase) {}
 
@@ -202,9 +214,21 @@ void Visitor::visit(const expression::QueryExpressionSyntax& node , bool callVir
 
 void Visitor::visitEnd(const expression::QueryExpressionSyntax& node , bool callVirtualBase) { }
 
+void Visitor::visit(const expression::RangeExpressionSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::RangeExpressionSyntax& node , bool callVirtualBase) { }
+
+void Visitor::visit(const expression::RefExpressionSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::RefExpressionSyntax& node , bool callVirtualBase) { }
+
 void Visitor::visit(const expression::RefTypeExpressionSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expression::RefTypeExpressionSyntax& node , bool callVirtualBase) { }
+
+void Visitor::visit(const expression::RefTypeSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::RefTypeSyntax& node , bool callVirtualBase) { }
 
 void Visitor::visit(const expression::RefValueExpressionSyntax& node , bool callVirtualBase) {}
 
@@ -222,9 +246,25 @@ void Visitor::visit(const expression::StackAllocArrayCreationExpressionSyntax& n
 
 void Visitor::visitEnd(const expression::StackAllocArrayCreationExpressionSyntax& node , bool callVirtualBase) { }
 
+void Visitor::visit(const expression::SwitchExpressionSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::SwitchExpressionSyntax& node , bool callVirtualBase) { }
+
 void Visitor::visit(const expression::ThisExpressionSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expression::ThisExpressionSyntax& node , bool callVirtualBase) { }
+
+void Visitor::visit(const expression::ThrowExpressionSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::ThrowExpressionSyntax& node , bool callVirtualBase) { }
+
+void Visitor::visit(const expression::TupleExpressionSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::TupleExpressionSyntax& node , bool callVirtualBase) { }
+
+void Visitor::visit(const expression::TupleTypeSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::TupleTypeSyntax& node , bool callVirtualBase) { }
 
 void Visitor::visit(const expression::TypeOfExpressionSyntax& node , bool callVirtualBase) {}
 
@@ -266,6 +306,10 @@ void Visitor::visit(const statement::ForEachStatementSyntax& node , bool callVir
 
 void Visitor::visitEnd(const statement::ForEachStatementSyntax& node , bool callVirtualBase) { }
 
+void Visitor::visit(const statement::ForEachVariableStatementSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const statement::ForEachVariableStatementSyntax& node , bool callVirtualBase) { }
+
 void Visitor::visit(const statement::ForStatementSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const statement::ForStatementSyntax& node , bool callVirtualBase) { }
@@ -285,6 +329,10 @@ void Visitor::visitEnd(const statement::LabeledStatementSyntax& node , bool call
 void Visitor::visit(const statement::LocalDeclarationStatementSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const statement::LocalDeclarationStatementSyntax& node , bool callVirtualBase) { }
+
+void Visitor::visit(const statement::LocalFunctionStatementSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const statement::LocalFunctionStatementSyntax& node , bool callVirtualBase) { }
 
 void Visitor::visit(const statement::LockStatementSyntax& node , bool callVirtualBase) {}
 
@@ -382,6 +430,10 @@ void Visitor::visit(const structure::BracketedParameterListSyntax& node , bool c
 
 void Visitor::visitEnd(const structure::BracketedParameterListSyntax& node , bool callVirtualBase) { }
 
+void Visitor::visit(const structure::CasePatternSwitchLabelSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::CasePatternSwitchLabelSyntax& node , bool callVirtualBase) { }
+
 void Visitor::visit(const structure::CaseSwitchLabelSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const structure::CaseSwitchLabelSyntax& node , bool callVirtualBase) { }
@@ -409,6 +461,10 @@ void Visitor::visitEnd(const structure::ClassOrStructConstraintSyntax& node , bo
 void Visitor::visit(const structure::CompilationUnitSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const structure::CompilationUnitSyntax& node , bool callVirtualBase) { }
+
+void Visitor::visit(const structure::ConstantPatternSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::ConstantPatternSyntax& node , bool callVirtualBase) { }
 
 void Visitor::visit(const structure::ConstructorConstraintSyntax& node , bool callVirtualBase) {}
 
@@ -442,6 +498,10 @@ void Visitor::visit(const structure::CrefParameterSyntax& node , bool callVirtua
 
 void Visitor::visitEnd(const structure::CrefParameterSyntax& node , bool callVirtualBase) { }
 
+void Visitor::visit(const structure::DeclarationPatternSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::DeclarationPatternSyntax& node , bool callVirtualBase) { }
+
 void Visitor::visit(const structure::DefaultSwitchLabelSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const structure::DefaultSwitchLabelSyntax& node , bool callVirtualBase) { }
@@ -453,6 +513,14 @@ void Visitor::visitEnd(const structure::DelegateDeclarationSyntax& node , bool c
 void Visitor::visit(const structure::DestructorDeclarationSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const structure::DestructorDeclarationSyntax& node , bool callVirtualBase) { }
+
+void Visitor::visit(const structure::DiscardDesignationSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::DiscardDesignationSyntax& node , bool callVirtualBase) { }
+
+void Visitor::visit(const structure::DiscardPatternSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::DiscardPatternSyntax& node , bool callVirtualBase) { }
 
 void Visitor::visit(const structure::ElseClauseSyntax& node , bool callVirtualBase) {}
 
@@ -594,9 +662,21 @@ void Visitor::visit(const structure::ParameterSyntax& node , bool callVirtualBas
 
 void Visitor::visitEnd(const structure::ParameterSyntax& node , bool callVirtualBase) { }
 
+void Visitor::visit(const structure::ParenthesizedVariableDesignationSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::ParenthesizedVariableDesignationSyntax& node , bool callVirtualBase) { }
+
+void Visitor::visit(const structure::PositionalPatternClauseSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::PositionalPatternClauseSyntax& node , bool callVirtualBase) { }
+
 void Visitor::visit(const structure::PropertyDeclarationSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const structure::PropertyDeclarationSyntax& node , bool callVirtualBase) { }
+
+void Visitor::visit(const structure::PropertyPatternClauseSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::PropertyPatternClauseSyntax& node , bool callVirtualBase) { }
 
 void Visitor::visit(const structure::QualifiedCrefSyntax& node , bool callVirtualBase) {}
 
@@ -610,6 +690,10 @@ void Visitor::visit(const structure::QueryContinuationSyntax& node , bool callVi
 
 void Visitor::visitEnd(const structure::QueryContinuationSyntax& node , bool callVirtualBase) { }
 
+void Visitor::visit(const structure::RecursivePatternSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::RecursivePatternSyntax& node , bool callVirtualBase) { }
+
 void Visitor::visit(const structure::SelectClauseSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const structure::SelectClauseSyntax& node , bool callVirtualBase) { }
@@ -618,9 +702,21 @@ void Visitor::visit(const structure::SimpleBaseTypeSyntax& node , bool callVirtu
 
 void Visitor::visitEnd(const structure::SimpleBaseTypeSyntax& node , bool callVirtualBase) { }
 
+void Visitor::visit(const structure::SingleVariableDesignationSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::SingleVariableDesignationSyntax& node , bool callVirtualBase) { }
+
 void Visitor::visit(const structure::StructDeclarationSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const structure::StructDeclarationSyntax& node , bool callVirtualBase) { }
+
+void Visitor::visit(const structure::SubpatternSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::SubpatternSyntax& node , bool callVirtualBase) { }
+
+void Visitor::visit(const structure::SwitchExpressionArmSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::SwitchExpressionArmSyntax& node , bool callVirtualBase) { }
 
 void Visitor::visit(const structure::SwitchSectionSyntax& node , bool callVirtualBase) {}
 
@@ -629,6 +725,10 @@ void Visitor::visitEnd(const structure::SwitchSectionSyntax& node , bool callVir
 void Visitor::visit(const structure::SyntaxToken& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const structure::SyntaxToken& node , bool callVirtualBase) { }
+
+void Visitor::visit(const structure::TupleElementSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::TupleElementSyntax& node , bool callVirtualBase) { }
 
 void Visitor::visit(const structure::TypeArgumentListSyntax& node , bool callVirtualBase) {}
 
@@ -658,6 +758,10 @@ void Visitor::visit(const structure::UsingDirectiveSyntax& node , bool callVirtu
 
 void Visitor::visitEnd(const structure::UsingDirectiveSyntax& node , bool callVirtualBase) { }
 
+void Visitor::visit(const structure::VarPatternSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::VarPatternSyntax& node , bool callVirtualBase) { }
+
 void Visitor::visit(const structure::VariableDeclarationSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const structure::VariableDeclarationSyntax& node , bool callVirtualBase) { }
@@ -665,6 +769,10 @@ void Visitor::visitEnd(const structure::VariableDeclarationSyntax& node , bool c
 void Visitor::visit(const structure::VariableDeclaratorSyntax& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const structure::VariableDeclaratorSyntax& node , bool callVirtualBase) { }
+
+void Visitor::visit(const structure::WhenClauseSyntax& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::WhenClauseSyntax& node , bool callVirtualBase) { }
 
 void Visitor::visit(const structure::WhereClauseSyntax& node , bool callVirtualBase) {}
 
@@ -730,9 +838,13 @@ void Visitor::visitAliasQualifiedNameSyntax_Name(const expression::AliasQualifie
 
 void Visitor::visitEndAliasQualifiedNameSyntax_Name(const expression::AliasQualifiedNameSyntax& begin, const expression::SimpleNameSyntax& end) { }
 
-void Visitor::visitAnonymousFunctionExpressionSyntax_Body(const expression::AnonymousFunctionExpressionSyntax& begin, const base::Positioned& end) { }
+void Visitor::visitAnonymousFunctionExpressionSyntax_Block(const expression::AnonymousFunctionExpressionSyntax& begin, const statement::BlockSyntax& end) { }
 
-void Visitor::visitEndAnonymousFunctionExpressionSyntax_Body(const expression::AnonymousFunctionExpressionSyntax& begin, const base::Positioned& end) { }
+void Visitor::visitEndAnonymousFunctionExpressionSyntax_Block(const expression::AnonymousFunctionExpressionSyntax& begin, const statement::BlockSyntax& end) { }
+
+void Visitor::visitAnonymousFunctionExpressionSyntax_ExpressionBody(const expression::AnonymousFunctionExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitEndAnonymousFunctionExpressionSyntax_ExpressionBody(const expression::AnonymousFunctionExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
 
 void Visitor::visitAnonymousMethodExpressionSyntax_ParameterList(const expression::AnonymousMethodExpressionSyntax& begin, const structure::ParameterListSyntax& end) { }
 
@@ -826,6 +938,14 @@ void Visitor::visitConditionalExpressionSyntax_WhenTrue(const expression::Condit
 
 void Visitor::visitEndConditionalExpressionSyntax_WhenTrue(const expression::ConditionalExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
 
+void Visitor::visitDeclarationExpressionSyntax_Designation(const expression::DeclarationExpressionSyntax& begin, const structure::VariableDesignationSyntax& end) { }
+
+void Visitor::visitEndDeclarationExpressionSyntax_Designation(const expression::DeclarationExpressionSyntax& begin, const structure::VariableDesignationSyntax& end) { }
+
+void Visitor::visitDeclarationExpressionSyntax_Type(const expression::DeclarationExpressionSyntax& begin, const expression::TypeSyntax& end) { }
+
+void Visitor::visitEndDeclarationExpressionSyntax_Type(const expression::DeclarationExpressionSyntax& begin, const expression::TypeSyntax& end) { }
+
 void Visitor::visitDefaultExpressionSyntax_Type(const expression::DefaultExpressionSyntax& begin, const expression::TypeSyntax& end) { }
 
 void Visitor::visitEndDefaultExpressionSyntax_Type(const expression::DefaultExpressionSyntax& begin, const expression::TypeSyntax& end) { }
@@ -866,6 +986,10 @@ void Visitor::visitImplicitElementAccessSyntax_ArgumentList(const expression::Im
 
 void Visitor::visitEndImplicitElementAccessSyntax_ArgumentList(const expression::ImplicitElementAccessSyntax& begin, const structure::BracketedArgumentListSyntax& end) { }
 
+void Visitor::visitImplicitStackAllocArrayCreationExpressionSyntax_Initializer(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end) { }
+
+void Visitor::visitEndImplicitStackAllocArrayCreationExpressionSyntax_Initializer(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end) { }
+
 void Visitor::visitInitializerExpressionSyntax_Expressions(const expression::InitializerExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
 
 void Visitor::visitEndInitializerExpressionSyntax_Expressions(const expression::InitializerExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
@@ -882,9 +1006,21 @@ void Visitor::visitInvocationExpressionSyntax_Expression(const expression::Invoc
 
 void Visitor::visitEndInvocationExpressionSyntax_Expression(const expression::InvocationExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
 
+void Visitor::visitInvocationExpressionSyntax_LocalFunctionCall(const expression::InvocationExpressionSyntax& begin, const statement::LocalFunctionStatementSyntax& end) { }
+
+void Visitor::visitEndInvocationExpressionSyntax_LocalFunctionCall(const expression::InvocationExpressionSyntax& begin, const statement::LocalFunctionStatementSyntax& end) { }
+
 void Visitor::visitInvocationExpressionSyntax_MethodCall(const expression::InvocationExpressionSyntax& begin, const structure::MethodDeclarationSyntax& end) { }
 
 void Visitor::visitEndInvocationExpressionSyntax_MethodCall(const expression::InvocationExpressionSyntax& begin, const structure::MethodDeclarationSyntax& end) { }
+
+void Visitor::visitIsPatternExpressionSyntax_Expression(const expression::IsPatternExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitEndIsPatternExpressionSyntax_Expression(const expression::IsPatternExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitIsPatternExpressionSyntax_Pattern(const expression::IsPatternExpressionSyntax& begin, const structure::PatternSyntax& end) { }
+
+void Visitor::visitEndIsPatternExpressionSyntax_Pattern(const expression::IsPatternExpressionSyntax& begin, const structure::PatternSyntax& end) { }
 
 void Visitor::visitMakeRefExpressionSyntax_Expression(const expression::MakeRefExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
 
@@ -966,9 +1102,25 @@ void Visitor::visitQueryExpressionSyntax_FromClause(const expression::QueryExpre
 
 void Visitor::visitEndQueryExpressionSyntax_FromClause(const expression::QueryExpressionSyntax& begin, const structure::FromClauseSyntax& end) { }
 
+void Visitor::visitRangeExpressionSyntax_LeftOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitEndRangeExpressionSyntax_LeftOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitRangeExpressionSyntax_RightOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitEndRangeExpressionSyntax_RightOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitRefExpressionSyntax_Expression(const expression::RefExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitEndRefExpressionSyntax_Expression(const expression::RefExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
+
 void Visitor::visitRefTypeExpressionSyntax_Expression(const expression::RefTypeExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
 
 void Visitor::visitEndRefTypeExpressionSyntax_Expression(const expression::RefTypeExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitRefTypeSyntax_Type(const expression::RefTypeSyntax& begin, const expression::TypeSyntax& end) { }
+
+void Visitor::visitEndRefTypeSyntax_Type(const expression::RefTypeSyntax& begin, const expression::TypeSyntax& end) { }
 
 void Visitor::visitRefValueExpressionSyntax_Expression(const expression::RefValueExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
 
@@ -986,9 +1138,33 @@ void Visitor::visitSizeOfExpressionSyntax_Type(const expression::SizeOfExpressio
 
 void Visitor::visitEndSizeOfExpressionSyntax_Type(const expression::SizeOfExpressionSyntax& begin, const expression::TypeSyntax& end) { }
 
+void Visitor::visitStackAllocArrayCreationExpressionSyntax_Initializer(const expression::StackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end) { }
+
+void Visitor::visitEndStackAllocArrayCreationExpressionSyntax_Initializer(const expression::StackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end) { }
+
 void Visitor::visitStackAllocArrayCreationExpressionSyntax_Type(const expression::StackAllocArrayCreationExpressionSyntax& begin, const expression::TypeSyntax& end) { }
 
 void Visitor::visitEndStackAllocArrayCreationExpressionSyntax_Type(const expression::StackAllocArrayCreationExpressionSyntax& begin, const expression::TypeSyntax& end) { }
+
+void Visitor::visitSwitchExpressionSyntax_Arms(const expression::SwitchExpressionSyntax& begin, const structure::SwitchExpressionArmSyntax& end) { }
+
+void Visitor::visitEndSwitchExpressionSyntax_Arms(const expression::SwitchExpressionSyntax& begin, const structure::SwitchExpressionArmSyntax& end) { }
+
+void Visitor::visitSwitchExpressionSyntax_GoverningExpression(const expression::SwitchExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitEndSwitchExpressionSyntax_GoverningExpression(const expression::SwitchExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitThrowExpressionSyntax_Expression(const expression::ThrowExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitEndThrowExpressionSyntax_Expression(const expression::ThrowExpressionSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitTupleExpressionSyntax_Arguments(const expression::TupleExpressionSyntax& begin, const structure::ArgumentSyntax& end) { }
+
+void Visitor::visitEndTupleExpressionSyntax_Arguments(const expression::TupleExpressionSyntax& begin, const structure::ArgumentSyntax& end) { }
+
+void Visitor::visitTupleTypeSyntax_Elements(const expression::TupleTypeSyntax& begin, const structure::TupleElementSyntax& end) { }
+
+void Visitor::visitEndTupleTypeSyntax_Elements(const expression::TupleTypeSyntax& begin, const structure::TupleElementSyntax& end) { }
 
 void Visitor::visitTypeOfExpressionSyntax_Type(const expression::TypeOfExpressionSyntax& begin, const expression::TypeSyntax& end) { }
 
@@ -1005,6 +1181,14 @@ void Visitor::visitEndBlockSyntax_Statements(const statement::BlockSyntax& begin
 void Visitor::visitCheckedStatementSyntax_Block(const statement::CheckedStatementSyntax& begin, const statement::BlockSyntax& end) { }
 
 void Visitor::visitEndCheckedStatementSyntax_Block(const statement::CheckedStatementSyntax& begin, const statement::BlockSyntax& end) { }
+
+void Visitor::visitCommonForEachStatementSyntax_Expression(const statement::CommonForEachStatementSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitEndCommonForEachStatementSyntax_Expression(const statement::CommonForEachStatementSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitCommonForEachStatementSyntax_Statement(const statement::CommonForEachStatementSyntax& begin, const statement::StatementSyntax& end) { }
+
+void Visitor::visitEndCommonForEachStatementSyntax_Statement(const statement::CommonForEachStatementSyntax& begin, const statement::StatementSyntax& end) { }
 
 void Visitor::visitDoStatementSyntax_Condition(const statement::DoStatementSyntax& begin, const expression::ExpressionSyntax& end) { }
 
@@ -1026,17 +1210,13 @@ void Visitor::visitFixedStatementSyntax_Statement(const statement::FixedStatemen
 
 void Visitor::visitEndFixedStatementSyntax_Statement(const statement::FixedStatementSyntax& begin, const statement::StatementSyntax& end) { }
 
-void Visitor::visitForEachStatementSyntax_Expression(const statement::ForEachStatementSyntax& begin, const expression::ExpressionSyntax& end) { }
-
-void Visitor::visitEndForEachStatementSyntax_Expression(const statement::ForEachStatementSyntax& begin, const expression::ExpressionSyntax& end) { }
-
-void Visitor::visitForEachStatementSyntax_Statement(const statement::ForEachStatementSyntax& begin, const statement::StatementSyntax& end) { }
-
-void Visitor::visitEndForEachStatementSyntax_Statement(const statement::ForEachStatementSyntax& begin, const statement::StatementSyntax& end) { }
-
 void Visitor::visitForEachStatementSyntax_Type(const statement::ForEachStatementSyntax& begin, const expression::TypeSyntax& end) { }
 
 void Visitor::visitEndForEachStatementSyntax_Type(const statement::ForEachStatementSyntax& begin, const expression::TypeSyntax& end) { }
+
+void Visitor::visitForEachVariableStatementSyntax_Variable(const statement::ForEachVariableStatementSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitEndForEachVariableStatementSyntax_Variable(const statement::ForEachVariableStatementSyntax& begin, const expression::ExpressionSyntax& end) { }
 
 void Visitor::visitForStatementSyntax_Condition(const statement::ForStatementSyntax& begin, const expression::ExpressionSyntax& end) { }
 
@@ -1082,6 +1262,30 @@ void Visitor::visitLocalDeclarationStatementSyntax_Declaration(const statement::
 
 void Visitor::visitEndLocalDeclarationStatementSyntax_Declaration(const statement::LocalDeclarationStatementSyntax& begin, const structure::VariableDeclarationSyntax& end) { }
 
+void Visitor::visitLocalFunctionStatementSyntax_Body(const statement::LocalFunctionStatementSyntax& begin, const statement::BlockSyntax& end) { }
+
+void Visitor::visitEndLocalFunctionStatementSyntax_Body(const statement::LocalFunctionStatementSyntax& begin, const statement::BlockSyntax& end) { }
+
+void Visitor::visitLocalFunctionStatementSyntax_ConstraintClauses(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterConstraintClauseSyntax& end) { }
+
+void Visitor::visitEndLocalFunctionStatementSyntax_ConstraintClauses(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterConstraintClauseSyntax& end) { }
+
+void Visitor::visitLocalFunctionStatementSyntax_ExpressionBody(const statement::LocalFunctionStatementSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) { }
+
+void Visitor::visitEndLocalFunctionStatementSyntax_ExpressionBody(const statement::LocalFunctionStatementSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) { }
+
+void Visitor::visitLocalFunctionStatementSyntax_ParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::ParameterListSyntax& end) { }
+
+void Visitor::visitEndLocalFunctionStatementSyntax_ParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::ParameterListSyntax& end) { }
+
+void Visitor::visitLocalFunctionStatementSyntax_ReturnType(const statement::LocalFunctionStatementSyntax& begin, const expression::TypeSyntax& end) { }
+
+void Visitor::visitEndLocalFunctionStatementSyntax_ReturnType(const statement::LocalFunctionStatementSyntax& begin, const expression::TypeSyntax& end) { }
+
+void Visitor::visitLocalFunctionStatementSyntax_TypeParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterListSyntax& end) { }
+
+void Visitor::visitEndLocalFunctionStatementSyntax_TypeParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterListSyntax& end) { }
+
 void Visitor::visitLockStatementSyntax_Expression(const statement::LockStatementSyntax& begin, const expression::ExpressionSyntax& end) { }
 
 void Visitor::visitEndLockStatementSyntax_Expression(const statement::LockStatementSyntax& begin, const expression::ExpressionSyntax& end) { }
@@ -1093,6 +1297,10 @@ void Visitor::visitEndLockStatementSyntax_Statement(const statement::LockStateme
 void Visitor::visitReturnStatementSyntax_Expression(const statement::ReturnStatementSyntax& begin, const expression::ExpressionSyntax& end) { }
 
 void Visitor::visitEndReturnStatementSyntax_Expression(const statement::ReturnStatementSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitStatementSyntax_AttributeLists(const statement::StatementSyntax& begin, const structure::AttributeListSyntax& end) { }
+
+void Visitor::visitEndStatementSyntax_AttributeLists(const statement::StatementSyntax& begin, const structure::AttributeListSyntax& end) { }
 
 void Visitor::visitSwitchStatementSyntax_Expression(const statement::SwitchStatementSyntax& begin, const expression::ExpressionSyntax& end) { }
 
@@ -1153,6 +1361,10 @@ void Visitor::visitEndAccessorDeclarationSyntax_AttributeLists(const structure::
 void Visitor::visitAccessorDeclarationSyntax_Body(const structure::AccessorDeclarationSyntax& begin, const statement::BlockSyntax& end) { }
 
 void Visitor::visitEndAccessorDeclarationSyntax_Body(const structure::AccessorDeclarationSyntax& begin, const statement::BlockSyntax& end) { }
+
+void Visitor::visitAccessorDeclarationSyntax_ExpressionBody(const structure::AccessorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) { }
+
+void Visitor::visitEndAccessorDeclarationSyntax_ExpressionBody(const structure::AccessorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) { }
 
 void Visitor::visitAccessorListSyntax_Accessors(const structure::AccessorListSyntax& begin, const structure::AccessorDeclarationSyntax& end) { }
 
@@ -1246,6 +1458,10 @@ void Visitor::visitBaseMethodDeclarationSyntax_Body(const structure::BaseMethodD
 
 void Visitor::visitEndBaseMethodDeclarationSyntax_Body(const structure::BaseMethodDeclarationSyntax& begin, const statement::BlockSyntax& end) { }
 
+void Visitor::visitBaseMethodDeclarationSyntax_ExpressionBody(const structure::BaseMethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) { }
+
+void Visitor::visitEndBaseMethodDeclarationSyntax_ExpressionBody(const structure::BaseMethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) { }
+
 void Visitor::visitBaseMethodDeclarationSyntax_ParameterList(const structure::BaseMethodDeclarationSyntax& begin, const structure::ParameterListSyntax& end) { }
 
 void Visitor::visitEndBaseMethodDeclarationSyntax_ParameterList(const structure::BaseMethodDeclarationSyntax& begin, const structure::ParameterListSyntax& end) { }
@@ -1281,6 +1497,14 @@ void Visitor::visitEndBaseTypeDeclarationSyntax_BaseList(const structure::BaseTy
 void Visitor::visitBaseTypeSyntax_Type(const structure::BaseTypeSyntax& begin, const expression::TypeSyntax& end) { }
 
 void Visitor::visitEndBaseTypeSyntax_Type(const structure::BaseTypeSyntax& begin, const expression::TypeSyntax& end) { }
+
+void Visitor::visitCasePatternSwitchLabelSyntax_Pattern(const structure::CasePatternSwitchLabelSyntax& begin, const structure::PatternSyntax& end) { }
+
+void Visitor::visitEndCasePatternSwitchLabelSyntax_Pattern(const structure::CasePatternSwitchLabelSyntax& begin, const structure::PatternSyntax& end) { }
+
+void Visitor::visitCasePatternSwitchLabelSyntax_WhenClause(const structure::CasePatternSwitchLabelSyntax& begin, const structure::WhenClauseSyntax& end) { }
+
+void Visitor::visitEndCasePatternSwitchLabelSyntax_WhenClause(const structure::CasePatternSwitchLabelSyntax& begin, const structure::WhenClauseSyntax& end) { }
 
 void Visitor::visitCaseSwitchLabelSyntax_Value(const structure::CaseSwitchLabelSyntax& begin, const expression::ExpressionSyntax& end) { }
 
@@ -1322,6 +1546,10 @@ void Visitor::visitCompilationUnitSyntax_Usings(const structure::CompilationUnit
 
 void Visitor::visitEndCompilationUnitSyntax_Usings(const structure::CompilationUnitSyntax& begin, const structure::UsingDirectiveSyntax& end) { }
 
+void Visitor::visitConstantPatternSyntax_Expression(const structure::ConstantPatternSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitEndConstantPatternSyntax_Expression(const structure::ConstantPatternSyntax& begin, const expression::ExpressionSyntax& end) { }
+
 void Visitor::visitConstructorDeclarationSyntax_Initializer(const structure::ConstructorDeclarationSyntax& begin, const structure::ConstructorInitializerSyntax& end) { }
 
 void Visitor::visitEndConstructorDeclarationSyntax_Initializer(const structure::ConstructorDeclarationSyntax& begin, const structure::ConstructorInitializerSyntax& end) { }
@@ -1333,10 +1561,6 @@ void Visitor::visitEndConstructorInitializerSyntax_ArgumentList(const structure:
 void Visitor::visitConstructorInitializerSyntax_ConstructorCall(const structure::ConstructorInitializerSyntax& begin, const structure::ConstructorDeclarationSyntax& end) { }
 
 void Visitor::visitEndConstructorInitializerSyntax_ConstructorCall(const structure::ConstructorInitializerSyntax& begin, const structure::ConstructorDeclarationSyntax& end) { }
-
-void Visitor::visitConversionOperatorDeclarationSyntax_ExpressionBody(const structure::ConversionOperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) { }
-
-void Visitor::visitEndConversionOperatorDeclarationSyntax_ExpressionBody(const structure::ConversionOperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) { }
 
 void Visitor::visitConversionOperatorDeclarationSyntax_Type(const structure::ConversionOperatorDeclarationSyntax& begin, const expression::TypeSyntax& end) { }
 
@@ -1353,6 +1577,14 @@ void Visitor::visitEndConversionOperatorMemberCrefSyntax_Type(const structure::C
 void Visitor::visitCrefParameterSyntax_Type(const structure::CrefParameterSyntax& begin, const expression::TypeSyntax& end) { }
 
 void Visitor::visitEndCrefParameterSyntax_Type(const structure::CrefParameterSyntax& begin, const expression::TypeSyntax& end) { }
+
+void Visitor::visitDeclarationPatternSyntax_Designation(const structure::DeclarationPatternSyntax& begin, const structure::VariableDesignationSyntax& end) { }
+
+void Visitor::visitEndDeclarationPatternSyntax_Designation(const structure::DeclarationPatternSyntax& begin, const structure::VariableDesignationSyntax& end) { }
+
+void Visitor::visitDeclarationPatternSyntax_Type(const structure::DeclarationPatternSyntax& begin, const expression::TypeSyntax& end) { }
+
+void Visitor::visitEndDeclarationPatternSyntax_Type(const structure::DeclarationPatternSyntax& begin, const expression::TypeSyntax& end) { }
 
 void Visitor::visitDelegateDeclarationSyntax_AttributeLists(const structure::DelegateDeclarationSyntax& begin, const structure::AttributeListSyntax& end) { }
 
@@ -1486,10 +1718,6 @@ void Visitor::visitMethodDeclarationSyntax_ExplicitInterfaceSpecifier(const stru
 
 void Visitor::visitEndMethodDeclarationSyntax_ExplicitInterfaceSpecifier(const structure::MethodDeclarationSyntax& begin, const structure::ExplicitInterfaceSpecifierSyntax& end) { }
 
-void Visitor::visitMethodDeclarationSyntax_ExpressionBody(const structure::MethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) { }
-
-void Visitor::visitEndMethodDeclarationSyntax_ExpressionBody(const structure::MethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) { }
-
 void Visitor::visitMethodDeclarationSyntax_ReturnType(const structure::MethodDeclarationSyntax& begin, const expression::TypeSyntax& end) { }
 
 void Visitor::visitEndMethodDeclarationSyntax_ReturnType(const structure::MethodDeclarationSyntax& begin, const expression::TypeSyntax& end) { }
@@ -1526,10 +1754,6 @@ void Visitor::visitNamespaceDeclarationSyntax_Usings(const structure::NamespaceD
 
 void Visitor::visitEndNamespaceDeclarationSyntax_Usings(const structure::NamespaceDeclarationSyntax& begin, const structure::UsingDirectiveSyntax& end) { }
 
-void Visitor::visitOperatorDeclarationSyntax_ExpressionBody(const structure::OperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) { }
-
-void Visitor::visitEndOperatorDeclarationSyntax_ExpressionBody(const structure::OperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) { }
-
 void Visitor::visitOperatorDeclarationSyntax_ReturnType(const structure::OperatorDeclarationSyntax& begin, const expression::TypeSyntax& end) { }
 
 void Visitor::visitEndOperatorDeclarationSyntax_ReturnType(const structure::OperatorDeclarationSyntax& begin, const expression::TypeSyntax& end) { }
@@ -1558,6 +1782,14 @@ void Visitor::visitParameterSyntax_Type(const structure::ParameterSyntax& begin,
 
 void Visitor::visitEndParameterSyntax_Type(const structure::ParameterSyntax& begin, const expression::TypeSyntax& end) { }
 
+void Visitor::visitParenthesizedVariableDesignationSyntax_Variables(const structure::ParenthesizedVariableDesignationSyntax& begin, const structure::VariableDesignationSyntax& end) { }
+
+void Visitor::visitEndParenthesizedVariableDesignationSyntax_Variables(const structure::ParenthesizedVariableDesignationSyntax& begin, const structure::VariableDesignationSyntax& end) { }
+
+void Visitor::visitPositionalPatternClauseSyntax_Subpatterns(const structure::PositionalPatternClauseSyntax& begin, const structure::SubpatternSyntax& end) { }
+
+void Visitor::visitEndPositionalPatternClauseSyntax_Subpatterns(const structure::PositionalPatternClauseSyntax& begin, const structure::SubpatternSyntax& end) { }
+
 void Visitor::visitPropertyDeclarationSyntax_ExpressionBody(const structure::PropertyDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) { }
 
 void Visitor::visitEndPropertyDeclarationSyntax_ExpressionBody(const structure::PropertyDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) { }
@@ -1565,6 +1797,10 @@ void Visitor::visitEndPropertyDeclarationSyntax_ExpressionBody(const structure::
 void Visitor::visitPropertyDeclarationSyntax_Initializer(const structure::PropertyDeclarationSyntax& begin, const structure::EqualsValueClauseSyntax& end) { }
 
 void Visitor::visitEndPropertyDeclarationSyntax_Initializer(const structure::PropertyDeclarationSyntax& begin, const structure::EqualsValueClauseSyntax& end) { }
+
+void Visitor::visitPropertyPatternClauseSyntax_Subpatterns(const structure::PropertyPatternClauseSyntax& begin, const structure::SubpatternSyntax& end) { }
+
+void Visitor::visitEndPropertyPatternClauseSyntax_Subpatterns(const structure::PropertyPatternClauseSyntax& begin, const structure::SubpatternSyntax& end) { }
 
 void Visitor::visitQualifiedCrefSyntax_Container(const structure::QualifiedCrefSyntax& begin, const expression::TypeSyntax& end) { }
 
@@ -1590,9 +1826,41 @@ void Visitor::visitQueryContinuationSyntax_Body(const structure::QueryContinuati
 
 void Visitor::visitEndQueryContinuationSyntax_Body(const structure::QueryContinuationSyntax& begin, const structure::QueryBodySyntax& end) { }
 
+void Visitor::visitRecursivePatternSyntax_Designation(const structure::RecursivePatternSyntax& begin, const structure::VariableDesignationSyntax& end) { }
+
+void Visitor::visitEndRecursivePatternSyntax_Designation(const structure::RecursivePatternSyntax& begin, const structure::VariableDesignationSyntax& end) { }
+
+void Visitor::visitRecursivePatternSyntax_PositionalPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PositionalPatternClauseSyntax& end) { }
+
+void Visitor::visitEndRecursivePatternSyntax_PositionalPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PositionalPatternClauseSyntax& end) { }
+
+void Visitor::visitRecursivePatternSyntax_PropertyPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PropertyPatternClauseSyntax& end) { }
+
+void Visitor::visitEndRecursivePatternSyntax_PropertyPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PropertyPatternClauseSyntax& end) { }
+
+void Visitor::visitRecursivePatternSyntax_Type(const structure::RecursivePatternSyntax& begin, const expression::TypeSyntax& end) { }
+
+void Visitor::visitEndRecursivePatternSyntax_Type(const structure::RecursivePatternSyntax& begin, const expression::TypeSyntax& end) { }
+
 void Visitor::visitSelectClauseSyntax_Expression(const structure::SelectClauseSyntax& begin, const expression::ExpressionSyntax& end) { }
 
 void Visitor::visitEndSelectClauseSyntax_Expression(const structure::SelectClauseSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitSubpatternSyntax_Pattern(const structure::SubpatternSyntax& begin, const structure::PatternSyntax& end) { }
+
+void Visitor::visitEndSubpatternSyntax_Pattern(const structure::SubpatternSyntax& begin, const structure::PatternSyntax& end) { }
+
+void Visitor::visitSwitchExpressionArmSyntax_Expression(const structure::SwitchExpressionArmSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitEndSwitchExpressionArmSyntax_Expression(const structure::SwitchExpressionArmSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitSwitchExpressionArmSyntax_Pattern(const structure::SwitchExpressionArmSyntax& begin, const structure::PatternSyntax& end) { }
+
+void Visitor::visitEndSwitchExpressionArmSyntax_Pattern(const structure::SwitchExpressionArmSyntax& begin, const structure::PatternSyntax& end) { }
+
+void Visitor::visitSwitchExpressionArmSyntax_WhenClause(const structure::SwitchExpressionArmSyntax& begin, const structure::WhenClauseSyntax& end) { }
+
+void Visitor::visitEndSwitchExpressionArmSyntax_WhenClause(const structure::SwitchExpressionArmSyntax& begin, const structure::WhenClauseSyntax& end) { }
 
 void Visitor::visitSwitchSectionSyntax_Labels(const structure::SwitchSectionSyntax& begin, const structure::SwitchLabelSyntax& end) { }
 
@@ -1601,6 +1869,10 @@ void Visitor::visitEndSwitchSectionSyntax_Labels(const structure::SwitchSectionS
 void Visitor::visitSwitchSectionSyntax_Statements(const structure::SwitchSectionSyntax& begin, const statement::StatementSyntax& end) { }
 
 void Visitor::visitEndSwitchSectionSyntax_Statements(const structure::SwitchSectionSyntax& begin, const statement::StatementSyntax& end) { }
+
+void Visitor::visitTupleElementSyntax_Type(const structure::TupleElementSyntax& begin, const expression::TypeSyntax& end) { }
+
+void Visitor::visitEndTupleElementSyntax_Type(const structure::TupleElementSyntax& begin, const expression::TypeSyntax& end) { }
 
 void Visitor::visitTypeArgumentListSyntax_Arguments(const structure::TypeArgumentListSyntax& begin, const expression::TypeSyntax& end) { }
 
@@ -1650,6 +1922,10 @@ void Visitor::visitUsingDirectiveSyntax_Name(const structure::UsingDirectiveSynt
 
 void Visitor::visitEndUsingDirectiveSyntax_Name(const structure::UsingDirectiveSyntax& begin, const expression::NameSyntax& end) { }
 
+void Visitor::visitVarPatternSyntax_Designation(const structure::VarPatternSyntax& begin, const structure::VariableDesignationSyntax& end) { }
+
+void Visitor::visitEndVarPatternSyntax_Designation(const structure::VarPatternSyntax& begin, const structure::VariableDesignationSyntax& end) { }
+
 void Visitor::visitVariableDeclarationSyntax_Type(const structure::VariableDeclarationSyntax& begin, const expression::TypeSyntax& end) { }
 
 void Visitor::visitEndVariableDeclarationSyntax_Type(const structure::VariableDeclarationSyntax& begin, const expression::TypeSyntax& end) { }
@@ -1665,6 +1941,10 @@ void Visitor::visitEndVariableDeclaratorSyntax_ArgumentList(const structure::Var
 void Visitor::visitVariableDeclaratorSyntax_Initializer(const structure::VariableDeclaratorSyntax& begin, const structure::EqualsValueClauseSyntax& end) { }
 
 void Visitor::visitEndVariableDeclaratorSyntax_Initializer(const structure::VariableDeclaratorSyntax& begin, const structure::EqualsValueClauseSyntax& end) { }
+
+void Visitor::visitWhenClauseSyntax_Condition(const structure::WhenClauseSyntax& begin, const expression::ExpressionSyntax& end) { }
+
+void Visitor::visitEndWhenClauseSyntax_Condition(const structure::WhenClauseSyntax& begin, const expression::ExpressionSyntax& end) { }
 
 void Visitor::visitWhereClauseSyntax_Condition(const structure::WhereClauseSyntax& begin, const expression::ExpressionSyntax& end) { }
 

@@ -75,7 +75,7 @@ std::string PlLOC::leftrim(std::string str) {
   return str.substr(start, str.length());
 }
 
-int PlLOC::findFirst(const std::string &line, vector<string> tokens, std::string &significantToken, int from){
+size_t PlLOC::findFirst(const std::string &line, vector<string> tokens, std::string &significantToken, int from){
   size_t lastTokenPos = string::npos;
   for (vector<string>::iterator token = tokens.begin(); token != tokens.end(); ++token){
     size_t tokenPos = line.find(*token, from);
@@ -117,33 +117,38 @@ vector<int> PlLOC::processLines(const std::string& name, PBuilder& builder) {
     string lineWithoutBackslashes = modifyEscapedChar(myline); // use this version of the line when search for quotes
 
     string firstSignificantToken;
-    int bannedRangeEndPos = 0;
-    int bannedRangeStartPos = static_cast<int>(string::npos);
+    size_t bannedRangeEndPos = 0;
+    size_t bannedRangeStartPos = 0;
+    size_t shift = 0;
     // if we are in a multi-line stringliteral, than search for the closer quote from 0 col
     if (!multiLineLiteralStarterString.empty()){
       firstSignificantToken = multiLineLiteralStarterString;
-      bannedRangeStartPos = -1 * static_cast<int>(firstSignificantToken.length());
+      shift = firstSignificantToken.length();
+      if (shift == 1)
+        bannedRangeStartPos = string::npos;
     } else { // else search for the first quote in the line
       bannedRangeStartPos = findFirst(lineWithoutBackslashes, significantTokens, firstSignificantToken, bannedRangeEndPos);
     }
-    set<int> bannedPositions;
-    while (bannedRangeStartPos != static_cast<int>(string::npos)){
-      bannedRangeEndPos = lineWithoutBackslashes.find(firstSignificantToken, bannedRangeStartPos + firstSignificantToken.length()); // find the closer quote for the string literal
-      if (bannedRangeEndPos == static_cast<int>(string::npos)){ //there is no closer quote, we ar in a multi-line literal
+    set<size_t> bannedPositions;
+    while (bannedRangeStartPos != string::npos){
+      bannedRangeEndPos = lineWithoutBackslashes.find(firstSignificantToken, bannedRangeStartPos + firstSignificantToken.length() - shift); // find the closer quote for the string literal
+      shift = 0;
+      if (bannedRangeEndPos == string::npos){ //there is no closer quote, we ar in a multi-line literal
         bannedRangeEndPos = myline.length(); // ban the whole line
         multiLineLiteralStarterString = firstSignificantToken; // store the literal starter token
       } else {
         multiLineLiteralStarterString = "";
         bannedRangeEndPos += firstSignificantToken.length();
       }
-      for (int i = bannedRangeStartPos; i < bannedRangeEndPos; ++i){
+
+      for (size_t i = bannedRangeStartPos; i < bannedRangeEndPos; ++i) {
         bannedPositions.insert(i);
       }
       bannedRangeStartPos = findFirst(lineWithoutBackslashes, significantTokens, firstSignificantToken, bannedRangeEndPos);
     }
 
-    int hashPos = 0;
-    while ( (hashPos = myline.find('#', hashPos) ) != static_cast<int>(string::npos)){
+    size_t hashPos = 0;
+    while ( (hashPos = myline.find('#', hashPos) ) != string::npos){
       if (bannedPositions.find(hashPos) == bannedPositions.end()){
         NodeId doc = builder.buildComment(myline.substr(hashPos));
         builder.setIncreasedPosition(doc, lc, hashPos, lc, myline.length());

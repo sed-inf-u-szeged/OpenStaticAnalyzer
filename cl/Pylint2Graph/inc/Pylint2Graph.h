@@ -28,6 +28,7 @@
 #include <rul/inc/RulHandler.h>
 #include <graph/inc/graph.h>
 #include <graphsupport/inc/GraphRangeIndexer.h>
+#include <graphsupport/inc/Metric.h>
 
 class Pylint2Graph {
   public:
@@ -50,6 +51,7 @@ class Pylint2Graph {
     columbus::rul::RulHandler* rulHandler;
     columbus::graph::Graph graph;
     columbus::graphsupport::GraphRangeIndexer& graphIndexer;
+    columbus::graphsupport::WarningCache warningCache;
 };
 
 #endif

@@ -39,6 +39,7 @@ import columbus.logger.LoggerHandler;
  */
 public class AnnotationTypeElementImpl extends BaseImpl implements AnnotationTypeElement {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(AnnotationTypeElementImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 
@@ -65,6 +66,8 @@ public class AnnotationTypeElementImpl extends BaseImpl implements AnnotationTyp
 	protected boolean isFinal;
 
 	protected Object finalPosition;
+
+	protected int lloc;
 
 	protected boolean isAbstract;
 
@@ -238,6 +241,11 @@ public class AnnotationTypeElementImpl extends BaseImpl implements AnnotationTyp
 	}
 
 	@Override
+	public int getLloc() {
+		return lloc;
+	}
+
+	@Override
 	public boolean getIsAbstract() {
 		return isAbstract;
 	}
@@ -265,6 +273,11 @@ public class AnnotationTypeElementImpl extends BaseImpl implements AnnotationTyp
 	@Override
 	public Range getParametersEndPosition() {
 		return (Range)parametersEndPosition;
+	}
+
+	@Override
+	public void setLloc(int _lloc) {
+		lloc = _lloc;
 	}
 
 	@Override
@@ -681,6 +694,7 @@ public class AnnotationTypeElementImpl extends BaseImpl implements AnnotationTyp
 				boolValues |= 1;
 			io.writeByte1(boolValues);
 		}
+		io.writeInt4(lloc);
 		io.writeInt4(((Range)abstractPosition).getPathKey());
 		io.writeInt4(((Range)abstractPosition).getLine());
 		io.writeInt4(((Range)abstractPosition).getCol());
@@ -846,6 +860,7 @@ public class AnnotationTypeElementImpl extends BaseImpl implements AnnotationTyp
 			boolValues >>>= 1;
 		}
 
+		lloc = io.readInt4();
 		((Range)abstractPosition).setPathKey(io.readInt4());
 		((Range)abstractPosition).setLine(io.readInt4());
 		((Range)abstractPosition).setCol(io.readInt4());

@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var memberExpression = factory.createMemberExpressionWrapper(factory);
+        var memberExpression = factory.createMemberExpressionWrapper();
         globals.setPositionInfo(node, memberExpression);
         memberExpression.setComputed(node.computed);
         return memberExpression;
@@ -35,29 +35,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.property != null) {
             var propertyWrapper = globals.getWrapperOfNode(node.property);
-            if (node.property.type !== "Literal") {
-                var propertyWrapperFunctionString = "setProperty" + node.property.type;
-            } else {
-                var propertyWrapperFunctionString = "setProperty" + globals.getLiteralType(node.property) + node.property.type;
-            }
             try {
-                memberExpressionWrapper[propertyWrapperFunctionString](propertyWrapper);
+                memberExpressionWrapper.setProperty(propertyWrapper);
             } catch (e) {
-                console.error("MEMBEREXPRESSION - Function not exist: memberExpressionWrapper." + propertyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("MEMBEREXPRESSION - Could not set property! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.object != null) {
             var objectWrapper = globals.getWrapperOfNode(node.object);
-            if (node.object.type !== "Literal") {
-                var objectWrapperFunctionString = "setObject" + node.object.type;
-            } else {
-                var objectWrapperFunctionString = "setObject" + globals.getLiteralType(node.object) + node.object.type;
-            }
             try {
-                memberExpressionWrapper[objectWrapperFunctionString](objectWrapper);
+                memberExpressionWrapper.setObject(objectWrapper);
             } catch (e) {
-                console.error("MEMBEREXPRESSION - Function not exist: memberExpressionWrapper." + objectWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("MEMBEREXPRESSION - Could not set object! Reason of the error: " + e + "\n");
             }
         }
 

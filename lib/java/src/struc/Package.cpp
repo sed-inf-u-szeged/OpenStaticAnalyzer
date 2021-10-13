@@ -21,12 +21,12 @@
 #include "java/inc/java.h"
 #include "java/inc/Common.h"
 #include "common/inc/WriteMessage.h"
+#include "common/inc/StringSup.h"
 
 #include "java/inc/messages.h"
 #include <algorithm>
 #include <string.h>
 #include "common/inc/math/common.h"
-#include <common/inc/StringSup.h>
 #include <sstream>
 
 
@@ -42,7 +42,8 @@ namespace struc {
     Named(_id, _factory),
     Scope(_id, _factory),
     m_qualifiedName(0),
-    hasCompilationUnitsContainer()
+    hasCompilationUnitsContainer(),
+    isInModuleContainer()
   {
   }
 
@@ -64,6 +65,7 @@ namespace struc {
 
     m_qualifiedName = other.m_qualifiedName;
     hasCompilationUnitsContainer = other.hasCompilationUnitsContainer;
+    isInModuleContainer = other.isInModuleContainer;
   }
 
   void Package::prepareDelete(bool tryOnVirtualParent){
@@ -73,6 +75,12 @@ namespace struc {
       if (factory->getExistsReverseEdges())
         factory->reverseEdges->removeEdge(id, this->getId(), edkPackage_HasCompilationUnits);
       hasCompilationUnitsContainer.pop_front();
+    }
+    while (!isInModuleContainer.empty()) {
+      const NodeId id = *isInModuleContainer.begin();
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->removeEdge(id, this->getId(), edkPackage_IsInModule);
+      isInModuleContainer.pop_front();
     }
     if (tryOnVirtualParent) {
       base::Base::prepareDelete(false);
@@ -128,10 +136,34 @@ namespace struc {
     return size;
   }
 
+  ListIterator<struc::Module> Package::getIsInModuleListIteratorBegin() const {
+    return ListIterator<struc::Module>(&isInModuleContainer, factory, true);
+  }
+
+  ListIterator<struc::Module> Package::getIsInModuleListIteratorEnd() const {
+    return ListIterator<struc::Module>(&isInModuleContainer, factory, false);
+  }
+
+  bool Package::getIsInModuleIsEmpty() const {
+    return getIsInModuleListIteratorBegin() == getIsInModuleListIteratorEnd();
+  }
+
+  unsigned int Package::getIsInModuleSize() const {
+    unsigned int size = 0;
+    ListIterator<struc::Module> endIt = getIsInModuleListIteratorEnd();
+    for (ListIterator<struc::Module> it = getIsInModuleListIteratorBegin(); it != endIt; ++it) {
+      ++size;
+    }
+    return size;
+  }
+
   bool Package::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
       case edkPackage_HasCompilationUnits:
         addCompilationUnits(edgeEnd);
+        return true;
+      case edkPackage_IsInModule:
+        addIsInModule(edgeEnd);
         return true;
       default:
         break;
@@ -164,6 +196,9 @@ namespace struc {
     switch (edgeKind) {
       case edkPackage_HasCompilationUnits:
         removeCompilationUnits(edgeEnd);
+        return true;
+      case edkPackage_IsInModule:
+        removeIsInModule(edgeEnd);
         return true;
       default:
         break;
@@ -238,6 +273,50 @@ namespace struc {
       throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
 
     removeCompilationUnits(_node->getId());
+  }
+
+  void Package::addIsInModule(const struc::Module *_node) {
+    if (_node == NULL)
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
+
+    if (&(_node->getFactory()) != this->factory)
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
+
+    if (!((_node->getNodeKind() == ndkModule) ))
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+
+    isInModuleContainer.push_back(_node->getId());
+    if (factory->reverseEdges)
+      factory->reverseEdges->insertEdge(_node, this, edkPackage_IsInModule);
+  }
+
+  void Package::addIsInModule(NodeId _id) {
+    const struc::Module *node = dynamic_cast<struc::Module*>(factory->getPointer(_id));
+    if (node == NULL)
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    addIsInModule( node );
+  }
+
+  void Package::removeIsInModule(NodeId id) {
+    if (!factory->getExist(id))
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    ListIterator<struc::Module>::Container::iterator it = find(isInModuleContainer.begin(), isInModuleContainer.end(), id);
+
+    if (it == isInModuleContainer.end())
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    isInModuleContainer.erase(it);
+
+    if (factory->getExistsReverseEdges())
+      factory->reverseEdges->removeEdge(id, this->getId(), edkPackage_IsInModule);
+  }
+
+  void Package::removeIsInModule(struc::Module *_node) {
+    if (_node == NULL)
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
+
+    removeIsInModule(_node->getId());
   }
 
   void Package::accept(Visitor &visitor) const {
@@ -380,6 +459,11 @@ namespace struc {
       binIo.writeUInt4(*it);
     }
     binIo.writeUInt4(0); // This is the end sign
+
+    for (ListIterator<struc::Module>::Container::const_iterator it = isInModuleContainer.begin(); it != isInModuleContainer.end(); ++it) {
+      binIo.writeUInt4(*it);
+    }
+    binIo.writeUInt4(0); // This is the end sign
   }
 
   void Package::load(io::BinaryIO &binIo, bool withVirtualBase /*= true*/) {
@@ -404,6 +488,12 @@ namespace struc {
     while (_id) {
       hasCompilationUnitsContainer.push_back(_id);
       setParentEdge(factory->getPointer(_id),edkPackage_HasCompilationUnits);
+      _id = binIo.readUInt4();
+    }
+
+    _id = binIo.readUInt4();
+    while (_id) {
+      isInModuleContainer.push_back(_id);
       _id = binIo.readUInt4();
     }
   }

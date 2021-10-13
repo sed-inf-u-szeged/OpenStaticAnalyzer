@@ -29,6 +29,8 @@ using namespace common;
 
 #ifdef PY3
 #define PyString_AS_STRING PyUnicode_AsUTF8
+#define endline end_lineno
+#define endcol end_col_offset
 #endif
 
 #ifndef _DEBUG
@@ -36,7 +38,7 @@ using namespace common;
 #define EXCEPTION_LOC_BEGIN \
   try {
 #define EXCEPTION_LOC_END(location) \
-} catch (Exception e) { \
+} catch (const Exception& e) { \
   WriteMsg::write(CMSG_EXCEPTION_AT, location); \
   WriteMsg::write(CMSG_POS, path.c_str(), parent->lineno, parent->col_offset); \
   WriteMsg::write(CMSG_ERROR, e.getLocation().c_str(), e.getMessage().c_str()); \
@@ -54,11 +56,34 @@ using namespace common;
 
 #endif
 
+static std::string PyObjectToString(PyObject *obj) {
+  std::string str;
+#ifdef PY3
+  // TODO unicodes
+  // it fails for e.g. "\uDC80", "\N{EMPTY SET}"
+  const char *s = PyString_AS_STRING(obj);
+  if (s)
+    str = std::string(s);
+#else
+  std::string type(obj->ob_type->tp_name);
+  if (type.compare("unicode") == 0)
+    str = std::string(PyString_AS_STRING(PyUnicode_AsUTF8String(obj)));
+  else if (type.compare("str") == 0)
+    str = std::string(PyString_AS_STRING(obj));
+#endif
+  return str;
+}
+
+
+
 
 ASTVisitor::ASTVisitor(PBuilder& pBuilder): pBuilder(pBuilder){
   assignment_map[Add] = askAdd;
   assignment_map[Sub] = askSub;
   assignment_map[Mult] = askMult;
+#ifdef PY3
+  assignment_map[MatMult] = askMult;
+#endif
   assignment_map[Div] = askDiv;
   assignment_map[Mod] = askMod;
   assignment_map[Pow] = askPow;
@@ -72,6 +97,9 @@ ASTVisitor::ASTVisitor(PBuilder& pBuilder): pBuilder(pBuilder){
   arithmetic_map[Add] = bakAddition;
   arithmetic_map[Sub] = bakSubtraction;
   arithmetic_map[Mult] = bakMultiplication;
+#ifdef PY3
+  arithmetic_map[MatMult] = bakMatrixMultiplication;
+#endif
   arithmetic_map[Div] = bakDivision;
   arithmetic_map[Mod] = bakModulo;
   arithmetic_map[Pow] = bakPow;
@@ -211,9 +239,9 @@ vector<NodeId> ASTVisitor::visitExprAsdl(asdl_seq* ch_list) {
   return body;
 }
 
-NodeId ASTVisitor::createParamAndObject(std::string name, python::asg::ParameterKind kind, NodeId lastParam){
+NodeId ASTVisitor::createParamAndObject(std::string name, python::asg::ParameterKind kind, NodeId annotation, NodeId lastParam){
   NodeId objNid = pBuilder.buildObject(name);
-  NodeId param = pBuilder.buildParameter(name, objNid, kind);
+  NodeId param = pBuilder.buildParameter(name, objNid, kind, annotation); // TODO annot position?
 
   //FIXME: its wrong if the parameters are not on the same line
   if (lastParam){
@@ -231,19 +259,20 @@ NodeId ASTVisitor::createParamAndObject(std::string name, python::asg::Parameter
 
 vector<NodeId> ASTVisitor::visitParameterListAsdl(arguments_ty arguments) {
   vector<NodeId> body;
+  asdl_seq* ch_list;
 
-  asdl_seq* ch_list = arguments->args;
+#ifdef PY3
+  if (arguments->posonlyargs) {
+    visitArg(body, arguments->posonlyargs, pmkPosonlyarg);
+  }
+#endif
+
+  ch_list = arguments->args;
   if (ch_list != 0) {
     for (int i = 0; i < (ch_list->size); i++) {
 #ifdef PY3
       arg_ty arg = static_cast<arg_ty>(ch_list->elements[i]);
-      std::string name = PyString_AS_STRING(arg->arg);
-
-      NodeId param = createParamAndObject(name, pmkNormal);
-      //pBuilder.setIncreasedPosition(param, arg->lineno, arg->col_offset, arg->endline, arg->endcol);
-      // TODO endline and endcol for "arg" type
-      pBuilder.setIncreasedPosition(param, arg->lineno, arg->col_offset, arg->lineno, arg->col_offset + name.size());
-      body.push_back(param);
+      visitArg(body, arg, pmkNormal);
 #else
       expr_ty expr = static_cast<expr_ty>(ch_list->elements[i]);
       std::string name = "";
@@ -255,7 +284,7 @@ vector<NodeId> ASTVisitor::visitParameterListAsdl(arguments_ty arguments) {
         // e.g. def comp_args((a, b)=(3, 4)):
       }
 
-      NodeId param = createParamAndObject(name, pmkNormal);
+      NodeId param = createParamAndObject(name, pmkNormal, 0);
       pBuilder.setIncreasedPosition(param, expr->lineno, expr->col_offset, expr->endline, expr->endcol);
       body.push_back(param);
 #endif
@@ -278,18 +307,42 @@ vector<NodeId> ASTVisitor::visitParameterListAsdl(arguments_ty arguments) {
   if (!body.empty()){
     lastParam = body.back();
   }
+#endif
 
   if (arguments->vararg){
+#ifndef PY3
     std::string varargName(PyString_AS_STRING(arguments->vararg));
-    body.push_back(createParamAndObject(varargName, pmkVararg, lastParam));
+    body.push_back(createParamAndObject(varargName, pmkVararg, 0, lastParam));
     lastParam = body.back();
+#else
+    visitArg(body, arguments->vararg, pmkVararg);
+#endif
   }
 
-  if(arguments->kwarg){
-    std::string kwargName(PyString_AS_STRING(arguments->kwarg));
-    body.push_back(createParamAndObject(kwargName, pmkKwarg, lastParam));
+#ifdef PY3
+  if(arguments->kwonlyargs){
+    visitArg(body, arguments->kwonlyargs, pmkKwonlyarg);
+  }
+  if (arguments->kw_defaults) {
+    if (arguments->kw_defaults->size == arguments->kwonlyargs->size) {
+      argItEnd = body.end();
+      ch_list = arguments->kw_defaults;
+      for (int i = static_cast<int>(ch_list->size) - 1; i >= 0; --i) {
+        statement::Parameter& param = dynamic_cast<statement::Parameter&>(pBuilder.getFactory()->getRef(*(--argItEnd)));
+        param.setDefaultValue(visitExpr(static_cast<expr_ty>(ch_list->elements[i])));
+      }
+    }
   }
 #endif
+
+  if(arguments->kwarg){
+#ifndef PY3
+    std::string kwargName(PyString_AS_STRING(arguments->kwarg));
+    body.push_back(createParamAndObject(kwargName, pmkKwarg, 0, lastParam));
+#else
+    visitArg(body, arguments->kwarg, pmkKwarg);
+#endif
+  }
 
   return body;
 }
@@ -542,6 +595,9 @@ NodeId ASTVisitor::visitMod(std::string modul_name, mod_ty parent) {
   case Interactive_kind:
   case Expression_kind:
   case Suite_kind:
+#ifdef PY3
+  case FunctionType_kind:
+#endif
   default:
     break; 
   }
@@ -581,8 +637,155 @@ NodeId ASTVisitor::visitExceptHandler(excepthandler_ty parent) {
     }
   }
 
+  return parentNid;
+}
+
+template<typename T>
+NodeId ASTVisitor::visitFunctionDef(const T& stmt, bool isAsync) {
+  asdl_seq * ch_list;
+  NodeId parentNid = 0;
+
+  std::map<std::string, NodeId> local_objects;
+  std::set<std::string> local_globals;
+  std::map<NodeId, bool> local_build_objects;
+  std::multimap<std::string, NodeId> temp_local_objects;
+  vector<NodeId> decorator_list;
+
+  objects.push_back(pair<std::map<std::string, NodeId>*, NodeKind>(&local_objects, ndkFunctionDef));
+  temp_objects.push_back(&temp_local_objects);
+  global_list.push_back(&local_globals);
+  reverse_edge_objects.push_back(&local_build_objects);
+
+  NodeId suiteNid = 0;
+  std::string str;
+
+  arguments_ty temp = stmt.args;
+  vector<NodeId> args;
+  if (temp != 0) {
+    args = visitParameterListAsdl(temp);
+  }
+
+  ch_list = stmt.body;
+  bool prev_state = collect_objects;
+  collect_objects = true;
+
+  NodeId docstring = getDocstring(ch_list);
+  vector<NodeId> body = visitStmtAsdl(ch_list, docstring);
+  collect_objects = prev_state;
+  suiteNid = pBuilder.buildSuite(body);
+
+  identifier tempx = stmt.name;
+  if (tempx != 0) {
+    str.assign(PyString_AS_STRING(tempx));
+  }
+
+  ch_list = stmt.decorator_list;
+  if (ch_list != 0) {
+    decorator_list = visitExprAsdl(stmt.decorator_list);
+  }
+
+  NodeId returns = 0;
+#ifdef PY3
+  if (stmt.returns) {
+    returns = visitExpr(stmt.returns);
+  }
+#endif
+
+  buildLocalObjects();
+
+  std::vector<NodeId> object;
+  for (std::map<std::string, NodeId>::iterator it = local_objects.begin(); it != local_objects.end(); ++it) {
+    object.push_back((*it).second);
+  }
+
+  objects.pop_back();
+  temp_objects.pop_back();
+  global_list.pop_back();
+  reverse_edge_objects.pop_back();
+
+  NodeId objNid = 0;
+  if (objects.back().first->find(str) == objects.back().first->end()) {
+    objNid = pBuilder.buildObject(str);
+    objects.back().first->insert(pair<std::string, NodeId>(str, objNid));
+  }
+  else {
+    std::map<std::string, NodeId>::iterator it = objects.back().first->find(str);
+    objNid = (*it).second;
+  }
+
+  parentNid = pBuilder.buildFunctionDef(str, docstring, suiteNid, args, decorator_list, returns, object, objNid, 0, isAsync);
+  pBuilder.AddObjectRef(objNid, parentNid);
 
   return parentNid;
+}
+
+template<typename T>
+NodeId ASTVisitor::visitFor(const T& stmt, bool isAsync) {
+  asdl_seq * ch_list;
+  NodeId parentNid = 0;
+
+  bool prev_state = build_object;
+  build_object = false;
+
+  ch_list = stmt.body;
+  vector<NodeId> bodyl = visitStmtAsdl(ch_list);
+  NodeId body = pBuilder.buildSuite(bodyl);
+
+  ch_list = stmt.orelse;
+  NodeId elsebody = 0;
+  if (ch_list != 0) {
+    vector<NodeId> elsebodyl = visitStmtAsdl(ch_list);
+    elsebody = pBuilder.buildSuite(elsebodyl);
+  }
+
+  build_object = true;
+  NodeId target = visitExpr(stmt.target);
+  build_object = false;
+  vector<NodeId> target_list;
+  target_list.push_back(target);
+  NodeId targetl = pBuilder.buildTargetList(target_list);
+
+  NodeId expression = visitExpr(stmt.iter);
+  vector<NodeId> expression_list;
+  expression_list.push_back(expression);
+  NodeId expressionl = pBuilder.buildExpressionList(expression_list, false);
+
+  parentNid = pBuilder.buildFor(targetl, body, elsebody, expressionl, isAsync);
+
+  build_object = prev_state;
+
+  return parentNid;
+}
+
+template<typename T>
+NodeId ASTVisitor::visitWith(const T& stmt, bool isAsync) {
+  asdl_seq * ch_list;
+  NodeId body = 0;
+  vector<NodeId> items;
+
+  ch_list = stmt.body;
+  if (ch_list != 0) {
+    vector<NodeId> bodyl = visitStmtAsdl(ch_list);
+    body = pBuilder.buildSuite(bodyl);
+  }
+
+#ifdef PY3
+  ch_list = stmt.items;
+  if (ch_list != 0) {
+    for (int i = 0; i < (ch_list->size); i++) {
+      withitem_ty item = static_cast<withitem_ty>(ch_list->elements[i]);
+      NodeId context_expr = visitExpr(item->context_expr);
+      NodeId optional_vars = visitExpr(item->optional_vars);
+      items.push_back(pBuilder.buildWithItem(context_expr, optional_vars));
+    }
+  }
+#else
+  NodeId context_expr = visitExpr(stmt.context_expr);
+  NodeId optional_vars = visitExpr(stmt.optional_vars);
+  items.push_back(pBuilder.buildWithItem(context_expr, optional_vars));
+#endif
+
+  return pBuilder.buildWith(body, items, isAsync);
 }
 
 
@@ -597,72 +800,14 @@ NodeId ASTVisitor::visitStmt(stmt_ty parent) {
   EXCEPTION_LOC_BEGIN
 
     switch (parent->kind) {
-    case FunctionDef_kind: 
-      {
-        std::map<std::string, NodeId> local_objects;
-        std::set<std::string> local_globals;
-        std::map<NodeId, bool> local_build_objects;
-        std::multimap<std::string, NodeId> temp_local_objects;
-        vector<NodeId> decorator_list;
-
-        objects.push_back(pair<std::map<std::string, NodeId>*, NodeKind>(&local_objects, ndkFunctionDef));
-        temp_objects.push_back(&temp_local_objects);
-        global_list.push_back(&local_globals);
-        reverse_edge_objects.push_back(&local_build_objects);
-
-        NodeId suiteNid = 0;
-        std::string str;
-
-        arguments_ty temp = parent->v.FunctionDef.args;
-        vector<NodeId> args;
-        if (temp != 0) {
-          args = visitParameterListAsdl(temp);
-        }
-
-        ch_list = parent->v.FunctionDef.body;
-        bool prev_state = collect_objects;
-        collect_objects = true;
-
-        NodeId docstring = getDocstring(ch_list);
-        vector<NodeId> body = visitStmtAsdl(ch_list, docstring);
-        collect_objects = prev_state;
-        suiteNid = pBuilder.buildSuite(body);
-
-        identifier tempx = parent->v.FunctionDef.name;
-        if (tempx != 0) {
-          str.assign(PyString_AS_STRING(tempx));
-        }
-
-        ch_list = parent->v.FunctionDef.decorator_list;
-        if (ch_list != 0) {
-          decorator_list = visitExprAsdl(parent->v.FunctionDef.decorator_list);
-        }
-
-        buildLocalObjects();
-
-        std::vector<NodeId> object;
-        for(std::map<std::string, NodeId>::iterator it = local_objects.begin(); it != local_objects.end(); ++it){
-          object.push_back((*it).second);
-        }
-
-        objects.pop_back();
-        temp_objects.pop_back();
-        global_list.pop_back();
-        reverse_edge_objects.pop_back();
-
-        NodeId objNid = 0;
-        if( objects.back().first->find(str) == objects.back().first->end() ){
-          objNid = pBuilder.buildObject(str);
-          objects.back().first->insert( pair<std::string,NodeId>(str,objNid) );
-        }else{
-          std::map<std::string, NodeId>::iterator it = objects.back().first->find(str);
-          objNid = (*it).second;
-        }
-
-        parentNid = pBuilder.buildFunctionDef(str, docstring, suiteNid, args, decorator_list, object, objNid, 0);
-        pBuilder.AddObjectRef(objNid, parentNid);
-      }
+    case FunctionDef_kind:
+      parentNid = visitFunctionDef(parent->v.FunctionDef, false);
       break;
+#ifdef PY3
+    case AsyncFunctionDef_kind:
+      parentNid = visitFunctionDef(parent->v.AsyncFunctionDef, true);
+      break;
+#endif
     case ClassDef_kind:
       {
         vector<NodeId> decorator_list;
@@ -697,6 +842,14 @@ NodeId ASTVisitor::visitStmt(stmt_ty parent) {
           decorator_list = visitExprAsdl(parent->v.ClassDef.decorator_list);
         }
 
+        vector<NodeId> keywords;
+#ifdef PY3
+        ch_list = parent->v.ClassDef.keywords;
+        if (ch_list != 0) {
+          keywords = visitKeywordAsdl(ch_list);
+        }
+#endif
+
         buildLocalObjects();
 
         std::vector<NodeId> object;
@@ -718,7 +871,7 @@ NodeId ASTVisitor::visitStmt(stmt_ty parent) {
           objNid = (*it).second;
         }
 
-        parentNid = pBuilder.buildClassDef(name, docstring, suiteNid, bases, decorator_list, object, objNid, 0 );
+        parentNid = pBuilder.buildClassDef(name, docstring, suiteNid, bases, keywords, decorator_list, object, objNid, 0 );
         pBuilder.AddObjectRef(objNid, parentNid);
       }
       break;
@@ -768,6 +921,21 @@ NodeId ASTVisitor::visitStmt(stmt_ty parent) {
         parentNid = pBuilder.buildAugAssign(tglist, value, assignment_map[parent->v.AugAssign.op]);
       }
       break;
+#ifdef PY3
+    case AnnAssign_kind:
+      {
+        NodeId target = visitExpr(parent->v.AnnAssign.target);
+        vector<NodeId> list;
+        list.push_back(target);
+        NodeId tglist = pBuilder.buildTargetList(list);
+        NodeId value = visitExpr(parent->v.AnnAssign.value);
+        NodeId annotation = visitExpr(parent->v.AnnAssign.annotation);
+        bool simple = parent->v.AnnAssign.simple != 0;
+
+        parentNid = pBuilder.buildAnnAssign(tglist, value, annotation, simple);
+      }
+      break;
+#endif
 #ifndef PY3
     case Print_kind:
       {
@@ -781,38 +949,13 @@ NodeId ASTVisitor::visitStmt(stmt_ty parent) {
       break;
 #endif
     case For_kind:
-      {
-        bool prev_state = build_object;
-        build_object = false;
-
-        ch_list = parent->v.For.body;
-        vector<NodeId> bodyl = visitStmtAsdl(ch_list);
-        NodeId body = pBuilder.buildSuite(bodyl);
-
-        ch_list = parent->v.For.orelse;
-        NodeId elsebody = 0;
-        if(ch_list != 0){
-          vector<NodeId> elsebodyl = visitStmtAsdl(ch_list);
-          elsebody = pBuilder.buildSuite(elsebodyl);
-        }
-
-        build_object = true;
-        NodeId target = visitExpr(parent->v.For.target);
-        build_object = false;
-        vector<NodeId> target_list;
-        target_list.push_back(target);
-        NodeId targetl = pBuilder.buildTargetList(target_list);
-
-        NodeId expression = visitExpr(parent->v.For.iter);
-        vector<NodeId> expression_list;
-        expression_list.push_back(expression);
-        NodeId expressionl = pBuilder.buildExpressionList(expression_list, false);
-
-        parentNid = pBuilder.buildFor(targetl, body, elsebody, expressionl);
-
-        build_object = prev_state;
-      }
+      parentNid = visitFor(parent->v.For, false);
       break;
+#ifdef PY3
+    case AsyncFor_kind:
+      parentNid = visitFor(parent->v.AsyncFor, true);
+      break;
+#endif
     case While_kind:
       {
         ch_list = parent->v.While.body;
@@ -850,44 +993,31 @@ NodeId ASTVisitor::visitStmt(stmt_ty parent) {
       }
       break;
     case With_kind:
-      {
-        NodeId body = 0;
-        ch_list = parent->v.With.body;
-        if(ch_list != 0) {
-          vector<NodeId> bodyl = visitStmtAsdl(ch_list);
-          body = pBuilder.buildSuite(bodyl);
-        }
-
-#ifdef PY3
-        NodeId context_expr = 0;
-        NodeId optional_vars = 0;
-#else
-        NodeId context_expr = visitExpr(parent->v.With.context_expr);
-        NodeId optional_vars = visitExpr(parent->v.With.optional_vars);
-#endif
-
-        parentNid = pBuilder.buildWith(body, optional_vars, context_expr);
-
-      }
+      parentNid = visitWith(parent->v.With, false);
       break;
+#ifdef PY3
+    case AsyncWith_kind:
+      parentNid = visitWith(parent->v.AsyncWith, true);
+      break;
+#endif
     case Raise_kind:
       {
 #ifdef PY3
-        NodeId type = 0;
-        NodeId traceback = 0;
-        NodeId value = 0;
+        NodeId exception = visitExpr(parent->v.Raise.exc);
+        NodeId cause = visitExpr(parent->v.Raise.cause);
+        parentNid = pBuilder.buildRaise3(exception, cause);
 #else
         NodeId type = visitExpr(parent->v.Raise.type);
         NodeId traceback = visitExpr(parent->v.Raise.tback);
         NodeId value = visitExpr(parent->v.Raise.inst);
-#endif
         parentNid = pBuilder.buildRaise(type, value, traceback);
+#endif
       }
       break;
 #ifdef PY3
     case Try_kind:
       {
-        NodeId body = 0, orelse = 0;
+        NodeId body = 0, orelse = 0, finally_body = 0;
         vector<NodeId> handlerl;
 
         ch_list = parent->v.Try.body;
@@ -907,7 +1037,13 @@ NodeId ASTVisitor::visitStmt(stmt_ty parent) {
           orelse = pBuilder.buildSuite(orelsel);
         }
 
-        parentNid = pBuilder.buildTryExcept(handlerl, body, orelse);
+        ch_list = parent->v.Try.finalbody;
+        if (ch_list != 0) {
+          vector<NodeId> finally_bodyl = visitStmtAsdl(ch_list);
+          finally_body = pBuilder.buildSuite(finally_bodyl);
+        }
+
+        parentNid = pBuilder.buildTry(body, handlerl, orelse, finally_body);
       }
       break;
 #else
@@ -933,7 +1069,6 @@ NodeId ASTVisitor::visitStmt(stmt_ty parent) {
           vector<NodeId> orelsel = visitStmtAsdl(ch_list);
           orelse = pBuilder.buildSuite(orelsel);
         }
-
 
         parentNid = pBuilder.buildTryExcept(handlerl, body, orelse);
       }
@@ -1010,9 +1145,29 @@ NodeId ASTVisitor::visitStmt(stmt_ty parent) {
         parentNid = pBuilder.buildGlobal(args);
       }
       break;
+#ifdef PY3
+    case Nonlocal_kind:
+      {
+        ch_list = parent->v.Nonlocal.names;
+        vector<NodeId> args = visitIdentifierAsdl(ch_list);
+
+        // TODO pantos
+        //fixme: better solution?
+        int offset = parent->col_offset + 9; // +9 for: "nonlocal "
+        for (vector<NodeId>::iterator beginIt = args.begin(); beginIt != args.end(); ++beginIt) {
+          expression::Identifier& id = dynamic_cast<expression::Identifier&>(pBuilder.getFactory()->getRef(*beginIt));
+          int nameSize = id.getName().size();
+          pBuilder.setIncreasedPosition(id.getId(), parent->lineno, offset, parent->lineno, offset + nameSize);
+          offset += nameSize + 2; // +2 for: ", "
+        }
+
+        parentNid = pBuilder.buildNonlocal(args);
+      }
+      break;
+#endif
     case Expr_kind:
       {
-        parentNid = visitExpr(parent->v.Expr.value);
+        parentNid = visitExpr(parent->v.Expr.value); // it's an expression statement
       }
       break;
     case Pass_kind:
@@ -1095,19 +1250,14 @@ NodeId ASTVisitor::visitStmt(stmt_ty parent) {
       }
     }
 
-    if (Common::getIsTryFinal(node)){
-      statement::TryFinal& tryFinal = static_cast<statement::TryFinal&>(node);
-      body = tryFinal.getFinallyBody();
-    }
-
-    if (Common::getIsTryExcept(node)){
-      statement::TryExcept& tryExcept = static_cast<statement::TryExcept&>(node);
-      if (tryExcept.getFinallyBody()) {
-        body = tryExcept.getFinallyBody();
-      } else if (tryExcept.getElseBody()) {
-        body = tryExcept.getElseBody();
-      } else if (!tryExcept.getHandlerIsEmpty()) {
-        python::asg::ListIterator<python::asg::statement::Handler> handlerItEnd = tryExcept.getHandlerListIteratorEnd();
+    if (Common::getIsTry(node)) {
+      statement::Try& tryStm = static_cast<statement::Try&>(node);
+      if (tryStm.getFinallyBody()) {
+        body = tryStm.getFinallyBody();
+      } else if (tryStm.getElseBody()) {
+        body = tryStm.getElseBody();
+      } else if (!tryStm.getHandlerIsEmpty()) {
+        python::asg::ListIterator<python::asg::statement::Handler> handlerItEnd = tryStm.getHandlerListIteratorEnd();
         --handlerItEnd;
         body = handlerItEnd->getExceptBody();
       }
@@ -1119,6 +1269,35 @@ NodeId ASTVisitor::visitStmt(stmt_ty parent) {
     }
 
     pBuilder.setIncreasedPosition(parentNid, parent->lineno, parent->col_offset, endLine, endCol);
+  }
+
+  {
+    // fix start position of decorated classdef and functiondef nodes
+    if (Common::getIsClassDef(node)) {
+      statement::ClassDef& stmt = static_cast<statement::ClassDef&>(node);
+      Range stmtPos = stmt.getPosition();
+      if (!stmt.getDecoratorIsEmpty()) {
+        const expression::Expression& dec = *stmt.getDecoratorListIteratorBegin();
+        const Range& decPos = dec.getPosition();
+        if (decPos.getLine() < stmtPos.getLine()) {
+          stmtPos.setLine(decPos.getLine());
+          stmtPos.setCol(decPos.getCol() - 1); // -1 because of the '@' sign
+          stmt.setPosition(stmtPos);
+        }
+      }
+    } else if (Common::getIsFunctionDef(node)) {
+      statement::FunctionDef& stmt = static_cast<statement::FunctionDef&>(node);
+      Range stmtPos = stmt.getPosition();
+      if (!stmt.getDecoratorIsEmpty()) {
+        const expression::Expression& dec = *stmt.getDecoratorListIteratorBegin();
+        const Range& decPos = dec.getPosition();
+        if (decPos.getLine() < stmtPos.getLine()) {
+          stmtPos.setLine(decPos.getLine());
+          stmtPos.setCol(decPos.getCol() - 1); // -1 because of the '@' sign
+          stmt.setPosition(stmtPos);
+        }
+      }
+    }
   }
 
   if (Common::getIsFunctionDef(node)){
@@ -1150,7 +1329,6 @@ NodeId ASTVisitor::visitStmt(stmt_ty parent) {
 
 NodeId ASTVisitor::visitExpr(expr_ty parent) {
   NodeId parentNid = 0;
-
   if (parent == 0) {
     return parentNid;
   }
@@ -1165,6 +1343,16 @@ NodeId ASTVisitor::visitExpr(expr_ty parent) {
         parentNid = pBuilder.buildBinaryLogical(values, boolop_map[parent->v.BoolOp.op]);
       }
       break;
+#ifdef PY3
+    case NamedExpr_kind:
+      {
+        NodeId target = visitExpr(parent->v.NamedExpr.target);
+        NodeId value = visitExpr(parent->v.NamedExpr.value);
+
+        parentNid = pBuilder.buildNamedExpr(target, value);
+      }
+      break;
+#endif
     case BinOp_kind:
       {
         NodeId left = visitExpr(parent->v.BinOp.left);
@@ -1267,17 +1455,28 @@ NodeId ASTVisitor::visitExpr(expr_ty parent) {
         parentNid = pBuilder.buildGeneratorExpression(elt, generators);
       }
       break;
-    case Yield_kind:
+#ifdef PY3
+    case Await_kind:
       {
-        vector<NodeId> list;
-        if (parent->v.Yield.value) {
-          NodeId value = visitExpr(parent->v.Yield.value);
-          list.push_back(value);
-        }
-        NodeId exprl = pBuilder.buildExpressionList(list, true);
-        parentNid = pBuilder.buildYield(exprl);
+        NodeId value = visitExpr(parent->v.Await.value);
+        parentNid = pBuilder.buildAwait(value);
       }
       break;
+#endif
+    case Yield_kind:
+      {
+        NodeId expr = visitExpr(parent->v.Yield.value);
+        parentNid = pBuilder.buildYield(expr, false);
+      }
+      break;
+#ifdef PY3
+    case YieldFrom_kind:
+      {
+        NodeId expr = visitExpr(parent->v.YieldFrom.value);
+        parentNid = pBuilder.buildYield(expr, true);
+      }
+      break;
+#endif
     case Compare_kind:
       {
         NodeId left = visitExpr(parent->v.Compare.left);
@@ -1365,6 +1564,7 @@ NodeId ASTVisitor::visitExpr(expr_ty parent) {
       }
       break;
 #endif
+#ifndef PY3
     case Num_kind:
       {
         if(PyFloat_Check(parent->v.Num.n)){
@@ -1380,26 +1580,72 @@ NodeId ASTVisitor::visitExpr(expr_ty parent) {
         }
       }
       break;
+#endif
+#ifndef PY3
     case Str_kind:
       {
-        std::string str;
-#ifdef PY3
-        // TODO unicodes
-        // it fails for e.g. "\uDC80", "\N{EMPTY SET}"
-        const char *s = PyString_AS_STRING(parent->v.Str.s);
-        if (s)
-          str = std::string(s);
-#else
-        std::string type(parent->v.Str.s->ob_type->tp_name);
-        if(type.compare("unicode") == 0)
-          str = std::string(PyString_AS_STRING(PyUnicode_AsUTF8String(parent->v.Str.s)));
-        else if(type.compare("str") == 0)
-          str = std::string(PyString_AS_STRING(parent->v.Str.s));
-#endif
-
+        std::string str = PyObjectToString(parent->v.Str.s);
         parentNid = pBuilder.buildStringLiteral(str);
       }
       break;
+#endif
+#ifdef PY3
+    case FormattedValue_kind:
+      {
+        NodeId value = visitExpr(parent->v.FormattedValue.value);
+        int conversion = parent->v.FormattedValue.conversion;
+        NodeId format_spec = visitExpr(parent->v.FormattedValue.format_spec);
+
+        parentNid = pBuilder.buildFormattedValue(value, format_spec, conversion);
+      }
+      break;
+    case JoinedStr_kind:
+      {
+        vector<NodeId> values = visitExprAsdl(parent->v.JoinedStr.values);
+        parentNid = pBuilder.buildJoinedStr(values);
+      }
+      break;
+#endif
+#ifdef PY3
+    case Constant_kind:
+      {
+        // TODO kind is always null ?? except for unicodes (where its 'u')
+        std::string name = "";
+        PyObject *o = parent->v.Constant.value;
+        if (o == Py_None)
+          name = "None";
+        else if (o == Py_True)
+          name = "True";
+        else if (o == Py_False)
+          name = "False";
+
+        if (!name.empty()) {
+          parentNid = pBuilder.buildIdentifier(name, 0);
+        } else if (o == Py_Ellipsis) {
+          parentNid = pBuilder.buildEllipsis();
+        } else if (PyBytes_CheckExact(o)) {
+          PyObject* repr = PyObject_Repr(o);
+          PyObject* enc = PyUnicode_AsEncodedString(repr, "utf-8", "~E~");
+          std::string str = std::string(PyBytes_AS_STRING(enc));
+          Py_XDECREF(enc);
+          Py_XDECREF(repr);
+          parentNid = pBuilder.buildBytesLiteral(str);
+        } else if (PyFloat_Check(o)) {
+          float x = static_cast<float>(PyFloat_AS_DOUBLE(o));
+          parentNid = pBuilder.buildFloatNumber(x);
+        } else if (PyComplex_Check(o)) {
+          Py_complex z;
+          z = PyComplex_AsCComplex(o);
+          parentNid = pBuilder.buildImagNumber(z.imag, z.real);
+        } else if (PyLong_Check(o)) {
+          int x = static_cast<int>(PyLong_AsLongLong(o)); // TODO signed/unsigned int/long/long long
+          parentNid = pBuilder.buildIntegerLiteral(x);
+        } else {
+          parentNid = pBuilder.buildStringLiteral(PyObjectToString(o));
+        }
+      }
+      break;
+#endif
     case Attribute_kind:
       {
         NodeId primary = visitExpr(parent->v.Attribute.value);
@@ -1419,6 +1665,14 @@ NodeId ASTVisitor::visitExpr(expr_ty parent) {
         parentNid = pBuilder.buildSubscription(sliceNid, value);
       }
       break;   
+#ifdef PY3
+    case Starred_kind:
+      {
+        NodeId value = visitExpr(parent->v.Starred.value);
+        parentNid = pBuilder.buildStarred(value);
+      }
+      break;
+#endif
     case Name_kind:
       {
         std::string str(PyString_AS_STRING(parent->v.Name.id));
@@ -1471,24 +1725,6 @@ NodeId ASTVisitor::visitExpr(expr_ty parent) {
       }
       break;
 #ifdef PY3
-    case NameConstant_kind:
-      {
-        std::string name = "";
-        PyObject *o = parent->v.NameConstant.value;
-        if (o == Py_None)
-          name = "None";
-        else if (o == Py_True)
-          name = "True";
-        else if (o == Py_False)
-          name = "False";
-
-        if (!name.empty())
-          parentNid = pBuilder.buildIdentifier(name, 0);
-        else
-          parentNid = pBuilder.buildStringLiteral("");
-      }
-      break;
-    default:
       parentNid = pBuilder.buildStringLiteral("");
       break;
 #endif
@@ -1508,7 +1744,7 @@ NodeId ASTVisitor::visitSlice(slice_ty parent) {
 
   switch (parent->kind) {
 #ifndef PY3
-  case Ellipsis_kind:
+  case Ellipsis_kind: // TODO it's expr in py3
     {
       parentNid = pBuilder.buildEllipsis();
     }
@@ -1576,6 +1812,27 @@ NodeId ASTVisitor::visitSlice(slice_ty parent) {
   return parentNid;
 }
 
+#ifdef PY3
+void ASTVisitor::visitArg(vector<NodeId>& params, arg_ty parent, python::asg::ParameterKind kind) {
+  std::string name(PyString_AS_STRING(parent->arg));
+  NodeId annotation = 0;
+  if (parent->annotation) {
+    annotation = visitExpr(parent->annotation);
+  }
+  NodeId param = createParamAndObject(name, kind, annotation);
+  // TODO endline and endcol for "arg" type
+  pBuilder.setIncreasedPosition(param, parent->lineno, parent->col_offset, parent->lineno, parent->col_offset + name.size());
+  params.push_back(param);
+}
+
+void ASTVisitor::visitArg(vector<NodeId>& params, asdl_seq* parent, python::asg::ParameterKind kind){
+  for (int i = 0; i < (parent->size); i++) {
+    arg_ty arg = static_cast<arg_ty>(parent->elements[i]);
+    visitArg(params, arg, kind);
+  }
+}
+#endif
+
 NodeId ASTVisitor::getDocstring(asdl_seq* ch_list){
   stmt_ty stmt = 0;
   if (ch_list != 0) {
@@ -1589,19 +1846,12 @@ NodeId ASTVisitor::getDocstring(asdl_seq* ch_list){
   NodeId docstring = 0;
   if (stmt->kind == Expr_kind){
     expr_ty expr = stmt->v.Expr.value;
-    if (expr->kind == Str_kind){
-      std::string str;
 #ifdef PY3
-      // TODO unicodes
-      const char *s = PyString_AS_STRING(expr->v.Str.s);
-      if (s)
-        str = std::string(s);
+    if (expr->kind == Constant_kind) {
+      std::string str = PyObjectToString(expr->v.Constant.value);
 #else
-      std::string type(expr->v.Str.s->ob_type->tp_name);
-      if(type.compare("unicode") == 0)
-        str = std::string(PyString_AS_STRING(PyUnicode_AsUTF8String(expr->v.Str.s)));
-      else if(type.compare("str") == 0)
-        str = std::string(PyString_AS_STRING(expr->v.Str.s));
+    if (expr->kind == Str_kind) {
+      std::string str = PyObjectToString(expr->v.Str.s);
 #endif
 
       int lineBreaks = static_cast<int>(std::count(str.begin(), str.end(), '\n'));

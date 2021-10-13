@@ -38,7 +38,7 @@ namespace expression {
   * (missing)
   * 
   * Edges:
-  *   - hasProperties (expression::Property, multiple) : (missing)
+  *   - hasProperties (base::Positioned, multiple) : (missing)
   */
   class ObjectExpression : public Expression {
     protected:
@@ -58,12 +58,12 @@ namespace expression {
 
     private:
       /**
-      * \brief This function always throws a JavaScriptException due to copying is not allowed!
+      * \brief This function always throws a JavascriptException due to copying is not allowed!
       */
       ObjectExpression & operator=(const ObjectExpression&);
 
       /**
-      * \brief This function always throws a JavaScriptException due to copying is not allowed!
+      * \brief This function always throws a JavascriptException due to copying is not allowed!
       */
       ObjectExpression(const ObjectExpression&);
 
@@ -107,13 +107,13 @@ namespace expression {
       * \brief Gives back iterator for the hasProperties edges.
       * \return Returns an iterator for the hasProperties edges.
       */
-      ListIterator<expression::Property> getPropertiesListIteratorBegin() const;
+      ListIterator<base::Positioned> getPropertiesListIteratorBegin() const;
 
       /**
       * \brief Gives back iterator for the hasProperties edges.
       * \return Returns an iterator for the hasProperties edges.
       */
-      ListIterator<expression::Property> getPropertiesListIteratorEnd() const;
+      ListIterator<base::Positioned> getPropertiesListIteratorEnd() const;
 
       /**
       * \brief Tells whether the node has hasProperties edges or not.
@@ -134,7 +134,7 @@ namespace expression {
       * \brief Adds a new hasProperties edge to the node and inserts it after the other ones.
       * \param node [in] The end point of the new hasProperties edge.
       */
-      void addProperties(const Property *node);
+      void addProperties(const base::Positioned *node);
 
       /**
       * \brief Adds a new hasProperties edge to the node and inserts it after the other ones.
@@ -152,14 +152,14 @@ namespace expression {
       * \brief Remove the hasProperties edge from the node.
       * \param node [in] The end point of the hasProperties edge.
       */
-      void removeProperties(Property *node);
+      void removeProperties(base::Positioned *node);
 
     protected:
 
       // ---------- Edges ----------
 
       /** \internal \brief Container stores the id of the nodes the hasProperties edge points to. */
-      ListIterator<expression::Property>::Container hasPropertiesContainer;
+      ListIterator<base::Positioned>::Container hasPropertiesContainer;
 
     public:
 

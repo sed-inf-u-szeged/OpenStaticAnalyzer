@@ -40,5 +40,20 @@ DEFINETASK(GraphMergeTask);
 DEFINETASK(MetricHunterTask);
 DEFINETASK(GraphDumpTask);
 DEFINETASK(CleanResultsTask);
+DEFINETASK(Sonar2GraphTask);
+DEFINETASK(LIM2PatternsTask)
+
+class UserDefinedMetricsTask : public columbus::controller::Task
+{
+private:
+  std::list<std::string>& inactives;
+public:
+  const static std::string name;
+  UserDefinedMetricsTask(std::list<std::string>& inactives, const Properties& properties);
+  virtual ExecutionResult execute();
+  virtual const std::string& getName() const {
+    return name;
+  }
+};
 
 #endif

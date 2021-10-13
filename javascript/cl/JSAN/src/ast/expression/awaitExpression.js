@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var awaitExpr = factory.createAwaitExpressionWrapper(factory);
+        var awaitExpr = factory.createAwaitExpressionWrapper();
         globals.setPositionInfo(node, awaitExpr);
         return awaitExpr;
     } else {
@@ -34,15 +34,10 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.argument != null) {
             var argumentWrapper = globals.getWrapperOfNode(node.argument);
-            if (node.argument.type !== "Literal") {
-                var argumentWrapperFunctionString = "setArgument" + node.argument.type;
-            } else {
-                var argumentWrapperFunctionString = "setArgument" + globals.getLiteralType(node.argument) + node.argument.type;
-            }
             try {
-                awaitExprWrapper[argumentWrapperFunctionString](argumentWrapper);
+                awaitExprWrapper.setArgument(argumentWrapper);
             } catch (e) {
-                console.error("SPREADELEMENT - Function not exist: spreadElementWrapper." + argumentWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("SPREADELEMENT - Could not set argument! Reason of the error: " + e + "\n");
             }
         }
 

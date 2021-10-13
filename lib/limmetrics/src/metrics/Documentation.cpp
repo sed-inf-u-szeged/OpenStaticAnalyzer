@@ -250,6 +250,7 @@ namespace columbus { namespace lim { namespace metrics {
       Language l = file.getFactory().getLanguage();
       if ( l != limLangC && l != limLangCpp && l != limLangPython ) return;
       
+      this->shared->files[&file].ints["CLOC"] = file.getCLOC();
       addMetric( node, (int) file.getCLOC() );
     });
 
@@ -289,8 +290,31 @@ namespace columbus { namespace lim { namespace metrics {
     // Same for Classes and Packages, see translateLevel
     propagateScopeInt( phaseFinalize, NTYPE_LIM_METHOD, limLangOther );
 
+
+
     // Component level
-    propagateComponentInt();
+    registerHandler(phaseFinalize, NTYPE_LIM_COMPONENT, limLangOther, false, [this, shared](NodeWrapper& node)
+    {
+      const base::Component* component = &node.getLimNode<base::Component>();
+      const base::Base* ptr = &node.getLimNode<base::Base>();
+      Info& info = this->shared->components.map[ptr];
+      int value = 0;
+
+      Language l = component->getFactory().getLanguage();
+      // The <System> component is treated differently, as the Int metrics cannot be simply summed up from the subscomponents.
+      // Since File-level CLOC is temporarily available in C/C++/Python only we use this for only those languages yet!!
+      if (((l == limLangC) || (l == limLangCpp) || (l == limLangPython)) &&
+          !component->getContainsIsEmpty())
+      {
+        for (auto fileInfo : shared->files)
+          value += fileInfo.second.ints["CLOC"];
+      }
+      else
+      {
+        value = info.ints[this->name];
+      }
+      addMetric(node, value);
+    });
   }
 
   const string& TCLOC::translateLevel( Language language, const string& level ) const {
@@ -667,7 +691,10 @@ namespace columbus { namespace lim { namespace metrics {
         int c = this->shared->components.map[&component].ints[this->CLOC];
         int l = (component.*(this->componentLLOC))();
 
-        addMetric( node, c / (float)(c+l) );
+        int denom = c + l;
+        double cd = ( denom == 0 ) ? 0.0 : ( c / (double)denom );
+
+        addMetric( node, cd );
 
       });
 

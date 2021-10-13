@@ -80,6 +80,10 @@ void VisitorFilter::visitEnd(const expression::ConditionalExpressionSyntax& node
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const expression::DeclarationExpressionSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const expression::DefaultExpressionSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
@@ -108,6 +112,10 @@ void VisitorFilter::visitEnd(const expression::ImplicitElementAccessSyntax& node
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const expression::InitializerExpressionSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
@@ -117,6 +125,10 @@ void VisitorFilter::visitEnd(const expression::InterpolatedStringExpressionSynta
 }
 
 void VisitorFilter::visitEnd(const expression::InvocationExpressionSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const expression::IsPatternExpressionSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
@@ -184,7 +196,19 @@ void VisitorFilter::visitEnd(const expression::QueryExpressionSyntax& node , boo
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const expression::RangeExpressionSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const expression::RefExpressionSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const expression::RefTypeExpressionSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const expression::RefTypeSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
@@ -204,7 +228,23 @@ void VisitorFilter::visitEnd(const expression::StackAllocArrayCreationExpression
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const expression::SwitchExpressionSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const expression::ThisExpressionSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const expression::ThrowExpressionSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const expression::TupleExpressionSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const expression::TupleTypeSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
@@ -248,6 +288,10 @@ void VisitorFilter::visitEnd(const statement::ForEachStatementSyntax& node , boo
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const statement::ForEachVariableStatementSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const statement::ForStatementSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
@@ -265,6 +309,10 @@ void VisitorFilter::visitEnd(const statement::LabeledStatementSyntax& node , boo
 }
 
 void VisitorFilter::visitEnd(const statement::LocalDeclarationStatementSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const statement::LocalFunctionStatementSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
@@ -364,6 +412,10 @@ void VisitorFilter::visitEnd(const structure::BracketedParameterListSyntax& node
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const structure::CasePatternSwitchLabelSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const structure::CaseSwitchLabelSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
@@ -389,6 +441,10 @@ void VisitorFilter::visitEnd(const structure::ClassOrStructConstraintSyntax& nod
 }
 
 void VisitorFilter::visitEnd(const structure::CompilationUnitSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const structure::ConstantPatternSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
@@ -424,6 +480,10 @@ void VisitorFilter::visitEnd(const structure::CrefParameterSyntax& node , bool c
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const structure::DeclarationPatternSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const structure::DefaultSwitchLabelSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
@@ -433,6 +493,14 @@ void VisitorFilter::visitEnd(const structure::DelegateDeclarationSyntax& node , 
 }
 
 void VisitorFilter::visitEnd(const structure::DestructorDeclarationSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const structure::DiscardDesignationSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const structure::DiscardPatternSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
@@ -576,7 +644,19 @@ void VisitorFilter::visitEnd(const structure::ParameterSyntax& node , bool callV
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const structure::ParenthesizedVariableDesignationSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const structure::PositionalPatternClauseSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const structure::PropertyDeclarationSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const structure::PropertyPatternClauseSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
@@ -592,6 +672,10 @@ void VisitorFilter::visitEnd(const structure::QueryContinuationSyntax& node , bo
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const structure::RecursivePatternSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const structure::SelectClauseSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
@@ -600,7 +684,19 @@ void VisitorFilter::visitEnd(const structure::SimpleBaseTypeSyntax& node , bool 
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const structure::SingleVariableDesignationSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const structure::StructDeclarationSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const structure::SubpatternSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const structure::SwitchExpressionArmSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
@@ -609,6 +705,10 @@ void VisitorFilter::visitEnd(const structure::SwitchSectionSyntax& node , bool c
 }
 
 void VisitorFilter::visitEnd(const structure::SyntaxToken& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const structure::TupleElementSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
@@ -640,11 +740,19 @@ void VisitorFilter::visitEnd(const structure::UsingDirectiveSyntax& node , bool 
   (node.getFactory().*selector)(node.getId());
 }
 
+void VisitorFilter::visitEnd(const structure::VarPatternSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
 void VisitorFilter::visitEnd(const structure::VariableDeclarationSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
 void VisitorFilter::visitEnd(const structure::VariableDeclaratorSyntax& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const structure::WhenClauseSyntax& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 

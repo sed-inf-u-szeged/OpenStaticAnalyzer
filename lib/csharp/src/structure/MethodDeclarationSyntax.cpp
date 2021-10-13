@@ -38,7 +38,6 @@ namespace structure {
     m_identifier(0),
     ConstraintClausesContainer(),
     m_ExplicitInterfaceSpecifier(0),
-    m_ExpressionBody(0),
     m_ReturnType(0)
   {
   }
@@ -55,7 +54,6 @@ namespace structure {
       ConstraintClausesContainer.pop_front();
     }
     removeExplicitInterfaceSpecifier();
-    removeExpressionBody();
     removeReturnType();
     structure::BaseMethodDeclarationSyntax::prepareDelete(false);
   }
@@ -111,16 +109,6 @@ namespace structure {
     return _node;
   }
 
-  structure::ArrowExpressionClauseSyntax* MethodDeclarationSyntax::getExpressionBody() const {
-    structure::ArrowExpressionClauseSyntax *_node = NULL;
-    if (m_ExpressionBody != 0)
-      _node = dynamic_cast<structure::ArrowExpressionClauseSyntax*>(factory->getPointer(m_ExpressionBody));
-    if ( (_node == NULL) || factory->getIsFiltered(_node))
-      return NULL;
-
-    return _node;
-  }
-
   expression::TypeSyntax* MethodDeclarationSyntax::getReturnType() const {
     expression::TypeSyntax *_node = NULL;
     if (m_ReturnType != 0)
@@ -138,9 +126,6 @@ namespace structure {
         return true;
       case edkMethodDeclarationSyntax_ExplicitInterfaceSpecifier:
         setExplicitInterfaceSpecifier(edgeEnd);
-        return true;
-      case edkMethodDeclarationSyntax_ExpressionBody:
-        setExpressionBody(edgeEnd);
         return true;
       case edkMethodDeclarationSyntax_ReturnType:
         setReturnType(edgeEnd);
@@ -161,9 +146,6 @@ namespace structure {
         return true;
       case edkMethodDeclarationSyntax_ExplicitInterfaceSpecifier:
         removeExplicitInterfaceSpecifier();
-        return true;
-      case edkMethodDeclarationSyntax_ExpressionBody:
-        removeExpressionBody();
         return true;
       case edkMethodDeclarationSyntax_ReturnType:
         removeReturnType();
@@ -269,52 +251,6 @@ namespace structure {
           factory->reverseEdges->removeEdge(m_ExplicitInterfaceSpecifier, m_id, edkMethodDeclarationSyntax_ExplicitInterfaceSpecifier);
       }
       m_ExplicitInterfaceSpecifier = 0;
-  }
-
-  void MethodDeclarationSyntax::setExpressionBody(NodeId _id) {
-    structure::ArrowExpressionClauseSyntax *_node = NULL;
-    if (_id) {
-      if (!factory->getExist(_id))
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
-
-      _node = dynamic_cast<structure::ArrowExpressionClauseSyntax*> (factory->getPointer(_id));
-      if ( _node == NULL) {
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
-      }
-      if (&(_node->getFactory()) != this->factory)
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
-
-      if (m_ExpressionBody) {
-        removeParentEdge(m_ExpressionBody);
-        if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_ExpressionBody, m_id, edkMethodDeclarationSyntax_ExpressionBody);
-      }
-      m_ExpressionBody = _node->getId();
-      if (m_ExpressionBody != 0)
-        setParentEdge(factory->getPointer(m_ExpressionBody), edkMethodDeclarationSyntax_ExpressionBody);
-      if (factory->getExistsReverseEdges())
-        factory->reverseEdges->insertEdge(m_ExpressionBody, this->getId(), edkMethodDeclarationSyntax_ExpressionBody);
-    } else {
-      if (m_ExpressionBody) {
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
-      }
-    }
-  }
-
-  void MethodDeclarationSyntax::setExpressionBody(structure::ArrowExpressionClauseSyntax *_node) {
-    if (_node == NULL)
-      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
-
-    setExpressionBody(_node->getId());
-  }
-
-  void MethodDeclarationSyntax::removeExpressionBody() {
-      if (m_ExpressionBody) {
-        removeParentEdge(m_ExpressionBody);
-        if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_ExpressionBody, m_id, edkMethodDeclarationSyntax_ExpressionBody);
-      }
-      m_ExpressionBody = 0;
   }
 
   void MethodDeclarationSyntax::setReturnType(NodeId _id) {
@@ -429,7 +365,6 @@ namespace structure {
     binIo.writeUInt4(m_identifier);
 
     binIo.writeUInt4(m_ExplicitInterfaceSpecifier);
-    binIo.writeUInt4(m_ExpressionBody);
     binIo.writeUInt4(m_ReturnType);
 
 
@@ -447,10 +382,6 @@ namespace structure {
     m_ExplicitInterfaceSpecifier =  binIo.readUInt4();
     if (m_ExplicitInterfaceSpecifier != 0)
       setParentEdge(factory->getPointer(m_ExplicitInterfaceSpecifier),edkMethodDeclarationSyntax_ExplicitInterfaceSpecifier);
-
-    m_ExpressionBody =  binIo.readUInt4();
-    if (m_ExpressionBody != 0)
-      setParentEdge(factory->getPointer(m_ExpressionBody),edkMethodDeclarationSyntax_ExpressionBody);
 
     m_ReturnType =  binIo.readUInt4();
     if (m_ReturnType != 0)

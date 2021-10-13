@@ -25,6 +25,7 @@
 #include <rul/inc/RulHandler.h>
 #include "ThresholdReader.h"
 #include "Threshold.h"
+#include <graphsupport/inc/Metric.h>
 
 namespace columbus { namespace rul {
 
@@ -34,6 +35,7 @@ namespace columbus { namespace rul {
     rul::RulHandler *rul;
     std::set<std::string> nodeTypes;
     std::string txtOutputFileName;
+    graphsupport::WarningCache warningCache;
   public:
     int count;
     void addNodeType(std::string& nodeType);

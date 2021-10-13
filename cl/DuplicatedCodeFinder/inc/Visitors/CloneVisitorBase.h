@@ -169,6 +169,7 @@ protected:
   void addPattern(const  Base& n);
 
   void decreaseDepth(const Base& n) ;
+  
 
   void addFileSeparator() ;
 

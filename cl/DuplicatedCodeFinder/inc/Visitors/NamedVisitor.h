@@ -29,10 +29,10 @@ public:
   virtual void visit(const Base& node, bool callVirtualBase = true) {
 #if defined SCHEMA_PYTHON || defined(SCHEMA_CSHARP)
 #if defined SCHEMA_CSHARP
-	std::string name = "";
-	try {
-	  name = AlgorithmCommon::getName(node);
-	} catch (...) {}
+    std::string name = "";
+    try {
+      name = AlgorithmCommon::getName(node);
+    } catch (...) {}
 #elif defined SCHEMA_PYTHON
     std::string name;
     if (node.getParent() != NULL ) {

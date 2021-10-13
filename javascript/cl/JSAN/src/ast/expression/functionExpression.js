@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var functionExpression = factory.createFunctionExpressionWrapper(factory);
+        var functionExpression = factory.createFunctionExpressionWrapper();
         globals.setPositionInfo(node, functionExpression);
         functionExpression.setGenerator(node.generator);
         functionExpression.setExpression(node.expression);
@@ -39,15 +39,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.params.length; i++) {
                 if (node.params[i] != null) {
                     var paramsWrapper = globals.getWrapperOfNode(node.params[i]);
-                    if (node.params[i].type !== "Literal") {
-                        var paramsWrapperFunctionString = "addParams" + node.params[i].type;
-                    } else {
-                        var paramsWrapperFunctionString = "addParams" + globals.getLiteralType(node.params[i]) + node.params[i].type;
-                    }
                     try {
-                        functionExpressionWrapper[paramsWrapperFunctionString](paramsWrapper);
+                        functionExpressionWrapper.addParams(paramsWrapper);
                     } catch (e) {
-                        console.error("FUNCTIONEXPRESSION - Function not exist: functionExpressionWrapper." + paramsWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("FUNCTIONEXPRESSION - Could not add params! Reason of the error: " + e + "\n");
                     }
                 }
             }
@@ -55,29 +50,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.body != null) {
             var bodyWrapper = globals.getWrapperOfNode(node.body);
-            if (node.body.type !== "Literal") {
-                var bodyWrapperFunctionString = "setBody" + node.body.type;
-            } else {
-                var bodyWrapperFunctionString = "setBody" + globals.getLiteralType(node.body) + node.body.type;
-            }
             try {
-                functionExpressionWrapper[bodyWrapperFunctionString](bodyWrapper);
+                functionExpressionWrapper.setBody(bodyWrapper);
             } catch (e) {
-                console.error("FUNCTIONEXPRESSION - Function not exist: functionExpressionWrapper." + bodyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("FUNCTIONEXPRESSION - Could not set body! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.id != null) {
             var identifierWrapper = globals.getWrapperOfNode(node.id);
-            if (node.id.type !== "Literal") {
-                var identifierWrapperFunctionString = "setIdentifier" + node.id.type;
-            } else {
-                var identifierWrapperFunctionString = "setIdentifier" + globals.getLiteralType(node.id) + node.id.type;
-            }
             try {
-                functionExpressionWrapper[identifierWrapperFunctionString](identifierWrapper);
+                functionExpressionWrapper.setIdentifier(identifierWrapper);
             } catch (e) {
-                console.error("FUNCTIONEXPRESSION - Function not exist: functionExpressionWrapper." + identifierWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("FUNCTIONEXPRESSION - Could not set identifier! Reason of the error: " + e + "\n");
             }
         }
 

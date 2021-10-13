@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class SwitchImpl extends BaseImpl implements Switch {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(SwitchImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

@@ -34,4 +34,6 @@
 #define CMSG_STAT_HEADER_LINE                         "Line"
 #define CMSG_STAT_HEADER_DESCRIPTION                  "Description"
 
+#define CMSG_SARIF_OUT_OF_DATE(UID, ATYPE, NAME, CONTEXT)   "Tried to get '" + NAME + "' attribute with conxtext of '" + CONTEXT + "' and a type of '" + ATYPE + "' in " + UID + " node|Attribute"
+
 #endif

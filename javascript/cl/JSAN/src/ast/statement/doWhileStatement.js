@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var doWhileStatement = factory.createDoWhileStatementWrapper(factory);
+        var doWhileStatement = factory.createDoWhileStatementWrapper();
         globals.setPositionInfo(node, doWhileStatement);
         return doWhileStatement;
     } else {
@@ -34,29 +34,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.test != null) {
             var testWrapper = globals.getWrapperOfNode(node.test);
-            if (node.test.type !== "Literal") {
-                var testWrapperFunctionString = "setTest" + node.test.type;
-            } else {
-                var testWrapperFunctionString = "setTest" + globals.getLiteralType(node.test) + node.test.type;
-            }
             try {
-                doWhileStatementWrapper[testWrapperFunctionString](testWrapper);
+                doWhileStatementWrapper.setTest(testWrapper);
             } catch (e) {
-                console.error("DOWHILESTATEMENT - Function not exist: doWhileStatementWrapper." + testWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("DOWHILESTATEMENT - Could not set test! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.body != null) {
             var bodyWrapper = globals.getWrapperOfNode(node.body);
-            if (node.body.type !== "Literal") {
-                var bodyWrapperFunctionString = "setBody" + node.body.type;
-            } else {
-                var bodyWrapperFunctionString = "setBody" + globals.getLiteralType(node.body) + node.body.type;
-            }
             try {
-                doWhileStatementWrapper[bodyWrapperFunctionString](bodyWrapper);
+                doWhileStatementWrapper.setBody(bodyWrapper);
             } catch (e) {
-                console.error("DOWHILESTATEMENT - Function not exist: doWhileStatementWrapper." + bodyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("DOWHILESTATEMENT - Could not set body! Reason of the error: " + e + "\n");
             }
         }
 

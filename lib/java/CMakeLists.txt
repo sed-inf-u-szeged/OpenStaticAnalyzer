@@ -1,5 +1,6 @@
 set (LIBNAME java)
 
+
 set (SOURCES
     src/Factory.cpp
     inc/Factory.h
@@ -61,6 +62,8 @@ set (SOURCES
     inc/base/Positioned.h
     src/base/PositionedWithoutComment.cpp
     inc/base/PositionedWithoutComment.h
+    src/expr/AnnotatedTypeExpression.cpp
+    inc/expr/AnnotatedTypeExpression.h
     src/expr/Annotation.cpp
     inc/expr/Annotation.h
     src/expr/ArrayAccess.cpp
@@ -93,6 +96,8 @@ set (SOURCES
     inc/expr/FieldAccess.h
     src/expr/FloatLiteral.cpp
     inc/expr/FloatLiteral.h
+    src/expr/FunctionalExpression.cpp
+    inc/expr/FunctionalExpression.h
     src/expr/Identifier.cpp
     inc/expr/Identifier.h
     src/expr/InfixExpression.cpp
@@ -101,12 +106,16 @@ set (SOURCES
     inc/expr/InstanceOf.h
     src/expr/IntegerLiteral.cpp
     inc/expr/IntegerLiteral.h
+    src/expr/Lambda.cpp
+    inc/expr/Lambda.h
     src/expr/Literal.cpp
     inc/expr/Literal.h
     src/expr/LongLiteral.cpp
     inc/expr/LongLiteral.h
     src/expr/MarkerAnnotation.cpp
     inc/expr/MarkerAnnotation.h
+    src/expr/MemberReference.cpp
+    inc/expr/MemberReference.h
     src/expr/MethodInvocation.cpp
     inc/expr/MethodInvocation.h
     src/expr/NewArray.cpp
@@ -121,6 +130,8 @@ set (SOURCES
     inc/expr/NumberLiteral.h
     src/expr/ParenthesizedExpression.cpp
     inc/expr/ParenthesizedExpression.h
+    src/expr/PolyExpression.cpp
+    inc/expr/PolyExpression.h
     src/expr/PostfixExpression.cpp
     inc/expr/PostfixExpression.h
     src/expr/PrefixExpression.cpp
@@ -145,12 +156,26 @@ set (SOURCES
     inc/expr/TypeCast.h
     src/expr/TypeExpression.cpp
     inc/expr/TypeExpression.h
+    src/expr/TypeIntersectionExpression.cpp
+    inc/expr/TypeIntersectionExpression.h
     src/expr/TypeUnionExpression.cpp
     inc/expr/TypeUnionExpression.h
     src/expr/Unary.cpp
     inc/expr/Unary.h
     src/expr/WildcardExpression.cpp
     inc/expr/WildcardExpression.h
+    src/module/Exports.cpp
+    inc/module/Exports.h
+    src/module/ModuleDirective.cpp
+    inc/module/ModuleDirective.h
+    src/module/Opens.cpp
+    inc/module/Opens.h
+    src/module/Provides.cpp
+    inc/module/Provides.h
+    src/module/Requires.cpp
+    inc/module/Requires.h
+    src/module/Uses.cpp
+    inc/module/Uses.h
     src/statm/Assert.cpp
     inc/statm/Assert.h
     src/statm/BasicFor.cpp
@@ -247,6 +272,10 @@ set (SOURCES
     inc/struc/MethodDeclaration.h
     src/struc/MethodGeneric.cpp
     inc/struc/MethodGeneric.h
+    src/struc/Module.cpp
+    inc/struc/Module.h
+    src/struc/ModuleDeclaration.cpp
+    inc/struc/ModuleDeclaration.h
     src/struc/NamedDeclaration.cpp
     inc/struc/NamedDeclaration.h
     src/struc/NormalMethod.cpp
@@ -289,12 +318,16 @@ set (SOURCES
     inc/type/FloatType.h
     src/type/IntType.cpp
     inc/type/IntType.h
+    src/type/IntersectionType.cpp
+    inc/type/IntersectionType.h
     src/type/LongType.cpp
     inc/type/LongType.h
     src/type/LowerBoundedWildcardType.cpp
     inc/type/LowerBoundedWildcardType.h
     src/type/MethodType.cpp
     inc/type/MethodType.h
+    src/type/ModuleType.cpp
+    inc/type/ModuleType.h
     src/type/NoType.cpp
     inc/type/NoType.h
     src/type/NullType.cpp
@@ -334,6 +367,4 @@ set (SOURCES
 
 add_library (${LIBNAME} STATIC ${SOURCES})
 add_dependencies (${LIBNAME} boost)
-set_target_properties(${LIBNAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/inc/${LIBNAME}.h")
-add_pch_generation(${LIBNAME} boost)
 set_visual_studio_project_folder(${LIBNAME} TRUE)

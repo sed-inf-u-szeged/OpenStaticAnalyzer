@@ -138,7 +138,7 @@ void ResultConverter::addWarning(Location location){
     }
 
     if (node != Graph::invalidNode) {
-      bool warningAdded = graphsupport::addWarningOnce(graph, node, ruleId, location.file, location.line, location.column, location.line, 10000, warningText);
+      bool warningAdded = graphsupport::addWarningOnce(graph, node, ruleId, location.file, location.line, location.column, location.line, 10000, warningText, &warningCache);
       
       if (warningAdded){
         if(!txtOutFile.empty()) {
@@ -157,8 +157,7 @@ void ResultConverter::addWarning(Location location){
 }
 
 void ResultConverter::aggregateWarnings() {
-  graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENT, graph::Edge::edtDirectional), true);
-  graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENTTREE, graph::Edge::edtReverse), false);
+  graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENT, graph::Edge::edtDirectional), true, std::set<std::string>(), true);
   graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_LOGICALTREE, graph::Edge::edtReverse), false);
 
   graphsupport::createGroupMetrics(graph, rulHandler);
@@ -200,8 +199,4 @@ void ResultConverter::startElement (const XMLCh *const uri, const XMLCh *const l
     XMLString::release(&currentFileChar);
   }
   XMLString::release(&localnameChar);
-}
-
-void ResultConverter::addLicenseTypeToTheGraphHeader(const string& toolName) {
-  graph.setHeaderInfo(toolName + graphsupport::graphconstants::HEADER_MODE_KEY_SUFFIX, graphsupport::graphconstants::HEADER_MODE_VALUE_FULL );
 }

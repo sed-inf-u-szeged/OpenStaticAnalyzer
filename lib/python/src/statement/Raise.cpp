@@ -35,9 +35,11 @@ typedef boost::crc_32_type  Crc_type;
 namespace statement { 
   Raise::Raise(NodeId _id, Factory *_factory) :
     SimpleStatement(_id, _factory),
-    m_hasTracebackExpression(0),
-    m_hasTypeExpression(0),
-    m_hasValueExpression(0)
+    m_hasType(0),
+    m_hasValue(0),
+    m_hasTraceback(0),
+    m_hasException(0),
+    m_hasCause(0)
   {
   }
 
@@ -45,9 +47,11 @@ namespace statement {
   }
 
   void Raise::prepareDelete(bool tryOnVirtualParent){
-    removeTracebackExpression();
-    removeTypeExpression();
-    removeValueExpression();
+    removeType();
+    removeValue();
+    removeTraceback();
+    removeException();
+    removeCause();
     statement::SimpleStatement::prepareDelete(false);
   }
 
@@ -55,30 +59,50 @@ namespace statement {
     return ndkRaise;
   }
 
-  expression::Expression* Raise::getTracebackExpression() const {
+  expression::Expression* Raise::getType() const {
     expression::Expression *_node = NULL;
-    if (m_hasTracebackExpression != 0)
-      _node = dynamic_cast<expression::Expression*>(factory->getPointer(m_hasTracebackExpression));
+    if (m_hasType != 0)
+      _node = dynamic_cast<expression::Expression*>(factory->getPointer(m_hasType));
     if ( (_node == NULL) || factory->getIsFiltered(_node))
       return NULL;
 
     return _node;
   }
 
-  expression::Expression* Raise::getTypeExpression() const {
+  expression::Expression* Raise::getValue() const {
     expression::Expression *_node = NULL;
-    if (m_hasTypeExpression != 0)
-      _node = dynamic_cast<expression::Expression*>(factory->getPointer(m_hasTypeExpression));
+    if (m_hasValue != 0)
+      _node = dynamic_cast<expression::Expression*>(factory->getPointer(m_hasValue));
     if ( (_node == NULL) || factory->getIsFiltered(_node))
       return NULL;
 
     return _node;
   }
 
-  expression::Expression* Raise::getValueExpression() const {
+  expression::Expression* Raise::getTraceback() const {
     expression::Expression *_node = NULL;
-    if (m_hasValueExpression != 0)
-      _node = dynamic_cast<expression::Expression*>(factory->getPointer(m_hasValueExpression));
+    if (m_hasTraceback != 0)
+      _node = dynamic_cast<expression::Expression*>(factory->getPointer(m_hasTraceback));
+    if ( (_node == NULL) || factory->getIsFiltered(_node))
+      return NULL;
+
+    return _node;
+  }
+
+  expression::Expression* Raise::getException() const {
+    expression::Expression *_node = NULL;
+    if (m_hasException != 0)
+      _node = dynamic_cast<expression::Expression*>(factory->getPointer(m_hasException));
+    if ( (_node == NULL) || factory->getIsFiltered(_node))
+      return NULL;
+
+    return _node;
+  }
+
+  expression::Expression* Raise::getCause() const {
+    expression::Expression *_node = NULL;
+    if (m_hasCause != 0)
+      _node = dynamic_cast<expression::Expression*>(factory->getPointer(m_hasCause));
     if ( (_node == NULL) || factory->getIsFiltered(_node))
       return NULL;
 
@@ -87,14 +111,20 @@ namespace statement {
 
   bool Raise::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
-      case edkRaise_HasTracebackExpression:
-        setTracebackExpression(edgeEnd);
+      case edkRaise_HasType:
+        setType(edgeEnd);
         return true;
-      case edkRaise_HasTypeExpression:
-        setTypeExpression(edgeEnd);
+      case edkRaise_HasValue:
+        setValue(edgeEnd);
         return true;
-      case edkRaise_HasValueExpression:
-        setValueExpression(edgeEnd);
+      case edkRaise_HasTraceback:
+        setTraceback(edgeEnd);
+        return true;
+      case edkRaise_HasException:
+        setException(edgeEnd);
+        return true;
+      case edkRaise_HasCause:
+        setCause(edgeEnd);
         return true;
       default:
         break;
@@ -107,14 +137,20 @@ namespace statement {
 
   bool Raise::removeEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
-      case edkRaise_HasTracebackExpression:
-        removeTracebackExpression();
+      case edkRaise_HasType:
+        removeType();
         return true;
-      case edkRaise_HasTypeExpression:
-        removeTypeExpression();
+      case edkRaise_HasValue:
+        removeValue();
         return true;
-      case edkRaise_HasValueExpression:
-        removeValueExpression();
+      case edkRaise_HasTraceback:
+        removeTraceback();
+        return true;
+      case edkRaise_HasException:
+        removeException();
+        return true;
+      case edkRaise_HasCause:
+        removeCause();
         return true;
       default:
         break;
@@ -125,7 +161,7 @@ namespace statement {
     return false;
   }
 
-  void Raise::setTracebackExpression(NodeId _id) {
+  void Raise::setType(NodeId _id) {
     expression::Expression *_node = NULL;
     if (_id) {
       if (!factory->getExist(_id))
@@ -138,40 +174,40 @@ namespace statement {
       if (&(_node->getFactory()) != this->factory)
         throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
 
-      if (m_hasTracebackExpression) {
-        removeParentEdge(m_hasTracebackExpression);
+      if (m_hasType) {
+        removeParentEdge(m_hasType);
         if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_hasTracebackExpression, m_id, edkRaise_HasTracebackExpression);
+          factory->reverseEdges->removeEdge(m_hasType, m_id, edkRaise_HasType);
       }
-      m_hasTracebackExpression = _node->getId();
-      if (m_hasTracebackExpression != 0)
-        setParentEdge(factory->getPointer(m_hasTracebackExpression), edkRaise_HasTracebackExpression);
+      m_hasType = _node->getId();
+      if (m_hasType != 0)
+        setParentEdge(factory->getPointer(m_hasType), edkRaise_HasType);
       if (factory->getExistsReverseEdges())
-        factory->reverseEdges->insertEdge(m_hasTracebackExpression, this->getId(), edkRaise_HasTracebackExpression);
+        factory->reverseEdges->insertEdge(m_hasType, this->getId(), edkRaise_HasType);
     } else {
-      if (m_hasTracebackExpression) {
+      if (m_hasType) {
         throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
       }
     }
   }
 
-  void Raise::setTracebackExpression(expression::Expression *_node) {
+  void Raise::setType(expression::Expression *_node) {
     if (_node == NULL)
       throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
 
-    setTracebackExpression(_node->getId());
+    setType(_node->getId());
   }
 
-  void Raise::removeTracebackExpression() {
-      if (m_hasTracebackExpression) {
-        removeParentEdge(m_hasTracebackExpression);
+  void Raise::removeType() {
+      if (m_hasType) {
+        removeParentEdge(m_hasType);
         if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_hasTracebackExpression, m_id, edkRaise_HasTracebackExpression);
+          factory->reverseEdges->removeEdge(m_hasType, m_id, edkRaise_HasType);
       }
-      m_hasTracebackExpression = 0;
+      m_hasType = 0;
   }
 
-  void Raise::setTypeExpression(NodeId _id) {
+  void Raise::setValue(NodeId _id) {
     expression::Expression *_node = NULL;
     if (_id) {
       if (!factory->getExist(_id))
@@ -184,40 +220,40 @@ namespace statement {
       if (&(_node->getFactory()) != this->factory)
         throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
 
-      if (m_hasTypeExpression) {
-        removeParentEdge(m_hasTypeExpression);
+      if (m_hasValue) {
+        removeParentEdge(m_hasValue);
         if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_hasTypeExpression, m_id, edkRaise_HasTypeExpression);
+          factory->reverseEdges->removeEdge(m_hasValue, m_id, edkRaise_HasValue);
       }
-      m_hasTypeExpression = _node->getId();
-      if (m_hasTypeExpression != 0)
-        setParentEdge(factory->getPointer(m_hasTypeExpression), edkRaise_HasTypeExpression);
+      m_hasValue = _node->getId();
+      if (m_hasValue != 0)
+        setParentEdge(factory->getPointer(m_hasValue), edkRaise_HasValue);
       if (factory->getExistsReverseEdges())
-        factory->reverseEdges->insertEdge(m_hasTypeExpression, this->getId(), edkRaise_HasTypeExpression);
+        factory->reverseEdges->insertEdge(m_hasValue, this->getId(), edkRaise_HasValue);
     } else {
-      if (m_hasTypeExpression) {
+      if (m_hasValue) {
         throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
       }
     }
   }
 
-  void Raise::setTypeExpression(expression::Expression *_node) {
+  void Raise::setValue(expression::Expression *_node) {
     if (_node == NULL)
       throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
 
-    setTypeExpression(_node->getId());
+    setValue(_node->getId());
   }
 
-  void Raise::removeTypeExpression() {
-      if (m_hasTypeExpression) {
-        removeParentEdge(m_hasTypeExpression);
+  void Raise::removeValue() {
+      if (m_hasValue) {
+        removeParentEdge(m_hasValue);
         if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_hasTypeExpression, m_id, edkRaise_HasTypeExpression);
+          factory->reverseEdges->removeEdge(m_hasValue, m_id, edkRaise_HasValue);
       }
-      m_hasTypeExpression = 0;
+      m_hasValue = 0;
   }
 
-  void Raise::setValueExpression(NodeId _id) {
+  void Raise::setTraceback(NodeId _id) {
     expression::Expression *_node = NULL;
     if (_id) {
       if (!factory->getExist(_id))
@@ -230,37 +266,129 @@ namespace statement {
       if (&(_node->getFactory()) != this->factory)
         throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
 
-      if (m_hasValueExpression) {
-        removeParentEdge(m_hasValueExpression);
+      if (m_hasTraceback) {
+        removeParentEdge(m_hasTraceback);
         if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_hasValueExpression, m_id, edkRaise_HasValueExpression);
+          factory->reverseEdges->removeEdge(m_hasTraceback, m_id, edkRaise_HasTraceback);
       }
-      m_hasValueExpression = _node->getId();
-      if (m_hasValueExpression != 0)
-        setParentEdge(factory->getPointer(m_hasValueExpression), edkRaise_HasValueExpression);
+      m_hasTraceback = _node->getId();
+      if (m_hasTraceback != 0)
+        setParentEdge(factory->getPointer(m_hasTraceback), edkRaise_HasTraceback);
       if (factory->getExistsReverseEdges())
-        factory->reverseEdges->insertEdge(m_hasValueExpression, this->getId(), edkRaise_HasValueExpression);
+        factory->reverseEdges->insertEdge(m_hasTraceback, this->getId(), edkRaise_HasTraceback);
     } else {
-      if (m_hasValueExpression) {
+      if (m_hasTraceback) {
         throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
       }
     }
   }
 
-  void Raise::setValueExpression(expression::Expression *_node) {
+  void Raise::setTraceback(expression::Expression *_node) {
     if (_node == NULL)
       throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
 
-    setValueExpression(_node->getId());
+    setTraceback(_node->getId());
   }
 
-  void Raise::removeValueExpression() {
-      if (m_hasValueExpression) {
-        removeParentEdge(m_hasValueExpression);
+  void Raise::removeTraceback() {
+      if (m_hasTraceback) {
+        removeParentEdge(m_hasTraceback);
         if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_hasValueExpression, m_id, edkRaise_HasValueExpression);
+          factory->reverseEdges->removeEdge(m_hasTraceback, m_id, edkRaise_HasTraceback);
       }
-      m_hasValueExpression = 0;
+      m_hasTraceback = 0;
+  }
+
+  void Raise::setException(NodeId _id) {
+    expression::Expression *_node = NULL;
+    if (_id) {
+      if (!factory->getExist(_id))
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+      _node = dynamic_cast<expression::Expression*> (factory->getPointer(_id));
+      if ( _node == NULL) {
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      }
+      if (&(_node->getFactory()) != this->factory)
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+
+      if (m_hasException) {
+        removeParentEdge(m_hasException);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_hasException, m_id, edkRaise_HasException);
+      }
+      m_hasException = _node->getId();
+      if (m_hasException != 0)
+        setParentEdge(factory->getPointer(m_hasException), edkRaise_HasException);
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->insertEdge(m_hasException, this->getId(), edkRaise_HasException);
+    } else {
+      if (m_hasException) {
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      }
+    }
+  }
+
+  void Raise::setException(expression::Expression *_node) {
+    if (_node == NULL)
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+
+    setException(_node->getId());
+  }
+
+  void Raise::removeException() {
+      if (m_hasException) {
+        removeParentEdge(m_hasException);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_hasException, m_id, edkRaise_HasException);
+      }
+      m_hasException = 0;
+  }
+
+  void Raise::setCause(NodeId _id) {
+    expression::Expression *_node = NULL;
+    if (_id) {
+      if (!factory->getExist(_id))
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+      _node = dynamic_cast<expression::Expression*> (factory->getPointer(_id));
+      if ( _node == NULL) {
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      }
+      if (&(_node->getFactory()) != this->factory)
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+
+      if (m_hasCause) {
+        removeParentEdge(m_hasCause);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_hasCause, m_id, edkRaise_HasCause);
+      }
+      m_hasCause = _node->getId();
+      if (m_hasCause != 0)
+        setParentEdge(factory->getPointer(m_hasCause), edkRaise_HasCause);
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->insertEdge(m_hasCause, this->getId(), edkRaise_HasCause);
+    } else {
+      if (m_hasCause) {
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      }
+    }
+  }
+
+  void Raise::setCause(expression::Expression *_node) {
+    if (_node == NULL)
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+
+    setCause(_node->getId());
+  }
+
+  void Raise::removeCause() {
+      if (m_hasCause) {
+        removeParentEdge(m_hasCause);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_hasCause, m_id, edkRaise_HasCause);
+      }
+      m_hasCause = 0;
   }
 
   void Raise::accept(Visitor &visitor) const {
@@ -303,26 +431,36 @@ namespace statement {
   void Raise::save(io::BinaryIO &binIo,bool withVirtualBase  /*= true*/) const {
     SimpleStatement::save(binIo,false);
 
-    binIo.writeUInt4(m_hasTracebackExpression);
-    binIo.writeUInt4(m_hasTypeExpression);
-    binIo.writeUInt4(m_hasValueExpression);
+    binIo.writeUInt4(m_hasType);
+    binIo.writeUInt4(m_hasValue);
+    binIo.writeUInt4(m_hasTraceback);
+    binIo.writeUInt4(m_hasException);
+    binIo.writeUInt4(m_hasCause);
 
   }
 
   void Raise::load(io::BinaryIO &binIo, bool withVirtualBase /*= true*/) {
     SimpleStatement::load(binIo,false);
 
-    m_hasTracebackExpression =  binIo.readUInt4();
-    if (m_hasTracebackExpression != 0)
-      setParentEdge(factory->getPointer(m_hasTracebackExpression),edkRaise_HasTracebackExpression);
+    m_hasType =  binIo.readUInt4();
+    if (m_hasType != 0)
+      setParentEdge(factory->getPointer(m_hasType),edkRaise_HasType);
 
-    m_hasTypeExpression =  binIo.readUInt4();
-    if (m_hasTypeExpression != 0)
-      setParentEdge(factory->getPointer(m_hasTypeExpression),edkRaise_HasTypeExpression);
+    m_hasValue =  binIo.readUInt4();
+    if (m_hasValue != 0)
+      setParentEdge(factory->getPointer(m_hasValue),edkRaise_HasValue);
 
-    m_hasValueExpression =  binIo.readUInt4();
-    if (m_hasValueExpression != 0)
-      setParentEdge(factory->getPointer(m_hasValueExpression),edkRaise_HasValueExpression);
+    m_hasTraceback =  binIo.readUInt4();
+    if (m_hasTraceback != 0)
+      setParentEdge(factory->getPointer(m_hasTraceback),edkRaise_HasTraceback);
+
+    m_hasException =  binIo.readUInt4();
+    if (m_hasException != 0)
+      setParentEdge(factory->getPointer(m_hasException),edkRaise_HasException);
+
+    m_hasCause =  binIo.readUInt4();
+    if (m_hasCause != 0)
+      setParentEdge(factory->getPointer(m_hasCause),edkRaise_HasCause);
 
   }
 

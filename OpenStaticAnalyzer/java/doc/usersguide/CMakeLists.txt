@@ -5,6 +5,8 @@ set (UG_INPUTS
     md/CodeDuplicationMetricsRef.md
     md/PMDRef.md
     md/FindBugsRef.md
+    ../../../doc/md/UserDefinedMetricsRef.md
+    ../../../doc/md/UserDefinedPatternsRef.md
     md/Footnotes.md
 )
 

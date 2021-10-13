@@ -32,12 +32,12 @@ namespace columbus { namespace lim { namespace asg {
   /**
   * \brief The API version of the schema.
   */
-  const std::string APIVersion = "3.0.28";
+  const std::string APIVersion = "3.0.31";
 
   /**
   * \brief The binary version of the schema.
   */
-  const std::string BinaryVersion = "3.0.28";
+  const std::string BinaryVersion = "3.0.31";
 
 
 }}}

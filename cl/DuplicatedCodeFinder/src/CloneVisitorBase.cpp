@@ -71,16 +71,16 @@ CloneVisitorBase::~CloneVisitorBase() {}
 
 bool CloneVisitorBase::isAnalizeNode(const Base& node) {
   if(analizeNode) {
-#if defined SCHEMA_JAVA
-    return columbus::java::asg::Common::getIsMethodDeclaration(node);
+#ifdef SCHEMA_JAVA
+    return AlgorithmCommon::getIsMethodDeclaration(node);
 #elif defined SCHEMA_JAVASCRIPT
     return AlgorithmCommon::getIsFunction(node) || AlgorithmCommon::getIsMethodDefinition(node);
-#elif defined SCHEMA_PYTHON
-    return columbus::python::asg::Common::getIsFunctionDef(node);
 #elif defined SCHEMA_CSHARP
-    return columbus::csharp::asg::Common::getIsBaseMethodDeclarationSyntax(node)
-        || columbus::csharp::asg::Common::getIsBasePropertyDeclarationSyntax(node)
-        || columbus::csharp::asg::Common::getIsAnonymousFunctionExpressionSyntax(node);
+    return AlgorithmCommon::getIsBaseMethodDeclarationSyntax(node)
+        || AlgorithmCommon::getIsBasePropertyDeclarationSyntax(node)
+        || AlgorithmCommon::getIsAnonymousFunctionExpressionSyntax(node);
+#elif defined SCHEMA_PYTHON
+    return AlgorithmCommon::getIsFunctionDef(node);
 #endif
   }
   return false;
@@ -104,12 +104,15 @@ ClonePositioned* CloneVisitorBase::createClonePositioned(const Positioned* p) {
   } else {
     px = new ClonePositioned(p->getPosition().getPath(), p->getPosition().getWideLine(), p->getPosition().getWideCol(), p->getPosition().getWideEndLine(), p->getPosition().getWideEndCol(), p->getNodeKind(), p->getId(),currentLimNode.empty()?currentLimComponent:currentLimNode.top(),currentLimComponent);
   }
-#elif defined SCHEMA_PYTHON
-  px = new ClonePositioned(p->getPosition().getPath(), p->GET_LINE_OF_POSITIONS, p->GET_COLUMN_OF_POSITIONS, p->GET_END_LINE_OF_POSITIONS, p->GET_END_COLUMN_OF_POSITIONS, p->getNodeKind(), p->getId(),currentLimNode.empty()?currentLimComponent:currentLimNode.top(),currentLimComponent);
+
 #elif defined SCHEMA_JAVASCRIPT
   px = new ClonePositioned(p->getPosition().getPath(), p->getPosition().getWideLine(), p->getPosition().getWideCol(), p->getPosition().getWideEndLine(), p->getPosition().getWideEndCol(), p->getNodeKind(), p->getId(), currentLimNode.empty() ? currentLimComponent : currentLimNode.top(), currentLimComponent);
+
 #elif defined SCHEMA_CSHARP
   px=new ClonePositioned(p->getPosition().getFileName(), p->GET_LINE_OF_POSITIONS, p->GET_COLUMN_OF_POSITIONS, p->GET_END_LINE_OF_POSITIONS, p->GET_END_COLUMN_OF_POSITIONS, p->getNodeKind(), p->getId(),currentLimNode.empty()?currentLimComponent:currentLimNode.top(),currentLimComponent);
+
+#elif defined SCHEMA_PYTHON
+  px=new ClonePositioned(p->getPosition().getPath(), p->GET_LINE_OF_POSITIONS, p->GET_COLUMN_OF_POSITIONS, p->GET_END_LINE_OF_POSITIONS, p->GET_END_COLUMN_OF_POSITIONS, p->getNodeKind(), p->getId(),currentLimNode.empty()?currentLimComponent:currentLimNode.top(),currentLimComponent);
 #endif
   return px;
 }
@@ -180,34 +183,40 @@ void CloneVisitorBase::blockNode(const Base& b) {
 
 #if defined(SCHEMA_JAVA) || defined(SCHEMA_JAVASCRIPT)
   std::string lPath=pos.getPosition().getPath();
+  LowerStringOnWindows(lPath);
   unsigned line = pos.getPosition().getWideLine();
+
 #elif defined(SCHEMA_PYTHON)
   std::string lPath=pos.getPosition().getPath();
+  LowerStringOnWindows(lPath);
   unsigned line = pos.getPosition().getLine();
+
 #elif defined(SCHEMA_CSHARP)
   std::string lPath=pos.getPosition().getFileName();
   LowerStringOnWindows(lPath);
   unsigned line = pos.getPosition().getStartLine();
 #endif
+
+
   if ((prevPath!=lPath) && fileNamesByComponent) {
     assignSrcFileToComponenet(lPath,currentLimComponent);
   }
 
   if (logicalLines) {
-#if defined(SCHEMA_JAVA)
+#ifdef SCHEMA_JAVA
     logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getLine()));
     logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getEndLine()));
     logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getWideLine()));
     logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getWideEndLine()));
-#elif defined (SCHEMA_PYTHON)
+#elif defined SCHEMA_PYTHON
     logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getLine()));
     logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getEndLine()));
 #elif defined SCHEMA_CSHARP
     logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getStartLine()));
     logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()),pos.getPosition().getEndLine()));
-#elif defined SCHEMA_JAVASCRIPT       
-      logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()), pos.getPosition().getLine()));
-      logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()), pos.getPosition().getEndLine()));
+#elif defined SCHEMA_JAVASCRIPT
+    logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()), pos.getPosition().getLine()));
+    logicalLines->insert(LineIdentifier(limFactory->getStringTable().set(lPath.c_str()), pos.getPosition().getEndLine()));
 #endif
   }
 
@@ -321,7 +330,7 @@ void CloneVisitorBase::dumpFilterRange(columbus::NodeId from,columbus::NodeId to
 }
 
 void CloneVisitorBase::visit(const  Positioned& n,bool callVirtualParent){
-#if defined (SCHEMA_JAVA)
+#if defined SCHEMA_JAVA
   if (n.getIsCompilerGenerated())
     return;
 #endif
@@ -365,11 +374,12 @@ void CloneVisitorBase::visit(const  Positioned& n,bool callVirtualParent){
   lastIsFilteredOut = false;
 
 
-#if defined(SCHEMA_JAVA)
-  if (columbus::java::asg::Common::getIsPackage(n)) {
+#if defined SCHEMA_JAVA
+  if (AlgorithmCommon::getIsPackage(n)) {
 #elif defined SCHEMA_CSHARP
   if (n.getNodeKind() == columbus::LANGUAGE_NAMESPACE::ndkNamespaceDeclarationSyntax) {
 #endif
+
 #if defined SCHEMA_JAVA || defined SCHEMA_CSHARP
     addFileSeparator();
     addPattern(n);
@@ -396,6 +406,7 @@ void CloneVisitorBase::visit(const  Positioned& n,bool callVirtualParent){
         path = posNodeRef.getPath();
     }
   } else {
+    //not considering non-positioned nodes except in python where the packages nodes are not Positioned nodes
 #ifdef SCHEMA_CSHARP
     if (n.getNodeKind() != columbus::LANGUAGE_NAMESPACE::ndkNamespaceDeclarationSyntax)
 #endif
@@ -407,7 +418,7 @@ void CloneVisitorBase::visit(const  Positioned& n,bool callVirtualParent){
 }
 
 void CloneVisitorBase::visitEnd(const  Positioned& n, bool callVirtualParent) {
-#if defined(SCHEMA_JAVA)
+#if defined SCHEMA_JAVA
   if (n.getIsCompilerGenerated())
     return;
 #endif
@@ -501,3 +512,5 @@ void CloneVisitorBase::assignSrcFileToComponenet( std::string &lPath ,columbus::
     assignSrcFileToComponenet(lPath,it->getId());
   }
 }
+
+

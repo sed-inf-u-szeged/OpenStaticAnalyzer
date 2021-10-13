@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var taggedTemplateExpression = factory.createTaggedTemplateExpressionWrapper(factory);
+        var taggedTemplateExpression = factory.createTaggedTemplateExpressionWrapper();
         globals.setPositionInfo(node, taggedTemplateExpression);
         return taggedTemplateExpression;
     } else {
@@ -34,29 +34,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.tag != null) {
             var tagWrapper = globals.getWrapperOfNode(node.tag);
-            if (node.tag.type !== "Literal") {
-                var tagWrapperFunctionString = "setTag" + node.tag.type;
-            } else {
-                var tagWrapperFunctionString = "setTag" + globals.getLiteralType(node.tag) + node.tag.type;
-            }
             try {
-                taggedTemplateExpressionWrapper[tagWrapperFunctionString](tagWrapper);
+                taggedTemplateExpressionWrapper.setTag(tagWrapper);
             } catch (e) {
-                console.error("TAGGEDTEMPLATEEXPRESSION - Function not exist: taggedTemplateExpressionWrapper." + tagWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("TAGGEDTEMPLATEEXPRESSION - Could not add tag! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.quasi != null) {
             var quasiWrapper = globals.getWrapperOfNode(node.quasi);
-            if (node.quasi.type !== "Literal") {
-                var quasiWrapperFunctionString = "setQuasi" + node.quasi.type;
-            } else {
-                var quasiWrapperFunctionString = "setQuasi" + globals.getLiteralType(node.quasi) + node.quasi.type;
-            }
             try {
-                taggedTemplateExpressionWrapper[quasiWrapperFunctionString](quasiWrapper);
+                taggedTemplateExpressionWrapper.setQuasi(quasiWrapper);
             } catch (e) {
-                console.error("TAGGEDTEMPLATEEXPRESSION - Function not exist: taggedTemplateExpressionWrapper." + quasiWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("TAGGEDTEMPLATEEXPRESSION - Could not set quasi! Reason of the error: " + e + "\n");
             }
         }
 

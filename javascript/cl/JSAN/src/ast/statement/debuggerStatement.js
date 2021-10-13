@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var debuggerStatement = factory.createDebuggerStatementWrapper(factory);
+        var debuggerStatement = factory.createDebuggerStatementWrapper();
         globals.setPositionInfo(node, debuggerStatement);
         return debuggerStatement;
     }

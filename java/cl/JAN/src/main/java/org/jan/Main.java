@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 import columbus.CsiHeader;
 import columbus.StrTable;
@@ -100,29 +101,21 @@ public class Main {
 		}
 
 		int inputsBeforeHardFiltering = fileNames.size();
-
 		boolean fillFactory = true;
-		if (fileNames.isEmpty()) { // if there is no input during diranalyze -> create empty jsi
-			if (OptionParser.dirAnalyze) {
-				fillFactory = false;
-			} else { // if there is no input during wrapped analyze -> don't create anything
-				logger.warn("error.jan.Main.inputMustBeGiven");
-			}
+
+		if (fileNames.isEmpty()) { // if there is no input -> create empty jsi
+			fillFactory = false;
+			logger.warn("error.jan.Main.inputMustBeGiven");
 		}
 
 		if (OptionParser.hardFilter != null) {
 			Filter.filterList(fileNames, OptionParser.hardFilter);
 		}
 
-		if (fileNames.isEmpty()) {
-			if (OptionParser.dirAnalyze) {// if there is no input after filtering during diranalyze -> create empty jsi
-				fillFactory = false;
-			} else {
-				if (inputsBeforeHardFiltering > 0) { // if there is no input after filtering during wrapped analyze ->
-														// create empty jsi
-					fillFactory = false;
-					logger.warn("warn.jan.Main.allInputFiltered");
-				}
+		if (fileNames.isEmpty()) { // if there is no input after filtering -> create empty jsi
+			fillFactory = false;
+			if (inputsBeforeHardFiltering > 0) {
+				logger.warn("warn.jan.Main.allInputFiltered");
 			}
 		}
 
@@ -152,9 +145,14 @@ public class Main {
 			phaseTimer.start();
 			SymbolMaps symMaps = new SymbolMaps();
 			TreeBuilder builder = new TreeBuilder(fact, symMaps, jdkTreeMaker.getContext());
+			FileProcessor fprocessor = new FileProcessor();
+			TreeSet<Integer> resultSet = new TreeSet<>();
 			for (CompilationUnitTree t : trees) {
 				try {
 					builder.visit((JCCompilationUnit) t);
+					//Set the LLOC value on type declaration and method declaration nodes.
+					resultSet = fprocessor.processFile(t.getSourceFile().getName());
+					builder.setLLOCToSubTree(resultSet);
 				} catch (Exception e) {
 					logger.error("error.jan.Main.TreeBuilderEx", e);
 					System.exit(1);
@@ -295,7 +293,10 @@ public class Main {
 		phaseTimer.start();
 		if (OptionParser.getCommonXml() != null) {
 			logger.info("info.jan.Main.saveJml");
-			ClassSaver.saveToXml(fact, OptionParser.getCommonXml());
+			if (OptionParser.isMinXml())
+				ClassSaver.saveMinXml(fact, OptionParser.getCommonXml());
+			else
+				ClassSaver.saveToXml(fact, OptionParser.getCommonXml());
 		}
 		phaseTimer.stop();
 
@@ -374,10 +375,9 @@ public class Main {
 		final String delimiter = ";";
 		File file = new File(fileName);
 
-		try {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
 			boolean writer_header = !file.exists();
 
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 			int i, size = timers.size();
 			Timer timer;
 
@@ -415,8 +415,6 @@ public class Main {
 				writer.write("\"" + str + "\" ");
 			}
 			writer.newLine();
-
-			writer.close();
 		} catch (IOException e) {
 			logger.error("error.jan.Main.savingStatisticsEx", e);
 		}

@@ -1,4 +1,2 @@
 # Exclude the .gradle directories
 **/.gradle
-lib/javascript/addon/build/*
-lib/javascript/addon/node_modules/*

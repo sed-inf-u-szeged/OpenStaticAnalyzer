@@ -50,6 +50,24 @@ namespace controller {
   */
   void profileProcessToolThresholds(const ProfileHandler& profile, const std::string& toolName, const std::string& thresholdsFileIn, const std::string& thresholdsFileOut);
 
+  /**
+  * \brief Process the user defined metrics.
+  * \param profile [in] the profile
+  * \param rulPath [in] where to create the UDM.rul
+  * \param rulconfig [in] the rul config parameter option with which the .rul file should be created
+  * \return if the rul was succesfully generated and the tool should be run
+  */
+  bool profileProcessUDM(const ProfileHandler& profile, const std::string& rulPath, const std::string& rulconfig);
+
+
+  /**
+  * \brief Process the parameters for the lim2patterns tool
+  * \param profile [in] the profile
+  * \param parameters[in] parameters to search for in the xml
+  * \return true if there was no problem during the parsing (problem eg. Unknown parameter was set)
+  */
+  bool profileProcessLIM2Patterns(const ProfileHandler& profile, const std::string& toolName, std::map<std::string, std::string> &parameters);
+
 }
 }
 

@@ -1,249 +1,256 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
 #include "../inc/ClassBodyWrapper.h"
-#include <sstream>  
 #include <string>   
-#include <iomanip>  
-#include <algorithm>
-#include <cctype>   
-
-#include <nan.h>   
-
-using namespace v8;
-
 namespace columbus { namespace javascript { namespace asg { namespace addon {
 
-Persistent<Function> ClassBodyWrapper::constructor;
+napi_ref ClassBodyWrapper::constructor;
 
-void ClassBodyWrapper::Init(Handle<v8::Object> exports) {
-  Isolate* isolate = Isolate::GetCurrent();                                
-                                                                           
-  // Prepare constructor template                                          
-  Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);       
-  tpl->SetClassName(v8::String::NewFromUtf8(isolate, "ClassBodyWrapper"));             
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);                       
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyMethodDefinition", addBodyMethodDefinition);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addCommentsComment", addCommentsComment);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setPath", setPath);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setLine", setLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setCol", setCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setEndLine", setEndLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setEndCol", setEndCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideLine", setWideLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideCol", setWideCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideEndLine", setWideEndLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideEndCol", setWideEndCol);
-                                                                           
-  constructor.Reset(isolate, tpl->GetFunction());                          
-  exports->Set(v8::String::NewFromUtf8(isolate, "ClassBodyWrapper"),                   
-               tpl->GetFunction());                                        
-}                                                                          
+ClassBodyWrapper::ClassBodyWrapper(): env_(nullptr), wrapper_(nullptr) {}
 
+ClassBodyWrapper::~ClassBodyWrapper(){ napi_delete_reference(env_, wrapper_); }
 
-void ClassBodyWrapper::New(const FunctionCallbackInfo<Value>& args) {                             
-  Isolate* isolate = Isolate::GetCurrent();                                         
-  HandleScope scope(isolate);                                                       
-                                                                                    
-  if (args.IsConstructCall()) {                                                     
-    // Invoked as constructor: `new ClassBodyWrapper(...)`                                        
-    Factory* fact = Nan::ObjectWrap::Unwrap<Factory>(args[0]->ToObject()); 
-    ClassBodyWrapper* obj = new ClassBodyWrapper(fact);                                                         
-    obj->Wrap(args.This());                                                         
-    args.GetReturnValue().Set(args.This());                                         
-  } else {                                                                          
-    // Invoked as plain function `ClassBodyWrapper(...)`, turn into construct call.               
-    const int argc = 1;                                                             
-    Handle<v8::Value> argv[argc] = { args[0] };                                         
-    Local<v8::Function> cons = Local<v8::Function>::New(isolate, constructor);              
-    args.GetReturnValue().Set(Nan::NewInstance(cons, argc, argv).ToLocalChecked()); 
-  }                                                                                 
-}                                                                                   
-
-
-ClassBodyWrapper::ClassBodyWrapper(Factory* fact)                        
-{                                                   
-  ClassBody = fact->getFactory()->createClassBodyNode();          
-}                                                   
-
-ClassBodyWrapper::~ClassBodyWrapper()
-{        
-}        
-
-void ClassBodyWrapper::NewInstance(const FunctionCallbackInfo<Value>& args) {              
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  const unsigned argc = 1;                                                   
-  Handle<Value> argv[argc] = { args[0] };                                    
-  Local<v8::Function> cons = Local<v8::Function>::New(isolate, constructor);         
-  Local<v8::Object> instance = Nan::NewInstance(cons, argc, argv).ToLocalChecked();  
-  args.GetReturnValue().Set(instance);                                       
-}                                                                            
-
-void ClassBodyWrapper::addBodyMethodDefinition(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  MethodDefinitionWrapper* _MethodDefinition1 = ObjectWrap::Unwrap<MethodDefinitionWrapper>(args[0]->ToObject());
-  ClassBodyWrapper* _ClassBody2 = ObjectWrap::Unwrap<ClassBodyWrapper>(args.This());
-
-  _ClassBody2->ClassBody->addBody(_MethodDefinition1->MethodDefinition);
+void ClassBodyWrapper::Destructor(napi_env env, void* nativeObject, void* ){
+  ClassBodyWrapper* obj = reinterpret_cast<ClassBodyWrapper*>(nativeObject);
+  //delete obj->_nativeObj;
+  obj->~ClassBodyWrapper();
 }
-void ClassBodyWrapper::addCommentsComment(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  CommentWrapper* _Comment1 = ObjectWrap::Unwrap<CommentWrapper>(args[0]->ToObject());
-  ClassBodyWrapper* _ClassBody2 = ObjectWrap::Unwrap<ClassBodyWrapper>(args.This());
+napi_value ClassBodyWrapper::Init(napi_env env, napi_value& exports) {
+  napi_status status;
+  napi_property_descriptor props [] = {
+  DECLARE_NAPI_METHOD( "addBody", addBody),
+  DECLARE_NAPI_METHOD( "addComments", addComments),
+    DECLARE_NAPI_METHOD("setPath", setPath),
+    DECLARE_NAPI_METHOD("setPosition", setPosition),
+  };
 
-  _ClassBody2->ClassBody->addComments(_Comment1->Comment);
+  napi_value cons;
+  status = napi_define_class(env, "ClassBodyWrapper", NAPI_AUTO_LENGTH, New, nullptr, sizeof(props) / sizeof(*props), props, &cons );
+  assert(status == napi_ok);
+
+  status = napi_create_reference(env, cons, 1, &constructor);
+  assert(status == napi_ok);
+
+  return exports;
 }
-void ClassBodyWrapper::setPath(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);
+napi_value ClassBodyWrapper::New(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
 
-  ClassBodyWrapper* _ClassBody = ObjectWrap::Unwrap<ClassBodyWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );
-  std::string param(*utfStr);
-  Range range = _ClassBody->ClassBody->getPosition();
-  range.setPath( param );
-  _ClassBody->ClassBody->setPosition( range );
+  status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  ClassBodyWrapper* obj = new ClassBodyWrapper();
+  obj->env_ = env;
+  status = napi_wrap(env, jsthis, reinterpret_cast<void*>(obj), ClassBodyWrapper::Destructor, nullptr, &obj->wrapper_);
+  assert(status == napi_ok);
+
+  return jsthis;
 }
 
-void ClassBodyWrapper::setLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassBodyWrapper* _ClassBody = ObjectWrap::Unwrap<ClassBodyWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassBody->ClassBody->getPosition();
-  range.setLine( ui );
-  _ClassBody->ClassBody->setPosition( range );
+
+napi_status ClassBodyWrapper::NewInstance(napi_env env, structure::ClassBody* arg, napi_value* instance) {
+
+  napi_status status;
+  napi_value cons;
+
+  status = napi_get_reference_value(env, constructor, &cons);
+  if(status != napi_ok) return status;
+
+  status = napi_new_instance(env, cons, 0, nullptr, instance);
+  if(status != napi_ok) return status;
+
+  ClassBodyWrapper* obj;
+  status = napi_unwrap(env, *instance, reinterpret_cast<void**>(&obj));
+  obj->_nativeObj = arg;
+  return napi_ok;
 }
 
-void ClassBodyWrapper::setCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassBodyWrapper* _ClassBody = ObjectWrap::Unwrap<ClassBodyWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassBody->ClassBody->getPosition();
-  range.setCol( ui );
-  _ClassBody->ClassBody->setPosition( range );
+napi_value ClassBodyWrapper::addBody(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
+
+  ClassBodyWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
+
+  columbus::javascript::asg::structure::ClassBody* source = dynamic_cast<columbus::javascript::asg::structure::ClassBody*>(obj->_nativeObj);
+  columbus::javascript::asg::structure::MethodDefinition* target = dynamic_cast<columbus::javascript::asg::structure::MethodDefinition*>(param->_nativeObj);
+
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast structure::ClassBody" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast structure::MethodDefinition" );
+  }
+
+  source->addBody(target);
+  return nullptr;
+}
+napi_value ClassBodyWrapper::addComments(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
+
+  ClassBodyWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
+
+  columbus::javascript::asg::structure::ClassBody* source = dynamic_cast<columbus::javascript::asg::structure::ClassBody*>(obj->_nativeObj);
+  columbus::javascript::asg::base::Comment* target = dynamic_cast<columbus::javascript::asg::base::Comment*>(param->_nativeObj);
+
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast structure::ClassBody" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast base::Comment" );
+  }
+
+  source->addComments(target);
+  return nullptr;
+}
+napi_value ClassBodyWrapper::setPath(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments");
+    return nullptr;
+  }
+
+  ClassBodyWrapper* obj;
+  napi_valuetype valuetype;
+  status = napi_typeof(env, args[0], &valuetype);
+  assert(status == napi_ok);
+
+  if (valuetype != napi_string) {
+    napi_throw_type_error(env, nullptr, "Argument should be a string!");
+    return nullptr;
+  }
+
+  char buffer[1024];
+  size_t buffer_size = 1024, result_size = 0;
+  status = napi_get_value_string_utf8(env, args[0], buffer, buffer_size, &result_size);
+  assert(status == napi_ok);
+
+  std::string path(buffer);
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  Range range = dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->getPosition();
+  range.setPath( path );
+  dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->setPosition( range );
+  return nullptr;
 }
 
-void ClassBodyWrapper::setEndLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassBodyWrapper* _ClassBody = ObjectWrap::Unwrap<ClassBodyWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassBody->ClassBody->getPosition();
-  range.setEndLine( ui );
-  _ClassBody->ClassBody->setPosition( range );
+
+napi_value ClassBodyWrapper::setPosition(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 8;
+  napi_value args[8];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1 && argc != 8) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments. Use a simple object with the positions or pass 8 parameters: line, col, endline, endcol and their wide equivalents!");
+    return nullptr;
+  }
+
+  ClassBodyWrapper* obj;
+  napi_valuetype valuetype[8];
+  int32_t position[8];
+  bool hasProp[8];
+  if(argc == 1){
+    status = napi_typeof(env, args[0], &valuetype[0]);
+    assert(status == napi_ok);
+
+    if(valuetype[0] != napi_object){
+      napi_throw_type_error(env, nullptr, "Argument should be an object!");
+      return nullptr;
+    }
+
+    std::string props[] = {"line", "col", "endline", "endcol", "wideline", "widecol", "wideendline", "wideendcol",};
+
+    for(int i = 0; i < 8; ++i){
+      status = napi_has_named_property(env, args[0], props[i].c_str(), &hasProp[i]);
+      assert(status == napi_ok);
+      napi_value value;
+      if(hasProp[i]){
+        status = napi_get_named_property(env, args[0], props[i].c_str(), &value);
+        assert(status == napi_ok);
+        status = napi_get_value_int32(env, value, &position[i]);
+        assert(status == napi_ok);
+      }
+
+    }
+  }
+  else{
+    for(int i = 0; i < 8; ++i){
+      status = napi_typeof(env, args[i], &valuetype[i]);
+      assert(status == napi_ok);
+      if(valuetype[i] != napi_number){
+        napi_throw_type_error(env, nullptr, "Argument should be an integer!");
+        return nullptr;
+      }
+      status = napi_get_value_int32(env, args[i], &position[i]);
+      assert(status == napi_ok);
+    }
+    for(int i = 0; i < 8; ++i){
+      hasProp[i] = true;
+    }
+  }
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  Range range = dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->getPosition();
+
+  if(hasProp[0])
+    range.setLine( (int)position[0] );
+  if(hasProp[1])
+    range.setCol( (int)position[1] );
+  if(hasProp[2])
+    range.setEndLine( (int)position[2] );
+  if(hasProp[3])
+    range.setEndCol( (int)position[3] );
+  if(hasProp[4])
+    range.setWideLine( (int)position[4] );
+  if(hasProp[5])
+    range.setWideCol( (int)position[5] );
+  if(hasProp[6])
+    range.setWideEndLine( (int)position[6] );
+  if(hasProp[7])
+    range.setWideEndCol( (int)position[7] );
+  dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->setPosition( range );
+  return nullptr;
 }
 
-void ClassBodyWrapper::setEndCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassBodyWrapper* _ClassBody = ObjectWrap::Unwrap<ClassBodyWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassBody->ClassBody->getPosition();
-  range.setEndCol( ui );
-  _ClassBody->ClassBody->setPosition( range );
-}
-
-void ClassBodyWrapper::setWideLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassBodyWrapper* _ClassBody = ObjectWrap::Unwrap<ClassBodyWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassBody->ClassBody->getPosition();
-  range.setWideLine( ui );
-  _ClassBody->ClassBody->setPosition( range );
-}
-
-void ClassBodyWrapper::setWideCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassBodyWrapper* _ClassBody = ObjectWrap::Unwrap<ClassBodyWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassBody->ClassBody->getPosition();
-  range.setWideCol( ui );
-  _ClassBody->ClassBody->setPosition( range );
-}
-
-void ClassBodyWrapper::setWideEndLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassBodyWrapper* _ClassBody = ObjectWrap::Unwrap<ClassBodyWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassBody->ClassBody->getPosition();
-  range.setWideEndLine( ui );
-  _ClassBody->ClassBody->setPosition( range );
-}
-
-void ClassBodyWrapper::setWideEndCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassBodyWrapper* _ClassBody = ObjectWrap::Unwrap<ClassBodyWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassBody->ClassBody->getPosition();
-  range.setWideEndCol( ui );
-  _ClassBody->ClassBody->setPosition( range );
-}
 
 }}}} //end of namespaces

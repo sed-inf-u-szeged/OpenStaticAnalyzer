@@ -77,24 +77,54 @@ void JSNodeEmbeddedVisitor::visit(const columbus::javascript::asg::expression::I
     putNode(n, *dynamic_cast<const columbus::javascript::asg::base::Positioned*>(n.getRefersTo()), false);
   }
 
+  // Compute how many times an identifier is referred to. This is done using reverse edges.
+  // Node ---Identifier_RefersTo----> Identifier
+  const columbus::javascript::asg::ReverseEdges& reverseEdges = n.getFactory().getReverseEdges();
+  for (columbus::javascript::asg::ListIterator<columbus::javascript::asg::base::Base> itConnectedEdges = reverseEdges.constIteratorBegin(n.getId(), columbus::javascript::asg::edkIdentifier_RefersTo); itConnectedEdges != reverseEdges.constIteratorEnd(n.getId(), columbus::javascript::asg::edkIdentifier_RefersTo); ++itConnectedEdges) {
+    putNode(n, dynamic_cast<const columbus::javascript::asg::base::Positioned&>(*itConnectedEdges), false);
+  }
 }
 
 void JSNodeEmbeddedVisitor::visit(const columbus::javascript::asg::declaration::VariableDeclarator& n, bool b)
 {
   NodeEmbeddednessVisitorBase::visit(n, b);
+  // Compute how many times a VariableDeclarator is referred to. This is done using reverse edges.
+  // Node ---Identifier_RefersTo----> VariableDeclarator
+  const columbus::javascript::asg::ReverseEdges& reverseEdges = n.getFactory().getReverseEdges();
+  for (columbus::javascript::asg::ListIterator<columbus::javascript::asg::base::Base> itConnectedEdges = reverseEdges.constIteratorBegin(n.getId(), columbus::javascript::asg::edkIdentifier_RefersTo); itConnectedEdges != reverseEdges.constIteratorEnd(n.getId(), columbus::javascript::asg::edkIdentifier_RefersTo); ++itConnectedEdges) {
+    putNode(n, dynamic_cast<const columbus::javascript::asg::base::Positioned&>(*itConnectedEdges), false);
+  }
 }
 
 void JSNodeEmbeddedVisitor::visit(const columbus::javascript::asg::declaration::ClassDeclaration& n, bool b)
 {
   NodeEmbeddednessVisitorBase::visit(n, b);
+  // Compute how many times a ClassDeclaration is referred to. This is done using reverse edges.
+  // Node ---Identifier_RefersTo----> ClassDeclaration
+  const columbus::javascript::asg::ReverseEdges& reverseEdges = n.getFactory().getReverseEdges();
+  for (columbus::javascript::asg::ListIterator<columbus::javascript::asg::base::Base> itConnectedEdges = reverseEdges.constIteratorBegin(n.getId(), columbus::javascript::asg::edkIdentifier_RefersTo); itConnectedEdges != reverseEdges.constIteratorEnd(n.getId(), columbus::javascript::asg::edkIdentifier_RefersTo); ++itConnectedEdges) {
+    putNode(n, dynamic_cast<const columbus::javascript::asg::base::Positioned&>(*itConnectedEdges), false);
+  }
 }
 
 void JSNodeEmbeddedVisitor::visit(const columbus::javascript::asg::declaration::FunctionDeclaration& n, bool b)
 {
   NodeEmbeddednessVisitorBase::visit(n, b);
+  // Compute how many times a FunctionDeclaration is referred to. This is done using reverse edges.
+  // Node ---Identifier_RefersTo----> FunctionDeclaration
+  const columbus::javascript::asg::ReverseEdges& reverseEdges = n.getFactory().getReverseEdges();
+  for (columbus::javascript::asg::ListIterator<columbus::javascript::asg::base::Base> itConnectedEdges = reverseEdges.constIteratorBegin(n.getId(), columbus::javascript::asg::edkIdentifier_RefersTo); itConnectedEdges != reverseEdges.constIteratorEnd(n.getId(), columbus::javascript::asg::edkIdentifier_RefersTo); ++itConnectedEdges) {
+    putNode(n, dynamic_cast<const columbus::javascript::asg::base::Positioned&>(*itConnectedEdges), false);
+  }
 }
 
 void JSNodeEmbeddedVisitor::visit(const columbus::javascript::asg::structure::MethodDefinition& n, bool b) {
   NodeEmbeddednessVisitorBase::visit(n, b);
+  // Compute how many times a MethodDefinition is referred to. This is done using reverse edges.
+  // Node ---Identifier_RefersTo----> MethodDefinition
+  const columbus::javascript::asg::ReverseEdges& reverseEdges = n.getFactory().getReverseEdges();
+    for (columbus::javascript::asg::ListIterator<columbus::javascript::asg::base::Base> itConnectedEdges = reverseEdges.constIteratorBegin(n.getId(), columbus::javascript::asg::edkIdentifier_RefersTo); itConnectedEdges != reverseEdges.constIteratorEnd(n.getId(), columbus::javascript::asg::edkIdentifier_RefersTo); ++itConnectedEdges) {
+    putNode(n, dynamic_cast<const columbus::javascript::asg::base::Positioned&>(*itConnectedEdges), false);
+  }
 }
 #endif

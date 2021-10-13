@@ -31,6 +31,7 @@ import columbus.java.asg.base.Named;
 import columbus.java.asg.base.NonJavadocComment;
 import columbus.java.asg.base.Positioned;
 import columbus.java.asg.base.PositionedWithoutComment;
+import columbus.java.asg.expr.AnnotatedTypeExpression;
 import columbus.java.asg.expr.Annotation;
 import columbus.java.asg.expr.ArrayAccess;
 import columbus.java.asg.expr.ArrayTypeExpression;
@@ -47,13 +48,16 @@ import columbus.java.asg.expr.Expression;
 import columbus.java.asg.expr.ExternalTypeExpression;
 import columbus.java.asg.expr.FieldAccess;
 import columbus.java.asg.expr.FloatLiteral;
+import columbus.java.asg.expr.FunctionalExpression;
 import columbus.java.asg.expr.Identifier;
 import columbus.java.asg.expr.InfixExpression;
 import columbus.java.asg.expr.InstanceOf;
 import columbus.java.asg.expr.IntegerLiteral;
+import columbus.java.asg.expr.Lambda;
 import columbus.java.asg.expr.Literal;
 import columbus.java.asg.expr.LongLiteral;
 import columbus.java.asg.expr.MarkerAnnotation;
+import columbus.java.asg.expr.MemberReference;
 import columbus.java.asg.expr.MethodInvocation;
 import columbus.java.asg.expr.NewArray;
 import columbus.java.asg.expr.NewClass;
@@ -61,6 +65,7 @@ import columbus.java.asg.expr.NormalAnnotation;
 import columbus.java.asg.expr.NullLiteral;
 import columbus.java.asg.expr.NumberLiteral;
 import columbus.java.asg.expr.ParenthesizedExpression;
+import columbus.java.asg.expr.PolyExpression;
 import columbus.java.asg.expr.PostfixExpression;
 import columbus.java.asg.expr.PrefixExpression;
 import columbus.java.asg.expr.PrimitiveTypeExpression;
@@ -73,9 +78,16 @@ import columbus.java.asg.expr.This;
 import columbus.java.asg.expr.TypeApplyExpression;
 import columbus.java.asg.expr.TypeCast;
 import columbus.java.asg.expr.TypeExpression;
+import columbus.java.asg.expr.TypeIntersectionExpression;
 import columbus.java.asg.expr.TypeUnionExpression;
 import columbus.java.asg.expr.Unary;
 import columbus.java.asg.expr.WildcardExpression;
+import columbus.java.asg.module.Exports;
+import columbus.java.asg.module.ModuleDirective;
+import columbus.java.asg.module.Opens;
+import columbus.java.asg.module.Provides;
+import columbus.java.asg.module.Requires;
+import columbus.java.asg.module.Uses;
 import columbus.java.asg.statm.Assert;
 import columbus.java.asg.statm.BasicFor;
 import columbus.java.asg.statm.Block;
@@ -124,6 +136,8 @@ import columbus.java.asg.struc.Member;
 import columbus.java.asg.struc.Method;
 import columbus.java.asg.struc.MethodDeclaration;
 import columbus.java.asg.struc.MethodGeneric;
+import columbus.java.asg.struc.Module;
+import columbus.java.asg.struc.ModuleDeclaration;
 import columbus.java.asg.struc.NamedDeclaration;
 import columbus.java.asg.struc.NormalMethod;
 import columbus.java.asg.struc.Package;
@@ -145,9 +159,11 @@ import columbus.java.asg.type.DoubleType;
 import columbus.java.asg.type.ErrorType;
 import columbus.java.asg.type.FloatType;
 import columbus.java.asg.type.IntType;
+import columbus.java.asg.type.IntersectionType;
 import columbus.java.asg.type.LongType;
 import columbus.java.asg.type.LowerBoundedWildcardType;
 import columbus.java.asg.type.MethodType;
+import columbus.java.asg.type.ModuleType;
 import columbus.java.asg.type.NoType;
 import columbus.java.asg.type.NullType;
 import columbus.java.asg.type.PackageType;
@@ -354,6 +370,10 @@ public class AlgorithmPreorder extends Algorithm {
 
 			// ndkPositionedWithoutComment is abstract
 
+			case ndkAnnotatedTypeExpression:
+				traverse((AnnotatedTypeExpression)node, true);
+				break;
+
 			// ndkAnnotation is abstract
 
 			case ndkArrayAccess:
@@ -412,6 +432,8 @@ public class AlgorithmPreorder extends Algorithm {
 				traverse((FloatLiteral)node, true);
 				break;
 
+			// ndkFunctionalExpression is abstract
+
 			case ndkIdentifier:
 				traverse((Identifier)node, true);
 				break;
@@ -428,6 +450,10 @@ public class AlgorithmPreorder extends Algorithm {
 				traverse((IntegerLiteral)node, true);
 				break;
 
+			case ndkLambda:
+				traverse((Lambda)node, true);
+				break;
+
 			// ndkLiteral is abstract
 
 			case ndkLongLiteral:
@@ -436,6 +462,10 @@ public class AlgorithmPreorder extends Algorithm {
 
 			case ndkMarkerAnnotation:
 				traverse((MarkerAnnotation)node, true);
+				break;
+
+			case ndkMemberReference:
+				traverse((MemberReference)node, true);
 				break;
 
 			case ndkMethodInvocation:
@@ -463,6 +493,8 @@ public class AlgorithmPreorder extends Algorithm {
 			case ndkParenthesizedExpression:
 				traverse((ParenthesizedExpression)node, true);
 				break;
+
+			// ndkPolyExpression is abstract
 
 			case ndkPostfixExpression:
 				traverse((PostfixExpression)node, true);
@@ -510,6 +542,10 @@ public class AlgorithmPreorder extends Algorithm {
 
 			// ndkTypeExpression is abstract
 
+			case ndkTypeIntersectionExpression:
+				traverse((TypeIntersectionExpression)node, true);
+				break;
+
 			case ndkTypeUnionExpression:
 				traverse((TypeUnionExpression)node, true);
 				break;
@@ -518,6 +554,28 @@ public class AlgorithmPreorder extends Algorithm {
 
 			case ndkWildcardExpression:
 				traverse((WildcardExpression)node, true);
+				break;
+
+			case ndkExports:
+				traverse((Exports)node, true);
+				break;
+
+			// ndkModuleDirective is abstract
+
+			case ndkOpens:
+				traverse((Opens)node, true);
+				break;
+
+			case ndkProvides:
+				traverse((Provides)node, true);
+				break;
+
+			case ndkRequires:
+				traverse((Requires)node, true);
+				break;
+
+			case ndkUses:
+				traverse((Uses)node, true);
 				break;
 
 			case ndkAssert:
@@ -684,6 +742,14 @@ public class AlgorithmPreorder extends Algorithm {
 				traverse((MethodGeneric)node, true);
 				break;
 
+			case ndkModule:
+				traverse((Module)node, true);
+				break;
+
+			case ndkModuleDeclaration:
+				traverse((ModuleDeclaration)node, true);
+				break;
+
 			// ndkNamedDeclaration is abstract
 
 			// ndkNormalMethod is abstract
@@ -756,6 +822,10 @@ public class AlgorithmPreorder extends Algorithm {
 				traverse((IntType)node, true);
 				break;
 
+			case ndkIntersectionType:
+				traverse((IntersectionType)node, true);
+				break;
+
 			case ndkLongType: // ndkLongType is visited at the end
 				traverse((LongType)node, true);
 				break;
@@ -766,6 +836,10 @@ public class AlgorithmPreorder extends Algorithm {
 
 			case ndkMethodType: // ndkMethodType is visited at the end
 				traverse((MethodType)node, true);
+				break;
+
+			case ndkModuleType:
+				traverse((ModuleType)node, true);
 				break;
 
 			case ndkNoType: // ndkNoType is visited at the end
@@ -940,6 +1014,47 @@ public class AlgorithmPreorder extends Algorithm {
 	protected void traverse(PositionedWithoutComment node, boolean callVirtualBase) {
 		if (callVirtualBase)
 			traverse((Base)node, false);
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	protected void traverse(AnnotatedTypeExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			traverse((Base)node, false);
+		if (callVirtualBase)
+			traverse((Commentable)node, false);
+		traverse((TypeExpression)node, false);
+
+		Base genNodeRef;
+
+		// edge: hasAnnotations
+		for (EdgeIterator<Annotation> it = node.getAnnotationsIterator(); it.hasNext(); ) {
+			Annotation end = it.next();
+			visitor.visitAnnotatedTypeExpression_HasAnnotations(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndAnnotatedTypeExpression_HasAnnotations(node, end);
+		}
+
+		// edge: hasUnderlyingType
+		genNodeRef = node.getUnderlyingType();
+		if (genNodeRef != null) {
+			TypeExpression end = (TypeExpression)genNodeRef;
+			visitor.visitAnnotatedTypeExpression_HasUnderlyingType(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndAnnotatedTypeExpression_HasUnderlyingType(node, end);
+		}
+
 	}
 
 	/**
@@ -1314,6 +1429,33 @@ public class AlgorithmPreorder extends Algorithm {
 	 * @param node            The node which is traversed.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
 	 */
+	protected void traverse(FunctionalExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			traverse((Base)node, false);
+		if (callVirtualBase)
+			traverse((Commentable)node, false);
+		traverse((PolyExpression)node, false);
+
+		Base genNodeRef;
+
+		// edge: target
+		genNodeRef = node.getTarget();
+		if (genNodeRef != null) {
+			Type end = (Type)genNodeRef;
+			visitor.visitFunctionalExpression_Target(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			}
+			visitor.visitEndFunctionalExpression_Target(node, end);
+		}
+
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
 	protected void traverse(Identifier node, boolean callVirtualBase) {
 		if (callVirtualBase)
 			traverse((Base)node, false);
@@ -1396,6 +1538,47 @@ public class AlgorithmPreorder extends Algorithm {
 	 * @param node            The node which is traversed.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
 	 */
+	protected void traverse(Lambda node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			traverse((Base)node, false);
+		if (callVirtualBase)
+			traverse((Commentable)node, false);
+		traverse((FunctionalExpression)node, false);
+
+		Base genNodeRef;
+
+		// edge: hasParameters
+		for (EdgeIterator<Parameter> it = node.getParametersIterator(); it.hasNext(); ) {
+			Parameter end = it.next();
+			visitor.visitLambda_HasParameters(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndLambda_HasParameters(node, end);
+		}
+
+		// edge: hasBody
+		genNodeRef = node.getBody();
+		if (genNodeRef != null) {
+			Positioned end = (Positioned)genNodeRef;
+			visitor.visitLambda_HasBody(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndLambda_HasBody(node, end);
+		}
+
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
 	protected void traverse(Literal node, boolean callVirtualBase) {
 		if (callVirtualBase)
 			traverse((Base)node, false);
@@ -1428,6 +1611,58 @@ public class AlgorithmPreorder extends Algorithm {
 		if (callVirtualBase)
 			traverse((Commentable)node, false);
 		traverse((Annotation)node, false);
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	protected void traverse(MemberReference node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			traverse((Base)node, false);
+		if (callVirtualBase)
+			traverse((Commentable)node, false);
+		traverse((FunctionalExpression)node, false);
+
+		Base genNodeRef;
+
+		// edge: hasQualifierExpression
+		genNodeRef = node.getQualifierExpression();
+		if (genNodeRef != null) {
+			Expression end = (Expression)genNodeRef;
+			visitor.visitMemberReference_HasQualifierExpression(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndMemberReference_HasQualifierExpression(node, end);
+		}
+
+		// edge: hasTypeArguments
+		for (EdgeIterator<TypeExpression> it = node.getTypeArgumentsIterator(); it.hasNext(); ) {
+			TypeExpression end = it.next();
+			visitor.visitMemberReference_HasTypeArguments(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndMemberReference_HasTypeArguments(node, end);
+		}
+
+		// edge: referredMethod
+		genNodeRef = node.getReferredMethod();
+		if (genNodeRef != null) {
+			MethodDeclaration end = (MethodDeclaration)genNodeRef;
+			visitor.visitMemberReference_ReferredMethod(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			}
+			visitor.visitEndMemberReference_ReferredMethod(node, end);
+		}
+
 	}
 
 	/**
@@ -1694,6 +1929,19 @@ public class AlgorithmPreorder extends Algorithm {
 	 * @param node            The node which is traversed.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
 	 */
+	protected void traverse(PolyExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			traverse((Base)node, false);
+		if (callVirtualBase)
+			traverse((Commentable)node, false);
+		traverse((Expression)node, false);
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
 	protected void traverse(PostfixExpression node, boolean callVirtualBase) {
 		if (callVirtualBase)
 			traverse((Base)node, false);
@@ -1939,6 +2187,32 @@ public class AlgorithmPreorder extends Algorithm {
 	 * @param node            The node which is traversed.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
 	 */
+	protected void traverse(TypeIntersectionExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			traverse((Base)node, false);
+		if (callVirtualBase)
+			traverse((Commentable)node, false);
+		traverse((TypeExpression)node, false);
+
+		// edge: hasBounds
+		for (EdgeIterator<TypeExpression> it = node.getBoundsIterator(); it.hasNext(); ) {
+			TypeExpression end = it.next();
+			visitor.visitTypeIntersectionExpression_HasBounds(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndTypeIntersectionExpression_HasBounds(node, end);
+		}
+
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
 	protected void traverse(TypeUnionExpression node, boolean callVirtualBase) {
 		if (callVirtualBase)
 			traverse((Base)node, false);
@@ -2014,6 +2288,200 @@ public class AlgorithmPreorder extends Algorithm {
 				recRun(end);
 			}
 			visitor.visitEndWildcardExpression_HasBound(node, end);
+		}
+
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	protected void traverse(Exports node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			traverse((Base)node, false);
+		if (callVirtualBase)
+			traverse((Commentable)node, false);
+		traverse((ModuleDirective)node, false);
+
+		Base genNodeRef;
+
+		// edge: hasPackageName
+		genNodeRef = node.getPackageName();
+		if (genNodeRef != null) {
+			Expression end = (Expression)genNodeRef;
+			visitor.visitExports_HasPackageName(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndExports_HasPackageName(node, end);
+		}
+
+		// edge: hasModuleNames
+		for (EdgeIterator<Expression> it = node.getModuleNamesIterator(); it.hasNext(); ) {
+			Expression end = it.next();
+			visitor.visitExports_HasModuleNames(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndExports_HasModuleNames(node, end);
+		}
+
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	protected void traverse(ModuleDirective node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			traverse((Base)node, false);
+		if (callVirtualBase)
+			traverse((Commentable)node, false);
+		traverse((Positioned)node, false);
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	protected void traverse(Opens node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			traverse((Base)node, false);
+		if (callVirtualBase)
+			traverse((Commentable)node, false);
+		traverse((ModuleDirective)node, false);
+
+		Base genNodeRef;
+
+		// edge: hasPackageName
+		genNodeRef = node.getPackageName();
+		if (genNodeRef != null) {
+			Expression end = (Expression)genNodeRef;
+			visitor.visitOpens_HasPackageName(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndOpens_HasPackageName(node, end);
+		}
+
+		// edge: hasModuleNames
+		for (EdgeIterator<Expression> it = node.getModuleNamesIterator(); it.hasNext(); ) {
+			Expression end = it.next();
+			visitor.visitOpens_HasModuleNames(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndOpens_HasModuleNames(node, end);
+		}
+
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	protected void traverse(Provides node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			traverse((Base)node, false);
+		if (callVirtualBase)
+			traverse((Commentable)node, false);
+		traverse((ModuleDirective)node, false);
+
+		Base genNodeRef;
+
+		// edge: hasServiceName
+		genNodeRef = node.getServiceName();
+		if (genNodeRef != null) {
+			Expression end = (Expression)genNodeRef;
+			visitor.visitProvides_HasServiceName(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndProvides_HasServiceName(node, end);
+		}
+
+		// edge: hasImplementationNames
+		for (EdgeIterator<Expression> it = node.getImplementationNamesIterator(); it.hasNext(); ) {
+			Expression end = it.next();
+			visitor.visitProvides_HasImplementationNames(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndProvides_HasImplementationNames(node, end);
+		}
+
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	protected void traverse(Requires node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			traverse((Base)node, false);
+		if (callVirtualBase)
+			traverse((Commentable)node, false);
+		traverse((ModuleDirective)node, false);
+
+		Base genNodeRef;
+
+		// edge: hasModuleName
+		genNodeRef = node.getModuleName();
+		if (genNodeRef != null) {
+			Expression end = (Expression)genNodeRef;
+			visitor.visitRequires_HasModuleName(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndRequires_HasModuleName(node, end);
+		}
+
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	protected void traverse(Uses node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			traverse((Base)node, false);
+		if (callVirtualBase)
+			traverse((Commentable)node, false);
+		traverse((ModuleDirective)node, false);
+
+		Base genNodeRef;
+
+		// edge: hasServiceName
+		genNodeRef = node.getServiceName();
+		if (genNodeRef != null) {
+			Expression end = (Expression)genNodeRef;
+			visitor.visitUses_HasServiceName(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndUses_HasServiceName(node, end);
 		}
 
 	}
@@ -2711,8 +3179,8 @@ public class AlgorithmPreorder extends Algorithm {
 		Base genNodeRef;
 
 		// edge: hasResources
-		for (EdgeIterator<Variable> it = node.getResourcesIterator(); it.hasNext(); ) {
-			Variable end = it.next();
+		for (EdgeIterator<Base> it = node.getResourcesIterator(); it.hasNext(); ) {
+			Base end = it.next();
 			visitor.visitTry_HasResources(node, end);
 			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
 				unvisitedNodes[end.getId()] = true;
@@ -2959,16 +3427,6 @@ public class AlgorithmPreorder extends Algorithm {
 			visitor.visitEndCompilationUnit_HasImports(node, end);
 		}
 
-		// edge: typeDeclarations
-		for (EdgeIterator<TypeDeclaration> it = node.getTypeDeclarationsIterator(); it.hasNext(); ) {
-			TypeDeclaration end = it.next();
-			visitor.visitCompilationUnit_TypeDeclarations(node, end);
-			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
-				unvisitedNodes[end.getId()] = true;
-			}
-			visitor.visitEndCompilationUnit_TypeDeclarations(node, end);
-		}
-
 		// edge: hasOthers
 		for (EdgeIterator<Positioned> it = node.getOthersIterator(); it.hasNext(); ) {
 			Positioned end = it.next();
@@ -2979,6 +3437,40 @@ public class AlgorithmPreorder extends Algorithm {
 				recRun(end);
 			}
 			visitor.visitEndCompilationUnit_HasOthers(node, end);
+		}
+
+		// edge: hasModuleDeclaration
+		genNodeRef = node.getModuleDeclaration();
+		if (genNodeRef != null) {
+			ModuleDeclaration end = (ModuleDeclaration)genNodeRef;
+			visitor.visitCompilationUnit_HasModuleDeclaration(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndCompilationUnit_HasModuleDeclaration(node, end);
+		}
+
+		// edge: typeDeclarations
+		for (EdgeIterator<TypeDeclaration> it = node.getTypeDeclarationsIterator(); it.hasNext(); ) {
+			TypeDeclaration end = it.next();
+			visitor.visitCompilationUnit_TypeDeclarations(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			}
+			visitor.visitEndCompilationUnit_TypeDeclarations(node, end);
+		}
+
+		// edge: isInModule
+		genNodeRef = node.getIsInModule();
+		if (genNodeRef != null) {
+			Module end = (Module)genNodeRef;
+			visitor.visitCompilationUnit_IsInModule(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			}
+			visitor.visitEndCompilationUnit_IsInModule(node, end);
 		}
 
 	}
@@ -3289,6 +3781,91 @@ public class AlgorithmPreorder extends Algorithm {
 	 * @param node            The node which is traversed.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
 	 */
+	protected void traverse(Module node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			traverse((Base)node, false);
+		traverse((Named)node, false);
+
+		// edge: packages
+		for (EdgeIterator<Package> it = node.getPackagesIterator(); it.hasNext(); ) {
+			Package end = it.next();
+			visitor.visitModule_Packages(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			}
+			visitor.visitEndModule_Packages(node, end);
+		}
+
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	protected void traverse(ModuleDeclaration node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			traverse((Base)node, false);
+		if (callVirtualBase)
+			traverse((Commentable)node, false);
+		traverse((Positioned)node, false);
+
+		Base genNodeRef;
+
+		// edge: hasName
+		genNodeRef = node.getName();
+		if (genNodeRef != null) {
+			Expression end = (Expression)genNodeRef;
+			visitor.visitModuleDeclaration_HasName(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndModuleDeclaration_HasName(node, end);
+		}
+
+		// edge: hasDirectives
+		for (EdgeIterator<ModuleDirective> it = node.getDirectivesIterator(); it.hasNext(); ) {
+			ModuleDirective end = it.next();
+			visitor.visitModuleDeclaration_HasDirectives(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			} else {
+				recRun(end);
+			}
+			visitor.visitEndModuleDeclaration_HasDirectives(node, end);
+		}
+
+		// edge: moduleType
+		genNodeRef = node.getModuleType();
+		if (genNodeRef != null) {
+			ModuleType end = (ModuleType)genNodeRef;
+			visitor.visitModuleDeclaration_ModuleType(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			}
+			visitor.visitEndModuleDeclaration_ModuleType(node, end);
+		}
+
+		// edge: refersTo
+		genNodeRef = node.getRefersTo();
+		if (genNodeRef != null) {
+			Module end = (Module)genNodeRef;
+			visitor.visitModuleDeclaration_RefersTo(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			}
+			visitor.visitEndModuleDeclaration_RefersTo(node, end);
+		}
+
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
 	protected void traverse(NamedDeclaration node, boolean callVirtualBase) {
 		if (callVirtualBase)
 			traverse((Base)node, false);
@@ -3380,6 +3957,16 @@ public class AlgorithmPreorder extends Algorithm {
 				recRun(end);
 			}
 			visitor.visitEndPackage_HasCompilationUnits(node, end);
+		}
+
+		// edge: isInModule
+		for (EdgeIterator<Module> it = node.getIsInModuleIterator(); it.hasNext(); ) {
+			Module end = it.next();
+			visitor.visitPackage_IsInModule(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			}
+			visitor.visitEndPackage_IsInModule(node, end);
 		}
 
 	}
@@ -3498,17 +4085,6 @@ public class AlgorithmPreorder extends Algorithm {
 
 		Base genNodeRef;
 
-		// edge: isInCompilationUnit
-		genNodeRef = node.getIsInCompilationUnit();
-		if (genNodeRef != null) {
-			CompilationUnit end = (CompilationUnit)genNodeRef;
-			visitor.visitTypeDeclaration_IsInCompilationUnit(node, end);
-			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
-				unvisitedNodes[end.getId()] = true;
-			}
-			visitor.visitEndTypeDeclaration_IsInCompilationUnit(node, end);
-		}
-
 		// edge: hasSuperClass
 		genNodeRef = node.getSuperClass();
 		if (genNodeRef != null) {
@@ -3544,6 +4120,28 @@ public class AlgorithmPreorder extends Algorithm {
 				recRun(end);
 			}
 			visitor.visitEndTypeDeclaration_HasOthers(node, end);
+		}
+
+		// edge: isInCompilationUnit
+		genNodeRef = node.getIsInCompilationUnit();
+		if (genNodeRef != null) {
+			CompilationUnit end = (CompilationUnit)genNodeRef;
+			visitor.visitTypeDeclaration_IsInCompilationUnit(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			}
+			visitor.visitEndTypeDeclaration_IsInCompilationUnit(node, end);
+		}
+
+		// edge: isInModule
+		genNodeRef = node.getIsInModule();
+		if (genNodeRef != null) {
+			Module end = (Module)genNodeRef;
+			visitor.visitTypeDeclaration_IsInModule(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			}
+			visitor.visitEndTypeDeclaration_IsInModule(node, end);
 		}
 
 	}
@@ -3760,6 +4358,26 @@ public class AlgorithmPreorder extends Algorithm {
 	 * @param node            The node which is traversed.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
 	 */
+	protected void traverse(IntersectionType node, boolean callVirtualBase) {
+		traverse((Type)node, false);
+
+		// edge: bounds
+		for (EdgeIterator<Type> it = node.getBoundsIterator(); it.hasNext(); ) {
+			Type end = it.next();
+			visitor.visitIntersectionType_Bounds(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			}
+			visitor.visitEndIntersectionType_Bounds(node, end);
+		}
+
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
 	protected void traverse(LongType node, boolean callVirtualBase) {
 		traverse((PrimitiveType)node, false);
 	}
@@ -3812,6 +4430,29 @@ public class AlgorithmPreorder extends Algorithm {
 				unvisitedNodes[end.getId()] = true;
 			}
 			visitor.visitEndMethodType_ThrownTypes(node, end);
+		}
+
+	}
+
+	/**
+	 * Traverse the given node.
+	 * @param node            The node which is traversed.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	protected void traverse(ModuleType node, boolean callVirtualBase) {
+		traverse((Type)node, false);
+
+		Base genNodeRef;
+
+		// edge: refersTo
+		genNodeRef = node.getRefersTo();
+		if (genNodeRef != null) {
+			Module end = (Module)genNodeRef;
+			visitor.visitModuleType_RefersTo(node, end);
+			if (apRoot && visitUsedSpecialNodesOnly && Common.getIsAPSpecNode(end)) {
+				unvisitedNodes[end.getId()] = true;
+			}
+			visitor.visitEndModuleType_RefersTo(node, end);
 		}
 
 	}

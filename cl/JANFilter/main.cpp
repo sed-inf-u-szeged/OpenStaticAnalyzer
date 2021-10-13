@@ -123,7 +123,7 @@ int main(int argc, char *argv[]) {
   #endif
         fact.load(inputFile, csiHeader);
   #ifndef _DEBUG
-      } catch (IOException e) {
+      } catch (const IOException&) {
         WriteMsg::write(CMSG_CANNOT_READ_FILE, inputFile.c_str());
         exit(EXIT_FAILURE);
       }
@@ -153,7 +153,7 @@ int main(int argc, char *argv[]) {
         try {
           common::WriteMsg::write(CMSG_LOAD_FILTER_FILE, filterFile.c_str());
           fact.loadFilter(filterFile);
-        } catch (IOException e) {
+        } catch (const IOException&) {
           common::WriteMsg::write(CMSG_FILTER_CANNOT_LOAD, filterFile.c_str());
         }
         fact.turnFilterOn();

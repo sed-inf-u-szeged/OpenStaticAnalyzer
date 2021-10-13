@@ -148,6 +148,7 @@ namespace columbus { namespace lim { namespace metrics {
 
       void addMetric( NodeWrapper& node, int value );
       void addMetric( NodeWrapper& node, double value );
+      void setInvalid( NodeWrapper& node );
 
     protected:
 

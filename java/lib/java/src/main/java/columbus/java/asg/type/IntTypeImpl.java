@@ -33,6 +33,7 @@ import columbus.logger.LoggerHandler;
  */
 public class IntTypeImpl extends BaseImpl implements IntType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(IntTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	public IntTypeImpl(int id, Factory factory) {
 		super(id, factory);

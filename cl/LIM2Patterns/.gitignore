@@ -1,0 +1,4 @@
+# Exclude the .gradle directories
+pybind11/
+Lib/
+__pycache__/

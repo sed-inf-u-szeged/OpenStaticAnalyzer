@@ -39,6 +39,9 @@ namespace struc {
   * \brief InitializerBlock class, which represents the struc::InitializerBlock node.
   * (missing)
   * 
+  * Attributes:
+  *   - lloc (int) : (missing)
+  * 
   * Edges:
   *   - hasBody (statm::Block, single) : (missing)
   */
@@ -87,6 +90,32 @@ namespace struc {
       * \brief Delete all edge.
       */
       virtual void prepareDelete(bool tryOnVirtualParent);
+
+
+      // ---------- Attribute getter function(s) ----------
+
+      /**
+      * \brief Gives back the lloc of the node.
+      * \return Returns with the lloc.
+      */
+      int getLloc() const;
+
+
+      // ---------- Attribute setter function(s) ----------
+
+      /**
+      * \internal
+      * \brief Sets the lloc of the node.
+      * \param lloc [in] The new value of the lloc.
+      */
+      void setLloc(int _lloc);
+
+    protected:
+
+      // ---------- Attribute(s) ----------
+
+      /** \internal \brief The value of the `lloc`. */
+      int m_lloc;
 
     protected:
       /**

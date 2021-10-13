@@ -36,7 +36,6 @@ VisitorJAVASCRIPTML::~VisitorJAVASCRIPTML() {
 
 void VisitorJAVASCRIPTML::beginVisit() {
   ofs << "<?xml version='1.0' encoding=\"utf-8\"?>\n";
-  ofs << "<!DOCTYPE Project SYSTEM 'javascript-0.1.10.dtd'>\n";
   ofs << "<Project name='" << projectName << "'"
       << " xmlns:base='columbus_javascript_schema/base'"
       << " xmlns:declaration='columbus_javascript_schema/declaration'"
@@ -1352,6 +1351,17 @@ void VisitorJAVASCRIPTML::visitEndCallExpression_HasArguments(const expression::
   ofs << "</CallExpression_HasArguments>\n";
 }
 
+void VisitorJAVASCRIPTML::visitCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end) {
+  createIndentation();
+  ofs << "<CallExpression_Calls ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
+}
+
+void VisitorJAVASCRIPTML::visitEndCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end) {
+}
+
 void VisitorJAVASCRIPTML::visitConditionalExpression_HasAlternate(const expression::ConditionalExpression& begin, const expression::Expression& end) {
   createIndentation();
   ofs << "<ConditionalExpression_HasAlternate>\n";
@@ -1495,13 +1505,24 @@ void VisitorJAVASCRIPTML::visitEndNewExpression_HasArguments(const expression::N
   ofs << "</NewExpression_HasArguments>\n";
 }
 
-void VisitorJAVASCRIPTML::visitObjectExpression_HasProperties(const expression::ObjectExpression& begin, const expression::Property& end) {
+void VisitorJAVASCRIPTML::visitNewExpression_Calls(const expression::NewExpression& begin, const statement::Function& end) {
+  createIndentation();
+  ofs << "<NewExpression_Calls ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
+}
+
+void VisitorJAVASCRIPTML::visitEndNewExpression_Calls(const expression::NewExpression& begin, const statement::Function& end) {
+}
+
+void VisitorJAVASCRIPTML::visitObjectExpression_HasProperties(const expression::ObjectExpression& begin, const base::Positioned& end) {
   createIndentation();
   ofs << "<ObjectExpression_HasProperties>\n";
   incDepth();
 }
 
-void VisitorJAVASCRIPTML::visitEndObjectExpression_HasProperties(const expression::ObjectExpression& begin, const expression::Property& end) {
+void VisitorJAVASCRIPTML::visitEndObjectExpression_HasProperties(const expression::ObjectExpression& begin, const base::Positioned& end) {
   decDepth();
   createIndentation();
   ofs << "</ObjectExpression_HasProperties>\n";
@@ -1927,13 +1948,13 @@ void VisitorJAVASCRIPTML::visitEndLabeledStatement_HasBody(const statement::Labe
   ofs << "</LabeledStatement_HasBody>\n";
 }
 
-void VisitorJAVASCRIPTML::visitObjectPattern_HasProperties(const statement::ObjectPattern& begin, const expression::Property& end) {
+void VisitorJAVASCRIPTML::visitObjectPattern_HasProperties(const statement::ObjectPattern& begin, const base::Positioned& end) {
   createIndentation();
   ofs << "<ObjectPattern_HasProperties>\n";
   incDepth();
 }
 
-void VisitorJAVASCRIPTML::visitEndObjectPattern_HasProperties(const statement::ObjectPattern& begin, const expression::Property& end) {
+void VisitorJAVASCRIPTML::visitEndObjectPattern_HasProperties(const statement::ObjectPattern& begin, const base::Positioned& end) {
   decDepth();
   createIndentation();
   ofs << "</ObjectPattern_HasProperties>\n";
@@ -2837,6 +2858,9 @@ void VisitorJAVASCRIPTML::writeAttributes(const statement::ForOfStatement& node,
 
   writeAttributes((statement::ForInStatement&)node,composite,false);
 
+  if (!composite) {
+    ofs << " async='" << (node.getAsync() ? "true" : "false") << "'";
+  }
 }
 
 void VisitorJAVASCRIPTML::writeAttributes(const statement::ForStatement& node,bool composite, bool bWithParent /*= true*/ ) {

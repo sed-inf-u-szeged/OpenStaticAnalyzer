@@ -100,24 +100,24 @@ const additionalOperators = {
 //--------------------------
 module.exports.convertPropertyKind = function (kind) {
     return propertyKinds[kind] === undefined ? 'unrecognized' : propertyKinds[kind];
-}
+};
 
 module.exports.convertDeclarationKind = function (kind) {
     return declarationKinds[kind] === undefined ? 'unrecognized' : declarationKinds[kind];
-}
+};
 
 module.exports.convertMethodDefinitionKind = function (kind) {
     return methodDefinitionKinds[kind] === undefined ? 'unrecognized' : methodDefinitionKinds[kind];
-}
+};
 
 module.exports.convertSourceType = function (sourcetype) {
     return sourceTypes[sourcetype] === undefined ? 'unrecognized' : sourceTypes[sourcetype];
-}
+};
 
 module.exports.convertUnaryOperatorToString = function (operator) {
     return unaryOperators[operator] === undefined ? 'unrecognized' : unaryOperators[operator];
-}
+};
 
 module.exports.convertOperatorToString = function (operator) {
     return additionalOperators[operator] === undefined ? 'unrecognized' : additionalOperators[operator];
-}
+};

@@ -10,16 +10,21 @@ results in the increase of development and testing costs, and operational
 risks. In spite of this, the source code usually receives hostile treatment
 and is merely considered as a tool.
 
+OpenStaticAnalyzer provides deep static analysis of source code.
+Using the results of the analysis, the quality of the analyzed source code can
+be improved and developed both in the short- and long term in a directed way.
+
 Product characteristics
 
 The most important product characteristics of OpenStaticAnalyzer are the following:
-* Support for Java 8, Python 2.7.x and 3.6.x, EcmaScript2017 (JavaScript), C# 6.0
+* Support for Java 11, Python 2.7.x and 3.8.x, EcmaScript2017 (JavaScript), C# 8.0
 * Platform-independent command line tools
 * Transparent integration into build processes
 * Powerful filter management
 * Coding issue detection
+  - Common programming mistakes
   - Metric threshold violations
-  - Integration of popular free tools (PMD, FindBugs, Pylint, ESLint, FxCop)
+  - Integration of popular free tools (PMD, SpotBugs, Pylint, ESLint, FxCop)
 * Clone detection (copy-pasted source code fragments) extended with clone
   tracking and "clone smells"
   - Syntax-based, so-called Type-2 clones

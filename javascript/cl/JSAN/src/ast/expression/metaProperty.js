@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var metaProperty = factory.createMetaPropertyWrapper(factory);
+        var metaProperty = factory.createMetaPropertyWrapper();
         globals.setPositionInfo(node, metaProperty);
         return metaProperty;
     } else {
@@ -34,29 +34,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.meta != null) {
             var metaWrapper = globals.getWrapperOfNode(node.meta);
-            if (node.meta.type !== "Literal") {
-                var metaWrapperFunctionString = "setMeta" + node.meta.type;
-            } else {
-                var metaWrapperFunctionString = "setMeta" + globals.getLiteralType(node.meta) + node.meta.type;
-            }
             try {
-                metaPropertyWrapper[metaWrapperFunctionString](metaWrapper);
+                metaPropertyWrapper.setMeta(metaWrapper);
             } catch (e) {
-                console.error("METAPROPERTY - Function not exist: metaPropertyWrapper." + metaWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("METAPROPERTY - Could not set meta! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.property != null) {
             var propertyWrapper = globals.getWrapperOfNode(node.property);
-            if (node.property.type !== "Literal") {
-                var propertyWrapperFunctionString = "setProperty" + node.property.type;
-            } else {
-                var propertyWrapperFunctionString = "setProperty" + globals.getLiteralType(node.property) + node.property.type;
-            }
             try {
-                metaPropertyWrapper[propertyWrapperFunctionString](propertyWrapper);
+                metaPropertyWrapper.setProperty(propertyWrapper);
             } catch (e) {
-                console.error("METAPROPERTY - Function not exist: metaPropertyWrapper." + propertyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("METAPROPERTY - Could not set property! Reason of the error: " + e + "\n");
             }
         }
 

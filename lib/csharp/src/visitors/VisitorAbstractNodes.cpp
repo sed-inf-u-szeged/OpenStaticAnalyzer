@@ -147,6 +147,14 @@ void VisitorAbstractNodes::visitEnd(const expression::ConditionalExpressionSynta
   visitEnd   ((expression::ExpressionSyntax&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const expression::DeclarationExpressionSyntax& node , bool callVirtualBase) {
+  visit   ((expression::ExpressionSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::DeclarationExpressionSyntax& node , bool callVirtualBase) {
+  visitEnd   ((expression::ExpressionSyntax&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const expression::DefaultExpressionSyntax& node , bool callVirtualBase) {
   visit   ((expression::ExpressionSyntax&)node,false); 
 }
@@ -211,6 +219,14 @@ void VisitorAbstractNodes::visitEnd(const expression::ImplicitElementAccessSynta
   visitEnd   ((expression::ExpressionSyntax&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& node , bool callVirtualBase) {
+  visit   ((expression::ExpressionSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& node , bool callVirtualBase) {
+  visitEnd   ((expression::ExpressionSyntax&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const expression::InitializerExpressionSyntax& node , bool callVirtualBase) {
   visit   ((expression::ExpressionSyntax&)node,false); 
 }
@@ -240,6 +256,14 @@ void VisitorAbstractNodes::visit(const expression::InvocationExpressionSyntax& n
 }
 
 void VisitorAbstractNodes::visitEnd(const expression::InvocationExpressionSyntax& node , bool callVirtualBase) {
+  visitEnd   ((expression::ExpressionSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const expression::IsPatternExpressionSyntax& node , bool callVirtualBase) {
+  visit   ((expression::ExpressionSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::IsPatternExpressionSyntax& node , bool callVirtualBase) {
   visitEnd   ((expression::ExpressionSyntax&)node,false); 
 }
 
@@ -387,12 +411,36 @@ void VisitorAbstractNodes::visitEnd(const expression::QueryExpressionSyntax& nod
   visitEnd   ((expression::ExpressionSyntax&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const expression::RangeExpressionSyntax& node , bool callVirtualBase) {
+  visit   ((expression::ExpressionSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::RangeExpressionSyntax& node , bool callVirtualBase) {
+  visitEnd   ((expression::ExpressionSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const expression::RefExpressionSyntax& node , bool callVirtualBase) {
+  visit   ((expression::ExpressionSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::RefExpressionSyntax& node , bool callVirtualBase) {
+  visitEnd   ((expression::ExpressionSyntax&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const expression::RefTypeExpressionSyntax& node , bool callVirtualBase) {
   visit   ((expression::ExpressionSyntax&)node,false); 
 }
 
 void VisitorAbstractNodes::visitEnd(const expression::RefTypeExpressionSyntax& node , bool callVirtualBase) {
   visitEnd   ((expression::ExpressionSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const expression::RefTypeSyntax& node , bool callVirtualBase) {
+  visit   ((expression::TypeSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::RefTypeSyntax& node , bool callVirtualBase) {
+  visitEnd   ((expression::TypeSyntax&)node,false); 
 }
 
 void VisitorAbstractNodes::visit(const expression::RefValueExpressionSyntax& node , bool callVirtualBase) {
@@ -435,12 +483,44 @@ void VisitorAbstractNodes::visitEnd(const expression::StackAllocArrayCreationExp
   visitEnd   ((expression::ExpressionSyntax&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const expression::SwitchExpressionSyntax& node , bool callVirtualBase) {
+  visit   ((expression::ExpressionSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::SwitchExpressionSyntax& node , bool callVirtualBase) {
+  visitEnd   ((expression::ExpressionSyntax&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const expression::ThisExpressionSyntax& node , bool callVirtualBase) {
   visit   ((expression::InstanceExpressionSyntax&)node,false); 
 }
 
 void VisitorAbstractNodes::visitEnd(const expression::ThisExpressionSyntax& node , bool callVirtualBase) {
   visitEnd   ((expression::InstanceExpressionSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const expression::ThrowExpressionSyntax& node , bool callVirtualBase) {
+  visit   ((expression::ExpressionSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::ThrowExpressionSyntax& node , bool callVirtualBase) {
+  visitEnd   ((expression::ExpressionSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const expression::TupleExpressionSyntax& node , bool callVirtualBase) {
+  visit   ((expression::ExpressionSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::TupleExpressionSyntax& node , bool callVirtualBase) {
+  visitEnd   ((expression::ExpressionSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const expression::TupleTypeSyntax& node , bool callVirtualBase) {
+  visit   ((expression::TypeSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::TupleTypeSyntax& node , bool callVirtualBase) {
+  visitEnd   ((expression::TypeSyntax&)node,false); 
 }
 
 void VisitorAbstractNodes::visit(const expression::TypeOfExpressionSyntax& node , bool callVirtualBase) {
@@ -480,6 +560,14 @@ void VisitorAbstractNodes::visit(const statement::CheckedStatementSyntax& node ,
 }
 
 void VisitorAbstractNodes::visitEnd(const statement::CheckedStatementSyntax& node , bool callVirtualBase) {
+  visitEnd   ((statement::StatementSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const statement::CommonForEachStatementSyntax& node , bool callVirtualBase) {
+  visit   ((statement::StatementSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const statement::CommonForEachStatementSyntax& node , bool callVirtualBase) {
   visitEnd   ((statement::StatementSyntax&)node,false); 
 }
 
@@ -524,11 +612,19 @@ void VisitorAbstractNodes::visitEnd(const statement::FixedStatementSyntax& node 
 }
 
 void VisitorAbstractNodes::visit(const statement::ForEachStatementSyntax& node , bool callVirtualBase) {
-  visit   ((statement::StatementSyntax&)node,false); 
+  visit   ((statement::CommonForEachStatementSyntax&)node,false); 
 }
 
 void VisitorAbstractNodes::visitEnd(const statement::ForEachStatementSyntax& node , bool callVirtualBase) {
-  visitEnd   ((statement::StatementSyntax&)node,false); 
+  visitEnd   ((statement::CommonForEachStatementSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const statement::ForEachVariableStatementSyntax& node , bool callVirtualBase) {
+  visit   ((statement::CommonForEachStatementSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const statement::ForEachVariableStatementSyntax& node , bool callVirtualBase) {
+  visitEnd   ((statement::CommonForEachStatementSyntax&)node,false); 
 }
 
 void VisitorAbstractNodes::visit(const statement::ForStatementSyntax& node , bool callVirtualBase) {
@@ -568,6 +664,14 @@ void VisitorAbstractNodes::visit(const statement::LocalDeclarationStatementSynta
 }
 
 void VisitorAbstractNodes::visitEnd(const statement::LocalDeclarationStatementSyntax& node , bool callVirtualBase) {
+  visitEnd   ((statement::StatementSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const statement::LocalFunctionStatementSyntax& node , bool callVirtualBase) {
+  visit   ((statement::StatementSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const statement::LocalFunctionStatementSyntax& node , bool callVirtualBase) {
   visitEnd   ((statement::StatementSyntax&)node,false); 
 }
 
@@ -835,6 +939,14 @@ void VisitorAbstractNodes::visitEnd(const structure::BracketedParameterListSynta
   visitEnd   ((structure::BaseParameterListSyntax&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const structure::CasePatternSwitchLabelSyntax& node , bool callVirtualBase) {
+  visit   ((structure::SwitchLabelSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::CasePatternSwitchLabelSyntax& node , bool callVirtualBase) {
+  visitEnd   ((structure::SwitchLabelSyntax&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const structure::CaseSwitchLabelSyntax& node , bool callVirtualBase) {
   visit   ((structure::SwitchLabelSyntax&)node,false); 
 }
@@ -889,6 +1001,14 @@ void VisitorAbstractNodes::visit(const structure::CompilationUnitSyntax& node , 
 
 void VisitorAbstractNodes::visitEnd(const structure::CompilationUnitSyntax& node , bool callVirtualBase) {
   visitEnd   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const structure::ConstantPatternSyntax& node , bool callVirtualBase) {
+  visit   ((structure::PatternSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::ConstantPatternSyntax& node , bool callVirtualBase) {
+  visitEnd   ((structure::PatternSyntax&)node,false); 
 }
 
 void VisitorAbstractNodes::visit(const structure::ConstructorConstraintSyntax& node , bool callVirtualBase) {
@@ -963,6 +1083,14 @@ void VisitorAbstractNodes::visitEnd(const structure::CrefSyntax& node , bool cal
   visitEnd   ((base::Positioned&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const structure::DeclarationPatternSyntax& node , bool callVirtualBase) {
+  visit   ((structure::PatternSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::DeclarationPatternSyntax& node , bool callVirtualBase) {
+  visitEnd   ((structure::PatternSyntax&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const structure::DefaultSwitchLabelSyntax& node , bool callVirtualBase) {
   visit   ((structure::SwitchLabelSyntax&)node,false); 
 }
@@ -985,6 +1113,22 @@ void VisitorAbstractNodes::visit(const structure::DestructorDeclarationSyntax& n
 
 void VisitorAbstractNodes::visitEnd(const structure::DestructorDeclarationSyntax& node , bool callVirtualBase) {
   visitEnd   ((structure::BaseMethodDeclarationSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const structure::DiscardDesignationSyntax& node , bool callVirtualBase) {
+  visit   ((structure::VariableDesignationSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::DiscardDesignationSyntax& node , bool callVirtualBase) {
+  visitEnd   ((structure::VariableDesignationSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const structure::DiscardPatternSyntax& node , bool callVirtualBase) {
+  visit   ((structure::PatternSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::DiscardPatternSyntax& node , bool callVirtualBase) {
+  visitEnd   ((structure::PatternSyntax&)node,false); 
 }
 
 void VisitorAbstractNodes::visit(const structure::ElseClauseSyntax& node , bool callVirtualBase) {
@@ -1291,12 +1435,44 @@ void VisitorAbstractNodes::visitEnd(const structure::ParameterSyntax& node , boo
   visitEnd   ((base::Positioned&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const structure::ParenthesizedVariableDesignationSyntax& node , bool callVirtualBase) {
+  visit   ((structure::VariableDesignationSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::ParenthesizedVariableDesignationSyntax& node , bool callVirtualBase) {
+  visitEnd   ((structure::VariableDesignationSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const structure::PatternSyntax& node , bool callVirtualBase) {
+  visit   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::PatternSyntax& node , bool callVirtualBase) {
+  visitEnd   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const structure::PositionalPatternClauseSyntax& node , bool callVirtualBase) {
+  visit   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::PositionalPatternClauseSyntax& node , bool callVirtualBase) {
+  visitEnd   ((base::Positioned&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const structure::PropertyDeclarationSyntax& node , bool callVirtualBase) {
   visit   ((structure::BasePropertyDeclarationSyntax&)node,false); 
 }
 
 void VisitorAbstractNodes::visitEnd(const structure::PropertyDeclarationSyntax& node , bool callVirtualBase) {
   visitEnd   ((structure::BasePropertyDeclarationSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const structure::PropertyPatternClauseSyntax& node , bool callVirtualBase) {
+  visit   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::PropertyPatternClauseSyntax& node , bool callVirtualBase) {
+  visitEnd   ((base::Positioned&)node,false); 
 }
 
 void VisitorAbstractNodes::visit(const structure::QualifiedCrefSyntax& node , bool callVirtualBase) {
@@ -1331,6 +1507,14 @@ void VisitorAbstractNodes::visitEnd(const structure::QueryContinuationSyntax& no
   visitEnd   ((base::Positioned&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const structure::RecursivePatternSyntax& node , bool callVirtualBase) {
+  visit   ((structure::PatternSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::RecursivePatternSyntax& node , bool callVirtualBase) {
+  visitEnd   ((structure::PatternSyntax&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const structure::SelectClauseSyntax& node , bool callVirtualBase) {
   visit   ((structure::SelectOrGroupClauseSyntax&)node,false); 
 }
@@ -1355,12 +1539,36 @@ void VisitorAbstractNodes::visitEnd(const structure::SimpleBaseTypeSyntax& node 
   visitEnd   ((structure::BaseTypeSyntax&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const structure::SingleVariableDesignationSyntax& node , bool callVirtualBase) {
+  visit   ((structure::VariableDesignationSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::SingleVariableDesignationSyntax& node , bool callVirtualBase) {
+  visitEnd   ((structure::VariableDesignationSyntax&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const structure::StructDeclarationSyntax& node , bool callVirtualBase) {
   visit   ((structure::TypeDeclarationSyntax&)node,false); 
 }
 
 void VisitorAbstractNodes::visitEnd(const structure::StructDeclarationSyntax& node , bool callVirtualBase) {
   visitEnd   ((structure::TypeDeclarationSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const structure::SubpatternSyntax& node , bool callVirtualBase) {
+  visit   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::SubpatternSyntax& node , bool callVirtualBase) {
+  visitEnd   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const structure::SwitchExpressionArmSyntax& node , bool callVirtualBase) {
+  visit   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::SwitchExpressionArmSyntax& node , bool callVirtualBase) {
+  visitEnd   ((base::Positioned&)node,false); 
 }
 
 void VisitorAbstractNodes::visit(const structure::SwitchLabelSyntax& node , bool callVirtualBase) {
@@ -1384,6 +1592,14 @@ void VisitorAbstractNodes::visit(const structure::SyntaxToken& node , bool callV
 }
 
 void VisitorAbstractNodes::visitEnd(const structure::SyntaxToken& node , bool callVirtualBase) {
+  visitEnd   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const structure::TupleElementSyntax& node , bool callVirtualBase) {
+  visit   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::TupleElementSyntax& node , bool callVirtualBase) {
   visitEnd   ((base::Positioned&)node,false); 
 }
 
@@ -1459,6 +1675,14 @@ void VisitorAbstractNodes::visitEnd(const structure::UsingDirectiveSyntax& node 
   visitEnd   ((base::Positioned&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const structure::VarPatternSyntax& node , bool callVirtualBase) {
+  visit   ((structure::PatternSyntax&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::VarPatternSyntax& node , bool callVirtualBase) {
+  visitEnd   ((structure::PatternSyntax&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const structure::VariableDeclarationSyntax& node , bool callVirtualBase) {
   visit   ((base::Positioned&)node,false); 
 }
@@ -1472,6 +1696,22 @@ void VisitorAbstractNodes::visit(const structure::VariableDeclaratorSyntax& node
 }
 
 void VisitorAbstractNodes::visitEnd(const structure::VariableDeclaratorSyntax& node , bool callVirtualBase) {
+  visitEnd   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const structure::VariableDesignationSyntax& node , bool callVirtualBase) {
+  visit   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::VariableDesignationSyntax& node , bool callVirtualBase) {
+  visitEnd   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const structure::WhenClauseSyntax& node , bool callVirtualBase) {
+  visit   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::WhenClauseSyntax& node , bool callVirtualBase) {
   visitEnd   ((base::Positioned&)node,false); 
 }
 

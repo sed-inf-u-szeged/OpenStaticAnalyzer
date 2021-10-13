@@ -37,6 +37,7 @@ import columbus.logger.LoggerHandler;
  */
 public class MethodInvocationImpl extends BaseImpl implements MethodInvocation {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(MethodInvocationImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

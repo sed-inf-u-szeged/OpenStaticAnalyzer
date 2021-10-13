@@ -133,6 +133,22 @@ void VisitorAbstractNodes::visitEnd(const base::PositionedWithoutComment& node ,
     visitEnd((base::Base&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const expr::AnnotatedTypeExpression& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visit   ((base::Commentable&)node,false); 
+  visit   ((expr::TypeExpression&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expr::AnnotatedTypeExpression& node , bool callVirtualBase) {
+  visitEnd   ((expr::TypeExpression&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Commentable&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const expr::Annotation& node , bool callVirtualBase) {
   if (callVirtualBase)
     visit   ((base::Base&)node,false); 
@@ -389,6 +405,22 @@ void VisitorAbstractNodes::visitEnd(const expr::FloatLiteral& node , bool callVi
     visitEnd   ((base::Commentable&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const expr::FunctionalExpression& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visit   ((base::Commentable&)node,false); 
+  visit   ((expr::PolyExpression&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expr::FunctionalExpression& node , bool callVirtualBase) {
+  visitEnd   ((expr::PolyExpression&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Commentable&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const expr::Identifier& node , bool callVirtualBase) {
   if (callVirtualBase)
     visit   ((base::Base&)node,false); 
@@ -453,6 +485,22 @@ void VisitorAbstractNodes::visitEnd(const expr::IntegerLiteral& node , bool call
     visitEnd   ((base::Commentable&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const expr::Lambda& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visit   ((base::Commentable&)node,false); 
+  visit   ((expr::FunctionalExpression&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expr::Lambda& node , bool callVirtualBase) {
+  visitEnd   ((expr::FunctionalExpression&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Commentable&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const expr::Literal& node , bool callVirtualBase) {
   if (callVirtualBase)
     visit   ((base::Base&)node,false); 
@@ -495,6 +543,22 @@ void VisitorAbstractNodes::visit(const expr::MarkerAnnotation& node , bool callV
 
 void VisitorAbstractNodes::visitEnd(const expr::MarkerAnnotation& node , bool callVirtualBase) {
   visitEnd   ((expr::Annotation&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Commentable&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const expr::MemberReference& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visit   ((base::Commentable&)node,false); 
+  visit   ((expr::FunctionalExpression&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expr::MemberReference& node , bool callVirtualBase) {
+  visitEnd   ((expr::FunctionalExpression&)node,false); 
   if (callVirtualBase)
     visitEnd   ((base::Base&)node,false); 
   if (callVirtualBase)
@@ -607,6 +671,22 @@ void VisitorAbstractNodes::visit(const expr::ParenthesizedExpression& node , boo
 
 void VisitorAbstractNodes::visitEnd(const expr::ParenthesizedExpression& node , bool callVirtualBase) {
   visitEnd   ((expr::Unary&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Commentable&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const expr::PolyExpression& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visit   ((base::Commentable&)node,false); 
+  visit   ((expr::Expression&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expr::PolyExpression& node , bool callVirtualBase) {
+  visitEnd   ((expr::Expression&)node,false); 
   if (callVirtualBase)
     visitEnd   ((base::Base&)node,false); 
   if (callVirtualBase)
@@ -805,6 +885,22 @@ void VisitorAbstractNodes::visitEnd(const expr::TypeExpression& node , bool call
     visitEnd   ((base::Commentable&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const expr::TypeIntersectionExpression& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visit   ((base::Commentable&)node,false); 
+  visit   ((expr::TypeExpression&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expr::TypeIntersectionExpression& node , bool callVirtualBase) {
+  visitEnd   ((expr::TypeExpression&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Commentable&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const expr::TypeUnionExpression& node , bool callVirtualBase) {
   if (callVirtualBase)
     visit   ((base::Base&)node,false); 
@@ -847,6 +943,102 @@ void VisitorAbstractNodes::visit(const expr::WildcardExpression& node , bool cal
 
 void VisitorAbstractNodes::visitEnd(const expr::WildcardExpression& node , bool callVirtualBase) {
   visitEnd   ((expr::TypeExpression&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Commentable&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const module::Exports& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visit   ((base::Commentable&)node,false); 
+  visit   ((module::ModuleDirective&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const module::Exports& node , bool callVirtualBase) {
+  visitEnd   ((module::ModuleDirective&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Commentable&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const module::ModuleDirective& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visit   ((base::Commentable&)node,false); 
+  visit   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const module::ModuleDirective& node , bool callVirtualBase) {
+  visitEnd   ((base::Positioned&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Commentable&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const module::Opens& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visit   ((base::Commentable&)node,false); 
+  visit   ((module::ModuleDirective&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const module::Opens& node , bool callVirtualBase) {
+  visitEnd   ((module::ModuleDirective&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Commentable&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const module::Provides& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visit   ((base::Commentable&)node,false); 
+  visit   ((module::ModuleDirective&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const module::Provides& node , bool callVirtualBase) {
+  visitEnd   ((module::ModuleDirective&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Commentable&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const module::Requires& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visit   ((base::Commentable&)node,false); 
+  visit   ((module::ModuleDirective&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const module::Requires& node , bool callVirtualBase) {
+  visitEnd   ((module::ModuleDirective&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Commentable&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const module::Uses& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visit   ((base::Commentable&)node,false); 
+  visit   ((module::ModuleDirective&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const module::Uses& node , bool callVirtualBase) {
+  visitEnd   ((module::ModuleDirective&)node,false); 
   if (callVirtualBase)
     visitEnd   ((base::Base&)node,false); 
   if (callVirtualBase)
@@ -1681,6 +1873,34 @@ void VisitorAbstractNodes::visitEnd(const struc::MethodGeneric& node , bool call
     visitEnd   ((struc::Member&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const struc::Module& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Base&)node,false); 
+  visit   ((base::Named&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const struc::Module& node , bool callVirtualBase) {
+  visitEnd   ((base::Named&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Base&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const struc::ModuleDeclaration& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visit   ((base::Commentable&)node,false); 
+  visit   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const struc::ModuleDeclaration& node , bool callVirtualBase) {
+  visitEnd   ((base::Positioned&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Base&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Commentable&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const struc::NamedDeclaration& node , bool callVirtualBase) {
   if (callVirtualBase)
     visit   ((base::Base&)node,false); 
@@ -1979,6 +2199,14 @@ void VisitorAbstractNodes::visitEnd(const type::IntType& node , bool callVirtual
   visitEnd   ((type::PrimitiveType&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const type::IntersectionType& node , bool callVirtualBase) {
+  visit   ((type::Type&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const type::IntersectionType& node , bool callVirtualBase) {
+  visitEnd   ((type::Type&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const type::LongType& node , bool callVirtualBase) {
   visit   ((type::PrimitiveType&)node,false); 
 }
@@ -2000,6 +2228,14 @@ void VisitorAbstractNodes::visit(const type::MethodType& node , bool callVirtual
 }
 
 void VisitorAbstractNodes::visitEnd(const type::MethodType& node , bool callVirtualBase) {
+  visitEnd   ((type::Type&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const type::ModuleType& node , bool callVirtualBase) {
+  visit   ((type::Type&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const type::ModuleType& node , bool callVirtualBase) {
   visitEnd   ((type::Type&)node,false); 
 }
 

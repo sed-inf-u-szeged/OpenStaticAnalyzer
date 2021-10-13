@@ -46,6 +46,11 @@ namespace columbus { namespace lim { namespace metrics {
       this->shared->currentPackageInfo().ints[this->name] += wmc;
     });
 
+    // C vs. C++ compat
+    registerHandler( phaseVisit, NTYPE_LIM_STRUCTURE, limLangC, false, [this] ( NodeWrapper& node ) {
+      setInvalid( node );
+    });
+
   }
 
   const string& WMC::translateLevel( Language language, const string& level ) const {

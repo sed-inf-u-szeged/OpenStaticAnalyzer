@@ -42,6 +42,7 @@ namespace logical {
   *   - objectSize (int) : (missing)
   * 
   * Edges:
+  *   - extends (logical::Class, multiple) : (missing)
   *   - grantsFriendship (logical::Friendship, multiple) : (missing)
   *   - isSubclass (type::Type, multiple) : (missing)
   */
@@ -175,6 +176,30 @@ namespace logical {
       // ---------- Edge getter function(s) ----------
 
       /**
+      * \brief Gives back iterator for the extends edges.
+      * \return Returns an iterator for the extends edges.
+      */
+      ListIterator<logical::Class> getExtendsListIteratorBegin() const;
+
+      /**
+      * \brief Gives back iterator for the extends edges.
+      * \return Returns an iterator for the extends edges.
+      */
+      ListIterator<logical::Class> getExtendsListIteratorEnd() const;
+
+      /**
+      * \brief Tells whether the node has extends edges or not.
+      * \return Returns true if the node doesn't have any extends edge.
+      */
+      bool getExtendsIsEmpty() const;
+
+      /**
+      * \brief Gives back how many extends edges the node has.
+      * \return Returns with the number of extends edges.
+      */
+      unsigned getExtendsSize() const;
+
+      /**
       * \brief Gives back iterator for the grantsFriendship edges.
       * \return Returns an iterator for the grantsFriendship edges.
       */
@@ -224,6 +249,30 @@ namespace logical {
 
 
       // ---------- Edge setter function(s) ----------
+
+      /**
+      * \brief Adds a new extends edge to the node and inserts it after the other ones.
+      * \param node [in] The end point of the new extends edge.
+      */
+      void addExtends(const Class *node);
+
+      /**
+      * \brief Adds a new extends edge to the node and inserts it after the other ones.
+      * \param id [in] The end point of the new extends edge.
+      */
+      void addExtends(NodeId id);
+
+      /**
+      * \brief Remove the extends edge by id from the node.
+      * \param id [in] The end point of the extends edge.
+      */
+      void removeExtends(NodeId id);
+
+      /**
+      * \brief Remove the extends edge from the node.
+      * \param node [in] The end point of the extends edge.
+      */
+      void removeExtends(Class *node);
 
       /**
       * \brief Adds a new grantsFriendship edge to the node and inserts it after the other ones.
@@ -276,6 +325,9 @@ namespace logical {
     protected:
 
       // ---------- Edges ----------
+
+      /** \internal \brief Container stores the id of the nodes the extends edge points to. */
+      ListIterator<logical::Class>::Container extendsContainer;
 
       /** \internal \brief Container stores the id of the nodes the grantsFriendship edge points to. */
       ListIterator<logical::Friendship>::Container grantsFriendshipContainer;

@@ -11,7 +11,6 @@ add_custom_copy_target(${PROGRAM_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/${PROGRAM_NAM
 add_custom_copy_target(${PROGRAM_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src ${EXECUTABLE_OUTPUT_PATH}/node_modules/eslintrunner/src DIRECTORY)
 add_custom_copy_target(${PROGRAM_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/package.json ${EXECUTABLE_OUTPUT_PATH}/node_modules/eslintrunner/package.json)
 add_custom_copy_target(${PROGRAM_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/eslint.json ${EXECUTABLE_OUTPUT_PATH}/node_modules/eslintrunner/eslint.json)
-add_custom_copy_target(${PROGRAM_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/OpenStaticAnalyzerFormatter.js ${EXECUTABLE_OUTPUT_PATH}/node_modules/eslintrunner/OpenStaticAnalyzerFormatter.js)
-
+add_custom_copy_target(${PROGRAM_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/OpenStaticAnalyzerFormater.js ${EXECUTABLE_OUTPUT_PATH}/node_modules/eslintrunner/OpenStaticAnalyzerFormater.js)
 
 set_visual_studio_project_folder(${PROGRAM_NAME} TRUE)

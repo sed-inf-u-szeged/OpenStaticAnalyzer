@@ -35,6 +35,9 @@ namespace statement {
   /**
   * \brief StatementSyntax class, which represents the statement::StatementSyntax node.
   * (missing)
+  * 
+  * Edges:
+  *   - AttributeLists (structure::AttributeListSyntax, multiple) : (missing)
   */
   class StatementSyntax : public base::Positioned {
     protected:
@@ -94,6 +97,68 @@ namespace statement {
       * \return Return true if removing was success.
       */
       virtual bool removeEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent);
+
+    public:
+
+      // ---------- Edge getter function(s) ----------
+
+      /**
+      * \brief Gives back iterator for the AttributeLists edges.
+      * \return Returns an iterator for the AttributeLists edges.
+      */
+      ListIterator<structure::AttributeListSyntax> getAttributeListsListIteratorBegin() const;
+
+      /**
+      * \brief Gives back iterator for the AttributeLists edges.
+      * \return Returns an iterator for the AttributeLists edges.
+      */
+      ListIterator<structure::AttributeListSyntax> getAttributeListsListIteratorEnd() const;
+
+      /**
+      * \brief Tells whether the node has AttributeLists edges or not.
+      * \return Returns true if the node doesn't have any AttributeLists edge.
+      */
+      bool getAttributeListsIsEmpty() const;
+
+      /**
+      * \brief Gives back how many AttributeLists edges the node has.
+      * \return Returns with the number of AttributeLists edges.
+      */
+      unsigned getAttributeListsSize() const;
+
+
+      // ---------- Edge setter function(s) ----------
+
+      /**
+      * \brief Adds a new AttributeLists edge to the node and inserts it after the other ones.
+      * \param node [in] The end point of the new AttributeLists edge.
+      */
+      void addAttributeLists(const structure::AttributeListSyntax *node);
+
+      /**
+      * \brief Adds a new AttributeLists edge to the node and inserts it after the other ones.
+      * \param id [in] The end point of the new AttributeLists edge.
+      */
+      void addAttributeLists(NodeId id);
+
+      /**
+      * \brief Remove the AttributeLists edge by id from the node.
+      * \param id [in] The end point of the AttributeLists edge.
+      */
+      void removeAttributeLists(NodeId id);
+
+      /**
+      * \brief Remove the AttributeLists edge from the node.
+      * \param node [in] The end point of the AttributeLists edge.
+      */
+      void removeAttributeLists(structure::AttributeListSyntax *node);
+
+    protected:
+
+      // ---------- Edges ----------
+
+      /** \internal \brief Container stores the id of the nodes the AttributeLists edge points to. */
+      ListIterator<structure::AttributeListSyntax>::Container AttributeListsContainer;
 
     public:
 

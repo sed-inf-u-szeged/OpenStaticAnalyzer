@@ -10,6 +10,11 @@ file (MAKE_DIRECTORY ${COLUMBUS_3RDPARTY_INSTALL_DIR}/bin)
 file (MAKE_DIRECTORY ${COLUMBUS_3RDPARTY_INSTALL_DIR}/lib)
 file (MAKE_DIRECTORY ${COLUMBUS_3RDPARTY_INSTALL_DIR}/include)
 
+# Disable warnings during building 3rdparty code
+if (CMAKE_SYSTEM_NAME STREQUAL Linux)
+  add_compile_options("-w")
+endif()
+
 ########################### zlib #########################
 
 ExternalProject_Add(zlib
@@ -17,7 +22,7 @@ ExternalProject_Add(zlib
     PATCH_COMMAND git clean -x -d -f
           COMMAND git reset --hard
           COMMAND git apply --ignore-whitespace ${CMAKE_CURRENT_SOURCE_DIR}/CMake/zlib.patch
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${COLUMBUS_3RDPARTY_INSTALL_DIR} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS} -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${COLUMBUS_3RDPARTY_INSTALL_DIR} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS} -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
     LOG_CONFIGURE 1
     LOG_BUILD 1
     LOG_INSTALL 1
@@ -38,6 +43,13 @@ if (CMAKE_SYSTEM_NAME STREQUAL Windows)
   if (COLUMBUS_64BIT)
     set (BOOST_ADDRESS_MODEL address-model=64)
   endif ()
+  set (BOOST_MSVC_TOOLSET toolset=msvc-14.1)
+endif ()
+
+
+if (CMAKE_SYSTEM_NAME STREQUAL Linux)
+  set (BOOST_EXTRA_CXX_COMPILER_FLAGS cxxflags=-fPIC)
+  set (BOOST_EXTRA_C_COMPILER_FLAGS cflags=-fPIC)
 endif ()  
 
 ExternalProject_Add(boost
@@ -45,8 +57,8 @@ ExternalProject_Add(boost
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/boost
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ${COMMAND_PREFIX}bootstrap${SCRIPT_EXT}
-    BUILD_COMMAND ${COMMAND_PREFIX}b2 cxxflags=-fPIC cflags=-fPIC --reconfigure --build-dir=${CMAKE_CURRENT_BINARY_DIR}/boost-prefix --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR} -j8 --with-filesystem --with-system --with-date_time --with-iostreams --with-graph --with-regex --with-thread --with-math --layout=system variant=$<$<CONFIG:Debug>:debug>$<$<CONFIG:Release>:release>  runtime-link=static architecture=x86  threading=multi ${BOOST_ADDRESS_MODEL} link=static  -sZLIB_INCLUDE=${COLUMBUS_3RDPARTY_INSTALL_DIR}/include -sZLIB_LIBPATH=${COLUMBUS_3RDPARTY_INSTALL_DIR}/lib -sZLIB_BINARY=z -sNO_ZLIB=0 -sNO_BZIP2=1   headers
-          COMMAND ${COMMAND_PREFIX}b2 cxxflags=-fPIC cflags=-fPIC --reconfigure --build-dir=${CMAKE_CURRENT_BINARY_DIR}/boost-prefix --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR} -j8 --with-filesystem --with-system --with-date_time --with-iostreams --with-graph --with-regex --with-thread --with-math --layout=system variant=$<$<CONFIG:Debug>:debug>$<$<CONFIG:Release>:release>  runtime-link=static architecture=x86  threading=multi ${BOOST_ADDRESS_MODEL} link=static  -sZLIB_INCLUDE=${COLUMBUS_3RDPARTY_INSTALL_DIR}/include -sZLIB_LIBPATH=${COLUMBUS_3RDPARTY_INSTALL_DIR}/lib -sZLIB_BINARY=z -sNO_ZLIB=0 -sNO_BZIP2=1   install
+    BUILD_COMMAND ${COMMAND_PREFIX}b2 ${BOOST_EXTRA_CXX_COMPILER_FLAGS} ${BOOST_EXTRA_C_COMPILER_FLAGS} ${BOOST_MSVC_TOOLSET} --reconfigure --build-dir=${CMAKE_CURRENT_BINARY_DIR}/boost-prefix --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR} -j8 --with-filesystem --with-system --with-date_time --with-iostreams --with-graph --with-regex --with-thread --with-math --layout=system variant=$<$<CONFIG:Debug>:debug>$<$<CONFIG:Release>:release>  runtime-link=static architecture=x86  threading=multi ${BOOST_ADDRESS_MODEL} link=static  -sZLIB_INCLUDE=${COLUMBUS_3RDPARTY_INSTALL_DIR}/include -sZLIB_LIBPATH=${COLUMBUS_3RDPARTY_INSTALL_DIR}/lib -sZLIB_BINARY=z -sNO_ZLIB=0 -sNO_BZIP2=1   headers
+          COMMAND ${COMMAND_PREFIX}b2 ${BOOST_EXTRA_CXX_COMPILER_FLAGS} ${BOOST_EXTRA_C_COMPILER_FLAGS} ${BOOST_MSVC_TOOLSET} --reconfigure --build-dir=${CMAKE_CURRENT_BINARY_DIR}/boost-prefix --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR} -j8 --with-filesystem --with-system --with-date_time --with-iostreams --with-graph --with-regex --with-thread --with-math --layout=system variant=$<$<CONFIG:Debug>:debug>$<$<CONFIG:Release>:release>  runtime-link=static architecture=x86  threading=multi ${BOOST_ADDRESS_MODEL} link=static  -sZLIB_INCLUDE=${COLUMBUS_3RDPARTY_INSTALL_DIR}/include -sZLIB_LIBPATH=${COLUMBUS_3RDPARTY_INSTALL_DIR}/lib -sZLIB_BINARY=z -sNO_ZLIB=0 -sNO_BZIP2=1   install
     INSTALL_COMMAND ${CMAKE_COMMAND} -E echo "No sepearate installation step is needed."
     LOG_CONFIGURE 1
     LOG_BUILD 1
@@ -88,11 +100,11 @@ endif ()
 
 if (CMAKE_SYSTEM_NAME STREQUAL Linux)
   ExternalProject_Add( xerces-c
-      URL http://archive.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.4.tar.gz
-	  URL_HASH MD5=21bb097b711a513275379b59757cba4c 
-	  BUILD_IN_SOURCE 1
+      URL https://archive.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.4.tar.gz
+      URL_HASH MD5=21bb097b711a513275379b59757cba4c 
+      BUILD_IN_SOURCE 1
       CONFIGURE_COMMAND ./reconf
-                COMMAND ./configure --disable-shared -disable-network --disable-transcoder-icu --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR}
+                COMMAND ./configure --disable-shared -disable-network --disable-transcoder-icu --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR} --disable-dependency-tracking
       BUILD_COMMAND make -j8 all
       INSTALL_COMMAND make install
       LOG_DOWNLOAD 1
@@ -111,8 +123,8 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL Windows)
   endif ()
   
   ExternalProject_Add( xerces-c
-	  URL http://archive.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.4.zip
-	  URL_HASH MD5=6fcd8ec268f6bfe11d8ce2cd7d25a185
+      URL https://archive.apache.org/dist/xerces/c/3/sources/xerces-c-3.1.4.zip
+      URL_HASH MD5=6fcd8ec268f6bfe11d8ce2cd7d25a185
       BUILD_IN_SOURCE 1
       CONFIGURE_COMMAND ${CMAKE_COMMAND} -E echo "No configuration is required."
       BUILD_COMMAND msbuild projects/Win32/VC14/xerces-all/xerces-all.sln /m /t:XercesLib "/p:Configuration=Static $<CONFIG>" /p:Platform=${VS_PLATFORM} /p:PlatformToolset=${CMAKE_VS_PLATFORM_TOOLSET}
@@ -128,13 +140,19 @@ endif ()
 
 ########################### PMD #########################
 
-set (PMD_PACKAGE_VERSION pmd-bin-5.2.3)
+set (PMD_PACKAGE_VERSION pmd-bin-6.32.0)
 set (PMD_DIST_PACKAGE ${CMAKE_CURRENT_SOURCE_DIR}/PMD/pmd-dist/target/${PMD_PACKAGE_VERSION}.zip)
 set (PMD_PACKAGE ${COLUMBUS_3RDPARTY_INSTALL_DIR}/PMD.zip)
+if (CMAKE_SYSTEM_NAME STREQUAL Windows AND NOT COLUMBUS_64BIT)
+  set (PMD_MAVEN_OPTS ${CMAKE_COMMAND} -E env MAVEN_OPTS=-Xss16m)
+endif ()
+if (CMAKE_SYSTEM_NAME STREQUAL Windows)
+  set (MVNW_POSTFIX .cmd)
+endif ()
 
 add_custom_command (
   OUTPUT ${PMD_PACKAGE}
-  COMMAND mvn${MVN_POSTFIX} package -DskipTests > ${CMAKE_CURRENT_BINARY_DIR}/PMD-build.log
+  COMMAND ${PMD_MAVEN_OPTS} ${COMMAND_PREFIX}mvnw${MVNW_POSTFIX} package -DskipTests -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dmaven.source.skip=true -pl pmd-dist,pmd-core,pmd-java > ${CMAKE_CURRENT_BINARY_DIR}/PMD-build.log 2>&1
   COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_CURRENT_SOURCE_DIR}/PMD/pmd-dist/target/ ${CMAKE_COMMAND} -E remove_directory PMD
   COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_CURRENT_SOURCE_DIR}/PMD/pmd-dist/target/ ${CMAKE_COMMAND} -E tar xf ${PMD_DIST_PACKAGE}
   COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_CURRENT_SOURCE_DIR}/PMD/pmd-dist/target/ ${CMAKE_COMMAND} -E rename ${PMD_PACKAGE_VERSION} PMD
@@ -151,14 +169,26 @@ add_custom_target (
 
 set_target_properties (PMD PROPERTIES FOLDER "ExternalProjectTargets/pmd")
 
+
+########################### SpotBugs #########################
+
+ExternalProject_Add( spotbugs
+    URL https://repo.maven.apache.org/maven2/com/github/spotbugs/spotbugs/4.2.2/spotbugs-4.2.2.tgz
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_CURRENT_BINARY_DIR}/spotbugs-prefix/src ${CMAKE_COMMAND} -E tar cf ${COLUMBUS_3RDPARTY_INSTALL_DIR}/spotbugs.zip --format=zip spotbugs
+    LOG_DOWNLOAD 1
+    LOG_INSTALL 1
+)
+
+
 ########################### python27 #########################
 if (CMAKE_SYSTEM_NAME STREQUAL Linux)
 
   ExternalProject_Add( python2.7
       DEPENDS zlib
       SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/python2
-      BUILD_IN_SOURCE 1
-      CONFIGURE_COMMAND ./configure --enable-optimizations --disable-shared --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR}
+      CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/python2/configure --enable-optimizations --disable-shared --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR}
       BUILD_COMMAND make -j8 altbininstall inclinstall
       INSTALL_COMMAND ${CMAKE_COMMAND} -E echo "No install step is required as the build step installs the library."
       LOG_CONFIGURE 1
@@ -186,14 +216,13 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL Windows)
 
 endif ()
 
-########################### python36 #########################
+########################### python38 #########################
 if (CMAKE_SYSTEM_NAME STREQUAL Linux)
 
-  ExternalProject_Add( python3.6
+  ExternalProject_Add( python3.8
       DEPENDS zlib
       SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/python3
-      BUILD_IN_SOURCE 1
-      CONFIGURE_COMMAND ./configure --enable-optimizations --disable-shared --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR} --without-pymalloc
+      CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/python3/configure --enable-optimizations --disable-shared --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR} --without-pymalloc
       BUILD_COMMAND make -j8 altbininstall inclinstall
       INSTALL_COMMAND ${CMAKE_COMMAND} -E echo "No install step is required as the build step installs the library."
       LOG_CONFIGURE 1
@@ -202,17 +231,51 @@ if (CMAKE_SYSTEM_NAME STREQUAL Linux)
   )
 elseif (CMAKE_SYSTEM_NAME STREQUAL Windows)
 
-  ExternalProject_Add( python3.6
+  ExternalProject_Add( python3.8
       DEPENDS zlib
       SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/python3
       BUILD_IN_SOURCE 1
       CONFIGURE_COMMAND ""
       BUILD_COMMAND msbuild PCbuild/pythoncore.vcxproj /m /t:Build /p:Configuration=$<CONFIG> /p:Platform=${VS_PLATFORM} /p:PlatformToolset=${CMAKE_VS_PLATFORM_TOOLSET}
-      INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory Include ${COLUMBUS_3RDPARTY_INSTALL_DIR}/include/python3.6
-              COMMAND ${CMAKE_COMMAND} -E copy "PC/pyconfig.h" ${COLUMBUS_3RDPARTY_INSTALL_DIR}/include/python3.6/pyconfig.h
-              COMMAND ${CMAKE_COMMAND} -E copy "PCbuild/${PYTHON_PLATFORM_NAME}/python36$<$<CONFIG:Debug>:_d>.lib" ${COLUMBUS_3RDPARTY_INSTALL_DIR}/lib/python3.6.lib
+      INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory Include ${COLUMBUS_3RDPARTY_INSTALL_DIR}/include/python3.8
+              COMMAND ${CMAKE_COMMAND} -E copy "PC/pyconfig.h" ${COLUMBUS_3RDPARTY_INSTALL_DIR}/include/python3.8/pyconfig.h
+              COMMAND ${CMAKE_COMMAND} -E copy "PCbuild/${PYTHON_PLATFORM_NAME}/python38$<$<CONFIG:Debug>:_d>.lib" ${COLUMBUS_3RDPARTY_INSTALL_DIR}/lib/python3.8.lib
       LOG_CONFIGURE 1
       LOG_BUILD 1
       LOG_INSTALL 1
   )
+endif ()
+
+###################### openssl ############################
+
+if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+    if (CMAKE_CL_64)
+      set (OPENSSL_PLATFORM VC-WIN64A)
+    else ()
+      set (OPENSSL_PLATFORM VC-WIN32)
+    endif ()
+
+    ExternalProject_Add( openssl
+        URL https://www.openssl.org/source/openssl-1.1.0h.tar.gz
+        CONFIGURE_COMMAND perl ../openssl/Configure --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR} --openssldir=ssl ${OPENSSL_PLATFORM} ${DEBUG_BUILD} -no-shared
+        BUILD_COMMAND nmake
+        INSTALL_COMMAND nmake install
+        LOG_CONFIGURE 1
+        LOG_BUILD 1
+        LOG_INSTALL 1
+        LOG_DOWNLOAD 1
+    )
+
+  else ()
+    ExternalProject_Add( openssl
+        URL https://www.openssl.org/source/openssl-1.1.0h.tar.gz
+        CONFIGURE_COMMAND ../openssl/config --prefix=${COLUMBUS_3RDPARTY_INSTALL_DIR} --openssldir=ssl ${DEBUG_BUILD} -no-shared
+        BUILD_COMMAND make
+        INSTALL_COMMAND make install
+        LOG_CONFIGURE 1
+        LOG_BUILD 1
+        LOG_INSTALL 1
+        LOG_DOWNLOAD 1
+    )
+  
 endif ()

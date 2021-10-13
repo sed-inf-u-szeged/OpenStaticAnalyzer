@@ -131,13 +131,13 @@ namespace base {
 
   void Program::addBody(const base::Positioned *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
 
     if (&(_node->getFactory()) != this->factory)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
 
     if (!(Common::getIsModuleDeclaration(*_node) || Common::getIsStatement(*_node)))
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
 
     hasBodyContainer.push_back(_node->getId());
     setParentEdge(_node,edkProgram_HasBody);
@@ -149,18 +149,18 @@ namespace base {
   void Program::addBody(NodeId _id) {
     const base::Positioned *node = dynamic_cast<base::Positioned*>(factory->getPointer(_id));
     if (node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
     addBody( node );
   }
 
   void Program::removeBody(NodeId id) {
     if (!factory->getExist(id))
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
     ListIterator<base::Positioned>::Container::iterator it = find(hasBodyContainer.begin(), hasBodyContainer.end(), id);
 
     if (it == hasBodyContainer.end())
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
     hasBodyContainer.erase(it);
 
@@ -172,7 +172,7 @@ namespace base {
 
   void Program::removeBody(base::Positioned *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
 
     removeBody(_node->getId());
   }

@@ -48,10 +48,13 @@ namespace columbus { namespace lim { namespace asg {
 
   enum ClassKind {
     clkAnnotation,
+    clkCategory,
     clkClass,
     clkDelegate,
     clkEnum,
+    clkExtension,
     clkInterface,
+    clkProtocol,
     clkStruct,
     clkUnion,
     clkLAST
@@ -191,6 +194,7 @@ namespace columbus { namespace lim { namespace asg {
   };
 
   enum EdgeKind {
+    edkComponent_CompilationUnit,
     edkComponent_Contains,
     edkComponent_HasFiles,
     edkControlFlowBlock_Calls,
@@ -199,6 +203,7 @@ namespace columbus { namespace lim { namespace asg {
     edkAttribute_Calls,
     edkAttribute_HasType,
     edkAttributeAccess_Attribute,
+    edkClass_Extends,
     edkClass_GrantsFriendship,
     edkClass_IsSubclass,
     edkClassGeneric_HasGenericParameter,

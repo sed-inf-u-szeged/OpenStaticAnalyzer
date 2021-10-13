@@ -39,6 +39,7 @@ namespace struc {
          Commentable(_id, _factory),
          Member(_id, _factory),
     Declaration(_id, _factory),
+    m_lloc(0),
     m_hasBody(0)
   {
   }
@@ -58,6 +59,7 @@ namespace struc {
     }
     struc::Declaration::clone(other, false);
 
+    m_lloc = other.m_lloc;
     m_hasBody = other.m_hasBody;
   }
 
@@ -73,6 +75,14 @@ namespace struc {
       struc::Member::prepareDelete(false);
     }
     struc::Declaration::prepareDelete(false);
+  }
+
+  int InitializerBlock::getLloc() const {
+    return m_lloc;
+  }
+
+  void InitializerBlock::setLloc(int _lloc) {
+    m_lloc = _lloc;
   }
 
   statm::Block* InitializerBlock::getBody() const {
@@ -195,7 +205,8 @@ namespace struc {
       double matchAttrs = 0;
       if(node.getIsCompilerGenerated() == getIsCompilerGenerated()) ++matchAttrs;
       if(node.getIsToolGenerated() == getIsToolGenerated()) ++matchAttrs;
-      return matchAttrs / (2 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
+      if(node.getLloc() == getLloc()) ++matchAttrs;
+      return matchAttrs / (3 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
     }
@@ -244,6 +255,8 @@ namespace struc {
 
     Declaration::save(binIo,false);
 
+    binIo.writeUInt4(m_lloc);
+
     binIo.writeUInt4(m_hasBody);
 
   }
@@ -259,6 +272,8 @@ namespace struc {
       Member::load(binIo, false);
 
     Declaration::load(binIo,false);
+
+    m_lloc = binIo.readUInt4();
 
     m_hasBody =  binIo.readUInt4();
     if (m_hasBody != 0)

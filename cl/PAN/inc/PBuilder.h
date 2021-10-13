@@ -56,7 +56,8 @@ public:
   NodeId buildBreak( );
   NodeId buildTargetList( std::vector<NodeId>& list );
   NodeId buildRaise( NodeId type, NodeId value, NodeId traceback );
-  NodeId buildParameter( std::string name, NodeId obj, ParameterKind kind );
+  NodeId buildRaise3( NodeId exception, NodeId cause ); // TODO merge v2 and v3?
+  NodeId buildParameter( std::string name, NodeId obj, ParameterKind kind, NodeId annotation );
   NodeId buildPrint( bool nl, NodeId dest, NodeId expression_list );
   NodeId buildPass( );
   NodeId buildAssert( NodeId test, NodeId msg );
@@ -69,15 +70,16 @@ public:
   NodeId buildContinue( );
   NodeId buildDelete( NodeId list );
   NodeId buildAssign( NodeId list, NodeId expression );
-  NodeId buildFunctionDef( std::string name, NodeId docstring, NodeId body, std::vector<NodeId>& parameter_list, std::vector<NodeId>& decorator_list, std::vector<NodeId>& local_object, NodeId object, int lloc );
+  NodeId buildFunctionDef( std::string name, NodeId docstring, NodeId body, std::vector<NodeId>& parameter_list, std::vector<NodeId>& decorator_list, NodeId returns, std::vector<NodeId>& local_object, NodeId object, int lloc, bool isAsync );
   NodeId buildGlobal( std::vector<NodeId>& identifier );
-  NodeId buildWith( NodeId body, NodeId target, NodeId expression );
+  NodeId buildWithItem( NodeId context, NodeId target );
+  NodeId buildWith( NodeId body, const std::vector<NodeId>& items, bool isAsync );
   NodeId buildWhile( NodeId test, NodeId body, NodeId else_body );
   NodeId buildTryFinal( NodeId body, NodeId finally_body );
-  NodeId buildAugAssign( NodeId target_list, NodeId expression, AssignmentKind kind );
-  NodeId buildClassDef( std::string name, NodeId docstring, NodeId body, std::vector<NodeId>& base, std::vector<NodeId>& decorator_list, std::vector<NodeId>& local_object, NodeId object, int lloc );
   NodeId buildTryExcept( std::vector<NodeId>& handlerl, NodeId body, NodeId else_body );
-  NodeId buildFor( NodeId target_list, NodeId body, NodeId else_body, NodeId expression_list );
+  NodeId buildAugAssign( NodeId target_list, NodeId expression, AssignmentKind kind );
+  NodeId buildClassDef( std::string name, NodeId docstring, NodeId body, std::vector<NodeId>& base, std::vector<NodeId>& keywords, std::vector<NodeId>& decorator_list, std::vector<NodeId>& local_object, NodeId object, int lloc );
+  NodeId buildFor( NodeId target_list, NodeId body, NodeId else_body, NodeId expression_list, bool isAsync );
   NodeId buildAlias( std::string name, std::string alias );
   NodeId buildKeyValue( NodeId key, NodeId value );
   NodeId buildIfExpression( NodeId test, NodeId body, NodeId else_body );
@@ -105,7 +107,7 @@ public:
   NodeId buildExtSlice( std::vector<NodeId>& slice_item, NodeId primary );
   NodeId buildCompare( NodeId left, std::vector<NodeId>& operands, std::vector<BinaryLogicalKind>& kinds );
   NodeId buildStringConversion( NodeId expression_list );
-  NodeId buildYield( NodeId expression_list );
+  NodeId buildYield( NodeId expression, bool from );
   NodeId buildDictionary( std::vector<NodeId>& key_value_list );
   NodeId buildGenerator( NodeId identifier, NodeId iter, std::vector<NodeId>& ifexp );
   NodeId buildEllipsis( );
@@ -116,6 +118,18 @@ public:
   NodeId buildSet( std::vector<NodeId>& expression_list );
   NodeId buildSetComp( NodeId expression, std::vector<NodeId>& generators );
   NodeId buildDictComp( NodeId key_value, std::vector<NodeId>& generators );
+
+  NodeId buildTry(NodeId body, const std::vector<NodeId>& handlerl, NodeId else_body, NodeId finally_body);
+  NodeId buildNonlocal(const std::vector<NodeId>& identifier);
+  NodeId buildAnnAssign(NodeId target_list, NodeId expression, NodeId annotation, bool simple);
+  NodeId buildAwait(NodeId value);
+  NodeId buildFormattedValue(NodeId value, NodeId format_spec, int conversion);
+  NodeId buildJoinedStr(const std::vector<NodeId>& values);
+  NodeId buildBytesLiteral(const std::string& value);
+  NodeId buildStarred(NodeId value);
+  // TODO NameConstant, Constant?
+
+  NodeId buildNamedExpr(NodeId target, NodeId value);
 
 };
 }

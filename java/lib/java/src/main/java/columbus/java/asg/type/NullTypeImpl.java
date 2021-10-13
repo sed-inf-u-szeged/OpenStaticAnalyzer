@@ -33,6 +33,7 @@ import columbus.logger.LoggerHandler;
  */
 public class NullTypeImpl extends BaseImpl implements NullType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(NullTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	public NullTypeImpl(int id, Factory factory) {
 		super(id, factory);

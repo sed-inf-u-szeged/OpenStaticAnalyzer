@@ -34,7 +34,7 @@ typedef boost::crc_32_type  Crc_type;
 
 namespace statement { 
   Handler::Handler(NodeId _id, Factory *_factory) :
-    Statement(_id, _factory),
+    Positioned(_id, _factory),
     m_hasName(0),
     m_hasExceptBody(0),
     m_hasType(0)
@@ -48,7 +48,7 @@ namespace statement {
     removeName();
     removeExceptBody();
     removeType();
-    statement::Statement::prepareDelete(false);
+    base::Positioned::prepareDelete(false);
   }
 
   NodeKind Handler::getNodeKind() const {
@@ -99,7 +99,7 @@ namespace statement {
       default:
         break;
     }
-    if (statement::Statement::setEdge(edgeKind, edgeEnd, false)) {
+    if (base::Positioned::setEdge(edgeKind, edgeEnd, false)) {
       return true;
     }
     return false;
@@ -119,7 +119,7 @@ namespace statement {
       default:
         break;
     }
-    if (statement::Statement::removeEdge(edgeKind, edgeEnd, false)) {
+    if (base::Positioned::removeEdge(edgeKind, edgeEnd, false)) {
       return true;
     }
     return false;
@@ -301,7 +301,7 @@ namespace statement {
   }
 
   void Handler::save(io::BinaryIO &binIo,bool withVirtualBase  /*= true*/) const {
-    Statement::save(binIo,false);
+    Positioned::save(binIo,false);
 
     binIo.writeUInt4(m_hasName);
     binIo.writeUInt4(m_hasExceptBody);
@@ -310,7 +310,7 @@ namespace statement {
   }
 
   void Handler::load(io::BinaryIO &binIo, bool withVirtualBase /*= true*/) {
-    Statement::load(binIo,false);
+    Positioned::load(binIo,false);
 
     m_hasName =  binIo.readUInt4();
     if (m_hasName != 0)

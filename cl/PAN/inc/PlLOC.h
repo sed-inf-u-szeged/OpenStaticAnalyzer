@@ -33,7 +33,7 @@ class PlLOC {
 private:
   int strreplace( std::string &str, const std::string &find_what, const std::string &replace_with);
   std::string modifyEscapedChar( std::string str);
-  int findFirst( const std::string& line, std::vector<std::string> what, std::string& significantChar, int from);
+  size_t findFirst( const std::string& line, std::vector<std::string> what, std::string& significantChar, int from);
   int strcount( std::string &str, const std::string &find_what, int endPos);
 
   std::string leftrim(std::string str);

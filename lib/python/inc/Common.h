@@ -77,6 +77,13 @@ namespace columbus { namespace python { namespace asg {
       bool getIsAttributeRef(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is expression::Await or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::Await.
+      */
+      bool getIsAwait(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is expression::Binary or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is expression::Binary.
@@ -96,6 +103,13 @@ namespace columbus { namespace python { namespace asg {
       * \return Returns true if the node is expression::BinaryLogical.
       */
       bool getIsBinaryLogical(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expression::BytesLiteral or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::BytesLiteral.
+      */
+      bool getIsBytesLiteral(const base::Base& node);
 
       /**
       * \brief Decides whether the node is expression::Call or not.
@@ -154,6 +168,13 @@ namespace columbus { namespace python { namespace asg {
       bool getIsFloatNumber(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is expression::FormattedValue or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::FormattedValue.
+      */
+      bool getIsFormattedValue(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is expression::Generator or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is expression::Generator.
@@ -201,6 +222,13 @@ namespace columbus { namespace python { namespace asg {
       * \return Returns true if the node is expression::IntegerLiteral.
       */
       bool getIsIntegerLiteral(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expression::JoinedStr or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::JoinedStr.
+      */
+      bool getIsJoinedStr(const base::Base& node);
 
       /**
       * \brief Decides whether the node is expression::KeyValue or not.
@@ -252,6 +280,13 @@ namespace columbus { namespace python { namespace asg {
       bool getIsLongInteger(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is expression::NamedExpr or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::NamedExpr.
+      */
+      bool getIsNamedExpr(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is expression::Set or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is expression::Set.
@@ -278,6 +313,13 @@ namespace columbus { namespace python { namespace asg {
       * \return Returns true if the node is expression::Slicing.
       */
       bool getIsSlicing(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expression::Starred or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::Starred.
+      */
+      bool getIsStarred(const base::Base& node);
 
       /**
       * \brief Decides whether the node is expression::StringConversion or not.
@@ -348,6 +390,13 @@ namespace columbus { namespace python { namespace asg {
       * \return Returns true if the node is statement::Alias.
       */
       bool getIsAlias(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is statement::AnnAssign or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is statement::AnnAssign.
+      */
+      bool getIsAnnAssign(const base::Base& node);
 
       /**
       * \brief Decides whether the node is statement::Assert or not.
@@ -476,6 +525,13 @@ namespace columbus { namespace python { namespace asg {
       bool getIsIteration(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is statement::Nonlocal or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is statement::Nonlocal.
+      */
+      bool getIsNonlocal(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is statement::Parameter or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is statement::Parameter.
@@ -546,20 +602,6 @@ namespace columbus { namespace python { namespace asg {
       bool getIsTry(const base::Base& node);
 
       /**
-      * \brief Decides whether the node is statement::TryExcept or not.
-      * \param node [in] The node whose kind is examined.
-      * \return Returns true if the node is statement::TryExcept.
-      */
-      bool getIsTryExcept(const base::Base& node);
-
-      /**
-      * \brief Decides whether the node is statement::TryFinal or not.
-      * \param node [in] The node whose kind is examined.
-      * \return Returns true if the node is statement::TryFinal.
-      */
-      bool getIsTryFinal(const base::Base& node);
-
-      /**
       * \brief Decides whether the node is statement::While or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is statement::While.
@@ -572,6 +614,13 @@ namespace columbus { namespace python { namespace asg {
       * \return Returns true if the node is statement::With.
       */
       bool getIsWith(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is statement::WithItem or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is statement::WithItem.
+      */
+      bool getIsWithItem(const base::Base& node);
 
       /**
       * \brief Decides whether the node is type::DictType or not.

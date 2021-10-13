@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var identifier = factory.createIdentifierWrapper(factory);
+        var identifier = factory.createIdentifierWrapper();
         globals.setPositionInfo(node, identifier);
         identifier.setName(node.name);
         return identifier;

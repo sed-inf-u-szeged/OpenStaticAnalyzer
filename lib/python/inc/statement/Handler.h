@@ -41,7 +41,7 @@ namespace statement {
   *   - hasExceptBody (statement::Suite, single) : (missing)
   *   - hasType (expression::Expression, single) : (missing)
   */
-  class Handler : public Statement {
+  class Handler : public base::Positioned {
     protected:
       /**
       * \internal

@@ -373,15 +373,10 @@ bool ReportConverter::collectData(const vector<string>& file_names){
 
 void ReportConverter::aggregateWarnings(bool createGroups) {
 	// summarize warnings
-	cumSum(graph, Edge::EdgeType(graphconstants::ETYPE_LIM_COMPONENT, Edge::edtDirectional), true);
-	cumSum(graph, Edge::EdgeType(graphconstants::ETYPE_LIM_COMPONENTTREE, Edge::edtReverse), false);
+	cumSum(graph, Edge::EdgeType(graphconstants::ETYPE_LIM_COMPONENT, Edge::edtDirectional), true, std::set<std::string>(), true);
 	cumSum(graph, Edge::EdgeType(graphconstants::ETYPE_LIM_LOGICALTREE, Edge::edtReverse), false);
 
 	// create group metrics
 	if (createGroups)
 		createGroupMetrics(graph, *xRulhandler);
-}
-
-void ReportConverter::addLicenseTypeToTheGraphHeader(const string& toolName, const string& headerMode) {
-    graph.setHeaderInfo(toolName + graphconstants::HEADER_MODE_KEY_SUFFIX, headerMode);
 }

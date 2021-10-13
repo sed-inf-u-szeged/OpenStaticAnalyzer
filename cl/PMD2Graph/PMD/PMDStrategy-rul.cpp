@@ -23,9 +23,9 @@
 #include <set>
 
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/TransService.hpp>
 #include <xercesc/parsers/AbstractDOMParser.hpp>
 #include <xercesc/dom/DOM.hpp>
-
 #include <xercesc/dom/DOMDocument.hpp>
 #if defined(XERCES_NEW_IOSTREAMS)
 #include <iostream>
@@ -39,136 +39,165 @@
 #include <common/inc/PlatformDependentDefines.h>
 #include "../messages.h"
 #include <map>
-
-#if defined(XERCES_NEW_IOSTREAMS)
-#include <iostream>
-#else
-#include <iostream.h>
-#endif
+#include <boost/regex.hpp>
+#include <boost/bimap.hpp>
 
 using namespace std;
 using namespace columbus;
 using namespace common;
 XERCES_CPP_NAMESPACE_USE
 
+static const string RULE_PREFIX = "PMD_";
+
+static std::string toUTF8String(const XMLCh* ch) {
+  return (char*)TranscodeToStr(ch, "UTF-8").str();
+}
+
+struct PMDRule {
+  PMDRule()
+    : id(), name(), enabled(), priority(), ruleId() {}
+  PMDRule(string id, string name, string enabled, string priority)
+    : id(id), name(name), enabled(enabled), priority(priority), ruleId(RULE_PREFIX + id) {}
+  ~PMDRule() {}
+
+  string id;
+  string name;
+  string enabled;
+  string priority;
+  string ruleId; // prefix + id
+};
+
+typedef boost::bimap<string, string> RuleId2NameMap;
+static RuleId2NameMap ruleIdMap; // rule id (without prefix) <-> original rule name
+static map<string, PMDRule> pmdRules; // original rule name -> opts
+
 void PMDStrategy::makeRul(File_Names& file_names, std::string& rul, std::string& rulConfig, std::string& rul_option_filename){
   rul::RulHandler rh(rulConfig, "eng");
 
   setConstantData(rh);
 
-  list<pair<string,string> > rul_refs;
-  for(File_Names::iterator it = file_names.begin();it != file_names.end();++it)
-    makeRulByFile(it->c_str(), rh, rul_refs);
+  ruleIdMap.clear();
+  pmdRules.clear();
 
-  set<string> ref_id_list;
-  // setting the groups of referenced ruls
-  for(list<pair<string,string> >::iterator it = rul_refs.begin(); it != rul_refs.end(); ++it) {
-    string group = group_paths.find(it->first.substr(0, it->first.find_last_of('/')))->second;
-    string name = separateName(it->first.substr(it->first.find_last_of('/')+1, it->first.size()-1));
-    set<string> members;
-    rh.getGroupMembers(group, members);
-    set<string>::iterator members_it;
-    for(members_it = members.begin(); members_it != members.end(); ++members_it) {
-      if(rh.getDisplayName(*members_it) == name) {
-        rh.addMetricGroupMembers(*members_it, it->second);
-        ref_id_list.insert(it->second + "-"+ *members_it);
-        break;
-      }
-    }
-    if(members_it == members.end()) {
-      WriteMsg::write(CMSG_PMD2GRAPH_COULDNT_FIND_REF, name.c_str());
-    }
-  }
-
-  if(rul_option_filename != "") {
-    // save a rul option file, setting everything enabled
-    ifstream file(rul_option_filename.c_str());
-    if(!file.good()) {
-      set<string> groups;
-      rh.getGroupIdList(groups);
-
-      io::CsvIO out(rul_option_filename, io::IOBase::omWrite);
-
-      // header
-      out.writeColumn("Parent");
-      out.writeColumn("Name");
-      out.writeColumn("ID");
-      out.writeColumn("Enabled");
-      out.writeColumn("Priority");
-      out.writeNewLine();
-
-      // rules
-      for(set<string>::iterator group_it = groups.begin(); group_it != groups.end(); ++group_it) {
-        set<string> members;
-        StringMap shorted_members;
-        rh.getGroupMembers(*group_it, members);
-        // sort members by display name
-        for(set<string>::iterator member_it = members.begin(); member_it != members.end(); ++member_it) {
-          shorted_members.insert(pair<string, string>(rh.getDisplayName(*member_it), *member_it));
+  // load config file
+  if (!rul_option_filename.empty()) {
+    ifstream input(rul_option_filename.c_str());
+    if (input.is_open()) {
+      string line;
+      bool first = true;
+      while (input.good()) {
+        getline(input, line);
+        if (first) {
+          first = false;
+          continue; // skip header
         }
-        for(StringMap::iterator member_it = shorted_members.begin(); member_it != shorted_members.end(); ++member_it) {
-          if(ref_id_list.find(*group_it + "-" + member_it->second) != ref_id_list.end()) {
-            continue;
+        if (!line.empty()) {
+          vector<string> items;
+          common::split(line, items, ';');
+          if (items.size() == 4) {
+            ruleIdMap.insert(RuleId2NameMap::value_type(items[0], items[1]));
+            pmdRules[items[1]] = PMDRule(items[0], items[1], items[2], items[3]);
           }
-          //write ruls
-          out.writeColumn(*group_it);
-          out.writeColumn(member_it->first);
-          out.writeColumn(member_it->second);
-          //is enabled
-          out.writeColumn(1);
-          //priority
-          out.writeColumn("Minor");
-          out.writeNewLine();
         }
       }
-
-      // groups
-      for(set<string>::iterator group_it = groups.begin(); group_it != groups.end(); ++group_it) {
-        out.writeColumn(""); // no parent
-        out.writeColumn(*group_it);
-        out.writeColumn(*group_it);
-        //is enabled
-        out.writeColumn(1);
-        //priority
-        out.writeColumn("Minor");
-        out.writeNewLine();
-      }
-      out.close();
-
-    // read an existing rul option file
-    } else {
-      io::CsvIO in(rul_option_filename, io::IOBase::omRead);
-      list<string> cols;
-      list<string>::iterator it;
-
-      in.readLine(cols); // skip header
-      cols.clear();
-
-      while (in.readLine(cols)) {
-        if (cols.empty()) {
-          break;
-        }
-
-        it = cols.begin();
-        ++it; //group name
-        ++it; //rul name
-        string id = *it;
-        bool enabled = common::str2int(*(++it)) != 0;
-        rh.setIsEnabled(id, enabled);
-        rh.setSettingValue(id, "Priority", *(++it), true);
-
-        cols.clear();
-      }
-      in.close();
+      input.close();
     }
-    file.close();
   }
 
-  //Writing out the rul file
+  // create rules
+  for (File_Names::iterator it = file_names.begin(); it != file_names.end(); ++it)
+    makeRulByFile(it->c_str(), rh);
+
+  // fix references in help texts
+  {
+    set<string> allIds;
+    rh.getRuleIdList(allIds);
+
+    for (string ruleId : allIds) {
+      if (rh.getGroupType(ruleId) != "false") {
+        // skip groups
+        continue;
+      }
+
+      const boost::regex re(R"(\{% rule (\w+/)*(\w+)? %\})"); // {% rule LANG/GROUP/RULE %} or {% rule RULE %}
+
+      auto fixRefs = [&](const boost::smatch& what) {
+        std::string out = what[0];
+        string origName = what[2];
+        RuleId2NameMap::right_const_iterator nameIt = ruleIdMap.right.find(origName);
+        if (nameIt != ruleIdMap.right.end()) {
+          string id = RULE_PREFIX + nameIt->second;
+          out = "[" + rh.getDisplayName(id) + "](#" + id + ")";
+        }
+        return out;
+      };
+
+      string helpText = rh.getHelpText(ruleId);
+      string newHelpText = boost::regex_replace(helpText, re, fixRefs);
+
+      if (helpText != newHelpText)
+        rh.setHelpText(ruleId, newHelpText);
+    }
+  }
+
+  // rewrite options file
+  {
+    ofstream output(rul_option_filename.c_str());
+    if (output) {
+      output << "ID;Name;Enabled;Priority" << "\n";
+
+      // sort by ids
+      for (RuleId2NameMap::left_const_iterator it = ruleIdMap.left.begin(); it != ruleIdMap.left.end(); ++it) {
+        const PMDRule& rule = pmdRules[it->second];
+        if (!rh.getIsDefined(rule.ruleId)) // ignore deleted rules
+          continue;
+        output << rule.id << ";" << rule.name << ";" << rule.enabled << ";" << rule.priority << "\n";
+      }
+
+      output.close();
+    }
+  }
+
+  // write out the rul file
   rh.saveRul(rul.c_str());
 }
 
-void PMDStrategy::makeRulByFile(const char* xmlFile, columbus::rul::RulHandler& rh, list<pair<string,string> > &rul_refs){
+static void setShortName(const std::string& origname, const std::string& rulename, std::string& shortname, int small = 0, int ext = 0) {
+  RuleId2NameMap::right_const_iterator it = ruleIdMap.right.find(origname);
+  if (it != ruleIdMap.right.end()) {
+    shortname = it->second;
+    return;
+  }
+
+  int tsmall = small;
+  for (unsigned int i = 0; i < rulename.size(); i++) {
+    if (::isupper(rulename[i]) || ::isdigit(rulename[i])) {
+      shortname += rulename[i];
+    } else if (::islower(rulename[i]) && tsmall > 0) {
+      shortname += rulename[i];
+      tsmall--;
+    }
+  }
+  if (ext > 0)
+    shortname += toString(ext);
+  if (shortname.empty())
+    setShortName(origname, rulename, shortname, ++small);
+  else {
+    RuleId2NameMap::left_const_iterator it1 = ruleIdMap.left.find(shortname);
+    RuleId2NameMap::left_const_iterator it2 = ruleIdMap.left.end();
+    if (it1 != it2) {
+      shortname.clear();
+      if (tsmall > 0)
+        setShortName(origname, rulename, shortname, ++small, ++ext);
+      else
+        setShortName(origname, rulename, shortname, ++small);
+    } else {
+      ruleIdMap.insert(RuleId2NameMap::value_type(shortname, origname));
+    }
+  }
+}
+
+void PMDStrategy::makeRulByFile(const char* xmlFile, columbus::rul::RulHandler& rh){
   //initialization
   WriteMsg::write(CMSG_PMD2GRAPH_PROCESSING_FILE, xmlFile);
 
@@ -190,16 +219,12 @@ void PMDStrategy::makeRulByFile(const char* xmlFile, columbus::rul::RulHandler& 
     rh.setDescription(groupshortname, desc);
     rh.setHasWarningText(groupshortname, true);
     rh.setDisplayName(groupshortname, groupname);
+    rh.setOriginalId(groupshortname, pmdgroup);
     rh.setGroupType(groupshortname, "summarized");
     rh.setHelpText(groupshortname, desc);
     rh.setIsEnabled(groupshortname, true);
     rh.setIsVisible(groupshortname, true);
     rh.setSettingValue(groupshortname, "Priority", "Minor", true);
-
-    string path = xmlFile;
-    std::replace(path.begin(), path.end(), DIRDIVCHAR, '/');
-    path.erase(0, path.rfind("rulesets/"));
-    group_paths[path] = groupshortname;
 
     DOMNodeList* childs = root->getChildNodes();
     XMLSize_t length = childs->getLength();
@@ -210,9 +235,25 @@ void PMDStrategy::makeRulByFile(const char* xmlFile, columbus::rul::RulHandler& 
         if(node->getAttributes()->getNamedItem(XMLString::transcode("name"))) {
           DOMNamedNodeMap * mymap = node->getAttributes();
           string rulename, shortname, desc;
+          // default values
+          string enabled = "1";
+          string priority = "Minor";
+
           rulename = XMLString::transcode(mymap->getNamedItem(XMLString::transcode("name"))->getNodeValue());
-          setShortName(rulename, shortname);
-          shortname = "PMD_" + shortname;
+
+          map<string, PMDRule>::const_iterator nameIt = pmdRules.find(rulename);
+          if (nameIt != pmdRules.end()) {
+            // the rule already exists in a previous version
+            shortname = nameIt->second.id;
+            enabled = nameIt->second.enabled;
+            priority = nameIt->second.priority;
+          } else {
+            // new rule, generate an id for it
+            setShortName(rulename, rulename, shortname);
+            pmdRules[rulename] = PMDRule(shortname, rulename, enabled, priority);
+          }
+
+          shortname = RULE_PREFIX + shortname;
 
           rh.defineMetric(shortname);
 
@@ -221,10 +262,11 @@ void PMDStrategy::makeRulByFile(const char* xmlFile, columbus::rul::RulHandler& 
           rh.createLanguage(shortname, "Default", "eng");
           rh.setHasWarningText(shortname, true);
           rh.setDisplayName(shortname, separateName(rulename));
+          rh.setOriginalId(shortname, rulename);
           rh.setGroupType(shortname, "false");
-          rh.setSettingValue(shortname, "Priority", "Minor", true);
+          rh.setSettingValue(shortname, "Priority", priority, true);
           rh.addMetricGroupMembers(shortname, groupshortname);
-          rh.setIsEnabled(shortname, true);
+          rh.setIsEnabled(shortname, enabled == "1");
           if(mymap->getNamedItem(XMLString::transcode("message"))){
             desc = XMLString::transcode(mymap->getNamedItem(XMLString::transcode("message"))->getNodeValue());
             rh.setDescription(shortname, desc);
@@ -243,10 +285,6 @@ void PMDStrategy::makeRulByFile(const char* xmlFile, columbus::rul::RulHandler& 
             rh.setHelpText(shortname, rulename);
             rh.setDescription(shortname, rulename);
           }
-
-        } else if(node->getAttributes()->getNamedItem(XMLString::transcode("ref"))) {
-          string name = XMLString::transcode(node->getAttributes()->getNamedItem(XMLString::transcode("ref"))->getNodeValue());
-          rul_refs.push_back(pair<string, string>(name, groupshortname));
         }
       }
     }
@@ -264,20 +302,30 @@ bool PMDStrategy::getIsOnlySpaces(std::string& in){
 void PMDStrategy::getDescription(string& desc, DOMNode* node){
   DOMNodeList* childs = node->getChildNodes();
   XMLSize_t length = childs->getLength();
+  string examples;
+
   for(unsigned int i = 0; i < length; i++){
     DOMNode * node = childs->item(i);
     if(strcmp(XMLString::transcode(node->getNodeName()),"description") == 0){
       XMLCh* descx = (XMLCh*)node->getTextContent();
-      XMLString::collapseWS(descx);
-      desc = XMLString::transcode(descx);
+      desc = toUTF8String(descx);
+      common::trim(desc);
     }
     if(strcmp(XMLString::transcode(node->getNodeName()),"example") == 0){
       XMLCh* descx = (XMLCh*)node->getTextContent();
-      // pre tag is needed to keep whitespaces
-      desc += "<br>Example(s):<br><pre>";
-      desc += XMLString::transcode(descx);
-      desc += "</pre>";
+      string ex = toUTF8String(descx);
+      common::trim(ex);
+      if (!examples.empty())
+        examples += "\n";
+      examples += "```java\n";
+      examples += ex;
+      examples += "\n```\n";
     }
+  }
+
+  if (!examples.empty()) {
+    desc += "\n\nExample(s):\n\n";
+    desc += examples;
   }
 }
 

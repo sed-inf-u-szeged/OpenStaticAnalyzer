@@ -22,7 +22,9 @@
 #define _JAVASCRIPT_ADDON_FACTORY_H_
 
 #include "javascript/inc/javascript.h"
-#include <nan.h>
+#include <node_api.h>
+
+
 #include "inc/SystemWrapper.h"
 #include "inc/CommentWrapper.h"
 #include "inc/ModuleDeclarationWrapper.h"
@@ -98,97 +100,105 @@
 #include "inc/ImportDefaultSpecifierWrapper.h"
 #include "inc/ImportNamespaceSpecifierWrapper.h"
 #include "inc/ImportSpecifierWrapper.h"
+#define DECLARE_NAPI_METHOD(name, func) \
+  { name, 0, func, 0, 0, 0, napi_default, 0 } 
+
+
 namespace columbus { namespace javascript { namespace asg { namespace addon { 
-class Factory : public Nan::ObjectWrap {                                                 
-  public:                                                                                
-    static void Init(v8::Local<v8::Object> exports);                                     
-                                                                                         
-                                                                                         
-    static void getRoot(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createCommentWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createModuleDeclarationWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createVariableDeclaratorWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createPropertyWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createSpreadElementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createSuperWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createTemplateElementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createCatchClauseWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createFunctionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createSwitchCaseWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createClassBodyWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createMethodDefinitionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createProgramWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createIdentifierWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createExportNamedDeclarationWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createImportDeclarationWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createArrayExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createArrowFunctionExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createAssignmentExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createAwaitExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createBinaryExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createCallExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createClassExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createConditionalExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createFunctionExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createLogicalExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createMemberExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createMetaPropertyWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createNewExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createObjectExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createSequenceExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createTaggedTemplateExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createTemplateLiteralWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createThisExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createUnaryExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createUpdateExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createYieldExpressionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createBooleanLiteralWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createNullLiteralWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createNumberLiteralWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createRegExpLiteralWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createStringLiteralWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createAssignmentPropertyWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createArrayPatternWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createAssignmentPatternWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createObjectPatternWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createRestElementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createBlockStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createBreakStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createContinueStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createDebuggerStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createEmptyStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createExpressionStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createForInStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createForStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createIfStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createLabeledStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createReturnStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createSwitchStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createThrowStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createTryStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createWhileStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createWithStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createClassDeclarationWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createExportSpecifierWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createFunctionDeclarationWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createExportAllDeclarationWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createExportDefaultDeclarationWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createVariableDeclarationWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createForOfStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createDoWhileStatementWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createImportDefaultSpecifierWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createImportNamespaceSpecifierWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    static void createImportSpecifierWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);   
-    columbus::javascript::asg::Factory* getFactory(){ return factory; }                          
-                                                                                         
-  private:                                                                               
-    explicit Factory();                                                                  
-    virtual ~Factory();                                                                  
-    static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);                   
-    static Nan::Persistent<v8::Function> constructor;                                    
-    static columbus::RefDistributorStrTable* strTable;                                   
-    static columbus::javascript::asg::Factory* factory;                                  
-    static void SaveAST(const Nan::FunctionCallbackInfo<v8::Value>& info);               
-}; // Factory                                                                            
+class Factory {
+  public:
+    static napi_value Init(napi_env env, napi_value& exports);
+    static void Destructor(napi_env env, void* nativeObject, void* finalize_hint);
+
+  private:
+    explicit Factory();
+    ~Factory();
+
+    static napi_value New(napi_env env, napi_callback_info info);
+    static napi_value SaveAST(napi_env env, napi_callback_info info);
+    static napi_value LoadAST(napi_env env, napi_callback_info info);
+    static napi_value Clear(napi_env env, napi_callback_info info);
+    static napi_value getRoot(napi_env env, napi_callback_info info);   
+    static napi_value createCommentWrapper(napi_env env, napi_callback_info info);
+    static napi_value createModuleDeclarationWrapper(napi_env env, napi_callback_info info);
+    static napi_value createVariableDeclaratorWrapper(napi_env env, napi_callback_info info);
+    static napi_value createPropertyWrapper(napi_env env, napi_callback_info info);
+    static napi_value createSpreadElementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createSuperWrapper(napi_env env, napi_callback_info info);
+    static napi_value createTemplateElementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createCatchClauseWrapper(napi_env env, napi_callback_info info);
+    static napi_value createFunctionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createSwitchCaseWrapper(napi_env env, napi_callback_info info);
+    static napi_value createClassBodyWrapper(napi_env env, napi_callback_info info);
+    static napi_value createMethodDefinitionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createProgramWrapper(napi_env env, napi_callback_info info);
+    static napi_value createIdentifierWrapper(napi_env env, napi_callback_info info);
+    static napi_value createExportNamedDeclarationWrapper(napi_env env, napi_callback_info info);
+    static napi_value createImportDeclarationWrapper(napi_env env, napi_callback_info info);
+    static napi_value createArrayExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createArrowFunctionExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createAssignmentExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createAwaitExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createBinaryExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createCallExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createClassExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createConditionalExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createFunctionExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createLogicalExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createMemberExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createMetaPropertyWrapper(napi_env env, napi_callback_info info);
+    static napi_value createNewExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createObjectExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createSequenceExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createTaggedTemplateExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createTemplateLiteralWrapper(napi_env env, napi_callback_info info);
+    static napi_value createThisExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createUnaryExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createUpdateExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createYieldExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createBooleanLiteralWrapper(napi_env env, napi_callback_info info);
+    static napi_value createNullLiteralWrapper(napi_env env, napi_callback_info info);
+    static napi_value createNumberLiteralWrapper(napi_env env, napi_callback_info info);
+    static napi_value createRegExpLiteralWrapper(napi_env env, napi_callback_info info);
+    static napi_value createStringLiteralWrapper(napi_env env, napi_callback_info info);
+    static napi_value createAssignmentPropertyWrapper(napi_env env, napi_callback_info info);
+    static napi_value createArrayPatternWrapper(napi_env env, napi_callback_info info);
+    static napi_value createAssignmentPatternWrapper(napi_env env, napi_callback_info info);
+    static napi_value createObjectPatternWrapper(napi_env env, napi_callback_info info);
+    static napi_value createRestElementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createBlockStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createBreakStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createContinueStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createDebuggerStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createEmptyStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createExpressionStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createForInStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createForStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createIfStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createLabeledStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createReturnStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createSwitchStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createThrowStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createTryStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createWhileStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createWithStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createClassDeclarationWrapper(napi_env env, napi_callback_info info);
+    static napi_value createExportSpecifierWrapper(napi_env env, napi_callback_info info);
+    static napi_value createFunctionDeclarationWrapper(napi_env env, napi_callback_info info);
+    static napi_value createExportAllDeclarationWrapper(napi_env env, napi_callback_info info);
+    static napi_value createExportDefaultDeclarationWrapper(napi_env env, napi_callback_info info);
+    static napi_value createVariableDeclarationWrapper(napi_env env, napi_callback_info info);
+    static napi_value createForOfStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createDoWhileStatementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createImportDefaultSpecifierWrapper(napi_env env, napi_callback_info info);
+    static napi_value createImportNamespaceSpecifierWrapper(napi_env env, napi_callback_info info);
+    static napi_value createImportSpecifierWrapper(napi_env env, napi_callback_info info);
+    static napi_ref constructor;
+    napi_env env_;
+    napi_ref wrapper_;
+
+    columbus::RefDistributorStrTable* strTable;
+    columbus::javascript::asg::Factory* factory;
+}; // Factory
 }}}}//end of namespaces
 #endif

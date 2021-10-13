@@ -93,6 +93,15 @@ bool Task::openLogFile()
   return logstream.is_open();
 }
 
+void Task::closeLogFile()
+{
+  if (logstream.is_open())
+    logstream.close();
+}
+
+
+
+
 void Task::copyAllFiles(const  path& source,const  path& dest)
 {
   if( exists( path (source)) )
@@ -185,6 +194,12 @@ string Task::ExecutionResult::toString() const {
   else
     result += "OK";
 
+  if (!message.empty())
+  {
+    result += "\n";
+    result += message;
+    result += "\n";
+  }
   return result;
 }
 
@@ -224,9 +239,11 @@ Task::SafeEnvironmentModifier::~SafeEnvironmentModifier() {
   if (exists) {
     logger.criticalErrorIfFail(setEnvironmentVariable(variable.c_str(), oldValue.c_str()) == 0, CMSG_ERROR_ENVSET_FAILURE, variable.c_str());
   } else {
-    logger.warningIfFail(setEnvironmentVariable(variable.c_str(), oldValue.c_str()) == 0, CMSG_ERROR_ENVSET_FAILURE, variable.c_str());
+    logger.warningIfFail(unsetEnvironmentVariable(variable.c_str()) == 0, CMSG_ERROR_ENVSET_FAILURE, variable.c_str());
   }
 }
+
+
 
 } // namespace controller
 

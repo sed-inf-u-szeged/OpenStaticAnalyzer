@@ -43,15 +43,57 @@ public:                                               \
 
 #define HANDLE_TASK_EXCEPTIONS                                                \
   catch (const columbus::Exception& cex) {                                    \
-    logstream << "EXCEPTION:" << cex.getLocation() << ":" << cex.getMessage() << "\n";  \
-    result.setCriticalError();                                                \
+    string message = "EXCEPTION:" + cex.getLocation() + ":" + cex.getMessage(); \
+    logstream << message << endl;                                             \
+    result.setCriticalError(message.c_str());                                 \
   } catch (const std::exception& ex) {                                        \
-    logstream << "EXCEPTION:" << ex.what() << "\n";                           \
-    result.setCriticalError();                                                \
+    string message = "EXCEPTION:" + string(ex.what());                        \
+    logstream << message << endl;                                             \
+    result.setCriticalError(message.c_str());                                 \
   } catch (...) {                                                             \
-    logstream << "EXCEPTION: Unknown exception!\n";                           \
-    result.setCriticalError();                                                \
+    string message = "EXCEPTION: Unknown exception!";                         \
+    logstream << message << endl;                                             \
+    result.setCriticalError(message.c_str());                                 \
   }
+
+// Defining Sonar2Graph Task
+#define SONAR2GRAPH_TASK(_LANG_KEY)                                                                   \
+TASK_NAME_DEF(Sonar2GraphTask);                                                                       \
+Task::ExecutionResult Sonar2GraphTask::execute()                                                      \
+{                                                                                                     \
+  ExecutionResult result;                                                                             \
+  ExecutionLogger logger(this, result);                                                               \
+  try {                                                                                               \
+    vector<string> sv;                                                                                \
+    addMessageLevel(sv);                                                                              \
+    sv.push_back("-SQHost:" + props.host);                                                            \
+    sv.push_back("-SQPort:" + props.port);                                                            \
+    sv.push_back("-SQProjectKey:" + props.projectKey);                                                \
+    sv.push_back("-lim:" + (props.asgDir / (props.projectName + ".lim")).string());                   \
+    sv.push_back("-graph:" + (props.graphDir / (props.projectName + "-Sonar2Graph.graph")).string()); \
+    sv.push_back("-SQProjectPrefix:" + props.projectPrefix);                                          \
+    if (props.strict) {                                                                               \
+      sv.push_back("-SQStrict:true");                                                                 \
+    } else {                                                                                          \
+      sv.push_back("-SQStrict:false");                                                                \
+    }                                                                                                 \
+    if (!props.languageKey.empty()) {                                                                 \
+      sv.push_back("-SQLanguageKey:" + props.languageKey);                                            \
+    } else {                                                                                          \
+      sv.push_back("-SQLanguageKey:_LANG_KEY");                                                       \
+    }                                                                                                 \
+    if (!props.jsonPath.empty()) {                                                                    \
+      sv.push_back("-jsonPath:" + props.jsonPath);                                                    \
+    }                                                                                                 \
+    if (!props.sqUsername.empty() && !props.sqPassword.empty()) {                                     \
+      sv.push_back("-SQUserName:" + props.sqUsername);                                                \
+      sv.push_back("-SQPassword:" + props.sqPassword);                                                \
+    }                                                                                                 \
+    checkedExec(props.toolsDir / "Sonar2Graph", sv, logger);                                          \
+  } HANDLE_TASK_EXCEPTIONS                                                                            \
+  return result;                                                                                      \
+}
+
 
 namespace columbus
 {
@@ -66,17 +108,20 @@ public:
     public:
       ExecutionResult() : warning(false), error(false), criticalError(false) { }
 
-      void setError() {
+      void setError(const char* msg = "") {
         error = true;
+        message = msg;
       }
 
-      void setCriticalError() {
+      void setCriticalError(const char* msg = "") {
         error = true;
         criticalError = true;
+        message = msg;
       }
 
-      void setWarning(){
+      void setWarning(const char* msg = "") {
         warning = true;
+        message = msg;
       }
 
       bool hasError() const {
@@ -96,6 +141,7 @@ public:
       bool warning;
       bool error;
       bool criticalError;
+      std::string message;
   };
 
 
@@ -107,6 +153,7 @@ public:
   const std::vector<std::string>& getDependsOn() const;
   virtual const std::string& getName() const = 0;
   bool openLogFile();
+  void closeLogFile();
 
 protected:
 

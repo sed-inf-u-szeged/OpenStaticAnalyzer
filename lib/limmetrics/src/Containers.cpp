@@ -161,21 +161,21 @@ namespace columbus { namespace lim { namespace metrics {
     for ( ; intIt != intEnd; ++intIt ) {
       newIntMap["T" + intIt->first] = intIt->second;
     }
-    info.ints = newIntMap;
+    info.ints = move(newIntMap);
 
     Info::SetMap newSetMap;
     Info::SetMap::iterator setIt = info.sets.begin(), setEnd = info.sets.end();
     for ( ; setIt != setEnd; ++setIt ) {
       newSetMap["T" + setIt->first] = setIt->second;
     }
-    info.sets = newSetMap;
+    info.sets = move(newSetMap);
 
     Info::MapMap newMapMap;
     Info::MapMap::iterator mapIt = info.maps.begin(), mapEnd = info.maps.end();
     for ( ; mapIt != mapEnd; ++mapIt ) {
       newMapMap["T" + mapIt->first] = mapIt->second;
     }
-    info.maps = newMapMap;
+    info.maps = move(newMapMap);
   }
 
   //

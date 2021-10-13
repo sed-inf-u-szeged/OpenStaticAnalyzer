@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class ParenthesizedExpressionImpl extends BaseImpl implements ParenthesizedExpression {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(ParenthesizedExpressionImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

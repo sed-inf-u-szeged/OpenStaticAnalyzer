@@ -32,6 +32,7 @@ import columbus.logger.LoggerHandler;
  */
 public class LineCommentImpl extends BaseImpl implements LineComment {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(LineCommentImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected Object position;
 

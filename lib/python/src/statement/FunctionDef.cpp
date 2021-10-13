@@ -35,11 +35,13 @@ typedef boost::crc_32_type  Crc_type;
 namespace statement { 
   FunctionDef::FunctionDef(NodeId _id, Factory *_factory) :
     CompoundStatement(_id, _factory),
+    m_isAsync(false),
     m_lloc(0),
     m_name(0),
     hasDecoratorContainer(),
     hasObjectContainer(),
     hasParameterContainer(),
+    m_hasReturnAnnotation(0),
     m_refersTo(0),
     m_returnType(0),
     m_docstring(0)
@@ -71,6 +73,7 @@ namespace statement {
         factory->reverseEdges->removeEdge(id, this->getId(), edkFunctionDef_HasParameter);
       hasParameterContainer.pop_front();
     }
+    removeReturnAnnotation();
     removeRefersTo();
     removeReturnType();
     removeDocstring();
@@ -93,6 +96,10 @@ namespace statement {
     return m_lloc;
   }
 
+  bool FunctionDef::getIsAsync() const {
+    return m_isAsync;
+  }
+
   void FunctionDef::setNameKey(Key _name) {
     m_name = _name;
   }
@@ -103,6 +110,10 @@ namespace statement {
 
   void FunctionDef::setLloc(int _lloc) {
     m_lloc = _lloc;
+  }
+
+  void FunctionDef::setIsAsync(bool _isAsync) {
+    m_isAsync = _isAsync;
   }
 
   ListIterator<expression::Expression> FunctionDef::getDecoratorListIteratorBegin() const {
@@ -168,6 +179,16 @@ namespace statement {
     return size;
   }
 
+  expression::Expression* FunctionDef::getReturnAnnotation() const {
+    expression::Expression *_node = NULL;
+    if (m_hasReturnAnnotation != 0)
+      _node = dynamic_cast<expression::Expression*>(factory->getPointer(m_hasReturnAnnotation));
+    if ( (_node == NULL) || factory->getIsFiltered(_node))
+      return NULL;
+
+    return _node;
+  }
+
   module::Object* FunctionDef::getRefersTo() const {
     module::Object *_node = NULL;
     if (m_refersTo != 0)
@@ -209,6 +230,9 @@ namespace statement {
       case edkFunctionDef_HasParameter:
         addParameter(edgeEnd);
         return true;
+      case edkFunctionDef_HasReturnAnnotation:
+        setReturnAnnotation(edgeEnd);
+        return true;
       case edkFunctionDef_RefersTo:
         setRefersTo(edgeEnd);
         return true;
@@ -237,6 +261,9 @@ namespace statement {
         return true;
       case edkFunctionDef_HasParameter:
         removeParameter(edgeEnd);
+        return true;
+      case edkFunctionDef_HasReturnAnnotation:
+        removeReturnAnnotation();
         return true;
       case edkFunctionDef_RefersTo:
         removeRefersTo();
@@ -400,6 +427,52 @@ namespace statement {
     removeParameter(_node->getId());
   }
 
+  void FunctionDef::setReturnAnnotation(NodeId _id) {
+    expression::Expression *_node = NULL;
+    if (_id) {
+      if (!factory->getExist(_id))
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+      _node = dynamic_cast<expression::Expression*> (factory->getPointer(_id));
+      if ( _node == NULL) {
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      }
+      if (&(_node->getFactory()) != this->factory)
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+
+      if (m_hasReturnAnnotation) {
+        removeParentEdge(m_hasReturnAnnotation);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_hasReturnAnnotation, m_id, edkFunctionDef_HasReturnAnnotation);
+      }
+      m_hasReturnAnnotation = _node->getId();
+      if (m_hasReturnAnnotation != 0)
+        setParentEdge(factory->getPointer(m_hasReturnAnnotation), edkFunctionDef_HasReturnAnnotation);
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->insertEdge(m_hasReturnAnnotation, this->getId(), edkFunctionDef_HasReturnAnnotation);
+    } else {
+      if (m_hasReturnAnnotation) {
+        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      }
+    }
+  }
+
+  void FunctionDef::setReturnAnnotation(expression::Expression *_node) {
+    if (_node == NULL)
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+
+    setReturnAnnotation(_node->getId());
+  }
+
+  void FunctionDef::removeReturnAnnotation() {
+      if (m_hasReturnAnnotation) {
+        removeParentEdge(m_hasReturnAnnotation);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_hasReturnAnnotation, m_id, edkFunctionDef_HasReturnAnnotation);
+      }
+      m_hasReturnAnnotation = 0;
+  }
+
   void FunctionDef::setRefersTo(NodeId _id) {
     module::Object *_node = NULL;
     if (_id) {
@@ -549,7 +622,8 @@ namespace statement {
         return 0.0;
       matchAttrs += strSim;
       if(node.getLloc() == getLloc()) ++matchAttrs;
-      return matchAttrs / (2 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
+      if(node.getIsAsync() == getIsAsync()) ++matchAttrs;
+      return matchAttrs / (3 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
     }
@@ -587,10 +661,16 @@ namespace statement {
   void FunctionDef::save(io::BinaryIO &binIo,bool withVirtualBase  /*= true*/) const {
     CompoundStatement::save(binIo,false);
 
+    unsigned char boolValues = 0;
+    boolValues <<= 1;
+    if (m_isAsync) 
+      boolValues |= 1;
+    binIo.writeUByte1(boolValues);
     factory->getStringTable().setType(m_name, StrTable::strToSave);
     binIo.writeUInt4(m_name);
     binIo.writeUInt4(m_lloc);
 
+    binIo.writeUInt4(m_hasReturnAnnotation);
     binIo.writeUInt4(m_refersTo);
     binIo.writeUInt4(m_returnType);
     binIo.writeUInt4(m_docstring);
@@ -615,8 +695,15 @@ namespace statement {
   void FunctionDef::load(io::BinaryIO &binIo, bool withVirtualBase /*= true*/) {
     CompoundStatement::load(binIo,false);
 
+    unsigned char boolValues = binIo.readUByte1();
+    m_isAsync = boolValues & 1;
+    boolValues >>= 1;
     m_name = binIo.readUInt4();
     m_lloc = binIo.readUInt4();
+
+    m_hasReturnAnnotation =  binIo.readUInt4();
+    if (m_hasReturnAnnotation != 0)
+      setParentEdge(factory->getPointer(m_hasReturnAnnotation),edkFunctionDef_HasReturnAnnotation);
 
     m_refersTo =  binIo.readUInt4();
 

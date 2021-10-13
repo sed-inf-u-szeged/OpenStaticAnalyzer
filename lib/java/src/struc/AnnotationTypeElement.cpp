@@ -263,9 +263,10 @@ namespace struc {
       if(node.getAccessibility() == getAccessibility()) ++matchAttrs;
       if(node.getIsStatic() == getIsStatic()) ++matchAttrs;
       if(node.getIsFinal() == getIsFinal()) ++matchAttrs;
+      if(node.getLloc() == getLloc()) ++matchAttrs;
       if(node.getIsAbstract() == getIsAbstract()) ++matchAttrs;
       if(node.getIsStrictfp() == getIsStrictfp()) ++matchAttrs;
-      return matchAttrs / (8 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
+      return matchAttrs / (9 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
     }

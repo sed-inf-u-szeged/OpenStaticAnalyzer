@@ -21,6 +21,10 @@
 #include "../inc/common.h"
 #include "../inc/Visitors/CoverageVisitorBase.h"
 
+#include<iostream>
+
+using namespace std;
+
 
 CoverageVisitorBase::CoverageVisitorBase() 
   : limNodeId(0)
@@ -45,10 +49,9 @@ int* CoverageVisitorBase::getCounter( CCCounterMap& container, const UniqueNameW
     return &container.insert(CCCounterMap::value_type(uname, 0)).first->second;
 }
 
-
 void CoverageVisitorBase::visitStart( const columbus::lim::asg::logical::Member& node )
 {
-  for (columbus::lim::asg::ListIterator<columbus::lim::asg::base::Base> itParent = fact->getReverseEdges().constIteratorBegin(node.getId(),columbus::lim::asg::edkScope_HasMember);
+  for (columbus::lim::asg::ListIterator<columbus::lim::asg::base::Base> itParent = fact->getReverseEdges().constIteratorBegin(node.getId() ,columbus::lim::asg::edkScope_HasMember);
     itParent != fact->getReverseEdges().constIteratorEnd(node.getId(),columbus::lim::asg::edkScope_HasMember);
     ++itParent){
       visitStart((const columbus::lim::asg::logical::Member&)*itParent);
@@ -65,6 +68,7 @@ void CoverageVisitorBase::visitStart( const columbus::lim::asg::logical::Member&
 
       UniqueNameWithPath uname;
       uname.uniqueName = node.getMangledName();
+
 
       if (!node.getIsContainedInIsEmpty()) {
         uname.line       = node.getIsContainedInListIteratorAssocBegin().getAssocClass().getLine();
@@ -131,7 +135,7 @@ void CoverageVisitorBase::fillCoverage( CCMap& cov )
       mccable = 1 + iter3->second;
 
     cov.insert(CCMap::value_type(uname, CloneMetricValues((covered)/(float)(surface),mccable)));
-    //printf("COV[%s|%s|%d|%d]:covered %d, surface %d, CC %f\n", uname.uniqueName.c_str(), uname.path.c_str(), uname.line,uname.limNodeId, covered, surface, (covered)/(float)(surface));
+    //printf("COV[%d|%s|%s|%d|%d]:covered %d, surface %d, CC %f\n", uname.limNodeId, uname.uniqueName.c_str(), uname.path.c_str(), uname.line,uname.limNodeId, covered, surface, (covered)/(float)(surface));
   }
 
   
@@ -147,39 +151,11 @@ void CoverageVisitorBase::acceptEndNode( Base& b )
   b.acceptEnd(dynamic_cast<Visitor&>(*this));
 }
 
-void CoverageVisitorBase::setLimNodeId( NodeId val ) {
-
-  if (limNodeId == val)
-    return ;
-
-  currentCoverage.clear();
-  currentAll.clear();
-  currentComplexity.clear();
-  limNodeId = val;
-  if ((limNodeId != 0) && ((columbus::lim::asg::Common::getIsMember( fact->getRef(limNodeId)))) ) {
-
-    const columbus::lim::asg::logical::Member& limASmemeber = (const columbus::lim::asg::logical::Member&)fact->getRef(limNodeId);
-    visitStart(limASmemeber);
-
-    for (columbus::lim::asg::ListIterator<columbus::lim::asg::base::Component> it = limASmemeber.getBelongsToListIteratorBegin();it != limASmemeber.getBelongsToListIteratorEnd();++it){
-      const columbus::lim::asg::base::Component& componenet =*it;
-      visitStartComponent(componenet);
-    }
-
-  } else if ((limNodeId != 0) && (columbus::lim::asg::Common::getIsComponent( fact->getRef(limNodeId)))) {
-
-    const columbus::lim::asg::base::Component& componenet = dynamic_cast<const columbus::lim::asg::base::Component&>(fact->getRef(limNodeId));
-    visitStartComponent(componenet);
-
-    
-  }
-
-
-}
-
 void CoverageVisitorBase::insertLines( std::set<LineIdentifier>* lineSet, const Base& n ) const {
+
+
 #ifdef SCHEMA_JAVA
-  if (!columbus::java::asg::Common::getIsPositioned(n)) 
+  if (!AlgorithmCommon::getIsPositioned(n))
     return;
   const columbus::java::asg::base::Positioned& p = dynamic_cast<const columbus::java::asg::base::Positioned&>(n);
  
@@ -211,6 +187,36 @@ void CoverageVisitorBase::visitStartComponent( const columbus::lim::asg::base::C
 }
 
 
+void CoverageVisitorBase::setLimNodeId( NodeId val ) {
+ 
+  if (limNodeId == val)
+    return ;
+  
+  currentCoverage.clear();
+  currentAll.clear();
+  currentComplexity.clear();
+  limNodeId = val;
+  
+  
+  if ((limNodeId != 0) && ((columbus::lim::asg::Common::getIsMember( fact->getRef(limNodeId)))) ) {
+
+    const columbus::lim::asg::logical::Member& limASmemeber = (const columbus::lim::asg::logical::Member&)fact->getRef(limNodeId);
+    
+    visitStart(limASmemeber);
+    for (columbus::lim::asg::ListIterator<columbus::lim::asg::base::Component> it = limASmemeber.getBelongsToListIteratorBegin();it != limASmemeber.getBelongsToListIteratorEnd();++it){
+      const columbus::lim::asg::base::Component& componenet =*it;
+      visitStartComponent(componenet);
+    }
+
+  } else if ((limNodeId != 0) && (columbus::lim::asg::Common::getIsComponent( fact->getRef(limNodeId)))) {
+    
+    const columbus::lim::asg::base::Component& componenet = dynamic_cast<const columbus::lim::asg::base::Component&>(fact->getRef(limNodeId));
+    visitStartComponent(componenet);
+
+    
+  }
+
+}
 
 
 

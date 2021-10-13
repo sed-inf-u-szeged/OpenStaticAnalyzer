@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class NormalAnnotationImpl extends BaseImpl implements NormalAnnotation {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(NormalAnnotationImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

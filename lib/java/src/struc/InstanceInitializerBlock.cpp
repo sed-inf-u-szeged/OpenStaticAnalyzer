@@ -134,7 +134,8 @@ namespace struc {
       double matchAttrs = 0;
       if(node.getIsCompilerGenerated() == getIsCompilerGenerated()) ++matchAttrs;
       if(node.getIsToolGenerated() == getIsToolGenerated()) ++matchAttrs;
-      return matchAttrs / (2 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
+      if(node.getLloc() == getLloc()) ++matchAttrs;
+      return matchAttrs / (3 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
     }

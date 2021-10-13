@@ -30,9 +30,18 @@ const definitions = [
         name: 'input',
         alias: 'i',
         type: String,
+        multiple: true,
         defaultOption: true,
-        description: 'Input AST file, what should transform to XML Graph.'
+        description: 'Input file(s) or directory to be analyzed. Note: simply giving the input file(s) or directory after the last command line parameter will have the same effect too.'
     },
+    {
+        name: 'useRelativePath',
+        alias: 'r',
+        type: Boolean,
+        defaultValue: false,
+        description: 'Relative paths are used in the output if this option is given.'
+    },
+
     {
         name: 'out',
         alias: 'o',
@@ -41,7 +50,6 @@ const definitions = [
     },
     {
         name: 'rul',
-        alias: 'r',
         type: String,
         defaultValue: false,
         description: 'Input RUL file, which contains the exluded and included rules.'
@@ -56,7 +64,7 @@ const definitions = [
     {
         name: 'stat',
         type: String,
-        description: 'Create stats',
+        description: 'Write memory and runtime stats to the given file.',
         defaultValue: false
     }
 
@@ -84,6 +92,22 @@ function printUsage() {
     console.log(usage);
 }
 
+//recursive function which fill the input list
+function constructInputList(inputFile, parsedOptions) {
+    if (fs.lstatSync(inputFile).isDirectory()) {
+        var dirContent = fs.readdirSync(inputFile);
+        for (var i = 0; i < dirContent.length; i++) {
+            constructInputList(path.join(inputFile, dirContent[i]), parsedOptions);
+        }
+    } else {
+        if (path.extname(inputFile) !== ".js" && path.extname(inputFile) !== ".html") {
+            return;
+        }
+
+        parsedOptions.inputList.push(inputFile);
+    }
+}
+
 //Exports
 module.exports.printUsage = printUsage;
 module.exports.parse = function () {
@@ -96,9 +120,17 @@ module.exports.parse = function () {
         options = checkOptions(options);
     }
     catch (e) {
+        console.error(e);
         console.error("The given command line arguments was bad. Please use the --help switch to read documentations.");
         process.exit();
     }
+
+    //get all input files (dirs turned into files to be analyzed)
+    options.inputList = [];
+    for (let i = 0; i < options.input.length; i++) {
+        constructInputList(options.input[i], options);
+    }
+
     return options;
 }
 

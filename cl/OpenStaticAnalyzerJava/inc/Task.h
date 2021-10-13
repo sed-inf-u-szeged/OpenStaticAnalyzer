@@ -18,8 +18,8 @@
  *  limitations under the Licence.
  */
 
-#ifndef _SMJ_CONTR_TASK_H_
-#define _SMJ_CONTR_TASK_H_
+#ifndef _OSAJ_CONTR_TASK_H_
+#define _OSAJ_CONTR_TASK_H_
 
 #include "Properties.h"
 #include <controller/inc/Task.h>
@@ -27,10 +27,9 @@
 DEFINETASK(CleanResultsTask)
 DEFINETASK(CleanProjectTask)
 DEFINETASK(DirectoryBasedAnalysisTask)
-DEFINETASK(RemoveWrapperBinsTask)
-DEFINETASK(CheckASGListTask)
+DEFINETASK(JAN2ChangePathTask)
+DEFINETASK(ASGBackupTask)
 DEFINETASK(JANFilterTask)
-DEFINETASK(SuperlinkTask)
 DEFINETASK(JAN2limTask)
 DEFINETASK(ProfileTask)
 DEFINETASK(DcfTask)
@@ -40,19 +39,18 @@ DEFINETASK(Lim2metricsTask)
 DEFINETASK(GraphMergeTask)
 DEFINETASK(GraphDumpTask)
 DEFINETASK(MetricHunterTask)
+DEFINETASK(Sonar2GraphTask)
+DEFINETASK(LIM2PatternsTask)
 
-class WrapperBasedAnalysisTask : public columbus::controller::Task
+class UserDefinedMetricsTask : public columbus::controller::Task
 {
 private:
-
+  std::list<std::string>& inactives;
 public:
-  WrapperBasedAnalysisTask(const Properties& properties);
-  virtual ExecutionResult execute();
-
-  void wrapTool(const std::string& wrappedTool, const std::string& wrapperTool, std::vector<std::string>& sv ) const;
-
   const static std::string name;
-  virtual const std::string& getName() const{
+  UserDefinedMetricsTask(std::list<std::string>& inactives, const Properties& properties);
+  virtual ExecutionResult execute();
+  virtual const std::string& getName() const {
     return name;
   }
 };

@@ -4,6 +4,8 @@ set (UG_INPUTS
     md/SourceCodeMetricsRef.md
     md/CodeDuplicationMetricsRef.md
     md/FxCopRef.md
+    ../../../doc/md/UserDefinedMetricsRef.md
+    ../../../doc/md/UserDefinedPatternsRef.md
     md/Footnotes.md
 )
 

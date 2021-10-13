@@ -226,6 +226,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const expression::DeclarationExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const expression::DefaultExpressionSyntax& node , bool callVirtualBase = true);
 
       /**
@@ -268,6 +274,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const expression::InitializerExpressionSyntax& node , bool callVirtualBase = true);
 
       /**
@@ -281,6 +293,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const expression::InvocationExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const expression::IsPatternExpressionSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -382,7 +400,25 @@ namespace columbus { namespace csharp { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const expression::RangeExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const expression::RefExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const expression::RefTypeExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const expression::RefTypeSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -412,7 +448,31 @@ namespace columbus { namespace csharp { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const expression::SwitchExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const expression::ThisExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const expression::ThrowExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const expression::TupleExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const expression::TupleTypeSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -478,6 +538,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const statement::ForEachVariableStatementSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const statement::ForStatementSyntax& node , bool callVirtualBase = true);
 
       /**
@@ -503,6 +569,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const statement::LocalDeclarationStatementSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const statement::LocalFunctionStatementSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -652,6 +724,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const structure::CasePatternSwitchLabelSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const structure::CaseSwitchLabelSyntax& node , bool callVirtualBase = true);
 
       /**
@@ -689,6 +767,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const structure::CompilationUnitSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const structure::ConstantPatternSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -742,6 +826,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const structure::DeclarationPatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const structure::DefaultSwitchLabelSyntax& node , bool callVirtualBase = true);
 
       /**
@@ -755,6 +845,18 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const structure::DestructorDeclarationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const structure::DiscardDesignationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const structure::DiscardPatternSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -970,7 +1072,25 @@ namespace columbus { namespace csharp { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const structure::ParenthesizedVariableDesignationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const structure::PositionalPatternClauseSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const structure::PropertyDeclarationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const structure::PropertyPatternClauseSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -994,6 +1114,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const structure::RecursivePatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const structure::SelectClauseSyntax& node , bool callVirtualBase = true);
 
       /**
@@ -1006,7 +1132,25 @@ namespace columbus { namespace csharp { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const structure::SingleVariableDesignationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const structure::StructDeclarationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const structure::SubpatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const structure::SwitchExpressionArmSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -1019,6 +1163,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const structure::SyntaxToken& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const structure::TupleElementSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -1066,6 +1216,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const structure::VarPatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const structure::VariableDeclarationSyntax& node , bool callVirtualBase = true);
 
       /**
@@ -1073,6 +1229,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const structure::VariableDeclaratorSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const structure::WhenClauseSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -1294,6 +1456,14 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const expression::DeclarationExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const expression::DefaultExpressionSyntax& node , bool callVirtualBase = true);
 
       /**
@@ -1358,6 +1528,14 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const expression::InitializerExpressionSyntax& node , bool callVirtualBase = true);
 
       /**
@@ -1383,6 +1561,14 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const expression::InvocationExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const expression::IsPatternExpressionSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -1534,7 +1720,31 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const expression::RangeExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const expression::RefExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const expression::RefTypeExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const expression::RefTypeSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -1582,7 +1792,39 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const expression::SwitchExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const expression::ThisExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const expression::ThrowExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const expression::TupleExpressionSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const expression::TupleTypeSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -1623,6 +1865,14 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const statement::CheckedStatementSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const statement::CommonForEachStatementSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -1678,6 +1928,14 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const statement::ForEachVariableStatementSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const statement::ForStatementSyntax& node , bool callVirtualBase = true);
 
       /**
@@ -1711,6 +1969,14 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const statement::LocalDeclarationStatementSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const statement::LocalFunctionStatementSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -1982,6 +2248,14 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const structure::CasePatternSwitchLabelSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const structure::CaseSwitchLabelSyntax& node , bool callVirtualBase = true);
 
       /**
@@ -2031,6 +2305,14 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const structure::CompilationUnitSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const structure::ConstantPatternSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -2110,6 +2392,14 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const structure::DeclarationPatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const structure::DefaultSwitchLabelSyntax& node , bool callVirtualBase = true);
 
       /**
@@ -2127,6 +2417,22 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const structure::DestructorDeclarationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const structure::DiscardDesignationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const structure::DiscardPatternSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -2438,7 +2744,39 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const structure::ParenthesizedVariableDesignationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const structure::PatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const structure::PositionalPatternClauseSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const structure::PropertyDeclarationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const structure::PropertyPatternClauseSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -2478,6 +2816,14 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const structure::RecursivePatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const structure::SelectClauseSyntax& node , bool callVirtualBase = true);
 
       /**
@@ -2502,7 +2848,31 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const structure::SingleVariableDesignationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const structure::StructDeclarationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const structure::SubpatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const structure::SwitchExpressionArmSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -2527,6 +2897,14 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const structure::SyntaxToken& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const structure::TupleElementSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -2606,6 +2984,14 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const structure::VarPatternSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const structure::VariableDeclarationSyntax& node , bool callVirtualBase = true);
 
       /**
@@ -2615,6 +3001,22 @@ namespace columbus { namespace csharp { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const structure::VariableDeclaratorSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const structure::VariableDesignationSyntax& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const structure::WhenClauseSyntax& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -2795,7 +3197,7 @@ namespace columbus { namespace csharp { namespace asg {
 
       Factory* fact;
 
-      bool traversaldCrossEdges[250];
+      bool traversaldCrossEdges[293];
 
   }; // AlgorithmPreorder
 

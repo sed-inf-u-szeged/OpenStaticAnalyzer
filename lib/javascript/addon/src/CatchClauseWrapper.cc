@@ -1,303 +1,291 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
 #include "../inc/CatchClauseWrapper.h"
-#include <sstream>  
 #include <string>   
-#include <iomanip>  
-#include <algorithm>
-#include <cctype>   
-
-#include <nan.h>   
-
-using namespace v8;
-
 namespace columbus { namespace javascript { namespace asg { namespace addon {
 
-Persistent<Function> CatchClauseWrapper::constructor;
+napi_ref CatchClauseWrapper::constructor;
 
-void CatchClauseWrapper::Init(Handle<v8::Object> exports) {
-  Isolate* isolate = Isolate::GetCurrent();                                
-                                                                           
-  // Prepare constructor template                                          
-  Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);       
-  tpl->SetClassName(v8::String::NewFromUtf8(isolate, "CatchClauseWrapper"));             
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);                       
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setParamIdentifier", setParamIdentifier);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setParamMemberExpression", setParamMemberExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setParamArrayPattern", setParamArrayPattern);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setParamAssignmentPattern", setParamAssignmentPattern);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setParamObjectPattern", setParamObjectPattern);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setParamRestElement", setParamRestElement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setBodyBlockStatement", setBodyBlockStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addCommentsComment", addCommentsComment);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setPath", setPath);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setLine", setLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setCol", setCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setEndLine", setEndLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setEndCol", setEndCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideLine", setWideLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideCol", setWideCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideEndLine", setWideEndLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideEndCol", setWideEndCol);
-                                                                           
-  constructor.Reset(isolate, tpl->GetFunction());                          
-  exports->Set(v8::String::NewFromUtf8(isolate, "CatchClauseWrapper"),                   
-               tpl->GetFunction());                                        
-}                                                                          
+CatchClauseWrapper::CatchClauseWrapper(): env_(nullptr), wrapper_(nullptr) {}
 
+CatchClauseWrapper::~CatchClauseWrapper(){ napi_delete_reference(env_, wrapper_); }
 
-void CatchClauseWrapper::New(const FunctionCallbackInfo<Value>& args) {                             
-  Isolate* isolate = Isolate::GetCurrent();                                         
-  HandleScope scope(isolate);                                                       
-                                                                                    
-  if (args.IsConstructCall()) {                                                     
-    // Invoked as constructor: `new CatchClauseWrapper(...)`                                        
-    Factory* fact = Nan::ObjectWrap::Unwrap<Factory>(args[0]->ToObject()); 
-    CatchClauseWrapper* obj = new CatchClauseWrapper(fact);                                                         
-    obj->Wrap(args.This());                                                         
-    args.GetReturnValue().Set(args.This());                                         
-  } else {                                                                          
-    // Invoked as plain function `CatchClauseWrapper(...)`, turn into construct call.               
-    const int argc = 1;                                                             
-    Handle<v8::Value> argv[argc] = { args[0] };                                         
-    Local<v8::Function> cons = Local<v8::Function>::New(isolate, constructor);              
-    args.GetReturnValue().Set(Nan::NewInstance(cons, argc, argv).ToLocalChecked()); 
-  }                                                                                 
-}                                                                                   
-
-
-CatchClauseWrapper::CatchClauseWrapper(Factory* fact)                        
-{                                                   
-  CatchClause = fact->getFactory()->createCatchClauseNode();          
-}                                                   
-
-CatchClauseWrapper::~CatchClauseWrapper()
-{        
-}        
-
-void CatchClauseWrapper::NewInstance(const FunctionCallbackInfo<Value>& args) {              
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  const unsigned argc = 1;                                                   
-  Handle<Value> argv[argc] = { args[0] };                                    
-  Local<v8::Function> cons = Local<v8::Function>::New(isolate, constructor);         
-  Local<v8::Object> instance = Nan::NewInstance(cons, argc, argv).ToLocalChecked();  
-  args.GetReturnValue().Set(instance);                                       
-}                                                                            
-
-void CatchClauseWrapper::setParamIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  IdentifierWrapper* _Identifier1 = ObjectWrap::Unwrap<IdentifierWrapper>(args[0]->ToObject());
-  CatchClauseWrapper* _CatchClause2 = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
-
-  _CatchClause2->CatchClause->setParam(_Identifier1->Identifier);
+void CatchClauseWrapper::Destructor(napi_env env, void* nativeObject, void* ){
+  CatchClauseWrapper* obj = reinterpret_cast<CatchClauseWrapper*>(nativeObject);
+  //delete obj->_nativeObj;
+  obj->~CatchClauseWrapper();
 }
-void CatchClauseWrapper::setParamMemberExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  MemberExpressionWrapper* _MemberExpression1 = ObjectWrap::Unwrap<MemberExpressionWrapper>(args[0]->ToObject());
-  CatchClauseWrapper* _CatchClause2 = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
+napi_value CatchClauseWrapper::Init(napi_env env, napi_value& exports) {
+  napi_status status;
+  napi_property_descriptor props [] = {
+  DECLARE_NAPI_METHOD( "setParam", setParam),
+  DECLARE_NAPI_METHOD( "setBody", setBody),
+  DECLARE_NAPI_METHOD( "addComments", addComments),
+    DECLARE_NAPI_METHOD("setPath", setPath),
+    DECLARE_NAPI_METHOD("setPosition", setPosition),
+  };
 
-  _CatchClause2->CatchClause->setParam(_MemberExpression1->MemberExpression);
+  napi_value cons;
+  status = napi_define_class(env, "CatchClauseWrapper", NAPI_AUTO_LENGTH, New, nullptr, sizeof(props) / sizeof(*props), props, &cons );
+  assert(status == napi_ok);
+
+  status = napi_create_reference(env, cons, 1, &constructor);
+  assert(status == napi_ok);
+
+  return exports;
 }
-void CatchClauseWrapper::setParamArrayPattern(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ArrayPatternWrapper* _ArrayPattern1 = ObjectWrap::Unwrap<ArrayPatternWrapper>(args[0]->ToObject());
-  CatchClauseWrapper* _CatchClause2 = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
+napi_value CatchClauseWrapper::New(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
 
-  _CatchClause2->CatchClause->setParam(_ArrayPattern1->ArrayPattern);
-}
-void CatchClauseWrapper::setParamAssignmentPattern(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  AssignmentPatternWrapper* _AssignmentPattern1 = ObjectWrap::Unwrap<AssignmentPatternWrapper>(args[0]->ToObject());
-  CatchClauseWrapper* _CatchClause2 = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
+  status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
+  assert(status == napi_ok);
 
-  _CatchClause2->CatchClause->setParam(_AssignmentPattern1->AssignmentPattern);
-}
-void CatchClauseWrapper::setParamObjectPattern(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ObjectPatternWrapper* _ObjectPattern1 = ObjectWrap::Unwrap<ObjectPatternWrapper>(args[0]->ToObject());
-  CatchClauseWrapper* _CatchClause2 = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
+  CatchClauseWrapper* obj = new CatchClauseWrapper();
+  obj->env_ = env;
+  status = napi_wrap(env, jsthis, reinterpret_cast<void*>(obj), CatchClauseWrapper::Destructor, nullptr, &obj->wrapper_);
+  assert(status == napi_ok);
 
-  _CatchClause2->CatchClause->setParam(_ObjectPattern1->ObjectPattern);
-}
-void CatchClauseWrapper::setParamRestElement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  RestElementWrapper* _RestElement1 = ObjectWrap::Unwrap<RestElementWrapper>(args[0]->ToObject());
-  CatchClauseWrapper* _CatchClause2 = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
-
-  _CatchClause2->CatchClause->setParam(_RestElement1->RestElement);
-}
-void CatchClauseWrapper::setBodyBlockStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  BlockStatementWrapper* _BlockStatement1 = ObjectWrap::Unwrap<BlockStatementWrapper>(args[0]->ToObject());
-  CatchClauseWrapper* _CatchClause2 = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
-
-  _CatchClause2->CatchClause->setBody(_BlockStatement1->BlockStatement);
-}
-void CatchClauseWrapper::addCommentsComment(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  CommentWrapper* _Comment1 = ObjectWrap::Unwrap<CommentWrapper>(args[0]->ToObject());
-  CatchClauseWrapper* _CatchClause2 = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
-
-  _CatchClause2->CatchClause->addComments(_Comment1->Comment);
-}
-void CatchClauseWrapper::setPath(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);
-
-  CatchClauseWrapper* _CatchClause = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );
-  std::string param(*utfStr);
-  Range range = _CatchClause->CatchClause->getPosition();
-  range.setPath( param );
-  _CatchClause->CatchClause->setPosition( range );
+  return jsthis;
 }
 
-void CatchClauseWrapper::setLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  CatchClauseWrapper* _CatchClause = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _CatchClause->CatchClause->getPosition();
-  range.setLine( ui );
-  _CatchClause->CatchClause->setPosition( range );
+
+napi_status CatchClauseWrapper::NewInstance(napi_env env, statement::CatchClause* arg, napi_value* instance) {
+
+  napi_status status;
+  napi_value cons;
+
+  status = napi_get_reference_value(env, constructor, &cons);
+  if(status != napi_ok) return status;
+
+  status = napi_new_instance(env, cons, 0, nullptr, instance);
+  if(status != napi_ok) return status;
+
+  CatchClauseWrapper* obj;
+  status = napi_unwrap(env, *instance, reinterpret_cast<void**>(&obj));
+  obj->_nativeObj = arg;
+  return napi_ok;
 }
 
-void CatchClauseWrapper::setCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  CatchClauseWrapper* _CatchClause = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _CatchClause->CatchClause->getPosition();
-  range.setCol( ui );
-  _CatchClause->CatchClause->setPosition( range );
+napi_value CatchClauseWrapper::setParam(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
+
+  CatchClauseWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
+
+  columbus::javascript::asg::statement::CatchClause* source = dynamic_cast<columbus::javascript::asg::statement::CatchClause*>(obj->_nativeObj);
+  columbus::javascript::asg::statement::Pattern* target = dynamic_cast<columbus::javascript::asg::statement::Pattern*>(param->_nativeObj);
+
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast statement::CatchClause" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast statement::Pattern" );
+  }
+
+  source->setParam(target);
+  return nullptr;
+}
+napi_value CatchClauseWrapper::setBody(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
+
+  CatchClauseWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
+
+  columbus::javascript::asg::statement::CatchClause* source = dynamic_cast<columbus::javascript::asg::statement::CatchClause*>(obj->_nativeObj);
+  columbus::javascript::asg::statement::BlockStatement* target = dynamic_cast<columbus::javascript::asg::statement::BlockStatement*>(param->_nativeObj);
+
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast statement::CatchClause" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast statement::BlockStatement" );
+  }
+
+  source->setBody(target);
+  return nullptr;
+}
+napi_value CatchClauseWrapper::addComments(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
+
+  CatchClauseWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
+
+  columbus::javascript::asg::statement::CatchClause* source = dynamic_cast<columbus::javascript::asg::statement::CatchClause*>(obj->_nativeObj);
+  columbus::javascript::asg::base::Comment* target = dynamic_cast<columbus::javascript::asg::base::Comment*>(param->_nativeObj);
+
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast statement::CatchClause" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast base::Comment" );
+  }
+
+  source->addComments(target);
+  return nullptr;
+}
+napi_value CatchClauseWrapper::setPath(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments");
+    return nullptr;
+  }
+
+  CatchClauseWrapper* obj;
+  napi_valuetype valuetype;
+  status = napi_typeof(env, args[0], &valuetype);
+  assert(status == napi_ok);
+
+  if (valuetype != napi_string) {
+    napi_throw_type_error(env, nullptr, "Argument should be a string!");
+    return nullptr;
+  }
+
+  char buffer[1024];
+  size_t buffer_size = 1024, result_size = 0;
+  status = napi_get_value_string_utf8(env, args[0], buffer, buffer_size, &result_size);
+  assert(status == napi_ok);
+
+  std::string path(buffer);
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  Range range = dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->getPosition();
+  range.setPath( path );
+  dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->setPosition( range );
+  return nullptr;
 }
 
-void CatchClauseWrapper::setEndLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  CatchClauseWrapper* _CatchClause = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _CatchClause->CatchClause->getPosition();
-  range.setEndLine( ui );
-  _CatchClause->CatchClause->setPosition( range );
+
+napi_value CatchClauseWrapper::setPosition(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 8;
+  napi_value args[8];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1 && argc != 8) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments. Use a simple object with the positions or pass 8 parameters: line, col, endline, endcol and their wide equivalents!");
+    return nullptr;
+  }
+
+  CatchClauseWrapper* obj;
+  napi_valuetype valuetype[8];
+  int32_t position[8];
+  bool hasProp[8];
+  if(argc == 1){
+    status = napi_typeof(env, args[0], &valuetype[0]);
+    assert(status == napi_ok);
+
+    if(valuetype[0] != napi_object){
+      napi_throw_type_error(env, nullptr, "Argument should be an object!");
+      return nullptr;
+    }
+
+    std::string props[] = {"line", "col", "endline", "endcol", "wideline", "widecol", "wideendline", "wideendcol",};
+
+    for(int i = 0; i < 8; ++i){
+      status = napi_has_named_property(env, args[0], props[i].c_str(), &hasProp[i]);
+      assert(status == napi_ok);
+      napi_value value;
+      if(hasProp[i]){
+        status = napi_get_named_property(env, args[0], props[i].c_str(), &value);
+        assert(status == napi_ok);
+        status = napi_get_value_int32(env, value, &position[i]);
+        assert(status == napi_ok);
+      }
+
+    }
+  }
+  else{
+    for(int i = 0; i < 8; ++i){
+      status = napi_typeof(env, args[i], &valuetype[i]);
+      assert(status == napi_ok);
+      if(valuetype[i] != napi_number){
+        napi_throw_type_error(env, nullptr, "Argument should be an integer!");
+        return nullptr;
+      }
+      status = napi_get_value_int32(env, args[i], &position[i]);
+      assert(status == napi_ok);
+    }
+    for(int i = 0; i < 8; ++i){
+      hasProp[i] = true;
+    }
+  }
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  Range range = dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->getPosition();
+
+  if(hasProp[0])
+    range.setLine( (int)position[0] );
+  if(hasProp[1])
+    range.setCol( (int)position[1] );
+  if(hasProp[2])
+    range.setEndLine( (int)position[2] );
+  if(hasProp[3])
+    range.setEndCol( (int)position[3] );
+  if(hasProp[4])
+    range.setWideLine( (int)position[4] );
+  if(hasProp[5])
+    range.setWideCol( (int)position[5] );
+  if(hasProp[6])
+    range.setWideEndLine( (int)position[6] );
+  if(hasProp[7])
+    range.setWideEndCol( (int)position[7] );
+  dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->setPosition( range );
+  return nullptr;
 }
 
-void CatchClauseWrapper::setEndCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  CatchClauseWrapper* _CatchClause = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _CatchClause->CatchClause->getPosition();
-  range.setEndCol( ui );
-  _CatchClause->CatchClause->setPosition( range );
-}
-
-void CatchClauseWrapper::setWideLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  CatchClauseWrapper* _CatchClause = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _CatchClause->CatchClause->getPosition();
-  range.setWideLine( ui );
-  _CatchClause->CatchClause->setPosition( range );
-}
-
-void CatchClauseWrapper::setWideCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  CatchClauseWrapper* _CatchClause = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _CatchClause->CatchClause->getPosition();
-  range.setWideCol( ui );
-  _CatchClause->CatchClause->setPosition( range );
-}
-
-void CatchClauseWrapper::setWideEndLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  CatchClauseWrapper* _CatchClause = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _CatchClause->CatchClause->getPosition();
-  range.setWideEndLine( ui );
-  _CatchClause->CatchClause->setPosition( range );
-}
-
-void CatchClauseWrapper::setWideEndCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  CatchClauseWrapper* _CatchClause = ObjectWrap::Unwrap<CatchClauseWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _CatchClause->CatchClause->getPosition();
-  range.setWideEndCol( ui );
-  _CatchClause->CatchClause->setPosition( range );
-}
 
 }}}} //end of namespaces

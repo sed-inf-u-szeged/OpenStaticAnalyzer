@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var whileStatement = factory.createWhileStatementWrapper(factory);
+        var whileStatement = factory.createWhileStatementWrapper();
         globals.setPositionInfo(node, whileStatement);
         return whileStatement;
     } else {
@@ -34,29 +34,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.test != null) {
             var testWrapper = globals.getWrapperOfNode(node.test);
-            if (node.test.type !== "Literal") {
-                var testWrapperFunctionString = "setTest" + node.test.type;
-            } else {
-                var testWrapperFunctionString = "setTest" + globals.getLiteralType(node.test) + node.test.type;
-            }
             try {
-                whileStatementWrapper[testWrapperFunctionString](testWrapper);
+                whileStatementWrapper.setTest(testWrapper);
             } catch (e) {
-                console.error("WHILESTATEMENT - Function not exist: whileStatementWrapper." + testWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("WHILESTATEMENT - Could not set test! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.body != null) {
             var bodyWrapper = globals.getWrapperOfNode(node.body);
-            if (node.body.type !== "Literal") {
-                var bodyWrapperFunctionString = "setBody" + node.body.type;
-            } else {
-                var bodyWrapperFunctionString = "setBody" + globals.getLiteralType(node.body) + node.body.type;
-            }
             try {
-                whileStatementWrapper[bodyWrapperFunctionString](bodyWrapper);
+                whileStatementWrapper.setBody(bodyWrapper);
             } catch (e) {
-                console.error("WHILESTATEMENT - Function not exist: whileStatementWrapper." + bodyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("WHILESTATEMENT - Could not set body! Reason of the error: " + e + "\n");
             }
         }
 

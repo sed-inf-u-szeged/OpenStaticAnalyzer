@@ -24,7 +24,6 @@
 #include "../inc/StatementFilter.h"
 #include <vector>
 
-
 bool StatementFilter::isFiltered( const columbus::genealogy::CloneClass& cc )
 {
   for(columbus::genealogy::ListIterator<columbus::genealogy::CloneInstance> cloneInstanceIt = cc.getItemsListIteratorBegin();cloneInstanceIt != cc.getItemsListIteratorEnd();++cloneInstanceIt) {
@@ -37,17 +36,21 @@ bool StatementFilter::isFiltered( const columbus::genealogy::CloneClass& cc )
         continue;
 
 #if defined SCHEMA_JAVA || defined SCHEMA_JAVASCRIPT
-      if (columbus::LANGUAGE_NAMESPACE::Common::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkStatement))
+
+      if (AlgorithmCommon::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkStatement))
         return false;
 
 #elif defined SCHEMA_PYTHON
-      if (columbus::LANGUAGE_NAMESPACE::Common::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkStatement)){
-        if (!columbus::LANGUAGE_NAMESPACE::Common::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkImportStatement) &&
-            !columbus::LANGUAGE_NAMESPACE::Common::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkAlias))
+
+      if (AlgorithmCommon::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkStatement)){
+        if (!AlgorithmCommon::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkImportStatement) &&
+            !AlgorithmCommon::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkAlias))
         return false;
       }
+
 #elif defined SCHEMA_CSHARP
-      if (columbus::LANGUAGE_NAMESPACE::Common::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkStatementSyntax))
+
+      if (AlgorithmCommon::getIsBaseClassKind((columbus::LANGUAGE_NAMESPACE::NodeKind)position->getNodeKind(),columbus::LANGUAGE_NAMESPACE::ndkStatementSyntax))
         return false;
 #endif
 

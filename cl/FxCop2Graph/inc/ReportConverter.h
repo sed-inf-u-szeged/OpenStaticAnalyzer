@@ -40,7 +40,6 @@ namespace columbus {
 				bool findPath(const columbus::lim::asg::physical::FSEntry& item);
 				columbus::graph::Graph* getGraph() { return &graph; }
 				void aggregateWarnings(bool createGroups);
-                void addLicenseTypeToTheGraphHeader(const std::string& toolName, const std::string& headerMode);
 			protected:
 				Config config;
 				void writeWarningLine(const std::string& id, const std::string& warningText, const std::string& path, int line, int endline, int col, int endcol);
@@ -56,6 +55,7 @@ namespace columbus {
 				std::vector<std::string> pathLim;
 				std::map<std::string, std::string> pathMap;
 				std::string txtOutputFileName;
+				graphsupport::WarningCache warningCache;
 		};
 	}
 }

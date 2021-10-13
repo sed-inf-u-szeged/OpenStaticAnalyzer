@@ -20,8 +20,9 @@
 
 #include <stdio.h>
 #include <string>
+#include <cstdint>
 
-#ifdef __unix__
+#ifdef __linux__
 #include <unistd.h>
 #include <sys/types.h>
 #endif
@@ -36,9 +37,11 @@
 #include "../inc/Stat.h"
 #include "../inc/messages.h"
 #include "../inc/FileSup.h"
+#include "../inc/WriteMessage.h"
+
 #include "Exception.h"
 
-#ifdef __unix__
+#ifdef __linux__
 #define __STDC_FORMAT_MACROS
 #include <inttypes.h>
 #endif
@@ -49,7 +52,7 @@ namespace common
 memstat getProcessUsedMemSize() {
   memstat stat = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-#ifdef __unix__
+#ifdef __linux__
   pid_t me = getpid();
 
   char file[100];
@@ -98,7 +101,7 @@ memstat getProcessUsedMemSize() {
 timestat getProcessUsedTime() {
   timestat stat = { 0, 0 };
 
-#ifdef __unix__
+#ifdef __linux__
   pid_t me = getpid();
 
   char file[100];
@@ -186,6 +189,201 @@ uint64_t updateMemoryStat(bool reset) {
   
   return counter;
 }
+
+
+std::unique_ptr<PerformanceLogger> PerformanceLogger::instance;
+
+PerformanceLogger::PerformanceLogger(const char* logFilename)
+  : enabled (false)
+  , sectionLimit (5000)
+  , sectionCounter (0)
+  , alignedSectionNameMaxLength (30)
+  , logFilename (logFilename)
+{
+  rootSection.name = "RootSection";
+  rootSection.startTime = getProcessUsedTime();
+  rootSection.endTime = { uint64_t(0), uint64_t(0) };
+
+  sectionStack.push(&rootSection);
+}
+
+PerformanceLogger& PerformanceLogger::getPerformanceLogger(const char* logFilename)
+{
+  if (!instance)
+    instance = std::unique_ptr<PerformanceLogger>(new PerformanceLogger(logFilename));
+
+  return *instance;
+}
+
+
+void PerformanceLogger::dumpSection(FILE* logFile, const PerformanceLogger::Section& section, int level, const timestat relativeTime) const
+{
+  std::string tab(level * 2, ' ');
+  const char* format = "%-*s GLB: user:%8lu, sys:%8lu  REL(%s): user:%8lu, sys:%8lu\n";
+  if (section.endTime.user != UINT64_MAX)
+  {
+    fprintf(logFile, format,
+      alignedSectionNameMaxLength,
+      (tab + '+' + section.name).c_str(),
+      section.startTime.user - rootSection.startTime.user,
+      section.startTime.system - rootSection.startTime.system,
+      "ParentStart ",
+      section.startTime.user - relativeTime.user,
+      section.startTime.system - relativeTime.system
+    );
+
+    for (const auto& subSection : section.subSections)
+      dumpSection(logFile, subSection, level + 1, section.startTime);
+
+    fprintf(logFile, format,
+      alignedSectionNameMaxLength,
+      (tab + '-' + section.name).c_str(),
+      section.endTime.user - rootSection.startTime.user,
+      section.endTime.system - rootSection.startTime.system,
+      "SectionStart",
+      section.endTime.user - section.startTime.user,
+      section.endTime.system - section.startTime.system
+    );
+  }
+  else
+    fprintf(logFile, format,
+      alignedSectionNameMaxLength,
+      (tab + '*' + section.name).c_str(),
+      section.startTime.user - rootSection.startTime.user,
+      section.startTime.system - rootSection.startTime.system,
+      "SectionStart",
+      section.startTime.user - relativeTime.user,
+      section.startTime.system - relativeTime.system
+    );
+
+}
+
+void PerformanceLogger::recalculateAlignedSectionNameMaxLength(const PerformanceLogger::Section& section, int level)
+{
+  int tabSize = level * 2;
+  size_t actualLength = tabSize + strlen(section.name);
+  if (alignedSectionNameMaxLength < actualLength)
+    alignedSectionNameMaxLength = actualLength;
+
+  for (const auto& subSection : section.subSections)
+    recalculateAlignedSectionNameMaxLength(subSection, level + 1);
+}
+
+PerformanceLogger::~PerformanceLogger()
+{
+  if (enabled)
+  {
+    rootSection.endTime = getProcessUsedTime();
+
+    if (sectionCounter >= sectionLimit)
+      WriteMsg::write(CMSG_LOG_SECTION_LIMIT_IS_REACHED_WARNING, sectionLimit);
+
+    if (!sectionStack.empty() && (sectionStack.top() != &rootSection))
+    {
+      while (sectionStack.top() != &rootSection)
+      {
+        WriteMsg::write(CMSG_LOG_STACK_MISMATCH_ERROR, sectionStack.top()->name, rootSection.name);
+        sectionStack.pop();
+      }
+    }
+
+    alignedSectionNameMaxLength = 0;
+    recalculateAlignedSectionNameMaxLength(rootSection, 1);
+
+    FILE* perfLogFile = fopen(logFilename.c_str(), "wt");
+    if (perfLogFile)
+    {
+      dumpSection(perfLogFile, rootSection, 0, rootSection.startTime);
+      fclose(perfLogFile);
+    }
+  }
+}
+
+PerformanceLogger::SectionHandler PerformanceLogger::startSection(const char* name)
+{
+  if (enabled && (sectionCounter < sectionLimit))
+  {
+    sectionStack.top()->subSections.push_back({ name, getProcessUsedTime(), { uint64_t(0), uint64_t(0) } });
+    sectionStack.push(&sectionStack.top()->subSections.back());
+    ++sectionCounter;
+    return SectionHandler(this, sectionStack.top());
+  }
+  else
+    return SectionHandler(nullptr, nullptr);
+}
+
+void PerformanceLogger::addTimeStamp(const char* name)
+{
+  if (enabled && (sectionCounter < sectionLimit))
+  {
+    sectionStack.top()->subSections.push_back({ name, getProcessUsedTime(), { UINT64_MAX, UINT64_MAX } });
+    ++sectionCounter;
+  }
+}
+
+void PerformanceLogger::endSection(Section* section)
+{
+  if (enabled)
+  {
+    if (sectionStack.top() == &rootSection)
+    {
+      WriteMsg::write(CMSG_LOG_STACK_MISMATCH_ERROR, rootSection.name, section->name);
+      return;
+    }
+
+    if (sectionStack.top() != section)
+    {
+      WriteMsg::write(CMSG_LOG_STACK_MISMATCH_ERROR, sectionStack.top()->name, section->name);
+      return;
+    }
+    section->endTime = getProcessUsedTime();
+    sectionStack.pop();
+  }
+}
+
+
+void PerformanceLogger::enable()
+{
+  enabled = true;
+}
+
+void PerformanceLogger::disable()
+{
+  enabled = false;
+}
+
+void PerformanceLogger::setSectionLimit(const size_t sectionLimit)
+{
+  this->sectionLimit = sectionLimit;
+}
+
+PerformanceLogger::SectionHandler::SectionHandler(SectionHandler&& other)
+  : section(other.section)
+  , performanceLogger (other.performanceLogger)
+{
+  other.section = nullptr;
+  other.performanceLogger = nullptr;
+}
+
+PerformanceLogger::SectionHandler::SectionHandler(PerformanceLogger* performanceLogger, Section* section)
+  : section (section)
+  , performanceLogger (performanceLogger)
+{
+}
+
+PerformanceLogger::SectionHandler::~SectionHandler()
+{
+  if (performanceLogger != nullptr && section != nullptr)
+    performanceLogger->endSection(section);
+}
+
+void PerformanceLogger::SectionHandler::addTimeStamp(const char* name)
+{
+  if (performanceLogger != nullptr && section != nullptr)
+    performanceLogger->addTimeStamp(name);
+
+}
+
 
 }
 

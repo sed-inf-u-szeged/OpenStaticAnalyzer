@@ -34,7 +34,8 @@ typedef boost::crc_32_type  Crc_type;
 
 namespace statement { 
   StatementSyntax::StatementSyntax(NodeId _id, Factory *_factory) :
-    Positioned(_id, _factory)
+    Positioned(_id, _factory),
+    AttributeListsContainer()
   {
   }
 
@@ -42,10 +43,45 @@ namespace statement {
   }
 
   void StatementSyntax::prepareDelete(bool tryOnVirtualParent){
+    while (!AttributeListsContainer.empty()) {
+      const NodeId id = *AttributeListsContainer.begin();
+      removeParentEdge(id);
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->removeEdge(id, this->getId(), edkStatementSyntax_AttributeLists);
+      AttributeListsContainer.pop_front();
+    }
     base::Positioned::prepareDelete(false);
   }
 
+  ListIterator<structure::AttributeListSyntax> StatementSyntax::getAttributeListsListIteratorBegin() const {
+    return ListIterator<structure::AttributeListSyntax>(&AttributeListsContainer, factory, true);
+  }
+
+  ListIterator<structure::AttributeListSyntax> StatementSyntax::getAttributeListsListIteratorEnd() const {
+    return ListIterator<structure::AttributeListSyntax>(&AttributeListsContainer, factory, false);
+  }
+
+  bool StatementSyntax::getAttributeListsIsEmpty() const {
+    return getAttributeListsListIteratorBegin() == getAttributeListsListIteratorEnd();
+  }
+
+  unsigned int StatementSyntax::getAttributeListsSize() const {
+    unsigned int size = 0;
+    ListIterator<structure::AttributeListSyntax> endIt = getAttributeListsListIteratorEnd();
+    for (ListIterator<structure::AttributeListSyntax> it = getAttributeListsListIteratorBegin(); it != endIt; ++it) {
+      ++size;
+    }
+    return size;
+  }
+
   bool StatementSyntax::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
+    switch (edgeKind) {
+      case edkStatementSyntax_AttributeLists:
+        addAttributeLists(edgeEnd);
+        return true;
+      default:
+        break;
+    }
     if (base::Positioned::setEdge(edgeKind, edgeEnd, false)) {
       return true;
     }
@@ -53,10 +89,65 @@ namespace statement {
   }
 
   bool StatementSyntax::removeEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
+    switch (edgeKind) {
+      case edkStatementSyntax_AttributeLists:
+        removeAttributeLists(edgeEnd);
+        return true;
+      default:
+        break;
+    }
     if (base::Positioned::removeEdge(edgeKind, edgeEnd, false)) {
       return true;
     }
     return false;
+  }
+
+  void StatementSyntax::addAttributeLists(const structure::AttributeListSyntax *_node) {
+    if (_node == NULL)
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
+
+    if (&(_node->getFactory()) != this->factory)
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
+
+    if (!((_node->getNodeKind() == ndkAttributeListSyntax) ))
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+
+    AttributeListsContainer.push_back(_node->getId());
+    setParentEdge(_node,edkStatementSyntax_AttributeLists);
+
+    if (factory->reverseEdges)
+      factory->reverseEdges->insertEdge(_node, this, edkStatementSyntax_AttributeLists);
+  }
+
+  void StatementSyntax::addAttributeLists(NodeId _id) {
+    const structure::AttributeListSyntax *node = dynamic_cast<structure::AttributeListSyntax*>(factory->getPointer(_id));
+    if (node == NULL)
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    addAttributeLists( node );
+  }
+
+  void StatementSyntax::removeAttributeLists(NodeId id) {
+    if (!factory->getExist(id))
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    ListIterator<structure::AttributeListSyntax>::Container::iterator it = find(AttributeListsContainer.begin(), AttributeListsContainer.end(), id);
+
+    if (it == AttributeListsContainer.end())
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    AttributeListsContainer.erase(it);
+
+    removeParentEdge(id);
+
+    if (factory->getExistsReverseEdges())
+      factory->reverseEdges->removeEdge(id, this->getId(), edkStatementSyntax_AttributeLists);
+  }
+
+  void StatementSyntax::removeAttributeLists(structure::AttributeListSyntax *_node) {
+    if (_node == NULL)
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
+
+    removeAttributeLists(_node->getId());
   }
 
   double StatementSyntax::getSimilarity(const base::Base& base){
@@ -93,11 +184,24 @@ namespace statement {
   void StatementSyntax::save(io::BinaryIO &binIo,bool withVirtualBase  /*= true*/) const {
     Positioned::save(binIo,false);
 
+
+    for (ListIterator<structure::AttributeListSyntax>::Container::const_iterator it = AttributeListsContainer.begin(); it != AttributeListsContainer.end(); ++it) {
+      binIo.writeUInt4(*it);
+    }
+    binIo.writeUInt4(0); // This is the end sign
   }
 
   void StatementSyntax::load(io::BinaryIO &binIo, bool withVirtualBase /*= true*/) {
     Positioned::load(binIo,false);
 
+    NodeId _id;
+
+    _id = binIo.readUInt4();
+    while (_id) {
+      AttributeListsContainer.push_back(_id);
+      setParentEdge(factory->getPointer(_id),edkStatementSyntax_AttributeLists);
+      _id = binIo.readUInt4();
+    }
   }
 
 

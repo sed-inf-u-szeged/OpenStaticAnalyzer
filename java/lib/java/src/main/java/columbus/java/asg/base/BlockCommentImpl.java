@@ -32,6 +32,7 @@ import columbus.logger.LoggerHandler;
  */
 public class BlockCommentImpl extends BaseImpl implements BlockComment {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(BlockCommentImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected Object position;
 

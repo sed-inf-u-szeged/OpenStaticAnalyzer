@@ -1,6 +1,6 @@
 ![](OpenStaticAnalyzer/doc/logo/OSA_small.png)
 # OpenStaticAnalyzer™
-Copyright (c) 2004-2018 Department of Software Engineering, University of Szeged, Hungary.
+Copyright (c) 2004-2021 Department of Software Engineering, University of Szeged, Hungary.
 
 ## About
 
@@ -18,11 +18,13 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
 - Powerful filter management
 - Coding issue detection:
     - Metric threshold violations (MetricHunter module)
-    - Re-prioritized and carefully selected [PMD] 5.2.3 coding rule violations
-    - [FindBugs] 3.0.0 coding rule violations
-    - [Pylint] 1.8.2 coding rule violations
+    - Re-prioritized and carefully selected [PMD] 6.32.0 coding rule violations
+    - [SpotBugs] 4.2.2 coding rule violations
+    - [Pylint] 1.9.4 and 2.3.1 coding rule violations
     - FxCop coding rule violations
+    - Roslyn Analyzer coding rule violations
     - [ESLint] coding rule violations
+    - [SONARQUBE™] platform 8.0 (“SonarQube” in the following) coding rule violations
 - Clone detection (copy-pasted source code fragments) extended with clone tracking and "clone smells"
     - Syntax-based, so-called Type-2 clones
 - Metrics calculation at component, file, package, class, method, and function levels:
@@ -31,10 +33,11 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
     - Coding rule violation metrics
 - Supported languages: Java, Python, C#, JavaScript (C/C++ will be available in the near future).
 
-[PMD]:http://pmd.sourceforge.net/
-[FindBugs]:http://findbugs.sourceforge.net
+[PMD]:https://pmd.github.io
+[SpotBugs]:https://spotbugs.github.io
 [Pylint]:http://www.pylint.org/
 [ESLint]:https://eslint.org/
+[SONARQUBE™]:https://www.sonarqube.org
 
 By continuous static analysis, the software developers can:
 - reduce the software erosion rate and this way decrease development costs;
@@ -42,7 +45,7 @@ By continuous static analysis, the software developers can:
 - the number of errors in delivered software can be reduced, so the operational risks can be decreased, increasing the company's reputation.
 
 ## License
-OpenStaticAnalyzer 4.0 is licensed under the [European Union Public Licence](https://joinup.ec.europa.eu/software/page/eupl) (EUPL) v1.2.
+OpenStaticAnalyzer 4.1 is licensed under the [European Union Public Licence](https://joinup.ec.europa.eu/software/page/eupl) (EUPL) v1.2.
 
 OpenStaticAnalyzer is free software, distributed in the hope that it will be useful, but on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the LICENSE file for more details.
 
@@ -63,19 +66,26 @@ OpenStaticAnalyzer is free software, distributed in the hope that it will be use
 In order to build the OpenStaticAnalyzer software package the following tools are required:
 
 
-- CMake 3.8.0
+- CMake 3.16.0
 - Compiler
-    - Linux : gcc 6.3
-    - Windows : Microsoft Visual Studio 2015
-- JDK 1.8
-- Gradle 1.6
+    - Linux : gcc 10.2
+    - Windows : Microsoft Visual Studio 2017, NASM 2.14, Perl 5.30
+        - Install Windows 8.1 SDK and Windows Universal CRT SDK in Visual Studio Installer (if Visual Studio is already installed, then run the installer, Modify > Invidvidual components > Install)
+- JDK 11
+- Gradle 5.3
+- Ant 1.10
 - Apache Maven 3.2.5
 - Pandoc 1.16
 - Node 8.x.x
 
 
-Some of the 3rd party libraries are used as a submodule so either `--recursive` parameter has to be used with the `git clone` command, or they have to be initialized immediately after the cloning with the `git submodule update --init --recursive` command.
-OpenStaticAnalyzer uses CMake for generating the platform dependent build files. After cloning the source code into an `OpenStaticAnalyzer` directory and creating a `Build` directory next to it, it can be built by executing the following commands in the `Build` directory:
+Some of the 3rd party libraries are used as a submodule so either `--recursive` 
+parameter has to be used with the `git clone` command, or they have to be 
+initialized immediately after the cloning with the `git submodule update 
+--init --recursive` command. OpenStaticAnalyzer uses CMake for generating the 
+platform dependent build files. After cloning the source code into an 
+`OpenStaticAnalyzer` directory and creating a `Build` directory next to it, it can be 
+built by executing the following commands in the `Build` directory:
 
 - Linux:
     
@@ -84,22 +94,22 @@ OpenStaticAnalyzer uses CMake for generating the platform dependent build files.
 
 - Windows:
 
-    - Building with Visual Studio 2015 IDE
+    - Building with Visual Studio 2017 IDE
     
-        `cmake ..\OpenStaticAnalyzer -G "Visual Studio 14 2015 Win64"`
+        `cmake ..\OpenStaticAnalyzer -G "Visual Studio 15 2017 Win64"`
    
         Open the generated OpenStaticAnalyzer.sln file with the VS IDE and build the `Columbus\OpenStaticAnalyzer\OpenStaticAnalyzer-Package` project to generate the OpenStaticAnalyzer package.
     
     - Building from command line
         
-        Activate the VS 2015 compiler environment. For example:
+        Activate the VS 2017 compiler environment. For example:
         
-        `"c:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"`
+        `"c:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\VsMSBuildCmd.bat"`
         
         Then execute the following commands in the same terminal.
         
         ```
-        cmake ..\OpenStaticAnalyzer -G "Visual Studio 14 2015 Win64"
+        cmake ..\OpenStaticAnalyzer -G "Visual Studio 15 2017 Win64"
         msbuild /p:Configuration=Release /m /t:Build OpenStaticAnalyzer\OpenStaticAnalyzer-Package.vcxproj
         ```    
 

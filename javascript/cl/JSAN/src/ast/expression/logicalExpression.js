@@ -36,29 +36,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.left != null) {
             var leftWrapper = globals.getWrapperOfNode(node.left);
-            if (node.left.type !== "Literal") {
-                var leftWrapperFunctionString = "setLeft" + node.left.type;
-            } else {
-                var leftWrapperFunctionString = "setLeft" + globals.getLiteralType(node.left) + node.left.type;
-            }
             try {
-                logicalExpressionWrapper[leftWrapperFunctionString](leftWrapper);
+                logicalExpressionWrapper.setLeft(leftWrapper);
             } catch (e) {
-                console.error("LOGICALEXPRESSION - Function not exist: logicalExpressionWrapper." + leftWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("LOGICALEXPRESSION - Could not set left! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.right != null) {
             var rightWrapper = globals.getWrapperOfNode(node.right);
-            if (node.right.type !== "Literal") {
-                var rightWrapperFunctionString = "setRight" + node.right.type;
-            } else {
-                var rightWrapperFunctionString = "setRight" + globals.getLiteralType(node.right) + node.right.type;
-            }
             try {
-                logicalExpressionWrapper[rightWrapperFunctionString](rightWrapper);
+                logicalExpressionWrapper.setRight(rightWrapper);
             } catch (e) {
-                console.error("LOGICALEXPRESSION - Function not exist: logicalExpressionWrapper." + rightWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("LOGICALEXPRESSION - Could not set right! Reason of the error: " + e + "\n");
             }
         }
 

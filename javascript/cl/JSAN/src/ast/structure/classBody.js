@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var classBody = factory.createClassBodyWrapper(factory);
+        var classBody = factory.createClassBodyWrapper();
         globals.setPositionInfo(node, classBody);
         return classBody;
     } else {
@@ -35,15 +35,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.body.length; i++) {
                 if (node.body[i] != null) {
                     var bodyWrapper = globals.getWrapperOfNode(node.body[i]);
-                    if (node.body[i].type !== "Literal") {
-                        var bodyWrapperFunctionString = "addBody" + node.body[i].type;
-                    } else {
-                        var bodyWrapperFunctionString = "addBody" + globals.getLiteralType(node.body[i]) + node.body[i].type;
-                    }
                     try {
-                        classBodyWrapper[bodyWrapperFunctionString](bodyWrapper);
+                        classBodyWrapper.addBody(bodyWrapper);
                     } catch (e) {
-                        console.error("CLASSBODY - Function not exist: classBodyWrapper." + bodyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("CLASSBODY - Could not add body! Reason of the error: " + e + "\n");
                     }
                 }
             }

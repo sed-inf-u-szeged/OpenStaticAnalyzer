@@ -1,57 +1,37 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-
 using Columbus.Lim.Asg;
 using Columbus.Lim.Asg.Nodes.Base;
 using Columbus.Lim.Asg.Nodes.Logical;
-
-using Columbus.CSAN.Commons;
 using Columbus.CSAN.Utils.Info;
 using Columbus.CSAN.Extensions;
 using Columbus.CSAN.Metrics.Size;
 using Microsoft.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using Columbus.CSAN.Contexts;
+using Attribute = Columbus.Lim.Asg.Nodes.Logical.Attribute;
+using Type = Columbus.Lim.Asg.Nodes.Type.Type;
 
 
 namespace Columbus.CSAN.LimBuilder
 {
     class SymbolBuilder
     {
-        private static SymbolBuilder inst;
+        private readonly FileContext fileContext;
+        private readonly ProjectContext projectContext;
+        private readonly SolutionContext solutionContext;
+        private readonly LOC loc;
+        private readonly SymbolConverter symbolConverter;
+        private readonly EdgeBuilder edgeBuilder;
 
-        /// <summary>
-        /// Create instance from this class
-        /// </summary>
-        public static SymbolBuilder Instance
+        public SymbolBuilder(FileContext fileContext)
         {
-            get
-            {
-                if (inst == null)
-                {
-                    inst = new SymbolBuilder();
-                }
-                return inst;
-            }
+            this.fileContext = fileContext;
+            projectContext = fileContext.ProjectContext;
+            solutionContext = projectContext.SolutionContext;
+            loc = new LOC(solutionContext);
+            symbolConverter = new SymbolConverter(fileContext);
+            edgeBuilder = new EdgeBuilder(fileContext);
         }
 
         /// <summary>
@@ -63,18 +43,17 @@ namespace Columbus.CSAN.LimBuilder
         /// <param name="setHasMember"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static L BuildDispatch<L, R>(R roslynNode, bool setHasMember = true)
+        public L BuildDispatch<L, R>(R roslynNode, bool setHasMember = true)
             where L : Base
             where R : ISymbol
         {
-
-            L LimNode = roslynNode.ConvertToLimNode() as L;
+            L LimNode = symbolConverter.ConvertToLimNode(roslynNode) as L;
             if (LimNode == null) return default(L);
 
             if (Lim.Asg.Common.getIsMember(LimNode))
-                MainDeclaration.Instance.UsesStack.Push(new HashSet<uint>());
+                fileContext.UsesStack.Push(new HashSet<uint>());
 
-            Instance.FillData(LimNode, roslynNode, setHasMember);
+            FillData(LimNode, roslynNode, setHasMember);
 
             return LimNode;
         }
@@ -88,7 +67,7 @@ namespace Columbus.CSAN.LimBuilder
         /// <param name="roslynNode"></param>
         /// <param name="setHasMember"></param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void FillData<L, R>(L limNode, R roslynNode, bool setHasMember)
+        private void FillData<L, R>(L limNode, R roslynNode, bool setHasMember)
             where L : Base
             where R : ISymbol
         {
@@ -110,7 +89,7 @@ namespace Columbus.CSAN.LimBuilder
                     fillData(limNode as MethodGeneric, roslynNode as IMethodSymbol, setHasMember);
                     break;
                 case Types.NodeKind.ndkAttribute:
-                    fillData(limNode as Attribute, roslynNode as IFieldSymbol, setHasMember);
+                    fillData(limNode as Attribute, roslynNode, setHasMember);
                     break;
                 case Types.NodeKind.ndkGenericParameter:
                     fillData(limNode as GenericParameter, roslynNode as ITypeParameterSymbol, setHasMember);
@@ -130,7 +109,7 @@ namespace Columbus.CSAN.LimBuilder
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void fillData(Package limNode, INamespaceSymbol roslynNode, bool setHasMember)
         {
-            MainDeclaration.Instance.NamespaceStack.Push(limNode.Id);
+            fileContext.NamespaceStack.Push(limNode.Id);
 
             fillScopeData(limNode, roslynNode, setHasMember);
 
@@ -139,18 +118,18 @@ namespace Columbus.CSAN.LimBuilder
                 string location = "";
                 SyntaxNode syntaxNode = item.GetSyntax();
                 if (!roslynNode.IsInMetadata())
-                    location = Commons.Common.ProcessPath(syntaxNode.SyntaxTree.FilePath);
+                    location = solutionContext.ProcessPath(syntaxNode.SyntaxTree.FilePath);
                 uint key = 0;
-                if (!string.IsNullOrEmpty(location))
-                    key = MainDeclaration.Instance.LimFactory.StringTable.set(location);
+                if (!String.IsNullOrEmpty(location))
+                    key = solutionContext.LimFactory.StringTable.set(location);
 
                 if (key == 0) return;
 
                 if (!roslynNode.IsInMetadata() && !roslynNode.IsGlobalNamespace)
                 {
-                    Commons.Common.AddIsContainedInEdge(limNode, syntaxNode);
-                    LOC.AddLocToComponent(
-                        MainDeclaration.Instance.Component.Id,
+                    edgeBuilder.AddIsContainedInEdge(limNode, syntaxNode);
+                    loc.AddLocToComponent(
+                        projectContext.Component.Id,
                         key,
                         (ulong)syntaxNode.GetLocation().GetLineSpan().EndLinePosition.Line + 1
                     );
@@ -167,7 +146,7 @@ namespace Columbus.CSAN.LimBuilder
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void fillData(Class limNode, INamedTypeSymbol roslynNode, bool setHasMember)
         {
-            MainDeclaration.Instance.ClassStack.Push(new ClassInfo(limNode.Id));
+            fileContext.ClassStack.Push(new ClassInfo(limNode.Id));
 
             fillScopeData(limNode, roslynNode, setHasMember);
 
@@ -205,20 +184,16 @@ namespace Columbus.CSAN.LimBuilder
             //isSubClass
             if (roslynNode.BaseType != null)
             {
-                SyntaxNode m_node;
-                if (roslynNode.BaseType.TypeKind != TypeKind.Error)
+                var original = symbolConverter.GetDefinition(roslynNode.BaseType, out _);
+                if (original != null && original.Kind == roslynNode.Kind)
                 {
-                    var original = roslynNode.BaseType.GetDefinition(out m_node);
-                    if (original != null && original.Kind == roslynNode.Kind)
-                    {
-                        MainDeclaration.Instance.ClassStack.Peek().IsSubclass.Add(new KeyValuePair<uint, bool>(original.GetLimType().Id, false));
-                    }
-                    else if (roslynNode.BaseType.IsInMetadata())
-                    {
-                        Base node = roslynNode.BaseType.GetLimType();
-                        MainDeclaration.Instance.LimFactory.setFiltered(node.Id);
-                        MainDeclaration.Instance.ClassStack.Peek().IsSubclass.Add(new KeyValuePair<uint, bool>(node.Id, true));
-                    }
+                    fileContext.ClassStack.Peek().IsSubclass.Add(new KeyValuePair<uint, bool>(symbolConverter.GetLimType(original).Id, false));
+                }
+                else if (roslynNode.BaseType.IsInMetadata())
+                {
+                    Base node = symbolConverter.GetLimType(roslynNode.BaseType);
+                    solutionContext.LimFactory.setFiltered(node.Id);
+                    fileContext.ClassStack.Peek().IsSubclass.Add(new KeyValuePair<uint, bool>(node.Id, true));
                 }
             }
             foreach (var @interface in roslynNode.AllInterfaces)
@@ -226,16 +201,16 @@ namespace Columbus.CSAN.LimBuilder
                 SyntaxNode m_node;
                 if (@interface.TypeKind != TypeKind.Error)
                 {
-                    var original = @interface.GetDefinition(out m_node);
+                    var original = symbolConverter.GetDefinition(@interface, out m_node);
                     if (original != null && original.Kind == @interface.Kind)
                     {
-                        MainDeclaration.Instance.ClassStack.Peek().IsSubclass.Add(new KeyValuePair<uint, bool>(original.GetLimType().Id, false));
+                        fileContext.ClassStack.Peek().IsSubclass.Add(new KeyValuePair<uint, bool>(symbolConverter.GetLimType(original).Id, false));
                     }
                     else if (@interface.IsInMetadata())
                     {
-                        Base node = @interface.GetLimType();
-                        MainDeclaration.Instance.LimFactory.setFiltered(node.Id);
-                        MainDeclaration.Instance.ClassStack.Peek().IsSubclass.Add(new KeyValuePair<uint, bool>(node.Id, false));
+                        Base node = symbolConverter.GetLimType(@interface);
+                        solutionContext.LimFactory.setFiltered(node.Id);
+                        fileContext.ClassStack.Peek().IsSubclass.Add(new KeyValuePair<uint, bool>(node.Id, false));
                     }
                 }
             }
@@ -257,7 +232,7 @@ namespace Columbus.CSAN.LimBuilder
 
             foreach (var argument in roslynNode.TypeArguments)
             {
-                GenericParameter genericParam = argument.ConvertToLimNode() as GenericParameter;
+                GenericParameter genericParam = symbolConverter.ConvertToLimNode(argument) as GenericParameter;
                 FillData(genericParam, argument, setHasMember);
             }
 
@@ -273,7 +248,7 @@ namespace Columbus.CSAN.LimBuilder
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void fillData(Method limNode, IMethodSymbol roslynNode, bool setHasMember)
         {
-            MainDeclaration.Instance.MethodStack.Push(new MethodInfo(limNode.Id));
+            fileContext.MethodStack.Push(new MethodInfo(limNode.Id));
 
             fillScopeData(limNode, roslynNode, setHasMember);
 
@@ -335,14 +310,14 @@ namespace Columbus.CSAN.LimBuilder
                 SyntaxNode _m;
                 if (!returnType.IsInMetadata())
                 {
-                    var originalDef = returnType.GetDefinition(out _m);
+                    var originalDef = symbolConverter.GetDefinition(returnType, out _m);
                     if (originalDef != null && originalDef.Kind == returnType.Kind)
-                        Commons.Common.Safe_Edge(limNode, "Returns", originalDef.GetLimType().Id);
+                        Commons.Common.Safe_Edge(limNode, "Returns", symbolConverter.GetLimType(originalDef).Id);
                 }
                 else
                 {
-                    Lim.Asg.Nodes.Type.Type node = returnType.GetLimType();
-                    MainDeclaration.Instance.LimFactory.setFiltered(node.Id);
+                    Type node = symbolConverter.GetLimType(returnType);
+                    solutionContext.LimFactory.setFiltered(node.Id);
                     Commons.Common.Safe_Edge(limNode, "Returns", node.Id);
                 }
                 limNode.MangledName += returnType.ToString();
@@ -354,7 +329,7 @@ namespace Columbus.CSAN.LimBuilder
             #region hasParamter
             foreach (var roslynParameter in roslynNode.Parameters)
             {
-                Base limParameter = roslynParameter.ConvertToLimNode();
+                Base limParameter = symbolConverter.ConvertToLimNode(roslynParameter);
                 if (limParameter == null) return;
 
                 FillData(limParameter, roslynParameter, setHasMember);
@@ -378,7 +353,7 @@ namespace Columbus.CSAN.LimBuilder
 
             foreach (var argument in roslynNode.TypeArguments)
             {
-                Base genericParameter = argument.ConvertToLimNode();
+                Base genericParameter = symbolConverter.ConvertToLimNode(argument);
                 if (genericParameter == null) return;
                 FillData(genericParameter, argument, setHasMember);
             }
@@ -392,29 +367,41 @@ namespace Columbus.CSAN.LimBuilder
         /// Fill Attribute node properties
         /// </summary>
         /// <param name="limNode"></param>
-        /// <param name="roslynNode"></param>
+        /// <param name="roslynNode">An IFieldSymbol or an IEventSymbol</param>
         /// <param name="setHasMember"></param>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="roslynNode"/> is not an IFieldSymbol or an IEventSymbol</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void fillData(Attribute limNode, IFieldSymbol roslynNode, bool setHasMember)
+        private void fillData(Attribute limNode, ISymbol roslynNode, bool setHasMember)
         {
+            ITypeSymbol roslynType;
+            switch (roslynNode)
+            {
+                case IFieldSymbol symbol:
+                    roslynType = symbol.Type;
+                    break;
+                case IEventSymbol symbol:
+                    roslynType = symbol.Type;
+                    break;
+                default:
+                    throw new ArgumentException("Parameter should be a Field or an Event", nameof(roslynNode));
+            }
 
             fillMemberData(limNode, roslynNode, setHasMember);
 
-            if (MainDeclaration.Instance.ClassStack.Count > 0)
+            if (fileContext.ClassStack.Count > 0)
             {
-                Class parnetClass = (Class)MainDeclaration.Instance.LimFactory.getRef(MainDeclaration.Instance.ClassStack.Peek().Id);
+                Class parnetClass = (Class)solutionContext.LimFactory.getRef(fileContext.ClassStack.Peek().Id);
                 if (parnetClass.ClassKind == Types.ClassKind.clkInterface)
                 {
                     limNode.Accessibility = Types.AccessibilityKind.ackPublic;
                 }
             }
 
-            var roslynType = roslynNode.Type;
             if (roslynType != null)
             {
                 if (roslynType is ITypeParameterSymbol)
                 {
-                    GenericParameter limReturnType = (GenericParameter)roslynType.ConvertToLimNode();
+                    GenericParameter limReturnType = (GenericParameter)symbolConverter.ConvertToLimNode(roslynType);
                     if (limReturnType == null) return;
 
                     fillData(limReturnType, roslynType as ITypeParameterSymbol, setHasMember);
@@ -422,28 +409,29 @@ namespace Columbus.CSAN.LimBuilder
                 else
                 {
                     SyntaxNode syntaxNode = null;
-                    var originalType = roslynType.GetDefinition(out syntaxNode);
-                    Lim.Asg.Nodes.Type.Type limType = null;
+                    var originalType = symbolConverter.GetDefinition(roslynType, out syntaxNode);
+                    Type limType = null;
                     if (originalType != null && originalType.Kind == roslynType.Kind)
                     {
                         if (((INamedTypeSymbol)originalType).IsGenericType)
-                            limType = roslynType.GetLimType(originalType);
+                            limType = symbolConverter.GetLimType(roslynType, originalType);
                         else
-                            limType = originalType.GetLimType();
+                            limType = symbolConverter.GetLimType(originalType);
 
                     }
                     else if (roslynType.IsInMetadata())
                     {
-                        limType = roslynType.GetLimType();
+                        limType = symbolConverter.GetLimType(roslynType);
                         if (roslynType.TypeKind != TypeKind.Array)
-                            MainDeclaration.Instance.LimFactory.setFiltered(limType.Id);
+                            solutionContext.LimFactory.setFiltered(limType.Id);
                     }
-                    if (limNode.HasTypeIsEmpty) limNode.addHasType(limType);
+                    if (limNode.HasTypeIsEmpty && limType != null)
+                        limNode.addHasType(limType);
                 }
             }
             else
             {
-                limNode.addHasType(Commons.Common.UnknownType);
+                limNode.addHasType(CreateUnknownType());
             }
             limNode.MangledName += ' ' + roslynType.ToString();
             limNode.DemangledName = limNode.MangledName;
@@ -463,29 +451,29 @@ namespace Columbus.CSAN.LimBuilder
             foreach (var constraint in roslynNode.ConstraintTypes)
             {
                 SyntaxNode _m;
-                Lim.Asg.Nodes.Type.Type limTpye;
+                Type limTpye;
                 if (!constraint.IsInMetadata())
                 {
-                    var original = constraint.GetDefinition(out _m);
+                    var original = symbolConverter.GetDefinition(constraint, out _m);
                     if (original != null && original.Kind == constraint.Kind)
-                        limTpye = original.GetLimType();
+                        limTpye = symbolConverter.GetLimType(original);
                     else continue;
                 }
                 else
                 {
-                    limTpye = constraint.GetLimType();
-                    MainDeclaration.Instance.LimFactory.setFiltered(limTpye.Id);
+                    limTpye = symbolConverter.GetLimType(constraint);
+                    solutionContext.LimFactory.setFiltered(limTpye.Id);
                 }
 
                 Commons.Common.Safe_Edge(limNode, "HasParameterConstraint", limTpye.Id);
             }
 
 
-            Base limParent = roslynNode.Parent().ConvertToLimNode();
+            Base limParent = symbolConverter.ConvertToLimNode(symbolConverter.Parent(roslynNode));
             if (limParent != null)
             {
-                if (roslynNode.Parent().IsInMetadata())
-                    MainDeclaration.Instance.LimFactory.setFiltered(limParent.Id);
+                if (symbolConverter.Parent(roslynNode).IsInMetadata())
+                    solutionContext.LimFactory.setFiltered(limParent.Id);
                 if (Lim.Asg.Common.getIsMethodGeneric(limParent))
                 {
                     MethodGeneric methodGeneric = (MethodGeneric)limParent;
@@ -523,37 +511,37 @@ namespace Columbus.CSAN.LimBuilder
             if (roslynNode.Type != null)
             {
                 SyntaxNode _m;
-                Lim.Asg.Nodes.Type.Type type = null;
+                Type type = null;
                 if (!roslynNode.Type.IsInMetadata())
                 {
-                    var original = roslynNode.Type.GetDefinition(out _m);
+                    var original = symbolConverter.GetDefinition(roslynNode.Type, out _m);
                     if (original != null && original.Kind == roslynNode.Type.Kind)
                     {
                         var namedType = roslynNode.Type as INamedTypeSymbol;
                         if (namedType != null && namedType.IsGenericType)
-                            type = roslynNode.Type.GetLimType(original);
+                            type = symbolConverter.GetLimType(roslynNode.Type, original);
                         else
-                            type = original.GetLimType();
+                            type = symbolConverter.GetLimType(original);
                     }
                 }
                 else
                 {
-                    type = roslynNode.Type.GetLimType();
+                    type = symbolConverter.GetLimType(roslynNode.Type);
                     if (roslynNode.Type.TypeKind != TypeKind.Array)
-                        MainDeclaration.Instance.LimFactory.setFiltered(type.Id);
+                        solutionContext.LimFactory.setFiltered(type.Id);
                 }
                 if (type != null) limNode.setHasType(type);
             }
             else
             {
-                limNode.setHasType(Commons.Common.UnknownType);
+                limNode.setHasType(CreateUnknownType());
             }
 
-            if (MainDeclaration.Instance.MethodStack.Count > 0)
+            if (fileContext.MethodStack.Count > 0)
             {
                 //hasParameter
-                Method parent = (Method)MainDeclaration.Instance.LimFactory.getRef(
-                    MainDeclaration.Instance.MethodStack.Peek().Id
+                Method parent = (Method)solutionContext.LimFactory.getRef(
+                    fileContext.MethodStack.Peek().Id
                 );
                 Commons.Common.Safe_Edge(parent, "HasParameter", limNode.Id);
             }
@@ -585,17 +573,9 @@ namespace Columbus.CSAN.LimBuilder
         {
             limNode.Language = Types.LanguageKind.lnkCsharp;
 
-            if (roslynNode.IsInMetadata())
+            if (roslynNode.IsInMetadata() || fileContext.SoftFiltered)
             {
-                MainDeclaration.Instance.LimFactory.setFiltered(limNode.Id);
-            }
-
-            if (MainDeclaration.Instance.SoftFilter != null)
-            {
-                if (MainDeclaration.Instance.CurrentFileIsSoftFiltered)
-                {
-                    MainDeclaration.Instance.LimFactory.setFiltered(limNode.Id);
-                }
+                solutionContext.LimFactory.setFiltered(limNode.Id);
             }
 
             #region Accessibility
@@ -634,7 +614,7 @@ namespace Columbus.CSAN.LimBuilder
             limNode.IsCompilerGenerated = false;
 
 
-            limNode.MangledName = roslynNode.ToString();
+            limNode.MangledName = roslynNode.GetFullMetadataName();
             limNode.DemangledName = limNode.MangledName;
 
             if (aggregateLLOC && !roslynNode.IsInMetadata())
@@ -646,12 +626,13 @@ namespace Columbus.CSAN.LimBuilder
                 {
                     foreach (var location in roslynNode.DeclaringSyntaxReferences)
                     {
-                        Commons.Common.AddIsContainedInEdge(limNode, location.GetSyntax());
+                        edgeBuilder.AddIsContainedInEdge(limNode, location.GetSyntax());
                     }
                 }
             }
 
-            Commons.Common.Safe_Edge(limNode, "BelongsTo", MainDeclaration.Instance.Component.Id);
+            // TODO maybe not if in metadata
+            Commons.Common.Safe_Edge(limNode, "BelongsTo", projectContext.Component.Id);
 
             if (setHasMember)
             {
@@ -659,11 +640,11 @@ namespace Columbus.CSAN.LimBuilder
                 Base limParent = null;
                 do
                 {
-                    roslynParent = roslynParent != null ? roslynParent.Parent() : null;
+                    roslynParent = roslynParent != null ? symbolConverter.Parent(roslynParent) : null;
 
                     if (roslynParent != null)
                     {
-                        limParent = roslynParent.ConvertToLimNode();
+                        limParent = symbolConverter.ConvertToLimNode(roslynParent);
 
                         if (roslynParent.Kind == SymbolKind.Namespace)
                             fillMemberData((Member)limParent, roslynParent, true, false);
@@ -672,7 +653,7 @@ namespace Columbus.CSAN.LimBuilder
                         {
                             ((Member)limParent).IsCompilerGenerated = true;
                             ((Scope)limParent).MangledName = ((Scope)limParent).DemangledName = roslynParent.ToString();
-                            MainDeclaration.Instance.LimFactory.setFiltered(limParent.Id);
+                            solutionContext.LimFactory.setFiltered(limParent.Id);
                         }
                     }
                     else
@@ -690,77 +671,23 @@ namespace Columbus.CSAN.LimBuilder
             {
                 foreach (var syntaxNode in roslynNode.DeclaringSyntaxReferences)
                 {
-                    LLOC.CollectLineInfos(syntaxNode.GetSyntax());
+                    fileContext.LlocCalculator.CollectLineInfos(syntaxNode.GetSyntax());
                 }
             }
         }
 
         /// <summary>
-        /// Fill collected Method datas
+        /// Create Unknown Type in the LIM
         /// </summary>
-        /// <param name="method"></param>
-        /// <param name="methodInfo"></param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void fillCollectedMethodData(Method method, MethodInfo methodInfo)
+        private Type CreateUnknownType()
         {
-            method.NestingLevel = (ushort)methodInfo.NL;
-            method.NestingLevelElseIf = (ushort)methodInfo.NLE;
-            method.NumberOfBranches = (ushort)methodInfo.NOB;
-            method.NumberOfStatements = (ushort)methodInfo.NOS;
-
-            foreach (KeyValuePair<uint, bool> call in methodInfo.Calls)
-            {
-                if (call.Value) MainDeclaration.Instance.LimFactory.setFiltered(call.Key);
-                Commons.Common.Safe_Edge(method, "Calls", call.Key);
-            }
-            foreach (KeyValuePair<uint, bool> throws in methodInfo.Throws)
-            {
-                if (throws.Value) MainDeclaration.Instance.LimFactory.setFiltered(throws.Key);
-                Commons.Common.Safe_Edge(method, "Throws", throws.Key);
-            }
-            foreach (KeyValuePair<uint, bool> canThrows in methodInfo.CanThrow)
-            {
-                if (canThrows.Value) MainDeclaration.Instance.LimFactory.setFiltered(canThrows.Key);
-                Commons.Common.Safe_Edge(method, "CanThrow", canThrows.Key);
-            }
-            foreach (KeyValuePair<uint, bool> instantiates in methodInfo.Instantiates)
-            {
-                if (instantiates.Value) MainDeclaration.Instance.LimFactory.setFiltered(instantiates.Key);
-                Commons.Common.Safe_Edge(method, "Instantiates", instantiates.Key);
-            }
-            foreach (KeyValuePair<uint, bool> accessAttribute in methodInfo.AccessAttribute)
-            {
-                if (accessAttribute.Value) MainDeclaration.Instance.LimFactory.setFiltered(accessAttribute.Key);
-                Commons.Common.Safe_Edge(method, "AccessesAttribute", accessAttribute.Key);
-            }
-
-            if (!method.ReturnsIsEmpty)
-            {
-                Lim.Asg.Nodes.Type.Type returnType = method.ReturnsListIteratorBegin.getValue();
-                if (returnType != null)
-                {
-                    MainDeclaration.Instance.UsesStack.Peek().Remove(returnType.Id);
-                }
-            }
-
-            if (!method.HasParameterIsEmpty)
-            {
-                ListIterator<Lim.Asg.Nodes.Logical.Parameter> paramIt = method.HasParameterListIteratorBegin;
-                while (paramIt.getValue() != null)
-                {
-                    MainDeclaration.Instance.UsesStack.Peek().Remove(paramIt.getValue().getHasType());
-                    paramIt = paramIt.getNext();
-                }
-            }
-
-            IEnumerable<uint> _throws = methodInfo.Throws.Select(t => t.Key);
-            IEnumerable<uint> _canThrows = methodInfo.CanThrow.Select(t => t.Key);
-            IEnumerable<uint> _instantiates = methodInfo.Instantiates.Select(t => t.Key);
-            Commons.Common.Remove(ref _throws);
-            Commons.Common.Remove(ref _canThrows);
-            Commons.Common.Remove(ref _instantiates);
-
-            Commons.Common.AddUses(method);
+            solutionContext.LimFactory.beginType();
+            solutionContext.LimFactory.addTypeFormer(
+                solutionContext.LimFactory.createTypeFormerType(
+                    solutionContext.LimFactory.createSimpleType(Types.SimpleTypeKind.stkUnknown).Id
+                ).Id
+            );
+            return solutionContext.LimFactory.endType();
         }
     }
 }

@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var importSpecifier = factory.createImportSpecifierWrapper(factory);
+        var importSpecifier = factory.createImportSpecifierWrapper();
         globals.setPositionInfo(node, importSpecifier);
         return importSpecifier;
     } else {
@@ -34,29 +34,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.imported != null) {
             var importedWrapper = globals.getWrapperOfNode(node.imported);
-            if (node.imported.type !== "Literal") {
-                var importedWrapperFunctionString = "setImported" + node.imported.type;
-            } else {
-                var importedWrapperFunctionString = "setImported" + globals.getLiteralType(node.imported) + node.imported.type;
-            }
             try {
-                importSpecifierWrapper[importedWrapperFunctionString](importedWrapper);
+                importSpecifierWrapper.setImported(importedWrapper);
             } catch (e) {
-                console.error("IMPORTSPECIFIER - Function not exist: importSpecifierWrapper." + importedWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("IMPORTSPECIFIER - Could not set imported! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.local != null) {
             var localWrapper = globals.getWrapperOfNode(node.local);
-            if (node.local.type !== "Literal") {
-                var localWrapperFunctionString = "setLocal" + node.local.type;
-            } else {
-                var localWrapperFunctionString = "setLocal" + globals.getLiteralType(node.local) + node.local.type;
-            }
             try {
-                importSpecifierWrapper[localWrapperFunctionString](localWrapper);
+                importSpecifierWrapper.setLocal(localWrapper);
             } catch (e) {
-                console.error("IMPORTSPECIFIER - Function not exist: importSpecifierWrapper." + localWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("IMPORTSPECIFIER - Could not set local! Reason of the error: " + e + "\n");
             }
         }
 

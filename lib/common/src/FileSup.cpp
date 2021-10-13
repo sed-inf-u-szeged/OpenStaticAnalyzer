@@ -26,6 +26,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cstdlib>
+#include <map>
+#include <cctype>
+#include <mutex>
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/path.hpp>
@@ -38,6 +41,7 @@
 #include <common/inc/PlatformDependentDefines.h>
 #include <common/inc/messages.h>
 #include <Environment.h>
+#include <mutex>          // std::mutex
 
 #define INIMAXSTRING 2000
 #define MAXPATH 4096
@@ -53,7 +57,7 @@ namespace fs = boost::filesystem;
   #include "shlobj.h"
 #endif
 
-#if defined(__unix__)
+#if defined(__linux__)
   #include <limits.h>
   #include <dirent.h>
   #include <unistd.h>
@@ -63,7 +67,7 @@ namespace fs = boost::filesystem;
   #include <sys/file.h>
 #endif
 
-#ifdef __unix__
+#ifdef __linux__
 extern char **environ; // For getEnvironmentVariables function.
 #endif
 
@@ -74,27 +78,29 @@ size_t common::splitPath(const std::string& path, std::string& dir, std::string&
   return dir.length();
 }
 
-std::string common::removeDoubleDirdivs(const std::string& str , bool win /*= true*/)
+std::string common::removeDoubleDirdivs(const std::string& str, bool win /*= true*/)
 {
-  unsigned p1 = 0, p2 = 0;
+  unsigned p = 0;
+  std::string result;
 
   char dirDivChar = win ? '\\' : '/';
-  if(win && str.length() > 1)
+  if (win && str.length() > 1)
   {
     // skip windows network name \\.....
-    if (str[0]==dirDivChar && str[1]==dirDivChar) {
-      p1++; p2++;
+    if (str[0] == dirDivChar && str[1] == dirDivChar) {
+      p = 2;
+      result = "\\\\";
     }
   }
 
   bool previsslash = false;
-  for (; p1 < str.length(); ++p1, ++p2) {
-    if (previsslash && str[p1] == dirDivChar)
-      --p2;
-    previsslash = (str[p1] == dirDivChar);
-    p2 = p1;
+  for (; p < str.length(); ++p)
+  {
+    if (!(previsslash && str[p] == dirDivChar))
+      result += str[p];
+    previsslash = (str[p] == dirDivChar);
   }
-  return str.substr(0, p2);
+  return result;
 }
 
 bool common::pathCanonicalize(std::string& dst, const std::string& src)
@@ -120,19 +126,50 @@ bool common::pathCanonicalize(std::string& dst, const std::string& src)
 #else
   char* ret = realpath(src.c_str(), buff);
   if(!ret)
+  {
+    int error_code = errno;
+    dst = strerror_r(error_code, buff, MAXPATH);;
     return false;
+  }
   dst = buff;
 #endif
   return true;
 }
 
+std::string common::pathCanonicalize(const std::string& path)
+{
+    static std::recursive_mutex m;
+    static std::map<std::string, std::string> pathCanonicalizationCache;
+
+    std::lock_guard<std::recursive_mutex> lck(m);
+    std::string transformedPath;
+    auto findResult = pathCanonicalizationCache.find(path);
+    if (findResult == pathCanonicalizationCache.end())
+    {
+      if (common::pathCanonicalize(transformedPath, path))
+      {
+        pathCanonicalizationCache[path] = transformedPath;
+        return transformedPath;
+      }
+      else
+      {
+        pathCanonicalizationCache[path] = path;
+        return path;
+
+      }
+    }
+    else
+      return findResult->second;
+}
+
+
 std::string common::getExecutableProgramDir() {
 #ifdef _WIN32
   char target[MAXPATH];
-  strncpy(target, _pgmptr, MAXPATH);
+  GetModuleFileName(NULL, target, MAXPATH);
   *PathFindFileName(target) = 0;
   return target;
-#elif defined __unix__
+#elif defined(__linux__)
   pid_t me = getpid();
 
   char file[100];
@@ -156,7 +193,7 @@ std::string common::getExecutableProgramDir() {
 bool common::makeDirectory(const std::string& dirName) {
   try {
     return boost::filesystem::create_directories(dirName);
-  } catch (fs::filesystem_error e) {
+  } catch (const fs::filesystem_error& e) {
     throw columbus::Exception(COLUMBUS_LOCATION, e.what());
   }
 }
@@ -172,7 +209,7 @@ std::string common::indep_fullpath(const std::string& path)
   if (str[0] == DIRDIVCHAR)    // FullPath
     return str;
     
-#if defined(__unix__)
+#if defined(__linux__)
   if (str[0] == '~')          // Home realtive
   {
     char* home = getenv("HOME");
@@ -317,7 +354,7 @@ size_t common::getPrivateProfileSection(const char* appname, char* ret_string, s
         if(strlen(line) != 0 && line[0] != '\r' && line[0] != '\n' ){
           size_t ksize = strlen(line);
           if (pos + ksize + 2 <= size) {
-            strncpy(ret_string + pos, line, ksize +1);
+            strcpy(ret_string + pos, line);
             pos += ksize + 1;
           } else
             WriteMsg::write(CMSG_BUFFER_TOO_SMALL);
@@ -391,7 +428,7 @@ size_t common::getPrivateProfileString(const char * appname, const char * keynam
         } else {  // All section names have to be collected
           size_t ssize = strlen(s);
           if (pos + ssize + 2 <= size) {
-            strncpy(ret_string + pos, s, ssize +1);
+            strcpy(ret_string + pos, s);
             pos += ssize + 1;
           } else
             WriteMsg::write(CMSG_BUFFER_TOO_SMALL);
@@ -408,7 +445,7 @@ size_t common::getPrivateProfileString(const char * appname, const char * keynam
           } else {  // All key names have to be collected
           size_t ksize = strlen(key);
           if (pos + ksize + 2 <= size) {
-            strncpy(ret_string + pos, key, ksize +1);
+            strcpy(ret_string + pos, key);
             pos += ksize + 1;
           } else
             WriteMsg::write(CMSG_BUFFER_TOO_SMALL);
@@ -434,7 +471,7 @@ size_t common::getPrivateProfileString(const char * appname, const char * keynam
 }
 
 unsigned int common::writePrivateProfileString(const char* appname, const char* keyname, const char* str, const char* filename, bool casesensitive /*=false*/) {
-  std::string tempfilename = (boost::filesystem::temp_directory_path()/boost::filesystem::unique_path()).string();
+  std::string tempfilename = getTemporaryName();
   FILE* tempfile = fopen(tempfilename.c_str(), "wb+");
 
   if (!tempfile) {
@@ -646,7 +683,7 @@ int common::chDir(const std::string& dirname)
 #if defined(_WIN32)
   return ::_chdir(dirname.c_str());
 #endif
-#if defined(__unix__)
+#if defined(__linux__)
   return ::chdir(dirname.c_str());
 #endif
 }
@@ -657,13 +694,26 @@ std::string common::correctDirDivs(std::string path)
 #if defined(_WIN32)
   std::string toSearch = "/";
 #endif
-#if defined(__unix__)
+#if defined(__linux__)
   std::string toSearch = "\\";
 #endif
   while ((pos = path.find(toSearch,pos)) != std::string::npos)
     path.replace(pos,1,DIRDIVSTRING);
   return path;
 }
+
+std::string common::correctDirDivsToUnix(std::string path)
+{
+#if defined(_WIN32)
+  std::string::size_type pos = 0;
+  std::string toSearch = "\\";
+  while ((pos = path.find(toSearch, pos)) != std::string::npos)
+    path.replace(pos, 1, "/");
+#endif
+  return path;
+}
+
+
 
 int common::fileTimeCmp(const std::string& first, const std::string& second) {  // -1: first < second; 0: first==second; 1: first > second
   if(!pathFileExists(first))
@@ -676,20 +726,24 @@ int common::fileTimeCmp(const std::string& first, const std::string& second) {  
     if     (tFirst < tSecond) return -1;
     else if(tFirst > tSecond) return  1;
     else                      return  0;
-  } catch (fs::filesystem_error e) {
+  } catch (const fs::filesystem_error& e) {
     throw columbus::Exception(COLUMBUS_LOCATION, e.what());
   }
 }
 
-bool common::pathDeleteFile(const std::string& path) {
-  return fs::remove(path);
+bool common::pathDeleteFile(const std::string& path, bool recursive)
+{
+  if (recursive)
+    return fs::remove_all(path) > 0;
+  else
+    return fs::remove(path);
 }
 
 bool common::pathIsDirectory (const std::string& path) {
   return fs::is_directory(path);
 }
 
-#ifdef __unix__
+#ifdef __linux__
 
 static int handle_system_exit_status(int status) {
   if (WIFEXITED(status)) {
@@ -708,7 +762,11 @@ static int handle_system_exit_status(int status) {
 
 #ifdef _WIN32 
 
+std::mutex g_mutex_for_process_setup;
+
 static int run(const std::string& cmd, std::ostream& out) {
+  std::unique_lock<std::mutex> lock(g_mutex_for_process_setup); // Critical section start
+
   char *debugfile = getenv(COLUMBUS_RUN_DEBUG_ENV_VAR);
   if (debugfile != NULL) {
    FILE* f = fopen(debugfile, "at");
@@ -751,6 +809,8 @@ static int run(const std::string& cmd, std::ostream& out) {
 
   CloseHandle(pipe[1]);
 
+  lock.unlock(); // Critical section end
+
   if (bRet) {
     const int BUFFERSIZE = 32768;
     DWORD readSize;
@@ -767,7 +827,6 @@ static int run(const std::string& cmd, std::ostream& out) {
   }
 
   CloseHandle(pipe[0]);
-
   return dw;
 }
 
@@ -910,7 +969,7 @@ int common::run(const std::string& cmd, bool silent, const std::string& out /*= 
 }
 
 
-#ifdef __unix__
+#ifdef __linux__
 
 static int run_with_args(const char *command, char* argv[], const char* out, const char* err)
 {
@@ -962,6 +1021,7 @@ static int run_with_args(const char *command, char* argv[], const char* out, con
     }
     
     execvp(command, argv);
+    perror("Execution failed");
     _exit (EXIT_FAILURE);
   } else if (pid < 0) {
    /* The fork failed.  Report failure.  */
@@ -1126,7 +1186,7 @@ int common::run(const std::string& program, const std::vector<std::string>& args
 {
   int ret = EXIT_FAILURE;
 
-#ifdef __unix__
+#ifdef __linux__
   size_t argc = args.size() + 2;    // +1 for the command name and +1 for the closing NULL;
   char** argv = (char**)malloc(sizeof(char*) * argc);
   
@@ -1164,7 +1224,7 @@ int common::run(const std::string& program, const std::vector<std::string>& args
 {
   int ret = EXIT_FAILURE;
 
-#ifdef __unix__
+#ifdef __linux__
   size_t argc = args.size() + 2;    // +1 for the command name and +1 for the closing NULL;
   char** argv = (char**)malloc(sizeof(char*) * argc);
   
@@ -1262,7 +1322,7 @@ int common::setEnvironmentVariable(const char* envname, const char* envval) {
 
 #ifdef _WIN32
   ret = _putenv_s(envname, envval);
-#elif __unix__
+#elif __linux__
   ret = setenv(envname, envval, 1);
 #endif
 
@@ -1275,7 +1335,7 @@ int common::unsetEnvironmentVariable(const char* envname) {
 
 #ifdef _WIN32
   ret = _putenv_s(envname, "");
-#elif __unix__
+#elif __linux__
   ret = unsetenv(envname);
 #endif
 
@@ -1298,7 +1358,7 @@ void common::getEnvironmentVariables(std::vector<std::string>& variables)
   }
   FreeEnvironmentStrings(lpvEnv);
 
-#elif __unix__
+#elif __linux__
   for (char **env = environ; *env; ++env){
     variables.push_back(std::string(*env));
   }
@@ -1349,13 +1409,19 @@ bool common::iscpplang(const std::string& ext)
   return false;
 }
 
-bool common::isPrefix(const std::string& str, const std::string& test, std::string& remain, bool skipeq)
+bool common::isobjclang(const std::string& ext)
+{
+  return ext == "m";
+}
+
+bool common::isPrefix(const std::string& str, const std::string& test, std::string& remain, bool skipeq, bool caseSensitive)
 {
   bool prefix = true;
   remain = "";
 
-  unsigned i = 0;
-  while (i < str.length() && i < test.length() && (str[i] == test[i])) { 
+  size_t i = 0;
+  while (i < str.length() && i < test.length() && ((str[i] == test[i]) || (!caseSensitive && (tolower(str[i]) == tolower(test[i]))))) 
+  { 
     i++;
   }
 
@@ -1477,4 +1543,9 @@ bool common::loadStringListFromFile(const std::string& listFileName, std::list<s
 std::string common::getLockFileName(const std::string& fileName)
 {
   return fileName + ".lock";
+}
+
+std::string common::getTemporaryName()
+{
+  return (boost::filesystem::temp_directory_path()/boost::filesystem::unique_path()).string();
 }

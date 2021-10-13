@@ -25,38 +25,14 @@
 * \file CSHARP.h
 * \brief Header can be used for precompiled header.
 */
-/*********** Options *************************
- *  SchemaGenerator347b651cde
- *  IndentInNamespace = 1
- *  IndentInClass = 1
- *  IndentUnderPubProtPri = 1
- *  UseShortRange = true
- *  ACommonGetIsForLeaf = true
- *  AlgPreorderSafeMode = true
- *  GenerateInOutForComment = true
- *  GenerateFilter = true
- *  GenerateReverseEdges = true
- *  GenerateAsgStat = false
- *  GenerateSpecFilterVisitor = false
- *  GenerateSpecXml = false
- *  GenerateDOT = false
- *  GenerateGraphml = true
- *  GenerateJSON = false
- *  GenerateSerialize = false
- *  GenerateParentEdge = true
- *  FactoryModes = 
- *  APIVersion = 0.9
- *  BinaryVersion = 0.9
- *  CSIHeaderText = CSharpLanguage
- *********************************************/
 #include <list>
 #include <cstring>
 #include <map>
 #include <set>
 #include <string>
 #include <boost/crc.hpp>
-
-#include "csi/inc/HeaderData.h" 
+
+#include "csi/inc/HeaderData.h" 
 #include "csi/inc/PropertyData.h" 
 #include "Forwards.h"
 
@@ -117,13 +93,19 @@
 #include "structure/NameEqualsSyntax.h"
 #include "structure/OrderingSyntax.h"
 #include "structure/ParameterSyntax.h"
+#include "structure/PatternSyntax.h"
+#include "structure/PositionalPatternClauseSyntax.h"
+#include "structure/PropertyPatternClauseSyntax.h"
 #include "structure/QueryBodySyntax.h"
 #include "structure/QueryClauseSyntax.h"
 #include "structure/QueryContinuationSyntax.h"
 #include "structure/SelectOrGroupClauseSyntax.h"
+#include "structure/SubpatternSyntax.h"
+#include "structure/SwitchExpressionArmSyntax.h"
 #include "structure/SwitchLabelSyntax.h"
 #include "structure/SwitchSectionSyntax.h"
 #include "structure/SyntaxToken.h"
+#include "structure/TupleElementSyntax.h"
 #include "structure/TypeArgumentListSyntax.h"
 #include "structure/TypeParameterConstraintClauseSyntax.h"
 #include "structure/TypeParameterConstraintSyntax.h"
@@ -132,6 +114,8 @@
 #include "structure/UsingDirectiveSyntax.h"
 #include "structure/VariableDeclarationSyntax.h"
 #include "structure/VariableDeclaratorSyntax.h"
+#include "structure/VariableDesignationSyntax.h"
+#include "structure/WhenClauseSyntax.h"
 #include "structure/XmlAttributeSyntax.h"
 #include "structure/XmlElementEndTagSyntax.h"
 #include "structure/XmlElementStartTagSyntax.h"
@@ -148,15 +132,18 @@
 #include "expression/CheckedExpressionSyntax.h"
 #include "expression/ConditionalAccessExpressionSyntax.h"
 #include "expression/ConditionalExpressionSyntax.h"
+#include "expression/DeclarationExpressionSyntax.h"
 #include "expression/DefaultExpressionSyntax.h"
 #include "expression/ElementAccessExpressionSyntax.h"
 #include "expression/ElementBindingExpressionSyntax.h"
 #include "expression/ImplicitArrayCreationExpressionSyntax.h"
 #include "expression/ImplicitElementAccessSyntax.h"
+#include "expression/ImplicitStackAllocArrayCreationExpressionSyntax.h"
 #include "expression/InitializerExpressionSyntax.h"
 #include "expression/InstanceExpressionSyntax.h"
 #include "expression/InterpolatedStringExpressionSyntax.h"
 #include "expression/InvocationExpressionSyntax.h"
+#include "expression/IsPatternExpressionSyntax.h"
 #include "expression/LiteralExpressionSyntax.h"
 #include "expression/MakeRefExpressionSyntax.h"
 #include "expression/MemberAccessExpressionSyntax.h"
@@ -167,26 +154,32 @@
 #include "expression/PostfixUnaryExpressionSyntax.h"
 #include "expression/PrefixUnaryExpressionSyntax.h"
 #include "expression/QueryExpressionSyntax.h"
+#include "expression/RangeExpressionSyntax.h"
+#include "expression/RefExpressionSyntax.h"
 #include "expression/RefTypeExpressionSyntax.h"
 #include "expression/RefValueExpressionSyntax.h"
 #include "expression/SizeOfExpressionSyntax.h"
 #include "expression/StackAllocArrayCreationExpressionSyntax.h"
+#include "expression/SwitchExpressionSyntax.h"
+#include "expression/ThrowExpressionSyntax.h"
+#include "expression/TupleExpressionSyntax.h"
 #include "expression/TypeOfExpressionSyntax.h"
 #include "expression/TypeSyntax.h"
 #include "statement/BlockSyntax.h"
 #include "statement/BreakStatementSyntax.h"
 #include "statement/CheckedStatementSyntax.h"
+#include "statement/CommonForEachStatementSyntax.h"
 #include "statement/ContinueStatementSyntax.h"
 #include "statement/DoStatementSyntax.h"
 #include "statement/EmptyStatementSyntax.h"
 #include "statement/ExpressionStatementSyntax.h"
 #include "statement/FixedStatementSyntax.h"
-#include "statement/ForEachStatementSyntax.h"
 #include "statement/ForStatementSyntax.h"
 #include "statement/GotoStatementSyntax.h"
 #include "statement/IfStatementSyntax.h"
 #include "statement/LabeledStatementSyntax.h"
 #include "statement/LocalDeclarationStatementSyntax.h"
+#include "statement/LocalFunctionStatementSyntax.h"
 #include "statement/LockStatementSyntax.h"
 #include "statement/ReturnStatementSyntax.h"
 #include "statement/SwitchStatementSyntax.h"
@@ -217,6 +210,11 @@
 #include "structure/GlobalStatementSyntax.h"
 #include "structure/IncompleteMemberSyntax.h"
 #include "structure/NamespaceDeclarationSyntax.h"
+#include "structure/ConstantPatternSyntax.h"
+#include "structure/DeclarationPatternSyntax.h"
+#include "structure/DiscardPatternSyntax.h"
+#include "structure/RecursivePatternSyntax.h"
+#include "structure/VarPatternSyntax.h"
 #include "structure/FromClauseSyntax.h"
 #include "structure/JoinClauseSyntax.h"
 #include "structure/LetClauseSyntax.h"
@@ -224,11 +222,15 @@
 #include "structure/WhereClauseSyntax.h"
 #include "structure/GroupClauseSyntax.h"
 #include "structure/SelectClauseSyntax.h"
+#include "structure/CasePatternSwitchLabelSyntax.h"
 #include "structure/CaseSwitchLabelSyntax.h"
 #include "structure/DefaultSwitchLabelSyntax.h"
 #include "structure/ClassOrStructConstraintSyntax.h"
 #include "structure/ConstructorConstraintSyntax.h"
 #include "structure/TypeConstraintSyntax.h"
+#include "structure/DiscardDesignationSyntax.h"
+#include "structure/ParenthesizedVariableDesignationSyntax.h"
+#include "structure/SingleVariableDesignationSyntax.h"
 #include "structure/XmlCrefAttributeSyntax.h"
 #include "structure/XmlNameAttributeSyntax.h"
 #include "structure/XmlTextAttributeSyntax.h"
@@ -248,6 +250,10 @@
 #include "expression/OmittedTypeArgumentSyntax.h"
 #include "expression/PointerTypeSyntax.h"
 #include "expression/PredefinedTypeSyntax.h"
+#include "expression/RefTypeSyntax.h"
+#include "expression/TupleTypeSyntax.h"
+#include "statement/ForEachStatementSyntax.h"
+#include "statement/ForEachVariableStatementSyntax.h"
 #include "structure/ConversionOperatorMemberCrefSyntax.h"
 #include "structure/IndexerMemberCrefSyntax.h"
 #include "structure/NameMemberCrefSyntax.h"

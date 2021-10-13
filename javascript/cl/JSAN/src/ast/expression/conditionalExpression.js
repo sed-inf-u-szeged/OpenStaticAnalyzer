@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var conditionalExpression = factory.createConditionalExpressionWrapper(factory);
+        var conditionalExpression = factory.createConditionalExpressionWrapper();
         globals.setPositionInfo(node, conditionalExpression);
         return conditionalExpression;
     } else {
@@ -34,43 +34,28 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.alternate != null) {
             var alternateWrapper = globals.getWrapperOfNode(node.alternate);
-            if (node.alternate.type !== "Literal") {
-                var alternateWrapperFunctionString = "setAlternate" + node.alternate.type;
-            } else {
-                var alternateWrapperFunctionString = "setAlternate" + globals.getLiteralType(node.alternate) + node.alternate.type;
-            }
             try {
-                conditionalExpressionWrapper[alternateWrapperFunctionString](alternateWrapper);
+                conditionalExpressionWrapper.setAlternate(alternateWrapper);
             } catch (e) {
-                console.error("CONDITIONALEXPRESSION - Function not exist: conditionalExpressionWrapper." + alternateWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("CONDITIONALEXPRESSION - Could not set alternate! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.test != null) {
             var testWrapper = globals.getWrapperOfNode(node.test);
-            if (node.test.type !== "Literal") {
-                var testWrapperFunctionString = "setTest" + node.test.type;
-            } else {
-                var testWrapperFunctionString = "setTest" + globals.getLiteralType(node.test) + node.test.type;
-            }
             try {
-                conditionalExpressionWrapper[testWrapperFunctionString](testWrapper);
+                conditionalExpressionWrapper.setTest(testWrapper);
             } catch (e) {
-                console.error("CONDITIONALEXPRESSION - Function not exist: conditionalExpressionWrapper." + testWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("CONDITIONALEXPRESSION - Could not set test! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.consequent != null) {
             var consequentWrapper = globals.getWrapperOfNode(node.consequent);
-            if (node.consequent.type !== "Literal") {
-                var consequentWrapperFunctionString = "setConsequent" + node.consequent.type;
-            } else {
-                var consequentWrapperFunctionString = "setConsequent" + globals.getLiteralType(node.consequent) + node.consequent.type;
-            }
             try {
-                conditionalExpressionWrapper[consequentWrapperFunctionString](consequentWrapper);
+                conditionalExpressionWrapper.setConsequent(consequentWrapper);
             } catch (e) {
-                console.error("CONDITIONALEXPRESSION - Function not exist: conditionalExpressionWrapper." + consequentWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("CONDITIONALEXPRESSION - Could not set consequent! Reason of the error: " + e + "\n");
             }
         }
 

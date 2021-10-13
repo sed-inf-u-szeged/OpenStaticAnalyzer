@@ -556,6 +556,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
+      expression::DeclarationExpressionSyntax* createDeclarationExpressionSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
       expression::DefaultExpressionSyntax* createDefaultExpressionSyntaxNode();
 
       /**
@@ -598,6 +604,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
+      expression::ImplicitStackAllocArrayCreationExpressionSyntax* createImplicitStackAllocArrayCreationExpressionSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
       expression::InitializerExpressionSyntax* createInitializerExpressionSyntaxNode();
 
       /**
@@ -611,6 +623,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \return Reference to the new node.
       */
       expression::InvocationExpressionSyntax* createInvocationExpressionSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      expression::IsPatternExpressionSyntax* createIsPatternExpressionSyntaxNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -712,7 +730,25 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
+      expression::RangeExpressionSyntax* createRangeExpressionSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      expression::RefExpressionSyntax* createRefExpressionSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
       expression::RefTypeExpressionSyntax* createRefTypeExpressionSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      expression::RefTypeSyntax* createRefTypeSyntaxNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -742,7 +778,31 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
+      expression::SwitchExpressionSyntax* createSwitchExpressionSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
       expression::ThisExpressionSyntax* createThisExpressionSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      expression::ThrowExpressionSyntax* createThrowExpressionSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      expression::TupleExpressionSyntax* createTupleExpressionSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      expression::TupleTypeSyntax* createTupleTypeSyntaxNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -808,6 +868,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
+      statement::ForEachVariableStatementSyntax* createForEachVariableStatementSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
       statement::ForStatementSyntax* createForStatementSyntaxNode();
 
       /**
@@ -833,6 +899,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \return Reference to the new node.
       */
       statement::LocalDeclarationStatementSyntax* createLocalDeclarationStatementSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      statement::LocalFunctionStatementSyntax* createLocalFunctionStatementSyntaxNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -982,6 +1054,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
+      structure::CasePatternSwitchLabelSyntax* createCasePatternSwitchLabelSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
       structure::CaseSwitchLabelSyntax* createCaseSwitchLabelSyntaxNode();
 
       /**
@@ -1019,6 +1097,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \return Reference to the new node.
       */
       structure::CompilationUnitSyntax* createCompilationUnitSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      structure::ConstantPatternSyntax* createConstantPatternSyntaxNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -1072,6 +1156,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
+      structure::DeclarationPatternSyntax* createDeclarationPatternSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
       structure::DefaultSwitchLabelSyntax* createDefaultSwitchLabelSyntaxNode();
 
       /**
@@ -1085,6 +1175,18 @@ namespace columbus { namespace csharp { namespace asg {
       * \return Reference to the new node.
       */
       structure::DestructorDeclarationSyntax* createDestructorDeclarationSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      structure::DiscardDesignationSyntax* createDiscardDesignationSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      structure::DiscardPatternSyntax* createDiscardPatternSyntaxNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -1300,7 +1402,25 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
+      structure::ParenthesizedVariableDesignationSyntax* createParenthesizedVariableDesignationSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      structure::PositionalPatternClauseSyntax* createPositionalPatternClauseSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
       structure::PropertyDeclarationSyntax* createPropertyDeclarationSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      structure::PropertyPatternClauseSyntax* createPropertyPatternClauseSyntaxNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -1324,6 +1444,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
+      structure::RecursivePatternSyntax* createRecursivePatternSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
       structure::SelectClauseSyntax* createSelectClauseSyntaxNode();
 
       /**
@@ -1336,7 +1462,25 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
+      structure::SingleVariableDesignationSyntax* createSingleVariableDesignationSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
       structure::StructDeclarationSyntax* createStructDeclarationSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      structure::SubpatternSyntax* createSubpatternSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      structure::SwitchExpressionArmSyntax* createSwitchExpressionArmSyntaxNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -1349,6 +1493,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \return Reference to the new node.
       */
       structure::SyntaxToken* createSyntaxTokenNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      structure::TupleElementSyntax* createTupleElementSyntaxNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -1396,6 +1546,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
+      structure::VarPatternSyntax* createVarPatternSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
       structure::VariableDeclarationSyntax* createVariableDeclarationSyntaxNode();
 
       /**
@@ -1403,6 +1559,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \return Reference to the new node.
       */
       structure::VariableDeclaratorSyntax* createVariableDeclaratorSyntaxNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      structure::WhenClauseSyntax* createWhenClauseSyntaxNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -1580,6 +1742,7 @@ namespace columbus { namespace csharp { namespace asg {
       friend class expression::CheckedExpressionSyntax;
       friend class expression::ConditionalAccessExpressionSyntax;
       friend class expression::ConditionalExpressionSyntax;
+      friend class expression::DeclarationExpressionSyntax;
       friend class expression::DefaultExpressionSyntax;
       friend class expression::ElementAccessExpressionSyntax;
       friend class expression::ElementBindingExpressionSyntax;
@@ -1588,10 +1751,12 @@ namespace columbus { namespace csharp { namespace asg {
       friend class expression::IdentifierNameSyntax;
       friend class expression::ImplicitArrayCreationExpressionSyntax;
       friend class expression::ImplicitElementAccessSyntax;
+      friend class expression::ImplicitStackAllocArrayCreationExpressionSyntax;
       friend class expression::InitializerExpressionSyntax;
       friend class expression::InstanceExpressionSyntax;
       friend class expression::InterpolatedStringExpressionSyntax;
       friend class expression::InvocationExpressionSyntax;
+      friend class expression::IsPatternExpressionSyntax;
       friend class expression::LambdaExpressionSyntax;
       friend class expression::LiteralExpressionSyntax;
       friend class expression::MakeRefExpressionSyntax;
@@ -1610,29 +1775,39 @@ namespace columbus { namespace csharp { namespace asg {
       friend class expression::PrefixUnaryExpressionSyntax;
       friend class expression::QualifiedNameSyntax;
       friend class expression::QueryExpressionSyntax;
+      friend class expression::RangeExpressionSyntax;
+      friend class expression::RefExpressionSyntax;
       friend class expression::RefTypeExpressionSyntax;
+      friend class expression::RefTypeSyntax;
       friend class expression::RefValueExpressionSyntax;
       friend class expression::SimpleLambdaExpressionSyntax;
       friend class expression::SimpleNameSyntax;
       friend class expression::SizeOfExpressionSyntax;
       friend class expression::StackAllocArrayCreationExpressionSyntax;
+      friend class expression::SwitchExpressionSyntax;
       friend class expression::ThisExpressionSyntax;
+      friend class expression::ThrowExpressionSyntax;
+      friend class expression::TupleExpressionSyntax;
+      friend class expression::TupleTypeSyntax;
       friend class expression::TypeOfExpressionSyntax;
       friend class expression::TypeSyntax;
       friend class statement::BlockSyntax;
       friend class statement::BreakStatementSyntax;
       friend class statement::CheckedStatementSyntax;
+      friend class statement::CommonForEachStatementSyntax;
       friend class statement::ContinueStatementSyntax;
       friend class statement::DoStatementSyntax;
       friend class statement::EmptyStatementSyntax;
       friend class statement::ExpressionStatementSyntax;
       friend class statement::FixedStatementSyntax;
       friend class statement::ForEachStatementSyntax;
+      friend class statement::ForEachVariableStatementSyntax;
       friend class statement::ForStatementSyntax;
       friend class statement::GotoStatementSyntax;
       friend class statement::IfStatementSyntax;
       friend class statement::LabeledStatementSyntax;
       friend class statement::LocalDeclarationStatementSyntax;
+      friend class statement::LocalFunctionStatementSyntax;
       friend class statement::LockStatementSyntax;
       friend class statement::ReturnStatementSyntax;
       friend class statement::StatementSyntax;
@@ -1666,6 +1841,7 @@ namespace columbus { namespace csharp { namespace asg {
       friend class structure::BaseTypeSyntax;
       friend class structure::BracketedArgumentListSyntax;
       friend class structure::BracketedParameterListSyntax;
+      friend class structure::CasePatternSwitchLabelSyntax;
       friend class structure::CaseSwitchLabelSyntax;
       friend class structure::CatchClauseSyntax;
       friend class structure::CatchDeclarationSyntax;
@@ -1673,6 +1849,7 @@ namespace columbus { namespace csharp { namespace asg {
       friend class structure::ClassDeclarationSyntax;
       friend class structure::ClassOrStructConstraintSyntax;
       friend class structure::CompilationUnitSyntax;
+      friend class structure::ConstantPatternSyntax;
       friend class structure::ConstructorConstraintSyntax;
       friend class structure::ConstructorDeclarationSyntax;
       friend class structure::ConstructorInitializerSyntax;
@@ -1682,9 +1859,12 @@ namespace columbus { namespace csharp { namespace asg {
       friend class structure::CrefParameterListSyntax;
       friend class structure::CrefParameterSyntax;
       friend class structure::CrefSyntax;
+      friend class structure::DeclarationPatternSyntax;
       friend class structure::DefaultSwitchLabelSyntax;
       friend class structure::DelegateDeclarationSyntax;
       friend class structure::DestructorDeclarationSyntax;
+      friend class structure::DiscardDesignationSyntax;
+      friend class structure::DiscardPatternSyntax;
       friend class structure::ElseClauseSyntax;
       friend class structure::EnumDeclarationSyntax;
       friend class structure::EnumMemberDeclarationSyntax;
@@ -1723,18 +1903,27 @@ namespace columbus { namespace csharp { namespace asg {
       friend class structure::OrderingSyntax;
       friend class structure::ParameterListSyntax;
       friend class structure::ParameterSyntax;
+      friend class structure::ParenthesizedVariableDesignationSyntax;
+      friend class structure::PatternSyntax;
+      friend class structure::PositionalPatternClauseSyntax;
       friend class structure::PropertyDeclarationSyntax;
+      friend class structure::PropertyPatternClauseSyntax;
       friend class structure::QualifiedCrefSyntax;
       friend class structure::QueryBodySyntax;
       friend class structure::QueryClauseSyntax;
       friend class structure::QueryContinuationSyntax;
+      friend class structure::RecursivePatternSyntax;
       friend class structure::SelectClauseSyntax;
       friend class structure::SelectOrGroupClauseSyntax;
       friend class structure::SimpleBaseTypeSyntax;
+      friend class structure::SingleVariableDesignationSyntax;
       friend class structure::StructDeclarationSyntax;
+      friend class structure::SubpatternSyntax;
+      friend class structure::SwitchExpressionArmSyntax;
       friend class structure::SwitchLabelSyntax;
       friend class structure::SwitchSectionSyntax;
       friend class structure::SyntaxToken;
+      friend class structure::TupleElementSyntax;
       friend class structure::TypeArgumentListSyntax;
       friend class structure::TypeConstraintSyntax;
       friend class structure::TypeCrefSyntax;
@@ -1744,8 +1933,11 @@ namespace columbus { namespace csharp { namespace asg {
       friend class structure::TypeParameterListSyntax;
       friend class structure::TypeParameterSyntax;
       friend class structure::UsingDirectiveSyntax;
+      friend class structure::VarPatternSyntax;
       friend class structure::VariableDeclarationSyntax;
       friend class structure::VariableDeclaratorSyntax;
+      friend class structure::VariableDesignationSyntax;
+      friend class structure::WhenClauseSyntax;
       friend class structure::WhereClauseSyntax;
       friend class structure::XmlAttributeSyntax;
       friend class structure::XmlCDataSectionSyntax;

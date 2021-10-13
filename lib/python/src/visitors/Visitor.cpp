@@ -62,6 +62,10 @@ void Visitor::visit(const expression::AttributeRef& node , bool callVirtualBase)
 
 void Visitor::visitEnd(const expression::AttributeRef& node , bool callVirtualBase) { }
 
+void Visitor::visit(const expression::Await& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::Await& node , bool callVirtualBase) { }
+
 void Visitor::visit(const expression::BinaryArithmetic& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expression::BinaryArithmetic& node , bool callVirtualBase) { }
@@ -69,6 +73,10 @@ void Visitor::visitEnd(const expression::BinaryArithmetic& node , bool callVirtu
 void Visitor::visit(const expression::BinaryLogical& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expression::BinaryLogical& node , bool callVirtualBase) { }
+
+void Visitor::visit(const expression::BytesLiteral& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::BytesLiteral& node , bool callVirtualBase) { }
 
 void Visitor::visit(const expression::Call& node , bool callVirtualBase) {}
 
@@ -98,6 +106,10 @@ void Visitor::visit(const expression::FloatNumber& node , bool callVirtualBase) 
 
 void Visitor::visitEnd(const expression::FloatNumber& node , bool callVirtualBase) { }
 
+void Visitor::visit(const expression::FormattedValue& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::FormattedValue& node , bool callVirtualBase) { }
+
 void Visitor::visit(const expression::Generator& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expression::Generator& node , bool callVirtualBase) { }
@@ -126,6 +138,10 @@ void Visitor::visit(const expression::IntegerLiteral& node , bool callVirtualBas
 
 void Visitor::visitEnd(const expression::IntegerLiteral& node , bool callVirtualBase) { }
 
+void Visitor::visit(const expression::JoinedStr& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::JoinedStr& node , bool callVirtualBase) { }
+
 void Visitor::visit(const expression::KeyValue& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expression::KeyValue& node , bool callVirtualBase) { }
@@ -150,6 +166,10 @@ void Visitor::visit(const expression::LongInteger& node , bool callVirtualBase) 
 
 void Visitor::visitEnd(const expression::LongInteger& node , bool callVirtualBase) { }
 
+void Visitor::visit(const expression::NamedExpr& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::NamedExpr& node , bool callVirtualBase) { }
+
 void Visitor::visit(const expression::Set& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expression::Set& node , bool callVirtualBase) { }
@@ -161,6 +181,10 @@ void Visitor::visitEnd(const expression::SetComp& node , bool callVirtualBase) {
 void Visitor::visit(const expression::Slice& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expression::Slice& node , bool callVirtualBase) { }
+
+void Visitor::visit(const expression::Starred& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::Starred& node , bool callVirtualBase) { }
 
 void Visitor::visit(const expression::StringConversion& node , bool callVirtualBase) {}
 
@@ -197,6 +221,10 @@ void Visitor::visitEnd(const module::Package& node , bool callVirtualBase) { }
 void Visitor::visit(const statement::Alias& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const statement::Alias& node , bool callVirtualBase) { }
+
+void Visitor::visit(const statement::AnnAssign& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const statement::AnnAssign& node , bool callVirtualBase) { }
 
 void Visitor::visit(const statement::Assert& node , bool callVirtualBase) {}
 
@@ -262,6 +290,10 @@ void Visitor::visit(const statement::ImportStatement& node , bool callVirtualBas
 
 void Visitor::visitEnd(const statement::ImportStatement& node , bool callVirtualBase) { }
 
+void Visitor::visit(const statement::Nonlocal& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const statement::Nonlocal& node , bool callVirtualBase) { }
+
 void Visitor::visit(const statement::Parameter& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const statement::Parameter& node , bool callVirtualBase) { }
@@ -290,13 +322,9 @@ void Visitor::visit(const statement::TargetList& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const statement::TargetList& node , bool callVirtualBase) { }
 
-void Visitor::visit(const statement::TryExcept& node , bool callVirtualBase) {}
+void Visitor::visit(const statement::Try& node , bool callVirtualBase) {}
 
-void Visitor::visitEnd(const statement::TryExcept& node , bool callVirtualBase) { }
-
-void Visitor::visit(const statement::TryFinal& node , bool callVirtualBase) {}
-
-void Visitor::visitEnd(const statement::TryFinal& node , bool callVirtualBase) { }
+void Visitor::visitEnd(const statement::Try& node , bool callVirtualBase) { }
 
 void Visitor::visit(const statement::While& node , bool callVirtualBase) {}
 
@@ -305,6 +333,10 @@ void Visitor::visitEnd(const statement::While& node , bool callVirtualBase) { }
 void Visitor::visit(const statement::With& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const statement::With& node , bool callVirtualBase) { }
+
+void Visitor::visit(const statement::WithItem& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const statement::WithItem& node , bool callVirtualBase) { }
 
 void Visitor::visit(const type::DictType& node , bool callVirtualBase) {}
 
@@ -341,6 +373,10 @@ void Visitor::visitEndArgumentList_HasKeyword(const expression::ArgumentList& be
 void Visitor::visitArgumentList_HasTuple(const expression::ArgumentList& begin, const expression::Expression& end) { }
 
 void Visitor::visitEndArgumentList_HasTuple(const expression::ArgumentList& begin, const expression::Expression& end) { }
+
+void Visitor::visitAwait_HasValue(const expression::Await& begin, const expression::Expression& end) { }
+
+void Visitor::visitEndAwait_HasValue(const expression::Await& begin, const expression::Expression& end) { }
 
 void Visitor::visitBinary_HasLeftExpression(const expression::Binary& begin, const expression::Expression& end) { }
 
@@ -382,6 +418,14 @@ void Visitor::visitExtSlice_HasItem(const expression::ExtSlice& begin, const exp
 
 void Visitor::visitEndExtSlice_HasItem(const expression::ExtSlice& begin, const expression::Slicing& end) { }
 
+void Visitor::visitFormattedValue_HasValue(const expression::FormattedValue& begin, const expression::Expression& end) { }
+
+void Visitor::visitEndFormattedValue_HasValue(const expression::FormattedValue& begin, const expression::Expression& end) { }
+
+void Visitor::visitFormattedValue_HasFormatSpec(const expression::FormattedValue& begin, const expression::Expression& end) { }
+
+void Visitor::visitEndFormattedValue_HasFormatSpec(const expression::FormattedValue& begin, const expression::Expression& end) { }
+
 void Visitor::visitGenerator_HasCondition(const expression::Generator& begin, const expression::Expression& end) { }
 
 void Visitor::visitEndGenerator_HasCondition(const expression::Generator& begin, const expression::Expression& end) { }
@@ -417,6 +461,10 @@ void Visitor::visitEndIfExpression_HasElseBody(const expression::IfExpression& b
 void Visitor::visitIfExpression_HasTest(const expression::IfExpression& begin, const expression::Expression& end) { }
 
 void Visitor::visitEndIfExpression_HasTest(const expression::IfExpression& begin, const expression::Expression& end) { }
+
+void Visitor::visitJoinedStr_HasValue(const expression::JoinedStr& begin, const expression::Expression& end) { }
+
+void Visitor::visitEndJoinedStr_HasValue(const expression::JoinedStr& begin, const expression::Expression& end) { }
 
 void Visitor::visitKeyValue_HasKey(const expression::KeyValue& begin, const expression::Expression& end) { }
 
@@ -458,6 +506,14 @@ void Visitor::visitListComp_HasGenerator(const expression::ListComp& begin, cons
 
 void Visitor::visitEndListComp_HasGenerator(const expression::ListComp& begin, const expression::Generator& end) { }
 
+void Visitor::visitNamedExpr_HasTarget(const expression::NamedExpr& begin, const expression::Expression& end) { }
+
+void Visitor::visitEndNamedExpr_HasTarget(const expression::NamedExpr& begin, const expression::Expression& end) { }
+
+void Visitor::visitNamedExpr_HasValue(const expression::NamedExpr& begin, const expression::Expression& end) { }
+
+void Visitor::visitEndNamedExpr_HasValue(const expression::NamedExpr& begin, const expression::Expression& end) { }
+
 void Visitor::visitSet_HasExpression(const expression::Set& begin, const expression::Expression& end) { }
 
 void Visitor::visitEndSet_HasExpression(const expression::Set& begin, const expression::Expression& end) { }
@@ -482,6 +538,10 @@ void Visitor::visitSlice_HasUpperBound(const expression::Slice& begin, const exp
 
 void Visitor::visitEndSlice_HasUpperBound(const expression::Slice& begin, const expression::Expression& end) { }
 
+void Visitor::visitStarred_HasValue(const expression::Starred& begin, const expression::Expression& end) { }
+
+void Visitor::visitEndStarred_HasValue(const expression::Starred& begin, const expression::Expression& end) { }
+
 void Visitor::visitStringConversion_HasExpressionList(const expression::StringConversion& begin, const expression::ExpressionList& end) { }
 
 void Visitor::visitEndStringConversion_HasExpressionList(const expression::StringConversion& begin, const expression::ExpressionList& end) { }
@@ -494,9 +554,9 @@ void Visitor::visitUnary_HasExpression(const expression::Unary& begin, const exp
 
 void Visitor::visitEndUnary_HasExpression(const expression::Unary& begin, const expression::Expression& end) { }
 
-void Visitor::visitYieldExpression_HasYieldExpression(const expression::YieldExpression& begin, const expression::ExpressionList& end) { }
+void Visitor::visitYieldExpression_HasExpression(const expression::YieldExpression& begin, const expression::Expression& end) { }
 
-void Visitor::visitEndYieldExpression_HasYieldExpression(const expression::YieldExpression& begin, const expression::ExpressionList& end) { }
+void Visitor::visitEndYieldExpression_HasExpression(const expression::YieldExpression& begin, const expression::Expression& end) { }
 
 void Visitor::visitModule_HasObject(const module::Module& begin, const module::Object& end) { }
 
@@ -530,6 +590,10 @@ void Visitor::visitAlias_RefersTo(const statement::Alias& begin, const base::Bas
 
 void Visitor::visitEndAlias_RefersTo(const statement::Alias& begin, const base::Base& end) { }
 
+void Visitor::visitAnnAssign_HasAnnotation(const statement::AnnAssign& begin, const expression::Expression& end) { }
+
+void Visitor::visitEndAnnAssign_HasAnnotation(const statement::AnnAssign& begin, const expression::Expression& end) { }
+
 void Visitor::visitAssert_HasMsgExpression(const statement::Assert& begin, const expression::Expression& end) { }
 
 void Visitor::visitEndAssert_HasMsgExpression(const statement::Assert& begin, const expression::Expression& end) { }
@@ -561,6 +625,10 @@ void Visitor::visitEndClassDef_HasObject(const statement::ClassDef& begin, const
 void Visitor::visitClassDef_HasBaseSpecifier(const statement::ClassDef& begin, const statement::BaseSpecifier& end) { }
 
 void Visitor::visitEndClassDef_HasBaseSpecifier(const statement::ClassDef& begin, const statement::BaseSpecifier& end) { }
+
+void Visitor::visitClassDef_HasKeyword(const statement::ClassDef& begin, const expression::Keyword& end) { }
+
+void Visitor::visitEndClassDef_HasKeyword(const statement::ClassDef& begin, const expression::Keyword& end) { }
 
 void Visitor::visitClassDef_HasDecorator(const statement::ClassDef& begin, const expression::Expression& end) { }
 
@@ -614,6 +682,10 @@ void Visitor::visitFunctionDef_HasParameter(const statement::FunctionDef& begin,
 
 void Visitor::visitEndFunctionDef_HasParameter(const statement::FunctionDef& begin, const statement::Parameter& end) { }
 
+void Visitor::visitFunctionDef_HasReturnAnnotation(const statement::FunctionDef& begin, const expression::Expression& end) { }
+
+void Visitor::visitEndFunctionDef_HasReturnAnnotation(const statement::FunctionDef& begin, const expression::Expression& end) { }
+
 void Visitor::visitFunctionDef_RefersTo(const statement::FunctionDef& begin, const module::Object& end) { }
 
 void Visitor::visitEndFunctionDef_RefersTo(const statement::FunctionDef& begin, const module::Object& end) { }
@@ -658,9 +730,17 @@ void Visitor::visitIteration_HasElseBody(const statement::Iteration& begin, cons
 
 void Visitor::visitEndIteration_HasElseBody(const statement::Iteration& begin, const statement::Suite& end) { }
 
+void Visitor::visitNonlocal_HasIdentifier(const statement::Nonlocal& begin, const expression::Identifier& end) { }
+
+void Visitor::visitEndNonlocal_HasIdentifier(const statement::Nonlocal& begin, const expression::Identifier& end) { }
+
 void Visitor::visitParameter_HasDefaultValue(const statement::Parameter& begin, const expression::Expression& end) { }
 
 void Visitor::visitEndParameter_HasDefaultValue(const statement::Parameter& begin, const expression::Expression& end) { }
+
+void Visitor::visitParameter_HasAnnotation(const statement::Parameter& begin, const expression::Expression& end) { }
+
+void Visitor::visitEndParameter_HasAnnotation(const statement::Parameter& begin, const expression::Expression& end) { }
 
 void Visitor::visitParameter_RefersTo(const statement::Parameter& begin, const module::Object& end) { }
 
@@ -674,17 +754,25 @@ void Visitor::visitPrint_HasDestination(const statement::Print& begin, const exp
 
 void Visitor::visitEndPrint_HasDestination(const statement::Print& begin, const expression::Expression& end) { }
 
-void Visitor::visitRaise_HasTracebackExpression(const statement::Raise& begin, const expression::Expression& end) { }
+void Visitor::visitRaise_HasType(const statement::Raise& begin, const expression::Expression& end) { }
 
-void Visitor::visitEndRaise_HasTracebackExpression(const statement::Raise& begin, const expression::Expression& end) { }
+void Visitor::visitEndRaise_HasType(const statement::Raise& begin, const expression::Expression& end) { }
 
-void Visitor::visitRaise_HasTypeExpression(const statement::Raise& begin, const expression::Expression& end) { }
+void Visitor::visitRaise_HasValue(const statement::Raise& begin, const expression::Expression& end) { }
 
-void Visitor::visitEndRaise_HasTypeExpression(const statement::Raise& begin, const expression::Expression& end) { }
+void Visitor::visitEndRaise_HasValue(const statement::Raise& begin, const expression::Expression& end) { }
 
-void Visitor::visitRaise_HasValueExpression(const statement::Raise& begin, const expression::Expression& end) { }
+void Visitor::visitRaise_HasTraceback(const statement::Raise& begin, const expression::Expression& end) { }
 
-void Visitor::visitEndRaise_HasValueExpression(const statement::Raise& begin, const expression::Expression& end) { }
+void Visitor::visitEndRaise_HasTraceback(const statement::Raise& begin, const expression::Expression& end) { }
+
+void Visitor::visitRaise_HasException(const statement::Raise& begin, const expression::Expression& end) { }
+
+void Visitor::visitEndRaise_HasException(const statement::Raise& begin, const expression::Expression& end) { }
+
+void Visitor::visitRaise_HasCause(const statement::Raise& begin, const expression::Expression& end) { }
+
+void Visitor::visitEndRaise_HasCause(const statement::Raise& begin, const expression::Expression& end) { }
 
 void Visitor::visitReturn_HasExpression(const statement::Return& begin, const expression::Expression& end) { }
 
@@ -698,33 +786,33 @@ void Visitor::visitTargetList_HasTarget(const statement::TargetList& begin, cons
 
 void Visitor::visitEndTargetList_HasTarget(const statement::TargetList& begin, const expression::Expression& end) { }
 
-void Visitor::visitTryExcept_HasElseBody(const statement::TryExcept& begin, const statement::Suite& end) { }
+void Visitor::visitTry_HasHandler(const statement::Try& begin, const statement::Handler& end) { }
 
-void Visitor::visitEndTryExcept_HasElseBody(const statement::TryExcept& begin, const statement::Suite& end) { }
+void Visitor::visitEndTry_HasHandler(const statement::Try& begin, const statement::Handler& end) { }
 
-void Visitor::visitTryExcept_HasHandler(const statement::TryExcept& begin, const statement::Handler& end) { }
+void Visitor::visitTry_HasElseBody(const statement::Try& begin, const statement::Suite& end) { }
 
-void Visitor::visitEndTryExcept_HasHandler(const statement::TryExcept& begin, const statement::Handler& end) { }
+void Visitor::visitEndTry_HasElseBody(const statement::Try& begin, const statement::Suite& end) { }
 
-void Visitor::visitTryExcept_HasFinallyBody(const statement::TryExcept& begin, const statement::Suite& end) { }
+void Visitor::visitTry_HasFinallyBody(const statement::Try& begin, const statement::Suite& end) { }
 
-void Visitor::visitEndTryExcept_HasFinallyBody(const statement::TryExcept& begin, const statement::Suite& end) { }
-
-void Visitor::visitTryFinal_HasFinallyBody(const statement::TryFinal& begin, const statement::Suite& end) { }
-
-void Visitor::visitEndTryFinal_HasFinallyBody(const statement::TryFinal& begin, const statement::Suite& end) { }
+void Visitor::visitEndTry_HasFinallyBody(const statement::Try& begin, const statement::Suite& end) { }
 
 void Visitor::visitWhile_HasTestExpression(const statement::While& begin, const expression::Expression& end) { }
 
 void Visitor::visitEndWhile_HasTestExpression(const statement::While& begin, const expression::Expression& end) { }
 
-void Visitor::visitWith_HasExpression(const statement::With& begin, const expression::Expression& end) { }
+void Visitor::visitWith_HasWithItem(const statement::With& begin, const statement::WithItem& end) { }
 
-void Visitor::visitEndWith_HasExpression(const statement::With& begin, const expression::Expression& end) { }
+void Visitor::visitEndWith_HasWithItem(const statement::With& begin, const statement::WithItem& end) { }
 
-void Visitor::visitWith_HasTargetList(const statement::With& begin, const statement::TargetList& end) { }
+void Visitor::visitWithItem_HasContext(const statement::WithItem& begin, const expression::Expression& end) { }
 
-void Visitor::visitEndWith_HasTargetList(const statement::With& begin, const statement::TargetList& end) { }
+void Visitor::visitEndWithItem_HasContext(const statement::WithItem& begin, const expression::Expression& end) { }
+
+void Visitor::visitWithItem_HasTarget(const statement::WithItem& begin, const expression::Expression& end) { }
+
+void Visitor::visitEndWithItem_HasTarget(const statement::WithItem& begin, const expression::Expression& end) { }
 
 void Visitor::visitReferenceType_RefersTo(const type::ReferenceType& begin, const base::Positioned& end) { }
 

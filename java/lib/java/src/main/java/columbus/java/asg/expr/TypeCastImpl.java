@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class TypeCastImpl extends BaseImpl implements TypeCast {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(TypeCastImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

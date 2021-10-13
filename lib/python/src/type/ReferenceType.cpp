@@ -119,7 +119,7 @@ namespace type {
       if (&(_node->getFactory()) != this->factory)
         throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
 
-      if (_node->getNodeKind() == ndkFunctionDef || _node->getNodeKind() == ndkClassDef || _node->getNodeKind() == ndkModule) {
+      if (_node->getNodeKind() == ndkClassDef || _node->getNodeKind() == ndkModule || _node->getNodeKind() == ndkFunctionDef) {
         if (m_refersTo) {
           if (factory->getExistsReverseEdges())
             factory->reverseEdges->removeEdge(m_refersTo, m_id, edkReferenceType_RefersTo);

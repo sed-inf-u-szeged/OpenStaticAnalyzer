@@ -14,4 +14,16 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>java</name>
+			<type>2</type>
+			<locationURI>BUILD_DIR/java/cl/JAN/java/java_src/src/main/java</locationURI>
+		</link>
+		<link>
+			<name>resources</name>
+			<type>2</type>
+			<locationURI>BUILD_DIR/java/cl/JAN/java/java_src/src/main/resources</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

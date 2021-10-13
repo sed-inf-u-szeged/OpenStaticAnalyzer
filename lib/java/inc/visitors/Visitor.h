@@ -107,6 +107,18 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEnd(const base::LineComment& node , bool callVirtualBase = true);
 
       /**
+      * \brief Visitor which is called at the beginning of the expr::AnnotatedTypeExpression node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expr::AnnotatedTypeExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the end of the expr::AnnotatedTypeExpression node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expr::AnnotatedTypeExpression& node , bool callVirtualBase = true);
+
+      /**
       * \brief Visitor which is called at the beginning of the expr::ArrayAccess node visiting.
       * \param node [in] The node which is visited.
       */
@@ -311,6 +323,18 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEnd(const expr::IntegerLiteral& node , bool callVirtualBase = true);
 
       /**
+      * \brief Visitor which is called at the beginning of the expr::Lambda node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expr::Lambda& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the end of the expr::Lambda node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expr::Lambda& node , bool callVirtualBase = true);
+
+      /**
       * \brief Visitor which is called at the beginning of the expr::LongLiteral node visiting.
       * \param node [in] The node which is visited.
       */
@@ -333,6 +357,18 @@ namespace columbus { namespace java { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expr::MarkerAnnotation& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the beginning of the expr::MemberReference node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expr::MemberReference& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the end of the expr::MemberReference node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expr::MemberReference& node , bool callVirtualBase = true);
 
       /**
       * \brief Visitor which is called at the beginning of the expr::MethodInvocation node visiting.
@@ -539,6 +575,18 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEnd(const expr::TypeCast& node , bool callVirtualBase = true);
 
       /**
+      * \brief Visitor which is called at the beginning of the expr::TypeIntersectionExpression node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expr::TypeIntersectionExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the end of the expr::TypeIntersectionExpression node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expr::TypeIntersectionExpression& node , bool callVirtualBase = true);
+
+      /**
       * \brief Visitor which is called at the beginning of the expr::TypeUnionExpression node visiting.
       * \param node [in] The node which is visited.
       */
@@ -561,6 +609,66 @@ namespace columbus { namespace java { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expr::WildcardExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the beginning of the module::Exports node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const module::Exports& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the end of the module::Exports node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const module::Exports& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the beginning of the module::Opens node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const module::Opens& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the end of the module::Opens node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const module::Opens& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the beginning of the module::Provides node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const module::Provides& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the end of the module::Provides node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const module::Provides& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the beginning of the module::Requires node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const module::Requires& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the end of the module::Requires node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const module::Requires& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the beginning of the module::Uses node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const module::Uses& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the end of the module::Uses node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const module::Uses& node , bool callVirtualBase = true);
 
       /**
       * \brief Visitor which is called at the beginning of the statm::Assert node visiting.
@@ -971,6 +1079,30 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEnd(const struc::MethodGeneric& node , bool callVirtualBase = true);
 
       /**
+      * \brief Visitor which is called at the beginning of the struc::Module node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const struc::Module& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the end of the struc::Module node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const struc::Module& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the beginning of the struc::ModuleDeclaration node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const struc::ModuleDeclaration& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the end of the struc::ModuleDeclaration node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const struc::ModuleDeclaration& node , bool callVirtualBase = true);
+
+      /**
       * \brief Visitor which is called at the beginning of the struc::Package node visiting.
       * \param node [in] The node which is visited.
       */
@@ -1151,6 +1283,18 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEnd(const type::IntType& node , bool callVirtualBase = true);
 
       /**
+      * \brief Visitor which is called at the beginning of the type::IntersectionType node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const type::IntersectionType& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the end of the type::IntersectionType node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const type::IntersectionType& node , bool callVirtualBase = true);
+
+      /**
       * \brief Visitor which is called at the beginning of the type::LongType node visiting.
       * \param node [in] The node which is visited.
       */
@@ -1185,6 +1329,18 @@ namespace columbus { namespace java { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const type::MethodType& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the beginning of the type::ModuleType node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const type::ModuleType& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor which is called at the end of the type::ModuleType node visiting.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const type::ModuleType& node , bool callVirtualBase = true);
 
       /**
       * \brief Visitor which is called at the beginning of the type::NoType node visiting.
@@ -1319,6 +1475,34 @@ namespace columbus { namespace java { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitEndCommentable_Comments(const base::Commentable& begin, const base::Comment& end);
+
+      /**
+      * \brief Edge  visitor for hasAnnotations edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitAnnotatedTypeExpression_HasAnnotations(const expr::AnnotatedTypeExpression& begin, const expr::Annotation& end);
+
+      /**
+      * \brief Edge end visitor for hasAnnotations edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndAnnotatedTypeExpression_HasAnnotations(const expr::AnnotatedTypeExpression& begin, const expr::Annotation& end);
+
+      /**
+      * \brief Edge  visitor for hasUnderlyingType edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitAnnotatedTypeExpression_HasUnderlyingType(const expr::AnnotatedTypeExpression& begin, const expr::TypeExpression& end);
+
+      /**
+      * \brief Edge end visitor for hasUnderlyingType edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndAnnotatedTypeExpression_HasUnderlyingType(const expr::AnnotatedTypeExpression& begin, const expr::TypeExpression& end);
 
       /**
       * \brief Edge  visitor for hasAnnotationName edge which is called when the subtree of this edge is started.
@@ -1475,6 +1659,20 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEndExpression_Type(const expr::Expression& begin, const type::Type& end);
 
       /**
+      * \brief Edge visitor for target edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitFunctionalExpression_Target(const expr::FunctionalExpression& begin, const type::Type& end);
+
+      /**
+      * \brief Edge visitor for target edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndFunctionalExpression_Target(const expr::FunctionalExpression& begin, const type::Type& end);
+
+      /**
       * \brief Edge visitor for refersTo edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1501,6 +1699,76 @@ namespace columbus { namespace java { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitEndInstanceOf_HasTypeOperand(const expr::InstanceOf& begin, const expr::TypeExpression& end);
+
+      /**
+      * \brief Edge  visitor for hasParameters edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitLambda_HasParameters(const expr::Lambda& begin, const struc::Parameter& end);
+
+      /**
+      * \brief Edge end visitor for hasParameters edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndLambda_HasParameters(const expr::Lambda& begin, const struc::Parameter& end);
+
+      /**
+      * \brief Edge  visitor for hasBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitLambda_HasBody(const expr::Lambda& begin, const base::Positioned& end);
+
+      /**
+      * \brief Edge end visitor for hasBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndLambda_HasBody(const expr::Lambda& begin, const base::Positioned& end);
+
+      /**
+      * \brief Edge  visitor for hasQualifierExpression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitMemberReference_HasQualifierExpression(const expr::MemberReference& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasQualifierExpression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndMemberReference_HasQualifierExpression(const expr::MemberReference& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasTypeArguments edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitMemberReference_HasTypeArguments(const expr::MemberReference& begin, const expr::TypeExpression& end);
+
+      /**
+      * \brief Edge end visitor for hasTypeArguments edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndMemberReference_HasTypeArguments(const expr::MemberReference& begin, const expr::TypeExpression& end);
+
+      /**
+      * \brief Edge visitor for referredMethod edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitMemberReference_ReferredMethod(const expr::MemberReference& begin, const struc::MethodDeclaration& end);
+
+      /**
+      * \brief Edge visitor for referredMethod edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndMemberReference_ReferredMethod(const expr::MemberReference& begin, const struc::MethodDeclaration& end);
 
       /**
       * \brief Edge  visitor for hasTypeArguments edge which is called when the subtree of this edge is started.
@@ -1769,6 +2037,20 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEndTypeCast_HasTypeOperand(const expr::TypeCast& begin, const expr::TypeExpression& end);
 
       /**
+      * \brief Edge  visitor for hasBounds edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitTypeIntersectionExpression_HasBounds(const expr::TypeIntersectionExpression& begin, const expr::TypeExpression& end);
+
+      /**
+      * \brief Edge end visitor for hasBounds edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndTypeIntersectionExpression_HasBounds(const expr::TypeIntersectionExpression& begin, const expr::TypeExpression& end);
+
+      /**
       * \brief Edge  visitor for hasAlternatives edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1809,6 +2091,118 @@ namespace columbus { namespace java { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitEndWildcardExpression_HasBound(const expr::WildcardExpression& begin, const expr::TypeExpression& end);
+
+      /**
+      * \brief Edge  visitor for hasPackageName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitExports_HasPackageName(const module::Exports& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasPackageName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndExports_HasPackageName(const module::Exports& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasModuleNames edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitExports_HasModuleNames(const module::Exports& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasModuleNames edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndExports_HasModuleNames(const module::Exports& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasPackageName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitOpens_HasPackageName(const module::Opens& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasPackageName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndOpens_HasPackageName(const module::Opens& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasModuleNames edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitOpens_HasModuleNames(const module::Opens& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasModuleNames edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndOpens_HasModuleNames(const module::Opens& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasServiceName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitProvides_HasServiceName(const module::Provides& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasServiceName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndProvides_HasServiceName(const module::Provides& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasImplementationNames edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitProvides_HasImplementationNames(const module::Provides& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasImplementationNames edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndProvides_HasImplementationNames(const module::Provides& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasModuleName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitRequires_HasModuleName(const module::Requires& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasModuleName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndRequires_HasModuleName(const module::Requires& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasServiceName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitUses_HasServiceName(const module::Uses& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasServiceName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndUses_HasServiceName(const module::Uses& begin, const expr::Expression& end);
 
       /**
       * \brief Edge  visitor for hasCondition edge which is called when the subtree of this edge is started.
@@ -2165,14 +2559,14 @@ namespace columbus { namespace java { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitTry_HasResources(const statm::Try& begin, const struc::Variable& end);
+      virtual void visitTry_HasResources(const statm::Try& begin, const base::Base& end);
 
       /**
       * \brief Edge end visitor for hasResources edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitEndTry_HasResources(const statm::Try& begin, const struc::Variable& end);
+      virtual void visitEndTry_HasResources(const statm::Try& begin, const base::Base& end);
 
       /**
       * \brief Edge  visitor for hasBlock edge which is called when the subtree of this edge is started.
@@ -2287,6 +2681,34 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEndCompilationUnit_HasImports(const struc::CompilationUnit& begin, const struc::Import& end);
 
       /**
+      * \brief Edge  visitor for hasOthers edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end);
+
+      /**
+      * \brief Edge end visitor for hasOthers edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end);
+
+      /**
+      * \brief Edge  visitor for hasModuleDeclaration edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitCompilationUnit_HasModuleDeclaration(const struc::CompilationUnit& begin, const struc::ModuleDeclaration& end);
+
+      /**
+      * \brief Edge end visitor for hasModuleDeclaration edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndCompilationUnit_HasModuleDeclaration(const struc::CompilationUnit& begin, const struc::ModuleDeclaration& end);
+
+      /**
       * \brief Edge visitor for typeDeclarations edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -2301,18 +2723,18 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEndCompilationUnit_TypeDeclarations(const struc::CompilationUnit& begin, const struc::TypeDeclaration& end);
 
       /**
-      * \brief Edge  visitor for hasOthers edge which is called when the subtree of this edge is started.
+      * \brief Edge visitor for isInModule edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end);
+      virtual void visitCompilationUnit_IsInModule(const struc::CompilationUnit& begin, const struc::Module& end);
 
       /**
-      * \brief Edge end visitor for hasOthers edge which is called when the subtree of this edge is started.
+      * \brief Edge visitor for isInModule edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitEndCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end);
+      virtual void visitEndCompilationUnit_IsInModule(const struc::CompilationUnit& begin, const struc::Module& end);
 
       /**
       * \brief Edge  visitor for hasNewClass edge which is called when the subtree of this edge is started.
@@ -2413,6 +2835,76 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEndMethodDeclaration_Overrides(const struc::MethodDeclaration& begin, const struc::MethodDeclaration& end);
 
       /**
+      * \brief Edge visitor for packages edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitModule_Packages(const struc::Module& begin, const struc::Package& end);
+
+      /**
+      * \brief Edge visitor for packages edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndModule_Packages(const struc::Module& begin, const struc::Package& end);
+
+      /**
+      * \brief Edge  visitor for hasName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitModuleDeclaration_HasName(const struc::ModuleDeclaration& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndModuleDeclaration_HasName(const struc::ModuleDeclaration& begin, const expr::Expression& end);
+
+      /**
+      * \brief Edge  visitor for hasDirectives edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitModuleDeclaration_HasDirectives(const struc::ModuleDeclaration& begin, const module::ModuleDirective& end);
+
+      /**
+      * \brief Edge end visitor for hasDirectives edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndModuleDeclaration_HasDirectives(const struc::ModuleDeclaration& begin, const module::ModuleDirective& end);
+
+      /**
+      * \brief Edge visitor for moduleType edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitModuleDeclaration_ModuleType(const struc::ModuleDeclaration& begin, const type::ModuleType& end);
+
+      /**
+      * \brief Edge visitor for moduleType edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndModuleDeclaration_ModuleType(const struc::ModuleDeclaration& begin, const type::ModuleType& end);
+
+      /**
+      * \brief Edge visitor for refersTo edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitModuleDeclaration_RefersTo(const struc::ModuleDeclaration& begin, const struc::Module& end);
+
+      /**
+      * \brief Edge visitor for refersTo edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndModuleDeclaration_RefersTo(const struc::ModuleDeclaration& begin, const struc::Module& end);
+
+      /**
       * \brief Edge  visitor for hasParameters edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -2469,6 +2961,20 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEndPackage_HasCompilationUnits(const struc::Package& begin, const struc::CompilationUnit& end);
 
       /**
+      * \brief Edge visitor for isInModule edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitPackage_IsInModule(const struc::Package& begin, const struc::Module& end);
+
+      /**
+      * \brief Edge visitor for isInModule edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndPackage_IsInModule(const struc::Package& begin, const struc::Module& end);
+
+      /**
       * \brief Edge  visitor for hasPackageName edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -2511,20 +3017,6 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEndScope_HasMembers(const struc::Scope& begin, const struc::Member& end);
 
       /**
-      * \brief Edge visitor for isInCompilationUnit edge which.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      virtual void visitTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end);
-
-      /**
-      * \brief Edge visitor for isInCompilationUnit edge which.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      virtual void visitEndTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end);
-
-      /**
       * \brief Edge  visitor for hasSuperClass edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -2565,6 +3057,34 @@ namespace columbus { namespace java { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitEndTypeDeclaration_HasOthers(const struc::TypeDeclaration& begin, const base::Positioned& end);
+
+      /**
+      * \brief Edge visitor for isInCompilationUnit edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end);
+
+      /**
+      * \brief Edge visitor for isInCompilationUnit edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end);
+
+      /**
+      * \brief Edge visitor for isInModule edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitTypeDeclaration_IsInModule(const struc::TypeDeclaration& begin, const struc::Module& end);
+
+      /**
+      * \brief Edge visitor for isInModule edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndTypeDeclaration_IsInModule(const struc::TypeDeclaration& begin, const struc::Module& end);
 
       /**
       * \brief Edge  visitor for hasBounds edge which is called when the subtree of this edge is started.
@@ -2637,6 +3157,20 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEndClassType_RefersTo(const type::ClassType& begin, const struc::TypeDeclaration& end);
 
       /**
+      * \brief Edge visitor for bounds edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitIntersectionType_Bounds(const type::IntersectionType& begin, const type::Type& end);
+
+      /**
+      * \brief Edge visitor for bounds edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndIntersectionType_Bounds(const type::IntersectionType& begin, const type::Type& end);
+
+      /**
       * \brief Edge visitor for returnType edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -2677,6 +3211,20 @@ namespace columbus { namespace java { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitEndMethodType_ThrownTypes(const type::MethodType& begin, const type::Type& end);
+
+      /**
+      * \brief Edge visitor for refersTo edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitModuleType_RefersTo(const type::ModuleType& begin, const struc::Module& end);
+
+      /**
+      * \brief Edge visitor for refersTo edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndModuleType_RefersTo(const type::ModuleType& begin, const struc::Module& end);
 
       /**
       * \brief Edge visitor for refersTo edge which.

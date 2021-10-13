@@ -37,6 +37,7 @@ namespace expression {
     ExpressionSyntax(_id, _factory),
     m_ArgumentList(0),
     m_Expression(0),
+    m_LocalFunctionCall(0),
     m_MethodCall(0)
   {
   }
@@ -47,6 +48,7 @@ namespace expression {
   void InvocationExpressionSyntax::prepareDelete(bool tryOnVirtualParent){
     removeArgumentList();
     removeExpression();
+    removeLocalFunctionCall();
     removeMethodCall();
     expression::ExpressionSyntax::prepareDelete(false);
   }
@@ -75,6 +77,16 @@ namespace expression {
     return _node;
   }
 
+  statement::LocalFunctionStatementSyntax* InvocationExpressionSyntax::getLocalFunctionCall() const {
+    statement::LocalFunctionStatementSyntax *_node = NULL;
+    if (m_LocalFunctionCall != 0)
+      _node = dynamic_cast<statement::LocalFunctionStatementSyntax*>(factory->getPointer(m_LocalFunctionCall));
+    if ( (_node == NULL) || factory->getIsFiltered(_node))
+      return NULL;
+
+    return _node;
+  }
+
   structure::MethodDeclarationSyntax* InvocationExpressionSyntax::getMethodCall() const {
     structure::MethodDeclarationSyntax *_node = NULL;
     if (m_MethodCall != 0)
@@ -92,6 +104,9 @@ namespace expression {
         return true;
       case edkInvocationExpressionSyntax_Expression:
         setExpression(edgeEnd);
+        return true;
+      case edkInvocationExpressionSyntax_LocalFunctionCall:
+        setLocalFunctionCall(edgeEnd);
         return true;
       case edkInvocationExpressionSyntax_MethodCall:
         setMethodCall(edgeEnd);
@@ -112,6 +127,9 @@ namespace expression {
         return true;
       case edkInvocationExpressionSyntax_Expression:
         removeExpression();
+        return true;
+      case edkInvocationExpressionSyntax_LocalFunctionCall:
+        removeLocalFunctionCall();
         return true;
       case edkInvocationExpressionSyntax_MethodCall:
         removeMethodCall();
@@ -217,6 +235,48 @@ namespace expression {
       m_Expression = 0;
   }
 
+  void InvocationExpressionSyntax::setLocalFunctionCall(NodeId _id) {
+    statement::LocalFunctionStatementSyntax *_node = NULL;
+    if (_id) {
+      if (!factory->getExist(_id))
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+      _node = dynamic_cast<statement::LocalFunctionStatementSyntax*> (factory->getPointer(_id));
+      if ( _node == NULL) {
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      }
+      if (&(_node->getFactory()) != this->factory)
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+
+      if (m_LocalFunctionCall) {
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_LocalFunctionCall, m_id, edkInvocationExpressionSyntax_LocalFunctionCall);
+      }
+      m_LocalFunctionCall = _node->getId();
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->insertEdge(m_LocalFunctionCall, this->getId(), edkInvocationExpressionSyntax_LocalFunctionCall);
+    } else {
+      if (m_LocalFunctionCall) {
+        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      }
+    }
+  }
+
+  void InvocationExpressionSyntax::setLocalFunctionCall(statement::LocalFunctionStatementSyntax *_node) {
+    if (_node == NULL)
+      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+
+    setLocalFunctionCall(_node->getId());
+  }
+
+  void InvocationExpressionSyntax::removeLocalFunctionCall() {
+      if (m_LocalFunctionCall) {
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_LocalFunctionCall, m_id, edkInvocationExpressionSyntax_LocalFunctionCall);
+      }
+      m_LocalFunctionCall = 0;
+  }
+
   void InvocationExpressionSyntax::setMethodCall(NodeId _id) {
     structure::MethodDeclarationSyntax *_node = NULL;
     if (_id) {
@@ -303,6 +363,7 @@ namespace expression {
 
     binIo.writeUInt4(m_ArgumentList);
     binIo.writeUInt4(m_Expression);
+    binIo.writeUInt4(m_LocalFunctionCall);
     binIo.writeUInt4(m_MethodCall);
 
   }
@@ -317,6 +378,8 @@ namespace expression {
     m_Expression =  binIo.readUInt4();
     if (m_Expression != 0)
       setParentEdge(factory->getPointer(m_Expression),edkInvocationExpressionSyntax_Expression);
+
+    m_LocalFunctionCall =  binIo.readUInt4();
 
     m_MethodCall =  binIo.readUInt4();
 

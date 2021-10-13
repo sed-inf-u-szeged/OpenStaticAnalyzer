@@ -43,11 +43,11 @@ namespace columbus { namespace dcf {
     columbus::RefDistributorStrTable *stt=new columbus::RefDistributorStrTable();
     Factory* factory = new Factory(*stt);
 
-#if defined(SCHEMA_JAVA) || defined SCHEMA_PYTHON
+#if defined SCHEMA_JAVA || defined SCHEMA_PYTHON
     columbus::CsiHeader header;
     factory->load(fname, header);
 
-#elif defined SCHEMA_CSHARP || defined (SCHEMA_JAVASCRIPT)
+#elif defined SCHEMA_CSHARP || defined SCHEMA_JAVASCRIPT
     std::list<HeaderData*> headerList;
     columbus::PropertyData header;
     headerList.push_back(&header);

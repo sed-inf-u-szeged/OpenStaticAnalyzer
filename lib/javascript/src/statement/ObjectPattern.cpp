@@ -61,12 +61,12 @@ namespace statement {
     return ndkObjectPattern;
   }
 
-  ListIterator<expression::Property> ObjectPattern::getPropertiesListIteratorBegin() const {
-    return ListIterator<expression::Property>(&hasPropertiesContainer, factory, true);
+  ListIterator<base::Positioned> ObjectPattern::getPropertiesListIteratorBegin() const {
+    return ListIterator<base::Positioned>(&hasPropertiesContainer, factory, true);
   }
 
-  ListIterator<expression::Property> ObjectPattern::getPropertiesListIteratorEnd() const {
-    return ListIterator<expression::Property>(&hasPropertiesContainer, factory, false);
+  ListIterator<base::Positioned> ObjectPattern::getPropertiesListIteratorEnd() const {
+    return ListIterator<base::Positioned>(&hasPropertiesContainer, factory, false);
   }
 
   bool ObjectPattern::getPropertiesIsEmpty() const {
@@ -75,8 +75,8 @@ namespace statement {
 
   unsigned int ObjectPattern::getPropertiesSize() const {
     unsigned int size = 0;
-    ListIterator<expression::Property> endIt = getPropertiesListIteratorEnd();
-    for (ListIterator<expression::Property> it = getPropertiesListIteratorBegin(); it != endIt; ++it) {
+    ListIterator<base::Positioned> endIt = getPropertiesListIteratorEnd();
+    for (ListIterator<base::Positioned> it = getPropertiesListIteratorBegin(); it != endIt; ++it) {
       ++size;
     }
     return size;
@@ -120,15 +120,15 @@ namespace statement {
     return false;
   }
 
-  void ObjectPattern::addProperties(const expression::Property *_node) {
+  void ObjectPattern::addProperties(const base::Positioned *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
 
     if (&(_node->getFactory()) != this->factory)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
 
-    if (!(Common::getIsProperty(*_node)))
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    if (!(Common::getIsProperty(*_node) || (_node->getNodeKind() == ndkRestElement) ))
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
 
     hasPropertiesContainer.push_back(_node->getId());
     setParentEdge(_node,edkObjectPattern_HasProperties);
@@ -138,20 +138,20 @@ namespace statement {
   }
 
   void ObjectPattern::addProperties(NodeId _id) {
-    const expression::Property *node = dynamic_cast<expression::Property*>(factory->getPointer(_id));
+    const base::Positioned *node = dynamic_cast<base::Positioned*>(factory->getPointer(_id));
     if (node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
     addProperties( node );
   }
 
   void ObjectPattern::removeProperties(NodeId id) {
     if (!factory->getExist(id))
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
-    ListIterator<expression::Property>::Container::iterator it = find(hasPropertiesContainer.begin(), hasPropertiesContainer.end(), id);
+    ListIterator<base::Positioned>::Container::iterator it = find(hasPropertiesContainer.begin(), hasPropertiesContainer.end(), id);
 
     if (it == hasPropertiesContainer.end())
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
     hasPropertiesContainer.erase(it);
 
@@ -161,9 +161,9 @@ namespace statement {
       factory->reverseEdges->removeEdge(id, this->getId(), edkObjectPattern_HasProperties);
   }
 
-  void ObjectPattern::removeProperties(expression::Property *_node) {
+  void ObjectPattern::removeProperties(base::Positioned *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
 
     removeProperties(_node->getId());
   }
@@ -212,7 +212,7 @@ namespace statement {
     Pattern::save(binIo,false);
 
 
-    for (ListIterator<expression::Property>::Container::const_iterator it = hasPropertiesContainer.begin(); it != hasPropertiesContainer.end(); ++it) {
+    for (ListIterator<base::Positioned>::Container::const_iterator it = hasPropertiesContainer.begin(); it != hasPropertiesContainer.end(); ++it) {
       binIo.writeUInt4(*it);
     }
     binIo.writeUInt4(0); // This is the end sign

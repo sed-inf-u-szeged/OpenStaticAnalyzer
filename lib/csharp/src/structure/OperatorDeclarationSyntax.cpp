@@ -35,7 +35,6 @@ typedef boost::crc_32_type  Crc_type;
 namespace structure { 
   OperatorDeclarationSyntax::OperatorDeclarationSyntax(NodeId _id, Factory *_factory) :
     BaseMethodDeclarationSyntax(_id, _factory),
-    m_ExpressionBody(0),
     m_ReturnType(0)
   {
   }
@@ -44,23 +43,12 @@ namespace structure {
   }
 
   void OperatorDeclarationSyntax::prepareDelete(bool tryOnVirtualParent){
-    removeExpressionBody();
     removeReturnType();
     structure::BaseMethodDeclarationSyntax::prepareDelete(false);
   }
 
   NodeKind OperatorDeclarationSyntax::getNodeKind() const {
     return ndkOperatorDeclarationSyntax;
-  }
-
-  structure::ArrowExpressionClauseSyntax* OperatorDeclarationSyntax::getExpressionBody() const {
-    structure::ArrowExpressionClauseSyntax *_node = NULL;
-    if (m_ExpressionBody != 0)
-      _node = dynamic_cast<structure::ArrowExpressionClauseSyntax*>(factory->getPointer(m_ExpressionBody));
-    if ( (_node == NULL) || factory->getIsFiltered(_node))
-      return NULL;
-
-    return _node;
   }
 
   expression::TypeSyntax* OperatorDeclarationSyntax::getReturnType() const {
@@ -75,9 +63,6 @@ namespace structure {
 
   bool OperatorDeclarationSyntax::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
-      case edkOperatorDeclarationSyntax_ExpressionBody:
-        setExpressionBody(edgeEnd);
-        return true;
       case edkOperatorDeclarationSyntax_ReturnType:
         setReturnType(edgeEnd);
         return true;
@@ -92,9 +77,6 @@ namespace structure {
 
   bool OperatorDeclarationSyntax::removeEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
-      case edkOperatorDeclarationSyntax_ExpressionBody:
-        removeExpressionBody();
-        return true;
       case edkOperatorDeclarationSyntax_ReturnType:
         removeReturnType();
         return true;
@@ -105,52 +87,6 @@ namespace structure {
       return true;
     }
     return false;
-  }
-
-  void OperatorDeclarationSyntax::setExpressionBody(NodeId _id) {
-    structure::ArrowExpressionClauseSyntax *_node = NULL;
-    if (_id) {
-      if (!factory->getExist(_id))
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
-
-      _node = dynamic_cast<structure::ArrowExpressionClauseSyntax*> (factory->getPointer(_id));
-      if ( _node == NULL) {
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
-      }
-      if (&(_node->getFactory()) != this->factory)
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
-
-      if (m_ExpressionBody) {
-        removeParentEdge(m_ExpressionBody);
-        if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_ExpressionBody, m_id, edkOperatorDeclarationSyntax_ExpressionBody);
-      }
-      m_ExpressionBody = _node->getId();
-      if (m_ExpressionBody != 0)
-        setParentEdge(factory->getPointer(m_ExpressionBody), edkOperatorDeclarationSyntax_ExpressionBody);
-      if (factory->getExistsReverseEdges())
-        factory->reverseEdges->insertEdge(m_ExpressionBody, this->getId(), edkOperatorDeclarationSyntax_ExpressionBody);
-    } else {
-      if (m_ExpressionBody) {
-        throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
-      }
-    }
-  }
-
-  void OperatorDeclarationSyntax::setExpressionBody(structure::ArrowExpressionClauseSyntax *_node) {
-    if (_node == NULL)
-      throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
-
-    setExpressionBody(_node->getId());
-  }
-
-  void OperatorDeclarationSyntax::removeExpressionBody() {
-      if (m_ExpressionBody) {
-        removeParentEdge(m_ExpressionBody);
-        if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_ExpressionBody, m_id, edkOperatorDeclarationSyntax_ExpressionBody);
-      }
-      m_ExpressionBody = 0;
   }
 
   void OperatorDeclarationSyntax::setReturnType(NodeId _id) {
@@ -241,17 +177,12 @@ namespace structure {
   void OperatorDeclarationSyntax::save(io::BinaryIO &binIo,bool withVirtualBase  /*= true*/) const {
     BaseMethodDeclarationSyntax::save(binIo,false);
 
-    binIo.writeUInt4(m_ExpressionBody);
     binIo.writeUInt4(m_ReturnType);
 
   }
 
   void OperatorDeclarationSyntax::load(io::BinaryIO &binIo, bool withVirtualBase /*= true*/) {
     BaseMethodDeclarationSyntax::load(binIo,false);
-
-    m_ExpressionBody =  binIo.readUInt4();
-    if (m_ExpressionBody != 0)
-      setParentEdge(factory->getPointer(m_ExpressionBody),edkOperatorDeclarationSyntax_ExpressionBody);
 
     m_ReturnType =  binIo.readUInt4();
     if (m_ReturnType != 0)

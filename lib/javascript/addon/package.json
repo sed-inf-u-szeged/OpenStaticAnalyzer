@@ -1,18 +1,12 @@
 {
   "name": "javascript",
-  "version": "0.1.10",
-  "description": "Node JS library for JavaScript.",
-  "main": "hello.js",
-  "private": true,
-  "files": [
-    "jsan.js"
-  ],
+  "version": "0.2.3",
+  "description": "Node JS Addon library for Javascript.",
   "dependencies": {
-    "bindings": "~1.2.1",
-    "nan": "^2.0.0"
+    "bindings": "~1.2.1"
   },
   "scripts": {
-    "test": "node hello.js",
+    "rebuild": "node-gyp configure && node-gyp rebuild -j 8",
     "install": "node-gyp configure && node-gyp build -j 8"
   },
   "gypfile": true

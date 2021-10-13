@@ -37,7 +37,6 @@ namespace structure {
   * (missing)
   * 
   * Edges:
-  *   - ExpressionBody (structure::ArrowExpressionClauseSyntax, single) : (missing)
   *   - Type (expression::TypeSyntax, single) : (missing)
   */
   class ConversionOperatorDeclarationSyntax : public BaseMethodDeclarationSyntax {
@@ -104,12 +103,6 @@ namespace structure {
       // ---------- Edge getter function(s) ----------
 
       /**
-      * \brief Gives back the pointer of the node the ExpressionBody edge points to.
-      * \return Returns the end point of the ExpressionBody edge.
-      */
-      structure::ArrowExpressionClauseSyntax* getExpressionBody() const;
-
-      /**
       * \brief Gives back the pointer of the node the Type edge points to.
       * \return Returns the end point of the Type edge.
       */
@@ -117,23 +110,6 @@ namespace structure {
 
 
       // ---------- Edge setter function(s) ----------
-
-      /**
-      * \brief Sets the ExpressionBody edge.
-      * \param id [in] The new end point of the ExpressionBody edge.
-      */
-      void setExpressionBody(NodeId id);
-
-      /**
-      * \brief Sets the ExpressionBody edge.
-      * \param node [in] The new end point of the ExpressionBody edge.
-      */
-      void setExpressionBody(ArrowExpressionClauseSyntax *node);
-
-      /**
-      * \brief remove the ExpressionBody edge.
-      */
-      void removeExpressionBody();
 
       /**
       * \brief Sets the Type edge.
@@ -155,9 +131,6 @@ namespace structure {
     protected:
 
       // ---------- Edges ----------
-
-      /** \internal \brief The id of the node the ExpressionBody edge points to. */
-      NodeId m_ExpressionBody;
 
       /** \internal \brief The id of the node the Type edge points to. */
       NodeId m_Type;

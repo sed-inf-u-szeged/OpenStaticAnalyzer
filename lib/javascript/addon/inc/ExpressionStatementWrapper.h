@@ -22,66 +22,30 @@
 #define _JAVASCRIPT_ExpressionStatementWrapper_H_
 
 #include "javascript/inc/javascript.h"
-#include <node.h>
-#include <node_object_wrap.h>
+#include <node_api.h>
+#include "BaseWrapper.h"
 #include "../Factory.h"
-
-using namespace v8;
 
 namespace columbus { namespace javascript { namespace asg { namespace addon {
   class Factory;
 
-  class ExpressionStatementWrapper : public node::ObjectWrap {
+  class ExpressionStatementWrapper : BaseWrapper{
     public:
-      columbus::javascript::asg::statement::ExpressionStatement* ExpressionStatement;
-      static void Init(v8::Handle<v8::Object> exports);
-      ExpressionStatementWrapper(const ExpressionStatementWrapper&);
-      ExpressionStatementWrapper(Factory* fact);
-      virtual ~ExpressionStatementWrapper();
-      static void NewInstance(const v8::FunctionCallbackInfo<v8::Value>& args);
-      void wrap(const v8::FunctionCallbackInfo<v8::Value>& args){ this->Wrap(args.Holder()); }
-      static v8::Persistent<v8::Function> constructor;
+      static napi_value Init(napi_env env, napi_value& exports);
+      static void Destructor(napi_env env, void* nativeObject, void* finalize_hint);
+      static napi_status NewInstance(napi_env env, statement::ExpressionStatement* arg, napi_value* instance);
     private:
-      static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-
-      static void setExpressionArrayExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionArrowFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionAssignmentExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionAwaitExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionBinaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionCallExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionClassExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionConditionalExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionBooleanLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionNullLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionNumberLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionRegExpLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionStringLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionLogicalExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionMemberExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionMetaProperty(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionNewExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionObjectExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionSequenceExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionTaggedTemplateExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionTemplateLiteral(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionThisExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionUnaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionUpdateExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setExpressionYieldExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addCommentsComment(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPath(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setEndLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setEndCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideEndLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideEndCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-}; //end of ExpressionStatementWrapper
+      explicit ExpressionStatementWrapper(); // Constructor
+      ~ExpressionStatementWrapper();
+      static napi_ref constructor;
+      static napi_value New(napi_env env, napi_callback_info info);
+      napi_env env_;
+      napi_ref wrapper_;
+      static napi_value setExpression(napi_env env, napi_callback_info info);
+      static napi_value addComments(napi_env env, napi_callback_info info);
+      static napi_value setPath(napi_env env, napi_callback_info info);
+      static napi_value setPosition(napi_env env, napi_callback_info info);
+  }; //end of ExpressionStatementWrapper
 
 }}}}//end of namespaces
 #endif

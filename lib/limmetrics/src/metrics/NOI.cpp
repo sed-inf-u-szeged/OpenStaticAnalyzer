@@ -32,6 +32,7 @@ namespace columbus { namespace lim { namespace metrics {
     this->registerHandler( phaseVisit, NTYPE_LIM_METHOD, limLangOther, false, [this]( NodeWrapper& node ) {
 
       if ( ! node.isDefinition() ) {
+        setInvalid( node );
         return;
       }
 
@@ -80,6 +81,14 @@ namespace columbus { namespace lim { namespace metrics {
       }
 
       addMetric( node, (int) noiSet.size() );
+    });
+
+    // C vs. C++ compat
+    registerHandler( phaseVisit, NTYPE_LIM_STRUCTURE, limLangC, false, [this] ( NodeWrapper& node ) {
+      setInvalid( node );
+    });
+    registerHandler( phaseVisit, NTYPE_LIM_UNION, limLangC, false, [this] ( NodeWrapper& node ) {
+      setInvalid( node );
     });
 
   }

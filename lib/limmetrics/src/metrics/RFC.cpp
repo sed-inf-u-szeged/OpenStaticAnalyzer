@@ -51,6 +51,14 @@ namespace columbus { namespace lim { namespace metrics {
       cleanup( node, "NOI" );
     });
 
+    // C vs. C++ compat
+    registerHandler( phaseVisit, NTYPE_LIM_STRUCTURE, limLangC, false, [this] ( NodeWrapper& node ) {
+      setInvalid( node );
+    });
+    registerHandler( phaseVisit, NTYPE_LIM_UNION, limLangC, false, [this] ( NodeWrapper& node ) {
+      setInvalid( node );
+    });
+
   }
 
   const string& RFC::translateLevel( Language language, const string& level ) const {

@@ -22,16 +22,18 @@ const hashmap = require('hashmap');
 const addon = require('../../javascriptAddon');
 const fs = require('fs');
 const estraverse = require('estraverse');
+const sha1 = require('sha1');
+const path = require('path');
+const Cache = require('lru-cache-node');
 
-var crossRefSolver = require('../assets/crossRefSolver');
-var globals = require('../globals');
-var factory = globals.getFactory();
+let crossRefSolver = require('../assets/crossRefSolver');
+let globals = require('../globals');
+let factory = globals.getFactory();
 
-
-var convertNodeToFunction = function (node) {
+let convertNodeToFunction = function (node) {
     switch (node.type) {
         case "Program":
-            return require('./base/program')//NodeProgramFunction;
+            return require('./base/program'); //NodeProgramFunction;
         case "EmptyStatement":
             return require('./statement/emptyStatement');
         case "BlockStatement":
@@ -147,7 +149,7 @@ var convertNodeToFunction = function (node) {
         case "Block":
             return require('./base/comment');
         case "ImportDeclaration":
-            return require('./declaration/ImportDeclaration');
+            return require('./declaration/importDeclaration');
         case "ExportNamedDeclaration":
             return require('./declaration/exportNamedDeclaration');
         case "ExportDefaultDeclaration":
@@ -185,12 +187,11 @@ var convertNodeToFunction = function (node) {
  * @param {type} wrapper
  */
 function handleComments(node) {
-    var wrapper = globals.getWrapperOfNode(node);
+    let wrapper = globals.getWrapperOfNode(node);
 
-
-    if (node.leadingComments != null) {
-        for (var j = 0; j < node.leadingComments.length; j++) {
-            if (node.leadingComments[j] != null && node.leadingComments[j] != undefined) {
+    if (node.leadingComments !== undefined && node.leadingComments !== null) {
+        for (let j = 0; j < node.leadingComments.length; j++) {
+            if (node.leadingComments[j] !== null && node.leadingComments[j] !== undefined) {
 
                 if (globals.isCommentExists(node.leadingComments[j])) {
                     node.leadingComments.splice(j, 1);
@@ -198,7 +199,7 @@ function handleComments(node) {
                     continue;
                 }
 
-                var leadingComment = factory.createCommentWrapper(factory);
+                let leadingComment = factory.createCommentWrapper();
                 leadingComment.setText(node.leadingComments[j].value);
                 globals.setPositionInfo(node.leadingComments[j], leadingComment);
                 leadingComment.setType("ct" + node.leadingComments[j].type);
@@ -207,8 +208,8 @@ function handleComments(node) {
                 globals.addComment(node.leadingComments[j]);
 
                 //Handle program comment at the beginning
-                if (node.leadingComments[j].loc.start.line == 1 && node.leadingComments[j].type === "Block") {
-                    globals.getWrapperOfNode(globals.getActualProgramNode()).addCommentsComment(leadingComment);
+                if (node.leadingComments[j].loc.start.line === 1 && node.leadingComments[j].type === "Block") {
+                    globals.getWrapperOfNode(globals.getActualProgramNode()).addComments(leadingComment);
 
                     //attach this comment to the program
                     globals.getActualProgramNode().leadingComments = [];
@@ -219,17 +220,16 @@ function handleComments(node) {
                     j--;
                 }
                 else {
-                    wrapper.addCommentsComment(leadingComment);
+                    wrapper.addComments(leadingComment);
                 }
             }
 
         }
     }
 
-
-    if (node.trailingComments != null) {
-        for (var j = 0; j < node.trailingComments.length; j++) {
-            if (node.trailingComments[j] != null && node.trailingComments[j] != undefined) {
+    if (node.trailingComments !== undefined && node.trailingComments !== null) {
+        for (let j = 0; j < node.trailingComments.length; j++) {
+            if (node.trailingComments[j] !== null && node.trailingComments[j] !== undefined) {
 
                 if (globals.isCommentExists(node.trailingComments[j]) || Math.abs(node.loc.end.line - node.trailingComments[j].loc.start.line) > 1) {
                     node.trailingComments.splice(j, 1);
@@ -237,19 +237,17 @@ function handleComments(node) {
                     continue;
                 }
 
-
-                var trailingComment = factory.createCommentWrapper(factory);
+                let trailingComment = factory.createCommentWrapper();
                 trailingComment.setText(node.trailingComments[j].value);
                 globals.setPositionInfo(node.trailingComments[j], trailingComment);
                 trailingComment.setType("ct" + node.trailingComments[j].type);
                 trailingComment.setLocation("clTrailing");
-                wrapper.addCommentsComment(trailingComment);
+                wrapper.addComments(trailingComment);
 
                 globals.addComment(node.trailingComments[j]);
             }
         }
     }
-
 }
 
 /**
@@ -261,91 +259,201 @@ function detectUnAttachedComments(node) {
     }
     //initially all the comments, then remove attached comments
     //var unattachedComments = Object.assign({}, node.comments);
-    var unattachedComments = node.comments;
-    for (var i = 0; i < unattachedComments.length; i++) {
+    let unattachedComments = node.comments;
+    for (let i = 0; i < unattachedComments.length; i++) {
         if (globals.isCommentExists(unattachedComments[i])) {
             unattachedComments.splice(i, 1);
             i--;
         }
     }
-
     return unattachedComments;
 }
 
 
 /**
- * Transforms the Espree AST into columbus AST
- *
- * @param {type} espreeAst: an ast created by espree
+ * Gets the absolute or relative path of a file path.
+ * @param filePath
  */
-module.exports.transform = function (ast, parsingOptions) {
-    //first traverse
-	crossRefSolver.setParsingOptions(parsingOptions);
-    estraverse.traverse(ast, {
-        enter: function (node, parent) {
-            var func = convertNodeToFunction(node);
-            if (func !== undefined) {
-                var nodeWrapper = func(node, parent, true);
-                if (nodeWrapper !== undefined) {
-                    globals.putNodeWrapperPair(node, nodeWrapper);
-                }
+function getFilePath(filePath) {
+    if (globals.getOption('useRelativePath') && path.isAbsolute(filePath)) {
+        return path.relative(process.cwd(), filePath);
+    }
+    return filePath;
+}
+
+/**
+ * Bind the references for JSAN2LIM. This method callable more.
+ * The format of references see here:
+ * https://github.com/Persper/js-callgraph#unified-json-format
+ * @param name The name of bindings data
+ * @param astSet The ColumbusStyle AST
+ * @param references A JSON, which contains the links.
+ */
+module.exports.binder = function (name, astSet, references, type) {
+    let success = 0;
+    let numberOfReferences = references.length;
+    let cache = new Cache(1000);
+    global.binded = [];
+
+    references.forEach(element => {
+        let hash = makeHash(element);
+        if(global.binded.indexOf(hash)!==-1){
+            numberOfReferences--;
+            return;
+        }
+        globals.setActualFile(element.source.file);
+
+        let sourceFile = getFilePath(element.source.file);
+
+        let hashSource = sha1(element.source.file+":"+element.source.range.start+":"+element.source.range.end);
+        if (!cache.contains(hashSource)) {
+            let wrappedNode = globals.getWrapperOfNode(crossRefSolver.resolveNode(astSet, sourceFile, element.source.range.start, element.source.range.end, true));
+            cache.set(hashSource, wrappedNode || null);
+        }
+        let sourcenode = cache.get(hashSource);
+        if (sourcenode === null) {
+            return;
+        }
+        if (element.target.file === "Native") {
+            numberOfReferences--;
+            return;
+        }
+        globals.setActualFile(element.target.file);
+        let targetFile = getFilePath(element.target.file);
+        let hashTarget = sha1(element.target.file+":"+element.target.range.start+":"+element.target.range.end);
+        if (!cache.contains(hashTarget)) {
+            let wrappedNode = globals.getWrapperOfNode(crossRefSolver.resolveNode(astSet, targetFile, element.target.range.start, element.target.range.end, false));
+            cache.set(hashTarget, wrappedNode || null);
+        }
+        let targetnode = cache.get(hashTarget);
+        if (targetnode === null) {
+            return;
+        }
+        try {
+            if (type === "addCalls"){
+                sourcenode.addCalls(targetnode);
+            } else if (type === "setRefersTo") {
+                sourcenode.setRefersTo(targetnode);
+            } else {
+                console.log("Not implemented yet!");
             }
-
-            //gathering the scopes and the identifiers located in them
-            crossRefSolver.gatherScopes(ast, node, "enter");
-
-        },
-        leave: function (node, parent) {
-            crossRefSolver.gatherScopes(ast, node, "leave");
+            //eval("sourcenode."+type+"(targetnode);");
+            global.binded.push(hash);
+            success++;
+        } catch (e) {
+            console.log(e);
         }
     });
-
-    //second traverse
-    estraverse.traverse(ast, {
-        enter: function (node, parent) {
-
-            var func = convertNodeToFunction(node);
-            if (func !== undefined) {
-                func(node, parent, false);
-            }
-            //handle comments
-            handleComments(node);
-
-            crossRefSolver.resolveCrossRefs(node, parent);
-        },
-        leave: function (node, parent) {
-            if (node.type === 'Program') {
-                var comments = detectUnAttachedComments(node);
-
-                //create these unattached comments and attach them to the program
-                for (var i = 0; i < comments.length; i++) {
-                    var comment = factory.createCommentWrapper(factory);
-                    comment.setText(comments[i].value);
-                    globals.setPositionInfo(comments[i], comment);
-                    comment.setType("ct" + comments[i].type);
-                    comment.setLocation("clTrailing");
-                    var programWrapper = globals.getWrapperOfNode(node);
-                    programWrapper.addCommentsComment(comment);
-
-                    if (node.loc.end.line < comments[i].loc.start.line || (node.loc.end.line === comments[i].loc.start.line && node.loc.end.column < comments[i].loc.start.column)) {
-                        programWrapper.setEndLine(comments[i].loc.end.line);
-                        programWrapper.setEndCol(comments[i].loc.end.column);
-                        programWrapper.setWideEndLine(comments[i].loc.end.line);
-                        programWrapper.setWideEndCol(comments[i].loc.end.column);
-                    }
-
-                }
-            }
-        }
-
-    });
-
-
+    console.log("Binding " + name + ": " + success + "/" + numberOfReferences);
 };
 
+let makeHash = function(element){
+    return sha1(element.source.file+":"+element.source.range.start+":"+element.source.range.end)+sha1(element.target.file+":"+element.target.range.start+":"+element.target.range.end);
+};
+
+module.exports.variableUsages = function (astSet) {
+    let vus = [];
+    astSet.forEach(ast => {
+        globals.setActualFile(ast.filename);
+        estraverse.traverse(ast, {
+            enter: function (node, parent) {
+                let varUse = crossRefSolver.resolveVariableUsages(node, parent);
+                if (varUse !== null) {
+                    vus.push(varUse);
+                }
+            }
+        });
+    });
+    return vus;
+};
+
+module.exports.variableUsages = function (astSet) {
+    let vus = [];
+    astSet.forEach(ast => {
+        globals.setActualFile(ast.filename);
+        estraverse.traverse(ast, {
+            enter: function (node, parent) {
+                let varUse = crossRefSolver.resolveVariableUsages(node, parent);
+                if (varUse !== null) {
+                    vus.push(varUse);
+                }
+            }
+        });
+    });
+    return vus;
+};
+
+/**
+ * Transforms the Espree AST
+ *
+ * @param {type} astSet: an ast created by espree
+ * @param {type} parsingOptions: The espree runner configurations
+ */
+module.exports.transform = function (astSet, parsingOptions) {
+    astSet.forEach(ast => {
+        globals.setActualFile(ast.filename);
+        //first traverse
+        crossRefSolver.setParsingOptions(parsingOptions);
+        estraverse.traverse(ast, {
+            enter: function (node, parent) {
+                let func = convertNodeToFunction(node);
+                if (func !== undefined) {
+                    let nodeWrapper = func(node, parent, true);
+                    if (nodeWrapper !== undefined) {
+                        globals.putNodeWrapperPair(node, nodeWrapper);
+                    }
+                }
+                //gathering the scopes and the identifiers located in them
+                crossRefSolver.gatherScopes(ast, node, "enter");
+            },
+            leave: function (node, parent) {
+                crossRefSolver.gatherScopes(ast, node, "leave");
+            }
+        });
+    });
+
+    astSet.forEach(ast => {
+        globals.setActualFile(ast.filename);
+        //second traverse
+        estraverse.traverse(ast, {
+            enter: function (node, parent) {
+                let func = convertNodeToFunction(node);
+                if (func !== undefined) {
+                    func(node, parent, false);
+
+                }
+                //handle comments
+                handleComments(node);
+            },
+            leave: function (node, parent) {
+                if (node.type === 'Program') {
+                    let comments = detectUnAttachedComments(node);
+
+                    //create these unattached comments and attach them to the program
+                    for (let i = 0; i < comments.length; i++) {
+                        let comment = factory.createCommentWrapper();
+                        comment.setText(comments[i].value);
+                        globals.setPositionInfo(comments[i], comment);
+                        comment.setType("ct" + comments[i].type);
+                        comment.setLocation("clTrailing");
+                        let programWrapper = globals.getWrapperOfNode(node);
+                        programWrapper.addComments(comment);
+
+                        if (node.loc.end.line < comments[i].loc.start.line || (node.loc.end.line === comments[i].loc.start.line && node.loc.end.column < comments[i].loc.start.column)) {
+                            programWrapper.setPosition({
+                                'endline': comments[i].loc.end.line,
+                                'endcol': comments[i].loc.end.column,
+                                'wideendline': comments[i].loc.end.line,
+                                'wideendcol': comments[i].loc.end.column
+                            });
+                        }
+                    }
+                }
+            }
+        });
+    });
+};
 
 module.exports.saveAST = function (filename, dumpjsml) {
     factory.saveAST(filename + ".jssi", dumpjsml);
 };
-
-

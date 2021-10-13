@@ -76,8 +76,6 @@ public class JDKTreeMaker {
 		List<CompilationUnitTree> tree = null;
 		JavacTool compiler = JavacTool.create();
 
-		options.add(0, "-bootclasspath");
-		options.add(1, System.getProperty("sun.boot.class.path"));
 
 		if (logger.isInfoEnabled()) {
 			logger.info("info.jan.JDKTreeMaker.javacOptions");
@@ -97,6 +95,7 @@ public class JDKTreeMaker {
 			trees = javacTask.parse();
 		} catch (Exception e) {
 			logger.error("error.jan.JDKTreeMaker.javacParseError", e);
+			System.exit(1);
 		}
 
 		tree = new ArrayList<>();
@@ -108,12 +107,14 @@ public class JDKTreeMaker {
 			javacTask.analyze();
 		} catch (Exception e) {
 			logger.error("error.jan.JDKTreeMaker.javacAnalyzeError", e);
+			System.exit(1);
 		}
 
 		context = javacTask.getContext();
 		return tree;
 	}
 
+	@SuppressWarnings("unchecked")
 	private Iterable<? extends JavaFileObject> getFileObjects(List<File> files, JavacTool compiler) {
 		Charset charset = null;
 		Charset defaultEncoding = Charset.defaultCharset();

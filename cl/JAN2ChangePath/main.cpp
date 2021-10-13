@@ -29,6 +29,7 @@
 #include <io/inc/CsvIO.h>
 #include <boost/filesystem.hpp>
 
+
 #include <iostream>
 #include <string>
 #include <list>
@@ -267,7 +268,7 @@ int main(int argc, char* argv[]) {
   #endif
         fact.load(*it, header);
   #ifndef _DEBUG
-      } catch (IOException e) {
+      } catch (const IOException&) {
         WriteMsg::write(CMSG_CANNOT_LOAD_FILE, it->c_str());
         exit_code = EXIT_FAILURE;
         continue;
@@ -283,7 +284,7 @@ int main(int argc, char* argv[]) {
   #endif
        fact.save(newName, header);
   #ifndef _DEBUG
-      } catch (IOException e) {
+      } catch (const IOException&) {
         WriteMsg::write(CMSG_CANNOT_SAVE_FILE, newName.c_str());
         exit_code = EXIT_FAILURE;
         continue;
@@ -298,7 +299,7 @@ int main(int argc, char* argv[]) {
         try {
           time_t asgFileTime = boost::filesystem::last_write_time(newName);
           boost::filesystem::last_write_time(filterFile, asgFileTime + 1);
-        } catch (boost::filesystem::filesystem_error e) {
+        } catch (const boost::filesystem::filesystem_error& e) {
           WriteMsg::write(CMSG_ERROR_WHILE_TOUCHING_FILTER, filterFile.c_str(), e.what());
           exit_code = EXIT_FAILURE;
         }

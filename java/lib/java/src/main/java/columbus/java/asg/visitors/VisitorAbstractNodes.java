@@ -30,6 +30,7 @@ import columbus.java.asg.base.Named;
 import columbus.java.asg.base.NonJavadocComment;
 import columbus.java.asg.base.Positioned;
 import columbus.java.asg.base.PositionedWithoutComment;
+import columbus.java.asg.expr.AnnotatedTypeExpression;
 import columbus.java.asg.expr.Annotation;
 import columbus.java.asg.expr.ArrayAccess;
 import columbus.java.asg.expr.ArrayTypeExpression;
@@ -46,13 +47,16 @@ import columbus.java.asg.expr.Expression;
 import columbus.java.asg.expr.ExternalTypeExpression;
 import columbus.java.asg.expr.FieldAccess;
 import columbus.java.asg.expr.FloatLiteral;
+import columbus.java.asg.expr.FunctionalExpression;
 import columbus.java.asg.expr.Identifier;
 import columbus.java.asg.expr.InfixExpression;
 import columbus.java.asg.expr.InstanceOf;
 import columbus.java.asg.expr.IntegerLiteral;
+import columbus.java.asg.expr.Lambda;
 import columbus.java.asg.expr.Literal;
 import columbus.java.asg.expr.LongLiteral;
 import columbus.java.asg.expr.MarkerAnnotation;
+import columbus.java.asg.expr.MemberReference;
 import columbus.java.asg.expr.MethodInvocation;
 import columbus.java.asg.expr.NewArray;
 import columbus.java.asg.expr.NewClass;
@@ -60,6 +64,7 @@ import columbus.java.asg.expr.NormalAnnotation;
 import columbus.java.asg.expr.NullLiteral;
 import columbus.java.asg.expr.NumberLiteral;
 import columbus.java.asg.expr.ParenthesizedExpression;
+import columbus.java.asg.expr.PolyExpression;
 import columbus.java.asg.expr.PostfixExpression;
 import columbus.java.asg.expr.PrefixExpression;
 import columbus.java.asg.expr.PrimitiveTypeExpression;
@@ -72,9 +77,16 @@ import columbus.java.asg.expr.This;
 import columbus.java.asg.expr.TypeApplyExpression;
 import columbus.java.asg.expr.TypeCast;
 import columbus.java.asg.expr.TypeExpression;
+import columbus.java.asg.expr.TypeIntersectionExpression;
 import columbus.java.asg.expr.TypeUnionExpression;
 import columbus.java.asg.expr.Unary;
 import columbus.java.asg.expr.WildcardExpression;
+import columbus.java.asg.module.Exports;
+import columbus.java.asg.module.ModuleDirective;
+import columbus.java.asg.module.Opens;
+import columbus.java.asg.module.Provides;
+import columbus.java.asg.module.Requires;
+import columbus.java.asg.module.Uses;
 import columbus.java.asg.statm.Assert;
 import columbus.java.asg.statm.BasicFor;
 import columbus.java.asg.statm.Block;
@@ -123,6 +135,8 @@ import columbus.java.asg.struc.Member;
 import columbus.java.asg.struc.Method;
 import columbus.java.asg.struc.MethodDeclaration;
 import columbus.java.asg.struc.MethodGeneric;
+import columbus.java.asg.struc.Module;
+import columbus.java.asg.struc.ModuleDeclaration;
 import columbus.java.asg.struc.NamedDeclaration;
 import columbus.java.asg.struc.NormalMethod;
 import columbus.java.asg.struc.Package;
@@ -144,9 +158,11 @@ import columbus.java.asg.type.DoubleType;
 import columbus.java.asg.type.ErrorType;
 import columbus.java.asg.type.FloatType;
 import columbus.java.asg.type.IntType;
+import columbus.java.asg.type.IntersectionType;
 import columbus.java.asg.type.LongType;
 import columbus.java.asg.type.LowerBoundedWildcardType;
 import columbus.java.asg.type.MethodType;
+import columbus.java.asg.type.ModuleType;
 import columbus.java.asg.type.NoType;
 import columbus.java.asg.type.NullType;
 import columbus.java.asg.type.PackageType;
@@ -383,6 +399,34 @@ public class VisitorAbstractNodes extends Visitor {
 	public void visitEnd(PositionedWithoutComment node, boolean callVirtualBase) {
 		if (callVirtualBase)
 			visitEnd((Base)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.expr.AnnotatedTypeExpression AnnotatedTypeExpression} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(AnnotatedTypeExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visit((Base)node, false);
+		if (callVirtualBase)
+			visit((Commentable)node, false);
+		visit((TypeExpression)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.expr.AnnotatedTypeExpression AnnotatedTypeExpression} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(AnnotatedTypeExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visitEnd((Base)node, false);
+		if (callVirtualBase)
+			visitEnd((Commentable)node, false);
+		visitEnd((TypeExpression)node, false);
 	}
 
 	/**
@@ -828,6 +872,32 @@ public class VisitorAbstractNodes extends Visitor {
 	}
 
 	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.expr.FunctionalExpression FunctionalExpression} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit(FunctionalExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visit((Base)node, false);
+		if (callVirtualBase)
+			visit((Commentable)node, false);
+		visit((PolyExpression)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.expr.FunctionalExpression FunctionalExpression} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(FunctionalExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visitEnd((Base)node, false);
+		if (callVirtualBase)
+			visitEnd((Commentable)node, false);
+		visitEnd((PolyExpression)node, false);
+	}
+
+	/**
 	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.expr.Identifier Identifier} node.
 	 * @param node            The node which is visited.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
@@ -940,6 +1010,34 @@ public class VisitorAbstractNodes extends Visitor {
 	}
 
 	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.expr.Lambda Lambda} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(Lambda node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visit((Base)node, false);
+		if (callVirtualBase)
+			visit((Commentable)node, false);
+		visit((FunctionalExpression)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.expr.Lambda Lambda} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Lambda node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visitEnd((Base)node, false);
+		if (callVirtualBase)
+			visitEnd((Commentable)node, false);
+		visitEnd((FunctionalExpression)node, false);
+	}
+
+	/**
 	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.expr.Literal Literal} node.
 	 * @param node            The node which is visited.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
@@ -1019,6 +1117,34 @@ public class VisitorAbstractNodes extends Visitor {
 		if (callVirtualBase)
 			visitEnd((Commentable)node, false);
 		visitEnd((Annotation)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.expr.MemberReference MemberReference} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(MemberReference node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visit((Base)node, false);
+		if (callVirtualBase)
+			visit((Commentable)node, false);
+		visit((FunctionalExpression)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.expr.MemberReference MemberReference} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(MemberReference node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visitEnd((Base)node, false);
+		if (callVirtualBase)
+			visitEnd((Commentable)node, false);
+		visitEnd((FunctionalExpression)node, false);
 	}
 
 	/**
@@ -1213,6 +1339,32 @@ public class VisitorAbstractNodes extends Visitor {
 		if (callVirtualBase)
 			visitEnd((Commentable)node, false);
 		visitEnd((Unary)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.expr.PolyExpression PolyExpression} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit(PolyExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visit((Base)node, false);
+		if (callVirtualBase)
+			visit((Commentable)node, false);
+		visit((Expression)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.expr.PolyExpression PolyExpression} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(PolyExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visitEnd((Base)node, false);
+		if (callVirtualBase)
+			visitEnd((Commentable)node, false);
+		visitEnd((Expression)node, false);
 	}
 
 	/**
@@ -1550,6 +1702,34 @@ public class VisitorAbstractNodes extends Visitor {
 	}
 
 	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.expr.TypeIntersectionExpression TypeIntersectionExpression} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(TypeIntersectionExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visit((Base)node, false);
+		if (callVirtualBase)
+			visit((Commentable)node, false);
+		visit((TypeExpression)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.expr.TypeIntersectionExpression TypeIntersectionExpression} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(TypeIntersectionExpression node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visitEnd((Base)node, false);
+		if (callVirtualBase)
+			visitEnd((Commentable)node, false);
+		visitEnd((TypeExpression)node, false);
+	}
+
+	/**
 	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.expr.TypeUnionExpression TypeUnionExpression} node.
 	 * @param node            The node which is visited.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
@@ -1629,6 +1809,172 @@ public class VisitorAbstractNodes extends Visitor {
 		if (callVirtualBase)
 			visitEnd((Commentable)node, false);
 		visitEnd((TypeExpression)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.module.Exports Exports} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(Exports node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visit((Base)node, false);
+		if (callVirtualBase)
+			visit((Commentable)node, false);
+		visit((ModuleDirective)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.module.Exports Exports} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Exports node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visitEnd((Base)node, false);
+		if (callVirtualBase)
+			visitEnd((Commentable)node, false);
+		visitEnd((ModuleDirective)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.module.ModuleDirective ModuleDirective} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit(ModuleDirective node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visit((Base)node, false);
+		if (callVirtualBase)
+			visit((Commentable)node, false);
+		visit((Positioned)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.module.ModuleDirective ModuleDirective} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(ModuleDirective node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visitEnd((Base)node, false);
+		if (callVirtualBase)
+			visitEnd((Commentable)node, false);
+		visitEnd((Positioned)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.module.Opens Opens} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(Opens node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visit((Base)node, false);
+		if (callVirtualBase)
+			visit((Commentable)node, false);
+		visit((ModuleDirective)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.module.Opens Opens} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Opens node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visitEnd((Base)node, false);
+		if (callVirtualBase)
+			visitEnd((Commentable)node, false);
+		visitEnd((ModuleDirective)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.module.Provides Provides} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(Provides node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visit((Base)node, false);
+		if (callVirtualBase)
+			visit((Commentable)node, false);
+		visit((ModuleDirective)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.module.Provides Provides} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Provides node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visitEnd((Base)node, false);
+		if (callVirtualBase)
+			visitEnd((Commentable)node, false);
+		visitEnd((ModuleDirective)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.module.Requires Requires} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(Requires node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visit((Base)node, false);
+		if (callVirtualBase)
+			visit((Commentable)node, false);
+		visit((ModuleDirective)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.module.Requires Requires} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Requires node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visitEnd((Base)node, false);
+		if (callVirtualBase)
+			visitEnd((Commentable)node, false);
+		visitEnd((ModuleDirective)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.module.Uses Uses} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(Uses node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visit((Base)node, false);
+		if (callVirtualBase)
+			visit((Commentable)node, false);
+		visit((ModuleDirective)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.module.Uses Uses} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Uses node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visitEnd((Base)node, false);
+		if (callVirtualBase)
+			visitEnd((Commentable)node, false);
+		visitEnd((ModuleDirective)node, false);
 	}
 
 	/**
@@ -3008,6 +3354,58 @@ public class VisitorAbstractNodes extends Visitor {
 	}
 
 	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.struc.Module Module} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(Module node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visit((Base)node, false);
+		visit((Named)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.struc.Module Module} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Module node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visitEnd((Base)node, false);
+		visitEnd((Named)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.struc.ModuleDeclaration ModuleDeclaration} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(ModuleDeclaration node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visit((Base)node, false);
+		if (callVirtualBase)
+			visit((Commentable)node, false);
+		visit((Positioned)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.struc.ModuleDeclaration ModuleDeclaration} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(ModuleDeclaration node, boolean callVirtualBase) {
+		if (callVirtualBase)
+			visitEnd((Base)node, false);
+		if (callVirtualBase)
+			visitEnd((Commentable)node, false);
+		visitEnd((Positioned)node, false);
+	}
+
+	/**
 	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.struc.NamedDeclaration NamedDeclaration} node.
 	 * @param node            The node which is visited.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
@@ -3546,6 +3944,26 @@ public class VisitorAbstractNodes extends Visitor {
 	}
 
 	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.type.IntersectionType IntersectionType} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(IntersectionType node, boolean callVirtualBase) {
+		visit((Type)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.type.IntersectionType IntersectionType} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(IntersectionType node, boolean callVirtualBase) {
+		visitEnd((Type)node, false);
+	}
+
+	/**
 	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.type.LongType LongType} node.
 	 * @param node            The node which is visited.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
@@ -3602,6 +4020,26 @@ public class VisitorAbstractNodes extends Visitor {
 	 */
 	@Override
 	public void visitEnd(MethodType node, boolean callVirtualBase) {
+		visitEnd((Type)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the visitor of the base class(es) of the {@link columbus.java.asg.type.ModuleType ModuleType} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visit(ModuleType node, boolean callVirtualBase) {
+		visit((Type)node, false);
+	}
+
+	/**
+	 * Abstract visitor, which calls the end visitor of the base class(es) of the {@link columbus.java.asg.type.ModuleType ModuleType} node.
+	 * @param node            The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(ModuleType node, boolean callVirtualBase) {
 		visitEnd((Type)node, false);
 	}
 

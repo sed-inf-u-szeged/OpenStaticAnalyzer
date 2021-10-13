@@ -168,13 +168,13 @@ namespace statement {
 
   void Function::addParams(const statement::Pattern *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
 
     if (&(_node->getFactory()) != this->factory)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
 
     if (!(Common::getIsPattern(*_node)))
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
 
     hasParamsContainer.push_back(_node->getId());
     setParentEdge(_node,edkFunction_HasParams);
@@ -186,18 +186,18 @@ namespace statement {
   void Function::addParams(NodeId _id) {
     const statement::Pattern *node = dynamic_cast<statement::Pattern*>(factory->getPointer(_id));
     if (node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
     addParams( node );
   }
 
   void Function::removeParams(NodeId id) {
     if (!factory->getExist(id))
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
     ListIterator<statement::Pattern>::Container::iterator it = find(hasParamsContainer.begin(), hasParamsContainer.end(), id);
 
     if (it == hasParamsContainer.end())
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
     hasParamsContainer.erase(it);
 
@@ -209,7 +209,7 @@ namespace statement {
 
   void Function::removeParams(statement::Pattern *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
 
     removeParams(_node->getId());
   }
@@ -218,14 +218,14 @@ namespace statement {
     base::Positioned *_node = NULL;
     if (_id) {
       if (!factory->getExist(_id))
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
       _node = dynamic_cast<base::Positioned*> (factory->getPointer(_id));
       if ( _node == NULL) {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
       if (&(_node->getFactory()) != this->factory)
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
 
       if (_node->getNodeKind() == ndkBlockStatement || Common::getIsBaseClassKind(_node->getNodeKind(), ndkExpression)) {
         if (m_hasBody) {
@@ -239,18 +239,18 @@ namespace statement {
         if (factory->getExistsReverseEdges())
           factory->reverseEdges->insertEdge(m_hasBody, this->getId(), edkFunction_HasBody);
       } else {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
     } else {
       if (m_hasBody) {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
       }
     }
   }
 
   void Function::setBody(base::Positioned *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
 
     setBody(_node->getId());
   }
@@ -268,14 +268,14 @@ namespace statement {
     expression::Identifier *_node = NULL;
     if (_id) {
       if (!factory->getExist(_id))
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
       _node = dynamic_cast<expression::Identifier*> (factory->getPointer(_id));
       if ( _node == NULL) {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
       if (&(_node->getFactory()) != this->factory)
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
 
       if (m_hasIdentifier) {
         removeParentEdge(m_hasIdentifier);
@@ -289,14 +289,14 @@ namespace statement {
         factory->reverseEdges->insertEdge(m_hasIdentifier, this->getId(), edkFunction_HasIdentifier);
     } else {
       if (m_hasIdentifier) {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
       }
     }
   }
 
   void Function::setIdentifier(expression::Identifier *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
 
     setIdentifier(_node->getId());
   }

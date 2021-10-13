@@ -17,7 +17,9 @@ endfunction ()
 
 # add schema language dependent compiler options to the given target
 function (set_schema_language_compiler_settings TARGET SCHEMA)
-  if (SCHEMA STREQUAL "java")
+  if (SCHEMA STREQUAL "cpp")
+    target_compile_definitions(${TARGET} PUBLIC SCHEMA_CPP)
+  elseif (SCHEMA STREQUAL "java")
     target_compile_definitions(${TARGET} PUBLIC SCHEMA_JAVA)
     target_link_libraries(${TARGET} java)
   elseif (SCHEMA STREQUAL "python")
@@ -54,16 +56,6 @@ function (set_visual_studio_project_folder TARGET REMOVE_CURRENT)
   source_group (TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES} ${ADDITIONAL_SOURCES})
 endfunction ()
 
-# Add PCH generator target with the required dependencies needed to be made before the generation.
-function (add_pch_generation TARGET)
-  cotire (${TARGET})
-  if (TARGET ${TARGET}_unity)
-    add_dependencies(${TARGET}_unity ${ARGN}) # Since all the headers have to be exist befor the pch is generated the add custom dependencies which generate files
-  endif ()
-  if (TARGET ${TARGET}_pch)
-    add_dependencies(${TARGET}_pch ${ARGN}) # Since all the headers have to be exist befor the pch is generated the add custom dependencies which generate files
-  endif ()
-endfunction ()
 
 # Replace the ${FROM} parameter in all the compiler flag lists to ${TO}
 function (replace_compiler_options FROM TO)
@@ -89,6 +81,24 @@ function (add_copy_next_to_the_binary_dependency TARGET_NAME FILE_NAME)
   add_custom_copy_target(${TARGET_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/${FILE_NAME} ${EXECUTABLE_OUTPUT_PATH}/${CUSTOM_DESTINATION_NAME})
 endfunction ()
 
+
+# Add a ${TARGET_NAME} named custom copy target, which will copy the ${SOURCE}
+# file to the ${DESTINATION}.
+function (add_copy_custom_target TARGET_NAME SOURCE DESTINATION)
+  add_custom_command (
+    DEPENDS ${SOURCE}
+    MAIN_DEPENDENCY ${SOURCE}
+    OUTPUT ${DESTINATION}
+    COMMAND ${CMAKE_COMMAND} -E copy ${SOURCE} ${DESTINATION}
+    COMMENT "Copying ${SOURCE} to ${DESTINATION}"
+  )
+  add_custom_target (
+    ${TARGET_NAME}
+    DEPENDS ${DESTINATION}
+  )
+  set_target_properties (${TARGET_NAME} PROPERTIES FOLDER ${CMAKE_SUPPORT_FOLDER_NAME})
+endfunction()
+
 # Add a custom copy target dependency to the ${TARGET_NAME} target, which will copy the ${SOURCE} to the ${DESTINATION}.
 # If 4th parameter is set then directory copy is used instead of file copy.
 function (add_custom_copy_target TARGET_NAME SOURCE DESTINATION)
@@ -103,7 +113,7 @@ function (add_custom_copy_target TARGET_NAME SOURCE DESTINATION)
     MAIN_DEPENDENCY ${SOURCE}
     OUTPUT ${DESTINATION}
     COMMAND ${CMAKE_COMMAND} -E ${COMMAND} ${SOURCE} ${DESTINATION}
-    COMMENT "Copying ${SOURCE}"
+    COMMENT "Copying ${SOURCE} to ${DESTINATION}"
   )
   get_filename_component (CUSTOM_TARGET_NAME ${SOURCE} NAME)
   set (CUSTOM_TARGET_NAME ${TARGET_NAME}_copy_${CUSTOM_TARGET_NAME})

@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var objectPattern = factory.createObjectPatternWrapper(factory);
+        var objectPattern = factory.createObjectPatternWrapper();
         globals.setPositionInfo(node, objectPattern);
         return objectPattern;
     } else {
@@ -35,15 +35,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.properties.length; i++) {
                 if (node.properties[i] != null) {
                     var propertiesWrapper = globals.getWrapperOfNode(node.properties[i]);
-                    if (node.properties[i].type !== "Literal") {
-                        var propertiesWrapperFunctionString = "addProperties" + node.properties[i].type;
-                    } else {
-                        var propertiesWrapperFunctionString = "addProperties" + globals.getLiteralType(node.properties[i]) + node.properties[i].type;
-                    }
                     try {
-                        objectPatternWrapper[propertiesWrapperFunctionString](propertiesWrapper);
+                        objectPatternWrapper.addProperties(propertiesWrapper);
                     } catch (e) {
-                        console.error("OBJECTPATTERN - Function not exist: objectPatternWrapper." + propertiesWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("OBJECTPATTERN - Could not add property! Reason of the error: " + e + "\n");
                     }
                 }
             }

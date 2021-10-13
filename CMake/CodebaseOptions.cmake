@@ -8,11 +8,16 @@ include_directories (${CMAKE_SOURCE_DIR}/lib)
 include_directories (${CMAKE_SOURCE_DIR}/wrapper)
 
 # Compiler standard options
-set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD 20)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set (CMAKE_CXX_EXTENSIONS OFF)
 
 option (STRIP "Strip all symbols from the binaries" OFF)
+
+add_definitions(-DBOOST_ALLOW_DEPRECATED_HEADERS -DBOOST_DISABLE_PRAGMA_MESSAGE)
+
+set (COLUMBUS_3RDPARTY_INSTALL_DIR ${CMAKE_BINARY_DIR}/3rdparty/install)
+set (COLUMBUS_3RDPARTY_SOURCE_DIR ${CMAKE_SOURCE_DIR}/3rdparty)
 
 # Compiler warning settings
 if (MSVC)
@@ -22,7 +27,7 @@ if (MSVC)
   endif ()
 
   # Disable some common compiler warnings end enable parallel build
-  set (EXTRA_COMPILER_OPTIONS "/wd4996 /wd4267 /wd4786 /wd4996 /MP /EHsc")
+  set (EXTRA_COMPILER_OPTIONS "/WX /wd4996 /wd4267 /wd4786 /wd4244 /wd4068 /MP /EHsc /experimental:external /external:W0 /external:I ${COLUMBUS_3RDPARTY_INSTALL_DIR}/include")
 
   # In Release builds enable Whole Program Optimization and Compile Time Code Generation
   set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /GL")
@@ -31,14 +36,13 @@ if (MSVC)
   set (CMAKE_STATIC_LINKER_FLAGS_RELEASE "${CMAKE_STATIC_LINKER_FLAGS_RELEASE} /LTCG")
 
   # The MSVCRT library is the DLL version of the CRT. (/MD) Since we use static CRT no MSVCRT is needed.
-  set (CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /NODEFAULTLIB:MSVCRT")
+  set (CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /NODEFAULTLIB:MSVCRT /STACK:10485760")
 
   # The MSVCRTD library is the debug DLL version of the CRT. (/MDd) Since we use static CRT no MSVCRTD is needed.
-  set (CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /NODEFAULTLIB:MSVCRTD")
+  set (CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /NODEFAULTLIB:MSVCRTD /STACK:10485760")
 
-  # Replace the default MultiThreadedDLL runtime to MultiThreaded.
-  replace_compiler_options (/MD /MT)
-  replace_compiler_options (/MDd /MTd)
+  # Change the default MultiThreadedDLL runtime to MultiThreaded.
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
   # Set some global macro definitions requred for use boost and xerces
   add_definitions(-DBOOST_ALL_NO_LIB -DXERCES_STATIC_LIBRARY)
@@ -46,7 +50,7 @@ if (MSVC)
 elseif (CMAKE_SYSTEM_NAME STREQUAL Linux)
 
   # Enable compiler warnings and use fPIC option
-  set (EXTRA_COMPILER_OPTIONS "-Wall -fPIC")
+  set (EXTRA_COMPILER_OPTIONS "-Wall -Werror -Wno-unused-local-typedefs -Wno-unknown-pragmas -fPIC")
 
   if (STRIP)
     set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
@@ -62,10 +66,9 @@ set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_COMPILER_OPTIONS}")
 # Common global dependencies
 set (COLUMBUS_GLOBAL_DEPENDENCY generate_build_info)
 
-set (COLUMBUS_3RDPARTY_INSTALL_DIR ${CMAKE_BINARY_DIR}/3rdparty/install)
-set (COLUMBUS_3RDPARTY_SOURCE_DIR ${CMAKE_SOURCE_DIR}/3rdparty)
-
-include_directories (SYSTEM ${COLUMBUS_3RDPARTY_INSTALL_DIR}/include)
+if (CMAKE_SYSTEM_NAME STREQUAL Linux)
+  include_directories (SYSTEM ${COLUMBUS_3RDPARTY_INSTALL_DIR}/include)
+endif ()
 link_directories (${COLUMBUS_3RDPARTY_INSTALL_DIR}/lib)
 
 if (CMAKE_SYSTEM_NAME STREQUAL Windows)

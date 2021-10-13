@@ -26,8 +26,6 @@
 #include <rul/inc/RulHandler.h>
 #include "../CheckerStrategy.h"
 
-
-
 struct PMD2GraphStat {
   typedef list<const char *> ErrorFileList;
   ErrorFileList error_files;
@@ -37,7 +35,7 @@ extern PMD2GraphStat stats;
 
 class PMDStrategy : public CheckerStrategy{
 public:
-  PMDStrategy() : CheckerStrategy(), group_paths() { }
+  PMDStrategy() : CheckerStrategy() { }
   virtual ~PMDStrategy(){}
   virtual void makeRul(File_Names&, std::string& rul, std::string& rulConfig, std::string& rul_option_filename);
   virtual void makeConfig(File_Names& file_names, std::string& rul, std::string& rulConfig, std::string& configFile);
@@ -46,14 +44,11 @@ protected:
   virtual void setConstantData(columbus::rul::RulHandler& rh);
 private:
   typedef map<string, string> StringMap;
-  StringMap group_paths;
-
-  static const char OPTION_SEPARATOR = ';';
 
   std::string pmd2InternalGroupName(const std::string& pmdGroup);
 
   //makeRul section
-  void makeRulByFile(const char*, columbus::rul::RulHandler&, list<pair<string,string> > &rul_refs);
+  void makeRulByFile(const char*, columbus::rul::RulHandler&);
   void getDescription(std::string& desc, XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* node);
   bool getIsOnlySpaces(std::string& in);
   //makeConfig section

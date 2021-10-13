@@ -1,0 +1,12 @@
+# LIM2Antipatterns
+name : LongFunction
+kind : ndkMethod
+role : longFunc
+category : AntiPattern
+priority : Info
+displayName : Long Function
+conditions :
+  - or:
+    - LLOC >= 80
+    - NOS >= 80
+    - McCC >= 10

@@ -41,8 +41,10 @@ namespace struc {
     m_fileEncoding(0),
     m_hasPackageDeclaration(0),
     hasImportsContainer(),
+    hasOthersContainer(),
+    m_hasModuleDeclaration(0),
     typeDeclarationsContainer(),
-    hasOthersContainer()
+    m_isInModule(0)
   {
   }
 
@@ -59,8 +61,10 @@ namespace struc {
     m_fileEncoding = other.m_fileEncoding;
     m_hasPackageDeclaration = other.m_hasPackageDeclaration;
     hasImportsContainer = other.hasImportsContainer;
-    typeDeclarationsContainer = other.typeDeclarationsContainer;
     hasOthersContainer = other.hasOthersContainer;
+    m_hasModuleDeclaration = other.m_hasModuleDeclaration;
+    typeDeclarationsContainer = other.typeDeclarationsContainer;
+    m_isInModule = other.m_isInModule;
   }
 
   void CompilationUnit::prepareDelete(bool tryOnVirtualParent){
@@ -72,12 +76,6 @@ namespace struc {
         factory->reverseEdges->removeEdge(id, this->getId(), edkCompilationUnit_HasImports);
       hasImportsContainer.pop_front();
     }
-    while (!typeDeclarationsContainer.empty()) {
-      const NodeId id = *typeDeclarationsContainer.begin();
-      if (factory->getExistsReverseEdges())
-        factory->reverseEdges->removeEdge(id, this->getId(), edkCompilationUnit_TypeDeclarations);
-      typeDeclarationsContainer.pop_front();
-    }
     while (!hasOthersContainer.empty()) {
       const NodeId id = *hasOthersContainer.begin();
       removeParentEdge(id);
@@ -85,6 +83,14 @@ namespace struc {
         factory->reverseEdges->removeEdge(id, this->getId(), edkCompilationUnit_HasOthers);
       hasOthersContainer.pop_front();
     }
+    removeModuleDeclaration();
+    while (!typeDeclarationsContainer.empty()) {
+      const NodeId id = *typeDeclarationsContainer.begin();
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->removeEdge(id, this->getId(), edkCompilationUnit_TypeDeclarations);
+      typeDeclarationsContainer.pop_front();
+    }
+    removeIsInModule();
     if (tryOnVirtualParent) {
       base::Base::prepareDelete(false);
     }
@@ -143,27 +149,6 @@ namespace struc {
     return size;
   }
 
-  ListIterator<struc::TypeDeclaration> CompilationUnit::getTypeDeclarationsListIteratorBegin() const {
-    return ListIterator<struc::TypeDeclaration>(&typeDeclarationsContainer, factory, true);
-  }
-
-  ListIterator<struc::TypeDeclaration> CompilationUnit::getTypeDeclarationsListIteratorEnd() const {
-    return ListIterator<struc::TypeDeclaration>(&typeDeclarationsContainer, factory, false);
-  }
-
-  bool CompilationUnit::getTypeDeclarationsIsEmpty() const {
-    return getTypeDeclarationsListIteratorBegin() == getTypeDeclarationsListIteratorEnd();
-  }
-
-  unsigned int CompilationUnit::getTypeDeclarationsSize() const {
-    unsigned int size = 0;
-    ListIterator<struc::TypeDeclaration> endIt = getTypeDeclarationsListIteratorEnd();
-    for (ListIterator<struc::TypeDeclaration> it = getTypeDeclarationsListIteratorBegin(); it != endIt; ++it) {
-      ++size;
-    }
-    return size;
-  }
-
   ListIterator<base::Positioned> CompilationUnit::getOthersListIteratorBegin() const {
     return ListIterator<base::Positioned>(&hasOthersContainer, factory, true);
   }
@@ -185,6 +170,47 @@ namespace struc {
     return size;
   }
 
+  struc::ModuleDeclaration* CompilationUnit::getModuleDeclaration() const {
+    struc::ModuleDeclaration *_node = NULL;
+    if (m_hasModuleDeclaration != 0)
+      _node = dynamic_cast<struc::ModuleDeclaration*>(factory->getPointer(m_hasModuleDeclaration));
+    if ( (_node == NULL) || factory->getIsFiltered(_node))
+      return NULL;
+
+    return _node;
+  }
+
+  ListIterator<struc::TypeDeclaration> CompilationUnit::getTypeDeclarationsListIteratorBegin() const {
+    return ListIterator<struc::TypeDeclaration>(&typeDeclarationsContainer, factory, true);
+  }
+
+  ListIterator<struc::TypeDeclaration> CompilationUnit::getTypeDeclarationsListIteratorEnd() const {
+    return ListIterator<struc::TypeDeclaration>(&typeDeclarationsContainer, factory, false);
+  }
+
+  bool CompilationUnit::getTypeDeclarationsIsEmpty() const {
+    return getTypeDeclarationsListIteratorBegin() == getTypeDeclarationsListIteratorEnd();
+  }
+
+  unsigned int CompilationUnit::getTypeDeclarationsSize() const {
+    unsigned int size = 0;
+    ListIterator<struc::TypeDeclaration> endIt = getTypeDeclarationsListIteratorEnd();
+    for (ListIterator<struc::TypeDeclaration> it = getTypeDeclarationsListIteratorBegin(); it != endIt; ++it) {
+      ++size;
+    }
+    return size;
+  }
+
+  struc::Module* CompilationUnit::getIsInModule() const {
+    struc::Module *_node = NULL;
+    if (m_isInModule != 0)
+      _node = dynamic_cast<struc::Module*>(factory->getPointer(m_isInModule));
+    if ( (_node == NULL) || factory->getIsFiltered(_node))
+      return NULL;
+
+    return _node;
+  }
+
   bool CompilationUnit::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
       case edkCompilationUnit_HasPackageDeclaration:
@@ -193,11 +219,17 @@ namespace struc {
       case edkCompilationUnit_HasImports:
         addImports(edgeEnd);
         return true;
+      case edkCompilationUnit_HasOthers:
+        addOthers(edgeEnd);
+        return true;
+      case edkCompilationUnit_HasModuleDeclaration:
+        setModuleDeclaration(edgeEnd);
+        return true;
       case edkCompilationUnit_TypeDeclarations:
         addTypeDeclarations(edgeEnd);
         return true;
-      case edkCompilationUnit_HasOthers:
-        addOthers(edgeEnd);
+      case edkCompilationUnit_IsInModule:
+        setIsInModule(edgeEnd);
         return true;
       default:
         break;
@@ -224,11 +256,17 @@ namespace struc {
       case edkCompilationUnit_HasImports:
         removeImports(edgeEnd);
         return true;
+      case edkCompilationUnit_HasOthers:
+        removeOthers(edgeEnd);
+        return true;
+      case edkCompilationUnit_HasModuleDeclaration:
+        removeModuleDeclaration();
+        return true;
       case edkCompilationUnit_TypeDeclarations:
         removeTypeDeclarations(edgeEnd);
         return true;
-      case edkCompilationUnit_HasOthers:
-        removeOthers(edgeEnd);
+      case edkCompilationUnit_IsInModule:
+        removeIsInModule();
         return true;
       default:
         break;
@@ -341,50 +379,6 @@ namespace struc {
     removeImports(_node->getId());
   }
 
-  void CompilationUnit::addTypeDeclarations(const struc::TypeDeclaration *_node) {
-    if (_node == NULL)
-      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
-
-    if (&(_node->getFactory()) != this->factory)
-      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
-
-    if (!(Common::getIsTypeDeclaration(*_node)))
-      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
-
-    typeDeclarationsContainer.push_back(_node->getId());
-    if (factory->reverseEdges)
-      factory->reverseEdges->insertEdge(_node, this, edkCompilationUnit_TypeDeclarations);
-  }
-
-  void CompilationUnit::addTypeDeclarations(NodeId _id) {
-    const struc::TypeDeclaration *node = dynamic_cast<struc::TypeDeclaration*>(factory->getPointer(_id));
-    if (node == NULL)
-      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
-    addTypeDeclarations( node );
-  }
-
-  void CompilationUnit::removeTypeDeclarations(NodeId id) {
-    if (!factory->getExist(id))
-      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
-
-    ListIterator<struc::TypeDeclaration>::Container::iterator it = find(typeDeclarationsContainer.begin(), typeDeclarationsContainer.end(), id);
-
-    if (it == typeDeclarationsContainer.end())
-      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
-
-    typeDeclarationsContainer.erase(it);
-
-    if (factory->getExistsReverseEdges())
-      factory->reverseEdges->removeEdge(id, this->getId(), edkCompilationUnit_TypeDeclarations);
-  }
-
-  void CompilationUnit::removeTypeDeclarations(struc::TypeDeclaration *_node) {
-    if (_node == NULL)
-      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
-
-    removeTypeDeclarations(_node->getId());
-  }
-
   void CompilationUnit::addOthers(const base::Positioned *_node) {
     if (_node == NULL)
       throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
@@ -431,6 +425,138 @@ namespace struc {
       throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
 
     removeOthers(_node->getId());
+  }
+
+  void CompilationUnit::setModuleDeclaration(NodeId _id) {
+    struc::ModuleDeclaration *_node = NULL;
+    if (_id) {
+      if (!factory->getExist(_id))
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+      _node = dynamic_cast<struc::ModuleDeclaration*> (factory->getPointer(_id));
+      if ( _node == NULL) {
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      }
+      if (&(_node->getFactory()) != this->factory)
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+
+      if (m_hasModuleDeclaration) {
+        removeParentEdge(m_hasModuleDeclaration);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_hasModuleDeclaration, m_id, edkCompilationUnit_HasModuleDeclaration);
+      }
+      m_hasModuleDeclaration = _node->getId();
+      if (m_hasModuleDeclaration != 0)
+        setParentEdge(factory->getPointer(m_hasModuleDeclaration), edkCompilationUnit_HasModuleDeclaration);
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->insertEdge(m_hasModuleDeclaration, this->getId(), edkCompilationUnit_HasModuleDeclaration);
+    } else {
+      if (m_hasModuleDeclaration) {
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      }
+    }
+  }
+
+  void CompilationUnit::setModuleDeclaration(struc::ModuleDeclaration *_node) {
+    if (_node == NULL)
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+
+    setModuleDeclaration(_node->getId());
+  }
+
+  void CompilationUnit::removeModuleDeclaration() {
+      if (m_hasModuleDeclaration) {
+        removeParentEdge(m_hasModuleDeclaration);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_hasModuleDeclaration, m_id, edkCompilationUnit_HasModuleDeclaration);
+      }
+      m_hasModuleDeclaration = 0;
+  }
+
+  void CompilationUnit::addTypeDeclarations(const struc::TypeDeclaration *_node) {
+    if (_node == NULL)
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
+
+    if (&(_node->getFactory()) != this->factory)
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
+
+    if (!(Common::getIsTypeDeclaration(*_node)))
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+
+    typeDeclarationsContainer.push_back(_node->getId());
+    if (factory->reverseEdges)
+      factory->reverseEdges->insertEdge(_node, this, edkCompilationUnit_TypeDeclarations);
+  }
+
+  void CompilationUnit::addTypeDeclarations(NodeId _id) {
+    const struc::TypeDeclaration *node = dynamic_cast<struc::TypeDeclaration*>(factory->getPointer(_id));
+    if (node == NULL)
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    addTypeDeclarations( node );
+  }
+
+  void CompilationUnit::removeTypeDeclarations(NodeId id) {
+    if (!factory->getExist(id))
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    ListIterator<struc::TypeDeclaration>::Container::iterator it = find(typeDeclarationsContainer.begin(), typeDeclarationsContainer.end(), id);
+
+    if (it == typeDeclarationsContainer.end())
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    typeDeclarationsContainer.erase(it);
+
+    if (factory->getExistsReverseEdges())
+      factory->reverseEdges->removeEdge(id, this->getId(), edkCompilationUnit_TypeDeclarations);
+  }
+
+  void CompilationUnit::removeTypeDeclarations(struc::TypeDeclaration *_node) {
+    if (_node == NULL)
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
+
+    removeTypeDeclarations(_node->getId());
+  }
+
+  void CompilationUnit::setIsInModule(NodeId _id) {
+    struc::Module *_node = NULL;
+    if (_id) {
+      if (!factory->getExist(_id))
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+      _node = dynamic_cast<struc::Module*> (factory->getPointer(_id));
+      if ( _node == NULL) {
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      }
+      if (&(_node->getFactory()) != this->factory)
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+
+      if (m_isInModule) {
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_isInModule, m_id, edkCompilationUnit_IsInModule);
+      }
+      m_isInModule = _node->getId();
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->insertEdge(m_isInModule, this->getId(), edkCompilationUnit_IsInModule);
+    } else {
+      if (m_isInModule) {
+        throw JavaException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      }
+    }
+  }
+
+  void CompilationUnit::setIsInModule(struc::Module *_node) {
+    if (_node == NULL)
+      throw JavaException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+
+    setIsInModule(_node->getId());
+  }
+
+  void CompilationUnit::removeIsInModule() {
+      if (m_isInModule) {
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_isInModule, m_id, edkCompilationUnit_IsInModule);
+      }
+      m_isInModule = 0;
   }
 
   void CompilationUnit::accept(Visitor &visitor) const {
@@ -509,6 +635,8 @@ namespace struc {
     binIo.writeUInt4(m_fileEncoding);
 
     binIo.writeUInt4(m_hasPackageDeclaration);
+    binIo.writeUInt4(m_hasModuleDeclaration);
+    binIo.writeUInt4(m_isInModule);
 
 
     for (ListIterator<struc::Import>::Container::const_iterator it = hasImportsContainer.begin(); it != hasImportsContainer.end(); ++it) {
@@ -516,12 +644,12 @@ namespace struc {
     }
     binIo.writeUInt4(0); // This is the end sign
 
-    for (ListIterator<struc::TypeDeclaration>::Container::const_iterator it = typeDeclarationsContainer.begin(); it != typeDeclarationsContainer.end(); ++it) {
+    for (ListIterator<base::Positioned>::Container::const_iterator it = hasOthersContainer.begin(); it != hasOthersContainer.end(); ++it) {
       binIo.writeUInt4(*it);
     }
     binIo.writeUInt4(0); // This is the end sign
 
-    for (ListIterator<base::Positioned>::Container::const_iterator it = hasOthersContainer.begin(); it != hasOthersContainer.end(); ++it) {
+    for (ListIterator<struc::TypeDeclaration>::Container::const_iterator it = typeDeclarationsContainer.begin(); it != typeDeclarationsContainer.end(); ++it) {
       binIo.writeUInt4(*it);
     }
     binIo.writeUInt4(0); // This is the end sign
@@ -541,6 +669,12 @@ namespace struc {
     if (m_hasPackageDeclaration != 0)
       setParentEdge(factory->getPointer(m_hasPackageDeclaration),edkCompilationUnit_HasPackageDeclaration);
 
+    m_hasModuleDeclaration =  binIo.readUInt4();
+    if (m_hasModuleDeclaration != 0)
+      setParentEdge(factory->getPointer(m_hasModuleDeclaration),edkCompilationUnit_HasModuleDeclaration);
+
+    m_isInModule =  binIo.readUInt4();
+
     NodeId _id;
 
     _id = binIo.readUInt4();
@@ -552,14 +686,14 @@ namespace struc {
 
     _id = binIo.readUInt4();
     while (_id) {
-      typeDeclarationsContainer.push_back(_id);
+      hasOthersContainer.push_back(_id);
+      setParentEdge(factory->getPointer(_id),edkCompilationUnit_HasOthers);
       _id = binIo.readUInt4();
     }
 
     _id = binIo.readUInt4();
     while (_id) {
-      hasOthersContainer.push_back(_id);
-      setParentEdge(factory->getPointer(_id),edkCompilationUnit_HasOthers);
+      typeDeclarationsContainer.push_back(_id);
       _id = binIo.readUInt4();
     }
   }

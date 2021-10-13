@@ -24,7 +24,9 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
 
     - Metric threshold violations (MetricHunter module)
 
-    - [Pylint] 1.8.2 coding rule violations
+    - [Pylint] 1.9.4 and 2.3.1 coding rule violations
+
+    - [SONARQUBE™] platform 8.0 (“SonarQube” in the following) coding rule violations
 
 - Clone detection (copy-pasted source code fragments) extended with clone tracking and "clone smells"
 
@@ -39,6 +41,7 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
     - Coding rule violation metrics
 
 [Pylint]:http://www.pylint.org/
+[SONARQUBE™]:https://www.sonarqube.org
 
 By continuous static analysis, the software developers can:
 
@@ -48,10 +51,12 @@ By continuous static analysis, the software developers can:
 
 - the number of errors in delivered software can be reduced, so the operational risks can be decreased, increasing the company's reputation.
 
-OpenStaticAnalyzer can analyze source code conforming to Python 2.7.x, 3.6.x and earlier versions.
+OpenStaticAnalyzer can analyze source code conforming to Python 2.7.x, 3.8.x and earlier versions.
 It is sufficient to set the source directory of the project to be analyzed.
 
 With the help of the filtering mechanism it is possible to specify a certain part of the ASG to be used (or not to be used) during the analysis, hence the results can be made more focused and the usage of memory and CPU can be reduced (e.g. generated source files or test code can be filtered out).
+
+[Department of Software Engineering]:http://www.sed.inf.u-szeged.hu/softwarequality
 
 ## Background
 
@@ -62,7 +67,7 @@ During the static analysis, an Abstract Semantic Graph (ASG) is constructed from
 
 ## Supported platforms
 
-OpenStaticAnalyzer supports the following x86 and x86-64 platforms:
+OpenStaticAnalyzer supports the following x64 platforms:
 
 - Microsoft Windows 7, 8, 8.1, and 10
 
@@ -76,14 +81,14 @@ OpenStaticAnalyzer supports the following x86 and x86-64 platforms:
 
 In order to use OpenStaticAnalyzer it is necessary to have Python 2.7 or 3.x installed on the computer.
 
-For Pylint coding rule violations Pylint 1.8.2 also must be installed.
+For Pylint coding rule violations Pylint 1.9.4 (for Python 2.7) or 2.3.1 (Python >= 3.0) also must be installed.
 In the case of a different version, the collected violations may be incomplete or incorrect.
 
-In case of Windows, the appropriate Microsoft Visual C++ 2015 Redistributable Package must be installed. It can be downloaded from the following URL:
+In case of Windows, the Microsoft Visual C++ 2017 Redistributable Package must be installed. It can be downloaded from the following URL:
 
-- [https://www.microsoft.com/en-us/download/details.aspx?id=48145] (x86/x64)
+- [https://aka.ms/vs/15/release/vc_redist.x64.exe] (x64)
 
-[https://www.microsoft.com/en-us/download/details.aspx?id=48145]:https://www.microsoft.com/en-us/download/details.aspx?id=48145
+[https://aka.ms/vs/15/release/vc_redist.x64.exe]:https://aka.ms/vs/15/release/vc_redist.x64.exe
 
 The Linux package uses the code page conversion functions of the GNU C Library. If the conversion modules are not in the standard /usr/lib/gconv directory then the GCONV_PATH environment variable must be set according to the current installation of the GNU C Library.
 
@@ -168,7 +173,7 @@ Filtered files will not appear in the results. The filter file is a simple text 
 
 **-profileXML**
 
-  : Global configuration file for OpenStaticAnalyzer. Its *tool-options* tag can be used to override the default metric thresholds for the MetricHunter tool. Furthermore, its *rule-options* tag can enable/disable or modify the priorities of multiple rules. An example profile xml file is shown below:
+  : Global configuration file for OpenStaticAnalyzer. Its *tool-options* tag can be used to override the default metric thresholds for the MetricHunter tool or define custom metric formulas for the UserDefinedMetrics tool. Furthermore, its *rule-options* tag can enable/disable or modify the priorities of multiple rules. An example profile xml file is shown below:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.xml}
       <openstaticanalyzer-profile>
@@ -190,6 +195,10 @@ Filtered files will not appear in the results. The filter file is a simple text 
       </openstaticanalyzer-profile>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+**-runUDM**
+
+  : This parameter turns on or off the UserDefinedMetrics module. With this feature, OpenStaticAnalyzer computes custom source code metrics based on other, previously computed metrics. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is dependent on the presence of custom metric definitions in the profile xml.
+
 **-cloneGenealogy**
 
   : This parameter turns on or off the tracking of code clones (copy-pasted source code fragments) through the consecutive revisions of the software system. It is required that during the analysis of the different revisions, the values set to projectName and resultsDir remain the same, so OpenStaticAnalyzer will handle them as different revisions of the same system. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is "false".
@@ -205,6 +214,10 @@ Filtered files will not appear in the results. The filter file is a simple text 
 **-csvDecimalMark**
 
   : This parameter sets the decimal mark character in the CSV outputs. The default is value is the dot ("."). The character set here must be placed in quotation marks (e.g. -csvDecimalMark=",").
+
+**-sarifseverity**
+
+  : This parameter sets the severity levels to be saved in the SARIF output. (1 - Info, 2 - Minor, 3 - Major, 4 - Critical, 5 - Blocker, c/C - CloneClass). The value should not be placed in quotation marks (e.g. -sarifseverity=2345c). The default value is 2345c.
 
 **-maximumThreads**
 
@@ -237,6 +250,46 @@ Filtered files will not appear in the results. The filter file is a simple text 
 **-pylintOptions**
 
   : Passes command line options to Pylint. Options with arguments can be passed with successive -pylintOptions options. For example, to filter out directories and python files named "tests", the "-pylintOptions:--ignore=tests" option must be specified.
+
+**-runSQ**
+
+  : Import issues from SonarQube server.
+
+**-SQHost**
+
+  : The URL address of the SonarQube server.
+
+**-SQPort**
+
+  : The port of the SonarQube server.
+
+**-SQProjectKey**
+
+  : The key of the project in the SonarQube server.
+
+**-SQProjectPrefix**
+
+  : Prefix path of the project's base directory (the path of the sonar-project.properties file).
+
+**-SQUserName**
+
+  : The user name for the SonarQube server.
+
+**-SQPassword**
+
+  : The password for the SonarQube server.
+
+**-SQLanguageKey**
+
+  : The key of the language in SonarQube.
+  
+**-runLIM2Patterns**
+
+  : This parameter can be used to enable or disable the LIM2Patterns module during analysis (default = on). 
+
+**-pattern**
+
+  : The pattern file or pattern directory for LIM2Patterns. By default it searches for the predefined Anti Patterns found in Tools/Patterns/AntiPatterns.
 
 # Usage
 
@@ -302,6 +355,22 @@ An error-free execution of OpenStaticAnalyzer produces the following files:
     - \$(projectName)\\python\\\$(projectName).gsi
 
         Binary data file containing information for tracking the code clones through the consecutive revisions of the analyzed software system.
+
+    - \$(projectName)\\python\\\$(DATE)\\\$(projectName).sarif
+
+        SARIF representation of the rule violations.
+
+    - \$(projectName)\\python\\\$(DATE)\\\$(projectName)-summary.graph
+
+        Binary representation of the summary result graph containing only the System component node.
+
+    - \$(projectName)\\python\\\$(DATE)\\\$(projectName)-summary.xml
+
+        XML representation of the summary result graph containing only the System component node.
+
+    - \$(projectName)\\python\\\$(DATE)\\\$(projectName)-summary.json
+
+        JSON representation of the summary result graph containing only the System component node.
 
 - Other files and directories created in the results directory:
 

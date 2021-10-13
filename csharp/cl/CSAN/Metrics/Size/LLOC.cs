@@ -1,25 +1,6 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using Columbus.CSAN.Commons;
+using Columbus.CSAN.Contexts;
 using Columbus.CSAN.Extensions;
 using Columbus.CSAN.Utils;
 using Columbus.Lim.Asg;
@@ -45,34 +26,46 @@ namespace Columbus.CSAN.Metrics.Size
     ///   that belong to the package; however the lines of the elements that can be found
     ///   in the subpackages of the package are not calculated.
     /// </summary>
-    internal sealed class LLOC
+    internal class LLOC
     {
+        private readonly FileContext fileContext;
+
+        public LLOC(FileContext fileContext)
+        {
+            this.fileContext = fileContext;
+        }
+
         /// <summary>
         /// Node's line informations will be collected.
         /// </summary>
         /// <param name="node"></param>
-        public static void CollectLineInfos(SyntaxNode node)
+        public void CollectLineInfos(SyntaxNode node)
         {
-            if (node.Kind() != SyntaxKind.DelegateDeclaration && MainDeclaration.Instance.MethodStack.Count == 0)
+            if (node.Kind() != SyntaxKind.DelegateDeclaration && fileContext.MethodStack.Count == 0)
             {
                 InsertLLOCMap(node.GetLocation());
             }
 
-            if (node.Parent != null && (node is BaseMethodDeclarationSyntax || node.Parent.Parent is BasePropertyDeclarationSyntax || node is AnonymousFunctionExpressionSyntax))
+            if (node.Parent != null &&
+                (node is BaseMethodDeclarationSyntax || node.Parent.Parent is BasePropertyDeclarationSyntax || node is AnonymousFunctionExpressionSyntax || node is LocalFunctionStatementSyntax))
             {
-                StatementVisitor.VisitStatement(node);
+                var statementVisitor = new StatementVisitor(this);
+                statementVisitor.Visit(node);
             }
             else if (node.Kind() == SyntaxKind.AnonymousObjectCreationExpression || node.Kind() == SyntaxKind.AnonymousObjectMemberDeclarator)
             {
-                AnonymousVisitor.VisitAnonimClass(node);
+                var anonymousVisitor = new AnonymousVisitor(this);
+                anonymousVisitor.Visit(node);
             }
             else if (node.Kind() == SyntaxKind.EnumDeclaration)
             {
-                EnumVisitor.VisitEnum(node);
+                var enumVisitor = new EnumVisitor(this);
+                enumVisitor.Visit(node);
             }
             else if (node is TypeDeclarationSyntax)
             {
-                TypeVisitor.VisitType(node);
+                var typeVisitor = new TypeVisitor(this);
+                typeVisitor.Visit(node);
             }
             else if (node.Kind() == SyntaxKind.NamespaceDeclaration)
             {
@@ -107,41 +100,41 @@ namespace Columbus.CSAN.Metrics.Size
         /// </summary>
         /// <param name="location">SyntaxNode's location</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void InsertLLOCMap(Location location)
+        private void InsertLLOCMap(Location location)
         {
-            string path = Commons.Common.ProcessPath(location.SourceTree.FilePath);
-            if (path.Contains(Constants.TEMP) && path.Contains(Constants.NET) && path.Contains(Constants.COMMA)) return;
-            if (path.Contains(Constants.PROP) && path.Contains(Constants.ASSEMBLYINFO)) return;
+            string path = fileContext.ProjectContext.SolutionContext.ProcessPath(location.SourceTree.FilePath);
+            string lowerPath = path.ToLower();
+            if (lowerPath.Contains(Constants.TEMP) && lowerPath.Contains(Constants.NET) && lowerPath.Contains(Constants.COMMA)) return;
+            if (lowerPath.Contains(Constants.PROP) && lowerPath.Contains(Constants.ASSEMBLYINFO)) return;
 
-            uint pathKey = MainDeclaration.Instance.LimFactory.StringTable.set(path);
+            uint pathKey = fileContext.ProjectContext.SolutionContext.LimFactory.StringTable.set(path);
 
             uint line = (uint)location.GetMappedLineSpan().StartLinePosition.Line + 1;
             uint endLine = (uint)location.GetMappedLineSpan().EndLinePosition.Line + 1;
 
             if (line <= 0 || endLine <= 0) return;
 
-            if (MainDeclaration.Instance.MethodStack.Count > 0)
+            if (fileContext.MethodStack.Count > 0)
             {
-                uint currentmethodId = MainDeclaration.Instance.MethodStack.Peek().Id;
+                uint currentmethodId = fileContext.MethodStack.Peek().Id;
                 if (!CheckAnonyumousEmbeddedness(currentmethodId))
                     AssignPathLineToNode(currentmethodId, pathKey, line, endLine);
             }
 
-            if (MainDeclaration.Instance.ClassStack.Count > 0)
+            if (fileContext.ClassStack.Count > 0)
             {
-                uint currentClassId = MainDeclaration.Instance.ClassStack.Peek().Id;
+                uint currentClassId = fileContext.ClassStack.Peek().Id;
                 AssignPathLineToNode(currentClassId, pathKey, line, endLine);
             }
 
-            if (MainDeclaration.Instance.NamespaceStack.Peek() > 0)
-                AssignPathLineToNode(MainDeclaration.Instance.NamespaceStack.Peek(), pathKey, line, endLine);
+            AssignPathLineToNode(fileContext.NamespaceStack.Peek(), pathKey, line, endLine);
 
             //Assign LLOC to the root node
-            AssignPathLineToNode(MainDeclaration.Instance.LimFactory.Root, pathKey, line, endLine);
+            AssignPathLineToNode(fileContext.ProjectContext.SolutionContext.LimFactory.Root, pathKey, line, endLine);
 
             //Assign LLOC to the component
-            AddLogicalLineOfComponent(MainDeclaration.Instance.Component.Id, pathKey, line);
-            AddLogicalLineOfComponent(MainDeclaration.Instance.Component.Id, pathKey, endLine);
+            AddLogicalLineOfComponent(fileContext.ProjectContext.Component.Id, pathKey, line);
+            AddLogicalLineOfComponent(fileContext.ProjectContext.Component.Id, pathKey, endLine);
         }
 
         /// <summary>
@@ -149,15 +142,15 @@ namespace Columbus.CSAN.Metrics.Size
         /// </summary>
         /// <param name="currentmethodId">LIM method node's id</param>
         /// <returns>Return true if method contains member(s)</returns>
-        private static bool CheckAnonyumousEmbeddedness(uint currentmethodId)
+        private bool CheckAnonyumousEmbeddedness(uint currentmethodId)
         {
             bool innerClass = false;
-            if (MainDeclaration.Instance.ClassStack.Count > 0)
+            if (fileContext.ClassStack.Count > 0)
             {
-                uint step = MainDeclaration.Instance.ClassStack.Peek().Id;
+                uint step = fileContext.ClassStack.Peek().Id;
                 while (true)
                 {
-                    ListIterator<Base> i = MainDeclaration.Instance.RevEdges.constIteratorBegin(step, Types.EdgeKind.edkScope_HasMember);
+                    ListIterator<Base> i = fileContext.ProjectContext.SolutionContext.ReverseEdges.constIteratorBegin(step, Types.EdgeKind.edkScope_HasMember);
                     if (i.getValue() == null) break;
 
                     step = i.getValue().Id;
@@ -178,12 +171,12 @@ namespace Columbus.CSAN.Metrics.Size
         /// <param name="NodeId">LIM node id</param>
         /// <param name="pathKey">Path hash code</param>
         /// <param name="line">Start line position</param>
-        private static void AddLogicalLineOfComponent(uint NodeId, uint pathKey, uint line)
+        private void AddLogicalLineOfComponent(uint NodeId, uint pathKey, uint line)
         {
             if (line > 0)
             {
-                MainDeclaration.Instance.LLOCMap.Add(NodeId, pathKey, line);
-                ListIterator<Base> itBegin = MainDeclaration.Instance.RevEdges.constIteratorBegin(NodeId, Types.EdgeKind.edkComponent_Contains);
+                fileContext.ProjectContext.SolutionContext.LLOCMap.Add(NodeId, pathKey, line);
+                ListIterator<Base> itBegin = fileContext.ProjectContext.SolutionContext.ReverseEdges.constIteratorBegin(NodeId, Types.EdgeKind.edkComponent_Contains);
                 while (itBegin.getValue() != null)
                 {
                     AddLogicalLineOfComponent(itBegin.getValue().Id, pathKey, line);
@@ -194,45 +187,39 @@ namespace Columbus.CSAN.Metrics.Size
 
 
         /// <summary>
-        /// <paramref name="pathKey"/> and <paramref name="line"/> will be assign to the <paramref name="NodeId"/>
+        /// <paramref name="pathKey"/> and <paramref name="line"/> will be assign to the <paramref name="nodeId"/>
         /// and also
-        /// <paramref name="pathKey"/> and <paramref name="endLine"/> will be assign to the <paramref name="NodeId"/>
+        /// <paramref name="pathKey"/> and <paramref name="endLine"/> will be assign to the <paramref name="nodeId"/>
         /// </summary>
-        /// <param name="NodeId">LIM node id</param>
+        /// <param name="nodeId">LIM node id</param>
         /// <param name="pathKey">Path hash code</param>
         /// <param name="line">Start line position</param>
         /// <param name="endLine">End line position</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void AssignPathLineToNode(uint NodeId, uint pathKey, uint line, uint endLine)
+        private void AssignPathLineToNode(uint nodeId, uint pathKey, uint line, uint endLine)
         {
-            MainDeclaration.Instance.LLOCMap.Add(NodeId, pathKey, line);
-            MainDeclaration.Instance.LLOCMap.Add(NodeId, pathKey, endLine);
+            fileContext.ProjectContext.SolutionContext.LLOCMap.Add(nodeId, pathKey, line);
+            fileContext.ProjectContext.SolutionContext.LLOCMap.Add(nodeId, pathKey, endLine);
         }
 
         #region Local utils
         private sealed class StatementVisitor : CSharpSyntaxWalker
         {
-
-            private static StatementVisitor instance;
+            private readonly LLOC parent;
             private SyntaxNode entryNode, embeddedNode;
             private bool _weInAnonymousMethod = false, _weComeFromMethod = false;
             private int _depthParenthesizedExpression = 0,
                         _depthSimpleLambdaExpression = 0,
                         _depthAnonymousMethodExpression = 0;
 
-            private StatementVisitor() { }
-
-            public static void VisitStatement(SyntaxNode node)
+            public StatementVisitor(LLOC lloc)
             {
-                if (instance == null)
-                    instance = new StatementVisitor();
-
-                instance.Visit(node);
+                parent = lloc;
             }
 
             public override void VisitAttributeList(AttributeListSyntax node)
             {
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitAttributeList(node);
             }
 
@@ -242,7 +229,7 @@ namespace Columbus.CSAN.Metrics.Size
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
                 if (!node.IsParent<AnonymousObjectCreationExpressionSyntax>())
                 {
-                    InsertLLOCMap(node.GetLocation());
+                    parent.InsertLLOCMap(node.GetLocation());
                 }
                 base.VisitExpressionStatement(node);
             }
@@ -251,8 +238,8 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.ColonToken.GetLocation());
-                InsertLLOCMap(node.QuestionToken.GetLocation());
+                parent.InsertLLOCMap(node.ColonToken.GetLocation());
+                parent.InsertLLOCMap(node.QuestionToken.GetLocation());
                 base.VisitConditionalExpression(node);
             }
 
@@ -260,10 +247,10 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 foreach (var variable in node.Declaration.Variables)
                 {
-                    InsertLLOCMap(variable.GetLocation());
+                    parent.InsertLLOCMap(variable.GetLocation());
                 }
                 base.VisitLocalDeclarationStatement(node);
             }
@@ -272,8 +259,8 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.FromClause.GetLocation());
-                InsertLLOCMap(node.Body.GetLocation());
+                parent.InsertLLOCMap(node.FromClause.GetLocation());
+                parent.InsertLLOCMap(node.Body.GetLocation());
                 base.VisitQueryExpression(node);
             }
 
@@ -281,10 +268,10 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
-                InsertLLOCMap(node.WhileKeyword.GetLocation());
-                InsertLLOCMap(node.OpenParenToken.GetLocation());
-                InsertLLOCMap(node.CloseParenToken.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.WhileKeyword.GetLocation());
+                parent.InsertLLOCMap(node.OpenParenToken.GetLocation());
+                parent.InsertLLOCMap(node.CloseParenToken.GetLocation());
                 base.VisitDoStatement(node);
             }
 
@@ -293,7 +280,7 @@ namespace Columbus.CSAN.Metrics.Size
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
                 if (node.IsParent<AnonymousObjectCreationExpressionSyntax>()) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitObjectCreationExpression(node);
             }
 
@@ -302,7 +289,7 @@ namespace Columbus.CSAN.Metrics.Size
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
                 if (node.IsParent<AnonymousObjectCreationExpressionSyntax>()) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitInitializerExpression(node);
             }
 
@@ -311,7 +298,7 @@ namespace Columbus.CSAN.Metrics.Size
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
                 if (node.IsParent<AnonymousObjectCreationExpressionSyntax>()) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitIdentifierName(node);
             }
 
@@ -319,7 +306,7 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitBreakStatement(node);
             }
 
@@ -327,7 +314,7 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitThrowStatement(node);
             }
 
@@ -335,7 +322,7 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitUsingStatement(node);
             }
 
@@ -343,7 +330,7 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitYieldStatement(node);
             }
 
@@ -352,7 +339,7 @@ namespace Columbus.CSAN.Metrics.Size
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
                 if (!node.IsParent<AnonymousObjectCreationExpressionSyntax>())
-                    InsertLLOCMap(node.GetLocation());
+                    parent.InsertLLOCMap(node.GetLocation());
                 base.VisitEmptyStatement(node);
             }
 
@@ -360,9 +347,9 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
-                InsertLLOCMap(node.OpenParenToken.GetLocation());
-                InsertLLOCMap(node.CloseParenToken.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.OpenParenToken.GetLocation());
+                parent.InsertLLOCMap(node.CloseParenToken.GetLocation());
                 base.VisitWhileStatement(node);
             }
 
@@ -370,7 +357,7 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitUnsafeStatement(node);
             }
 
@@ -378,7 +365,7 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitCheckedExpression(node);
             }
 
@@ -386,7 +373,7 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitLockStatement(node);
             }
 
@@ -394,7 +381,7 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitFixedStatement(node);
             }
 
@@ -402,8 +389,8 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
-                InsertLLOCMap(node.InKeyword.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.InKeyword.GetLocation());
                 base.VisitForEachStatement(node);
             }
 
@@ -411,21 +398,21 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 if (node.Declaration != null)
                 {
                     foreach (var variable in node.Declaration.Variables)
                     {
-                        InsertLLOCMap(variable.GetLocation());
+                        parent.InsertLLOCMap(variable.GetLocation());
                     }
                 }
-                InsertLLOCMap(node.FirstSemicolonToken.GetLocation());
+                parent.InsertLLOCMap(node.FirstSemicolonToken.GetLocation());
                 if (node.Condition != null)
-                    InsertLLOCMap(node.Condition.GetLocation());
-                InsertLLOCMap(node.SecondSemicolonToken.GetLocation());
+                    parent.InsertLLOCMap(node.Condition.GetLocation());
+                parent.InsertLLOCMap(node.SecondSemicolonToken.GetLocation());
                 foreach (var incrementor in node.Incrementors)
                 {
-                    InsertLLOCMap(incrementor.GetLocation());
+                    parent.InsertLLOCMap(incrementor.GetLocation());
                 }
                 base.VisitForStatement(node);
             }
@@ -434,8 +421,8 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.OpenBraceToken.GetLocation());
-                InsertLLOCMap(node.CloseBraceToken.GetLocation());
+                parent.InsertLLOCMap(node.OpenBraceToken.GetLocation());
+                parent.InsertLLOCMap(node.CloseBraceToken.GetLocation());
                 base.VisitBlock(node);
             }
 
@@ -443,7 +430,7 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitGotoStatement(node);
             }
 
@@ -451,8 +438,8 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
-                InsertLLOCMap(node.ColonToken.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.ColonToken.GetLocation());
                 base.VisitLabeledStatement(node);
             }
 
@@ -461,7 +448,7 @@ namespace Columbus.CSAN.Metrics.Size
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
                 if (node.IsParent<AnonymousObjectMemberDeclaratorSyntax>()) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitLiteralExpression(node);
             }
 
@@ -469,9 +456,9 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
-                InsertLLOCMap(node.OpenBraceToken.GetLocation());
-                InsertLLOCMap(node.CloseBraceToken.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.OpenBraceToken.GetLocation());
+                parent.InsertLLOCMap(node.CloseBraceToken.GetLocation());
                 base.VisitSwitchStatement(node);
             }
 
@@ -479,14 +466,14 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 foreach (var statement in node.Statements)
                 {
-                    InsertLLOCMap(statement.GetLocation());
+                    parent.InsertLLOCMap(statement.GetLocation());
                 }
                 foreach (var label in node.Labels)
                 {
-                    InsertLLOCMap(label.GetLocation());
+                    parent.InsertLLOCMap(label.GetLocation());
                 }
                 base.VisitSwitchSection(node);
             }
@@ -495,18 +482,18 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 foreach (var catchClause in node.Catches)
                 {
-                    InsertLLOCMap(catchClause.GetLocation());
+                    parent.InsertLLOCMap(catchClause.GetLocation());
                     if (catchClause.Declaration != null)
                     {
-                        InsertLLOCMap(catchClause.Declaration.OpenParenToken.GetLocation());
-                        InsertLLOCMap(catchClause.Declaration.CloseParenToken.GetLocation());
+                        parent.InsertLLOCMap(catchClause.Declaration.OpenParenToken.GetLocation());
+                        parent.InsertLLOCMap(catchClause.Declaration.CloseParenToken.GetLocation());
                     }
                 }
                 if (node.Finally != null)
-                    InsertLLOCMap(node.Finally.GetLocation());
+                    parent.InsertLLOCMap(node.Finally.GetLocation());
                 base.VisitTryStatement(node);
             }
 
@@ -515,7 +502,7 @@ namespace Columbus.CSAN.Metrics.Size
                 if (node.IsContains<AnonymousObjectCreationExpressionSyntax>()) return;
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitReturnStatement(node);
             }
 
@@ -523,13 +510,13 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode is AnonymousFunctionExpressionSyntax && embeddedNode is AnonymousFunctionExpressionSyntax) return;
                 if (_weComeFromMethod && _weInAnonymousMethod) return;
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 if (node.Else != null)
                 {
-                    InsertLLOCMap(node.Else.GetLocation());
+                    parent.InsertLLOCMap(node.Else.GetLocation());
                 }
-                InsertLLOCMap(node.OpenParenToken.GetLocation());
-                InsertLLOCMap(node.CloseParenToken.GetLocation());
+                parent.InsertLLOCMap(node.OpenParenToken.GetLocation());
+                parent.InsertLLOCMap(node.CloseParenToken.GetLocation());
                 base.VisitIfStatement(node);
             }
 
@@ -537,10 +524,10 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 if (entryNode == null) entryNode = node;
 
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 foreach (var modifier in node.Modifiers)
                 {
-                    InsertLLOCMap(modifier.GetLocation());
+                    parent.InsertLLOCMap(modifier.GetLocation());
                 }
                 _weComeFromMethod = true;
                 base.VisitAccessorDeclaration(node);
@@ -552,18 +539,18 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 foreach (var modifier in node.Modifiers)
                 {
-                    InsertLLOCMap(modifier.GetLocation());
+                    parent.InsertLLOCMap(modifier.GetLocation());
                 }
-                InsertLLOCMap(node.ParameterList.OpenParenToken.GetLocation());
+                parent.InsertLLOCMap(node.ParameterList.OpenParenToken.GetLocation());
                 foreach (var parameter in node.ParameterList.Parameters)
                 {
-                    InsertLLOCMap(parameter.GetLocation());
+                    parent.InsertLLOCMap(parameter.GetLocation());
                 }
-                InsertLLOCMap(node.ParameterList.CloseParenToken.GetLocation());
+                parent.InsertLLOCMap(node.ParameterList.CloseParenToken.GetLocation());
                 if (node.Body != null)
                 {
-                    InsertLLOCMap(node.Body.OpenBraceToken.GetLocation());
-                    InsertLLOCMap(node.Body.CloseBraceToken.GetLocation());
+                    parent.InsertLLOCMap(node.Body.OpenBraceToken.GetLocation());
+                    parent.InsertLLOCMap(node.Body.CloseBraceToken.GetLocation());
                 }
             }
 
@@ -572,17 +559,52 @@ namespace Columbus.CSAN.Metrics.Size
                 if (entryNode == null) entryNode = node;
                 foreach (var constraintClause in node.ConstraintClauses)
                 {
-                    InsertLLOCMap(constraintClause.WhereKeyword.GetLocation());
-                    InsertLLOCMap(constraintClause.ColonToken.GetLocation());
+                    parent.InsertLLOCMap(constraintClause.WhereKeyword.GetLocation());
+                    parent.InsertLLOCMap(constraintClause.ColonToken.GetLocation());
                     foreach (var constraint in constraintClause.Constraints)
                     {
-                        InsertLLOCMap(constraint.GetLocation());
+                        parent.InsertLLOCMap(constraint.GetLocation());
                     }
-                    InsertLLOCMap(constraintClause.GetLocation());
+                    parent.InsertLLOCMap(constraintClause.GetLocation());
                 }
                 CalculateMethodLines(node);
                 _weComeFromMethod = true;
                 base.VisitMethodDeclaration(node);
+                _weComeFromMethod = false;
+                entryNode = null;
+            }
+
+            public override void VisitLocalFunctionStatement(LocalFunctionStatementSyntax node)
+            {
+                if (entryNode == null)
+                    entryNode = node;
+                foreach (var constraintClause in node.ConstraintClauses)
+                {
+                    parent.InsertLLOCMap(constraintClause.WhereKeyword.GetLocation());
+                    parent.InsertLLOCMap(constraintClause.ColonToken.GetLocation());
+                    foreach (var constraint in constraintClause.Constraints)
+                        parent.InsertLLOCMap(constraint.GetLocation());
+                    parent.InsertLLOCMap(constraintClause.GetLocation());
+                }
+
+                foreach (var modifier in node.Modifiers)
+                    parent.InsertLLOCMap(modifier.GetLocation());
+
+                parent.InsertLLOCMap(node.ParameterList.OpenParenToken.GetLocation());
+
+                foreach (var parameter in node.ParameterList.Parameters)
+                    parent.InsertLLOCMap(parameter.GetLocation());
+
+                parent.InsertLLOCMap(node.ParameterList.CloseParenToken.GetLocation());
+
+                if (node.Body != null)
+                {
+                    parent.InsertLLOCMap(node.Body.OpenBraceToken.GetLocation());
+                    parent.InsertLLOCMap(node.Body.CloseBraceToken.GetLocation());
+                }
+
+                _weComeFromMethod = true;
+                base.VisitLocalFunctionStatement(node);
                 _weComeFromMethod = false;
                 entryNode = null;
             }
@@ -592,13 +614,13 @@ namespace Columbus.CSAN.Metrics.Size
                 if (entryNode == null) entryNode = node;
                 if (node.Initializer != null)
                 {
-                    InsertLLOCMap(node.Initializer.ColonToken.GetLocation());
-                    InsertLLOCMap(node.Initializer.ThisOrBaseKeyword.GetLocation());
+                    parent.InsertLLOCMap(node.Initializer.ColonToken.GetLocation());
+                    parent.InsertLLOCMap(node.Initializer.ThisOrBaseKeyword.GetLocation());
                     if (node.Initializer.ArgumentList != null)
                     {
                         foreach (var argument in node.Initializer.ArgumentList.Arguments)
                         {
-                            InsertLLOCMap(argument.GetLocation());
+                            parent.InsertLLOCMap(argument.GetLocation());
                         }
                     }
                 }
@@ -644,16 +666,16 @@ namespace Columbus.CSAN.Metrics.Size
                 if (entryNode == null) entryNode = node;
                 else embeddedNode = node;
                 _depthAnonymousMethodExpression++;
-                InsertLLOCMap(node.GetLocation());
-                InsertLLOCMap(node.Block.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.Block.GetLocation());
                 if (node.ParameterList != null)
                 {
                     foreach (var paramter in node.ParameterList.Parameters)
                     {
-                        InsertLLOCMap(paramter.GetLocation());
+                        parent.InsertLLOCMap(paramter.GetLocation());
                     }
                 }
-                InsertLLOCMap(node.DelegateKeyword.GetLocation());
+                parent.InsertLLOCMap(node.DelegateKeyword.GetLocation());
                 _weInAnonymousMethod = true;
                 base.VisitAnonymousMethodExpression(node);
                 _weInAnonymousMethod = false;
@@ -671,12 +693,12 @@ namespace Columbus.CSAN.Metrics.Size
                 if (entryNode == null) entryNode = node;
                 else embeddedNode = node;
                 _depthSimpleLambdaExpression++;
-                InsertLLOCMap(node.GetLocation());
-                InsertLLOCMap(node.Body.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.Body.GetLocation());
                 if (node.AsyncKeyword.Text != "")
-                    InsertLLOCMap(node.AsyncKeyword.GetLocation());
-                InsertLLOCMap(node.Parameter.GetLocation());
-                InsertLLOCMap(node.ArrowToken.GetLocation());
+                    parent.InsertLLOCMap(node.AsyncKeyword.GetLocation());
+                parent.InsertLLOCMap(node.Parameter.GetLocation());
+                parent.InsertLLOCMap(node.ArrowToken.GetLocation());
                 _weInAnonymousMethod = true;
                 base.VisitSimpleLambdaExpression(node);
                 _weInAnonymousMethod = false;
@@ -694,9 +716,9 @@ namespace Columbus.CSAN.Metrics.Size
                 if (entryNode == null) entryNode = node;
                 else embeddedNode = node;
                 _depthParenthesizedExpression++;
-                InsertLLOCMap(node.GetLocation());
-                InsertLLOCMap(node.OpenParenToken.GetLocation());
-                InsertLLOCMap(node.CloseParenToken.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.OpenParenToken.GetLocation());
+                parent.InsertLLOCMap(node.CloseParenToken.GetLocation());
                 _weInAnonymousMethod = true;
                 base.VisitParenthesizedExpression(node);
                 _weInAnonymousMethod = false;
@@ -711,82 +733,76 @@ namespace Columbus.CSAN.Metrics.Size
 
             public override void VisitAnonymousObjectCreationExpression(AnonymousObjectCreationExpressionSyntax node)
             {
-                InsertLLOCMap(node.OpenBraceToken.GetLocation());
+                parent.InsertLLOCMap(node.OpenBraceToken.GetLocation());
             }
         }
 
         private sealed class AnonymousVisitor : CSharpSyntaxWalker
         {
-            private static AnonymousVisitor instance;
+            private readonly LLOC parent;
 
-            private AnonymousVisitor() { }
-
-            public static void VisitAnonimClass(SyntaxNode node)
+            public AnonymousVisitor(LLOC parent)
             {
-                if (instance == null)
-                    instance = new AnonymousVisitor();
-
-                instance.Visit(node);
+                this.parent = parent;
             }
 
             public override void VisitAnonymousObjectMemberDeclarator(AnonymousObjectMemberDeclaratorSyntax node)
             {
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitAnonymousObjectMemberDeclarator(node);
             }
 
             public override void VisitAnonymousObjectCreationExpression(AnonymousObjectCreationExpressionSyntax node)
             {
-                InsertLLOCMap(node.OpenBraceToken.GetLocation());
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.OpenBraceToken.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
             }
         }
 
         private sealed class EnumVisitor : CSharpSyntaxWalker
         {
-            private static EnumVisitor instance;
-            public static void VisitEnum(SyntaxNode node)
+            private readonly LLOC parent;
+
+            public EnumVisitor(LLOC parent)
             {
-                if (instance == null) instance = new EnumVisitor();
-                instance.Visit(node);
+                this.parent = parent;
             }
 
             public override void VisitEnumMemberDeclaration(EnumMemberDeclarationSyntax node)
             {
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitEnumMemberDeclaration(node);
             }
         }
 
         private sealed class TypeVisitor : CSharpSyntaxWalker
         {
-            private static TypeVisitor _instance;
             private bool _weAreInClassNode;
+            private readonly LLOC parent;
 
-            public static void VisitType(SyntaxNode node)
+            public TypeVisitor(LLOC parent)
             {
-                if (_instance == null) _instance = new TypeVisitor();
-                _instance.Visit(node);
+                this.parent = parent;
             }
 
             public override void VisitDelegateDeclaration( DelegateDeclarationSyntax node )
             {
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 foreach ( var modifier in node.Modifiers )
                 {
-                    InsertLLOCMap(modifier.GetLocation());
+                    parent.InsertLLOCMap(modifier.GetLocation());
                 }
                 foreach ( var attributeListSyntax in node.AttributeLists )
                 {
-                    InsertLLOCMap(attributeListSyntax.GetLocation());
+                    parent.InsertLLOCMap(attributeListSyntax.GetLocation());
                 }
                 foreach ( var typeParameterConstraintClauseSyntax in node.ConstraintClauses )
                 {
-                    InsertLLOCMap(typeParameterConstraintClauseSyntax.GetLocation());
+                    parent.InsertLLOCMap(typeParameterConstraintClauseSyntax.GetLocation());
                 }
                 foreach ( var parameterSyntax in node.ParameterList.Parameters )
                 {
-                    InsertLLOCMap(parameterSyntax.GetLocation());
+                    parent.InsertLLOCMap(parameterSyntax.GetLocation());
                 }
             }
 
@@ -794,79 +810,79 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 foreach (var modifier in node.Modifiers)
                 {
-                    InsertLLOCMap(modifier.GetLocation());
+                    parent.InsertLLOCMap(modifier.GetLocation());
                 }
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 foreach (var variable in node.Declaration.Variables)
                 {
-                    InsertLLOCMap(variable.GetLocation());
+                    parent.InsertLLOCMap(variable.GetLocation());
                 }
                 base.VisitFieldDeclaration(node);
             }
 
             public override void VisitDefineDirectiveTrivia(DefineDirectiveTriviaSyntax node)
             {
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitDefineDirectiveTrivia(node);
             }
 
             public override void VisitElifDirectiveTrivia(ElifDirectiveTriviaSyntax node)
             {
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitElifDirectiveTrivia(node);
             }
 
             public override void VisitElseDirectiveTrivia(ElseDirectiveTriviaSyntax node)
             {
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitElseDirectiveTrivia(node);
             }
 
             public override void VisitEndIfDirectiveTrivia(EndIfDirectiveTriviaSyntax node)
             {
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitEndIfDirectiveTrivia(node);
             }
 
             public override void VisitEndRegionDirectiveTrivia(EndRegionDirectiveTriviaSyntax node)
             {
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitEndRegionDirectiveTrivia(node);
             }
 
             public override void VisitIfDirectiveTrivia(IfDirectiveTriviaSyntax node)
             {
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitIfDirectiveTrivia(node);
             }
 
             public override void VisitExternAliasDirective(ExternAliasDirectiveSyntax node)
             {
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitExternAliasDirective(node);
             }
 
             public override void VisitArgument(ArgumentSyntax node)
             {
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitArgument(node);
             }
 
             public override void VisitIdentifierName(IdentifierNameSyntax node)
             {
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitIdentifierName(node);
             }
 
             public override void VisitLiteralExpression(LiteralExpressionSyntax node)
             {
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitLiteralExpression(node);
             }
 
             public override void VisitInitializerExpression(InitializerExpressionSyntax node)
             {
-                InsertLLOCMap(node.GetLocation());
+                parent.InsertLLOCMap(node.GetLocation());
                 base.VisitInitializerExpression(node);
             }
 
@@ -875,19 +891,19 @@ namespace Columbus.CSAN.Metrics.Size
             {
                 foreach (var modifier in node.Modifiers)
                 {
-                    InsertLLOCMap(modifier.GetLocation());
+                    parent.InsertLLOCMap(modifier.GetLocation());
                 }
                 foreach (var constraintClause in node.ConstraintClauses)
                 {
-                    InsertLLOCMap(constraintClause.WhereKeyword.GetLocation());
-                    InsertLLOCMap(constraintClause.ColonToken.GetLocation());
+                    parent.InsertLLOCMap(constraintClause.WhereKeyword.GetLocation());
+                    parent.InsertLLOCMap(constraintClause.ColonToken.GetLocation());
                     foreach (var constraint in constraintClause.Constraints)
                     {
-                        InsertLLOCMap(constraint.GetLocation());
+                        parent.InsertLLOCMap(constraint.GetLocation());
                     }
-                    InsertLLOCMap(constraintClause.GetLocation());
+                    parent.InsertLLOCMap(constraintClause.GetLocation());
                 }
-                InsertLLOCMap(node.OpenBraceToken.GetLocation());
+                parent.InsertLLOCMap(node.OpenBraceToken.GetLocation());
             }
 
             public override void VisitClassDeclaration(ClassDeclarationSyntax node)

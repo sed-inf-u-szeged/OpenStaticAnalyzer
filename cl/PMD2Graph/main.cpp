@@ -63,10 +63,18 @@ static bool printstdout = false;
 static std::string out; //name of the output file
 PMD2GraphStat stats;
 
-bool print_debug = false;
-
 static string graph_filename;
+
+
 static list<string> inputFiles;
+
+
+#ifdef _WIN32
+bool cs = false;
+#elif defined(__linux__) || defined(__APPLE__)
+bool cs = true;
+#endif
+bool pathLower = false;
 
 //--------------------------------------------------------------
 
@@ -292,13 +300,6 @@ int main(int argc, char *argv[]) {
       if (!graph_filename.empty())
         pmd_strategy.saveGraph(graph_filename, exportRul);
       
-    }
-    if(print_debug) {
-      PMD2GraphStat::ErrorFileList::iterator it = stats.error_files.begin();
-      while(it != stats.error_files.end()) {
-        WriteMsg::write(CMSG_PMD2GRAPH_ERROR_ANALYZE_FILE, *it);
-        ++it;
-      }
     }
 
   MAIN_END

@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class TypeApplyExpressionImpl extends BaseImpl implements TypeApplyExpression {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(TypeApplyExpressionImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

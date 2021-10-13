@@ -256,14 +256,21 @@ namespace columbus { namespace java { namespace asg {
       // ---------- List of nodes having edge containers ----------
 
       friend class base::Commentable;
+      friend class expr::AnnotatedTypeExpression;
       friend class expr::Erroneous;
       friend class expr::ErroneousTypeExpression;
+      friend class expr::Lambda;
+      friend class expr::MemberReference;
       friend class expr::MethodInvocation;
       friend class expr::NewArray;
       friend class expr::NewClass;
       friend class expr::NormalAnnotation;
       friend class expr::TypeApplyExpression;
+      friend class expr::TypeIntersectionExpression;
       friend class expr::TypeUnionExpression;
+      friend class module::Exports;
+      friend class module::Opens;
+      friend class module::Provides;
       friend class statm::BasicFor;
       friend class statm::Block;
       friend class statm::Switch;
@@ -273,11 +280,14 @@ namespace columbus { namespace java { namespace asg {
       friend class struc::CompilationUnit;
       friend class struc::GenericDeclaration;
       friend class struc::MethodDeclaration;
+      friend class struc::Module;
+      friend class struc::ModuleDeclaration;
       friend class struc::NormalMethod;
       friend class struc::Package;
       friend class struc::Scope;
       friend class struc::TypeDeclaration;
       friend class struc::TypeParameter;
+      friend class type::IntersectionType;
       friend class type::MethodType;
       friend class type::ParameterizedType;
       friend class type::UnionType;

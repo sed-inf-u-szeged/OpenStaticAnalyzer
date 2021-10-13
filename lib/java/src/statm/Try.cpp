@@ -222,12 +222,12 @@ namespace statm {
       m_finallyPosition.posInfo.path = factory->getStringTable().set(_finallyPosition.getPath());
   }
 
-  ListIterator<struc::Variable> Try::getResourcesListIteratorBegin() const {
-    return ListIterator<struc::Variable>(&hasResourcesContainer, factory, true);
+  ListIterator<base::Base> Try::getResourcesListIteratorBegin() const {
+    return ListIterator<base::Base>(&hasResourcesContainer, factory, true);
   }
 
-  ListIterator<struc::Variable> Try::getResourcesListIteratorEnd() const {
-    return ListIterator<struc::Variable>(&hasResourcesContainer, factory, false);
+  ListIterator<base::Base> Try::getResourcesListIteratorEnd() const {
+    return ListIterator<base::Base>(&hasResourcesContainer, factory, false);
   }
 
   bool Try::getResourcesIsEmpty() const {
@@ -236,8 +236,8 @@ namespace statm {
 
   unsigned int Try::getResourcesSize() const {
     unsigned int size = 0;
-    ListIterator<struc::Variable> endIt = getResourcesListIteratorEnd();
-    for (ListIterator<struc::Variable> it = getResourcesListIteratorBegin(); it != endIt; ++it) {
+    ListIterator<base::Base> endIt = getResourcesListIteratorEnd();
+    for (ListIterator<base::Base> it = getResourcesListIteratorBegin(); it != endIt; ++it) {
       ++size;
     }
     return size;
@@ -350,14 +350,14 @@ namespace statm {
     return false;
   }
 
-  void Try::addResources(const struc::Variable *_node) {
+  void Try::addResources(const base::Base *_node) {
     if (_node == NULL)
       throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
 
     if (&(_node->getFactory()) != this->factory)
       throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
 
-    if (!((_node->getNodeKind() == ndkVariable) ))
+    if (!((_node->getNodeKind() == ndkVariable)  || Common::getIsExpression(*_node)))
       throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
 
     hasResourcesContainer.push_back(_node->getId());
@@ -368,7 +368,7 @@ namespace statm {
   }
 
   void Try::addResources(NodeId _id) {
-    const struc::Variable *node = dynamic_cast<struc::Variable*>(factory->getPointer(_id));
+    const base::Base *node = dynamic_cast<base::Base*>(factory->getPointer(_id));
     if (node == NULL)
       throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
     addResources( node );
@@ -378,7 +378,7 @@ namespace statm {
     if (!factory->getExist(id))
       throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
-    ListIterator<struc::Variable>::Container::iterator it = find(hasResourcesContainer.begin(), hasResourcesContainer.end(), id);
+    ListIterator<base::Base>::Container::iterator it = find(hasResourcesContainer.begin(), hasResourcesContainer.end(), id);
 
     if (it == hasResourcesContainer.end())
       throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
@@ -391,7 +391,7 @@ namespace statm {
       factory->reverseEdges->removeEdge(id, this->getId(), edkTry_HasResources);
   }
 
-  void Try::removeResources(struc::Variable *_node) {
+  void Try::removeResources(base::Base *_node) {
     if (_node == NULL)
       throw JavaException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
 
@@ -631,7 +631,7 @@ namespace statm {
     binIo.writeUInt4(m_hasFinallyBlock);
 
 
-    for (ListIterator<struc::Variable>::Container::const_iterator it = hasResourcesContainer.begin(); it != hasResourcesContainer.end(); ++it) {
+    for (ListIterator<base::Base>::Container::const_iterator it = hasResourcesContainer.begin(); it != hasResourcesContainer.end(); ++it) {
       binIo.writeUInt4(*it);
     }
     binIo.writeUInt4(0); // This is the end sign

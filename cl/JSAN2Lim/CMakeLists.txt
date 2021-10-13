@@ -2,9 +2,11 @@ set (PROGRAM_NAME JSAN2Lim)
 
 set (SOURCES
     src/JSAN2LimVisitor.cpp
+    src/HalsteadVisitor.cpp
     src/main.cpp
     
     inc/JSAN2LimVisitor.h
+    inc/HalsteadVisitor.h
     inc/messages.h 
 )
 

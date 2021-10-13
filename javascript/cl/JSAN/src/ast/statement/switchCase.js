@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var switchCase = factory.createSwitchCaseWrapper(factory);
+        var switchCase = factory.createSwitchCaseWrapper();
         globals.setPositionInfo(node, switchCase);
         return switchCase;
     } else {
@@ -34,15 +34,10 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.test != null) {
             var testWrapper = globals.getWrapperOfNode(node.test);
-            if (node.test.type !== "Literal") {
-                var testWrapperFunctionString = "setTest" + node.test.type;
-            } else {
-                var testWrapperFunctionString = "setTest" + globals.getLiteralType(node.test) + node.test.type;
-            }
             try {
-                switchCaseWrapper[testWrapperFunctionString](testWrapper);
+                switchCaseWrapper.setTest(testWrapper);
             } catch (e) {
-                console.error("SWITCHCASE - Function not exist: switchCaseWrapper." + testWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("SWITCHCASE - Could not set test! Reason of the error: " + e + "\n");
             }
         }
 
@@ -50,15 +45,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.consequent.length; i++) {
                 if (node.consequent[i] != null) {
                     var consequentWrapper = globals.getWrapperOfNode(node.consequent[i]);
-                    if (node.consequent[i].type !== "Literal") {
-                        var consequentWrapperFunctionString = "addConsequent" + node.consequent[i].type;
-                    } else {
-                        var consequentWrapperFunctionString = "addConsequent" + globals.getLiteralType(node.consequent[i]) + node.consequent[i].type;
-                    }
                     try {
-                        switchCaseWrapper[consequentWrapperFunctionString](consequentWrapper);
+                        switchCaseWrapper.addConsequent(consequentWrapper);
                     } catch (e) {
-                        console.error("SWITCHCASE - Function not exist: switchCaseWrapper." + consequentWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("SWITCHCASE - Could not add consequent! Reason of the error: " + e + "\n");
                     }
                 }
             }

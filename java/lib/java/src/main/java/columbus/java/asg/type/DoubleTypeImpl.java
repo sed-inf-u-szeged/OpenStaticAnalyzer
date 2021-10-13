@@ -33,6 +33,7 @@ import columbus.logger.LoggerHandler;
  */
 public class DoubleTypeImpl extends BaseImpl implements DoubleType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(DoubleTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	public DoubleTypeImpl(int id, Factory factory) {
 		super(id, factory);

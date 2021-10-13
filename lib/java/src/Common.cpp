@@ -68,8 +68,11 @@ bool getIsCommentable(const base::Base& node) {
     ndk == ndkStringLiteral ||
     ndk == ndkNewArray ||
     ndk == ndkNewClass ||
+    ndk == ndkLambda ||
+    ndk == ndkMemberReference ||
     ndk == ndkSuper ||
     ndk == ndkThis ||
+    ndk == ndkAnnotatedTypeExpression ||
     ndk == ndkArrayTypeExpression ||
     ndk == ndkErroneousTypeExpression ||
     ndk == ndkExternalTypeExpression ||
@@ -77,6 +80,7 @@ bool getIsCommentable(const base::Base& node) {
     ndk == ndkQualifiedTypeExpression ||
     ndk == ndkSimpleTypeExpression ||
     ndk == ndkTypeApplyExpression ||
+    ndk == ndkTypeIntersectionExpression ||
     ndk == ndkTypeUnionExpression ||
     ndk == ndkWildcardExpression ||
     ndk == ndkInstanceOf ||
@@ -85,6 +89,11 @@ bool getIsCommentable(const base::Base& node) {
     ndk == ndkPostfixExpression ||
     ndk == ndkPrefixExpression ||
     ndk == ndkTypeCast ||
+    ndk == ndkExports ||
+    ndk == ndkOpens ||
+    ndk == ndkProvides ||
+    ndk == ndkRequires ||
+    ndk == ndkUses ||
     ndk == ndkHandler ||
     ndk == ndkAssert ||
     ndk == ndkBlock ||
@@ -121,6 +130,7 @@ bool getIsCommentable(const base::Base& node) {
     ndk == ndkCase ||
     ndk == ndkDefault ||
     ndk == ndkImport ||
+    ndk == ndkModuleDeclaration ||
     ndk == ndkPackageDeclaration ||
     ndk == ndkTypeParameter ||
     ndk == ndkCompilationUnit ||
@@ -143,6 +153,7 @@ bool getIsNamed(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkNamed ||
+    ndk == ndkModule ||
     ndk == ndkAnnotationTypeElement ||
     ndk == ndkMethod ||
     ndk == ndkMethodGeneric ||
@@ -193,8 +204,11 @@ bool getIsPositioned(const base::Base& node) {
     ndk == ndkStringLiteral ||
     ndk == ndkNewArray ||
     ndk == ndkNewClass ||
+    ndk == ndkLambda ||
+    ndk == ndkMemberReference ||
     ndk == ndkSuper ||
     ndk == ndkThis ||
+    ndk == ndkAnnotatedTypeExpression ||
     ndk == ndkArrayTypeExpression ||
     ndk == ndkErroneousTypeExpression ||
     ndk == ndkExternalTypeExpression ||
@@ -202,6 +216,7 @@ bool getIsPositioned(const base::Base& node) {
     ndk == ndkQualifiedTypeExpression ||
     ndk == ndkSimpleTypeExpression ||
     ndk == ndkTypeApplyExpression ||
+    ndk == ndkTypeIntersectionExpression ||
     ndk == ndkTypeUnionExpression ||
     ndk == ndkWildcardExpression ||
     ndk == ndkInstanceOf ||
@@ -210,6 +225,11 @@ bool getIsPositioned(const base::Base& node) {
     ndk == ndkPostfixExpression ||
     ndk == ndkPrefixExpression ||
     ndk == ndkTypeCast ||
+    ndk == ndkExports ||
+    ndk == ndkOpens ||
+    ndk == ndkProvides ||
+    ndk == ndkRequires ||
+    ndk == ndkUses ||
     ndk == ndkHandler ||
     ndk == ndkAssert ||
     ndk == ndkBlock ||
@@ -246,6 +266,7 @@ bool getIsPositioned(const base::Base& node) {
     ndk == ndkCase ||
     ndk == ndkDefault ||
     ndk == ndkImport ||
+    ndk == ndkModuleDeclaration ||
     ndk == ndkPackageDeclaration ||
     ndk == ndkTypeParameter;
 }
@@ -278,8 +299,11 @@ bool getIsPositionedWithoutComment(const base::Base& node) {
     ndk == ndkStringLiteral ||
     ndk == ndkNewArray ||
     ndk == ndkNewClass ||
+    ndk == ndkLambda ||
+    ndk == ndkMemberReference ||
     ndk == ndkSuper ||
     ndk == ndkThis ||
+    ndk == ndkAnnotatedTypeExpression ||
     ndk == ndkArrayTypeExpression ||
     ndk == ndkErroneousTypeExpression ||
     ndk == ndkExternalTypeExpression ||
@@ -287,6 +311,7 @@ bool getIsPositionedWithoutComment(const base::Base& node) {
     ndk == ndkQualifiedTypeExpression ||
     ndk == ndkSimpleTypeExpression ||
     ndk == ndkTypeApplyExpression ||
+    ndk == ndkTypeIntersectionExpression ||
     ndk == ndkTypeUnionExpression ||
     ndk == ndkWildcardExpression ||
     ndk == ndkInstanceOf ||
@@ -295,6 +320,11 @@ bool getIsPositionedWithoutComment(const base::Base& node) {
     ndk == ndkPostfixExpression ||
     ndk == ndkPrefixExpression ||
     ndk == ndkTypeCast ||
+    ndk == ndkExports ||
+    ndk == ndkOpens ||
+    ndk == ndkProvides ||
+    ndk == ndkRequires ||
+    ndk == ndkUses ||
     ndk == ndkHandler ||
     ndk == ndkAssert ||
     ndk == ndkBlock ||
@@ -331,9 +361,16 @@ bool getIsPositionedWithoutComment(const base::Base& node) {
     ndk == ndkCase ||
     ndk == ndkDefault ||
     ndk == ndkImport ||
+    ndk == ndkModuleDeclaration ||
     ndk == ndkPackageDeclaration ||
     ndk == ndkTypeParameter ||
     ndk == ndkCompilationUnit;
+}
+
+bool getIsAnnotatedTypeExpression(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkAnnotatedTypeExpression;
 }
 
 bool getIsAnnotation(const base::Base& node) {
@@ -440,8 +477,11 @@ bool getIsExpression(const base::Base& node) {
     ndk == ndkStringLiteral ||
     ndk == ndkNewArray ||
     ndk == ndkNewClass ||
+    ndk == ndkLambda ||
+    ndk == ndkMemberReference ||
     ndk == ndkSuper ||
     ndk == ndkThis ||
+    ndk == ndkAnnotatedTypeExpression ||
     ndk == ndkArrayTypeExpression ||
     ndk == ndkErroneousTypeExpression ||
     ndk == ndkExternalTypeExpression ||
@@ -449,6 +489,7 @@ bool getIsExpression(const base::Base& node) {
     ndk == ndkQualifiedTypeExpression ||
     ndk == ndkSimpleTypeExpression ||
     ndk == ndkTypeApplyExpression ||
+    ndk == ndkTypeIntersectionExpression ||
     ndk == ndkTypeUnionExpression ||
     ndk == ndkWildcardExpression ||
     ndk == ndkInstanceOf ||
@@ -477,6 +518,14 @@ bool getIsFloatLiteral(const base::Base& node) {
     ndk == ndkFloatLiteral;
 }
 
+bool getIsFunctionalExpression(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkFunctionalExpression ||
+    ndk == ndkLambda ||
+    ndk == ndkMemberReference;
+}
+
 bool getIsIdentifier(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
@@ -499,6 +548,12 @@ bool getIsIntegerLiteral(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkIntegerLiteral;
+}
+
+bool getIsLambda(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkLambda;
 }
 
 bool getIsLiteral(const base::Base& node) {
@@ -526,6 +581,12 @@ bool getIsMarkerAnnotation(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkMarkerAnnotation;
+}
+
+bool getIsMemberReference(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkMemberReference;
 }
 
 bool getIsMethodInvocation(const base::Base& node) {
@@ -572,6 +633,14 @@ bool getIsParenthesizedExpression(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkParenthesizedExpression;
+}
+
+bool getIsPolyExpression(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkPolyExpression ||
+    ndk == ndkLambda ||
+    ndk == ndkMemberReference;
 }
 
 bool getIsPostfixExpression(const base::Base& node) {
@@ -644,6 +713,7 @@ bool getIsTypeExpression(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkTypeExpression ||
+    ndk == ndkAnnotatedTypeExpression ||
     ndk == ndkArrayTypeExpression ||
     ndk == ndkErroneousTypeExpression ||
     ndk == ndkExternalTypeExpression ||
@@ -651,8 +721,15 @@ bool getIsTypeExpression(const base::Base& node) {
     ndk == ndkQualifiedTypeExpression ||
     ndk == ndkSimpleTypeExpression ||
     ndk == ndkTypeApplyExpression ||
+    ndk == ndkTypeIntersectionExpression ||
     ndk == ndkTypeUnionExpression ||
     ndk == ndkWildcardExpression;
+}
+
+bool getIsTypeIntersectionExpression(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkTypeIntersectionExpression;
 }
 
 bool getIsTypeUnionExpression(const base::Base& node) {
@@ -677,6 +754,47 @@ bool getIsWildcardExpression(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkWildcardExpression;
+}
+
+bool getIsExports(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkExports;
+}
+
+bool getIsModuleDirective(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkModuleDirective ||
+    ndk == ndkExports ||
+    ndk == ndkOpens ||
+    ndk == ndkProvides ||
+    ndk == ndkRequires ||
+    ndk == ndkUses;
+}
+
+bool getIsOpens(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkOpens;
+}
+
+bool getIsProvides(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkProvides;
+}
+
+bool getIsRequires(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkRequires;
+}
+
+bool getIsUses(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkUses;
 }
 
 bool getIsAssert(const base::Base& node) {
@@ -1071,6 +1189,18 @@ bool getIsMethodGeneric(const base::Base& node) {
     ndk == ndkMethodGeneric;
 }
 
+bool getIsModule(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkModule;
+}
+
+bool getIsModuleDeclaration(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkModuleDeclaration;
+}
+
 bool getIsNamedDeclaration(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
@@ -1232,6 +1362,12 @@ bool getIsIntType(const base::Base& node) {
     ndk == ndkIntType;
 }
 
+bool getIsIntersectionType(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkIntersectionType;
+}
+
 bool getIsLongType(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
@@ -1248,6 +1384,12 @@ bool getIsMethodType(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkMethodType;
+}
+
+bool getIsModuleType(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkModuleType;
 }
 
 bool getIsNoType(const base::Base& node) {
@@ -1309,7 +1451,9 @@ bool getIsType(const base::Base& node) {
     ndk == ndkType ||
     ndk == ndkArrayType ||
     ndk == ndkErrorType ||
+    ndk == ndkIntersectionType ||
     ndk == ndkMethodType ||
+    ndk == ndkModuleType ||
     ndk == ndkNoType ||
     ndk == ndkNullType ||
     ndk == ndkPackageType ||
@@ -1424,12 +1568,15 @@ bool getIsNotComposite(const base::Base& node) {
     ndk == ndkEmpty ||
     ndk == ndkBreak ||
     ndk == ndkContinue ||
+    ndk == ndkModule ||
     ndk == ndkJavadocComment ||
     ndk == ndkBlockComment ||
     ndk == ndkLineComment ||
     ndk == ndkArrayType ||
     ndk == ndkErrorType ||
+    ndk == ndkIntersectionType ||
     ndk == ndkMethodType ||
+    ndk == ndkModuleType ||
     ndk == ndkNoType ||
     ndk == ndkNullType ||
     ndk == ndkPackageType ||
@@ -1483,6 +1630,8 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
           getIsBaseClassKind(ndkPositionedWithoutComment, base);
       case ndkPositionedWithoutComment:
         return getIsBaseClassKind(ndkBase, base);
+      case ndkAnnotatedTypeExpression:
+        return getIsBaseClassKind(ndkTypeExpression, base);
       case ndkAnnotation:
         return getIsBaseClassKind(ndkExpression, base);
       case ndkArrayAccess:
@@ -1515,6 +1664,8 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkBinary, base);
       case ndkFloatLiteral:
         return getIsBaseClassKind(ndkNumberLiteral, base);
+      case ndkFunctionalExpression:
+        return getIsBaseClassKind(ndkPolyExpression, base);
       case ndkIdentifier:
         return getIsBaseClassKind(ndkExpression, base);
       case ndkInfixExpression:
@@ -1523,12 +1674,16 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkUnary, base);
       case ndkIntegerLiteral:
         return getIsBaseClassKind(ndkNumberLiteral, base);
+      case ndkLambda:
+        return getIsBaseClassKind(ndkFunctionalExpression, base);
       case ndkLiteral:
         return getIsBaseClassKind(ndkExpression, base);
       case ndkLongLiteral:
         return getIsBaseClassKind(ndkNumberLiteral, base);
       case ndkMarkerAnnotation:
         return getIsBaseClassKind(ndkAnnotation, base);
+      case ndkMemberReference:
+        return getIsBaseClassKind(ndkFunctionalExpression, base);
       case ndkMethodInvocation:
         return getIsBaseClassKind(ndkUnary, base);
       case ndkNewArray:
@@ -1543,6 +1698,8 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkLiteral, base);
       case ndkParenthesizedExpression:
         return getIsBaseClassKind(ndkUnary, base);
+      case ndkPolyExpression:
+        return getIsBaseClassKind(ndkExpression, base);
       case ndkPostfixExpression:
         return getIsBaseClassKind(ndkUnary, base);
       case ndkPrefixExpression:
@@ -1567,12 +1724,26 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkUnary, base);
       case ndkTypeExpression:
         return getIsBaseClassKind(ndkExpression, base);
+      case ndkTypeIntersectionExpression:
+        return getIsBaseClassKind(ndkTypeExpression, base);
       case ndkTypeUnionExpression:
         return getIsBaseClassKind(ndkTypeExpression, base);
       case ndkUnary:
         return getIsBaseClassKind(ndkExpression, base);
       case ndkWildcardExpression:
         return getIsBaseClassKind(ndkTypeExpression, base);
+      case ndkExports:
+        return getIsBaseClassKind(ndkModuleDirective, base);
+      case ndkModuleDirective:
+        return getIsBaseClassKind(ndkPositioned, base);
+      case ndkOpens:
+        return getIsBaseClassKind(ndkModuleDirective, base);
+      case ndkProvides:
+        return getIsBaseClassKind(ndkModuleDirective, base);
+      case ndkRequires:
+        return getIsBaseClassKind(ndkModuleDirective, base);
+      case ndkUses:
+        return getIsBaseClassKind(ndkModuleDirective, base);
       case ndkAssert:
         return getIsBaseClassKind(ndkStatement, base);
       case ndkBasicFor:
@@ -1675,6 +1846,10 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
       case ndkMethodGeneric:
         return getIsBaseClassKind(ndkNormalMethod, base) ||
           getIsBaseClassKind(ndkGenericDeclaration, base);
+      case ndkModule:
+        return getIsBaseClassKind(ndkNamed, base);
+      case ndkModuleDeclaration:
+        return getIsBaseClassKind(ndkPositioned, base);
       case ndkNamedDeclaration:
         return getIsBaseClassKind(ndkDeclaration, base) ||
           getIsBaseClassKind(ndkNamed, base);
@@ -1721,11 +1896,15 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkPrimitiveType, base);
       case ndkIntType:
         return getIsBaseClassKind(ndkPrimitiveType, base);
+      case ndkIntersectionType:
+        return getIsBaseClassKind(ndkType, base);
       case ndkLongType:
         return getIsBaseClassKind(ndkPrimitiveType, base);
       case ndkLowerBoundedWildcardType:
         return getIsBaseClassKind(ndkBoundedWildcardType, base);
       case ndkMethodType:
+        return getIsBaseClassKind(ndkType, base);
+      case ndkModuleType:
         return getIsBaseClassKind(ndkType, base);
       case ndkNoType:
         return getIsBaseClassKind(ndkType, base);
@@ -1814,12 +1993,73 @@ const std::string toString(InfixOperatorKind kind) {
   }
 }
 
+const std::string toString(LambdaBodyKind kind) {
+  switch (kind) {
+    case lbkExpression: return "lbkExpression";
+    case lbkStatement: return "lbkStatement";
+    default: throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+  }
+}
+
+const std::string toString(LambdaParameterKind kind) {
+  switch (kind) {
+    case lpkImplicit: return "lpkImplicit";
+    case lpkExplicit: return "lpkExplicit";
+    default: throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+  }
+}
+
+const std::string toString(MemberReferenceKind kind) {
+  switch (kind) {
+    case mrkSuper: return "mrkSuper";
+    case mrkUnbound: return "mrkUnbound";
+    case mrkStatic: return "mrkStatic";
+    case mrkBound: return "mrkBound";
+    case mrkImplicitInner: return "mrkImplicitInner";
+    case mrkToplevel: return "mrkToplevel";
+    case mrkArrayCtor: return "mrkArrayCtor";
+    default: throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+  }
+}
+
+const std::string toString(MemberReferenceModeKind kind) {
+  switch (kind) {
+    case mrmkInvoke: return "mrmkInvoke";
+    case mrmkNew: return "mrmkNew";
+    default: throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+  }
+}
+
+const std::string toString(MemberReferenceOverloadKind kind) {
+  switch (kind) {
+    case mrokOverloaded: return "mrokOverloaded";
+    case mrokUnoverloaded: return "mrokUnoverloaded";
+    default: throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+  }
+}
+
 const std::string toString(MethodKind kind) {
   switch (kind) {
     case mekNormal: return "mekNormal";
     case mekConstructor: return "mekConstructor";
     case mekGeneratedDefaultConstructor: return "mekGeneratedDefaultConstructor";
     case mekGeneratedAnonymousClassConstructor: return "mekGeneratedAnonymousClassConstructor";
+    default: throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+  }
+}
+
+const std::string toString(ModuleKind kind) {
+  switch (kind) {
+    case mkOpen: return "mkOpen";
+    case mkStrong: return "mkStrong";
+    default: throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+  }
+}
+
+const std::string toString(PolyExpressionKind kind) {
+  switch (kind) {
+    case pekStandalone: return "pekStandalone";
+    case pekPoly: return "pekPoly";
     default: throw JavaException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
@@ -1880,6 +2120,7 @@ const std::string toString(NodeKind kind) {
     case ndkNonJavadocComment: return "ndkNonJavadocComment";
     case ndkPositioned: return "ndkPositioned";
     case ndkPositionedWithoutComment: return "ndkPositionedWithoutComment";
+    case ndkAnnotatedTypeExpression: return "ndkAnnotatedTypeExpression";
     case ndkAnnotation: return "ndkAnnotation";
     case ndkArrayAccess: return "ndkArrayAccess";
     case ndkArrayTypeExpression: return "ndkArrayTypeExpression";
@@ -1896,13 +2137,16 @@ const std::string toString(NodeKind kind) {
     case ndkExternalTypeExpression: return "ndkExternalTypeExpression";
     case ndkFieldAccess: return "ndkFieldAccess";
     case ndkFloatLiteral: return "ndkFloatLiteral";
+    case ndkFunctionalExpression: return "ndkFunctionalExpression";
     case ndkIdentifier: return "ndkIdentifier";
     case ndkInfixExpression: return "ndkInfixExpression";
     case ndkInstanceOf: return "ndkInstanceOf";
     case ndkIntegerLiteral: return "ndkIntegerLiteral";
+    case ndkLambda: return "ndkLambda";
     case ndkLiteral: return "ndkLiteral";
     case ndkLongLiteral: return "ndkLongLiteral";
     case ndkMarkerAnnotation: return "ndkMarkerAnnotation";
+    case ndkMemberReference: return "ndkMemberReference";
     case ndkMethodInvocation: return "ndkMethodInvocation";
     case ndkNewArray: return "ndkNewArray";
     case ndkNewClass: return "ndkNewClass";
@@ -1910,6 +2154,7 @@ const std::string toString(NodeKind kind) {
     case ndkNullLiteral: return "ndkNullLiteral";
     case ndkNumberLiteral: return "ndkNumberLiteral";
     case ndkParenthesizedExpression: return "ndkParenthesizedExpression";
+    case ndkPolyExpression: return "ndkPolyExpression";
     case ndkPostfixExpression: return "ndkPostfixExpression";
     case ndkPrefixExpression: return "ndkPrefixExpression";
     case ndkPrimitiveTypeExpression: return "ndkPrimitiveTypeExpression";
@@ -1922,9 +2167,16 @@ const std::string toString(NodeKind kind) {
     case ndkTypeApplyExpression: return "ndkTypeApplyExpression";
     case ndkTypeCast: return "ndkTypeCast";
     case ndkTypeExpression: return "ndkTypeExpression";
+    case ndkTypeIntersectionExpression: return "ndkTypeIntersectionExpression";
     case ndkTypeUnionExpression: return "ndkTypeUnionExpression";
     case ndkUnary: return "ndkUnary";
     case ndkWildcardExpression: return "ndkWildcardExpression";
+    case ndkExports: return "ndkExports";
+    case ndkModuleDirective: return "ndkModuleDirective";
+    case ndkOpens: return "ndkOpens";
+    case ndkProvides: return "ndkProvides";
+    case ndkRequires: return "ndkRequires";
+    case ndkUses: return "ndkUses";
     case ndkAssert: return "ndkAssert";
     case ndkBasicFor: return "ndkBasicFor";
     case ndkBlock: return "ndkBlock";
@@ -1973,6 +2225,8 @@ const std::string toString(NodeKind kind) {
     case ndkMethod: return "ndkMethod";
     case ndkMethodDeclaration: return "ndkMethodDeclaration";
     case ndkMethodGeneric: return "ndkMethodGeneric";
+    case ndkModule: return "ndkModule";
+    case ndkModuleDeclaration: return "ndkModuleDeclaration";
     case ndkNamedDeclaration: return "ndkNamedDeclaration";
     case ndkNormalMethod: return "ndkNormalMethod";
     case ndkPackage: return "ndkPackage";
@@ -1994,9 +2248,11 @@ const std::string toString(NodeKind kind) {
     case ndkErrorType: return "ndkErrorType";
     case ndkFloatType: return "ndkFloatType";
     case ndkIntType: return "ndkIntType";
+    case ndkIntersectionType: return "ndkIntersectionType";
     case ndkLongType: return "ndkLongType";
     case ndkLowerBoundedWildcardType: return "ndkLowerBoundedWildcardType";
     case ndkMethodType: return "ndkMethodType";
+    case ndkModuleType: return "ndkModuleType";
     case ndkNoType: return "ndkNoType";
     case ndkNullType: return "ndkNullType";
     case ndkPackageType: return "ndkPackageType";
@@ -2018,6 +2274,8 @@ const std::string toString(NodeKind kind) {
 const std::string toString(EdgeKind kind) {
   switch (kind) {
     case edkCommentable_Comments: return "edkCommentable_Comments";
+    case edkAnnotatedTypeExpression_HasAnnotations: return "edkAnnotatedTypeExpression_HasAnnotations";
+    case edkAnnotatedTypeExpression_HasUnderlyingType: return "edkAnnotatedTypeExpression_HasUnderlyingType";
     case edkAnnotation_HasAnnotationName: return "edkAnnotation_HasAnnotationName";
     case edkArrayTypeExpression_HasComponentType: return "edkArrayTypeExpression_HasComponentType";
     case edkBinary_HasLeftOperand: return "edkBinary_HasLeftOperand";
@@ -2029,8 +2287,14 @@ const std::string toString(EdgeKind kind) {
     case edkErroneous_HasErrors: return "edkErroneous_HasErrors";
     case edkErroneousTypeExpression_HasErrors: return "edkErroneousTypeExpression_HasErrors";
     case edkExpression_Type: return "edkExpression_Type";
+    case edkFunctionalExpression_Target: return "edkFunctionalExpression_Target";
     case edkIdentifier_RefersTo: return "edkIdentifier_RefersTo";
     case edkInstanceOf_HasTypeOperand: return "edkInstanceOf_HasTypeOperand";
+    case edkLambda_HasParameters: return "edkLambda_HasParameters";
+    case edkLambda_HasBody: return "edkLambda_HasBody";
+    case edkMemberReference_HasQualifierExpression: return "edkMemberReference_HasQualifierExpression";
+    case edkMemberReference_HasTypeArguments: return "edkMemberReference_HasTypeArguments";
+    case edkMemberReference_ReferredMethod: return "edkMemberReference_ReferredMethod";
     case edkMethodInvocation_HasTypeArguments: return "edkMethodInvocation_HasTypeArguments";
     case edkMethodInvocation_HasArguments: return "edkMethodInvocation_HasArguments";
     case edkMethodInvocation_Invokes: return "edkMethodInvocation_Invokes";
@@ -2050,9 +2314,18 @@ const std::string toString(EdgeKind kind) {
     case edkTypeApplyExpression_HasRawType: return "edkTypeApplyExpression_HasRawType";
     case edkTypeApplyExpression_HasTypeArguments: return "edkTypeApplyExpression_HasTypeArguments";
     case edkTypeCast_HasTypeOperand: return "edkTypeCast_HasTypeOperand";
+    case edkTypeIntersectionExpression_HasBounds: return "edkTypeIntersectionExpression_HasBounds";
     case edkTypeUnionExpression_HasAlternatives: return "edkTypeUnionExpression_HasAlternatives";
     case edkUnary_HasOperand: return "edkUnary_HasOperand";
     case edkWildcardExpression_HasBound: return "edkWildcardExpression_HasBound";
+    case edkExports_HasPackageName: return "edkExports_HasPackageName";
+    case edkExports_HasModuleNames: return "edkExports_HasModuleNames";
+    case edkOpens_HasPackageName: return "edkOpens_HasPackageName";
+    case edkOpens_HasModuleNames: return "edkOpens_HasModuleNames";
+    case edkProvides_HasServiceName: return "edkProvides_HasServiceName";
+    case edkProvides_HasImplementationNames: return "edkProvides_HasImplementationNames";
+    case edkRequires_HasModuleName: return "edkRequires_HasModuleName";
+    case edkUses_HasServiceName: return "edkUses_HasServiceName";
     case edkAssert_HasCondition: return "edkAssert_HasCondition";
     case edkAssert_HasDetail: return "edkAssert_HasDetail";
     case edkBasicFor_HasInitializers: return "edkBasicFor_HasInitializers";
@@ -2087,8 +2360,10 @@ const std::string toString(EdgeKind kind) {
     case edkAnnotationTypeElement_HasDefaultValue: return "edkAnnotationTypeElement_HasDefaultValue";
     case edkCompilationUnit_HasPackageDeclaration: return "edkCompilationUnit_HasPackageDeclaration";
     case edkCompilationUnit_HasImports: return "edkCompilationUnit_HasImports";
-    case edkCompilationUnit_TypeDeclarations: return "edkCompilationUnit_TypeDeclarations";
     case edkCompilationUnit_HasOthers: return "edkCompilationUnit_HasOthers";
+    case edkCompilationUnit_HasModuleDeclaration: return "edkCompilationUnit_HasModuleDeclaration";
+    case edkCompilationUnit_TypeDeclarations: return "edkCompilationUnit_TypeDeclarations";
+    case edkCompilationUnit_IsInModule: return "edkCompilationUnit_IsInModule";
     case edkEnumConstant_HasNewClass: return "edkEnumConstant_HasNewClass";
     case edkGenericDeclaration_HasTypeParameters: return "edkGenericDeclaration_HasTypeParameters";
     case edkImport_HasTarget: return "edkImport_HasTarget";
@@ -2096,25 +2371,34 @@ const std::string toString(EdgeKind kind) {
     case edkMethodDeclaration_HasReturnType: return "edkMethodDeclaration_HasReturnType";
     case edkMethodDeclaration_MethodType: return "edkMethodDeclaration_MethodType";
     case edkMethodDeclaration_Overrides: return "edkMethodDeclaration_Overrides";
+    case edkModule_Packages: return "edkModule_Packages";
+    case edkModuleDeclaration_HasName: return "edkModuleDeclaration_HasName";
+    case edkModuleDeclaration_HasDirectives: return "edkModuleDeclaration_HasDirectives";
+    case edkModuleDeclaration_ModuleType: return "edkModuleDeclaration_ModuleType";
+    case edkModuleDeclaration_RefersTo: return "edkModuleDeclaration_RefersTo";
     case edkNormalMethod_HasParameters: return "edkNormalMethod_HasParameters";
     case edkNormalMethod_HasBody: return "edkNormalMethod_HasBody";
     case edkNormalMethod_HasThrownExceptions: return "edkNormalMethod_HasThrownExceptions";
     case edkPackage_HasCompilationUnits: return "edkPackage_HasCompilationUnits";
+    case edkPackage_IsInModule: return "edkPackage_IsInModule";
     case edkPackageDeclaration_HasPackageName: return "edkPackageDeclaration_HasPackageName";
     case edkPackageDeclaration_RefersTo: return "edkPackageDeclaration_RefersTo";
     case edkScope_HasMembers: return "edkScope_HasMembers";
-    case edkTypeDeclaration_IsInCompilationUnit: return "edkTypeDeclaration_IsInCompilationUnit";
     case edkTypeDeclaration_HasSuperClass: return "edkTypeDeclaration_HasSuperClass";
     case edkTypeDeclaration_HasSuperInterfaces: return "edkTypeDeclaration_HasSuperInterfaces";
     case edkTypeDeclaration_HasOthers: return "edkTypeDeclaration_HasOthers";
+    case edkTypeDeclaration_IsInCompilationUnit: return "edkTypeDeclaration_IsInCompilationUnit";
+    case edkTypeDeclaration_IsInModule: return "edkTypeDeclaration_IsInModule";
     case edkTypeParameter_HasBounds: return "edkTypeParameter_HasBounds";
     case edkVariable_HasInitialValue: return "edkVariable_HasInitialValue";
     case edkVariableDeclaration_HasType: return "edkVariableDeclaration_HasType";
     case edkArrayType_ComponentType: return "edkArrayType_ComponentType";
     case edkClassType_RefersTo: return "edkClassType_RefersTo";
+    case edkIntersectionType_Bounds: return "edkIntersectionType_Bounds";
     case edkMethodType_ReturnType: return "edkMethodType_ReturnType";
     case edkMethodType_ParameterTypes: return "edkMethodType_ParameterTypes";
     case edkMethodType_ThrownTypes: return "edkMethodType_ThrownTypes";
+    case edkModuleType_RefersTo: return "edkModuleType_RefersTo";
     case edkPackageType_RefersTo: return "edkPackageType_RefersTo";
     case edkParameterizedType_RawType: return "edkParameterizedType_RawType";
     case edkParameterizedType_ArgumentTypes: return "edkParameterizedType_ArgumentTypes";
@@ -2162,8 +2446,11 @@ void setSimilarityMinForEdges(double value) {
 
 
 char packageSeparator = '.';
+//char packageSeparator = '/';
 char subClassSeparator = '$';
 char methodAndFieldSeparator = '.';
+//bool storeUniqueNames = true;
+// TODO egyelore ki van kapcsolva, ketfele nev lehet tobb helyen is (type erasure-os es anelkuli)
 bool storeUniqueNames = false;
 bool nonGenericMethodSignatures = false;
 
@@ -2179,11 +2466,19 @@ const std::string clInit = "<clinit>";
 const std::string clInitName = clInit + "()";
 const std::string clInitSuffix = methodAndFieldSeparator + clInitName;
 
+// TODO lambda name ???
+const std::string lambda = "<lambda>";
+const std::string lambdaName = lambda + "()";
+
 std::string getInstanceInitBlockSuffix() { return initBlockSuffix; }
+
 std::string getStaticInitBlockSuffix() { return clInitSuffix; }
+
 std::string getInstanceInitBlockName() { return initBlockName; }
+
 std::string getStaticInitBlockName() { return clInitName; }
 
+//std::string getUniqueNameForTypeInternal(const type::Type &node, bool typeErasure);
 
 //replace all occurence of c1 to c2 in str
 void replace(std::string &str, char c1, char c2) {
@@ -2203,7 +2498,8 @@ static bool isStructuralItem(const base::Base &node) {
   NodeKind ndk = node.getNodeKind();
   return
        ndk == ndkPackage
-    || (Common::getIsMember(node) && ((ndk != ndkVariable || Common::getIsTypeDeclaration(*node.getParent())) && (ndk != ndkParameter || Common::getIsNormalMethod(*node.getParent()))));
+    || (Common::getIsMember(node) && ((ndk != ndkVariable || Common::getIsTypeDeclaration(*node.getParent())) && (ndk != ndkParameter || Common::getIsNormalMethod(*node.getParent()))))
+    || ndk == ndkLambda;
 #else
     if (n.getId()!=fact.getRoot()
           && n.getNodeKind()!=ndkPackage
@@ -2276,7 +2572,16 @@ std::string getUnknownName(const base::Base& node) {
 }
 
 std::string NameGenerator::getUniqueNameForBase(const base::Base &node, bool qualified /*= true*/) {
-  Factory::TurnFilterOffSafely tfos(node.getFactory());
+  //looking for already generated unique name
+  /*Factory::UniqueNameMapType& uniqueNameMap = node.getFactory().uniqueNameMap;
+  if (storeUniqueNames) {
+    Factory::UniqueNameMapType::iterator it = uniqueNameMap.find(node.getId());
+    if (it != uniqueNameMap.end()) {
+      return it->second;
+    }
+  }*/
+
+  Factory::TurnFilterOffSafely tfos(node.getFactory()); // TODO
   std::string str = "";
 
   if(getIsMethodDeclaration(node)) {
@@ -2296,10 +2601,15 @@ std::string NameGenerator::getUniqueNameForBase(const base::Base &node, bool qua
     std::string typeStr = "";
 
     if (methodDeclaration.getMethodType()) {
-      typeStr = getUniqueNameForTypeInternal(*methodDeclaration.getMethodType(), /*typeErasure =*/ true);
+      //str += getUniqueNameForType(*methodDeclaration.getMethodType());
+      //typeStr = getUniqueNameForTypeInternal(*methodDeclaration.getMethodType(), /*typeErasure =*/ nonGenericMethodSignatures);
+      typeStr = getUniqueNameForTypeInternal(*methodDeclaration.getMethodType(), /*typeErasure =*/ true); // TODO pantos
     }
 
     if (!methodDeclaration.getMethodType() || NameGenerator::error) {
+      //str += "<MissingMethodType>";
+
+      //common::WriteMsg::write(common::WriteMsg::mlWarning, "Missing MethodType at node %u\n", node.getId());
 
       typeStr = "(";
       if(Common::getIsNormalMethod(methodDeclaration)) {
@@ -2320,8 +2630,16 @@ std::string NameGenerator::getUniqueNameForBase(const base::Base &node, bool qua
 
     str += typeStr;
 
+    //if (methodDeclaration.getMethodType()) {
+    //  //str += getUniqueNameForType(*methodDeclaration.getMethodType());
+    //  str += NameGenerator().getUniqueNameForTypeInternal(*methodDeclaration.getMethodType(), /*typeErasure =*/ nonGenericMethodSignatures);
+    //} else {
+    //  str += "<MissingMethodType>";
+    //}
   } else if(getIsTypeDeclaration(node)) {
     str = dynamic_cast<const struc::TypeDeclaration &>(node).getBinaryName();
+    //replace(str, '.', packageSeparator);
+    //replace(str, '$', subClassSeparator);
     if (!qualified) {
       replace(str, '.', '/');
     }
@@ -2349,10 +2667,17 @@ std::string NameGenerator::getUniqueNameForBase(const base::Base &node, bool qua
     }
     str += "#" + Common::toString(ordinal);
 
+  } else if (getIsLambda(node)) { // TODO vmi rendes nev ???
+    str = getUniqueNameForBase(*node.getParent());
+    str += methodAndFieldSeparator;
+    str += lambda;
+    str += "#" + Common::toString(dynamic_cast<const expr::Lambda&>(node).getPosition().getLine()); // FIXME
+
   } else {
     switch(node.getNodeKind()) {
     case ndkPackage:
       str = dynamic_cast<const struc::Package &>(node).getQualifiedName();
+      //replace(str,'.',packageSeparator);
       break;
 
     default:
@@ -2380,16 +2705,37 @@ std::string NameGenerator::getUniqueNameForBase(const base::Base &node, bool qua
     str += getUnknownName(node);
   }
 
+  /*if (storeUniqueNames) {
+    uniqueNameMap[node.getId()] = str;
+  }*/
 
   return str;
 }
 
 std::string NameGenerator::getUniqueNameForType(const type::Type &node) {
-  Factory::TurnFilterOffSafely tfos(node.getFactory());
+  //looking for already generated unique name
+  /*Factory::UniqueNameMapType& uniqueNameMap = node.getFactory().uniqueNameMap;
+  if (storeUniqueNames) {
+    Factory::UniqueNameMapType::iterator it = uniqueNameMap.find(node.getId());
+    if (it != uniqueNameMap.end()) {
+      return it->second;
+    }
+  }*/
+
+  Factory::TurnFilterOffSafely tfos(node.getFactory()); // TODO
+
   std::string str = getUniqueNameForTypeInternal(node, false);
+
+  /*if (storeUniqueNames) {
+    uniqueNameMap[node.getId()] = str;
+  }*/
+
   return str;
 }
 
+// TODO atnezni: JLS 4.6 Type Erasure
+// TODO a kozvetlen getUniqueNameForTypeInternal hivasok miatt a cache nem mukodik
+//      viszont a cache-el meg gond lehet a typeErasure-rel es nelkule keszult sztringekkel
 std::string NameGenerator::getUniqueNameForTypeInternal(const type::Type &node, bool typeErasure) {
   std::string str = "";
 
@@ -2399,6 +2745,8 @@ std::string NameGenerator::getUniqueNameForTypeInternal(const type::Type &node, 
     } else {
       str = "-";
     }
+    //str += getUniqueNameForType(*dynamic_cast<const type::BoundedWildcardType &>(node).getBound());
+    //str += getUniqueNameForTypeInternal(*dynamic_cast<const type::BoundedWildcardType &>(node).getBound(), typeErasure);
     const type::BoundedWildcardType& boundedWcType = dynamic_cast<const type::BoundedWildcardType &>(node);
     if (boundedWcType.getBound()) {
       str += getUniqueNameForTypeInternal(*boundedWcType.getBound(), typeErasure);
@@ -2461,6 +2809,8 @@ std::string NameGenerator::getUniqueNameForTypeInternal(const type::Type &node, 
         str += getUniqueNameForTypeInternal(*it, typeErasure);
         ++it;
       }
+      //str += ")" + getUniqueNameForType(*type.getReturnType());
+      //str += ")" + getUniqueNameForTypeInternal(*type.getReturnType(), typeErasure);
       str += ")";
       if (type.getReturnType()) {
         str += getUniqueNameForTypeInternal(*type.getReturnType(), typeErasure);
@@ -2474,6 +2824,8 @@ std::string NameGenerator::getUniqueNameForTypeInternal(const type::Type &node, 
     case ndkArrayType: {
       const type::ArrayType& arrayType = dynamic_cast<const type::ArrayType &>(node);
       str.insert(0, "[");
+      //str += getUniqueNameForType(*dynamic_cast<const type::ArrayType &>(node).getComponentType());
+      //str += getUniqueNameForTypeInternal(*dynamic_cast<const type::ArrayType &>(node).getComponentType(), typeErasure);
       if (arrayType.getComponentType()) {
         str += getUniqueNameForTypeInternal(*arrayType.getComponentType(), typeErasure);
       } else {
@@ -2497,6 +2849,7 @@ std::string NameGenerator::getUniqueNameForTypeInternal(const type::Type &node, 
     case ndkParameterizedType: {
       const type::ParameterizedType &parameterizedType = dynamic_cast<const type::ParameterizedType &>(node);
 
+      //str += getUniqueNameForType(*parameterizedType.getRawType());
       str += getUniqueNameForTypeInternal(*parameterizedType.getRawType(), typeErasure);
 
       //for ';' at the end of ClassType name
@@ -2506,6 +2859,7 @@ std::string NameGenerator::getUniqueNameForTypeInternal(const type::Type &node, 
         str += "<";
         ListIterator<type::Type> it = parameterizedType.getArgumentTypesListIteratorBegin();
         while(it != parameterizedType.getArgumentTypesListIteratorEnd()) {
+          //str += getUniqueNameForType(*it);
           str += getUniqueNameForTypeInternal(*it, typeErasure);
           ++it;
         }
@@ -2515,6 +2869,7 @@ std::string NameGenerator::getUniqueNameForTypeInternal(const type::Type &node, 
       str += ";";
       break;
     }
+    // TODO JAN hiba miatt hianyozhatnak keresztelek, tobbire is megcsinalni a hibakezelest
     case ndkClassType: {
       str = "L";
       struc::TypeDeclaration* td = dynamic_cast<const type::ClassType&>(node).getRefersTo();
@@ -2534,6 +2889,7 @@ std::string NameGenerator::getUniqueNameForTypeInternal(const type::Type &node, 
       str = "U";
       ListIterator<type::Type> it = type.getAlternativesListIteratorBegin();
       while(it != type.getAlternativesListIteratorEnd()) {
+        //str += getUniqueNameForType(*it);
         str += getUniqueNameForTypeInternal(*it, typeErasure);
         ++it;
       }
@@ -2548,10 +2904,11 @@ std::string NameGenerator::getUniqueNameForTypeInternal(const type::Type &node, 
       struc::TypeParameter* tp = dynamic_cast<const type::TypeVariable &>(node).getRefersTo();
       if (tp) {
         if (!tp->getBoundsIsEmpty()) {
+          //str += getUniqueNameForTypeInternal(*tp->getBoundsListIteratorBegin()->getType(), /*typeErasure =*/ true);
           const expr::TypeExpression &te = *tp->getBoundsListIteratorBegin();
           if (te.getType()) {
             str += getUniqueNameForTypeInternal(*te.getType(), /*typeErasure =*/ true);
-          } else {
+          } else { // TODO pl linkelesnel kesobb allitodik be a keresztel
             common::WriteMsg::write(CMSG_COMMON_TYPEEXPR_HAS_NO_TYPE, te.getId(), Common::toString(te.getNodeKind()).c_str());
             //str += "[MISSING_TYPE]";
             NameGenerator::error = true;
@@ -2569,6 +2926,18 @@ std::string NameGenerator::getUniqueNameForTypeInternal(const type::Type &node, 
       if (!typeErasure) {
         str += ";";
       }
+      break;
+    }
+    case ndkIntersectionType: {
+      const type::IntersectionType &type = dynamic_cast<const type::IntersectionType &>(node);
+      str = "I";
+      ListIterator<type::Type> it = type.getBoundsListIteratorBegin();
+      while(it != type.getBoundsListIteratorEnd()) {
+        //str += getUniqueNameForType(*it);
+        str += getUniqueNameForTypeInternal(*it, typeErasure);
+        ++it;
+      }
+      str += ";";
       break;
     }
     default:
@@ -2608,7 +2977,7 @@ std::string getUniqueStringForSorting(const base::Base& node) {
 
   if (node.getFactory().getFilterState(node.getId()) == Filter::NotFiltered
     || (node.getParent() && node.getFactory().getFilterState(node.getParent()->getId()) == Filter::NotFiltered
-        && Common::getIsNormalMethod(node) && dynamic_cast<const struc::NormalMethod&>(node).getMethodKind() == mekConstructor)
+        && Common::getIsNormalMethod(node) && dynamic_cast<const struc::NormalMethod&>(node).getMethodKind() == mekConstructor) // TODO JANLink bug
   ) {
     s << "F1#";
   } else {
@@ -2731,6 +3100,7 @@ std::string NameGenerator::getTypeName(const type::Type& node, bool typeErasure)
 
       break;
     }
+    // TODO JAN hiba miatt hianyozhatnak keresztelek, tobbire is megcsinalni a hibakezelest
     case ndkClassType: {
       struc::TypeDeclaration* td = dynamic_cast<const type::ClassType&>(node).getRefersTo();
       if (td) {
@@ -2772,6 +3142,7 @@ std::string NameGenerator::getTypeName(const type::Type& node, bool typeErasure)
     case ndkMethodType:
     case ndkPackageType:
     case ndkUnionType:
+    case ndkIntersectionType:
     default:
       NameGenerator::error = true;
       throw JavaException(COLUMBUS_LOCATION, CMSG_COMMON_EX_INVALID_NODE(node.getId(), node.getNodeKind()));
@@ -2813,6 +3184,7 @@ std::string NameGenerator::getGenericDeclarationName(const struc::GenericDeclara
         str += " extends ";
         firstBound = false;
       }
+      //str += getTypeName(*it2->getType(), false);
       str += visitTypeExpr(&*it2,false);
       ++it2;
     }
@@ -2910,7 +3282,7 @@ std::string NameGenerator::getTypeExpressionName(const expr::TypeExpression& nod
   }
   case ndkErroneousTypeExpression:
     str = "[ERROR]";
-    NameGenerator::error = true;
+    NameGenerator::error = true; // TODO kell ez ide?
     break;
   case ndkWildcardExpression: {
     const expr::WildcardExpression &wce = dynamic_cast<const expr::WildcardExpression &>(node);
@@ -2942,6 +3314,32 @@ std::string NameGenerator::getTypeExpressionName(const expr::TypeExpression& nod
     }
     break;
   }
+  case ndkAnnotatedTypeExpression: {
+    const expr::AnnotatedTypeExpression &ate = dynamic_cast<const expr::AnnotatedTypeExpression &>(node);
+    if (ate.getUnderlyingType() && ate.getUnderlyingType()->getType()) {
+      str = getTypeName(*ate.getUnderlyingType()->getType(), false);
+    } else {
+      str = "[MISSING_EXT_TYPE]";
+      common::WriteMsg::write(CMSG_COMMON_TYPEEXPR_HAS_NO_TYPE, ate.getId(), Common::toString(ate.getNodeKind()).c_str());
+      NameGenerator::error = true;
+    }
+    break;
+  }
+  case ndkTypeIntersectionExpression: {
+    const expr::TypeIntersectionExpression &tie = dynamic_cast<const expr::TypeIntersectionExpression &>(node);
+    ListIterator<expr::TypeExpression > it = tie.getBoundsListIteratorBegin();
+    bool first = true;
+    while (it != tie.getBoundsListIteratorEnd()) {
+      if (!first) {
+        str += " & ";
+      } else {
+        first = false;
+      }
+      str += getTypeExpressionName(*it);
+      ++it;
+    }
+    break;
+  }
   case ndkTypeUnionExpression:
   default:
     throw JavaException(COLUMBUS_LOCATION, CMSG_COMMON_EX_INVALID_NODE(node.getId(), node.getNodeKind()));
@@ -2954,7 +3352,8 @@ std::string NameGenerator::getTypeExpressionLongName(const expr::TypeExpression&
   switch(node.getNodeKind()) {
   case ndkArrayTypeExpression: {
     const expr::ArrayTypeExpression &arrayType = dynamic_cast<const expr::ArrayTypeExpression &>(node);
-    str = "[" + getTypeExpressionLongName(*arrayType.getComponentType(), true);
+    //str = "[" + getTypeExpressionName(*arrayType.getComponentType());
+    str = "[" + getTypeExpressionLongName(*arrayType.getComponentType(), true); // TODO true/false ?
     break;
   }
   case ndkPrimitiveTypeExpression: {
@@ -3016,12 +3415,26 @@ std::string NameGenerator::getTypeExpressionLongName(const expr::TypeExpression&
 
   case ndkTypeApplyExpression: {
     const expr::TypeApplyExpression &typeApply = dynamic_cast<const expr::TypeApplyExpression &>(node);
-    str = getTypeExpressionLongName(*typeApply.getRawType(), true);
+    //str = getTypeExpressionLongName(*typeApply.getRawType(),false);
+    str = getTypeExpressionLongName(*typeApply.getRawType(), true); // TODO true/false ?
+    /*+ "<";
+    ListIterator<expr::TypeExpression > it = typeApply.getTypeArgumentsListIteratorBegin();
+    bool first = true;
+    while(it != typeApply.getTypeArgumentsListIteratorEnd()) {
+      if(!first) {
+        str += ",";
+      } else {
+        first = false;
+      }
+      str += getTypeExpressionName(*it);
+      ++it;
+    }
+    str += ">";*/
     break;
   }
   case ndkErroneousTypeExpression:
     str = "[ERROR]";
-    NameGenerator::error = true;
+    NameGenerator::error = true; // TODO kell ez ide?
     break;
   case ndkExternalTypeExpression: {
     const expr::ExternalTypeExpression &external = dynamic_cast<const expr::ExternalTypeExpression &>(node);
@@ -3032,6 +3445,12 @@ std::string NameGenerator::getTypeExpressionLongName(const expr::TypeExpression&
       common::WriteMsg::write(CMSG_COMMON_TYPEEXPR_HAS_NO_TYPE, external.getId(), Common::toString(external.getNodeKind()).c_str());
       NameGenerator::error = true;
     }
+    //str = visitTypeExpr(dynamic_cast<const expr::ExternalTypeExpression&>(node).getType(), true);
+    break;
+  }
+  case ndkAnnotatedTypeExpression: {
+  const expr::AnnotatedTypeExpression &ate = dynamic_cast<const expr::AnnotatedTypeExpression &>(node);
+    str = getTypeExpressionLongName(*ate.getUnderlyingType(), true);
     break;
   }
   case ndkTypeUnionExpression:
@@ -3126,6 +3545,8 @@ std::string NameGenerator::getNameInternal(const base::Base& node) {
     name = initBlockName;
   } else if (Common::getIsStaticInitializerBlock(node)) {
     name = clInitName;
+  } else if (Common::getIsLambda(node)) {
+    name = lambdaName; // TODO
   } else {
 
   }
@@ -3154,8 +3575,9 @@ std::string NameGenerator::getLongNameInternal(const base::Base& node) {
       name = getLongName(dynamic_cast<const struc::TypeDeclaration &>(*vd.getParent()));
       name += "." + vd.getName() + ";";
       std::string typeName = visitTypeExpr(vd.getType(), true);
-      replace(typeName, '.', '/');
+      replace(typeName, '.', '/'); // FIXME hackelést kiszedni, ha jo lesz a getTypeName, vagy a uniqe nevben / legyen az elvalaszto . helyett
       name += typeName;
+      //name += getTypeName(*vd.getType()->getType(), true, true);
     }
   } else if(Common::getIsPackage(node)) {
     const struc::Package &package = dynamic_cast<const struc::Package&>(node);
@@ -3167,6 +3589,10 @@ std::string NameGenerator::getLongNameInternal(const base::Base& node) {
     } else if (Common::getIsStaticInitializerBlock(node)){
       name += clInitName;
     }
+  } else if (Common::getIsLambda(node)) { // TODO vmi rendes nev ???
+    name = getUniqueNameForBase(*node.getParent());
+    name += "." + lambda;
+    name += "#" + Common::toString(dynamic_cast<const expr::Lambda&>(node).getPosition().getLine()); // FIXME
   } else {
 
   }
@@ -3182,24 +3608,28 @@ std::string NameGenerator::getLongNameInternal(const base::Base& node) {
 }
 
 std::string getName(const base::Base& node) {
+  //return NameGenerator().getName(node);
   std::string name = NameGenerator().getName(node);
   //std::cout << "getName " << node.getId() << " " << Common::toString(node.getNodeKind()) << " " << name << std::endl;
   return name;
 }
 
 std::string getLongName(const base::Base& node) {
+  //return NameGenerator().getLongName(node);
   std::string name = NameGenerator().getLongName(node);
   //std::cout << "getLongName " << node.getId() << " " << Common::toString(node.getNodeKind()) << " " << name << std::endl;
   return name;
 }
 
 std::string getUniqueNameForBase(const base::Base &node) {
+  //return NameGenerator().getUniqueNameForBase(node);
   std::string name = NameGenerator().getUniqueNameForBase(node);
   //std::cout << "getUniqueNameForBase " << node.getId() << " " << Common::toString(node.getNodeKind()) << " " << name << std::endl;
   return name;
 }
 
 std::string getUniqueNameForType(const type::Type &node) {
+  //return NameGenerator().getUniqueNameForType(node);
   std::string name = NameGenerator().getUniqueNameForType(node);
   //std::cout << "getUniqueNameForType " << node.getId() << " " << Common::toString(node.getNodeKind()) << " " << name << std::endl;
   return name;

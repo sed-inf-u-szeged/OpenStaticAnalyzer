@@ -130,6 +130,4 @@ set (SOURCES
 
 add_library (${LIBNAME} STATIC ${SOURCES})
 add_dependencies (${LIBNAME} boost)
-set_target_properties(${LIBNAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/inc/${LIBNAME}.h")
-add_pch_generation(${LIBNAME} boost)
 set_visual_studio_project_folder(${LIBNAME} TRUE)

@@ -58,6 +58,10 @@ void Visitor::visit(const base::LineComment& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const base::LineComment& node , bool callVirtualBase) { }
 
+void Visitor::visit(const expr::AnnotatedTypeExpression& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expr::AnnotatedTypeExpression& node , bool callVirtualBase) { }
+
 void Visitor::visit(const expr::ArrayAccess& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expr::ArrayAccess& node , bool callVirtualBase) { }
@@ -126,6 +130,10 @@ void Visitor::visit(const expr::IntegerLiteral& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expr::IntegerLiteral& node , bool callVirtualBase) { }
 
+void Visitor::visit(const expr::Lambda& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expr::Lambda& node , bool callVirtualBase) { }
+
 void Visitor::visit(const expr::LongLiteral& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expr::LongLiteral& node , bool callVirtualBase) { }
@@ -133,6 +141,10 @@ void Visitor::visitEnd(const expr::LongLiteral& node , bool callVirtualBase) { }
 void Visitor::visit(const expr::MarkerAnnotation& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expr::MarkerAnnotation& node , bool callVirtualBase) { }
+
+void Visitor::visit(const expr::MemberReference& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expr::MemberReference& node , bool callVirtualBase) { }
 
 void Visitor::visit(const expr::MethodInvocation& node , bool callVirtualBase) {}
 
@@ -202,6 +214,10 @@ void Visitor::visit(const expr::TypeCast& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expr::TypeCast& node , bool callVirtualBase) { }
 
+void Visitor::visit(const expr::TypeIntersectionExpression& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expr::TypeIntersectionExpression& node , bool callVirtualBase) { }
+
 void Visitor::visit(const expr::TypeUnionExpression& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expr::TypeUnionExpression& node , bool callVirtualBase) { }
@@ -209,6 +225,26 @@ void Visitor::visitEnd(const expr::TypeUnionExpression& node , bool callVirtualB
 void Visitor::visit(const expr::WildcardExpression& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expr::WildcardExpression& node , bool callVirtualBase) { }
+
+void Visitor::visit(const module::Exports& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const module::Exports& node , bool callVirtualBase) { }
+
+void Visitor::visit(const module::Opens& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const module::Opens& node , bool callVirtualBase) { }
+
+void Visitor::visit(const module::Provides& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const module::Provides& node , bool callVirtualBase) { }
+
+void Visitor::visit(const module::Requires& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const module::Requires& node , bool callVirtualBase) { }
+
+void Visitor::visit(const module::Uses& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const module::Uses& node , bool callVirtualBase) { }
 
 void Visitor::visit(const statm::Assert& node , bool callVirtualBase) {}
 
@@ -346,6 +382,14 @@ void Visitor::visit(const struc::MethodGeneric& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const struc::MethodGeneric& node , bool callVirtualBase) { }
 
+void Visitor::visit(const struc::Module& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const struc::Module& node , bool callVirtualBase) { }
+
+void Visitor::visit(const struc::ModuleDeclaration& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const struc::ModuleDeclaration& node , bool callVirtualBase) { }
+
 void Visitor::visit(const struc::Package& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const struc::Package& node , bool callVirtualBase) { }
@@ -406,6 +450,10 @@ void Visitor::visit(const type::IntType& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const type::IntType& node , bool callVirtualBase) { }
 
+void Visitor::visit(const type::IntersectionType& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const type::IntersectionType& node , bool callVirtualBase) { }
+
 void Visitor::visit(const type::LongType& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const type::LongType& node , bool callVirtualBase) { }
@@ -417,6 +465,10 @@ void Visitor::visitEnd(const type::LowerBoundedWildcardType& node , bool callVir
 void Visitor::visit(const type::MethodType& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const type::MethodType& node , bool callVirtualBase) { }
+
+void Visitor::visit(const type::ModuleType& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const type::ModuleType& node , bool callVirtualBase) { }
 
 void Visitor::visit(const type::NoType& node , bool callVirtualBase) {}
 
@@ -462,6 +514,14 @@ void Visitor::visitCommentable_Comments(const base::Commentable& begin, const ba
 
 void Visitor::visitEndCommentable_Comments(const base::Commentable& begin, const base::Comment& end) { }
 
+void Visitor::visitAnnotatedTypeExpression_HasAnnotations(const expr::AnnotatedTypeExpression& begin, const expr::Annotation& end) { }
+
+void Visitor::visitEndAnnotatedTypeExpression_HasAnnotations(const expr::AnnotatedTypeExpression& begin, const expr::Annotation& end) { }
+
+void Visitor::visitAnnotatedTypeExpression_HasUnderlyingType(const expr::AnnotatedTypeExpression& begin, const expr::TypeExpression& end) { }
+
+void Visitor::visitEndAnnotatedTypeExpression_HasUnderlyingType(const expr::AnnotatedTypeExpression& begin, const expr::TypeExpression& end) { }
+
 void Visitor::visitAnnotation_HasAnnotationName(const expr::Annotation& begin, const expr::TypeExpression& end) { }
 
 void Visitor::visitEndAnnotation_HasAnnotationName(const expr::Annotation& begin, const expr::TypeExpression& end) { }
@@ -506,6 +566,10 @@ void Visitor::visitExpression_Type(const expr::Expression& begin, const type::Ty
 
 void Visitor::visitEndExpression_Type(const expr::Expression& begin, const type::Type& end) { }
 
+void Visitor::visitFunctionalExpression_Target(const expr::FunctionalExpression& begin, const type::Type& end) { }
+
+void Visitor::visitEndFunctionalExpression_Target(const expr::FunctionalExpression& begin, const type::Type& end) { }
+
 void Visitor::visitIdentifier_RefersTo(const expr::Identifier& begin, const base::Named& end) { }
 
 void Visitor::visitEndIdentifier_RefersTo(const expr::Identifier& begin, const base::Named& end) { }
@@ -513,6 +577,26 @@ void Visitor::visitEndIdentifier_RefersTo(const expr::Identifier& begin, const b
 void Visitor::visitInstanceOf_HasTypeOperand(const expr::InstanceOf& begin, const expr::TypeExpression& end) { }
 
 void Visitor::visitEndInstanceOf_HasTypeOperand(const expr::InstanceOf& begin, const expr::TypeExpression& end) { }
+
+void Visitor::visitLambda_HasParameters(const expr::Lambda& begin, const struc::Parameter& end) { }
+
+void Visitor::visitEndLambda_HasParameters(const expr::Lambda& begin, const struc::Parameter& end) { }
+
+void Visitor::visitLambda_HasBody(const expr::Lambda& begin, const base::Positioned& end) { }
+
+void Visitor::visitEndLambda_HasBody(const expr::Lambda& begin, const base::Positioned& end) { }
+
+void Visitor::visitMemberReference_HasQualifierExpression(const expr::MemberReference& begin, const expr::Expression& end) { }
+
+void Visitor::visitEndMemberReference_HasQualifierExpression(const expr::MemberReference& begin, const expr::Expression& end) { }
+
+void Visitor::visitMemberReference_HasTypeArguments(const expr::MemberReference& begin, const expr::TypeExpression& end) { }
+
+void Visitor::visitEndMemberReference_HasTypeArguments(const expr::MemberReference& begin, const expr::TypeExpression& end) { }
+
+void Visitor::visitMemberReference_ReferredMethod(const expr::MemberReference& begin, const struc::MethodDeclaration& end) { }
+
+void Visitor::visitEndMemberReference_ReferredMethod(const expr::MemberReference& begin, const struc::MethodDeclaration& end) { }
 
 void Visitor::visitMethodInvocation_HasTypeArguments(const expr::MethodInvocation& begin, const expr::TypeExpression& end) { }
 
@@ -590,6 +674,10 @@ void Visitor::visitTypeCast_HasTypeOperand(const expr::TypeCast& begin, const ex
 
 void Visitor::visitEndTypeCast_HasTypeOperand(const expr::TypeCast& begin, const expr::TypeExpression& end) { }
 
+void Visitor::visitTypeIntersectionExpression_HasBounds(const expr::TypeIntersectionExpression& begin, const expr::TypeExpression& end) { }
+
+void Visitor::visitEndTypeIntersectionExpression_HasBounds(const expr::TypeIntersectionExpression& begin, const expr::TypeExpression& end) { }
+
 void Visitor::visitTypeUnionExpression_HasAlternatives(const expr::TypeUnionExpression& begin, const expr::TypeExpression& end) { }
 
 void Visitor::visitEndTypeUnionExpression_HasAlternatives(const expr::TypeUnionExpression& begin, const expr::TypeExpression& end) { }
@@ -601,6 +689,38 @@ void Visitor::visitEndUnary_HasOperand(const expr::Unary& begin, const expr::Exp
 void Visitor::visitWildcardExpression_HasBound(const expr::WildcardExpression& begin, const expr::TypeExpression& end) { }
 
 void Visitor::visitEndWildcardExpression_HasBound(const expr::WildcardExpression& begin, const expr::TypeExpression& end) { }
+
+void Visitor::visitExports_HasPackageName(const module::Exports& begin, const expr::Expression& end) { }
+
+void Visitor::visitEndExports_HasPackageName(const module::Exports& begin, const expr::Expression& end) { }
+
+void Visitor::visitExports_HasModuleNames(const module::Exports& begin, const expr::Expression& end) { }
+
+void Visitor::visitEndExports_HasModuleNames(const module::Exports& begin, const expr::Expression& end) { }
+
+void Visitor::visitOpens_HasPackageName(const module::Opens& begin, const expr::Expression& end) { }
+
+void Visitor::visitEndOpens_HasPackageName(const module::Opens& begin, const expr::Expression& end) { }
+
+void Visitor::visitOpens_HasModuleNames(const module::Opens& begin, const expr::Expression& end) { }
+
+void Visitor::visitEndOpens_HasModuleNames(const module::Opens& begin, const expr::Expression& end) { }
+
+void Visitor::visitProvides_HasServiceName(const module::Provides& begin, const expr::Expression& end) { }
+
+void Visitor::visitEndProvides_HasServiceName(const module::Provides& begin, const expr::Expression& end) { }
+
+void Visitor::visitProvides_HasImplementationNames(const module::Provides& begin, const expr::Expression& end) { }
+
+void Visitor::visitEndProvides_HasImplementationNames(const module::Provides& begin, const expr::Expression& end) { }
+
+void Visitor::visitRequires_HasModuleName(const module::Requires& begin, const expr::Expression& end) { }
+
+void Visitor::visitEndRequires_HasModuleName(const module::Requires& begin, const expr::Expression& end) { }
+
+void Visitor::visitUses_HasServiceName(const module::Uses& begin, const expr::Expression& end) { }
+
+void Visitor::visitEndUses_HasServiceName(const module::Uses& begin, const expr::Expression& end) { }
 
 void Visitor::visitAssert_HasCondition(const statm::Assert& begin, const expr::Expression& end) { }
 
@@ -702,9 +822,9 @@ void Visitor::visitThrow_HasExpression(const statm::Throw& begin, const expr::Ex
 
 void Visitor::visitEndThrow_HasExpression(const statm::Throw& begin, const expr::Expression& end) { }
 
-void Visitor::visitTry_HasResources(const statm::Try& begin, const struc::Variable& end) { }
+void Visitor::visitTry_HasResources(const statm::Try& begin, const base::Base& end) { }
 
-void Visitor::visitEndTry_HasResources(const statm::Try& begin, const struc::Variable& end) { }
+void Visitor::visitEndTry_HasResources(const statm::Try& begin, const base::Base& end) { }
 
 void Visitor::visitTry_HasBlock(const statm::Try& begin, const statm::Block& end) { }
 
@@ -738,13 +858,21 @@ void Visitor::visitCompilationUnit_HasImports(const struc::CompilationUnit& begi
 
 void Visitor::visitEndCompilationUnit_HasImports(const struc::CompilationUnit& begin, const struc::Import& end) { }
 
+void Visitor::visitCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) { }
+
+void Visitor::visitEndCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) { }
+
+void Visitor::visitCompilationUnit_HasModuleDeclaration(const struc::CompilationUnit& begin, const struc::ModuleDeclaration& end) { }
+
+void Visitor::visitEndCompilationUnit_HasModuleDeclaration(const struc::CompilationUnit& begin, const struc::ModuleDeclaration& end) { }
+
 void Visitor::visitCompilationUnit_TypeDeclarations(const struc::CompilationUnit& begin, const struc::TypeDeclaration& end) { }
 
 void Visitor::visitEndCompilationUnit_TypeDeclarations(const struc::CompilationUnit& begin, const struc::TypeDeclaration& end) { }
 
-void Visitor::visitCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) { }
+void Visitor::visitCompilationUnit_IsInModule(const struc::CompilationUnit& begin, const struc::Module& end) { }
 
-void Visitor::visitEndCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) { }
+void Visitor::visitEndCompilationUnit_IsInModule(const struc::CompilationUnit& begin, const struc::Module& end) { }
 
 void Visitor::visitEnumConstant_HasNewClass(const struc::EnumConstant& begin, const expr::NewClass& end) { }
 
@@ -774,6 +902,26 @@ void Visitor::visitMethodDeclaration_Overrides(const struc::MethodDeclaration& b
 
 void Visitor::visitEndMethodDeclaration_Overrides(const struc::MethodDeclaration& begin, const struc::MethodDeclaration& end) { }
 
+void Visitor::visitModule_Packages(const struc::Module& begin, const struc::Package& end) { }
+
+void Visitor::visitEndModule_Packages(const struc::Module& begin, const struc::Package& end) { }
+
+void Visitor::visitModuleDeclaration_HasName(const struc::ModuleDeclaration& begin, const expr::Expression& end) { }
+
+void Visitor::visitEndModuleDeclaration_HasName(const struc::ModuleDeclaration& begin, const expr::Expression& end) { }
+
+void Visitor::visitModuleDeclaration_HasDirectives(const struc::ModuleDeclaration& begin, const module::ModuleDirective& end) { }
+
+void Visitor::visitEndModuleDeclaration_HasDirectives(const struc::ModuleDeclaration& begin, const module::ModuleDirective& end) { }
+
+void Visitor::visitModuleDeclaration_ModuleType(const struc::ModuleDeclaration& begin, const type::ModuleType& end) { }
+
+void Visitor::visitEndModuleDeclaration_ModuleType(const struc::ModuleDeclaration& begin, const type::ModuleType& end) { }
+
+void Visitor::visitModuleDeclaration_RefersTo(const struc::ModuleDeclaration& begin, const struc::Module& end) { }
+
+void Visitor::visitEndModuleDeclaration_RefersTo(const struc::ModuleDeclaration& begin, const struc::Module& end) { }
+
 void Visitor::visitNormalMethod_HasParameters(const struc::NormalMethod& begin, const struc::Parameter& end) { }
 
 void Visitor::visitEndNormalMethod_HasParameters(const struc::NormalMethod& begin, const struc::Parameter& end) { }
@@ -790,6 +938,10 @@ void Visitor::visitPackage_HasCompilationUnits(const struc::Package& begin, cons
 
 void Visitor::visitEndPackage_HasCompilationUnits(const struc::Package& begin, const struc::CompilationUnit& end) { }
 
+void Visitor::visitPackage_IsInModule(const struc::Package& begin, const struc::Module& end) { }
+
+void Visitor::visitEndPackage_IsInModule(const struc::Package& begin, const struc::Module& end) { }
+
 void Visitor::visitPackageDeclaration_HasPackageName(const struc::PackageDeclaration& begin, const expr::Expression& end) { }
 
 void Visitor::visitEndPackageDeclaration_HasPackageName(const struc::PackageDeclaration& begin, const expr::Expression& end) { }
@@ -802,10 +954,6 @@ void Visitor::visitScope_HasMembers(const struc::Scope& begin, const struc::Memb
 
 void Visitor::visitEndScope_HasMembers(const struc::Scope& begin, const struc::Member& end) { }
 
-void Visitor::visitTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) { }
-
-void Visitor::visitEndTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) { }
-
 void Visitor::visitTypeDeclaration_HasSuperClass(const struc::TypeDeclaration& begin, const expr::TypeExpression& end) { }
 
 void Visitor::visitEndTypeDeclaration_HasSuperClass(const struc::TypeDeclaration& begin, const expr::TypeExpression& end) { }
@@ -817,6 +965,14 @@ void Visitor::visitEndTypeDeclaration_HasSuperInterfaces(const struc::TypeDeclar
 void Visitor::visitTypeDeclaration_HasOthers(const struc::TypeDeclaration& begin, const base::Positioned& end) { }
 
 void Visitor::visitEndTypeDeclaration_HasOthers(const struc::TypeDeclaration& begin, const base::Positioned& end) { }
+
+void Visitor::visitTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) { }
+
+void Visitor::visitEndTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) { }
+
+void Visitor::visitTypeDeclaration_IsInModule(const struc::TypeDeclaration& begin, const struc::Module& end) { }
+
+void Visitor::visitEndTypeDeclaration_IsInModule(const struc::TypeDeclaration& begin, const struc::Module& end) { }
 
 void Visitor::visitTypeParameter_HasBounds(const struc::TypeParameter& begin, const expr::TypeExpression& end) { }
 
@@ -838,6 +994,10 @@ void Visitor::visitClassType_RefersTo(const type::ClassType& begin, const struc:
 
 void Visitor::visitEndClassType_RefersTo(const type::ClassType& begin, const struc::TypeDeclaration& end) { }
 
+void Visitor::visitIntersectionType_Bounds(const type::IntersectionType& begin, const type::Type& end) { }
+
+void Visitor::visitEndIntersectionType_Bounds(const type::IntersectionType& begin, const type::Type& end) { }
+
 void Visitor::visitMethodType_ReturnType(const type::MethodType& begin, const type::Type& end) { }
 
 void Visitor::visitEndMethodType_ReturnType(const type::MethodType& begin, const type::Type& end) { }
@@ -849,6 +1009,10 @@ void Visitor::visitEndMethodType_ParameterTypes(const type::MethodType& begin, c
 void Visitor::visitMethodType_ThrownTypes(const type::MethodType& begin, const type::Type& end) { }
 
 void Visitor::visitEndMethodType_ThrownTypes(const type::MethodType& begin, const type::Type& end) { }
+
+void Visitor::visitModuleType_RefersTo(const type::ModuleType& begin, const struc::Module& end) { }
+
+void Visitor::visitEndModuleType_RefersTo(const type::ModuleType& begin, const struc::Module& end) { }
 
 void Visitor::visitPackageType_RefersTo(const type::PackageType& begin, const struc::Package& end) { }
 

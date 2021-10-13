@@ -40,6 +40,7 @@ namespace structure {
   *   - AccessedEnumMembers (structure::EnumMemberDeclarationSyntax, multiple) : (missing)
   *   - AttributeLists (structure::AttributeListSyntax, multiple) : (missing)
   *   - Body (statement::BlockSyntax, single) : (missing)
+  *   - ExpressionBody (structure::ArrowExpressionClauseSyntax, single) : (missing)
   *   - ParameterList (structure::ParameterListSyntax, single) : (missing)
   */
   class BaseMethodDeclarationSyntax : public MemberDeclarationSyntax {
@@ -160,6 +161,12 @@ namespace structure {
       statement::BlockSyntax* getBody() const;
 
       /**
+      * \brief Gives back the pointer of the node the ExpressionBody edge points to.
+      * \return Returns the end point of the ExpressionBody edge.
+      */
+      structure::ArrowExpressionClauseSyntax* getExpressionBody() const;
+
+      /**
       * \brief Gives back the pointer of the node the ParameterList edge points to.
       * \return Returns the end point of the ParameterList edge.
       */
@@ -234,6 +241,23 @@ namespace structure {
       void removeBody();
 
       /**
+      * \brief Sets the ExpressionBody edge.
+      * \param id [in] The new end point of the ExpressionBody edge.
+      */
+      void setExpressionBody(NodeId id);
+
+      /**
+      * \brief Sets the ExpressionBody edge.
+      * \param node [in] The new end point of the ExpressionBody edge.
+      */
+      void setExpressionBody(ArrowExpressionClauseSyntax *node);
+
+      /**
+      * \brief remove the ExpressionBody edge.
+      */
+      void removeExpressionBody();
+
+      /**
       * \brief Sets the ParameterList edge.
       * \param id [in] The new end point of the ParameterList edge.
       */
@@ -262,6 +286,9 @@ namespace structure {
 
       /** \internal \brief The id of the node the Body edge points to. */
       NodeId m_Body;
+
+      /** \internal \brief The id of the node the ExpressionBody edge points to. */
+      NodeId m_ExpressionBody;
 
       /** \internal \brief The id of the node the ParameterList edge points to. */
       NodeId m_ParameterList;

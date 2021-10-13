@@ -37,9 +37,11 @@ namespace statement {
   * (missing)
   * 
   * Edges:
-  *   - hasTracebackExpression (expression::Expression, single) : (missing)
-  *   - hasTypeExpression (expression::Expression, single) : (missing)
-  *   - hasValueExpression (expression::Expression, single) : (missing)
+  *   - hasType (expression::Expression, single) : (missing)
+  *   - hasValue (expression::Expression, single) : (missing)
+  *   - hasTraceback (expression::Expression, single) : (missing)
+  *   - hasException (expression::Expression, single) : (missing)
+  *   - hasCause (expression::Expression, single) : (missing)
   */
   class Raise : public SimpleStatement {
     protected:
@@ -105,89 +107,141 @@ namespace statement {
       // ---------- Edge getter function(s) ----------
 
       /**
-      * \brief Gives back the pointer of the node the hasTracebackExpression edge points to.
-      * \return Returns the end point of the hasTracebackExpression edge.
+      * \brief Gives back the pointer of the node the hasType edge points to.
+      * \return Returns the end point of the hasType edge.
       */
-      expression::Expression* getTracebackExpression() const;
+      expression::Expression* getType() const;
 
       /**
-      * \brief Gives back the pointer of the node the hasTypeExpression edge points to.
-      * \return Returns the end point of the hasTypeExpression edge.
+      * \brief Gives back the pointer of the node the hasValue edge points to.
+      * \return Returns the end point of the hasValue edge.
       */
-      expression::Expression* getTypeExpression() const;
+      expression::Expression* getValue() const;
 
       /**
-      * \brief Gives back the pointer of the node the hasValueExpression edge points to.
-      * \return Returns the end point of the hasValueExpression edge.
+      * \brief Gives back the pointer of the node the hasTraceback edge points to.
+      * \return Returns the end point of the hasTraceback edge.
       */
-      expression::Expression* getValueExpression() const;
+      expression::Expression* getTraceback() const;
+
+      /**
+      * \brief Gives back the pointer of the node the hasException edge points to.
+      * \return Returns the end point of the hasException edge.
+      */
+      expression::Expression* getException() const;
+
+      /**
+      * \brief Gives back the pointer of the node the hasCause edge points to.
+      * \return Returns the end point of the hasCause edge.
+      */
+      expression::Expression* getCause() const;
 
 
       // ---------- Edge setter function(s) ----------
 
       /**
-      * \brief Sets the hasTracebackExpression edge.
-      * \param id [in] The new end point of the hasTracebackExpression edge.
+      * \brief Sets the hasType edge.
+      * \param id [in] The new end point of the hasType edge.
       */
-      void setTracebackExpression(NodeId id);
+      void setType(NodeId id);
 
       /**
-      * \brief Sets the hasTracebackExpression edge.
-      * \param node [in] The new end point of the hasTracebackExpression edge.
+      * \brief Sets the hasType edge.
+      * \param node [in] The new end point of the hasType edge.
       */
-      void setTracebackExpression(expression::Expression *node);
+      void setType(expression::Expression *node);
 
       /**
-      * \brief remove the hasTracebackExpression edge.
+      * \brief remove the hasType edge.
       */
-      void removeTracebackExpression();
+      void removeType();
 
       /**
-      * \brief Sets the hasTypeExpression edge.
-      * \param id [in] The new end point of the hasTypeExpression edge.
+      * \brief Sets the hasValue edge.
+      * \param id [in] The new end point of the hasValue edge.
       */
-      void setTypeExpression(NodeId id);
+      void setValue(NodeId id);
 
       /**
-      * \brief Sets the hasTypeExpression edge.
-      * \param node [in] The new end point of the hasTypeExpression edge.
+      * \brief Sets the hasValue edge.
+      * \param node [in] The new end point of the hasValue edge.
       */
-      void setTypeExpression(expression::Expression *node);
+      void setValue(expression::Expression *node);
 
       /**
-      * \brief remove the hasTypeExpression edge.
+      * \brief remove the hasValue edge.
       */
-      void removeTypeExpression();
+      void removeValue();
 
       /**
-      * \brief Sets the hasValueExpression edge.
-      * \param id [in] The new end point of the hasValueExpression edge.
+      * \brief Sets the hasTraceback edge.
+      * \param id [in] The new end point of the hasTraceback edge.
       */
-      void setValueExpression(NodeId id);
+      void setTraceback(NodeId id);
 
       /**
-      * \brief Sets the hasValueExpression edge.
-      * \param node [in] The new end point of the hasValueExpression edge.
+      * \brief Sets the hasTraceback edge.
+      * \param node [in] The new end point of the hasTraceback edge.
       */
-      void setValueExpression(expression::Expression *node);
+      void setTraceback(expression::Expression *node);
 
       /**
-      * \brief remove the hasValueExpression edge.
+      * \brief remove the hasTraceback edge.
       */
-      void removeValueExpression();
+      void removeTraceback();
+
+      /**
+      * \brief Sets the hasException edge.
+      * \param id [in] The new end point of the hasException edge.
+      */
+      void setException(NodeId id);
+
+      /**
+      * \brief Sets the hasException edge.
+      * \param node [in] The new end point of the hasException edge.
+      */
+      void setException(expression::Expression *node);
+
+      /**
+      * \brief remove the hasException edge.
+      */
+      void removeException();
+
+      /**
+      * \brief Sets the hasCause edge.
+      * \param id [in] The new end point of the hasCause edge.
+      */
+      void setCause(NodeId id);
+
+      /**
+      * \brief Sets the hasCause edge.
+      * \param node [in] The new end point of the hasCause edge.
+      */
+      void setCause(expression::Expression *node);
+
+      /**
+      * \brief remove the hasCause edge.
+      */
+      void removeCause();
 
     protected:
 
       // ---------- Edges ----------
 
-      /** \internal \brief The id of the node the hasTracebackExpression edge points to. */
-      NodeId m_hasTracebackExpression;
+      /** \internal \brief The id of the node the hasType edge points to. */
+      NodeId m_hasType;
 
-      /** \internal \brief The id of the node the hasTypeExpression edge points to. */
-      NodeId m_hasTypeExpression;
+      /** \internal \brief The id of the node the hasValue edge points to. */
+      NodeId m_hasValue;
 
-      /** \internal \brief The id of the node the hasValueExpression edge points to. */
-      NodeId m_hasValueExpression;
+      /** \internal \brief The id of the node the hasTraceback edge points to. */
+      NodeId m_hasTraceback;
+
+      /** \internal \brief The id of the node the hasException edge points to. */
+      NodeId m_hasException;
+
+      /** \internal \brief The id of the node the hasCause edge points to. */
+      NodeId m_hasCause;
 
     public:
 

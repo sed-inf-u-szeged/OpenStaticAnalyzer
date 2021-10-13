@@ -134,14 +134,14 @@ namespace expression {
     base::Positioned *_node = NULL;
     if (_id) {
       if (!factory->getExist(_id))
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
       _node = dynamic_cast<base::Positioned*> (factory->getPointer(_id));
       if ( _node == NULL) {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
       if (&(_node->getFactory()) != this->factory)
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
 
       if (Common::getIsBaseClassKind(_node->getNodeKind(), ndkExpression) || Common::getIsBaseClassKind(_node->getNodeKind(), ndkPattern)) {
         if (m_hasLeft) {
@@ -155,18 +155,18 @@ namespace expression {
         if (factory->getExistsReverseEdges())
           factory->reverseEdges->insertEdge(m_hasLeft, this->getId(), edkAssignmentExpression_HasLeft);
       } else {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
     } else {
       if (m_hasLeft) {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
       }
     }
   }
 
   void AssignmentExpression::setLeft(base::Positioned *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
 
     setLeft(_node->getId());
   }
@@ -184,14 +184,14 @@ namespace expression {
     expression::Expression *_node = NULL;
     if (_id) {
       if (!factory->getExist(_id))
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
       _node = dynamic_cast<expression::Expression*> (factory->getPointer(_id));
       if ( _node == NULL) {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
       if (&(_node->getFactory()) != this->factory)
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
 
       if (m_hasRight) {
         removeParentEdge(m_hasRight);
@@ -205,14 +205,14 @@ namespace expression {
         factory->reverseEdges->insertEdge(m_hasRight, this->getId(), edkAssignmentExpression_HasRight);
     } else {
       if (m_hasRight) {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
       }
     }
   }
 
   void AssignmentExpression::setRight(expression::Expression *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
 
     setRight(_node->getId());
   }

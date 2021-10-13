@@ -28,7 +28,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var unaryExpression = factory.createUnaryExpressionWrapper(factory);
+        var unaryExpression = factory.createUnaryExpressionWrapper();
         globals.setPositionInfo(node, unaryExpression);
         unaryExpression.setOperator(conversions.convertUnaryOperatorToString(node.operator));
         unaryExpression.setPrefix(node.prefix);
@@ -37,15 +37,10 @@ module.exports = function (node, parent, firstVisit) {
         var unaryExpressionWrapper = globals.getWrapperOfNode(node);
         if (node.argument != null) {
             var argumentWrapper = globals.getWrapperOfNode(node.argument);
-            if (node.argument.type !== "Literal") {
-                var argumentWrapperFunctionString = "setArgument" + node.argument.type;
-            } else {
-                var argumentWrapperFunctionString = "setArgument" + globals.getLiteralType(node.argument) + node.argument.type;
-            }
             try {
-                unaryExpressionWrapper[argumentWrapperFunctionString](argumentWrapper);
+                unaryExpressionWrapper.setArgument(argumentWrapper);
             } catch (e) {
-                console.error("UNARYEXPRESSION - Function not exist: unaryExpressionWrapper." + argumentWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("UNARYEXPRESSION - Could not set argument! Reason of the error: " + e + "\n");
             }
         }
 

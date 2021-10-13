@@ -111,6 +111,20 @@ public class Visitor {
 	public void visitEnd(columbus.java.asg.base.LineComment node, boolean callVirtualBase) { }
 
 	/**
+	 * Visitor which is called at the beginning of the {@link columbus.java.asg.expr.AnnotatedTypeExpression AnnotatedTypeExpression} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit   (columbus.java.asg.expr.AnnotatedTypeExpression node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the end of the {@link columbus.java.asg.expr.AnnotatedTypeExpression AnnotatedTypeExpression} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(columbus.java.asg.expr.AnnotatedTypeExpression node, boolean callVirtualBase) { }
+
+	/**
 	 * Visitor which is called at the beginning of the {@link columbus.java.asg.expr.ArrayAccess ArrayAccess} node visiting.
 	 * @param node The node which is visited.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
@@ -349,6 +363,20 @@ public class Visitor {
 	public void visitEnd(columbus.java.asg.expr.IntegerLiteral node, boolean callVirtualBase) { }
 
 	/**
+	 * Visitor which is called at the beginning of the {@link columbus.java.asg.expr.Lambda Lambda} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit   (columbus.java.asg.expr.Lambda node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the end of the {@link columbus.java.asg.expr.Lambda Lambda} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(columbus.java.asg.expr.Lambda node, boolean callVirtualBase) { }
+
+	/**
 	 * Visitor which is called at the beginning of the {@link columbus.java.asg.expr.LongLiteral LongLiteral} node visiting.
 	 * @param node The node which is visited.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
@@ -375,6 +403,20 @@ public class Visitor {
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
 	 */
 	public void visitEnd(columbus.java.asg.expr.MarkerAnnotation node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the beginning of the {@link columbus.java.asg.expr.MemberReference MemberReference} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit   (columbus.java.asg.expr.MemberReference node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the end of the {@link columbus.java.asg.expr.MemberReference MemberReference} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(columbus.java.asg.expr.MemberReference node, boolean callVirtualBase) { }
 
 	/**
 	 * Visitor which is called at the beginning of the {@link columbus.java.asg.expr.MethodInvocation MethodInvocation} node visiting.
@@ -615,6 +657,20 @@ public class Visitor {
 	public void visitEnd(columbus.java.asg.expr.TypeCast node, boolean callVirtualBase) { }
 
 	/**
+	 * Visitor which is called at the beginning of the {@link columbus.java.asg.expr.TypeIntersectionExpression TypeIntersectionExpression} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit   (columbus.java.asg.expr.TypeIntersectionExpression node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the end of the {@link columbus.java.asg.expr.TypeIntersectionExpression TypeIntersectionExpression} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(columbus.java.asg.expr.TypeIntersectionExpression node, boolean callVirtualBase) { }
+
+	/**
 	 * Visitor which is called at the beginning of the {@link columbus.java.asg.expr.TypeUnionExpression TypeUnionExpression} node visiting.
 	 * @param node The node which is visited.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
@@ -641,6 +697,76 @@ public class Visitor {
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
 	 */
 	public void visitEnd(columbus.java.asg.expr.WildcardExpression node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the beginning of the {@link columbus.java.asg.module.Exports Exports} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit   (columbus.java.asg.module.Exports node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the end of the {@link columbus.java.asg.module.Exports Exports} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(columbus.java.asg.module.Exports node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the beginning of the {@link columbus.java.asg.module.Opens Opens} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit   (columbus.java.asg.module.Opens node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the end of the {@link columbus.java.asg.module.Opens Opens} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(columbus.java.asg.module.Opens node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the beginning of the {@link columbus.java.asg.module.Provides Provides} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit   (columbus.java.asg.module.Provides node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the end of the {@link columbus.java.asg.module.Provides Provides} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(columbus.java.asg.module.Provides node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the beginning of the {@link columbus.java.asg.module.Requires Requires} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit   (columbus.java.asg.module.Requires node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the end of the {@link columbus.java.asg.module.Requires Requires} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(columbus.java.asg.module.Requires node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the beginning of the {@link columbus.java.asg.module.Uses Uses} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit   (columbus.java.asg.module.Uses node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the end of the {@link columbus.java.asg.module.Uses Uses} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(columbus.java.asg.module.Uses node, boolean callVirtualBase) { }
 
 	/**
 	 * Visitor which is called at the beginning of the {@link columbus.java.asg.statm.Assert Assert} node visiting.
@@ -1119,6 +1245,34 @@ public class Visitor {
 	public void visitEnd(columbus.java.asg.struc.MethodGeneric node, boolean callVirtualBase) { }
 
 	/**
+	 * Visitor which is called at the beginning of the {@link columbus.java.asg.struc.Module Module} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit   (columbus.java.asg.struc.Module node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the end of the {@link columbus.java.asg.struc.Module Module} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(columbus.java.asg.struc.Module node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the beginning of the {@link columbus.java.asg.struc.ModuleDeclaration ModuleDeclaration} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit   (columbus.java.asg.struc.ModuleDeclaration node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the end of the {@link columbus.java.asg.struc.ModuleDeclaration ModuleDeclaration} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(columbus.java.asg.struc.ModuleDeclaration node, boolean callVirtualBase) { }
+
+	/**
 	 * Visitor which is called at the beginning of the {@link columbus.java.asg.struc.Package Package} node visiting.
 	 * @param node The node which is visited.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
@@ -1329,6 +1483,20 @@ public class Visitor {
 	public void visitEnd(columbus.java.asg.type.IntType node, boolean callVirtualBase) { }
 
 	/**
+	 * Visitor which is called at the beginning of the {@link columbus.java.asg.type.IntersectionType IntersectionType} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit   (columbus.java.asg.type.IntersectionType node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the end of the {@link columbus.java.asg.type.IntersectionType IntersectionType} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(columbus.java.asg.type.IntersectionType node, boolean callVirtualBase) { }
+
+	/**
 	 * Visitor which is called at the beginning of the {@link columbus.java.asg.type.LongType LongType} node visiting.
 	 * @param node The node which is visited.
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
@@ -1369,6 +1537,20 @@ public class Visitor {
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
 	 */
 	public void visitEnd(columbus.java.asg.type.MethodType node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the beginning of the {@link columbus.java.asg.type.ModuleType ModuleType} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visit   (columbus.java.asg.type.ModuleType node, boolean callVirtualBase) { }
+
+	/**
+	 * Visitor which is called at the end of the {@link columbus.java.asg.type.ModuleType ModuleType} node visiting.
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	public void visitEnd(columbus.java.asg.type.ModuleType node, boolean callVirtualBase) { }
 
 	/**
 	 * Visitor which is called at the beginning of the {@link columbus.java.asg.type.NoType NoType} node visiting.
@@ -1525,6 +1707,34 @@ public class Visitor {
 	public void visitEndCommentable_Comments(columbus.java.asg.base.Commentable begin, columbus.java.asg.base.Comment end) { }
 
 	/**
+	 * Edge visitor for 'hasAnnotations' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitAnnotatedTypeExpression_HasAnnotations   (columbus.java.asg.expr.AnnotatedTypeExpression begin, columbus.java.asg.expr.Annotation end) { }
+
+	/**
+	 * Edge end visitor for 'hasAnnotations' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndAnnotatedTypeExpression_HasAnnotations(columbus.java.asg.expr.AnnotatedTypeExpression begin, columbus.java.asg.expr.Annotation end) { }
+
+	/**
+	 * Edge visitor for 'hasUnderlyingType' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitAnnotatedTypeExpression_HasUnderlyingType   (columbus.java.asg.expr.AnnotatedTypeExpression begin, columbus.java.asg.expr.TypeExpression end) { }
+
+	/**
+	 * Edge end visitor for 'hasUnderlyingType' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndAnnotatedTypeExpression_HasUnderlyingType(columbus.java.asg.expr.AnnotatedTypeExpression begin, columbus.java.asg.expr.TypeExpression end) { }
+
+	/**
 	 * Edge visitor for 'hasAnnotationName' edge which is called when the subtree of this edge is started.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
@@ -1679,6 +1889,20 @@ public class Visitor {
 	public void visitEndExpression_Type(columbus.java.asg.expr.Expression begin, columbus.java.asg.type.Type end) { }
 
 	/**
+	 * Edge visitor for 'target' edge which is called when this edge is visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitFunctionalExpression_Target   (columbus.java.asg.expr.FunctionalExpression begin, columbus.java.asg.type.Type end) { }
+
+	/**
+	 * Edge end visitor for 'target' edge which is called after this edge has been visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndFunctionalExpression_Target(columbus.java.asg.expr.FunctionalExpression begin, columbus.java.asg.type.Type end) { }
+
+	/**
 	 * Edge visitor for 'refersTo' edge which is called when this edge is visited.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
@@ -1705,6 +1929,76 @@ public class Visitor {
 	 * @param end   The reference of the node the edge points to.
 	 */
 	public void visitEndInstanceOf_HasTypeOperand(columbus.java.asg.expr.InstanceOf begin, columbus.java.asg.expr.TypeExpression end) { }
+
+	/**
+	 * Edge visitor for 'hasParameters' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitLambda_HasParameters   (columbus.java.asg.expr.Lambda begin, columbus.java.asg.struc.Parameter end) { }
+
+	/**
+	 * Edge end visitor for 'hasParameters' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndLambda_HasParameters(columbus.java.asg.expr.Lambda begin, columbus.java.asg.struc.Parameter end) { }
+
+	/**
+	 * Edge visitor for 'hasBody' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitLambda_HasBody   (columbus.java.asg.expr.Lambda begin, columbus.java.asg.base.Positioned end) { }
+
+	/**
+	 * Edge end visitor for 'hasBody' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndLambda_HasBody(columbus.java.asg.expr.Lambda begin, columbus.java.asg.base.Positioned end) { }
+
+	/**
+	 * Edge visitor for 'hasQualifierExpression' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitMemberReference_HasQualifierExpression   (columbus.java.asg.expr.MemberReference begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge end visitor for 'hasQualifierExpression' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndMemberReference_HasQualifierExpression(columbus.java.asg.expr.MemberReference begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge visitor for 'hasTypeArguments' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitMemberReference_HasTypeArguments   (columbus.java.asg.expr.MemberReference begin, columbus.java.asg.expr.TypeExpression end) { }
+
+	/**
+	 * Edge end visitor for 'hasTypeArguments' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndMemberReference_HasTypeArguments(columbus.java.asg.expr.MemberReference begin, columbus.java.asg.expr.TypeExpression end) { }
+
+	/**
+	 * Edge visitor for 'referredMethod' edge which is called when this edge is visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitMemberReference_ReferredMethod   (columbus.java.asg.expr.MemberReference begin, columbus.java.asg.struc.MethodDeclaration end) { }
+
+	/**
+	 * Edge end visitor for 'referredMethod' edge which is called after this edge has been visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndMemberReference_ReferredMethod(columbus.java.asg.expr.MemberReference begin, columbus.java.asg.struc.MethodDeclaration end) { }
 
 	/**
 	 * Edge visitor for 'hasTypeArguments' edge which is called when the subtree of this edge is started.
@@ -1973,6 +2267,20 @@ public class Visitor {
 	public void visitEndTypeCast_HasTypeOperand(columbus.java.asg.expr.TypeCast begin, columbus.java.asg.expr.TypeExpression end) { }
 
 	/**
+	 * Edge visitor for 'hasBounds' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitTypeIntersectionExpression_HasBounds   (columbus.java.asg.expr.TypeIntersectionExpression begin, columbus.java.asg.expr.TypeExpression end) { }
+
+	/**
+	 * Edge end visitor for 'hasBounds' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndTypeIntersectionExpression_HasBounds(columbus.java.asg.expr.TypeIntersectionExpression begin, columbus.java.asg.expr.TypeExpression end) { }
+
+	/**
 	 * Edge visitor for 'hasAlternatives' edge which is called when the subtree of this edge is started.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
@@ -2013,6 +2321,118 @@ public class Visitor {
 	 * @param end   The reference of the node the edge points to.
 	 */
 	public void visitEndWildcardExpression_HasBound(columbus.java.asg.expr.WildcardExpression begin, columbus.java.asg.expr.TypeExpression end) { }
+
+	/**
+	 * Edge visitor for 'hasPackageName' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitExports_HasPackageName   (columbus.java.asg.module.Exports begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge end visitor for 'hasPackageName' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndExports_HasPackageName(columbus.java.asg.module.Exports begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge visitor for 'hasModuleNames' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitExports_HasModuleNames   (columbus.java.asg.module.Exports begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge end visitor for 'hasModuleNames' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndExports_HasModuleNames(columbus.java.asg.module.Exports begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge visitor for 'hasPackageName' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitOpens_HasPackageName   (columbus.java.asg.module.Opens begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge end visitor for 'hasPackageName' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndOpens_HasPackageName(columbus.java.asg.module.Opens begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge visitor for 'hasModuleNames' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitOpens_HasModuleNames   (columbus.java.asg.module.Opens begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge end visitor for 'hasModuleNames' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndOpens_HasModuleNames(columbus.java.asg.module.Opens begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge visitor for 'hasServiceName' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitProvides_HasServiceName   (columbus.java.asg.module.Provides begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge end visitor for 'hasServiceName' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndProvides_HasServiceName(columbus.java.asg.module.Provides begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge visitor for 'hasImplementationNames' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitProvides_HasImplementationNames   (columbus.java.asg.module.Provides begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge end visitor for 'hasImplementationNames' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndProvides_HasImplementationNames(columbus.java.asg.module.Provides begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge visitor for 'hasModuleName' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitRequires_HasModuleName   (columbus.java.asg.module.Requires begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge end visitor for 'hasModuleName' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndRequires_HasModuleName(columbus.java.asg.module.Requires begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge visitor for 'hasServiceName' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitUses_HasServiceName   (columbus.java.asg.module.Uses begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge end visitor for 'hasServiceName' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndUses_HasServiceName(columbus.java.asg.module.Uses begin, columbus.java.asg.expr.Expression end) { }
 
 	/**
 	 * Edge visitor for 'hasCondition' edge which is called when the subtree of this edge is started.
@@ -2369,14 +2789,14 @@ public class Visitor {
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
 	 */
-	public void visitTry_HasResources   (columbus.java.asg.statm.Try begin, columbus.java.asg.struc.Variable end) { }
+	public void visitTry_HasResources   (columbus.java.asg.statm.Try begin, columbus.java.asg.base.Base end) { }
 
 	/**
 	 * Edge end visitor for 'hasResources' edge which is called after the subtree of this edge is finished.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
 	 */
-	public void visitEndTry_HasResources(columbus.java.asg.statm.Try begin, columbus.java.asg.struc.Variable end) { }
+	public void visitEndTry_HasResources(columbus.java.asg.statm.Try begin, columbus.java.asg.base.Base end) { }
 
 	/**
 	 * Edge visitor for 'hasBlock' edge which is called when the subtree of this edge is started.
@@ -2491,6 +2911,34 @@ public class Visitor {
 	public void visitEndCompilationUnit_HasImports(columbus.java.asg.struc.CompilationUnit begin, columbus.java.asg.struc.Import end) { }
 
 	/**
+	 * Edge visitor for 'hasOthers' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitCompilationUnit_HasOthers   (columbus.java.asg.struc.CompilationUnit begin, columbus.java.asg.base.Positioned end) { }
+
+	/**
+	 * Edge end visitor for 'hasOthers' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndCompilationUnit_HasOthers(columbus.java.asg.struc.CompilationUnit begin, columbus.java.asg.base.Positioned end) { }
+
+	/**
+	 * Edge visitor for 'hasModuleDeclaration' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitCompilationUnit_HasModuleDeclaration   (columbus.java.asg.struc.CompilationUnit begin, columbus.java.asg.struc.ModuleDeclaration end) { }
+
+	/**
+	 * Edge end visitor for 'hasModuleDeclaration' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndCompilationUnit_HasModuleDeclaration(columbus.java.asg.struc.CompilationUnit begin, columbus.java.asg.struc.ModuleDeclaration end) { }
+
+	/**
 	 * Edge visitor for 'typeDeclarations' edge which is called when this edge is visited.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
@@ -2505,18 +2953,18 @@ public class Visitor {
 	public void visitEndCompilationUnit_TypeDeclarations(columbus.java.asg.struc.CompilationUnit begin, columbus.java.asg.struc.TypeDeclaration end) { }
 
 	/**
-	 * Edge visitor for 'hasOthers' edge which is called when the subtree of this edge is started.
+	 * Edge visitor for 'isInModule' edge which is called when this edge is visited.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
 	 */
-	public void visitCompilationUnit_HasOthers   (columbus.java.asg.struc.CompilationUnit begin, columbus.java.asg.base.Positioned end) { }
+	public void visitCompilationUnit_IsInModule   (columbus.java.asg.struc.CompilationUnit begin, columbus.java.asg.struc.Module end) { }
 
 	/**
-	 * Edge end visitor for 'hasOthers' edge which is called after the subtree of this edge is finished.
+	 * Edge end visitor for 'isInModule' edge which is called after this edge has been visited.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
 	 */
-	public void visitEndCompilationUnit_HasOthers(columbus.java.asg.struc.CompilationUnit begin, columbus.java.asg.base.Positioned end) { }
+	public void visitEndCompilationUnit_IsInModule(columbus.java.asg.struc.CompilationUnit begin, columbus.java.asg.struc.Module end) { }
 
 	/**
 	 * Edge visitor for 'hasNewClass' edge which is called when the subtree of this edge is started.
@@ -2617,6 +3065,76 @@ public class Visitor {
 	public void visitEndMethodDeclaration_Overrides(columbus.java.asg.struc.MethodDeclaration begin, columbus.java.asg.struc.MethodDeclaration end) { }
 
 	/**
+	 * Edge visitor for 'packages' edge which is called when this edge is visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitModule_Packages   (columbus.java.asg.struc.Module begin, columbus.java.asg.struc.Package end) { }
+
+	/**
+	 * Edge end visitor for 'packages' edge which is called after this edge has been visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndModule_Packages(columbus.java.asg.struc.Module begin, columbus.java.asg.struc.Package end) { }
+
+	/**
+	 * Edge visitor for 'hasName' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitModuleDeclaration_HasName   (columbus.java.asg.struc.ModuleDeclaration begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge end visitor for 'hasName' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndModuleDeclaration_HasName(columbus.java.asg.struc.ModuleDeclaration begin, columbus.java.asg.expr.Expression end) { }
+
+	/**
+	 * Edge visitor for 'hasDirectives' edge which is called when the subtree of this edge is started.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitModuleDeclaration_HasDirectives   (columbus.java.asg.struc.ModuleDeclaration begin, columbus.java.asg.module.ModuleDirective end) { }
+
+	/**
+	 * Edge end visitor for 'hasDirectives' edge which is called after the subtree of this edge is finished.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndModuleDeclaration_HasDirectives(columbus.java.asg.struc.ModuleDeclaration begin, columbus.java.asg.module.ModuleDirective end) { }
+
+	/**
+	 * Edge visitor for 'moduleType' edge which is called when this edge is visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitModuleDeclaration_ModuleType   (columbus.java.asg.struc.ModuleDeclaration begin, columbus.java.asg.type.ModuleType end) { }
+
+	/**
+	 * Edge end visitor for 'moduleType' edge which is called after this edge has been visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndModuleDeclaration_ModuleType(columbus.java.asg.struc.ModuleDeclaration begin, columbus.java.asg.type.ModuleType end) { }
+
+	/**
+	 * Edge visitor for 'refersTo' edge which is called when this edge is visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitModuleDeclaration_RefersTo   (columbus.java.asg.struc.ModuleDeclaration begin, columbus.java.asg.struc.Module end) { }
+
+	/**
+	 * Edge end visitor for 'refersTo' edge which is called after this edge has been visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndModuleDeclaration_RefersTo(columbus.java.asg.struc.ModuleDeclaration begin, columbus.java.asg.struc.Module end) { }
+
+	/**
 	 * Edge visitor for 'hasParameters' edge which is called when the subtree of this edge is started.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
@@ -2673,6 +3191,20 @@ public class Visitor {
 	public void visitEndPackage_HasCompilationUnits(columbus.java.asg.struc.Package begin, columbus.java.asg.struc.CompilationUnit end) { }
 
 	/**
+	 * Edge visitor for 'isInModule' edge which is called when this edge is visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitPackage_IsInModule   (columbus.java.asg.struc.Package begin, columbus.java.asg.struc.Module end) { }
+
+	/**
+	 * Edge end visitor for 'isInModule' edge which is called after this edge has been visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndPackage_IsInModule(columbus.java.asg.struc.Package begin, columbus.java.asg.struc.Module end) { }
+
+	/**
 	 * Edge visitor for 'hasPackageName' edge which is called when the subtree of this edge is started.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
@@ -2715,20 +3247,6 @@ public class Visitor {
 	public void visitEndScope_HasMembers(columbus.java.asg.struc.Scope begin, columbus.java.asg.struc.Member end) { }
 
 	/**
-	 * Edge visitor for 'isInCompilationUnit' edge which is called when this edge is visited.
-	 * @param begin The reference of the node the edge starts from.
-	 * @param end   The reference of the node the edge points to.
-	 */
-	public void visitTypeDeclaration_IsInCompilationUnit   (columbus.java.asg.struc.TypeDeclaration begin, columbus.java.asg.struc.CompilationUnit end) { }
-
-	/**
-	 * Edge end visitor for 'isInCompilationUnit' edge which is called after this edge has been visited.
-	 * @param begin The reference of the node the edge starts from.
-	 * @param end   The reference of the node the edge points to.
-	 */
-	public void visitEndTypeDeclaration_IsInCompilationUnit(columbus.java.asg.struc.TypeDeclaration begin, columbus.java.asg.struc.CompilationUnit end) { }
-
-	/**
 	 * Edge visitor for 'hasSuperClass' edge which is called when the subtree of this edge is started.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
@@ -2769,6 +3287,34 @@ public class Visitor {
 	 * @param end   The reference of the node the edge points to.
 	 */
 	public void visitEndTypeDeclaration_HasOthers(columbus.java.asg.struc.TypeDeclaration begin, columbus.java.asg.base.Positioned end) { }
+
+	/**
+	 * Edge visitor for 'isInCompilationUnit' edge which is called when this edge is visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitTypeDeclaration_IsInCompilationUnit   (columbus.java.asg.struc.TypeDeclaration begin, columbus.java.asg.struc.CompilationUnit end) { }
+
+	/**
+	 * Edge end visitor for 'isInCompilationUnit' edge which is called after this edge has been visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndTypeDeclaration_IsInCompilationUnit(columbus.java.asg.struc.TypeDeclaration begin, columbus.java.asg.struc.CompilationUnit end) { }
+
+	/**
+	 * Edge visitor for 'isInModule' edge which is called when this edge is visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitTypeDeclaration_IsInModule   (columbus.java.asg.struc.TypeDeclaration begin, columbus.java.asg.struc.Module end) { }
+
+	/**
+	 * Edge end visitor for 'isInModule' edge which is called after this edge has been visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndTypeDeclaration_IsInModule(columbus.java.asg.struc.TypeDeclaration begin, columbus.java.asg.struc.Module end) { }
 
 	/**
 	 * Edge visitor for 'hasBounds' edge which is called when the subtree of this edge is started.
@@ -2841,6 +3387,20 @@ public class Visitor {
 	public void visitEndClassType_RefersTo(columbus.java.asg.type.ClassType begin, columbus.java.asg.struc.TypeDeclaration end) { }
 
 	/**
+	 * Edge visitor for 'bounds' edge which is called when this edge is visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitIntersectionType_Bounds   (columbus.java.asg.type.IntersectionType begin, columbus.java.asg.type.Type end) { }
+
+	/**
+	 * Edge end visitor for 'bounds' edge which is called after this edge has been visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndIntersectionType_Bounds(columbus.java.asg.type.IntersectionType begin, columbus.java.asg.type.Type end) { }
+
+	/**
 	 * Edge visitor for 'returnType' edge which is called when this edge is visited.
 	 * @param begin The reference of the node the edge starts from.
 	 * @param end   The reference of the node the edge points to.
@@ -2881,6 +3441,20 @@ public class Visitor {
 	 * @param end   The reference of the node the edge points to.
 	 */
 	public void visitEndMethodType_ThrownTypes(columbus.java.asg.type.MethodType begin, columbus.java.asg.type.Type end) { }
+
+	/**
+	 * Edge visitor for 'refersTo' edge which is called when this edge is visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitModuleType_RefersTo   (columbus.java.asg.type.ModuleType begin, columbus.java.asg.struc.Module end) { }
+
+	/**
+	 * Edge end visitor for 'refersTo' edge which is called after this edge has been visited.
+	 * @param begin The reference of the node the edge starts from.
+	 * @param end   The reference of the node the edge points to.
+	 */
+	public void visitEndModuleType_RefersTo(columbus.java.asg.type.ModuleType begin, columbus.java.asg.struc.Module end) { }
 
 	/**
 	 * Edge visitor for 'refersTo' edge which is called when this edge is visited.

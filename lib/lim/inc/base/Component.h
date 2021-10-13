@@ -44,6 +44,7 @@ namespace base {
   *   - shortName (String) : (missing)
   * 
   * Edges:
+  *   - compilationUnit (physical::File, multiple) : (missing)
   *   - contains (base::Component, multiple) : (missing)
   *   - hasFiles (physical::File, multiple) : (missing)
   */
@@ -235,6 +236,30 @@ namespace base {
       // ---------- Edge getter function(s) ----------
 
       /**
+      * \brief Gives back iterator for the compilationUnit edges.
+      * \return Returns an iterator for the compilationUnit edges.
+      */
+      ListIterator<physical::File> getCompilationUnitListIteratorBegin() const;
+
+      /**
+      * \brief Gives back iterator for the compilationUnit edges.
+      * \return Returns an iterator for the compilationUnit edges.
+      */
+      ListIterator<physical::File> getCompilationUnitListIteratorEnd() const;
+
+      /**
+      * \brief Tells whether the node has compilationUnit edges or not.
+      * \return Returns true if the node doesn't have any compilationUnit edge.
+      */
+      bool getCompilationUnitIsEmpty() const;
+
+      /**
+      * \brief Gives back how many compilationUnit edges the node has.
+      * \return Returns with the number of compilationUnit edges.
+      */
+      unsigned getCompilationUnitSize() const;
+
+      /**
       * \brief Gives back iterator for the contains edges.
       * \return Returns an iterator for the contains edges.
       */
@@ -284,6 +309,30 @@ namespace base {
 
 
       // ---------- Edge setter function(s) ----------
+
+      /**
+      * \brief Adds a new compilationUnit edge to the node and inserts it after the other ones.
+      * \param node [in] The end point of the new compilationUnit edge.
+      */
+      void addCompilationUnit(const physical::File *node);
+
+      /**
+      * \brief Adds a new compilationUnit edge to the node and inserts it after the other ones.
+      * \param id [in] The end point of the new compilationUnit edge.
+      */
+      void addCompilationUnit(NodeId id);
+
+      /**
+      * \brief Remove the compilationUnit edge by id from the node.
+      * \param id [in] The end point of the compilationUnit edge.
+      */
+      void removeCompilationUnit(NodeId id);
+
+      /**
+      * \brief Remove the compilationUnit edge from the node.
+      * \param node [in] The end point of the compilationUnit edge.
+      */
+      void removeCompilationUnit(physical::File *node);
 
       /**
       * \brief Adds a new contains edge to the node and inserts it after the other ones.
@@ -336,6 +385,9 @@ namespace base {
     protected:
 
       // ---------- Edges ----------
+
+      /** \internal \brief Container stores the id of the nodes the compilationUnit edge points to. */
+      ListIterator<physical::File>::Container compilationUnitContainer;
 
       /** \internal \brief Container stores the id of the nodes the contains edge points to. */
       ListIterator<base::Component>::Container containsContainer;

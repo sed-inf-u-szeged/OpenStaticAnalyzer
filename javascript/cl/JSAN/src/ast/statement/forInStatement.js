@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var forInStatement = factory.createForInStatementWrapper(factory);
+        var forInStatement = factory.createForInStatementWrapper();
         globals.setPositionInfo(node, forInStatement);
         return forInStatement;
     } else {
@@ -34,43 +34,28 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.left != null) {
             var leftWrapper = globals.getWrapperOfNode(node.left);
-            if (node.left.type !== "Literal") {
-                var leftWrapperFunctionString = "setLeft" + node.left.type;
-            } else {
-                var leftWrapperFunctionString = "setLeft" + globals.getLiteralType(node.left) + node.left.type;
-            }
             try {
-                forInStatementWrapper[leftWrapperFunctionString](leftWrapper);
+                forInStatementWrapper.setLeft(leftWrapper);
             } catch (e) {
-                console.error("FORINSTATEMENT - Function not exist: forInStatementWrapper." + leftWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("FORINSTATEMENT - Could not set left! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.right != null) {
             var rightWrapper = globals.getWrapperOfNode(node.right);
-            if (node.right.type !== "Literal") {
-                var rightWrapperFunctionString = "setRight" + node.right.type;
-            } else {
-                var rightWrapperFunctionString = "setRight" + globals.getLiteralType(node.right) + node.right.type;
-            }
             try {
-                forInStatementWrapper[rightWrapperFunctionString](rightWrapper);
+                forInStatementWrapper.setRight(rightWrapper);
             } catch (e) {
-                console.error("FORINSTATEMENT - Function not exist: forInStatementWrapper." + rightWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("FORINSTATEMENT - Could not set right! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.body != null) {
             var bodyWrapper = globals.getWrapperOfNode(node.body);
-            if (node.body.type !== "Literal") {
-                var bodyWrapperFunctionString = "setBody" + node.body.type;
-            } else {
-                var bodyWrapperFunctionString = "setBody" + globals.getLiteralType(node.body) + node.body.type;
-            }
             try {
-                forInStatementWrapper[bodyWrapperFunctionString](bodyWrapper);
+                forInStatementWrapper.setBody(bodyWrapper);
             } catch (e) {
-                console.error("FORINSTATEMENT - Function not exist: forInStatementWrapper." + bodyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("FORINSTATEMENT - Could not set body! Reason of the error: " + e + "\n");
             }
         }
 

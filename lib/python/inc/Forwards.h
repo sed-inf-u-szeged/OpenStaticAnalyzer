@@ -57,9 +57,11 @@ namespace columbus { namespace python { namespace asg {
   namespace expression {
     class ArgumentList;
     class AttributeRef;
+    class Await;
     class Binary;
     class BinaryArithmetic;
     class BinaryLogical;
+    class BytesLiteral;
     class Call;
     class DictComp;
     class Dictionary;
@@ -68,6 +70,7 @@ namespace columbus { namespace python { namespace asg {
     class ExpressionList;
     class ExtSlice;
     class FloatNumber;
+    class FormattedValue;
     class Generator;
     class GeneratorExpression;
     class Identifier;
@@ -75,6 +78,7 @@ namespace columbus { namespace python { namespace asg {
     class ImagNumber;
     class Index;
     class IntegerLiteral;
+    class JoinedStr;
     class KeyValue;
     class Keyword;
     class Lambda;
@@ -82,10 +86,12 @@ namespace columbus { namespace python { namespace asg {
     class ListComp;
     class Literal;
     class LongInteger;
+    class NamedExpr;
     class Set;
     class SetComp;
     class Slice;
     class Slicing;
+    class Starred;
     class StringConversion;
     class StringLiteral;
     class Subscription;
@@ -102,6 +108,7 @@ namespace columbus { namespace python { namespace asg {
 
   namespace statement {
     class Alias;
+    class AnnAssign;
     class Assert;
     class Assign;
     class AugAssign;
@@ -120,6 +127,7 @@ namespace columbus { namespace python { namespace asg {
     class ImportFrom;
     class ImportStatement;
     class Iteration;
+    class Nonlocal;
     class Parameter;
     class Pass;
     class Print;
@@ -130,10 +138,9 @@ namespace columbus { namespace python { namespace asg {
     class Suite;
     class TargetList;
     class Try;
-    class TryExcept;
-    class TryFinal;
     class While;
     class With;
+    class WithItem;
   }
 
   namespace type {

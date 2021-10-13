@@ -1,38 +1,21 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
-using Columbus.Lim.Asg;
+﻿using Columbus.Lim.Asg;
 using Columbus.Lim.Asg.Nodes.Physical;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Columbus.CSAN.Commons;
+using Columbus.CSAN.Contexts;
 
 namespace Columbus.CSAN.Metrics.Size
 {
     internal sealed class TLOC
     {
-        public static ulong Calculate(Lim.Asg.Nodes.Logical.Scope limScope, ref List<Interval> intervals)
+        private readonly SolutionContext solutionContext;
+
+        public TLOC(SolutionContext solutionContext)
+        {
+            this.solutionContext = solutionContext;
+        }
+
+        public ulong Calculate(Lim.Asg.Nodes.Logical.Scope limScope, ref List<Interval> intervals)
         {
             ulong TLOC = 0;
 
@@ -81,23 +64,20 @@ namespace Columbus.CSAN.Metrics.Size
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void InsertComponentTLOCMap(uint NodeId, uint Key, ulong lastLineNumber)
+        public void InsertComponentTLOCMap(uint nodeId, uint key, ulong lastLineNumber)
         {
-            if (MainDeclaration.Instance.ComponentTLOCMap.ContainsKey(NodeId))
+            Dictionary<uint, ulong> dictionary;
+            if (solutionContext.ComponentTLOCMap.TryGetValue(nodeId, out dictionary))
             {
-                if (!MainDeclaration.Instance.ComponentTLOCMap[NodeId].ContainsKey(Key))
-                {
-                    MainDeclaration.Instance.ComponentTLOCMap[NodeId].Add(Key, lastLineNumber);
-                }
+                if (dictionary.ContainsKey(key))
+                    dictionary[key] = lastLineNumber;
                 else
-                {
-                    MainDeclaration.Instance.ComponentTLOCMap[NodeId][Key] = lastLineNumber;
-                }
+                    dictionary.Add(key, lastLineNumber);
             }
             else
             {
-                var loc = new Dictionary<uint, ulong> { { Key, lastLineNumber } };
-                MainDeclaration.Instance.ComponentTLOCMap.Add(NodeId, loc);
+                var loc = new Dictionary<uint, ulong> { { key, lastLineNumber } };
+                solutionContext.ComponentTLOCMap.Add(nodeId, loc);
             }
         }
     }

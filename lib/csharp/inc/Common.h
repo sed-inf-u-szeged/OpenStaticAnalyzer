@@ -140,6 +140,13 @@ namespace columbus { namespace csharp { namespace asg {
       bool getIsConditionalExpressionSyntax(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is expression::DeclarationExpressionSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::DeclarationExpressionSyntax.
+      */
+      bool getIsDeclarationExpressionSyntax(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is expression::DefaultExpressionSyntax or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is expression::DefaultExpressionSyntax.
@@ -196,6 +203,13 @@ namespace columbus { namespace csharp { namespace asg {
       bool getIsImplicitElementAccessSyntax(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is expression::ImplicitStackAllocArrayCreationExpressionSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::ImplicitStackAllocArrayCreationExpressionSyntax.
+      */
+      bool getIsImplicitStackAllocArrayCreationExpressionSyntax(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is expression::InitializerExpressionSyntax or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is expression::InitializerExpressionSyntax.
@@ -222,6 +236,13 @@ namespace columbus { namespace csharp { namespace asg {
       * \return Returns true if the node is expression::InvocationExpressionSyntax.
       */
       bool getIsInvocationExpressionSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expression::IsPatternExpressionSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::IsPatternExpressionSyntax.
+      */
+      bool getIsIsPatternExpressionSyntax(const base::Base& node);
 
       /**
       * \brief Decides whether the node is expression::LambdaExpressionSyntax or not.
@@ -350,11 +371,32 @@ namespace columbus { namespace csharp { namespace asg {
       bool getIsQueryExpressionSyntax(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is expression::RangeExpressionSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::RangeExpressionSyntax.
+      */
+      bool getIsRangeExpressionSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expression::RefExpressionSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::RefExpressionSyntax.
+      */
+      bool getIsRefExpressionSyntax(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is expression::RefTypeExpressionSyntax or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is expression::RefTypeExpressionSyntax.
       */
       bool getIsRefTypeExpressionSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expression::RefTypeSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::RefTypeSyntax.
+      */
+      bool getIsRefTypeSyntax(const base::Base& node);
 
       /**
       * \brief Decides whether the node is expression::RefValueExpressionSyntax or not.
@@ -392,11 +434,39 @@ namespace columbus { namespace csharp { namespace asg {
       bool getIsStackAllocArrayCreationExpressionSyntax(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is expression::SwitchExpressionSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::SwitchExpressionSyntax.
+      */
+      bool getIsSwitchExpressionSyntax(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is expression::ThisExpressionSyntax or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is expression::ThisExpressionSyntax.
       */
       bool getIsThisExpressionSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expression::ThrowExpressionSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::ThrowExpressionSyntax.
+      */
+      bool getIsThrowExpressionSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expression::TupleExpressionSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::TupleExpressionSyntax.
+      */
+      bool getIsTupleExpressionSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expression::TupleTypeSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::TupleTypeSyntax.
+      */
+      bool getIsTupleTypeSyntax(const base::Base& node);
 
       /**
       * \brief Decides whether the node is expression::TypeOfExpressionSyntax or not.
@@ -432,6 +502,13 @@ namespace columbus { namespace csharp { namespace asg {
       * \return Returns true if the node is statement::CheckedStatementSyntax.
       */
       bool getIsCheckedStatementSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is statement::CommonForEachStatementSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is statement::CommonForEachStatementSyntax.
+      */
+      bool getIsCommonForEachStatementSyntax(const base::Base& node);
 
       /**
       * \brief Decides whether the node is statement::ContinueStatementSyntax or not.
@@ -476,6 +553,13 @@ namespace columbus { namespace csharp { namespace asg {
       bool getIsForEachStatementSyntax(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is statement::ForEachVariableStatementSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is statement::ForEachVariableStatementSyntax.
+      */
+      bool getIsForEachVariableStatementSyntax(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is statement::ForStatementSyntax or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is statement::ForStatementSyntax.
@@ -509,6 +593,13 @@ namespace columbus { namespace csharp { namespace asg {
       * \return Returns true if the node is statement::LocalDeclarationStatementSyntax.
       */
       bool getIsLocalDeclarationStatementSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is statement::LocalFunctionStatementSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is statement::LocalFunctionStatementSyntax.
+      */
+      bool getIsLocalFunctionStatementSyntax(const base::Base& node);
 
       /**
       * \brief Decides whether the node is statement::LockStatementSyntax or not.
@@ -742,6 +833,13 @@ namespace columbus { namespace csharp { namespace asg {
       bool getIsBracketedParameterListSyntax(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is structure::CasePatternSwitchLabelSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::CasePatternSwitchLabelSyntax.
+      */
+      bool getIsCasePatternSwitchLabelSyntax(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is structure::CaseSwitchLabelSyntax or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is structure::CaseSwitchLabelSyntax.
@@ -789,6 +887,13 @@ namespace columbus { namespace csharp { namespace asg {
       * \return Returns true if the node is structure::CompilationUnitSyntax.
       */
       bool getIsCompilationUnitSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is structure::ConstantPatternSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::ConstantPatternSyntax.
+      */
+      bool getIsConstantPatternSyntax(const base::Base& node);
 
       /**
       * \brief Decides whether the node is structure::ConstructorConstraintSyntax or not.
@@ -854,6 +959,13 @@ namespace columbus { namespace csharp { namespace asg {
       bool getIsCrefSyntax(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is structure::DeclarationPatternSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::DeclarationPatternSyntax.
+      */
+      bool getIsDeclarationPatternSyntax(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is structure::DefaultSwitchLabelSyntax or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is structure::DefaultSwitchLabelSyntax.
@@ -873,6 +985,20 @@ namespace columbus { namespace csharp { namespace asg {
       * \return Returns true if the node is structure::DestructorDeclarationSyntax.
       */
       bool getIsDestructorDeclarationSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is structure::DiscardDesignationSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::DiscardDesignationSyntax.
+      */
+      bool getIsDiscardDesignationSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is structure::DiscardPatternSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::DiscardPatternSyntax.
+      */
+      bool getIsDiscardPatternSyntax(const base::Base& node);
 
       /**
       * \brief Decides whether the node is structure::ElseClauseSyntax or not.
@@ -1141,11 +1267,39 @@ namespace columbus { namespace csharp { namespace asg {
       bool getIsParameterSyntax(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is structure::ParenthesizedVariableDesignationSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::ParenthesizedVariableDesignationSyntax.
+      */
+      bool getIsParenthesizedVariableDesignationSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is structure::PatternSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::PatternSyntax.
+      */
+      bool getIsPatternSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is structure::PositionalPatternClauseSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::PositionalPatternClauseSyntax.
+      */
+      bool getIsPositionalPatternClauseSyntax(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is structure::PropertyDeclarationSyntax or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is structure::PropertyDeclarationSyntax.
       */
       bool getIsPropertyDeclarationSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is structure::PropertyPatternClauseSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::PropertyPatternClauseSyntax.
+      */
+      bool getIsPropertyPatternClauseSyntax(const base::Base& node);
 
       /**
       * \brief Decides whether the node is structure::QualifiedCrefSyntax or not.
@@ -1176,6 +1330,13 @@ namespace columbus { namespace csharp { namespace asg {
       bool getIsQueryContinuationSyntax(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is structure::RecursivePatternSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::RecursivePatternSyntax.
+      */
+      bool getIsRecursivePatternSyntax(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is structure::SelectClauseSyntax or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is structure::SelectClauseSyntax.
@@ -1197,11 +1358,32 @@ namespace columbus { namespace csharp { namespace asg {
       bool getIsSimpleBaseTypeSyntax(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is structure::SingleVariableDesignationSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::SingleVariableDesignationSyntax.
+      */
+      bool getIsSingleVariableDesignationSyntax(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is structure::StructDeclarationSyntax or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is structure::StructDeclarationSyntax.
       */
       bool getIsStructDeclarationSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is structure::SubpatternSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::SubpatternSyntax.
+      */
+      bool getIsSubpatternSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is structure::SwitchExpressionArmSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::SwitchExpressionArmSyntax.
+      */
+      bool getIsSwitchExpressionArmSyntax(const base::Base& node);
 
       /**
       * \brief Decides whether the node is structure::SwitchLabelSyntax or not.
@@ -1223,6 +1405,13 @@ namespace columbus { namespace csharp { namespace asg {
       * \return Returns true if the node is structure::SyntaxToken.
       */
       bool getIsSyntaxToken(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is structure::TupleElementSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::TupleElementSyntax.
+      */
+      bool getIsTupleElementSyntax(const base::Base& node);
 
       /**
       * \brief Decides whether the node is structure::TypeArgumentListSyntax or not.
@@ -1288,6 +1477,13 @@ namespace columbus { namespace csharp { namespace asg {
       bool getIsUsingDirectiveSyntax(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is structure::VarPatternSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::VarPatternSyntax.
+      */
+      bool getIsVarPatternSyntax(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is structure::VariableDeclarationSyntax or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is structure::VariableDeclarationSyntax.
@@ -1300,6 +1496,20 @@ namespace columbus { namespace csharp { namespace asg {
       * \return Returns true if the node is structure::VariableDeclaratorSyntax.
       */
       bool getIsVariableDeclaratorSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is structure::VariableDesignationSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::VariableDesignationSyntax.
+      */
+      bool getIsVariableDesignationSyntax(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is structure::WhenClauseSyntax or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::WhenClauseSyntax.
+      */
+      bool getIsWhenClauseSyntax(const base::Base& node);
 
       /**
       * \brief Decides whether the node is structure::WhereClauseSyntax or not.

@@ -1,501 +1,326 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
 #include "../inc/ClassExpressionWrapper.h"
-#include <sstream>  
 #include <string>   
-#include <iomanip>  
-#include <algorithm>
-#include <cctype>   
-
-#include <nan.h>   
-
-using namespace v8;
-
 namespace columbus { namespace javascript { namespace asg { namespace addon {
 
-Persistent<Function> ClassExpressionWrapper::constructor;
+napi_ref ClassExpressionWrapper::constructor;
 
-void ClassExpressionWrapper::Init(Handle<v8::Object> exports) {
-  Isolate* isolate = Isolate::GetCurrent();                                
-                                                                           
-  // Prepare constructor template                                          
-  Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);       
-  tpl->SetClassName(v8::String::NewFromUtf8(isolate, "ClassExpressionWrapper"));             
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);                       
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addCommentsComment", addCommentsComment);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setBodyClassBody", setBodyClassBody);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassArrayExpression", setSuperClassArrayExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassArrowFunctionExpression", setSuperClassArrowFunctionExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassAssignmentExpression", setSuperClassAssignmentExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassAwaitExpression", setSuperClassAwaitExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassBinaryExpression", setSuperClassBinaryExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassCallExpression", setSuperClassCallExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassClassExpression", setSuperClassClassExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassConditionalExpression", setSuperClassConditionalExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassFunctionExpression", setSuperClassFunctionExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassIdentifier", setSuperClassIdentifier);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassBooleanLiteral", setSuperClassBooleanLiteral);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassNullLiteral", setSuperClassNullLiteral);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassNumberLiteral", setSuperClassNumberLiteral);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassRegExpLiteral", setSuperClassRegExpLiteral);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassStringLiteral", setSuperClassStringLiteral);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassLogicalExpression", setSuperClassLogicalExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassMemberExpression", setSuperClassMemberExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassMetaProperty", setSuperClassMetaProperty);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassNewExpression", setSuperClassNewExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassObjectExpression", setSuperClassObjectExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassSequenceExpression", setSuperClassSequenceExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassTaggedTemplateExpression", setSuperClassTaggedTemplateExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassTemplateLiteral", setSuperClassTemplateLiteral);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassThisExpression", setSuperClassThisExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassUnaryExpression", setSuperClassUnaryExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassUpdateExpression", setSuperClassUpdateExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setSuperClassYieldExpression", setSuperClassYieldExpression);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setIdentifierIdentifier", setIdentifierIdentifier);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setPath", setPath);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setLine", setLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setCol", setCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setEndLine", setEndLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setEndCol", setEndCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideLine", setWideLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideCol", setWideCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideEndLine", setWideEndLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideEndCol", setWideEndCol);
-                                                                           
-  constructor.Reset(isolate, tpl->GetFunction());                          
-  exports->Set(v8::String::NewFromUtf8(isolate, "ClassExpressionWrapper"),                   
-               tpl->GetFunction());                                        
-}                                                                          
+ClassExpressionWrapper::ClassExpressionWrapper(): env_(nullptr), wrapper_(nullptr) {}
 
+ClassExpressionWrapper::~ClassExpressionWrapper(){ napi_delete_reference(env_, wrapper_); }
 
-void ClassExpressionWrapper::New(const FunctionCallbackInfo<Value>& args) {                             
-  Isolate* isolate = Isolate::GetCurrent();                                         
-  HandleScope scope(isolate);                                                       
-                                                                                    
-  if (args.IsConstructCall()) {                                                     
-    // Invoked as constructor: `new ClassExpressionWrapper(...)`                                        
-    Factory* fact = Nan::ObjectWrap::Unwrap<Factory>(args[0]->ToObject()); 
-    ClassExpressionWrapper* obj = new ClassExpressionWrapper(fact);                                                         
-    obj->Wrap(args.This());                                                         
-    args.GetReturnValue().Set(args.This());                                         
-  } else {                                                                          
-    // Invoked as plain function `ClassExpressionWrapper(...)`, turn into construct call.               
-    const int argc = 1;                                                             
-    Handle<v8::Value> argv[argc] = { args[0] };                                         
-    Local<v8::Function> cons = Local<v8::Function>::New(isolate, constructor);              
-    args.GetReturnValue().Set(Nan::NewInstance(cons, argc, argv).ToLocalChecked()); 
-  }                                                                                 
-}                                                                                   
-
-
-ClassExpressionWrapper::ClassExpressionWrapper(Factory* fact)                        
-{                                                   
-  ClassExpression = fact->getFactory()->createClassExpressionNode();          
-}                                                   
-
-ClassExpressionWrapper::~ClassExpressionWrapper()
-{        
-}        
-
-void ClassExpressionWrapper::NewInstance(const FunctionCallbackInfo<Value>& args) {              
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  const unsigned argc = 1;                                                   
-  Handle<Value> argv[argc] = { args[0] };                                    
-  Local<v8::Function> cons = Local<v8::Function>::New(isolate, constructor);         
-  Local<v8::Object> instance = Nan::NewInstance(cons, argc, argv).ToLocalChecked();  
-  args.GetReturnValue().Set(instance);                                       
-}                                                                            
-
-void ClassExpressionWrapper::addCommentsComment(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  CommentWrapper* _Comment1 = ObjectWrap::Unwrap<CommentWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->addComments(_Comment1->Comment);
+void ClassExpressionWrapper::Destructor(napi_env env, void* nativeObject, void* ){
+  ClassExpressionWrapper* obj = reinterpret_cast<ClassExpressionWrapper*>(nativeObject);
+  //delete obj->_nativeObj;
+  obj->~ClassExpressionWrapper();
 }
-void ClassExpressionWrapper::setBodyClassBody(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ClassBodyWrapper* _ClassBody1 = ObjectWrap::Unwrap<ClassBodyWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
+napi_value ClassExpressionWrapper::Init(napi_env env, napi_value& exports) {
+  napi_status status;
+  napi_property_descriptor props [] = {
+  DECLARE_NAPI_METHOD( "addComments", addComments),
+  DECLARE_NAPI_METHOD( "setBody", setBody),
+  DECLARE_NAPI_METHOD( "setSuperClass", setSuperClass),
+  DECLARE_NAPI_METHOD( "setIdentifier", setIdentifier),
+    DECLARE_NAPI_METHOD("setPath", setPath),
+    DECLARE_NAPI_METHOD("setPosition", setPosition),
+  };
 
-  _ClassExpression2->ClassExpression->setBody(_ClassBody1->ClassBody);
+  napi_value cons;
+  status = napi_define_class(env, "ClassExpressionWrapper", NAPI_AUTO_LENGTH, New, nullptr, sizeof(props) / sizeof(*props), props, &cons );
+  assert(status == napi_ok);
+
+  status = napi_create_reference(env, cons, 1, &constructor);
+  assert(status == napi_ok);
+
+  return exports;
 }
-void ClassExpressionWrapper::setSuperClassArrayExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ArrayExpressionWrapper* _ArrayExpression1 = ObjectWrap::Unwrap<ArrayExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
+napi_value ClassExpressionWrapper::New(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
 
-  _ClassExpression2->ClassExpression->setSuperClass(_ArrayExpression1->ArrayExpression);
-}
-void ClassExpressionWrapper::setSuperClassArrowFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ArrowFunctionExpressionWrapper* _ArrowFunctionExpression1 = ObjectWrap::Unwrap<ArrowFunctionExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
+  status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
+  assert(status == napi_ok);
 
-  _ClassExpression2->ClassExpression->setSuperClass(_ArrowFunctionExpression1->ArrowFunctionExpression);
-}
-void ClassExpressionWrapper::setSuperClassAssignmentExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  AssignmentExpressionWrapper* _AssignmentExpression1 = ObjectWrap::Unwrap<AssignmentExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
+  ClassExpressionWrapper* obj = new ClassExpressionWrapper();
+  obj->env_ = env;
+  status = napi_wrap(env, jsthis, reinterpret_cast<void*>(obj), ClassExpressionWrapper::Destructor, nullptr, &obj->wrapper_);
+  assert(status == napi_ok);
 
-  _ClassExpression2->ClassExpression->setSuperClass(_AssignmentExpression1->AssignmentExpression);
-}
-void ClassExpressionWrapper::setSuperClassAwaitExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  AwaitExpressionWrapper* _AwaitExpression1 = ObjectWrap::Unwrap<AwaitExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_AwaitExpression1->AwaitExpression);
-}
-void ClassExpressionWrapper::setSuperClassBinaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  BinaryExpressionWrapper* _BinaryExpression1 = ObjectWrap::Unwrap<BinaryExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_BinaryExpression1->BinaryExpression);
-}
-void ClassExpressionWrapper::setSuperClassCallExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  CallExpressionWrapper* _CallExpression1 = ObjectWrap::Unwrap<CallExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_CallExpression1->CallExpression);
-}
-void ClassExpressionWrapper::setSuperClassClassExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ClassExpressionWrapper* _ClassExpression1 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_ClassExpression1->ClassExpression);
-}
-void ClassExpressionWrapper::setSuperClassConditionalExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ConditionalExpressionWrapper* _ConditionalExpression1 = ObjectWrap::Unwrap<ConditionalExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_ConditionalExpression1->ConditionalExpression);
-}
-void ClassExpressionWrapper::setSuperClassFunctionExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  FunctionExpressionWrapper* _FunctionExpression1 = ObjectWrap::Unwrap<FunctionExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_FunctionExpression1->FunctionExpression);
-}
-void ClassExpressionWrapper::setSuperClassIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  IdentifierWrapper* _Identifier1 = ObjectWrap::Unwrap<IdentifierWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_Identifier1->Identifier);
-}
-void ClassExpressionWrapper::setSuperClassBooleanLiteral(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  BooleanLiteralWrapper* _BooleanLiteral1 = ObjectWrap::Unwrap<BooleanLiteralWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_BooleanLiteral1->BooleanLiteral);
-}
-void ClassExpressionWrapper::setSuperClassNullLiteral(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  NullLiteralWrapper* _NullLiteral1 = ObjectWrap::Unwrap<NullLiteralWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_NullLiteral1->NullLiteral);
-}
-void ClassExpressionWrapper::setSuperClassNumberLiteral(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  NumberLiteralWrapper* _NumberLiteral1 = ObjectWrap::Unwrap<NumberLiteralWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_NumberLiteral1->NumberLiteral);
-}
-void ClassExpressionWrapper::setSuperClassRegExpLiteral(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  RegExpLiteralWrapper* _RegExpLiteral1 = ObjectWrap::Unwrap<RegExpLiteralWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_RegExpLiteral1->RegExpLiteral);
-}
-void ClassExpressionWrapper::setSuperClassStringLiteral(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  StringLiteralWrapper* _StringLiteral1 = ObjectWrap::Unwrap<StringLiteralWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_StringLiteral1->StringLiteral);
-}
-void ClassExpressionWrapper::setSuperClassLogicalExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  LogicalExpressionWrapper* _LogicalExpression1 = ObjectWrap::Unwrap<LogicalExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_LogicalExpression1->LogicalExpression);
-}
-void ClassExpressionWrapper::setSuperClassMemberExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  MemberExpressionWrapper* _MemberExpression1 = ObjectWrap::Unwrap<MemberExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_MemberExpression1->MemberExpression);
-}
-void ClassExpressionWrapper::setSuperClassMetaProperty(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  MetaPropertyWrapper* _MetaProperty1 = ObjectWrap::Unwrap<MetaPropertyWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_MetaProperty1->MetaProperty);
-}
-void ClassExpressionWrapper::setSuperClassNewExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  NewExpressionWrapper* _NewExpression1 = ObjectWrap::Unwrap<NewExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_NewExpression1->NewExpression);
-}
-void ClassExpressionWrapper::setSuperClassObjectExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ObjectExpressionWrapper* _ObjectExpression1 = ObjectWrap::Unwrap<ObjectExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_ObjectExpression1->ObjectExpression);
-}
-void ClassExpressionWrapper::setSuperClassSequenceExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  SequenceExpressionWrapper* _SequenceExpression1 = ObjectWrap::Unwrap<SequenceExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_SequenceExpression1->SequenceExpression);
-}
-void ClassExpressionWrapper::setSuperClassTaggedTemplateExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  TaggedTemplateExpressionWrapper* _TaggedTemplateExpression1 = ObjectWrap::Unwrap<TaggedTemplateExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_TaggedTemplateExpression1->TaggedTemplateExpression);
-}
-void ClassExpressionWrapper::setSuperClassTemplateLiteral(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  TemplateLiteralWrapper* _TemplateLiteral1 = ObjectWrap::Unwrap<TemplateLiteralWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_TemplateLiteral1->TemplateLiteral);
-}
-void ClassExpressionWrapper::setSuperClassThisExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ThisExpressionWrapper* _ThisExpression1 = ObjectWrap::Unwrap<ThisExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_ThisExpression1->ThisExpression);
-}
-void ClassExpressionWrapper::setSuperClassUnaryExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  UnaryExpressionWrapper* _UnaryExpression1 = ObjectWrap::Unwrap<UnaryExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_UnaryExpression1->UnaryExpression);
-}
-void ClassExpressionWrapper::setSuperClassUpdateExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  UpdateExpressionWrapper* _UpdateExpression1 = ObjectWrap::Unwrap<UpdateExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_UpdateExpression1->UpdateExpression);
-}
-void ClassExpressionWrapper::setSuperClassYieldExpression(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  YieldExpressionWrapper* _YieldExpression1 = ObjectWrap::Unwrap<YieldExpressionWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setSuperClass(_YieldExpression1->YieldExpression);
-}
-void ClassExpressionWrapper::setIdentifierIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  IdentifierWrapper* _Identifier1 = ObjectWrap::Unwrap<IdentifierWrapper>(args[0]->ToObject());
-  ClassExpressionWrapper* _ClassExpression2 = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-
-  _ClassExpression2->ClassExpression->setIdentifier(_Identifier1->Identifier);
-}
-void ClassExpressionWrapper::setPath(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);
-
-  ClassExpressionWrapper* _ClassExpression = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );
-  std::string param(*utfStr);
-  Range range = _ClassExpression->ClassExpression->getPosition();
-  range.setPath( param );
-  _ClassExpression->ClassExpression->setPosition( range );
+  return jsthis;
 }
 
-void ClassExpressionWrapper::setLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassExpressionWrapper* _ClassExpression = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassExpression->ClassExpression->getPosition();
-  range.setLine( ui );
-  _ClassExpression->ClassExpression->setPosition( range );
+
+napi_status ClassExpressionWrapper::NewInstance(napi_env env, expression::ClassExpression* arg, napi_value* instance) {
+
+  napi_status status;
+  napi_value cons;
+
+  status = napi_get_reference_value(env, constructor, &cons);
+  if(status != napi_ok) return status;
+
+  status = napi_new_instance(env, cons, 0, nullptr, instance);
+  if(status != napi_ok) return status;
+
+  ClassExpressionWrapper* obj;
+  status = napi_unwrap(env, *instance, reinterpret_cast<void**>(&obj));
+  obj->_nativeObj = arg;
+  return napi_ok;
 }
 
-void ClassExpressionWrapper::setCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassExpressionWrapper* _ClassExpression = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassExpression->ClassExpression->getPosition();
-  range.setCol( ui );
-  _ClassExpression->ClassExpression->setPosition( range );
+napi_value ClassExpressionWrapper::addComments(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
+
+  ClassExpressionWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
+
+  columbus::javascript::asg::expression::ClassExpression* source = dynamic_cast<columbus::javascript::asg::expression::ClassExpression*>(obj->_nativeObj);
+  columbus::javascript::asg::base::Comment* target = dynamic_cast<columbus::javascript::asg::base::Comment*>(param->_nativeObj);
+
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast expression::ClassExpression" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast base::Comment" );
+  }
+
+  source->addComments(target);
+  return nullptr;
+}
+napi_value ClassExpressionWrapper::setBody(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
+
+  ClassExpressionWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
+
+  columbus::javascript::asg::expression::ClassExpression* source = dynamic_cast<columbus::javascript::asg::expression::ClassExpression*>(obj->_nativeObj);
+  columbus::javascript::asg::structure::ClassBody* target = dynamic_cast<columbus::javascript::asg::structure::ClassBody*>(param->_nativeObj);
+
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast expression::ClassExpression" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast structure::ClassBody" );
+  }
+
+  source->setBody(target);
+  return nullptr;
+}
+napi_value ClassExpressionWrapper::setSuperClass(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
+
+  ClassExpressionWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
+
+  columbus::javascript::asg::expression::ClassExpression* source = dynamic_cast<columbus::javascript::asg::expression::ClassExpression*>(obj->_nativeObj);
+  columbus::javascript::asg::expression::Expression* target = dynamic_cast<columbus::javascript::asg::expression::Expression*>(param->_nativeObj);
+
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast expression::ClassExpression" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast expression::Expression" );
+  }
+
+  source->setSuperClass(target);
+  return nullptr;
+}
+napi_value ClassExpressionWrapper::setIdentifier(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
+
+  ClassExpressionWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
+
+  columbus::javascript::asg::expression::ClassExpression* source = dynamic_cast<columbus::javascript::asg::expression::ClassExpression*>(obj->_nativeObj);
+  columbus::javascript::asg::expression::Identifier* target = dynamic_cast<columbus::javascript::asg::expression::Identifier*>(param->_nativeObj);
+
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast expression::ClassExpression" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast expression::Identifier" );
+  }
+
+  source->setIdentifier(target);
+  return nullptr;
+}
+napi_value ClassExpressionWrapper::setPath(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments");
+    return nullptr;
+  }
+
+  ClassExpressionWrapper* obj;
+  napi_valuetype valuetype;
+  status = napi_typeof(env, args[0], &valuetype);
+  assert(status == napi_ok);
+
+  if (valuetype != napi_string) {
+    napi_throw_type_error(env, nullptr, "Argument should be a string!");
+    return nullptr;
+  }
+
+  char buffer[1024];
+  size_t buffer_size = 1024, result_size = 0;
+  status = napi_get_value_string_utf8(env, args[0], buffer, buffer_size, &result_size);
+  assert(status == napi_ok);
+
+  std::string path(buffer);
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  Range range = dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->getPosition();
+  range.setPath( path );
+  dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->setPosition( range );
+  return nullptr;
 }
 
-void ClassExpressionWrapper::setEndLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassExpressionWrapper* _ClassExpression = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassExpression->ClassExpression->getPosition();
-  range.setEndLine( ui );
-  _ClassExpression->ClassExpression->setPosition( range );
+
+napi_value ClassExpressionWrapper::setPosition(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 8;
+  napi_value args[8];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1 && argc != 8) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments. Use a simple object with the positions or pass 8 parameters: line, col, endline, endcol and their wide equivalents!");
+    return nullptr;
+  }
+
+  ClassExpressionWrapper* obj;
+  napi_valuetype valuetype[8];
+  int32_t position[8];
+  bool hasProp[8];
+  if(argc == 1){
+    status = napi_typeof(env, args[0], &valuetype[0]);
+    assert(status == napi_ok);
+
+    if(valuetype[0] != napi_object){
+      napi_throw_type_error(env, nullptr, "Argument should be an object!");
+      return nullptr;
+    }
+
+    std::string props[] = {"line", "col", "endline", "endcol", "wideline", "widecol", "wideendline", "wideendcol",};
+
+    for(int i = 0; i < 8; ++i){
+      status = napi_has_named_property(env, args[0], props[i].c_str(), &hasProp[i]);
+      assert(status == napi_ok);
+      napi_value value;
+      if(hasProp[i]){
+        status = napi_get_named_property(env, args[0], props[i].c_str(), &value);
+        assert(status == napi_ok);
+        status = napi_get_value_int32(env, value, &position[i]);
+        assert(status == napi_ok);
+      }
+
+    }
+  }
+  else{
+    for(int i = 0; i < 8; ++i){
+      status = napi_typeof(env, args[i], &valuetype[i]);
+      assert(status == napi_ok);
+      if(valuetype[i] != napi_number){
+        napi_throw_type_error(env, nullptr, "Argument should be an integer!");
+        return nullptr;
+      }
+      status = napi_get_value_int32(env, args[i], &position[i]);
+      assert(status == napi_ok);
+    }
+    for(int i = 0; i < 8; ++i){
+      hasProp[i] = true;
+    }
+  }
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  Range range = dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->getPosition();
+
+  if(hasProp[0])
+    range.setLine( (int)position[0] );
+  if(hasProp[1])
+    range.setCol( (int)position[1] );
+  if(hasProp[2])
+    range.setEndLine( (int)position[2] );
+  if(hasProp[3])
+    range.setEndCol( (int)position[3] );
+  if(hasProp[4])
+    range.setWideLine( (int)position[4] );
+  if(hasProp[5])
+    range.setWideCol( (int)position[5] );
+  if(hasProp[6])
+    range.setWideEndLine( (int)position[6] );
+  if(hasProp[7])
+    range.setWideEndCol( (int)position[7] );
+  dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->setPosition( range );
+  return nullptr;
 }
 
-void ClassExpressionWrapper::setEndCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassExpressionWrapper* _ClassExpression = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassExpression->ClassExpression->getPosition();
-  range.setEndCol( ui );
-  _ClassExpression->ClassExpression->setPosition( range );
-}
-
-void ClassExpressionWrapper::setWideLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassExpressionWrapper* _ClassExpression = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassExpression->ClassExpression->getPosition();
-  range.setWideLine( ui );
-  _ClassExpression->ClassExpression->setPosition( range );
-}
-
-void ClassExpressionWrapper::setWideCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassExpressionWrapper* _ClassExpression = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassExpression->ClassExpression->getPosition();
-  range.setWideCol( ui );
-  _ClassExpression->ClassExpression->setPosition( range );
-}
-
-void ClassExpressionWrapper::setWideEndLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassExpressionWrapper* _ClassExpression = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassExpression->ClassExpression->getPosition();
-  range.setWideEndLine( ui );
-  _ClassExpression->ClassExpression->setPosition( range );
-}
-
-void ClassExpressionWrapper::setWideEndCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  ClassExpressionWrapper* _ClassExpression = ObjectWrap::Unwrap<ClassExpressionWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _ClassExpression->ClassExpression->getPosition();
-  range.setWideEndCol( ui );
-  _ClassExpression->ClassExpression->setPosition( range );
-}
 
 }}}} //end of namespaces

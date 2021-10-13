@@ -36,6 +36,8 @@ import java.util.StringTokenizer;
 
 import columbus.logger.LoggerHandler;
 
+import com.sun.tools.javac.code.Source;
+import com.sun.tools.javac.jvm.Target;
 import com.sun.tools.javac.main.Option;
 
 public class OptionParser {
@@ -67,6 +69,8 @@ public class OptionParser {
 	private static String commonJsi = null;
 
 	private static String commonXml = null;
+
+	public static boolean minXml = false;
 
 	private static String generatedJsiListFile = null;
 
@@ -154,6 +158,10 @@ public class OptionParser {
 
 	public static String getCommonXml() {
 		return commonXml;
+	}
+
+	public static boolean isMinXml() {
+		return minXml;
 	}
 
 	public static String getGeneratedJsiListFile() {
@@ -266,6 +274,7 @@ public class OptionParser {
 		if (cmd.isOutputxml()) {
 			commonXml = cmd.getOutputxml();
 		}
+		minXml = cmd.isMinXml();
 		if (cmd.isJsilistfile()) {
 			generatedJsiListFile = cmd.getJsilistfile();
 		}
@@ -316,10 +325,9 @@ public class OptionParser {
 		}
 
 		for (int i = 0; i < javacOptions.size(); ++i) {
-			if (javacOptions.get(i).equals(Option.ENCODING.getText()) && i + 1 < javacOptions.size()) {
+			if (Option.ENCODING.matches(javacOptions.get(i)) && i + 1 < javacOptions.size()) {
 				OptionParser.encoding = javacOptions.get(i + 1);
-				logger.info("info.jan.OptionParser.javacOptionFound", Option.ENCODING.getText(),
-						OptionParser.encoding);
+				logger.info("info.jan.OptionParser.javacOptionFound", javacOptions.get(i), OptionParser.encoding);
 			}
 		}
 
@@ -396,6 +404,27 @@ public class OptionParser {
 					// these target options have been removed in JDK 8
 					if ("jsr14".equals(targetValue) || "1.4.1".equals(targetValue) || "1.4.2".equals(targetValue)) {
 						logger.error("error.jan.OptionParser.removedUndocumentedTargetOption", targetValue);
+						i++;
+						continue;
+					}
+				}
+			}
+			// TODO JDK 9+ doesn't support source/target before 1.6/6
+			if (i + 1 < javacOptions.size()) {
+				if ("-source".equals(o)) {
+					String value = javacOptions.get(i + 1);
+					Source source = Source.lookup(value);
+					if (source != null && source.compareTo(Source.MIN) < 0) {
+						logger.error("error.jan.OptionParser.unsupportedSourceOption", value);
+						i++;
+						continue;
+					}
+				}
+				if ("-target".equals(o)) {
+					String value = javacOptions.get(i + 1);
+					Target target = Target.lookup(value);
+					if (target != null && target.compareTo(Target.MIN) < 0) {
+						logger.error("error.jan.OptionParser.unsupportedTargetOption", value);
 						i++;
 						continue;
 					}

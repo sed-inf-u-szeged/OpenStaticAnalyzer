@@ -53,6 +53,10 @@ void VisitorReverseEdges::visitArgumentList_HasTuple(const expression::ArgumentL
   revEdges->insertEdge(&end, &begin, edkArgumentList_HasTuple);
 }
 
+void VisitorReverseEdges::visitAwait_HasValue(const expression::Await& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkAwait_HasValue);
+}
+
 void VisitorReverseEdges::visitBinary_HasLeftExpression(const expression::Binary& begin, const expression::Expression& end) {
   revEdges->insertEdge(&end, &begin, edkBinary_HasLeftExpression);
 }
@@ -93,6 +97,14 @@ void VisitorReverseEdges::visitExtSlice_HasItem(const expression::ExtSlice& begi
   revEdges->insertEdge(&end, &begin, edkExtSlice_HasItem);
 }
 
+void VisitorReverseEdges::visitFormattedValue_HasValue(const expression::FormattedValue& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkFormattedValue_HasValue);
+}
+
+void VisitorReverseEdges::visitFormattedValue_HasFormatSpec(const expression::FormattedValue& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkFormattedValue_HasFormatSpec);
+}
+
 void VisitorReverseEdges::visitGenerator_HasCondition(const expression::Generator& begin, const expression::Expression& end) {
   revEdges->insertEdge(&end, &begin, edkGenerator_HasCondition);
 }
@@ -127,6 +139,10 @@ void VisitorReverseEdges::visitIfExpression_HasElseBody(const expression::IfExpr
 
 void VisitorReverseEdges::visitIfExpression_HasTest(const expression::IfExpression& begin, const expression::Expression& end) {
   revEdges->insertEdge(&end, &begin, edkIfExpression_HasTest);
+}
+
+void VisitorReverseEdges::visitJoinedStr_HasValue(const expression::JoinedStr& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkJoinedStr_HasValue);
 }
 
 void VisitorReverseEdges::visitKeyValue_HasKey(const expression::KeyValue& begin, const expression::Expression& end) {
@@ -169,6 +185,14 @@ void VisitorReverseEdges::visitListComp_HasGenerator(const expression::ListComp&
   revEdges->insertEdge(&end, &begin, edkListComp_HasGenerator);
 }
 
+void VisitorReverseEdges::visitNamedExpr_HasTarget(const expression::NamedExpr& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkNamedExpr_HasTarget);
+}
+
+void VisitorReverseEdges::visitNamedExpr_HasValue(const expression::NamedExpr& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkNamedExpr_HasValue);
+}
+
 void VisitorReverseEdges::visitSet_HasExpression(const expression::Set& begin, const expression::Expression& end) {
   revEdges->insertEdge(&end, &begin, edkSet_HasExpression);
 }
@@ -193,6 +217,10 @@ void VisitorReverseEdges::visitSlice_HasUpperBound(const expression::Slice& begi
   revEdges->insertEdge(&end, &begin, edkSlice_HasUpperBound);
 }
 
+void VisitorReverseEdges::visitStarred_HasValue(const expression::Starred& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkStarred_HasValue);
+}
+
 void VisitorReverseEdges::visitStringConversion_HasExpressionList(const expression::StringConversion& begin, const expression::ExpressionList& end) {
   revEdges->insertEdge(&end, &begin, edkStringConversion_HasExpressionList);
 }
@@ -205,8 +233,8 @@ void VisitorReverseEdges::visitUnary_HasExpression(const expression::Unary& begi
   revEdges->insertEdge(&end, &begin, edkUnary_HasExpression);
 }
 
-void VisitorReverseEdges::visitYieldExpression_HasYieldExpression(const expression::YieldExpression& begin, const expression::ExpressionList& end) {
-  revEdges->insertEdge(&end, &begin, edkYieldExpression_HasYieldExpression);
+void VisitorReverseEdges::visitYieldExpression_HasExpression(const expression::YieldExpression& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkYieldExpression_HasExpression);
 }
 
 void VisitorReverseEdges::visitModule_HasObject(const module::Module& begin, const module::Object& end) {
@@ -241,6 +269,10 @@ void VisitorReverseEdges::visitAlias_RefersTo(const statement::Alias& begin, con
   revEdges->insertEdge(&end, &begin, edkAlias_RefersTo);
 }
 
+void VisitorReverseEdges::visitAnnAssign_HasAnnotation(const statement::AnnAssign& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkAnnAssign_HasAnnotation);
+}
+
 void VisitorReverseEdges::visitAssert_HasMsgExpression(const statement::Assert& begin, const expression::Expression& end) {
   revEdges->insertEdge(&end, &begin, edkAssert_HasMsgExpression);
 }
@@ -271,6 +303,10 @@ void VisitorReverseEdges::visitClassDef_HasObject(const statement::ClassDef& beg
 
 void VisitorReverseEdges::visitClassDef_HasBaseSpecifier(const statement::ClassDef& begin, const statement::BaseSpecifier& end) {
   revEdges->insertEdge(&end, &begin, edkClassDef_HasBaseSpecifier);
+}
+
+void VisitorReverseEdges::visitClassDef_HasKeyword(const statement::ClassDef& begin, const expression::Keyword& end) {
+  revEdges->insertEdge(&end, &begin, edkClassDef_HasKeyword);
 }
 
 void VisitorReverseEdges::visitClassDef_HasDecorator(const statement::ClassDef& begin, const expression::Expression& end) {
@@ -325,6 +361,10 @@ void VisitorReverseEdges::visitFunctionDef_HasParameter(const statement::Functio
   revEdges->insertEdge(&end, &begin, edkFunctionDef_HasParameter);
 }
 
+void VisitorReverseEdges::visitFunctionDef_HasReturnAnnotation(const statement::FunctionDef& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkFunctionDef_HasReturnAnnotation);
+}
+
 void VisitorReverseEdges::visitFunctionDef_RefersTo(const statement::FunctionDef& begin, const module::Object& end) {
   revEdges->insertEdge(&end, &begin, edkFunctionDef_RefersTo);
 }
@@ -369,8 +409,16 @@ void VisitorReverseEdges::visitIteration_HasElseBody(const statement::Iteration&
   revEdges->insertEdge(&end, &begin, edkIteration_HasElseBody);
 }
 
+void VisitorReverseEdges::visitNonlocal_HasIdentifier(const statement::Nonlocal& begin, const expression::Identifier& end) {
+  revEdges->insertEdge(&end, &begin, edkNonlocal_HasIdentifier);
+}
+
 void VisitorReverseEdges::visitParameter_HasDefaultValue(const statement::Parameter& begin, const expression::Expression& end) {
   revEdges->insertEdge(&end, &begin, edkParameter_HasDefaultValue);
+}
+
+void VisitorReverseEdges::visitParameter_HasAnnotation(const statement::Parameter& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkParameter_HasAnnotation);
 }
 
 void VisitorReverseEdges::visitParameter_RefersTo(const statement::Parameter& begin, const module::Object& end) {
@@ -385,16 +433,24 @@ void VisitorReverseEdges::visitPrint_HasDestination(const statement::Print& begi
   revEdges->insertEdge(&end, &begin, edkPrint_HasDestination);
 }
 
-void VisitorReverseEdges::visitRaise_HasTracebackExpression(const statement::Raise& begin, const expression::Expression& end) {
-  revEdges->insertEdge(&end, &begin, edkRaise_HasTracebackExpression);
+void VisitorReverseEdges::visitRaise_HasType(const statement::Raise& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkRaise_HasType);
 }
 
-void VisitorReverseEdges::visitRaise_HasTypeExpression(const statement::Raise& begin, const expression::Expression& end) {
-  revEdges->insertEdge(&end, &begin, edkRaise_HasTypeExpression);
+void VisitorReverseEdges::visitRaise_HasValue(const statement::Raise& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkRaise_HasValue);
 }
 
-void VisitorReverseEdges::visitRaise_HasValueExpression(const statement::Raise& begin, const expression::Expression& end) {
-  revEdges->insertEdge(&end, &begin, edkRaise_HasValueExpression);
+void VisitorReverseEdges::visitRaise_HasTraceback(const statement::Raise& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkRaise_HasTraceback);
+}
+
+void VisitorReverseEdges::visitRaise_HasException(const statement::Raise& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkRaise_HasException);
+}
+
+void VisitorReverseEdges::visitRaise_HasCause(const statement::Raise& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkRaise_HasCause);
 }
 
 void VisitorReverseEdges::visitReturn_HasExpression(const statement::Return& begin, const expression::Expression& end) {
@@ -409,32 +465,32 @@ void VisitorReverseEdges::visitTargetList_HasTarget(const statement::TargetList&
   revEdges->insertEdge(&end, &begin, edkTargetList_HasTarget);
 }
 
-void VisitorReverseEdges::visitTryExcept_HasElseBody(const statement::TryExcept& begin, const statement::Suite& end) {
-  revEdges->insertEdge(&end, &begin, edkTryExcept_HasElseBody);
+void VisitorReverseEdges::visitTry_HasHandler(const statement::Try& begin, const statement::Handler& end) {
+  revEdges->insertEdge(&end, &begin, edkTry_HasHandler);
 }
 
-void VisitorReverseEdges::visitTryExcept_HasHandler(const statement::TryExcept& begin, const statement::Handler& end) {
-  revEdges->insertEdge(&end, &begin, edkTryExcept_HasHandler);
+void VisitorReverseEdges::visitTry_HasElseBody(const statement::Try& begin, const statement::Suite& end) {
+  revEdges->insertEdge(&end, &begin, edkTry_HasElseBody);
 }
 
-void VisitorReverseEdges::visitTryExcept_HasFinallyBody(const statement::TryExcept& begin, const statement::Suite& end) {
-  revEdges->insertEdge(&end, &begin, edkTryExcept_HasFinallyBody);
-}
-
-void VisitorReverseEdges::visitTryFinal_HasFinallyBody(const statement::TryFinal& begin, const statement::Suite& end) {
-  revEdges->insertEdge(&end, &begin, edkTryFinal_HasFinallyBody);
+void VisitorReverseEdges::visitTry_HasFinallyBody(const statement::Try& begin, const statement::Suite& end) {
+  revEdges->insertEdge(&end, &begin, edkTry_HasFinallyBody);
 }
 
 void VisitorReverseEdges::visitWhile_HasTestExpression(const statement::While& begin, const expression::Expression& end) {
   revEdges->insertEdge(&end, &begin, edkWhile_HasTestExpression);
 }
 
-void VisitorReverseEdges::visitWith_HasExpression(const statement::With& begin, const expression::Expression& end) {
-  revEdges->insertEdge(&end, &begin, edkWith_HasExpression);
+void VisitorReverseEdges::visitWith_HasWithItem(const statement::With& begin, const statement::WithItem& end) {
+  revEdges->insertEdge(&end, &begin, edkWith_HasWithItem);
 }
 
-void VisitorReverseEdges::visitWith_HasTargetList(const statement::With& begin, const statement::TargetList& end) {
-  revEdges->insertEdge(&end, &begin, edkWith_HasTargetList);
+void VisitorReverseEdges::visitWithItem_HasContext(const statement::WithItem& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkWithItem_HasContext);
+}
+
+void VisitorReverseEdges::visitWithItem_HasTarget(const statement::WithItem& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkWithItem_HasTarget);
 }
 
 void VisitorReverseEdges::visitReferenceType_RefersTo(const type::ReferenceType& begin, const base::Positioned& end) {

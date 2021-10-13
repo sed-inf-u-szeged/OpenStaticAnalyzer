@@ -21,7 +21,7 @@
 #ifndef __INTERVAL_H
 #define __INTERVAL_H
 
-#include <set>
+#include <vector>
 
 struct Interval {
   unsigned int a;

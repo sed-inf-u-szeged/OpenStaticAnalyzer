@@ -40,6 +40,7 @@ namespace struc {
   * (missing)
   * 
   * Attributes:
+  *   - lloc (int) : (missing)
   *   - isAbstract (boolean) : (missing)
   *   - abstractPosition (Range) : (missing)
   *   - isStrictfp (boolean) : (missing)
@@ -100,6 +101,12 @@ namespace struc {
 
 
       // ---------- Attribute getter function(s) ----------
+
+      /**
+      * \brief Gives back the lloc of the node.
+      * \return Returns with the lloc.
+      */
+      int getLloc() const;
 
       /**
       * \brief Gives back the isAbstract of the node.
@@ -166,6 +173,13 @@ namespace struc {
 
       /**
       * \internal
+      * \brief Sets the lloc of the node.
+      * \param lloc [in] The new value of the lloc.
+      */
+      void setLloc(int _lloc);
+
+      /**
+      * \internal
       * \brief Sets the isAbstract of the node.
       * \param isAbstract [in] The new value of the isAbstract.
       */
@@ -215,6 +229,9 @@ namespace struc {
 
       /** \internal \brief Stores whether the node is `Strictfp` or not. */
       bool m_isStrictfp : 1;
+
+      /** \internal \brief The value of the `lloc`. */
+      int m_lloc;
 
       /** \internal \brief todo (unknown). */
       MultiRange m_abstractPosition;

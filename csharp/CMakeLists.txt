@@ -1,13 +1,18 @@
 set (REVISION_TARGET Revision_csharp)
 set (CSHARP_BUILD_TARGET CSHARP_solution)
 
-set (REVISION_TEMPLATE_FILE ${CMAKE_CURRENT_SOURCE_DIR}/lib/Columbus/Revision.cs)
+string(TOLOWER ${VS_PLATFORM} CSHARP_PLATFORM)
+if(${CSHARP_PLATFORM} STREQUAL win32)
+    set(CSHARP_PLATFORM x86)
+endif()
+
+set (REVISION_TEMPLATE_FILE ${CMAKE_CURRENT_SOURCE_DIR}/lib/Columbus/Revision.cs.in)
+set (REVISION_GENERATED_FILE ${CMAKE_CURRENT_SOURCE_DIR}/lib/Columbus/Revision.cs)
 
 add_custom_target (
     ${REVISION_TARGET}
     DEPENDS generate_build_info
-    COMMAND git checkout ${REVISION_TEMPLATE_FILE}
-    COMMAND ${CMAKE_COMMAND} "-DINPUT_FILE_NAME=${REVISION_TEMPLATE_FILE}" "-DOUTPUT_FILE_NAME=${REVISION_TEMPLATE_FILE}" "-DTEMPLATE_VARIABLE_NAME=GIT_HASH" "-DTEMPLATE_VARIABLE_VALUE_FILE=${BUILD_INFO_FILE}" -P ${CMAKE_MODULE_PATH}/ConfigureFile.cmake
+    COMMAND ${CMAKE_COMMAND} "-DINPUT_FILE_NAME=${REVISION_TEMPLATE_FILE}" "-DOUTPUT_FILE_NAME=${REVISION_GENERATED_FILE}" "-DTEMPLATE_VARIABLE_NAME=GIT_HASH" "-DTEMPLATE_VARIABLE_VALUE_FILE=${TEMP_BUILD_INFO_FILE}" -P ${CMAKE_MODULE_PATH}/ConfigureFile.cmake
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
@@ -15,10 +20,12 @@ set_target_properties (${REVISION_TARGET} PROPERTIES FOLDER ${CMAKE_SUPPORT_FOLD
 
 add_custom_target (
   ${CSHARP_BUILD_TARGET}
-  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}\\.nuget\\NuGet restore ${CMAKE_CURRENT_SOURCE_DIR}\\All.sln
-  COMMAND msbuild All.sln /t:Build  /p:Configuration=$<CONFIG>  /p:Platform=${VS_PLATFORM} /p:COLUMBUS_BIN_DIR=${EXECUTABLE_OUTPUT_PATH} /p:CSHARP_BUILD_DIR=${CMAKE_CURRENT_BINARY_DIR} > ${CMAKE_CURRENT_BINARY_DIR}/CSAN-build.log
+  COMMAND dotnet build cl/CSAN/CSAN.csproj --configuration $<CONFIG> /p:Platform=${CSHARP_PLATFORM} /p:COLUMBUS_BIN_DIR=${EXECUTABLE_OUTPUT_PATH} /p:CSHARP_BUILD_DIR=${CMAKE_CURRENT_BINARY_DIR} > ${CMAKE_CURRENT_BINARY_DIR}/CSAN-build.log
+  DEPENDS ${REVISION_TARGET}
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+set (CSAN_OUTPUT_DIR Columbus/CSAN.dir/netcoreapp3.1)
 
 set_target_properties (${CSHARP_BUILD_TARGET} PROPERTIES FOLDER ${CMAKE_SUPPORT_FOLDER_NAME})
 
@@ -27,30 +34,6 @@ set (CSAN_TARGET CSAN_virtual_target)
 add_custom_target (
     ${CSAN_TARGET}
 )
-
-set (CSAN_OUTPUT_DIR Columbus/CSAN.dir)
-
-set (CSAN_BINARIES
-     CSAN.exe
-     Columbus.dll
-     CSharp.dll
-     LIM.dll
-     Microsoft.CodeAnalysis.dll
-     Microsoft.CodeAnalysis.CSharp.dll
-     Microsoft.CodeAnalysis.CSharp.Workspaces.dll
-     Microsoft.CodeAnalysis.VisualBasic.dll
-     Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll
-     Microsoft.CodeAnalysis.Workspaces.dll
-     Microsoft.CodeAnalysis.Workspaces.Desktop.dll
-     System.Collections.Immutable.dll
-     System.Composition.AttributedModel.dll
-     System.Composition.Convention.dll
-     System.Composition.Hosting.dll
-     System.Composition.Runtime.dll
-     System.Composition.TypedParts.dll
-     System.Reflection.Metadata.dll
-)
-
 
 foreach (BINARY ${CSAN_BINARIES})
   add_custom_generated_copy_dependency(${CSAN_TARGET} ${CSAN_OUTPUT_DIR} ${EXECUTABLE_OUTPUT_PATH} ${BINARY} ${CSHARP_BUILD_TARGET})

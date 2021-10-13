@@ -114,6 +114,10 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
       newNode = createNode(old,ndkConditionalExpressionSyntax);
       clone(dynamic_cast<expression::ConditionalExpressionSyntax*>(newNode), dynamic_cast<const expression::ConditionalExpressionSyntax*>(old));
       break;
+    case ndkDeclarationExpressionSyntax: 
+      newNode = createNode(old,ndkDeclarationExpressionSyntax);
+      clone(dynamic_cast<expression::DeclarationExpressionSyntax*>(newNode), dynamic_cast<const expression::DeclarationExpressionSyntax*>(old));
+      break;
     case ndkDefaultExpressionSyntax: 
       newNode = createNode(old,ndkDefaultExpressionSyntax);
       clone(dynamic_cast<expression::DefaultExpressionSyntax*>(newNode), dynamic_cast<const expression::DefaultExpressionSyntax*>(old));
@@ -142,6 +146,10 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
       newNode = createNode(old,ndkImplicitElementAccessSyntax);
       clone(dynamic_cast<expression::ImplicitElementAccessSyntax*>(newNode), dynamic_cast<const expression::ImplicitElementAccessSyntax*>(old));
       break;
+    case ndkImplicitStackAllocArrayCreationExpressionSyntax: 
+      newNode = createNode(old,ndkImplicitStackAllocArrayCreationExpressionSyntax);
+      clone(dynamic_cast<expression::ImplicitStackAllocArrayCreationExpressionSyntax*>(newNode), dynamic_cast<const expression::ImplicitStackAllocArrayCreationExpressionSyntax*>(old));
+      break;
     case ndkInitializerExpressionSyntax: 
       newNode = createNode(old,ndkInitializerExpressionSyntax);
       clone(dynamic_cast<expression::InitializerExpressionSyntax*>(newNode), dynamic_cast<const expression::InitializerExpressionSyntax*>(old));
@@ -153,6 +161,10 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
     case ndkInvocationExpressionSyntax: 
       newNode = createNode(old,ndkInvocationExpressionSyntax);
       clone(dynamic_cast<expression::InvocationExpressionSyntax*>(newNode), dynamic_cast<const expression::InvocationExpressionSyntax*>(old));
+      break;
+    case ndkIsPatternExpressionSyntax: 
+      newNode = createNode(old,ndkIsPatternExpressionSyntax);
+      clone(dynamic_cast<expression::IsPatternExpressionSyntax*>(newNode), dynamic_cast<const expression::IsPatternExpressionSyntax*>(old));
       break;
     case ndkLiteralExpressionSyntax: 
       newNode = createNode(old,ndkLiteralExpressionSyntax);
@@ -218,9 +230,21 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
       newNode = createNode(old,ndkQueryExpressionSyntax);
       clone(dynamic_cast<expression::QueryExpressionSyntax*>(newNode), dynamic_cast<const expression::QueryExpressionSyntax*>(old));
       break;
+    case ndkRangeExpressionSyntax: 
+      newNode = createNode(old,ndkRangeExpressionSyntax);
+      clone(dynamic_cast<expression::RangeExpressionSyntax*>(newNode), dynamic_cast<const expression::RangeExpressionSyntax*>(old));
+      break;
+    case ndkRefExpressionSyntax: 
+      newNode = createNode(old,ndkRefExpressionSyntax);
+      clone(dynamic_cast<expression::RefExpressionSyntax*>(newNode), dynamic_cast<const expression::RefExpressionSyntax*>(old));
+      break;
     case ndkRefTypeExpressionSyntax: 
       newNode = createNode(old,ndkRefTypeExpressionSyntax);
       clone(dynamic_cast<expression::RefTypeExpressionSyntax*>(newNode), dynamic_cast<const expression::RefTypeExpressionSyntax*>(old));
+      break;
+    case ndkRefTypeSyntax: 
+      newNode = createNode(old,ndkRefTypeSyntax);
+      clone(dynamic_cast<expression::RefTypeSyntax*>(newNode), dynamic_cast<const expression::RefTypeSyntax*>(old));
       break;
     case ndkRefValueExpressionSyntax: 
       newNode = createNode(old,ndkRefValueExpressionSyntax);
@@ -238,9 +262,25 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
       newNode = createNode(old,ndkStackAllocArrayCreationExpressionSyntax);
       clone(dynamic_cast<expression::StackAllocArrayCreationExpressionSyntax*>(newNode), dynamic_cast<const expression::StackAllocArrayCreationExpressionSyntax*>(old));
       break;
+    case ndkSwitchExpressionSyntax: 
+      newNode = createNode(old,ndkSwitchExpressionSyntax);
+      clone(dynamic_cast<expression::SwitchExpressionSyntax*>(newNode), dynamic_cast<const expression::SwitchExpressionSyntax*>(old));
+      break;
     case ndkThisExpressionSyntax: 
       newNode = createNode(old,ndkThisExpressionSyntax);
       clone(dynamic_cast<expression::ThisExpressionSyntax*>(newNode), dynamic_cast<const expression::ThisExpressionSyntax*>(old));
+      break;
+    case ndkThrowExpressionSyntax: 
+      newNode = createNode(old,ndkThrowExpressionSyntax);
+      clone(dynamic_cast<expression::ThrowExpressionSyntax*>(newNode), dynamic_cast<const expression::ThrowExpressionSyntax*>(old));
+      break;
+    case ndkTupleExpressionSyntax: 
+      newNode = createNode(old,ndkTupleExpressionSyntax);
+      clone(dynamic_cast<expression::TupleExpressionSyntax*>(newNode), dynamic_cast<const expression::TupleExpressionSyntax*>(old));
+      break;
+    case ndkTupleTypeSyntax: 
+      newNode = createNode(old,ndkTupleTypeSyntax);
+      clone(dynamic_cast<expression::TupleTypeSyntax*>(newNode), dynamic_cast<const expression::TupleTypeSyntax*>(old));
       break;
     case ndkTypeOfExpressionSyntax: 
       newNode = createNode(old,ndkTypeOfExpressionSyntax);
@@ -282,6 +322,10 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
       newNode = createNode(old,ndkForEachStatementSyntax);
       clone(dynamic_cast<statement::ForEachStatementSyntax*>(newNode), dynamic_cast<const statement::ForEachStatementSyntax*>(old));
       break;
+    case ndkForEachVariableStatementSyntax: 
+      newNode = createNode(old,ndkForEachVariableStatementSyntax);
+      clone(dynamic_cast<statement::ForEachVariableStatementSyntax*>(newNode), dynamic_cast<const statement::ForEachVariableStatementSyntax*>(old));
+      break;
     case ndkForStatementSyntax: 
       newNode = createNode(old,ndkForStatementSyntax);
       clone(dynamic_cast<statement::ForStatementSyntax*>(newNode), dynamic_cast<const statement::ForStatementSyntax*>(old));
@@ -301,6 +345,10 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
     case ndkLocalDeclarationStatementSyntax: 
       newNode = createNode(old,ndkLocalDeclarationStatementSyntax);
       clone(dynamic_cast<statement::LocalDeclarationStatementSyntax*>(newNode), dynamic_cast<const statement::LocalDeclarationStatementSyntax*>(old));
+      break;
+    case ndkLocalFunctionStatementSyntax: 
+      newNode = createNode(old,ndkLocalFunctionStatementSyntax);
+      clone(dynamic_cast<statement::LocalFunctionStatementSyntax*>(newNode), dynamic_cast<const statement::LocalFunctionStatementSyntax*>(old));
       break;
     case ndkLockStatementSyntax: 
       newNode = createNode(old,ndkLockStatementSyntax);
@@ -398,6 +446,10 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
       newNode = createNode(old,ndkBracketedParameterListSyntax);
       clone(dynamic_cast<structure::BracketedParameterListSyntax*>(newNode), dynamic_cast<const structure::BracketedParameterListSyntax*>(old));
       break;
+    case ndkCasePatternSwitchLabelSyntax: 
+      newNode = createNode(old,ndkCasePatternSwitchLabelSyntax);
+      clone(dynamic_cast<structure::CasePatternSwitchLabelSyntax*>(newNode), dynamic_cast<const structure::CasePatternSwitchLabelSyntax*>(old));
+      break;
     case ndkCaseSwitchLabelSyntax: 
       newNode = createNode(old,ndkCaseSwitchLabelSyntax);
       clone(dynamic_cast<structure::CaseSwitchLabelSyntax*>(newNode), dynamic_cast<const structure::CaseSwitchLabelSyntax*>(old));
@@ -425,6 +477,10 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
     case ndkCompilationUnitSyntax: 
       newNode = createNode(old,ndkCompilationUnitSyntax);
       clone(dynamic_cast<structure::CompilationUnitSyntax*>(newNode), dynamic_cast<const structure::CompilationUnitSyntax*>(old));
+      break;
+    case ndkConstantPatternSyntax: 
+      newNode = createNode(old,ndkConstantPatternSyntax);
+      clone(dynamic_cast<structure::ConstantPatternSyntax*>(newNode), dynamic_cast<const structure::ConstantPatternSyntax*>(old));
       break;
     case ndkConstructorConstraintSyntax: 
       newNode = createNode(old,ndkConstructorConstraintSyntax);
@@ -458,6 +514,10 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
       newNode = createNode(old,ndkCrefParameterSyntax);
       clone(dynamic_cast<structure::CrefParameterSyntax*>(newNode), dynamic_cast<const structure::CrefParameterSyntax*>(old));
       break;
+    case ndkDeclarationPatternSyntax: 
+      newNode = createNode(old,ndkDeclarationPatternSyntax);
+      clone(dynamic_cast<structure::DeclarationPatternSyntax*>(newNode), dynamic_cast<const structure::DeclarationPatternSyntax*>(old));
+      break;
     case ndkDefaultSwitchLabelSyntax: 
       newNode = createNode(old,ndkDefaultSwitchLabelSyntax);
       clone(dynamic_cast<structure::DefaultSwitchLabelSyntax*>(newNode), dynamic_cast<const structure::DefaultSwitchLabelSyntax*>(old));
@@ -469,6 +529,14 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
     case ndkDestructorDeclarationSyntax: 
       newNode = createNode(old,ndkDestructorDeclarationSyntax);
       clone(dynamic_cast<structure::DestructorDeclarationSyntax*>(newNode), dynamic_cast<const structure::DestructorDeclarationSyntax*>(old));
+      break;
+    case ndkDiscardDesignationSyntax: 
+      newNode = createNode(old,ndkDiscardDesignationSyntax);
+      clone(dynamic_cast<structure::DiscardDesignationSyntax*>(newNode), dynamic_cast<const structure::DiscardDesignationSyntax*>(old));
+      break;
+    case ndkDiscardPatternSyntax: 
+      newNode = createNode(old,ndkDiscardPatternSyntax);
+      clone(dynamic_cast<structure::DiscardPatternSyntax*>(newNode), dynamic_cast<const structure::DiscardPatternSyntax*>(old));
       break;
     case ndkElseClauseSyntax: 
       newNode = createNode(old,ndkElseClauseSyntax);
@@ -610,9 +678,21 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
       newNode = createNode(old,ndkParameterSyntax);
       clone(dynamic_cast<structure::ParameterSyntax*>(newNode), dynamic_cast<const structure::ParameterSyntax*>(old));
       break;
+    case ndkParenthesizedVariableDesignationSyntax: 
+      newNode = createNode(old,ndkParenthesizedVariableDesignationSyntax);
+      clone(dynamic_cast<structure::ParenthesizedVariableDesignationSyntax*>(newNode), dynamic_cast<const structure::ParenthesizedVariableDesignationSyntax*>(old));
+      break;
+    case ndkPositionalPatternClauseSyntax: 
+      newNode = createNode(old,ndkPositionalPatternClauseSyntax);
+      clone(dynamic_cast<structure::PositionalPatternClauseSyntax*>(newNode), dynamic_cast<const structure::PositionalPatternClauseSyntax*>(old));
+      break;
     case ndkPropertyDeclarationSyntax: 
       newNode = createNode(old,ndkPropertyDeclarationSyntax);
       clone(dynamic_cast<structure::PropertyDeclarationSyntax*>(newNode), dynamic_cast<const structure::PropertyDeclarationSyntax*>(old));
+      break;
+    case ndkPropertyPatternClauseSyntax: 
+      newNode = createNode(old,ndkPropertyPatternClauseSyntax);
+      clone(dynamic_cast<structure::PropertyPatternClauseSyntax*>(newNode), dynamic_cast<const structure::PropertyPatternClauseSyntax*>(old));
       break;
     case ndkQualifiedCrefSyntax: 
       newNode = createNode(old,ndkQualifiedCrefSyntax);
@@ -626,6 +706,10 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
       newNode = createNode(old,ndkQueryContinuationSyntax);
       clone(dynamic_cast<structure::QueryContinuationSyntax*>(newNode), dynamic_cast<const structure::QueryContinuationSyntax*>(old));
       break;
+    case ndkRecursivePatternSyntax: 
+      newNode = createNode(old,ndkRecursivePatternSyntax);
+      clone(dynamic_cast<structure::RecursivePatternSyntax*>(newNode), dynamic_cast<const structure::RecursivePatternSyntax*>(old));
+      break;
     case ndkSelectClauseSyntax: 
       newNode = createNode(old,ndkSelectClauseSyntax);
       clone(dynamic_cast<structure::SelectClauseSyntax*>(newNode), dynamic_cast<const structure::SelectClauseSyntax*>(old));
@@ -634,9 +718,21 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
       newNode = createNode(old,ndkSimpleBaseTypeSyntax);
       clone(dynamic_cast<structure::SimpleBaseTypeSyntax*>(newNode), dynamic_cast<const structure::SimpleBaseTypeSyntax*>(old));
       break;
+    case ndkSingleVariableDesignationSyntax: 
+      newNode = createNode(old,ndkSingleVariableDesignationSyntax);
+      clone(dynamic_cast<structure::SingleVariableDesignationSyntax*>(newNode), dynamic_cast<const structure::SingleVariableDesignationSyntax*>(old));
+      break;
     case ndkStructDeclarationSyntax: 
       newNode = createNode(old,ndkStructDeclarationSyntax);
       clone(dynamic_cast<structure::StructDeclarationSyntax*>(newNode), dynamic_cast<const structure::StructDeclarationSyntax*>(old));
+      break;
+    case ndkSubpatternSyntax: 
+      newNode = createNode(old,ndkSubpatternSyntax);
+      clone(dynamic_cast<structure::SubpatternSyntax*>(newNode), dynamic_cast<const structure::SubpatternSyntax*>(old));
+      break;
+    case ndkSwitchExpressionArmSyntax: 
+      newNode = createNode(old,ndkSwitchExpressionArmSyntax);
+      clone(dynamic_cast<structure::SwitchExpressionArmSyntax*>(newNode), dynamic_cast<const structure::SwitchExpressionArmSyntax*>(old));
       break;
     case ndkSwitchSectionSyntax: 
       newNode = createNode(old,ndkSwitchSectionSyntax);
@@ -645,6 +741,10 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
     case ndkSyntaxToken: 
       newNode = createNode(old,ndkSyntaxToken);
       clone(dynamic_cast<structure::SyntaxToken*>(newNode), dynamic_cast<const structure::SyntaxToken*>(old));
+      break;
+    case ndkTupleElementSyntax: 
+      newNode = createNode(old,ndkTupleElementSyntax);
+      clone(dynamic_cast<structure::TupleElementSyntax*>(newNode), dynamic_cast<const structure::TupleElementSyntax*>(old));
       break;
     case ndkTypeArgumentListSyntax: 
       newNode = createNode(old,ndkTypeArgumentListSyntax);
@@ -674,6 +774,10 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
       newNode = createNode(old,ndkUsingDirectiveSyntax);
       clone(dynamic_cast<structure::UsingDirectiveSyntax*>(newNode), dynamic_cast<const structure::UsingDirectiveSyntax*>(old));
       break;
+    case ndkVarPatternSyntax: 
+      newNode = createNode(old,ndkVarPatternSyntax);
+      clone(dynamic_cast<structure::VarPatternSyntax*>(newNode), dynamic_cast<const structure::VarPatternSyntax*>(old));
+      break;
     case ndkVariableDeclarationSyntax: 
       newNode = createNode(old,ndkVariableDeclarationSyntax);
       clone(dynamic_cast<structure::VariableDeclarationSyntax*>(newNode), dynamic_cast<const structure::VariableDeclarationSyntax*>(old));
@@ -681,6 +785,10 @@ base::Base* AlgorithmDeepCopy::clone(const base::Base* old) {
     case ndkVariableDeclaratorSyntax: 
       newNode = createNode(old,ndkVariableDeclaratorSyntax);
       clone(dynamic_cast<structure::VariableDeclaratorSyntax*>(newNode), dynamic_cast<const structure::VariableDeclaratorSyntax*>(old));
+      break;
+    case ndkWhenClauseSyntax: 
+      newNode = createNode(old,ndkWhenClauseSyntax);
+      clone(dynamic_cast<structure::WhenClauseSyntax*>(newNode), dynamic_cast<const structure::WhenClauseSyntax*>(old));
       break;
     case ndkWhereClauseSyntax: 
       newNode = createNode(old,ndkWhereClauseSyntax);
@@ -791,9 +899,12 @@ void AlgorithmDeepCopy::clone(expression::AnonymousFunctionExpressionSyntax* des
   dest->setIdentifier(src->getIdentifier());
   // Copying edges
   base::Base* pNewSingleEdge;
-  pNewSingleEdge = getMappedNode(src->getBody());
+  pNewSingleEdge = getMappedNode(src->getBlock());
   if (pNewSingleEdge)
-    dest->setBody(dynamic_cast<base::Positioned*>(pNewSingleEdge));
+    dest->setBlock(dynamic_cast<statement::BlockSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getExpressionBody());
+  if (pNewSingleEdge)
+    dest->setExpressionBody(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
 }
 
 void AlgorithmDeepCopy::clone(expression::AnonymousMethodExpressionSyntax* dest, const expression::AnonymousMethodExpressionSyntax* src) {
@@ -808,9 +919,12 @@ void AlgorithmDeepCopy::clone(expression::AnonymousMethodExpressionSyntax* dest,
   dest->setIdentifier(src->getIdentifier());
   // Copying edges
   base::Base* pNewSingleEdge;
-  pNewSingleEdge = getMappedNode(src->getBody());
+  pNewSingleEdge = getMappedNode(src->getBlock());
   if (pNewSingleEdge)
-    dest->setBody(dynamic_cast<base::Positioned*>(pNewSingleEdge));
+    dest->setBlock(dynamic_cast<statement::BlockSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getExpressionBody());
+  if (pNewSingleEdge)
+    dest->setExpressionBody(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
   // Copying attributes
   // Copying edges
   pNewSingleEdge = getMappedNode(src->getParameterList());
@@ -1037,6 +1151,25 @@ void AlgorithmDeepCopy::clone(expression::ConditionalExpressionSyntax* dest, con
     dest->setWhenTrue(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
 }
 
+void AlgorithmDeepCopy::clone(expression::DeclarationExpressionSyntax* dest, const expression::DeclarationExpressionSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getDesignation());
+  if (pNewSingleEdge)
+    dest->setDesignation(dynamic_cast<structure::VariableDesignationSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getType());
+  if (pNewSingleEdge)
+    dest->setType(dynamic_cast<expression::TypeSyntax*>(pNewSingleEdge));
+}
+
 void AlgorithmDeepCopy::clone(expression::DefaultExpressionSyntax* dest, const expression::DefaultExpressionSyntax* src) {
   // Copying attributes
   // Copying edges
@@ -1192,6 +1325,22 @@ void AlgorithmDeepCopy::clone(expression::ImplicitElementAccessSyntax* dest, con
     dest->setArgumentList(dynamic_cast<structure::BracketedArgumentListSyntax*>(pNewSingleEdge));
 }
 
+void AlgorithmDeepCopy::clone(expression::ImplicitStackAllocArrayCreationExpressionSyntax* dest, const expression::ImplicitStackAllocArrayCreationExpressionSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getInitializer());
+  if (pNewSingleEdge)
+    dest->setInitializer(dynamic_cast<expression::InitializerExpressionSyntax*>(pNewSingleEdge));
+}
+
 void AlgorithmDeepCopy::clone(expression::InitializerExpressionSyntax* dest, const expression::InitializerExpressionSyntax* src) {
   // Copying attributes
   // Copying edges
@@ -1255,9 +1404,31 @@ void AlgorithmDeepCopy::clone(expression::InvocationExpressionSyntax* dest, cons
   pNewSingleEdge = getMappedNode(src->getExpression());
   if (pNewSingleEdge)
     dest->setExpression(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getLocalFunctionCall());
+  if (pNewSingleEdge)
+    dest->setLocalFunctionCall(dynamic_cast<statement::LocalFunctionStatementSyntax*>(pNewSingleEdge));
   pNewSingleEdge = getMappedNode(src->getMethodCall());
   if (pNewSingleEdge)
     dest->setMethodCall(dynamic_cast<structure::MethodDeclarationSyntax*>(pNewSingleEdge));
+}
+
+void AlgorithmDeepCopy::clone(expression::IsPatternExpressionSyntax* dest, const expression::IsPatternExpressionSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getExpression());
+  if (pNewSingleEdge)
+    dest->setExpression(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getPattern());
+  if (pNewSingleEdge)
+    dest->setPattern(dynamic_cast<structure::PatternSyntax*>(pNewSingleEdge));
 }
 
 void AlgorithmDeepCopy::clone(expression::LambdaExpressionSyntax* dest, const expression::LambdaExpressionSyntax* src) {
@@ -1272,9 +1443,12 @@ void AlgorithmDeepCopy::clone(expression::LambdaExpressionSyntax* dest, const ex
   dest->setIdentifier(src->getIdentifier());
   // Copying edges
   base::Base* pNewSingleEdge;
-  pNewSingleEdge = getMappedNode(src->getBody());
+  pNewSingleEdge = getMappedNode(src->getBlock());
   if (pNewSingleEdge)
-    dest->setBody(dynamic_cast<base::Positioned*>(pNewSingleEdge));
+    dest->setBlock(dynamic_cast<statement::BlockSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getExpressionBody());
+  if (pNewSingleEdge)
+    dest->setExpressionBody(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
   // Copying attributes
   // Copying edges
 }
@@ -1465,9 +1639,12 @@ void AlgorithmDeepCopy::clone(expression::ParenthesizedLambdaExpressionSyntax* d
   dest->setIdentifier(src->getIdentifier());
   // Copying edges
   base::Base* pNewSingleEdge;
-  pNewSingleEdge = getMappedNode(src->getBody());
+  pNewSingleEdge = getMappedNode(src->getBlock());
   if (pNewSingleEdge)
-    dest->setBody(dynamic_cast<base::Positioned*>(pNewSingleEdge));
+    dest->setBlock(dynamic_cast<statement::BlockSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getExpressionBody());
+  if (pNewSingleEdge)
+    dest->setExpressionBody(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
   // Copying attributes
   // Copying edges
   // Copying attributes
@@ -1599,6 +1776,41 @@ void AlgorithmDeepCopy::clone(expression::QueryExpressionSyntax* dest, const exp
     dest->setFromClause(dynamic_cast<structure::FromClauseSyntax*>(pNewSingleEdge));
 }
 
+void AlgorithmDeepCopy::clone(expression::RangeExpressionSyntax* dest, const expression::RangeExpressionSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getLeftOperand());
+  if (pNewSingleEdge)
+    dest->setLeftOperand(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getRightOperand());
+  if (pNewSingleEdge)
+    dest->setRightOperand(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
+}
+
+void AlgorithmDeepCopy::clone(expression::RefExpressionSyntax* dest, const expression::RefExpressionSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getExpression());
+  if (pNewSingleEdge)
+    dest->setExpression(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
+}
+
 void AlgorithmDeepCopy::clone(expression::RefTypeExpressionSyntax* dest, const expression::RefTypeExpressionSyntax* src) {
   // Copying attributes
   // Copying edges
@@ -1613,6 +1825,27 @@ void AlgorithmDeepCopy::clone(expression::RefTypeExpressionSyntax* dest, const e
   pNewSingleEdge = getMappedNode(src->getExpression());
   if (pNewSingleEdge)
     dest->setExpression(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
+}
+
+void AlgorithmDeepCopy::clone(expression::RefTypeSyntax* dest, const expression::RefTypeSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getOriginalDefinition());
+  if (pNewSingleEdge)
+    dest->setOriginalDefinition(dynamic_cast<structure::MemberDeclarationSyntax*>(pNewSingleEdge));
+  // Copying attributes
+  // Copying edges
+  pNewSingleEdge = getMappedNode(src->getType());
+  if (pNewSingleEdge)
+    dest->setType(dynamic_cast<expression::TypeSyntax*>(pNewSingleEdge));
 }
 
 void AlgorithmDeepCopy::clone(expression::RefValueExpressionSyntax* dest, const expression::RefValueExpressionSyntax* src) {
@@ -1646,9 +1879,12 @@ void AlgorithmDeepCopy::clone(expression::SimpleLambdaExpressionSyntax* dest, co
   dest->setIdentifier(src->getIdentifier());
   // Copying edges
   base::Base* pNewSingleEdge;
-  pNewSingleEdge = getMappedNode(src->getBody());
+  pNewSingleEdge = getMappedNode(src->getBlock());
   if (pNewSingleEdge)
-    dest->setBody(dynamic_cast<base::Positioned*>(pNewSingleEdge));
+    dest->setBlock(dynamic_cast<statement::BlockSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getExpressionBody());
+  if (pNewSingleEdge)
+    dest->setExpressionBody(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
   // Copying attributes
   // Copying edges
   // Copying attributes
@@ -1706,9 +1942,33 @@ void AlgorithmDeepCopy::clone(expression::StackAllocArrayCreationExpressionSynta
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getInitializer());
+  if (pNewSingleEdge)
+    dest->setInitializer(dynamic_cast<expression::InitializerExpressionSyntax*>(pNewSingleEdge));
   pNewSingleEdge = getMappedNode(src->getType());
   if (pNewSingleEdge)
     dest->setType(dynamic_cast<expression::TypeSyntax*>(pNewSingleEdge));
+}
+
+void AlgorithmDeepCopy::clone(expression::SwitchExpressionSyntax* dest, const expression::SwitchExpressionSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  for ( ListIterator<structure::SwitchExpressionArmSyntax> it = src->getArmsListIteratorBegin(); it != src->getArmsListIteratorEnd(); ++it ) {
+    structure::SwitchExpressionArmSyntax* pNewEdge = dynamic_cast<structure::SwitchExpressionArmSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addArms(pNewEdge);
+  }
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getGoverningExpression());
+  if (pNewSingleEdge)
+    dest->setGoverningExpression(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
 }
 
 void AlgorithmDeepCopy::clone(expression::ThisExpressionSyntax* dest, const expression::ThisExpressionSyntax* src) {
@@ -1723,6 +1983,62 @@ void AlgorithmDeepCopy::clone(expression::ThisExpressionSyntax* dest, const expr
   // Copying edges
   // Copying attributes
   // Copying edges
+}
+
+void AlgorithmDeepCopy::clone(expression::ThrowExpressionSyntax* dest, const expression::ThrowExpressionSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getExpression());
+  if (pNewSingleEdge)
+    dest->setExpression(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
+}
+
+void AlgorithmDeepCopy::clone(expression::TupleExpressionSyntax* dest, const expression::TupleExpressionSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  for ( ListIterator<structure::ArgumentSyntax> it = src->getArgumentsListIteratorBegin(); it != src->getArgumentsListIteratorEnd(); ++it ) {
+    structure::ArgumentSyntax* pNewEdge = dynamic_cast<structure::ArgumentSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addArguments(pNewEdge);
+  }
+}
+
+void AlgorithmDeepCopy::clone(expression::TupleTypeSyntax* dest, const expression::TupleTypeSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getOriginalDefinition());
+  if (pNewSingleEdge)
+    dest->setOriginalDefinition(dynamic_cast<structure::MemberDeclarationSyntax*>(pNewSingleEdge));
+  // Copying attributes
+  // Copying edges
+  for ( ListIterator<structure::TupleElementSyntax> it = src->getElementsListIteratorBegin(); it != src->getElementsListIteratorEnd(); ++it ) {
+    structure::TupleElementSyntax* pNewEdge = dynamic_cast<structure::TupleElementSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addElements(pNewEdge);
+  }
 }
 
 void AlgorithmDeepCopy::clone(expression::TypeOfExpressionSyntax* dest, const expression::TypeOfExpressionSyntax* src) {
@@ -1765,6 +2081,11 @@ void AlgorithmDeepCopy::clone(statement::BlockSyntax* dest, const statement::Blo
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   for ( ListIterator<statement::StatementSyntax> it = src->getStatementsListIteratorBegin(); it != src->getStatementsListIteratorEnd(); ++it ) {
@@ -1782,6 +2103,11 @@ void AlgorithmDeepCopy::clone(statement::BreakStatementSyntax* dest, const state
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
 }
@@ -1794,12 +2120,41 @@ void AlgorithmDeepCopy::clone(statement::CheckedStatementSyntax* dest, const sta
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
   pNewSingleEdge = getMappedNode(src->getBlock());
   if (pNewSingleEdge)
     dest->setBlock(dynamic_cast<statement::BlockSyntax*>(pNewSingleEdge));
+}
+
+void AlgorithmDeepCopy::clone(statement::CommonForEachStatementSyntax* dest, const statement::CommonForEachStatementSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getExpression());
+  if (pNewSingleEdge)
+    dest->setExpression(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getStatement());
+  if (pNewSingleEdge)
+    dest->setStatement(dynamic_cast<statement::StatementSyntax*>(pNewSingleEdge));
 }
 
 void AlgorithmDeepCopy::clone(statement::ContinueStatementSyntax* dest, const statement::ContinueStatementSyntax* src) {
@@ -1810,6 +2165,11 @@ void AlgorithmDeepCopy::clone(statement::ContinueStatementSyntax* dest, const st
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
 }
@@ -1822,6 +2182,11 @@ void AlgorithmDeepCopy::clone(statement::DoStatementSyntax* dest, const statemen
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
@@ -1841,6 +2206,11 @@ void AlgorithmDeepCopy::clone(statement::EmptyStatementSyntax* dest, const state
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
 }
@@ -1853,6 +2223,11 @@ void AlgorithmDeepCopy::clone(statement::ExpressionStatementSyntax* dest, const 
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
@@ -1869,6 +2244,11 @@ void AlgorithmDeepCopy::clone(statement::FixedStatementSyntax* dest, const state
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
@@ -1888,8 +2268,12 @@ void AlgorithmDeepCopy::clone(statement::ForEachStatementSyntax* dest, const sta
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
-  dest->setIdentifier(src->getIdentifier());
   // Copying edges
   base::Base* pNewSingleEdge;
   pNewSingleEdge = getMappedNode(src->getExpression());
@@ -1898,9 +2282,41 @@ void AlgorithmDeepCopy::clone(statement::ForEachStatementSyntax* dest, const sta
   pNewSingleEdge = getMappedNode(src->getStatement());
   if (pNewSingleEdge)
     dest->setStatement(dynamic_cast<statement::StatementSyntax*>(pNewSingleEdge));
+  // Copying attributes
+  dest->setIdentifier(src->getIdentifier());
+  // Copying edges
   pNewSingleEdge = getMappedNode(src->getType());
   if (pNewSingleEdge)
     dest->setType(dynamic_cast<expression::TypeSyntax*>(pNewSingleEdge));
+}
+
+void AlgorithmDeepCopy::clone(statement::ForEachVariableStatementSyntax* dest, const statement::ForEachVariableStatementSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getExpression());
+  if (pNewSingleEdge)
+    dest->setExpression(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getStatement());
+  if (pNewSingleEdge)
+    dest->setStatement(dynamic_cast<statement::StatementSyntax*>(pNewSingleEdge));
+  // Copying attributes
+  // Copying edges
+  pNewSingleEdge = getMappedNode(src->getVariable());
+  if (pNewSingleEdge)
+    dest->setVariable(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
 }
 
 void AlgorithmDeepCopy::clone(statement::ForStatementSyntax* dest, const statement::ForStatementSyntax* src) {
@@ -1911,6 +2327,11 @@ void AlgorithmDeepCopy::clone(statement::ForStatementSyntax* dest, const stateme
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
@@ -1943,6 +2364,11 @@ void AlgorithmDeepCopy::clone(statement::GotoStatementSyntax* dest, const statem
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
@@ -1959,6 +2385,11 @@ void AlgorithmDeepCopy::clone(statement::IfStatementSyntax* dest, const statemen
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
@@ -1981,6 +2412,11 @@ void AlgorithmDeepCopy::clone(statement::LabeledStatementSyntax* dest, const sta
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   dest->setIdentifier(src->getIdentifier());
   // Copying edges
@@ -1998,12 +2434,56 @@ void AlgorithmDeepCopy::clone(statement::LocalDeclarationStatementSyntax* dest, 
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
   pNewSingleEdge = getMappedNode(src->getDeclaration());
   if (pNewSingleEdge)
     dest->setDeclaration(dynamic_cast<structure::VariableDeclarationSyntax*>(pNewSingleEdge));
+}
+
+void AlgorithmDeepCopy::clone(statement::LocalFunctionStatementSyntax* dest, const statement::LocalFunctionStatementSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
+  // Copying attributes
+  dest->setIdentifier(src->getIdentifier());
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getBody());
+  if (pNewSingleEdge)
+    dest->setBody(dynamic_cast<statement::BlockSyntax*>(pNewSingleEdge));
+  for ( ListIterator<structure::TypeParameterConstraintClauseSyntax> it = src->getConstraintClausesListIteratorBegin(); it != src->getConstraintClausesListIteratorEnd(); ++it ) {
+    structure::TypeParameterConstraintClauseSyntax* pNewEdge = dynamic_cast<structure::TypeParameterConstraintClauseSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addConstraintClauses(pNewEdge);
+  }
+  pNewSingleEdge = getMappedNode(src->getExpressionBody());
+  if (pNewSingleEdge)
+    dest->setExpressionBody(dynamic_cast<structure::ArrowExpressionClauseSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getParameterList());
+  if (pNewSingleEdge)
+    dest->setParameterList(dynamic_cast<structure::ParameterListSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getReturnType());
+  if (pNewSingleEdge)
+    dest->setReturnType(dynamic_cast<expression::TypeSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getTypeParameterList());
+  if (pNewSingleEdge)
+    dest->setTypeParameterList(dynamic_cast<structure::TypeParameterListSyntax*>(pNewSingleEdge));
 }
 
 void AlgorithmDeepCopy::clone(statement::LockStatementSyntax* dest, const statement::LockStatementSyntax* src) {
@@ -2014,6 +2494,11 @@ void AlgorithmDeepCopy::clone(statement::LockStatementSyntax* dest, const statem
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
@@ -2033,6 +2518,11 @@ void AlgorithmDeepCopy::clone(statement::ReturnStatementSyntax* dest, const stat
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
@@ -2049,6 +2539,11 @@ void AlgorithmDeepCopy::clone(statement::StatementSyntax* dest, const statement:
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
 }
 
 void AlgorithmDeepCopy::clone(statement::SwitchStatementSyntax* dest, const statement::SwitchStatementSyntax* src) {
@@ -2059,6 +2554,11 @@ void AlgorithmDeepCopy::clone(statement::SwitchStatementSyntax* dest, const stat
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
@@ -2080,6 +2580,11 @@ void AlgorithmDeepCopy::clone(statement::ThrowStatementSyntax* dest, const state
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
@@ -2096,6 +2601,11 @@ void AlgorithmDeepCopy::clone(statement::TryStatementSyntax* dest, const stateme
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
@@ -2120,6 +2630,11 @@ void AlgorithmDeepCopy::clone(statement::UnsafeStatementSyntax* dest, const stat
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
@@ -2136,6 +2651,11 @@ void AlgorithmDeepCopy::clone(statement::UsingStatementSyntax* dest, const state
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
@@ -2158,6 +2678,11 @@ void AlgorithmDeepCopy::clone(statement::WhileStatementSyntax* dest, const state
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
@@ -2177,6 +2702,11 @@ void AlgorithmDeepCopy::clone(statement::YieldStatementSyntax* dest, const state
   // Copying edges
   // Copying attributes
   // Copying edges
+  for ( ListIterator<structure::AttributeListSyntax> it = src->getAttributeListsListIteratorBegin(); it != src->getAttributeListsListIteratorEnd(); ++it ) {
+    structure::AttributeListSyntax* pNewEdge = dynamic_cast<structure::AttributeListSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addAttributeLists(pNewEdge);
+  }
   // Copying attributes
   // Copying edges
   base::Base* pNewSingleEdge;
@@ -2203,6 +2733,9 @@ void AlgorithmDeepCopy::clone(structure::AccessorDeclarationSyntax* dest, const 
   pNewSingleEdge = getMappedNode(src->getBody());
   if (pNewSingleEdge)
     dest->setBody(dynamic_cast<statement::BlockSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getExpressionBody());
+  if (pNewSingleEdge)
+    dest->setExpressionBody(dynamic_cast<structure::ArrowExpressionClauseSyntax*>(pNewSingleEdge));
 }
 
 void AlgorithmDeepCopy::clone(structure::AccessorListSyntax* dest, const structure::AccessorListSyntax* src) {
@@ -2472,6 +3005,9 @@ void AlgorithmDeepCopy::clone(structure::BaseMethodDeclarationSyntax* dest, cons
   pNewSingleEdge = getMappedNode(src->getBody());
   if (pNewSingleEdge)
     dest->setBody(dynamic_cast<statement::BlockSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getExpressionBody());
+  if (pNewSingleEdge)
+    dest->setExpressionBody(dynamic_cast<structure::ArrowExpressionClauseSyntax*>(pNewSingleEdge));
   pNewSingleEdge = getMappedNode(src->getParameterList());
   if (pNewSingleEdge)
     dest->setParameterList(dynamic_cast<structure::ParameterListSyntax*>(pNewSingleEdge));
@@ -2587,6 +3123,25 @@ void AlgorithmDeepCopy::clone(structure::BracketedParameterListSyntax* dest, con
   }
   // Copying attributes
   // Copying edges
+}
+
+void AlgorithmDeepCopy::clone(structure::CasePatternSwitchLabelSyntax* dest, const structure::CasePatternSwitchLabelSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getPattern());
+  if (pNewSingleEdge)
+    dest->setPattern(dynamic_cast<structure::PatternSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getWhenClause());
+  if (pNewSingleEdge)
+    dest->setWhenClause(dynamic_cast<structure::WhenClauseSyntax*>(pNewSingleEdge));
 }
 
 void AlgorithmDeepCopy::clone(structure::CaseSwitchLabelSyntax* dest, const structure::CaseSwitchLabelSyntax* src) {
@@ -2734,6 +3289,22 @@ void AlgorithmDeepCopy::clone(structure::CompilationUnitSyntax* dest, const stru
   }
 }
 
+void AlgorithmDeepCopy::clone(structure::ConstantPatternSyntax* dest, const structure::ConstantPatternSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getExpression());
+  if (pNewSingleEdge)
+    dest->setExpression(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
+}
+
 void AlgorithmDeepCopy::clone(structure::ConstructorConstraintSyntax* dest, const structure::ConstructorConstraintSyntax* src) {
   // Copying attributes
   // Copying edges
@@ -2770,6 +3341,9 @@ void AlgorithmDeepCopy::clone(structure::ConstructorDeclarationSyntax* dest, con
   pNewSingleEdge = getMappedNode(src->getBody());
   if (pNewSingleEdge)
     dest->setBody(dynamic_cast<statement::BlockSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getExpressionBody());
+  if (pNewSingleEdge)
+    dest->setExpressionBody(dynamic_cast<structure::ArrowExpressionClauseSyntax*>(pNewSingleEdge));
   pNewSingleEdge = getMappedNode(src->getParameterList());
   if (pNewSingleEdge)
     dest->setParameterList(dynamic_cast<structure::ParameterListSyntax*>(pNewSingleEdge));
@@ -2822,14 +3396,14 @@ void AlgorithmDeepCopy::clone(structure::ConversionOperatorDeclarationSyntax* de
   pNewSingleEdge = getMappedNode(src->getBody());
   if (pNewSingleEdge)
     dest->setBody(dynamic_cast<statement::BlockSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getExpressionBody());
+  if (pNewSingleEdge)
+    dest->setExpressionBody(dynamic_cast<structure::ArrowExpressionClauseSyntax*>(pNewSingleEdge));
   pNewSingleEdge = getMappedNode(src->getParameterList());
   if (pNewSingleEdge)
     dest->setParameterList(dynamic_cast<structure::ParameterListSyntax*>(pNewSingleEdge));
   // Copying attributes
   // Copying edges
-  pNewSingleEdge = getMappedNode(src->getExpressionBody());
-  if (pNewSingleEdge)
-    dest->setExpressionBody(dynamic_cast<structure::ArrowExpressionClauseSyntax*>(pNewSingleEdge));
   pNewSingleEdge = getMappedNode(src->getType());
   if (pNewSingleEdge)
     dest->setType(dynamic_cast<expression::TypeSyntax*>(pNewSingleEdge));
@@ -2914,6 +3488,25 @@ void AlgorithmDeepCopy::clone(structure::CrefSyntax* dest, const structure::Cref
   // Copying edges
 }
 
+void AlgorithmDeepCopy::clone(structure::DeclarationPatternSyntax* dest, const structure::DeclarationPatternSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getDesignation());
+  if (pNewSingleEdge)
+    dest->setDesignation(dynamic_cast<structure::VariableDesignationSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getType());
+  if (pNewSingleEdge)
+    dest->setType(dynamic_cast<expression::TypeSyntax*>(pNewSingleEdge));
+}
+
 void AlgorithmDeepCopy::clone(structure::DefaultSwitchLabelSyntax* dest, const structure::DefaultSwitchLabelSyntax* src) {
   // Copying attributes
   // Copying edges
@@ -2980,11 +3573,38 @@ void AlgorithmDeepCopy::clone(structure::DestructorDeclarationSyntax* dest, cons
   pNewSingleEdge = getMappedNode(src->getBody());
   if (pNewSingleEdge)
     dest->setBody(dynamic_cast<statement::BlockSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getExpressionBody());
+  if (pNewSingleEdge)
+    dest->setExpressionBody(dynamic_cast<structure::ArrowExpressionClauseSyntax*>(pNewSingleEdge));
   pNewSingleEdge = getMappedNode(src->getParameterList());
   if (pNewSingleEdge)
     dest->setParameterList(dynamic_cast<structure::ParameterListSyntax*>(pNewSingleEdge));
   // Copying attributes
   dest->setIdentifier(src->getIdentifier());
+  // Copying edges
+}
+
+void AlgorithmDeepCopy::clone(structure::DiscardDesignationSyntax* dest, const structure::DiscardDesignationSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+}
+
+void AlgorithmDeepCopy::clone(structure::DiscardPatternSyntax* dest, const structure::DiscardPatternSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
   // Copying edges
 }
 
@@ -3521,6 +4141,9 @@ void AlgorithmDeepCopy::clone(structure::MethodDeclarationSyntax* dest, const st
   pNewSingleEdge = getMappedNode(src->getBody());
   if (pNewSingleEdge)
     dest->setBody(dynamic_cast<statement::BlockSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getExpressionBody());
+  if (pNewSingleEdge)
+    dest->setExpressionBody(dynamic_cast<structure::ArrowExpressionClauseSyntax*>(pNewSingleEdge));
   pNewSingleEdge = getMappedNode(src->getParameterList());
   if (pNewSingleEdge)
     dest->setParameterList(dynamic_cast<structure::ParameterListSyntax*>(pNewSingleEdge));
@@ -3535,9 +4158,6 @@ void AlgorithmDeepCopy::clone(structure::MethodDeclarationSyntax* dest, const st
   pNewSingleEdge = getMappedNode(src->getExplicitInterfaceSpecifier());
   if (pNewSingleEdge)
     dest->setExplicitInterfaceSpecifier(dynamic_cast<structure::ExplicitInterfaceSpecifierSyntax*>(pNewSingleEdge));
-  pNewSingleEdge = getMappedNode(src->getExpressionBody());
-  if (pNewSingleEdge)
-    dest->setExpressionBody(dynamic_cast<structure::ArrowExpressionClauseSyntax*>(pNewSingleEdge));
   pNewSingleEdge = getMappedNode(src->getReturnType());
   if (pNewSingleEdge)
     dest->setReturnType(dynamic_cast<expression::TypeSyntax*>(pNewSingleEdge));
@@ -3647,14 +4267,14 @@ void AlgorithmDeepCopy::clone(structure::OperatorDeclarationSyntax* dest, const 
   pNewSingleEdge = getMappedNode(src->getBody());
   if (pNewSingleEdge)
     dest->setBody(dynamic_cast<statement::BlockSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getExpressionBody());
+  if (pNewSingleEdge)
+    dest->setExpressionBody(dynamic_cast<structure::ArrowExpressionClauseSyntax*>(pNewSingleEdge));
   pNewSingleEdge = getMappedNode(src->getParameterList());
   if (pNewSingleEdge)
     dest->setParameterList(dynamic_cast<structure::ParameterListSyntax*>(pNewSingleEdge));
   // Copying attributes
   // Copying edges
-  pNewSingleEdge = getMappedNode(src->getExpressionBody());
-  if (pNewSingleEdge)
-    dest->setExpressionBody(dynamic_cast<structure::ArrowExpressionClauseSyntax*>(pNewSingleEdge));
   pNewSingleEdge = getMappedNode(src->getReturnType());
   if (pNewSingleEdge)
     dest->setReturnType(dynamic_cast<expression::TypeSyntax*>(pNewSingleEdge));
@@ -3749,6 +4369,48 @@ void AlgorithmDeepCopy::clone(structure::ParameterSyntax* dest, const structure:
     dest->setType(dynamic_cast<expression::TypeSyntax*>(pNewSingleEdge));
 }
 
+void AlgorithmDeepCopy::clone(structure::ParenthesizedVariableDesignationSyntax* dest, const structure::ParenthesizedVariableDesignationSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  for ( ListIterator<structure::VariableDesignationSyntax> it = src->getVariablesListIteratorBegin(); it != src->getVariablesListIteratorEnd(); ++it ) {
+    structure::VariableDesignationSyntax* pNewEdge = dynamic_cast<structure::VariableDesignationSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addVariables(pNewEdge);
+  }
+}
+
+void AlgorithmDeepCopy::clone(structure::PatternSyntax* dest, const structure::PatternSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+}
+
+void AlgorithmDeepCopy::clone(structure::PositionalPatternClauseSyntax* dest, const structure::PositionalPatternClauseSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  for ( ListIterator<structure::SubpatternSyntax> it = src->getSubpatternsListIteratorBegin(); it != src->getSubpatternsListIteratorEnd(); ++it ) {
+    structure::SubpatternSyntax* pNewEdge = dynamic_cast<structure::SubpatternSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addSubpatterns(pNewEdge);
+  }
+}
+
 void AlgorithmDeepCopy::clone(structure::PropertyDeclarationSyntax* dest, const structure::PropertyDeclarationSyntax* src) {
   // Copying attributes
   // Copying edges
@@ -3783,6 +4445,21 @@ void AlgorithmDeepCopy::clone(structure::PropertyDeclarationSyntax* dest, const 
   pNewSingleEdge = getMappedNode(src->getInitializer());
   if (pNewSingleEdge)
     dest->setInitializer(dynamic_cast<structure::EqualsValueClauseSyntax*>(pNewSingleEdge));
+}
+
+void AlgorithmDeepCopy::clone(structure::PropertyPatternClauseSyntax* dest, const structure::PropertyPatternClauseSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  for ( ListIterator<structure::SubpatternSyntax> it = src->getSubpatternsListIteratorBegin(); it != src->getSubpatternsListIteratorEnd(); ++it ) {
+    structure::SubpatternSyntax* pNewEdge = dynamic_cast<structure::SubpatternSyntax*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addSubpatterns(pNewEdge);
+  }
 }
 
 void AlgorithmDeepCopy::clone(structure::QualifiedCrefSyntax* dest, const structure::QualifiedCrefSyntax* src) {
@@ -3851,6 +4528,31 @@ void AlgorithmDeepCopy::clone(structure::QueryContinuationSyntax* dest, const st
     dest->setBody(dynamic_cast<structure::QueryBodySyntax*>(pNewSingleEdge));
 }
 
+void AlgorithmDeepCopy::clone(structure::RecursivePatternSyntax* dest, const structure::RecursivePatternSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getDesignation());
+  if (pNewSingleEdge)
+    dest->setDesignation(dynamic_cast<structure::VariableDesignationSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getPositionalPatternClause());
+  if (pNewSingleEdge)
+    dest->setPositionalPatternClause(dynamic_cast<structure::PositionalPatternClauseSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getPropertyPatternClause());
+  if (pNewSingleEdge)
+    dest->setPropertyPatternClause(dynamic_cast<structure::PropertyPatternClauseSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getType());
+  if (pNewSingleEdge)
+    dest->setType(dynamic_cast<expression::TypeSyntax*>(pNewSingleEdge));
+}
+
 void AlgorithmDeepCopy::clone(structure::SelectClauseSyntax* dest, const structure::SelectClauseSyntax* src) {
   // Copying attributes
   // Copying edges
@@ -3893,6 +4595,19 @@ void AlgorithmDeepCopy::clone(structure::SimpleBaseTypeSyntax* dest, const struc
   // Copying edges
 }
 
+void AlgorithmDeepCopy::clone(structure::SingleVariableDesignationSyntax* dest, const structure::SingleVariableDesignationSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setIdentifier(src->getIdentifier());
+  // Copying edges
+}
+
 void AlgorithmDeepCopy::clone(structure::StructDeclarationSyntax* dest, const structure::StructDeclarationSyntax* src) {
   // Copying attributes
   // Copying edges
@@ -3930,6 +4645,40 @@ void AlgorithmDeepCopy::clone(structure::StructDeclarationSyntax* dest, const st
     dest->setTypeParameterList(dynamic_cast<structure::TypeParameterListSyntax*>(pNewSingleEdge));
   // Copying attributes
   // Copying edges
+}
+
+void AlgorithmDeepCopy::clone(structure::SubpatternSyntax* dest, const structure::SubpatternSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getPattern());
+  if (pNewSingleEdge)
+    dest->setPattern(dynamic_cast<structure::PatternSyntax*>(pNewSingleEdge));
+}
+
+void AlgorithmDeepCopy::clone(structure::SwitchExpressionArmSyntax* dest, const structure::SwitchExpressionArmSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getExpression());
+  if (pNewSingleEdge)
+    dest->setExpression(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getPattern());
+  if (pNewSingleEdge)
+    dest->setPattern(dynamic_cast<structure::PatternSyntax*>(pNewSingleEdge));
+  pNewSingleEdge = getMappedNode(src->getWhenClause());
+  if (pNewSingleEdge)
+    dest->setWhenClause(dynamic_cast<structure::WhenClauseSyntax*>(pNewSingleEdge));
 }
 
 void AlgorithmDeepCopy::clone(structure::SwitchLabelSyntax* dest, const structure::SwitchLabelSyntax* src) {
@@ -3970,6 +4719,21 @@ void AlgorithmDeepCopy::clone(structure::SyntaxToken* dest, const structure::Syn
   // Copying edges
   // Copying attributes
   // Copying edges
+}
+
+void AlgorithmDeepCopy::clone(structure::TupleElementSyntax* dest, const structure::TupleElementSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  dest->setIdentifier(src->getIdentifier());
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getType());
+  if (pNewSingleEdge)
+    dest->setType(dynamic_cast<expression::TypeSyntax*>(pNewSingleEdge));
 }
 
 void AlgorithmDeepCopy::clone(structure::TypeArgumentListSyntax* dest, const structure::TypeArgumentListSyntax* src) {
@@ -4133,6 +4897,22 @@ void AlgorithmDeepCopy::clone(structure::UsingDirectiveSyntax* dest, const struc
     dest->setName(dynamic_cast<expression::NameSyntax*>(pNewSingleEdge));
 }
 
+void AlgorithmDeepCopy::clone(structure::VarPatternSyntax* dest, const structure::VarPatternSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getDesignation());
+  if (pNewSingleEdge)
+    dest->setDesignation(dynamic_cast<structure::VariableDesignationSyntax*>(pNewSingleEdge));
+}
+
 void AlgorithmDeepCopy::clone(structure::VariableDeclarationSyntax* dest, const structure::VariableDeclarationSyntax* src) {
   // Copying attributes
   // Copying edges
@@ -4168,6 +4948,30 @@ void AlgorithmDeepCopy::clone(structure::VariableDeclaratorSyntax* dest, const s
   pNewSingleEdge = getMappedNode(src->getInitializer());
   if (pNewSingleEdge)
     dest->setInitializer(dynamic_cast<structure::EqualsValueClauseSyntax*>(pNewSingleEdge));
+}
+
+void AlgorithmDeepCopy::clone(structure::VariableDesignationSyntax* dest, const structure::VariableDesignationSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+}
+
+void AlgorithmDeepCopy::clone(structure::WhenClauseSyntax* dest, const structure::WhenClauseSyntax* src) {
+  // Copying attributes
+  // Copying edges
+  // Copying attributes
+  dest->setPosition(src->getPosition());
+  // Copying edges
+  // Copying attributes
+  // Copying edges
+  base::Base* pNewSingleEdge;
+  pNewSingleEdge = getMappedNode(src->getCondition());
+  if (pNewSingleEdge)
+    dest->setCondition(dynamic_cast<expression::ExpressionSyntax*>(pNewSingleEdge));
 }
 
 void AlgorithmDeepCopy::clone(structure::WhereClauseSyntax* dest, const structure::WhereClauseSyntax* src) {

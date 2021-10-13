@@ -221,9 +221,10 @@ public:
   bool getIsVisible(const std::string& ruleId) const;
   void setIsVisible(const std::string& ruleId, bool visible) ;
   void setIsVisible(const std::string& ruleId, const std::string& configuration, bool visible) ;
-  std::string getHelpText(const std::string& ruleId) const;
   std::string getRuleIdByOriginalId(const std::string& originalId) const;
+  std::string getOriginalIdByRuleId(const std::string& ruleId) const;
   void setOriginalId(const std::string& ruleId,const std::string& originalId);
+  std::string getHelpText(const std::string& ruleId) const;
   void setHelpText(const std::string& ruleId, const std::string& helpText) ;
   void setHelpText(const std::string& ruleId, const std::string& configuration , const std::string& helpText, const std::string& lang) ;
   bool getHasWarningText(const std::string& ruleId) const;

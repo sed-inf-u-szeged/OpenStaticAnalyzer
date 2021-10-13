@@ -122,13 +122,13 @@ namespace statement {
 
   void BlockStatement::addBody(const statement::Statement *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
 
     if (&(_node->getFactory()) != this->factory)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
 
     if (!(Common::getIsStatement(*_node)))
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
 
     hasBodyContainer.push_back(_node->getId());
     setParentEdge(_node,edkBlockStatement_HasBody);
@@ -140,18 +140,18 @@ namespace statement {
   void BlockStatement::addBody(NodeId _id) {
     const statement::Statement *node = dynamic_cast<statement::Statement*>(factory->getPointer(_id));
     if (node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
     addBody( node );
   }
 
   void BlockStatement::removeBody(NodeId id) {
     if (!factory->getExist(id))
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
     ListIterator<statement::Statement>::Container::iterator it = find(hasBodyContainer.begin(), hasBodyContainer.end(), id);
 
     if (it == hasBodyContainer.end())
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
     hasBodyContainer.erase(it);
 
@@ -163,7 +163,7 @@ namespace statement {
 
   void BlockStatement::removeBody(statement::Statement *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
 
     removeBody(_node->getId());
   }

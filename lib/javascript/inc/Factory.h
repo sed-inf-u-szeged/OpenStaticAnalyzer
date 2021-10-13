@@ -148,7 +148,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back a reference to the node.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException if there is no node for the id.
+      * \throw JavascriptException Throws JavascriptException if there is no node for the id.
       * \return Reference to the node.
       */
       base::Base& getRef(NodeId id) const;
@@ -156,7 +156,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back a pointer to the node.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException if there is no node for the id.
+      * \throw JavascriptException Throws JavascriptException if there is no node for the id.
       * \return Pointer to the node.
       */
       base::Base* getPointer(NodeId id) const;
@@ -170,7 +170,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back the NodeKind of a node.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException if there is no node for the id.
+      * \throw JavascriptException Throws JavascriptException if there is no node for the id.
       * \return The NodeKind of the node.
       */
       NodeKind getNodeKind(NodeId id) const;
@@ -178,14 +178,14 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Deletes the node with the given ID and every node in it's subtree.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException if there is no node for the id.
+      * \throw JavascriptException Throws JavascriptException if there is no node for the id.
       */
       void destroyNode(NodeId id);
 
       /**
       * \brief Deletes the node with the given ID without it's subtree.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException if there is no node for the id.
+      * \throw JavascriptException Throws JavascriptException if there is no node for the id.
       */
       void destroyThisNodeOnly(NodeId id);
 
@@ -364,7 +364,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Tells whether the given node is filtered or not.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException if the id is too large (larger than the size of the ASG).
+      * \throw JavascriptException Throws JavascriptException if the id is too large (larger than the size of the ASG).
       * \return Returns true if the Node is filtered and returns false if it isn't (or the filter mode is turned off).
       */
       bool getIsFiltered(NodeId id) const;
@@ -379,28 +379,28 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Filters out the given node and all of its descendants.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException id the id is too large (larger than the size of the Filter).
+      * \throw JavascriptException Throws JavascriptException id the id is too large (larger than the size of the Filter).
       */
       void setFiltered(NodeId id);
 
       /**
       * \brief Sets the state of the node, all of its descendants and all of its ancestors to not filtered.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException id the id is too large (larger than the size of the Filter).
+      * \throw JavascriptException Throws JavascriptException id the id is too large (larger than the size of the Filter).
       */
       void setNotFiltered(NodeId id);
 
       /**
       * \brief Sets the state of the node and all of its ancestors to not filtered.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException id the id is too large (larger than the size of the Filter).
+      * \throw JavascriptException Throws JavascriptException id the id is too large (larger than the size of the Filter).
       */
       void setNotFilteredThisNode(NodeId id);
 
       /**
       * \brief Gives back the filter state (javascript::Filter::FilterStae) of the given node irrespectively of the state of the filter mode.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException if the id is too large (larger than the size of the ASG).
+      * \throw JavascriptException Throws JavascriptException if the id is too large (larger than the size of the ASG).
       * \return Returns with the state of the filter.
       */
       Filter::FilterState getFilterState(NodeId id) const;
@@ -408,7 +408,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Loads the filter.
       * \param filename    [in] The name of the filter file.
-      * \throw JavaScriptException Throws JavaScriptException if the filter contains more (or less) node than the factory does.
+      * \throw JavascriptException Throws JavascriptException if the filter contains more (or less) node than the factory does.
       * \throw IOException Throws IOException if any error happens during the loading.
       */
       void loadFilter(const std::string &filename);
@@ -424,7 +424,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \internal
       * \brief Filter out only the given node (without its children).
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException id the id is too large (larger than the size of the Filter).
+      * \throw JavascriptException Throws JavascriptException id the id is too large (larger than the size of the Filter).
       */
       void setFilteredThisNodeOnly(NodeId id);
 
@@ -432,7 +432,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \internal
       * \brief Set only the given node to not filtered (without its children).
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException id the id is too large (larger than the size of the Filter).
+      * \throw JavascriptException Throws JavascriptException id the id is too large (larger than the size of the Filter).
       */
       void setNotFilteredThisNodeOnly(NodeId id);
 
@@ -469,7 +469,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Creates a new node, insert it into the container and return with it.
       * \param ndk                 [in] The kind of the node.
-      * \throw JavaScriptException If an invalid (or an abstract) NodeKind is given, JavaScriptException is thrown.
+      * \throw JavascriptException If an invalid (or an abstract) NodeKind is given, JavascriptException is thrown.
       * \return Pointer to the new node.
       */
       base::Base* createNode(NodeKind ndk);
@@ -952,7 +952,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \param ndk                 [in] The kind of the node.
       * \param id                  [in] The id of the new node.
-      * \throw JavaScriptException If an invalid (or an abstract) NodeKind is given, JavaScriptException is thrown.
+      * \throw JavascriptException If an invalid (or an abstract) NodeKind is given, JavascriptException is thrown.
       * \return Reference to the new node.
       */
       base::Base& createNode(NodeKind ndk, NodeId id);

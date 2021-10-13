@@ -180,6 +180,20 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEnd(const base::PositionedWithoutComment& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expr::TypeExpression,..) of the expr::AnnotatedTypeExpression node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expr::AnnotatedTypeExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expr::TypeExpression,..) of the expr::AnnotatedTypeExpression node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expr::AnnotatedTypeExpression& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expr::Expression,..) of the expr::Annotation node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -404,6 +418,20 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEnd(const expr::FloatLiteral& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expr::PolyExpression,..) of the expr::FunctionalExpression node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expr::FunctionalExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expr::PolyExpression,..) of the expr::FunctionalExpression node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expr::FunctionalExpression& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expr::Expression,..) of the expr::Identifier node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -460,6 +488,20 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEnd(const expr::IntegerLiteral& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expr::FunctionalExpression,..) of the expr::Lambda node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expr::Lambda& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expr::FunctionalExpression,..) of the expr::Lambda node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expr::Lambda& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expr::Expression,..) of the expr::Literal node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -500,6 +542,20 @@ namespace columbus { namespace java { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const expr::MarkerAnnotation& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expr::FunctionalExpression,..) of the expr::MemberReference node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expr::MemberReference& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expr::FunctionalExpression,..) of the expr::MemberReference node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expr::MemberReference& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expr::Unary,..) of the expr::MethodInvocation node.
@@ -598,6 +654,20 @@ namespace columbus { namespace java { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const expr::ParenthesizedExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expr::Expression,..) of the expr::PolyExpression node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expr::PolyExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expr::Expression,..) of the expr::PolyExpression node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expr::PolyExpression& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expr::Unary,..) of the expr::PostfixExpression node.
@@ -768,6 +838,20 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEnd(const expr::TypeExpression& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expr::TypeExpression,..) of the expr::TypeIntersectionExpression node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expr::TypeIntersectionExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expr::TypeExpression,..) of the expr::TypeIntersectionExpression node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expr::TypeIntersectionExpression& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expr::TypeExpression,..) of the expr::TypeUnionExpression node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -808,6 +892,90 @@ namespace columbus { namespace java { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const expr::WildcardExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (module::ModuleDirective,..) of the module::Exports node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const module::Exports& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (module::ModuleDirective,..) of the module::Exports node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const module::Exports& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the module::ModuleDirective node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const module::ModuleDirective& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (base::Positioned,..) of the module::ModuleDirective node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const module::ModuleDirective& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (module::ModuleDirective,..) of the module::Opens node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const module::Opens& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (module::ModuleDirective,..) of the module::Opens node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const module::Opens& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (module::ModuleDirective,..) of the module::Provides node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const module::Provides& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (module::ModuleDirective,..) of the module::Provides node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const module::Provides& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (module::ModuleDirective,..) of the module::Requires node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const module::Requires& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (module::ModuleDirective,..) of the module::Requires node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const module::Requires& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (module::ModuleDirective,..) of the module::Uses node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const module::Uses& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (module::ModuleDirective,..) of the module::Uses node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const module::Uses& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (statm::Statement,..) of the statm::Assert node.
@@ -1482,6 +1650,34 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEnd(const struc::MethodGeneric& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Named,..) of the struc::Module node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const struc::Module& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (base::Named,..) of the struc::Module node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const struc::Module& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the struc::ModuleDeclaration node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const struc::ModuleDeclaration& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (base::Positioned,..) of the struc::ModuleDeclaration node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const struc::ModuleDeclaration& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (struc::Declaration,..) of the struc::NamedDeclaration node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -1776,6 +1972,20 @@ namespace columbus { namespace java { namespace asg {
       virtual void visitEnd(const type::IntType& node , bool callVirtualBase = true);
 
       /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (type::Type,..) of the type::IntersectionType node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const type::IntersectionType& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (type::Type,..) of the type::IntersectionType node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const type::IntersectionType& node , bool callVirtualBase = true);
+
+      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (type::PrimitiveType,..) of the type::LongType node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -1816,6 +2026,20 @@ namespace columbus { namespace java { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const type::MethodType& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (type::Type,..) of the type::ModuleType node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const type::ModuleType& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (type::Type,..) of the type::ModuleType node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const type::ModuleType& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (type::Type,..) of the type::NoType node.

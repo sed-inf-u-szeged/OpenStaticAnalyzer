@@ -37,7 +37,8 @@ namespace expression {
          Positioned(_id, _factory),
     Expression(_id, _factory),
     m_hasCallee(0),
-    hasArgumentsContainer()
+    hasArgumentsContainer(),
+    callsContainer()
   {
   }
 
@@ -52,6 +53,12 @@ namespace expression {
       if (factory->getExistsReverseEdges())
         factory->reverseEdges->removeEdge(id, this->getId(), edkCallExpression_HasArguments);
       hasArgumentsContainer.pop_front();
+    }
+    while (!callsContainer.empty()) {
+      const NodeId id = *callsContainer.begin();
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->removeEdge(id, this->getId(), edkCallExpression_Calls);
+      callsContainer.pop_front();
     }
     if (tryOnVirtualParent) {
       base::Positioned::prepareDelete(false);
@@ -94,6 +101,27 @@ namespace expression {
     return size;
   }
 
+  ListIterator<statement::Function> CallExpression::getCallsListIteratorBegin() const {
+    return ListIterator<statement::Function>(&callsContainer, factory, true);
+  }
+
+  ListIterator<statement::Function> CallExpression::getCallsListIteratorEnd() const {
+    return ListIterator<statement::Function>(&callsContainer, factory, false);
+  }
+
+  bool CallExpression::getCallsIsEmpty() const {
+    return getCallsListIteratorBegin() == getCallsListIteratorEnd();
+  }
+
+  unsigned int CallExpression::getCallsSize() const {
+    unsigned int size = 0;
+    ListIterator<statement::Function> endIt = getCallsListIteratorEnd();
+    for (ListIterator<statement::Function> it = getCallsListIteratorBegin(); it != endIt; ++it) {
+      ++size;
+    }
+    return size;
+  }
+
   bool CallExpression::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
       case edkCallExpression_HasCallee:
@@ -101,6 +129,9 @@ namespace expression {
         return true;
       case edkCallExpression_HasArguments:
         addArguments(edgeEnd);
+        return true;
+      case edkCallExpression_Calls:
+        addCalls(edgeEnd);
         return true;
       default:
         break;
@@ -124,6 +155,9 @@ namespace expression {
       case edkCallExpression_HasArguments:
         removeArguments(edgeEnd);
         return true;
+      case edkCallExpression_Calls:
+        removeCalls(edgeEnd);
+        return true;
       default:
         break;
     }
@@ -142,14 +176,14 @@ namespace expression {
     base::Positioned *_node = NULL;
     if (_id) {
       if (!factory->getExist(_id))
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
       _node = dynamic_cast<base::Positioned*> (factory->getPointer(_id));
       if ( _node == NULL) {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
       if (&(_node->getFactory()) != this->factory)
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
 
       if (Common::getIsBaseClassKind(_node->getNodeKind(), ndkExpression) || _node->getNodeKind() == ndkSuper) {
         if (m_hasCallee) {
@@ -163,18 +197,18 @@ namespace expression {
         if (factory->getExistsReverseEdges())
           factory->reverseEdges->insertEdge(m_hasCallee, this->getId(), edkCallExpression_HasCallee);
       } else {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
     } else {
       if (m_hasCallee) {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
       }
     }
   }
 
   void CallExpression::setCallee(base::Positioned *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
 
     setCallee(_node->getId());
   }
@@ -190,13 +224,13 @@ namespace expression {
 
   void CallExpression::addArguments(const base::Positioned *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
 
     if (&(_node->getFactory()) != this->factory)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
 
     if (!(Common::getIsExpression(*_node) || (_node->getNodeKind() == ndkSpreadElement) ))
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
 
     hasArgumentsContainer.push_back(_node->getId());
     setParentEdge(_node,edkCallExpression_HasArguments);
@@ -208,18 +242,18 @@ namespace expression {
   void CallExpression::addArguments(NodeId _id) {
     const base::Positioned *node = dynamic_cast<base::Positioned*>(factory->getPointer(_id));
     if (node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
     addArguments( node );
   }
 
   void CallExpression::removeArguments(NodeId id) {
     if (!factory->getExist(id))
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
     ListIterator<base::Positioned>::Container::iterator it = find(hasArgumentsContainer.begin(), hasArgumentsContainer.end(), id);
 
     if (it == hasArgumentsContainer.end())
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
     hasArgumentsContainer.erase(it);
 
@@ -231,9 +265,53 @@ namespace expression {
 
   void CallExpression::removeArguments(base::Positioned *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
 
     removeArguments(_node->getId());
+  }
+
+  void CallExpression::addCalls(const statement::Function *_node) {
+    if (_node == NULL)
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
+
+    if (&(_node->getFactory()) != this->factory)
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
+
+    if (!(Common::getIsFunction(*_node)))
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+
+    callsContainer.push_back(_node->getId());
+    if (factory->reverseEdges)
+      factory->reverseEdges->insertEdge(_node, this, edkCallExpression_Calls);
+  }
+
+  void CallExpression::addCalls(NodeId _id) {
+    const statement::Function *node = dynamic_cast<statement::Function*>(factory->getPointer(_id));
+    if (node == NULL)
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    addCalls( node );
+  }
+
+  void CallExpression::removeCalls(NodeId id) {
+    if (!factory->getExist(id))
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    ListIterator<statement::Function>::Container::iterator it = find(callsContainer.begin(), callsContainer.end(), id);
+
+    if (it == callsContainer.end())
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    callsContainer.erase(it);
+
+    if (factory->getExistsReverseEdges())
+      factory->reverseEdges->removeEdge(id, this->getId(), edkCallExpression_Calls);
+  }
+
+  void CallExpression::removeCalls(statement::Function *_node) {
+    if (_node == NULL)
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
+
+    removeCalls(_node->getId());
   }
 
   void CallExpression::accept(Visitor &visitor) const {
@@ -286,6 +364,11 @@ namespace expression {
       binIo.writeUInt4(*it);
     }
     binIo.writeUInt4(0); // This is the end sign
+
+    for (ListIterator<statement::Function>::Container::const_iterator it = callsContainer.begin(); it != callsContainer.end(); ++it) {
+      binIo.writeUInt4(*it);
+    }
+    binIo.writeUInt4(0); // This is the end sign
   }
 
   void CallExpression::load(io::BinaryIO &binIo, bool withVirtualBase /*= true*/) {
@@ -304,6 +387,12 @@ namespace expression {
     while (_id) {
       hasArgumentsContainer.push_back(_id);
       setParentEdge(factory->getPointer(_id),edkCallExpression_HasArguments);
+      _id = binIo.readUInt4();
+    }
+
+    _id = binIo.readUInt4();
+    while (_id) {
+      callsContainer.push_back(_id);
       _id = binIo.readUInt4();
     }
   }

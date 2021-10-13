@@ -131,13 +131,13 @@ namespace declaration {
 
   void VariableDeclaration::addDeclarations(const declaration::VariableDeclarator *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
 
     if (&(_node->getFactory()) != this->factory)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
 
     if (!((_node->getNodeKind() == ndkVariableDeclarator) ))
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
 
     hasDeclarationsContainer.push_back(_node->getId());
     setParentEdge(_node,edkVariableDeclaration_HasDeclarations);
@@ -149,18 +149,18 @@ namespace declaration {
   void VariableDeclaration::addDeclarations(NodeId _id) {
     const declaration::VariableDeclarator *node = dynamic_cast<declaration::VariableDeclarator*>(factory->getPointer(_id));
     if (node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
     addDeclarations( node );
   }
 
   void VariableDeclaration::removeDeclarations(NodeId id) {
     if (!factory->getExist(id))
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
     ListIterator<declaration::VariableDeclarator>::Container::iterator it = find(hasDeclarationsContainer.begin(), hasDeclarationsContainer.end(), id);
 
     if (it == hasDeclarationsContainer.end())
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
     hasDeclarationsContainer.erase(it);
 
@@ -172,7 +172,7 @@ namespace declaration {
 
   void VariableDeclaration::removeDeclarations(declaration::VariableDeclarator *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
 
     removeDeclarations(_node->getId());
   }

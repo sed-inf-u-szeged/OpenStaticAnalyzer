@@ -36,9 +36,11 @@ namespace statement {
   * \brief With class, which represents the statement::With node.
   * (missing)
   * 
+  * Attributes:
+  *   - isAsync (boolean) : (missing)
+  * 
   * Edges:
-  *   - hasExpression (expression::Expression, single) : (missing)
-  *   - hasTargetList (statement::TargetList, single) : (missing)
+  *   - hasWithItem (statement::WithItem, multiple) : (missing)
   */
   class With : public CompoundStatement {
     protected:
@@ -79,6 +81,32 @@ namespace statement {
       */
       virtual void prepareDelete(bool tryOnVirtualParent);
 
+
+      // ---------- Attribute getter function(s) ----------
+
+      /**
+      * \brief Gives back the isAsync of the node.
+      * \return Returns with the isAsync.
+      */
+      bool getIsAsync() const;
+
+
+      // ---------- Attribute setter function(s) ----------
+
+      /**
+      * \internal
+      * \brief Sets the isAsync of the node.
+      * \param isAsync [in] The new value of the isAsync.
+      */
+      void setIsAsync(bool _isAsync);
+
+    protected:
+
+      // ---------- Attribute(s) ----------
+
+      /** \internal \brief Stores whether the node is `Async` or not. */
+      bool m_isAsync : 1;
+
     protected:
       /**
       * \brief Set or add the edge by edge kind
@@ -104,63 +132,62 @@ namespace statement {
       // ---------- Edge getter function(s) ----------
 
       /**
-      * \brief Gives back the pointer of the node the hasExpression edge points to.
-      * \return Returns the end point of the hasExpression edge.
+      * \brief Gives back iterator for the hasWithItem edges.
+      * \return Returns an iterator for the hasWithItem edges.
       */
-      expression::Expression* getExpression() const;
+      ListIterator<statement::WithItem> getWithItemListIteratorBegin() const;
 
       /**
-      * \brief Gives back the pointer of the node the hasTargetList edge points to.
-      * \return Returns the end point of the hasTargetList edge.
+      * \brief Gives back iterator for the hasWithItem edges.
+      * \return Returns an iterator for the hasWithItem edges.
       */
-      statement::TargetList* getTargetList() const;
+      ListIterator<statement::WithItem> getWithItemListIteratorEnd() const;
+
+      /**
+      * \brief Tells whether the node has hasWithItem edges or not.
+      * \return Returns true if the node doesn't have any hasWithItem edge.
+      */
+      bool getWithItemIsEmpty() const;
+
+      /**
+      * \brief Gives back how many hasWithItem edges the node has.
+      * \return Returns with the number of hasWithItem edges.
+      */
+      unsigned getWithItemSize() const;
 
 
       // ---------- Edge setter function(s) ----------
 
       /**
-      * \brief Sets the hasExpression edge.
-      * \param id [in] The new end point of the hasExpression edge.
+      * \brief Adds a new hasWithItem edge to the node and inserts it after the other ones.
+      * \param node [in] The end point of the new hasWithItem edge.
       */
-      void setExpression(NodeId id);
+      void addWithItem(const WithItem *node);
 
       /**
-      * \brief Sets the hasExpression edge.
-      * \param node [in] The new end point of the hasExpression edge.
+      * \brief Adds a new hasWithItem edge to the node and inserts it after the other ones.
+      * \param id [in] The end point of the new hasWithItem edge.
       */
-      void setExpression(expression::Expression *node);
+      void addWithItem(NodeId id);
 
       /**
-      * \brief remove the hasExpression edge.
+      * \brief Remove the hasWithItem edge by id from the node.
+      * \param id [in] The end point of the hasWithItem edge.
       */
-      void removeExpression();
+      void removeWithItem(NodeId id);
 
       /**
-      * \brief Sets the hasTargetList edge.
-      * \param id [in] The new end point of the hasTargetList edge.
+      * \brief Remove the hasWithItem edge from the node.
+      * \param node [in] The end point of the hasWithItem edge.
       */
-      void setTargetList(NodeId id);
-
-      /**
-      * \brief Sets the hasTargetList edge.
-      * \param node [in] The new end point of the hasTargetList edge.
-      */
-      void setTargetList(TargetList *node);
-
-      /**
-      * \brief remove the hasTargetList edge.
-      */
-      void removeTargetList();
+      void removeWithItem(WithItem *node);
 
     protected:
 
       // ---------- Edges ----------
 
-      /** \internal \brief The id of the node the hasExpression edge points to. */
-      NodeId m_hasExpression;
-
-      /** \internal \brief The id of the node the hasTargetList edge points to. */
-      NodeId m_hasTargetList;
+      /** \internal \brief Container stores the id of the nodes the hasWithItem edge points to. */
+      ListIterator<statement::WithItem>::Container hasWithItemContainer;
 
     public:
 

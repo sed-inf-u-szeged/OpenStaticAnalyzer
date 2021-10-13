@@ -50,12 +50,13 @@ set (SOURCES
     inc/Visitors/PNodeEmbeddednessVisitor.h
 )
 
+add_copy_custom_target(DCFRulCopy ${CMAKE_CURRENT_SOURCE_DIR}/DCF.rul ${EXECUTABLE_OUTPUT_PATH}/DCF.rul)
+
 function (add_language_config LANG)
   add_executable(${PROGRAM_NAME}_${LANG} ${SOURCES})
-  add_dependencies(${PROGRAM_NAME}_${LANG} ${COLUMBUS_GLOBAL_DEPENDENCY})
+  add_dependencies(${PROGRAM_NAME}_${LANG} DCFRulCopy ${COLUMBUS_GLOBAL_DEPENDENCY})
   target_link_libraries(${PROGRAM_NAME}_${LANG} genealogy graphsupport lim2graph graph lim strtable common csi rul io ${COMMON_EXTERNAL_LIBRARIES})
   set_schema_language_compiler_settings(${PROGRAM_NAME}_${LANG} ${LANG})
-  add_copy_next_to_the_binary_dependency (${PROGRAM_NAME}_${LANG} DCF.rul)
   set_visual_studio_project_folder(${PROGRAM_NAME}_${LANG} FALSE)
 #  Can not use atm because it tries to generate the pch for all targets
 #  set_target_properties(${PROGRAM_NAME}_${LANG} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "${CMAKE_CURRENT_SOURCE_DIR}/inc/common.h")

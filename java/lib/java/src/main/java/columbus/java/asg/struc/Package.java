@@ -28,6 +28,7 @@ import columbus.java.asg.base.Named;
  * @columbus.node (missing)
  * @columbus.attr qualifiedName (String) : (missing)
  * @columbus.edge hasCompilationUnits ({@link columbus.java.asg.struc.CompilationUnit CompilationUnit}, multiple) : (missing)
+ * @columbus.edge isInModule ({@link columbus.java.asg.struc.Module Module}, multiple) : (missing)
  */
 public interface Package extends Named, Scope {
 
@@ -78,6 +79,36 @@ public interface Package extends Named, Scope {
 	 * @param node The end point of the new hasCompilationUnits edge.
 	 */
 	public void addCompilationUnits(CompilationUnit node);
+
+	/**
+	 * Gives back iterator for the {@link columbus.java.asg.struc.Package#edgeIsInModule isInModule} edges.
+	 * @return Returns an iterator for the isInModule edges.
+	 */
+	public EdgeIterator<Module> getIsInModuleIterator();
+
+	/**
+	 * Tells whether the node has {@link columbus.java.asg.struc.Package#edgeIsInModule isInModule} edges or not.
+	 * @return Returns true if the node doesn't have any isInModule edge.
+	 */
+	public boolean getIsInModuleIsEmpty();
+
+	/**
+	 * Gives back how many {@link columbus.java.asg.struc.Package#edgeIsInModule isInModule} edges the node has.
+	 * @return Returns with the number of isInModule edges.
+	 */
+	public int getIsInModuleSize();
+
+	/**
+	 * Adds a new {@link columbus.java.asg.struc.Package#edgeIsInModule isInModule} edge to the node.
+	 * @param id The end point of the new isInModule edge.
+	 */
+	public void addIsInModule(int id);
+
+	/**
+	 * Adds a new {@link columbus.java.asg.struc.Package#edgeIsInModule isInModule} edge to the node.
+	 * @param node The end point of the new isInModule edge.
+	 */
+	public void addIsInModule(Module node);
 
 }
 

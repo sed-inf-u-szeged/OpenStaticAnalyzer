@@ -23,6 +23,7 @@ package columbus.java.asg.visitors;
 import columbus.java.asg.base.BlockComment;
 import columbus.java.asg.base.JavadocComment;
 import columbus.java.asg.base.LineComment;
+import columbus.java.asg.expr.AnnotatedTypeExpression;
 import columbus.java.asg.expr.ArrayAccess;
 import columbus.java.asg.expr.ArrayTypeExpression;
 import columbus.java.asg.expr.Assignment;
@@ -40,8 +41,10 @@ import columbus.java.asg.expr.Identifier;
 import columbus.java.asg.expr.InfixExpression;
 import columbus.java.asg.expr.InstanceOf;
 import columbus.java.asg.expr.IntegerLiteral;
+import columbus.java.asg.expr.Lambda;
 import columbus.java.asg.expr.LongLiteral;
 import columbus.java.asg.expr.MarkerAnnotation;
+import columbus.java.asg.expr.MemberReference;
 import columbus.java.asg.expr.MethodInvocation;
 import columbus.java.asg.expr.NewArray;
 import columbus.java.asg.expr.NewClass;
@@ -59,8 +62,14 @@ import columbus.java.asg.expr.Super;
 import columbus.java.asg.expr.This;
 import columbus.java.asg.expr.TypeApplyExpression;
 import columbus.java.asg.expr.TypeCast;
+import columbus.java.asg.expr.TypeIntersectionExpression;
 import columbus.java.asg.expr.TypeUnionExpression;
 import columbus.java.asg.expr.WildcardExpression;
+import columbus.java.asg.module.Exports;
+import columbus.java.asg.module.Opens;
+import columbus.java.asg.module.Provides;
+import columbus.java.asg.module.Requires;
+import columbus.java.asg.module.Uses;
 import columbus.java.asg.statm.Assert;
 import columbus.java.asg.statm.BasicFor;
 import columbus.java.asg.statm.Block;
@@ -95,6 +104,8 @@ import columbus.java.asg.struc.Interface;
 import columbus.java.asg.struc.InterfaceGeneric;
 import columbus.java.asg.struc.Method;
 import columbus.java.asg.struc.MethodGeneric;
+import columbus.java.asg.struc.Module;
+import columbus.java.asg.struc.ModuleDeclaration;
 import columbus.java.asg.struc.Package;
 import columbus.java.asg.struc.PackageDeclaration;
 import columbus.java.asg.struc.Parameter;
@@ -110,9 +121,11 @@ import columbus.java.asg.type.DoubleType;
 import columbus.java.asg.type.ErrorType;
 import columbus.java.asg.type.FloatType;
 import columbus.java.asg.type.IntType;
+import columbus.java.asg.type.IntersectionType;
 import columbus.java.asg.type.LongType;
 import columbus.java.asg.type.LowerBoundedWildcardType;
 import columbus.java.asg.type.MethodType;
+import columbus.java.asg.type.ModuleType;
 import columbus.java.asg.type.NoType;
 import columbus.java.asg.type.NullType;
 import columbus.java.asg.type.PackageType;
@@ -156,6 +169,16 @@ public class VisitorFilter extends Visitor {
 	 */
 	@Override
 	public void visitEnd(LineComment node, boolean callVirtualBase) {
+		node.getFactory().setFilteredThisNodeOnly(node.getId());
+	}
+
+	/**
+	 * Deselects the actual node (and only this).
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(AnnotatedTypeExpression node, boolean callVirtualBase) {
 		node.getFactory().setFilteredThisNodeOnly(node.getId());
 	}
 
@@ -335,6 +358,16 @@ public class VisitorFilter extends Visitor {
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
 	 */
 	@Override
+	public void visitEnd(Lambda node, boolean callVirtualBase) {
+		node.getFactory().setFilteredThisNodeOnly(node.getId());
+	}
+
+	/**
+	 * Deselects the actual node (and only this).
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
 	public void visitEnd(LongLiteral node, boolean callVirtualBase) {
 		node.getFactory().setFilteredThisNodeOnly(node.getId());
 	}
@@ -346,6 +379,16 @@ public class VisitorFilter extends Visitor {
 	 */
 	@Override
 	public void visitEnd(MarkerAnnotation node, boolean callVirtualBase) {
+		node.getFactory().setFilteredThisNodeOnly(node.getId());
+	}
+
+	/**
+	 * Deselects the actual node (and only this).
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(MemberReference node, boolean callVirtualBase) {
 		node.getFactory().setFilteredThisNodeOnly(node.getId());
 	}
 
@@ -525,6 +568,16 @@ public class VisitorFilter extends Visitor {
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
 	 */
 	@Override
+	public void visitEnd(TypeIntersectionExpression node, boolean callVirtualBase) {
+		node.getFactory().setFilteredThisNodeOnly(node.getId());
+	}
+
+	/**
+	 * Deselects the actual node (and only this).
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
 	public void visitEnd(TypeUnionExpression node, boolean callVirtualBase) {
 		node.getFactory().setFilteredThisNodeOnly(node.getId());
 	}
@@ -536,6 +589,56 @@ public class VisitorFilter extends Visitor {
 	 */
 	@Override
 	public void visitEnd(WildcardExpression node, boolean callVirtualBase) {
+		node.getFactory().setFilteredThisNodeOnly(node.getId());
+	}
+
+	/**
+	 * Deselects the actual node (and only this).
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Exports node, boolean callVirtualBase) {
+		node.getFactory().setFilteredThisNodeOnly(node.getId());
+	}
+
+	/**
+	 * Deselects the actual node (and only this).
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Opens node, boolean callVirtualBase) {
+		node.getFactory().setFilteredThisNodeOnly(node.getId());
+	}
+
+	/**
+	 * Deselects the actual node (and only this).
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Provides node, boolean callVirtualBase) {
+		node.getFactory().setFilteredThisNodeOnly(node.getId());
+	}
+
+	/**
+	 * Deselects the actual node (and only this).
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Requires node, boolean callVirtualBase) {
+		node.getFactory().setFilteredThisNodeOnly(node.getId());
+	}
+
+	/**
+	 * Deselects the actual node (and only this).
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(Uses node, boolean callVirtualBase) {
 		node.getFactory().setFilteredThisNodeOnly(node.getId());
 	}
 
@@ -885,6 +988,26 @@ public class VisitorFilter extends Visitor {
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
 	 */
 	@Override
+	public void visitEnd(Module node, boolean callVirtualBase) {
+		node.getFactory().setFilteredThisNodeOnly(node.getId());
+	}
+
+	/**
+	 * Deselects the actual node (and only this).
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(ModuleDeclaration node, boolean callVirtualBase) {
+		node.getFactory().setFilteredThisNodeOnly(node.getId());
+	}
+
+	/**
+	 * Deselects the actual node (and only this).
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
 	public void visitEnd(Package node, boolean callVirtualBase) {
 		node.getFactory().setFilteredThisNodeOnly(node.getId());
 	}
@@ -1035,6 +1158,16 @@ public class VisitorFilter extends Visitor {
 	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
 	 */
 	@Override
+	public void visitEnd(IntersectionType node, boolean callVirtualBase) {
+		node.getFactory().setFilteredThisNodeOnly(node.getId());
+	}
+
+	/**
+	 * Deselects the actual node (and only this).
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
 	public void visitEnd(LongType node, boolean callVirtualBase) {
 		node.getFactory().setFilteredThisNodeOnly(node.getId());
 	}
@@ -1056,6 +1189,16 @@ public class VisitorFilter extends Visitor {
 	 */
 	@Override
 	public void visitEnd(MethodType node, boolean callVirtualBase) {
+		node.getFactory().setFilteredThisNodeOnly(node.getId());
+	}
+
+	/**
+	 * Deselects the actual node (and only this).
+	 * @param node The node which is visited.
+	 * @param callVirtualBase Helper flag which determines whether to call overloaded methods for virtual base classes. Methods for non-virtual base classes are called directly.
+	 */
+	@Override
+	public void visitEnd(ModuleType node, boolean callVirtualBase) {
 		node.getFactory().setFilteredThisNodeOnly(node.getId());
 	}
 

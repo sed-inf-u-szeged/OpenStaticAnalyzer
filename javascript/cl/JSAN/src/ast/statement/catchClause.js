@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var catchClause = factory.createCatchClauseWrapper(factory);
+        var catchClause = factory.createCatchClauseWrapper();
         globals.setPositionInfo(node, catchClause);
         return catchClause;
     } else {
@@ -34,29 +34,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.body != null) {
             var bodyWrapper = globals.getWrapperOfNode(node.body);
-            if (node.body.type !== "Literal") {
-                var bodyWrapperFunctionString = "setBody" + node.body.type;
-            } else {
-                var bodyWrapperFunctionString = "setBody" + globals.getLiteralType(node.body) + node.body.type;
-            }
             try {
-                catchClauseWrapper[bodyWrapperFunctionString](bodyWrapper);
+                catchClauseWrapper.setBody(bodyWrapper);
             } catch (e) {
-                console.error("CATCHCLAUSE - Function not exist: catchClauseWrapper." + bodyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("CATCHCLAUSE - Could not set body! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.param != null) {
             var paramWrapper = globals.getWrapperOfNode(node.param);
-            if (node.param.type !== "Literal") {
-                var paramWrapperFunctionString = "setParam" + node.param.type;
-            } else {
-                var paramWrapperFunctionString = "setParam" + globals.getLiteralType(node.param) + node.param.type;
-            }
             try {
-                catchClauseWrapper[paramWrapperFunctionString](paramWrapper);
+                catchClauseWrapper.setParam(paramWrapper);
             } catch (e) {
-                console.error("CATCHCLAUSE - Function not exist: catchClauseWrapper." + paramWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("CATCHCLAUSE - Could not set param! Reason of the error: " + e + "\n");
             }
         }
 

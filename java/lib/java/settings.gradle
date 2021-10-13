@@ -1,1 +1,2 @@
-include COLUMBUSLOGGER
+include ":ColumbusLogger"
+project(":ColumbusLogger").projectDir = file("../../lib/ColumbusLogger")

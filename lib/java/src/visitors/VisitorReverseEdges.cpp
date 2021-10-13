@@ -37,6 +37,14 @@ void VisitorReverseEdges::visitCommentable_Comments(const base::Commentable& beg
   revEdges->insertEdge(&end, &begin, edkCommentable_Comments);
 }
 
+void VisitorReverseEdges::visitAnnotatedTypeExpression_HasAnnotations(const expr::AnnotatedTypeExpression& begin, const expr::Annotation& end) {
+  revEdges->insertEdge(&end, &begin, edkAnnotatedTypeExpression_HasAnnotations);
+}
+
+void VisitorReverseEdges::visitAnnotatedTypeExpression_HasUnderlyingType(const expr::AnnotatedTypeExpression& begin, const expr::TypeExpression& end) {
+  revEdges->insertEdge(&end, &begin, edkAnnotatedTypeExpression_HasUnderlyingType);
+}
+
 void VisitorReverseEdges::visitAnnotation_HasAnnotationName(const expr::Annotation& begin, const expr::TypeExpression& end) {
   revEdges->insertEdge(&end, &begin, edkAnnotation_HasAnnotationName);
 }
@@ -81,12 +89,36 @@ void VisitorReverseEdges::visitExpression_Type(const expr::Expression& begin, co
   revEdges->insertEdge(&end, &begin, edkExpression_Type);
 }
 
+void VisitorReverseEdges::visitFunctionalExpression_Target(const expr::FunctionalExpression& begin, const type::Type& end) {
+  revEdges->insertEdge(&end, &begin, edkFunctionalExpression_Target);
+}
+
 void VisitorReverseEdges::visitIdentifier_RefersTo(const expr::Identifier& begin, const base::Named& end) {
   revEdges->insertEdge(&end, &begin, edkIdentifier_RefersTo);
 }
 
 void VisitorReverseEdges::visitInstanceOf_HasTypeOperand(const expr::InstanceOf& begin, const expr::TypeExpression& end) {
   revEdges->insertEdge(&end, &begin, edkInstanceOf_HasTypeOperand);
+}
+
+void VisitorReverseEdges::visitLambda_HasParameters(const expr::Lambda& begin, const struc::Parameter& end) {
+  revEdges->insertEdge(&end, &begin, edkLambda_HasParameters);
+}
+
+void VisitorReverseEdges::visitLambda_HasBody(const expr::Lambda& begin, const base::Positioned& end) {
+  revEdges->insertEdge(&end, &begin, edkLambda_HasBody);
+}
+
+void VisitorReverseEdges::visitMemberReference_HasQualifierExpression(const expr::MemberReference& begin, const expr::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkMemberReference_HasQualifierExpression);
+}
+
+void VisitorReverseEdges::visitMemberReference_HasTypeArguments(const expr::MemberReference& begin, const expr::TypeExpression& end) {
+  revEdges->insertEdge(&end, &begin, edkMemberReference_HasTypeArguments);
+}
+
+void VisitorReverseEdges::visitMemberReference_ReferredMethod(const expr::MemberReference& begin, const struc::MethodDeclaration& end) {
+  revEdges->insertEdge(&end, &begin, edkMemberReference_ReferredMethod);
 }
 
 void VisitorReverseEdges::visitMethodInvocation_HasTypeArguments(const expr::MethodInvocation& begin, const expr::TypeExpression& end) {
@@ -165,6 +197,10 @@ void VisitorReverseEdges::visitTypeCast_HasTypeOperand(const expr::TypeCast& beg
   revEdges->insertEdge(&end, &begin, edkTypeCast_HasTypeOperand);
 }
 
+void VisitorReverseEdges::visitTypeIntersectionExpression_HasBounds(const expr::TypeIntersectionExpression& begin, const expr::TypeExpression& end) {
+  revEdges->insertEdge(&end, &begin, edkTypeIntersectionExpression_HasBounds);
+}
+
 void VisitorReverseEdges::visitTypeUnionExpression_HasAlternatives(const expr::TypeUnionExpression& begin, const expr::TypeExpression& end) {
   revEdges->insertEdge(&end, &begin, edkTypeUnionExpression_HasAlternatives);
 }
@@ -175,6 +211,38 @@ void VisitorReverseEdges::visitUnary_HasOperand(const expr::Unary& begin, const 
 
 void VisitorReverseEdges::visitWildcardExpression_HasBound(const expr::WildcardExpression& begin, const expr::TypeExpression& end) {
   revEdges->insertEdge(&end, &begin, edkWildcardExpression_HasBound);
+}
+
+void VisitorReverseEdges::visitExports_HasPackageName(const module::Exports& begin, const expr::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkExports_HasPackageName);
+}
+
+void VisitorReverseEdges::visitExports_HasModuleNames(const module::Exports& begin, const expr::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkExports_HasModuleNames);
+}
+
+void VisitorReverseEdges::visitOpens_HasPackageName(const module::Opens& begin, const expr::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkOpens_HasPackageName);
+}
+
+void VisitorReverseEdges::visitOpens_HasModuleNames(const module::Opens& begin, const expr::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkOpens_HasModuleNames);
+}
+
+void VisitorReverseEdges::visitProvides_HasServiceName(const module::Provides& begin, const expr::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkProvides_HasServiceName);
+}
+
+void VisitorReverseEdges::visitProvides_HasImplementationNames(const module::Provides& begin, const expr::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkProvides_HasImplementationNames);
+}
+
+void VisitorReverseEdges::visitRequires_HasModuleName(const module::Requires& begin, const expr::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkRequires_HasModuleName);
+}
+
+void VisitorReverseEdges::visitUses_HasServiceName(const module::Uses& begin, const expr::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkUses_HasServiceName);
 }
 
 void VisitorReverseEdges::visitAssert_HasCondition(const statm::Assert& begin, const expr::Expression& end) {
@@ -277,7 +345,7 @@ void VisitorReverseEdges::visitThrow_HasExpression(const statm::Throw& begin, co
   revEdges->insertEdge(&end, &begin, edkThrow_HasExpression);
 }
 
-void VisitorReverseEdges::visitTry_HasResources(const statm::Try& begin, const struc::Variable& end) {
+void VisitorReverseEdges::visitTry_HasResources(const statm::Try& begin, const base::Base& end) {
   revEdges->insertEdge(&end, &begin, edkTry_HasResources);
 }
 
@@ -313,12 +381,20 @@ void VisitorReverseEdges::visitCompilationUnit_HasImports(const struc::Compilati
   revEdges->insertEdge(&end, &begin, edkCompilationUnit_HasImports);
 }
 
+void VisitorReverseEdges::visitCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) {
+  revEdges->insertEdge(&end, &begin, edkCompilationUnit_HasOthers);
+}
+
+void VisitorReverseEdges::visitCompilationUnit_HasModuleDeclaration(const struc::CompilationUnit& begin, const struc::ModuleDeclaration& end) {
+  revEdges->insertEdge(&end, &begin, edkCompilationUnit_HasModuleDeclaration);
+}
+
 void VisitorReverseEdges::visitCompilationUnit_TypeDeclarations(const struc::CompilationUnit& begin, const struc::TypeDeclaration& end) {
   revEdges->insertEdge(&end, &begin, edkCompilationUnit_TypeDeclarations);
 }
 
-void VisitorReverseEdges::visitCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) {
-  revEdges->insertEdge(&end, &begin, edkCompilationUnit_HasOthers);
+void VisitorReverseEdges::visitCompilationUnit_IsInModule(const struc::CompilationUnit& begin, const struc::Module& end) {
+  revEdges->insertEdge(&end, &begin, edkCompilationUnit_IsInModule);
 }
 
 void VisitorReverseEdges::visitEnumConstant_HasNewClass(const struc::EnumConstant& begin, const expr::NewClass& end) {
@@ -349,6 +425,26 @@ void VisitorReverseEdges::visitMethodDeclaration_Overrides(const struc::MethodDe
   revEdges->insertEdge(&end, &begin, edkMethodDeclaration_Overrides);
 }
 
+void VisitorReverseEdges::visitModule_Packages(const struc::Module& begin, const struc::Package& end) {
+  revEdges->insertEdge(&end, &begin, edkModule_Packages);
+}
+
+void VisitorReverseEdges::visitModuleDeclaration_HasName(const struc::ModuleDeclaration& begin, const expr::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkModuleDeclaration_HasName);
+}
+
+void VisitorReverseEdges::visitModuleDeclaration_HasDirectives(const struc::ModuleDeclaration& begin, const module::ModuleDirective& end) {
+  revEdges->insertEdge(&end, &begin, edkModuleDeclaration_HasDirectives);
+}
+
+void VisitorReverseEdges::visitModuleDeclaration_ModuleType(const struc::ModuleDeclaration& begin, const type::ModuleType& end) {
+  revEdges->insertEdge(&end, &begin, edkModuleDeclaration_ModuleType);
+}
+
+void VisitorReverseEdges::visitModuleDeclaration_RefersTo(const struc::ModuleDeclaration& begin, const struc::Module& end) {
+  revEdges->insertEdge(&end, &begin, edkModuleDeclaration_RefersTo);
+}
+
 void VisitorReverseEdges::visitNormalMethod_HasParameters(const struc::NormalMethod& begin, const struc::Parameter& end) {
   revEdges->insertEdge(&end, &begin, edkNormalMethod_HasParameters);
 }
@@ -365,6 +461,10 @@ void VisitorReverseEdges::visitPackage_HasCompilationUnits(const struc::Package&
   revEdges->insertEdge(&end, &begin, edkPackage_HasCompilationUnits);
 }
 
+void VisitorReverseEdges::visitPackage_IsInModule(const struc::Package& begin, const struc::Module& end) {
+  revEdges->insertEdge(&end, &begin, edkPackage_IsInModule);
+}
+
 void VisitorReverseEdges::visitPackageDeclaration_HasPackageName(const struc::PackageDeclaration& begin, const expr::Expression& end) {
   revEdges->insertEdge(&end, &begin, edkPackageDeclaration_HasPackageName);
 }
@@ -377,10 +477,6 @@ void VisitorReverseEdges::visitScope_HasMembers(const struc::Scope& begin, const
   revEdges->insertEdge(&end, &begin, edkScope_HasMembers);
 }
 
-void VisitorReverseEdges::visitTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) {
-  revEdges->insertEdge(&end, &begin, edkTypeDeclaration_IsInCompilationUnit);
-}
-
 void VisitorReverseEdges::visitTypeDeclaration_HasSuperClass(const struc::TypeDeclaration& begin, const expr::TypeExpression& end) {
   revEdges->insertEdge(&end, &begin, edkTypeDeclaration_HasSuperClass);
 }
@@ -391,6 +487,14 @@ void VisitorReverseEdges::visitTypeDeclaration_HasSuperInterfaces(const struc::T
 
 void VisitorReverseEdges::visitTypeDeclaration_HasOthers(const struc::TypeDeclaration& begin, const base::Positioned& end) {
   revEdges->insertEdge(&end, &begin, edkTypeDeclaration_HasOthers);
+}
+
+void VisitorReverseEdges::visitTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) {
+  revEdges->insertEdge(&end, &begin, edkTypeDeclaration_IsInCompilationUnit);
+}
+
+void VisitorReverseEdges::visitTypeDeclaration_IsInModule(const struc::TypeDeclaration& begin, const struc::Module& end) {
+  revEdges->insertEdge(&end, &begin, edkTypeDeclaration_IsInModule);
 }
 
 void VisitorReverseEdges::visitTypeParameter_HasBounds(const struc::TypeParameter& begin, const expr::TypeExpression& end) {
@@ -413,6 +517,10 @@ void VisitorReverseEdges::visitClassType_RefersTo(const type::ClassType& begin, 
   revEdges->insertEdge(&end, &begin, edkClassType_RefersTo);
 }
 
+void VisitorReverseEdges::visitIntersectionType_Bounds(const type::IntersectionType& begin, const type::Type& end) {
+  revEdges->insertEdge(&end, &begin, edkIntersectionType_Bounds);
+}
+
 void VisitorReverseEdges::visitMethodType_ReturnType(const type::MethodType& begin, const type::Type& end) {
   revEdges->insertEdge(&end, &begin, edkMethodType_ReturnType);
 }
@@ -423,6 +531,10 @@ void VisitorReverseEdges::visitMethodType_ParameterTypes(const type::MethodType&
 
 void VisitorReverseEdges::visitMethodType_ThrownTypes(const type::MethodType& begin, const type::Type& end) {
   revEdges->insertEdge(&end, &begin, edkMethodType_ThrownTypes);
+}
+
+void VisitorReverseEdges::visitModuleType_RefersTo(const type::ModuleType& begin, const struc::Module& end) {
+  revEdges->insertEdge(&end, &begin, edkModuleType_RefersTo);
 }
 
 void VisitorReverseEdges::visitPackageType_RefersTo(const type::PackageType& begin, const struc::Package& end) {

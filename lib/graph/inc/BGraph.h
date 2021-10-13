@@ -27,7 +27,7 @@
 #include <queue>
 #include <strtable/inc/StrTable.h>
 #include <io/inc/IO.h>
-
+#include <jsoncpp/inc/json.h>
 
 
 /**
@@ -217,6 +217,14 @@ namespace columbus {  namespace graph {
       * \param sio [in] the simple xml out
       */
       void writeAttributeToXml(Attribute& attribute,io::SimpleXmlIO& sio) const;
+
+      /**
+      * \internal
+      * \brief add attribute to a JSON node
+      * \param attribute [in] the attribute
+      * \param node [in/out] the JSON node to which the attribute will be added
+      */
+      void addAttributeToJsonNode(Attribute& attribute, Json::Value& node) const;
 
       /**
       * \internal
@@ -452,6 +460,12 @@ namespace columbus {  namespace graph {
       std::string getHeaderInfo(const std::string& key);
 
       /**
+      * \brief get header keys
+      * \return a vector containing all the header keys
+      */
+      std::vector<std::string> getHeaderKeys() const;
+
+      /**
       * \brief delete information form header
       * \param key [in] the info name
       * 
@@ -474,12 +488,15 @@ namespace columbus {  namespace graph {
       void saveGML(const std::string& filename) const;
       void loadXML(const std::string& filename) ;
       
+      
       void saveBinary(const std::string& filename) const;
       void loadBinary(const std::string& filename) ;
 
       void saveCSV(const std::string& filename, const std::string& edge) const;
       void saveCSV(const std::string& filename) ;
       void loadCSV(const std::string& filename);
+
+      void saveJSON(const std::string& filename) const;
 
       /**
       * \brief get iterator to all nodes

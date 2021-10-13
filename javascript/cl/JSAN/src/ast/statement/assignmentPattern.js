@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var assignmentPattern = factory.createAssignmentPatternWrapper(factory);
+        var assignmentPattern = factory.createAssignmentPatternWrapper();
         globals.setPositionInfo(node, assignmentPattern);
         return assignmentPattern;
     } else {
@@ -34,29 +34,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.left != null) {
             var leftWrapper = globals.getWrapperOfNode(node.left);
-            if (node.left.type !== "Literal") {
-                var leftWrapperFunctionString = "setLeft" + node.left.type;
-            } else {
-                var leftWrapperFunctionString = "setLeft" + globals.getLiteralType(node.left) + node.left.type;
-            }
             try {
-                assignmentPatternWrapper[leftWrapperFunctionString](leftWrapper);
+                assignmentPatternWrapper.setLeft(leftWrapper);
             } catch (e) {
-                console.error("ASSIGNMENTPATTERN - Function not exist: assignmentPatternWrapper." + leftWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("ASSIGNMENTPATTERN - Could not set left! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.right != null) {
             var rightWrapper = globals.getWrapperOfNode(node.right);
-            if (node.right.type !== "Literal") {
-                var rightWrapperFunctionString = "setRight" + node.right.type;
-            } else {
-                var rightWrapperFunctionString = "setRight" + globals.getLiteralType(node.right) + node.right.type;
-            }
             try {
-                assignmentPatternWrapper[rightWrapperFunctionString](rightWrapper);
+                assignmentPatternWrapper.setRight(rightWrapper);
             } catch (e) {
-                console.error("ASSIGNMENTPATTERN - Function not exist: assignmentPatternWrapper." + rightWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("ASSIGNMENTPATTERN - Could not set right! Reason of the error: " + e + "\n");
             }
         }
 

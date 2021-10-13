@@ -188,7 +188,7 @@ namespace columbus { namespace java { namespace asg {
       RevEdgesContainer reContainer;
 
       /** \internal \brief The possible edges by nodes. */
-      static bool possibleEdges[141][105];
+      static bool possibleEdges[157][133];
 
       friend class Factory;
       friend class VisitorReverseEdges;
@@ -203,6 +203,7 @@ namespace columbus { namespace java { namespace asg {
       friend class base::NonJavadocComment;
       friend class base::Positioned;
       friend class base::PositionedWithoutComment;
+      friend class expr::AnnotatedTypeExpression;
       friend class expr::Annotation;
       friend class expr::ArrayAccess;
       friend class expr::ArrayTypeExpression;
@@ -219,13 +220,16 @@ namespace columbus { namespace java { namespace asg {
       friend class expr::ExternalTypeExpression;
       friend class expr::FieldAccess;
       friend class expr::FloatLiteral;
+      friend class expr::FunctionalExpression;
       friend class expr::Identifier;
       friend class expr::InfixExpression;
       friend class expr::InstanceOf;
       friend class expr::IntegerLiteral;
+      friend class expr::Lambda;
       friend class expr::Literal;
       friend class expr::LongLiteral;
       friend class expr::MarkerAnnotation;
+      friend class expr::MemberReference;
       friend class expr::MethodInvocation;
       friend class expr::NewArray;
       friend class expr::NewClass;
@@ -233,6 +237,7 @@ namespace columbus { namespace java { namespace asg {
       friend class expr::NullLiteral;
       friend class expr::NumberLiteral;
       friend class expr::ParenthesizedExpression;
+      friend class expr::PolyExpression;
       friend class expr::PostfixExpression;
       friend class expr::PrefixExpression;
       friend class expr::PrimitiveTypeExpression;
@@ -245,9 +250,16 @@ namespace columbus { namespace java { namespace asg {
       friend class expr::TypeApplyExpression;
       friend class expr::TypeCast;
       friend class expr::TypeExpression;
+      friend class expr::TypeIntersectionExpression;
       friend class expr::TypeUnionExpression;
       friend class expr::Unary;
       friend class expr::WildcardExpression;
+      friend class module::Exports;
+      friend class module::ModuleDirective;
+      friend class module::Opens;
+      friend class module::Provides;
+      friend class module::Requires;
+      friend class module::Uses;
       friend class statm::Assert;
       friend class statm::BasicFor;
       friend class statm::Block;
@@ -296,6 +308,8 @@ namespace columbus { namespace java { namespace asg {
       friend class struc::Method;
       friend class struc::MethodDeclaration;
       friend class struc::MethodGeneric;
+      friend class struc::Module;
+      friend class struc::ModuleDeclaration;
       friend class struc::NamedDeclaration;
       friend class struc::NormalMethod;
       friend class struc::Package;
@@ -317,9 +331,11 @@ namespace columbus { namespace java { namespace asg {
       friend class type::ErrorType;
       friend class type::FloatType;
       friend class type::IntType;
+      friend class type::IntersectionType;
       friend class type::LongType;
       friend class type::LowerBoundedWildcardType;
       friend class type::MethodType;
+      friend class type::ModuleType;
       friend class type::NoType;
       friend class type::NullType;
       friend class type::PackageType;

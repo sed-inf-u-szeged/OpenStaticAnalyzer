@@ -36,6 +36,7 @@ public abstract class BaseImpl implements Base {
 
 	protected int parent;
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(BaseImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected int id;
 

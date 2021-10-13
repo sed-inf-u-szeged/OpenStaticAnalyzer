@@ -27,6 +27,7 @@ import columbus.java.asg.base.Positioned;
 /**
  * Interface TypeDeclaration, which represents the {@link columbus.java.asg.struc.TypeDeclaration TypeDeclaration} node.
  * @columbus.node (missing)
+ * @columbus.attr lloc (int) : (missing)
  * @columbus.attr typeNamePosition (Range) : (missing)
  * @columbus.attr isAbstract (boolean) : (missing)
  * @columbus.attr abstractPosition (Range) : (missing)
@@ -36,12 +37,25 @@ import columbus.java.asg.base.Positioned;
  * @columbus.attr extendsPosition (Range) : (missing)
  * @columbus.attr implementsPosition (Range) : (missing)
  * @columbus.attr bodyStartPosition (Range) : (missing)
- * @columbus.edge isInCompilationUnit ({@link columbus.java.asg.struc.CompilationUnit CompilationUnit}, single) : (missing)
  * @columbus.edge hasSuperClass ({@link columbus.java.asg.expr.TypeExpression TypeExpression}, single) : (missing)
  * @columbus.edge hasSuperInterfaces ({@link columbus.java.asg.expr.TypeExpression TypeExpression}, multiple) : (missing)
  * @columbus.edge hasOthers ({@link columbus.java.asg.base.Positioned Positioned}, multiple) : (missing)
+ * @columbus.edge isInCompilationUnit ({@link columbus.java.asg.struc.CompilationUnit CompilationUnit}, single) : (missing)
+ * @columbus.edge isInModule ({@link columbus.java.asg.struc.Module Module}, single) : (missing)
  */
 public interface TypeDeclaration extends NamedDeclaration, Scope {
+
+	/**
+	 * Gives back the {@link columbus.java.asg.struc.TypeDeclaration#attributeLloc lloc} of the node.
+	 * @return Returns with the lloc.
+	 */
+	public int getLloc();
+
+	/**
+	 * Sets the {@link columbus.java.asg.struc.TypeDeclaration#attributeLloc lloc} of the node.
+	 * @param value The new value of the lloc.
+	 */
+	public void setLloc(int value);
 
 	/**
 	 * Gives back the {@link columbus.java.asg.struc.TypeDeclaration#attributeTypeNamePosition typeNamePosition} of the node.
@@ -158,24 +172,6 @@ public interface TypeDeclaration extends NamedDeclaration, Scope {
 	public void setBodyStartPosition(Range value);
 
 	/**
-	 * Gives back the reference of the node the {@link columbus.java.asg.struc.TypeDeclaration#edgeIsInCompilationUnit isInCompilationUnit} edge points to.
-	 * @return Returns the end point of the isInCompilationUnit edge.
-	 */
-	public CompilationUnit getIsInCompilationUnit();
-
-	/**
-	 * Sets the {@link columbus.java.asg.struc.TypeDeclaration#edgeIsInCompilationUnit isInCompilationUnit} edge.
-	 * @param id The new end point of the isInCompilationUnit edge.
-	 */
-	public void setIsInCompilationUnit(int id);
-
-	/**
-	 * Sets the {@link columbus.java.asg.struc.TypeDeclaration#edgeIsInCompilationUnit isInCompilationUnit} edge.
-	 * @param node The new end point of the isInCompilationUnit edge.
-	 */
-	public void setIsInCompilationUnit(CompilationUnit node);
-
-	/**
 	 * Gives back the reference of the node the {@link columbus.java.asg.struc.TypeDeclaration#edgeHasSuperClass hasSuperClass} edge points to.
 	 * @return Returns the end point of the hasSuperClass edge.
 	 */
@@ -252,6 +248,42 @@ public interface TypeDeclaration extends NamedDeclaration, Scope {
 	 * @param node The end point of the new hasOthers edge.
 	 */
 	public void addOthers(Positioned node);
+
+	/**
+	 * Gives back the reference of the node the {@link columbus.java.asg.struc.TypeDeclaration#edgeIsInCompilationUnit isInCompilationUnit} edge points to.
+	 * @return Returns the end point of the isInCompilationUnit edge.
+	 */
+	public CompilationUnit getIsInCompilationUnit();
+
+	/**
+	 * Sets the {@link columbus.java.asg.struc.TypeDeclaration#edgeIsInCompilationUnit isInCompilationUnit} edge.
+	 * @param id The new end point of the isInCompilationUnit edge.
+	 */
+	public void setIsInCompilationUnit(int id);
+
+	/**
+	 * Sets the {@link columbus.java.asg.struc.TypeDeclaration#edgeIsInCompilationUnit isInCompilationUnit} edge.
+	 * @param node The new end point of the isInCompilationUnit edge.
+	 */
+	public void setIsInCompilationUnit(CompilationUnit node);
+
+	/**
+	 * Gives back the reference of the node the {@link columbus.java.asg.struc.TypeDeclaration#edgeIsInModule isInModule} edge points to.
+	 * @return Returns the end point of the isInModule edge.
+	 */
+	public Module getIsInModule();
+
+	/**
+	 * Sets the {@link columbus.java.asg.struc.TypeDeclaration#edgeIsInModule isInModule} edge.
+	 * @param id The new end point of the isInModule edge.
+	 */
+	public void setIsInModule(int id);
+
+	/**
+	 * Sets the {@link columbus.java.asg.struc.TypeDeclaration#edgeIsInModule isInModule} edge.
+	 * @param node The new end point of the isInModule edge.
+	 */
+	public void setIsInModule(Module node);
 
 }
 

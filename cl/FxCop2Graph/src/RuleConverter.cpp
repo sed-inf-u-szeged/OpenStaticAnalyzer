@@ -100,8 +100,8 @@ public:
                     rul->setSettingValue(MetricId, "Priority", "Minor", true);
                 else if (std::strstr(content.c_str(), "Information"))
                     rul->setSettingValue(MetricId, "Priority", "Info", true);
-
             } else if (name == "Name") {
+
                 using namespace std;
                 string displayNameBeginLetters = "";
                 if (TypeName.find("FxCopRule") != std::string::npos) {
@@ -145,12 +145,12 @@ public:
                 rul->createLanguage(MetricId, "eng");
                 rul->setDisplayName(MetricId, content);
                 rul->setHasWarningText(MetricId, true);
-                rul->addMetricGroupMembers(MetricId, Category);
 
+                rul->addMetricGroupMembers(MetricId, Category);
             } else if (name == "Description") {
                 rul->setHelpText(MetricId, content);
-
             } else if (name == "Rules"){
+
                 rul->defineMetric(Category);
                 rul->createConfiguration(Category, "Default");
                 rul->setIsEnabled(Category, true);
@@ -160,7 +160,9 @@ public:
                 rul->setHasWarningText(Category, true);
                 rul->setDisplayName(Category, CategoryFriendlyName);
                 rul->setDescription(Category, "");
+
             }
+
         } catch (const rul::RulHandlerException& ex) {
             WriteMsg::write(CMSG_FXCOP2GRAPH_RULE_EXCEPTION, ex.getMessage().c_str());
         }
@@ -180,6 +182,7 @@ void RuleConverter::convertRuleFile(const vector<string>& file_names, const Conf
     {
       parseXML(filename, fxCopHandler);
     }
+
 
     rul.saveRul(config.rulFile);
 }

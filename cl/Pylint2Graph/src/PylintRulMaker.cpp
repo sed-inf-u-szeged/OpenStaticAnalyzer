@@ -99,13 +99,19 @@ static string convertPriority(const string& id) {
   }
 }
 
+// TODO copied from PMD2Graph, and modified slightly
 static void setShortName(const std::string& origname, const std::string& rulename, std::string& shortname, int small = 0, int ext = 0) {
+  RuleId2NameMap::right_const_iterator it = ruleIdMap.right.find(origname);
+  if (it != ruleIdMap.right.end()) {
+    shortname = it->second;
+    return;
+  }
+
   int tsmall = small;
   for (unsigned int i = 0; i < rulename.size(); i++) {
-    if (   (rulename[i] >= 'A' && rulename[i] <= 'Z')
-        || (rulename[i] >= '0' && rulename[i] <= '9'))
+    if (::isupper(rulename[i]) || ::isdigit(rulename[i])) {
       shortname += rulename[i];
-    else if (rulename[i] >= 'a' && rulename[i] <= 'z' && tsmall > 0) {
+    } else if (::islower(rulename[i]) && tsmall > 0) {
       shortname += rulename[i];
       tsmall--;
     }

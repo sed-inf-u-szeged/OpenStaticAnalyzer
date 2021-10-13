@@ -179,6 +179,12 @@ namespace columbus { namespace python { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const expression::Await& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const expression::BinaryArithmetic& node , bool callVirtualBase = true);
 
       /**
@@ -186,6 +192,12 @@ namespace columbus { namespace python { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const expression::BinaryLogical& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const expression::BytesLiteral& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -233,6 +245,12 @@ namespace columbus { namespace python { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const expression::FormattedValue& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const expression::Generator& node , bool callVirtualBase = true);
 
       /**
@@ -275,6 +293,12 @@ namespace columbus { namespace python { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const expression::JoinedStr& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const expression::KeyValue& node , bool callVirtualBase = true);
 
       /**
@@ -311,6 +335,12 @@ namespace columbus { namespace python { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const expression::NamedExpr& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const expression::Set& node , bool callVirtualBase = true);
 
       /**
@@ -324,6 +354,12 @@ namespace columbus { namespace python { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const expression::Slice& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const expression::Starred& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -378,6 +414,12 @@ namespace columbus { namespace python { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const statement::Alias& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const statement::AnnAssign& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -479,6 +521,12 @@ namespace columbus { namespace python { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
+      virtual void visit(const statement::Nonlocal& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
       virtual void visit(const statement::Parameter& node , bool callVirtualBase = true);
 
       /**
@@ -521,13 +569,7 @@ namespace columbus { namespace python { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
-      virtual void visit(const statement::TryExcept& node , bool callVirtualBase = true);
-
-      /**
-      * \internal
-      * \brief The node call back the this function that achive the preorder
-      */
-      virtual void visit(const statement::TryFinal& node , bool callVirtualBase = true);
+      virtual void visit(const statement::Try& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -540,6 +582,12 @@ namespace columbus { namespace python { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const statement::With& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const statement::WithItem& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -629,6 +677,14 @@ namespace columbus { namespace python { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const expression::Await& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const expression::Binary& node , bool callVirtualBase = true);
 
       /**
@@ -646,6 +702,14 @@ namespace columbus { namespace python { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const expression::BinaryLogical& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const expression::BytesLiteral& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -717,6 +781,14 @@ namespace columbus { namespace python { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const expression::FormattedValue& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const expression::Generator& node , bool callVirtualBase = true);
 
       /**
@@ -766,6 +838,14 @@ namespace columbus { namespace python { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const expression::IntegerLiteral& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const expression::JoinedStr& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -829,6 +909,14 @@ namespace columbus { namespace python { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const expression::NamedExpr& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const expression::Set& node , bool callVirtualBase = true);
 
       /**
@@ -854,6 +942,14 @@ namespace columbus { namespace python { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const expression::Slicing& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const expression::Starred& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -934,6 +1030,14 @@ namespace columbus { namespace python { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const statement::Alias& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const statement::AnnAssign& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -1085,6 +1189,14 @@ namespace columbus { namespace python { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
+      virtual void visitAllEdges(const statement::Nonlocal& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
       virtual void visitAllEdges(const statement::Parameter& node , bool callVirtualBase = true);
 
       /**
@@ -1165,22 +1277,6 @@ namespace columbus { namespace python { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
-      virtual void visitAllEdges(const statement::TryExcept& node , bool callVirtualBase = true);
-
-      /**
-      * \internal
-      * \brief It call the traversal for the edges
-      * \param node            [in] The node with own type
-      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
-      */
-      virtual void visitAllEdges(const statement::TryFinal& node , bool callVirtualBase = true);
-
-      /**
-      * \internal
-      * \brief It call the traversal for the edges
-      * \param node            [in] The node with own type
-      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
-      */
       virtual void visitAllEdges(const statement::While& node , bool callVirtualBase = true);
 
       /**
@@ -1190,6 +1286,14 @@ namespace columbus { namespace python { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const statement::With& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const statement::WithItem& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -1288,7 +1392,7 @@ namespace columbus { namespace python { namespace asg {
 
       Factory* fact;
 
-      bool traversaldCrossEdges[102];
+      bool traversaldCrossEdges[116];
 
   }; // AlgorithmPreorder
 

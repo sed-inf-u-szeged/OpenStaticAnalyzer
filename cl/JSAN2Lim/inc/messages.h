@@ -45,25 +45,27 @@
 #define CMSG_NO_NODE_TO_DISPATCH            common::WriteMsg::mlDebug,   "Debug: The node to build dispatch is not exist in the lim.\n"
 
 //Normal messages
-#define CMSG_VISIT_END                      common::WriteMsg::mlDDDebug, "VisitEnd( %-20s), javaID:%d, limID:%d\n"
 #define CMSG_TRACEID_ON                     common::WriteMsg::mlNormal, "Ids of various phase are dumped.\n"
 #define CMSG_LOADING_FILE                   common::WriteMsg::mlNormal, "Loading file:    %s\n"
+#define CMSG_STATISTICS                     common::WriteMsg::mlNormal, "\nStatistics:\n\
+\tConverting time              : %10.2fs\n\
+\tSaving asg time              : %10.2fs\n\
+\tTotal time                   : %10.2fs\n\
+\tPeak memory usage            : %10.2fMB\n\
+\tNumber of not existed files  : %10d\n\n"
 
 
-#define CMSG_STAT_HEADER_CONVERTING_TIME "Converting time"
-#define CMSG_STAT_HEADER_SAVE_TIME "Saving asg time"
-#define CMSG_STAT_HEADER_TOTAL_TIME "Total time"
-#define CMSG_STAT_HEADER_PEAK_MEMORY "Peak memory usage"
 #define CMSG_STAT_HEADER_NOT_EXISTED_FILE "Number of not existed files"
 
 
-//STAT messages
-#define CMSG_STAT_NOSC                  "\n\tNumber of Source classes     : %10d\n"
-#define CMSG_STAT_NOEC                  "\tNumber of External classes   : %10d\n"
-#define CMSG_STAT_NOIC                  "\tNumber of Irrelevant classes : %10d\n"
-#define CMSG_STAT_NOCC                  "\tNumber of Converted classes  : %10d\n"
-#define CMSG_STAT_NOSKC                 "\tNumber of Skipped classes    : %10d\n"
-#define CMSG_STAT_NOC                   "\tTotal Number of classes      : %10d\n\n"
-#define CMSG_STAT_NODC                  "\tNumber of Dumped classes     : %10d\n"
+
+//DEBUG messages
+#define CMSG_VISIT_BEGIN                common::WriteMsg::mlDDDebug, "Visit   ( %-20s), jsID:%d, limID:%d\n"
+#define CMSG_VISIT_END                  common::WriteMsg::mlDDDebug, "VisitEnd( %-20s), jsID:%d, limID:%d\n"
+
+//EXCEPTION messages
+#define CMSG_EX_UNEXPECTED_TYPE(id, ndk)    "Unexpected Type: " + javascript::asg::Common::toString(ndk) + " (id" + javascript::asg::Common::toString(id) + ")"
+
+#define CMSG_EMPTY_METHODSTACK          common::WriteMsg::mlDDDebug, "Empty method stack while attempting to add %s\n"
 
 #endif

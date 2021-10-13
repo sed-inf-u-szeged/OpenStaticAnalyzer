@@ -37,7 +37,10 @@ struct Properties : public columbus::controller::BaseProperties
     , runDCF(true)
     , runPylint(true)
     , runMetricHunter(true)
-    , runLimMetrics(true)
+    , runLim2Metric(true)
+    , runUDM(false)
+    , runUDMExplicit(false)
+    , runLIM2Patterns(true)
   {}
 
   bool cloneGenealogy;                                // Create clone genealogy or no.
@@ -65,13 +68,33 @@ struct Properties : public columbus::controller::BaseProperties
   std::list<std::string> pylintOptions;               // Options passed to Pylint
   char csvSeparator;                                  // Column separator character of the csv outputs.
   char csvDecimalmark;                                // Decimal mark character in the csv outputs.
+  std::string sarifSeverityLevel;                     // Severity level to be converted into sarif
   int cleanResults;                                   // Keep the last 'cleanResults' number of timestamped directory of the project in the results.
   int cloneMinLines;                                  // Minimum number of lines of clone instances.
 
   bool runDCF;                                        // Run DCF.
   bool runPylint;                                     // Run Pylint2Graph
   bool runMetricHunter;                               // Run MetricHunter.
-  bool runLimMetrics;                                 // Run Lim2Metrics.
+  bool runLim2Metric;                                 // Run Lim2Metric.
+  bool runUDM;                                        // Run UserDefinedMetrics
+  bool runUDMExplicit;                                // Was the "runUDM" switch explicitly set on the command line?
+
+  bool runSonar2Graph;                                // Run Sonar2Graph tool to extrat issues from SonarQube server.
+  std::string host;                                   // IP of the SonarQube server.
+  std::string port;                                   // Port of the SonarQube server.
+  std::string projectKey;                             // Key of the project on the SonarQube server.
+  std::string projectPrefix;                          // Prefix path of the project's base directory.
+  std::string jsonPath;                               // For testing only.
+  std::string sqUsername;                             // Username for the SonarQube server.
+  std::string sqPassword;                             // Password for the SonarQube server.
+  std::string languageKey;                            // Key of the language in SonarQube.
+  bool sonar2GraphVerbose;                            // Prints more information about the running of Sonar2Graph tool.
+  bool strict;                                        // If true, the tool will stop working if finds too many issues in one file.
+
+  bool runLIM2Patterns;                               // Run LIM2Patterns
+  std::string patternFile;                            // Location of the pattern file
+  std::string whitelist;                              // Pattern whitelist, can be set from profileXML
+  std::string blacklist;                              // Pattern blacklist, can be set from profileXML
 };
 
 extern Properties props;

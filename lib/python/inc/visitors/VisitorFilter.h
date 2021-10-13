@@ -77,6 +77,12 @@ namespace columbus { namespace python { namespace asg {
       * \brief Deselects the actual node (and only this).
       * \param node [in] The node which is visited.
       */
+      virtual void visitEnd(const expression::Await& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
       virtual void visitEnd(const expression::BinaryArithmetic& node , bool callVirtualBase = true);
 
       /**
@@ -84,6 +90,12 @@ namespace columbus { namespace python { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::BinaryLogical& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::BytesLiteral& node , bool callVirtualBase = true);
 
       /**
       * \brief Deselects the actual node (and only this).
@@ -131,6 +143,12 @@ namespace columbus { namespace python { namespace asg {
       * \brief Deselects the actual node (and only this).
       * \param node [in] The node which is visited.
       */
+      virtual void visitEnd(const expression::FormattedValue& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
       virtual void visitEnd(const expression::Generator& node , bool callVirtualBase = true);
 
       /**
@@ -173,6 +191,12 @@ namespace columbus { namespace python { namespace asg {
       * \brief Deselects the actual node (and only this).
       * \param node [in] The node which is visited.
       */
+      virtual void visitEnd(const expression::JoinedStr& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
       virtual void visitEnd(const expression::KeyValue& node , bool callVirtualBase = true);
 
       /**
@@ -209,6 +233,12 @@ namespace columbus { namespace python { namespace asg {
       * \brief Deselects the actual node (and only this).
       * \param node [in] The node which is visited.
       */
+      virtual void visitEnd(const expression::NamedExpr& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
       virtual void visitEnd(const expression::Set& node , bool callVirtualBase = true);
 
       /**
@@ -222,6 +252,12 @@ namespace columbus { namespace python { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::Slice& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::Starred& node , bool callVirtualBase = true);
 
       /**
       * \brief Deselects the actual node (and only this).
@@ -276,6 +312,12 @@ namespace columbus { namespace python { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const statement::Alias& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const statement::AnnAssign& node , bool callVirtualBase = true);
 
       /**
       * \brief Deselects the actual node (and only this).
@@ -377,6 +419,12 @@ namespace columbus { namespace python { namespace asg {
       * \brief Deselects the actual node (and only this).
       * \param node [in] The node which is visited.
       */
+      virtual void visitEnd(const statement::Nonlocal& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
       virtual void visitEnd(const statement::Parameter& node , bool callVirtualBase = true);
 
       /**
@@ -419,13 +467,7 @@ namespace columbus { namespace python { namespace asg {
       * \brief Deselects the actual node (and only this).
       * \param node [in] The node which is visited.
       */
-      virtual void visitEnd(const statement::TryExcept& node , bool callVirtualBase = true);
-
-      /**
-      * \brief Deselects the actual node (and only this).
-      * \param node [in] The node which is visited.
-      */
-      virtual void visitEnd(const statement::TryFinal& node , bool callVirtualBase = true);
+      virtual void visitEnd(const statement::Try& node , bool callVirtualBase = true);
 
       /**
       * \brief Deselects the actual node (and only this).
@@ -438,6 +480,12 @@ namespace columbus { namespace python { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const statement::With& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const statement::WithItem& node , bool callVirtualBase = true);
 
       /**
       * \brief Deselects the actual node (and only this).

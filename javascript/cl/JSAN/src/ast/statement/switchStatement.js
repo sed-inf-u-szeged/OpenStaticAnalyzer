@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var switchStatement = factory.createSwitchStatementWrapper(factory);
+        var switchStatement = factory.createSwitchStatementWrapper();
         globals.setPositionInfo(node, switchStatement);
         return switchStatement;
     } else {
@@ -35,30 +35,20 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.cases.length; i++) {
                 if (node.cases[i] != null) {
                     var casesWrapper = globals.getWrapperOfNode(node.cases[i]);
-                    if (node.cases[i].type !== "Literal") {
-                        var casesWrapperFunctionString = "addCases" + node.cases[i].type;
-                    } else {
-                        var casesWrapperFunctionString = "addCases" + globals.getLiteralType(node.cases[i]) + node.cases[i].type;
-                    }
                     try {
-                        switchStatementWrapper[casesWrapperFunctionString](casesWrapper);
+                        switchStatementWrapper.addCases(casesWrapper);
                     } catch (e) {
-                        console.error("SWITCHSTATEMENT - Function not exist: switchStatementWrapper." + casesWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("SWITCHSTATEMENT - Could not add case! Reason of the error: " + e + "\n");
                     }
                 }
             }
         }
         if (node.discriminant != null) {
             var discriminantWrapper = globals.getWrapperOfNode(node.discriminant);
-            if (node.discriminant.type !== "Literal") {
-                var discriminantWrapperFunctionString = "setDiscriminant" + node.discriminant.type;
-            } else {
-                var discriminantWrapperFunctionString = "setDiscriminant" + globals.getLiteralType(node.discriminant) + node.discriminant.type;
-            }
             try {
-                switchStatementWrapper[discriminantWrapperFunctionString](discriminantWrapper);
+                switchStatementWrapper.setDiscriminant(discriminantWrapper);
             } catch (e) {
-                console.error("SWITCHSTATEMENT - Function not exist: switchStatementWrapper." + discriminantWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("SWITCHSTATEMENT - Could not set discriminant! Reason of the error: " + e + "\n");
             }
         }
 

@@ -43,6 +43,7 @@ namespace statement {
   * Edges:
   *   - hasObject (module::Object, multiple) : (missing)
   *   - hasBaseSpecifier (statement::BaseSpecifier, multiple) : (missing)
+  *   - hasKeyword (expression::Keyword, multiple) : (missing)
   *   - hasDecorator (expression::Expression, multiple) : (missing)
   *   - refersTo (module::Object, single) : (missing)
   *   - docstring (base::Docstring, single) : (missing)
@@ -214,6 +215,30 @@ namespace statement {
       unsigned getBaseSpecifierSize() const;
 
       /**
+      * \brief Gives back iterator for the hasKeyword edges.
+      * \return Returns an iterator for the hasKeyword edges.
+      */
+      ListIterator<expression::Keyword> getKeywordListIteratorBegin() const;
+
+      /**
+      * \brief Gives back iterator for the hasKeyword edges.
+      * \return Returns an iterator for the hasKeyword edges.
+      */
+      ListIterator<expression::Keyword> getKeywordListIteratorEnd() const;
+
+      /**
+      * \brief Tells whether the node has hasKeyword edges or not.
+      * \return Returns true if the node doesn't have any hasKeyword edge.
+      */
+      bool getKeywordIsEmpty() const;
+
+      /**
+      * \brief Gives back how many hasKeyword edges the node has.
+      * \return Returns with the number of hasKeyword edges.
+      */
+      unsigned getKeywordSize() const;
+
+      /**
       * \brief Gives back iterator for the hasDecorator edges.
       * \return Returns an iterator for the hasDecorator edges.
       */
@@ -301,6 +326,30 @@ namespace statement {
       void removeBaseSpecifier(BaseSpecifier *node);
 
       /**
+      * \brief Adds a new hasKeyword edge to the node and inserts it after the other ones.
+      * \param node [in] The end point of the new hasKeyword edge.
+      */
+      void addKeyword(const expression::Keyword *node);
+
+      /**
+      * \brief Adds a new hasKeyword edge to the node and inserts it after the other ones.
+      * \param id [in] The end point of the new hasKeyword edge.
+      */
+      void addKeyword(NodeId id);
+
+      /**
+      * \brief Remove the hasKeyword edge by id from the node.
+      * \param id [in] The end point of the hasKeyword edge.
+      */
+      void removeKeyword(NodeId id);
+
+      /**
+      * \brief Remove the hasKeyword edge from the node.
+      * \param node [in] The end point of the hasKeyword edge.
+      */
+      void removeKeyword(expression::Keyword *node);
+
+      /**
       * \brief Adds a new hasDecorator edge to the node and inserts it after the other ones.
       * \param node [in] The end point of the new hasDecorator edge.
       */
@@ -367,6 +416,9 @@ namespace statement {
 
       /** \internal \brief Container stores the id of the nodes the hasBaseSpecifier edge points to. */
       ListIterator<statement::BaseSpecifier>::Container hasBaseSpecifierContainer;
+
+      /** \internal \brief Container stores the id of the nodes the hasKeyword edge points to. */
+      ListIterator<expression::Keyword>::Container hasKeywordContainer;
 
       /** \internal \brief Container stores the id of the nodes the hasDecorator edge points to. */
       ListIterator<expression::Expression>::Container hasDecoratorContainer;

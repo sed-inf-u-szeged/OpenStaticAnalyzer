@@ -82,6 +82,14 @@ namespace columbus { namespace lim { namespace metrics {
       addMetric( node, fileInfo.ints[this->name] );
     });
 
+    // C vs. C++ compat
+    registerHandler( phaseVisit, NTYPE_LIM_STRUCTURE, limLangC, false, [this] ( NodeWrapper& node ) {
+      setInvalid( node );
+    });
+    registerHandler( phaseVisit, NTYPE_LIM_UNION, limLangC, false, [this] ( NodeWrapper& node ) {
+      setInvalid( node );
+    });
+
   }
 
   const string& NOS::translateLevel( Language language, const string& level ) const {
@@ -110,7 +118,31 @@ namespace columbus { namespace lim { namespace metrics {
     propagateScopeInt( phaseFinalize, NTYPE_LIM_METHOD, limLangOther );
     propagateScopeInt( phaseFinalize, NTYPE_LIM_CLASS, limLangOther );
     propagateScopeInt( phaseFinalize, NTYPE_LIM_PACKAGE, limLangOther );
-    propagateComponentInt();
+    registerHandler(phaseFinalize, NTYPE_LIM_COMPONENT, limLangOther, false, [this,shared](NodeWrapper& node) {
+      const base::Component* component = &node.getLimNode<base::Component>();
+      const base::Base* ptr = &node.getLimNode<base::Base>();
+      Info& info = this->shared->components.map[ptr];
+      int value = 0;
+      // The <System> component is treated differently, as the Int metrics cannot be simply summed up from the subscomponents.
+      if (!component->getContainsIsEmpty()) {
+        for (auto fileInfo : shared->files) {
+          value += fileInfo.second.ints["NOS"];
+        }
+      }
+      else {
+        value = info.ints[this->name];
+      }
+      addMetric(node, value);
+    });
+
+    // C vs. C++ compat
+    registerHandler( phaseVisit, NTYPE_LIM_STRUCTURE, limLangC, false, [this] ( NodeWrapper& node ) {
+      setInvalid( node );
+    });
+    registerHandler( phaseVisit, NTYPE_LIM_UNION, limLangC, false, [this] ( NodeWrapper& node ) {
+      setInvalid( node );
+    });
+
   }
 
   const string& TNOS::translateLevel( Language language, const string& level ) const {

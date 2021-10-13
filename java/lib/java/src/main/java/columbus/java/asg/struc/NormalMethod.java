@@ -34,6 +34,7 @@ import columbus.java.asg.enums.*;
  * @columbus.attr isNative (boolean) : (missing)
  * @columbus.attr nativePosition (Range) : (missing)
  * @columbus.attr throwsPosition (Range) : (missing)
+ * @columbus.attr isDefault (boolean) : (missing)
  * @columbus.edge hasParameters ({@link columbus.java.asg.struc.Parameter Parameter}, multiple) : (missing)
  * @columbus.edge hasBody ({@link columbus.java.asg.statm.Block Block}, single) : (missing)
  * @columbus.edge hasThrownExceptions ({@link columbus.java.asg.expr.TypeExpression TypeExpression}, multiple) : (missing)
@@ -111,6 +112,18 @@ public interface NormalMethod extends MethodDeclaration {
 	 * @param value The new value of the throwsPosition.
 	 */
 	public void setThrowsPosition(Range value);
+
+	/**
+	 * Gives back the {@link columbus.java.asg.struc.NormalMethod#attributeIsDefault isDefault} of the node.
+	 * @return Returns with the isDefault.
+	 */
+	public boolean getIsDefault();
+
+	/**
+	 * Sets the {@link columbus.java.asg.struc.NormalMethod#attributeIsDefault isDefault} of the node.
+	 * @param value The new value of the isDefault.
+	 */
+	public void setIsDefault(boolean value);
 
 	/**
 	 * Gives back iterator for the {@link columbus.java.asg.struc.NormalMethod#edgeHasParameters hasParameters} edges.

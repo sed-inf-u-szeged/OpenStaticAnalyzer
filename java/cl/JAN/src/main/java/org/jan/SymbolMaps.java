@@ -20,6 +20,7 @@
 
 package org.jan;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -48,20 +49,31 @@ public class SymbolMaps {
 	// declarations
 	private Map<Symbol, Integer> methodDeclarationMap = new LinkedHashMap<>();
 	private Map<Symbol, Integer> packageMap = new LinkedHashMap<>();
+	private Map<String, Integer> packageNameMap = new LinkedHashMap<>();
 	private Map<Symbol, Integer> externalTypeDeclarationMap = new LinkedHashMap<>();
 	private Map<Symbol, Integer> innerTypeDeclarationMap = new LinkedHashMap<>();
 	private Map<Symbol, Integer> variableDeclarationMap = new LinkedHashMap<>();
+	//Java 9: maps for modules
+	private Map<Symbol, Integer> moduleMap = new LinkedHashMap<>();
+	private Map<String, Integer> moduleNameMap = new LinkedHashMap<>();
+	private Map<Integer, HashSet<Integer>> packagesOfModulesMap = new LinkedHashMap<>();
 
 	// types
 	private Map<Type, List<Integer>> usedTypesMap = new LinkedHashMap<>();
+	private Map<Type, List<Integer>> methodTypeMap = new LinkedHashMap<>();
+	private Map<Type, List<Integer>> funcExprTargetMap = new LinkedHashMap<>();
 	private Map<Type, Integer> typeParameterMap = new LinkedHashMap<>();
+	private Map<Type, Integer> moduleTypeMap = new LinkedHashMap<>();
 
 	// references
 	private Map<Integer, Symbol> idMap = new LinkedHashMap<>();
 	private Map<Integer, Symbol> methodInvMap = new LinkedHashMap<>();
 	private Map<Integer, Symbol> newClassConstructorMap = new LinkedHashMap<>();
+	//Java 8: member reference map
+	private Map<Integer, Symbol> memberReferenceMap = new LinkedHashMap<>();
 
 	private Set<Symbol> symbolsToFullBuild = new LinkedHashSet<>();
+	private Set<Symbol> visitedParents = new LinkedHashSet<>();
 	private Set<Symbol> memberSet = new LinkedHashSet<>();
 	private Set<Symbol> retTypeSet = new LinkedHashSet<>();
 	private Set<Symbol> varTypeSet = new LinkedHashSet<>();
@@ -70,6 +82,14 @@ public class SymbolMaps {
 
 	public Map<Type, List<Integer>> getUsedTypesMap() {
 		return usedTypesMap;
+	}
+
+	public Map<Type, List<Integer>> getMethodTypeMap() {
+		return methodTypeMap;
+	}
+
+	public Map<Type, List<Integer>> getFuncExprTargetMap() {
+		return funcExprTargetMap;
 	}
 
 	public Map<Symbol, Integer> getVariableDeclarationMap() {
@@ -86,6 +106,42 @@ public class SymbolMaps {
 
 	public Map<Symbol, Integer> getPackageMap() {
 		return packageMap;
+	}
+
+	public Map<String, Integer> getPackageNameMap() {
+		return packageNameMap;
+	}
+	
+	public Map<Symbol, Integer> getModuleMap() {
+		return moduleMap;
+	}
+	
+	public Map<String, Integer> getModuleNameMap() {
+		return moduleNameMap;
+	}
+	
+	public Map<Integer, HashSet<Integer>> getPackagesOfModulesMap() {
+		return packagesOfModulesMap;
+	}
+	
+	public Map<Integer, Symbol> getMemberReferenceMap() {
+		return memberReferenceMap;
+	}
+
+	public Map<Type, Integer> getModuleTypeMap() {
+		return moduleTypeMap;
+	}
+
+	public Integer findPackage(PackageSymbol sym) {
+		Integer id = packageMap.get(sym);
+		if (id == null) {
+			id = packageNameMap.get(sym.toString());
+		}
+		return id;
+	}
+
+	public Integer findModule(String s) {
+		return moduleNameMap.get(s);
 	}
 
 	public Set<Symbol> getExternalClassAndInterfaceSet() {
@@ -123,16 +179,28 @@ public class SymbolMaps {
 	}
 
 	public void addNodeType(Type type, int id) {
+		addNodeType(type, id, usedTypesMap);
+	}
+
+	public void addMethodType(Type type, int id) {
+		addNodeType(type, id, methodTypeMap);
+	}
+
+	public void addFuncExprTarget(Type type, int id) {
+		addNodeType(type, id, funcExprTargetMap);
+	}
+
+	private void addNodeType(Type type, int id, Map<Type, List<Integer>> typeMap) {
 		List<Integer> ids = null;
 
-		ids = TypeBuilder.getValueFromTypeMap(type, usedTypesMap);
+		ids = TypeBuilder.getValueFromTypeMap(type, typeMap);
 
 		if (ids == null) {
 			ids = new LinkedList<>();
-			usedTypesMap.put(type, ids);
+			typeMap.put(type, ids);
 		}
 
-		ids.add(new Integer(id));
+		ids.add(Integer.valueOf(id));
 	}
 
 	public Iterator<Entry<Integer, Symbol>> getIdMapIterator() {
@@ -191,7 +259,7 @@ public class SymbolMaps {
 	}
 
 	public void addAllParentToFullBuild(ClassSymbol sym) {
-		if (sym != null) {
+		if (sym != null && visitedParents.add(sym)) {
 			Type parent = sym.getSuperclass();
 
 			if (parent.tsym != null) {
@@ -218,7 +286,11 @@ public class SymbolMaps {
 	}
 
 	enum EdgeType {
-		METHOD, NEWCLASS, ID
+		METHOD, NEWCLASS, ID, MEMBER_REF
+	}
+
+	enum TypeKinds {
+		EXPR_TYPE, METHOD_TYPE, FUNC_EXPR_TARGET
 	}
 
 }

@@ -46,6 +46,8 @@ using namespace columbus;
 
 XERCES_CPP_NAMESPACE_USE
 
+
+static bool makerul = false;
 static string outTxt;
 static string outGraph;
 static string rulFile;
@@ -53,6 +55,23 @@ static string rulConfig = "Default";
 static string limFile;
 static bool exportRul;
 static string inputFile;
+static string messagesXML;
+static string findbugsXML;
+static string rulesXML;
+static string idsTxt;
+
+static bool ppMakeRul (const Option *o, char *argv[]) {
+  makerul = true;
+  messagesXML = argv[0];
+  findbugsXML = argv[1];
+  rulesXML = argv[2];
+  return true;
+}
+
+static bool ppIds(const Option *o, char *argv[]) {
+  idsTxt = argv[0];
+  return true;
+}
 
 static bool ppGraph (const Option *o, char *argv[]) {
   outGraph = argv[0];
@@ -89,6 +108,8 @@ static void ppFile(char *filename) {
 }
 
 const Option OPTIONS_OBJ [] = {
+  { false,  "-makerul",         3, "messages.xml findbugs.xml rules-findbugs.xml", 0,  OT_WS,  ppMakeRul,  NULL,   "Makes rul file from the two xml files of the findbugs and the configuration xml of the sonar." },
+  { false,  "-ids",             1, "fb_ids.txt",        0,  OT_WC,    ppIds,            NULL,   "File which contains previous rule ids."},
   { false,  "-graph",           1, "file",              1,  OT_WC,    ppGraph,          NULL,   "Save binary graph output."},
   { false,  "-out",             1, "file",              0,  OT_WC,    ppOut,            NULL,   "Specify the name of the output file. The list of rule violations will be dumped in it.\n"},
   CL_LIM
@@ -145,20 +166,20 @@ bool getAttr(const Attributes& attrs, const char* attrName, string& val) {
 
 int main(int argc, char* argv[]) {
 
-
   MAIN_BEGIN
     MainInit(argc, argv, "-");
 
-    if (inputFile.empty()) {
-      WriteMsg::write(CMSG_FINDBUGS2GRAPH_MISSING_ASG);
-      clError();
-    }
+    if (!makerul) {
+      if (inputFile.empty()) {
+        WriteMsg::write(CMSG_FINDBUGS2GRAPH_MISSING_ASG);
+        clError();
+      }
 
-    if (limFile.empty()) {
-      WriteMsg::write(CMSG_FINDBUGS2GRAPH_MISSING_LIM);
-      clError();
+      if (limFile.empty()) {
+        WriteMsg::write(CMSG_FINDBUGS2GRAPH_MISSING_LIM);
+        clError();
+      }
     }
-
     // init xerces
     try {
       XMLPlatformUtils::Initialize();
@@ -172,19 +193,25 @@ int main(int argc, char* argv[]) {
       throw Exception("initxerces()", exceptionMessage);
     }
 
-    //process findbugs output
-    if (!outTxt.empty()) {
-       ofstream txtOutputStream(outTxt.c_str(), std::ofstream::trunc);
+
+    //make rule
+    if (makerul) {
+      RuleConverter ruleConverter;
+      ruleConverter.convertRuleFile(messagesXML, findbugsXML, rulesXML, rulFile, rulConfig, idsTxt);
+    } else {
+
+      //process findbugs output
+      if (!outTxt.empty()) {
+         ofstream txtOutputStream(outTxt.c_str(), std::ofstream::trunc);
+      }
+      ResultConverter rc(limFile, rulFile, rulConfig, outTxt);
+
+      rc.buildtree(exportRul);
+      rc.collectData(inputFile);
+      rc.aggregateWarnings(true);
+
+      rc.saveGraph(outGraph);
     }
-    ResultConverter rc(limFile, rulFile, rulConfig, outTxt);
-
-    rc.buildtree(exportRul);
-    rc.collectData(inputFile);
-    rc.aggregateWarnings(true);
-
-    updateMemoryStat();
-
-    rc.saveGraph(outGraph);
 
     // terminate xerces
     XMLPlatformUtils::Terminate();

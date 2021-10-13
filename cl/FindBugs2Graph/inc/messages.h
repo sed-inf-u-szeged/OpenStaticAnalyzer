@@ -25,6 +25,8 @@
 #define CMSG_FB2GRAPH_ERROR_DURING_INIT                          WriteMsg::mlError, "Error: Initialization error: '%s'\n"
 #define CMSG_XERCES_ERROR                                        WriteMsg::mlError, "ERROR: Error during XERCES initialization! :\n Exception message is: \n %s \n"
 #define CMSG_FILE_PARSE_ERROR                                    WriteMsg::mlError, "ERROR: Exception at parse %s file: %s\n"
+#define CMSG_FINDBUGS2GRAPH_MISSING_PRIORITY                     WriteMsg::mlError, "Error: There is no valid priority for rule %s (%s)\n"
+#define CMSG_FINDBUGS2GRAPH_PANDOC_ERROR                         WriteMsg::mlError, "Error: pandoc returned with exit code %d\n"
 
 //MetricTree.cpp messages
 #define CMSG_FINDBUGS2GRAPH_USING_CONFIG                          WriteMsg::mlNormal,   "Using configuration: \"%s\"\n"
@@ -41,6 +43,5 @@
 
 #define CMSG_FINDBUGS2GRAPH_MISSING_LIM                           WriteMsg::mlError,    "Error: No LIM file is given!\n"
 #define CMSG_FINDBUGS2GRAPH_MISSING_ASG                           WriteMsg::mlError,    "Error: No java ASG file is given!\n"
-#define CMSG_FINDBUGS2GRAPH_RULE_EXCEPTION                        WriteMsg::mlWarning,  "Warning: %s\n"
 
 #endif

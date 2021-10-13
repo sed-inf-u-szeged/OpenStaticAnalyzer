@@ -337,7 +337,7 @@ namespace columbus { namespace python {
   void Python2LimVisitor::visit(const columbus::python::asg::statement::Raise& _node, bool callVirtualBase ) {
     VisitorAbstractNodes::visit(_node, callVirtualBase);
 
-    expression::Expression* expr = _node.getTypeExpression();
+    expression::Expression* expr = _node.getType();
     if(expr) {
       type::Type* type = expr->getType();
       if(type) {
@@ -427,6 +427,12 @@ namespace columbus { namespace python {
         }
       }
     }
+  }
+
+  void Python2LimVisitor::visit(const columbus::python::asg::statement::Nonlocal& _node, bool callVirtualBase) {
+    VisitorAbstractNodes::visit(_node, callVirtualBase);
+
+    incNos(_node);
   }
 
 /**************

@@ -58,7 +58,7 @@ namespace ColumbusWrappers {
     void examineLibs(LinkerArgs& linkerArgs, std::list<Argument>& libFiles) const;
 
     /**
-     * @brief Creates from input file list a string which contains input file names separated by '\n' and a string for command. Put ".csi" or ".acsi" extension to the end of files.
+     * @brief Creates from input file list a string which contains input file names separated by '\n' and a string for command. Put ".ast" or ".aast" extension to the end of files.
      * @param i_files              [in] Argument list for input files.
      * @param output_paramlist     [out] Argument list for CANLink commandline.
      * @return                         True if there is at least on file for linker.

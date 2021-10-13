@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var exportNamedDeclaration = factory.createExportNamedDeclarationWrapper(factory);
+        var exportNamedDeclaration = factory.createExportNamedDeclarationWrapper();
         globals.setPositionInfo(node, exportNamedDeclaration);
         return exportNamedDeclaration;
     } else {
@@ -34,29 +34,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.source != null) {
             var sourceWrapper = globals.getWrapperOfNode(node.source);
-            if (node.source.type !== "Literal") {
-                var sourceWrapperFunctionString = "setSource" + node.source.type;
-            } else {
-                var sourceWrapperFunctionString = "setSource" + globals.getLiteralType(node.source) + node.source.type;
-            }
             try {
-                exportNamedDeclarationWrapper[sourceWrapperFunctionString](sourceWrapper);
+                exportNamedDeclarationWrapper.setSource(sourceWrapper);
             } catch (e) {
-                console.error("EXPORTNAMEDDECLARATION - Function not exist: exportNamedDeclarationWrapper." + sourceWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("EXPORTNAMEDDECLARATION - Could not set source! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.declaration != null) {
             var declarationWrapper = globals.getWrapperOfNode(node.declaration);
-            if (node.declaration.type !== "Literal") {
-                var declarationWrapperFunctionString = "setDeclaration" + node.declaration.type;
-            } else {
-                var declarationWrapperFunctionString = "setDeclaration" + globals.getLiteralType(node.declaration) + node.declaration.type;
-            }
             try {
-                exportNamedDeclarationWrapper[declarationWrapperFunctionString](declarationWrapper);
+                exportNamedDeclarationWrapper.setDeclaration(declarationWrapper);
             } catch (e) {
-                console.error("EXPORTNAMEDDECLARATION - Function not exist: exportNamedDeclarationWrapper." + declarationWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("EXPORTNAMEDDECLARATION - Could not set declaration! Reason of the error: " + e + "\n");
             }
         }
 
@@ -64,15 +54,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.specifiers.length; i++) {
                 if (node.specifiers[i] != null) {
                     var specifiersWrapper = globals.getWrapperOfNode(node.specifiers[i]);
-                    if (node.specifiers[i].type !== "Literal") {
-                        var specifiersWrapperFunctionString = "addSpecifiers" + node.specifiers[i].type;
-                    } else {
-                        var specifiersWrapperFunctionString = "addSpecifiers" + globals.getLiteralType(node.specifiers[i]) + node.specifiers[i].type;
-                    }
                     try {
-                        exportNamedDeclarationWrapper[specifiersWrapperFunctionString](specifiersWrapper);
+                        exportNamedDeclarationWrapper.addSpecifiers(specifiersWrapper);
                     } catch (e) {
-                        console.error("EXPORTNAMEDDECLARATION - Function not exist: exportNamedDeclarationWrapper." + specifiersWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("EXPORTNAMEDDECLARATION - Could nout add specifier! Reason of the error: " + e + "\n");
                     }
                 }
             }

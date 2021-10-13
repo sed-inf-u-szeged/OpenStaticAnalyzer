@@ -37,6 +37,7 @@ namespace expression {
   * (missing)
   * 
   * Edges:
+  *   - Initializer (expression::InitializerExpressionSyntax, single) : (missing)
   *   - Type (expression::TypeSyntax, single) : (missing)
   */
   class StackAllocArrayCreationExpressionSyntax : public ExpressionSyntax {
@@ -103,6 +104,12 @@ namespace expression {
       // ---------- Edge getter function(s) ----------
 
       /**
+      * \brief Gives back the pointer of the node the Initializer edge points to.
+      * \return Returns the end point of the Initializer edge.
+      */
+      expression::InitializerExpressionSyntax* getInitializer() const;
+
+      /**
       * \brief Gives back the pointer of the node the Type edge points to.
       * \return Returns the end point of the Type edge.
       */
@@ -110,6 +117,23 @@ namespace expression {
 
 
       // ---------- Edge setter function(s) ----------
+
+      /**
+      * \brief Sets the Initializer edge.
+      * \param id [in] The new end point of the Initializer edge.
+      */
+      void setInitializer(NodeId id);
+
+      /**
+      * \brief Sets the Initializer edge.
+      * \param node [in] The new end point of the Initializer edge.
+      */
+      void setInitializer(InitializerExpressionSyntax *node);
+
+      /**
+      * \brief remove the Initializer edge.
+      */
+      void removeInitializer();
 
       /**
       * \brief Sets the Type edge.
@@ -131,6 +155,9 @@ namespace expression {
     protected:
 
       // ---------- Edges ----------
+
+      /** \internal \brief The id of the node the Initializer edge points to. */
+      NodeId m_Initializer;
 
       /** \internal \brief The id of the node the Type edge points to. */
       NodeId m_Type;

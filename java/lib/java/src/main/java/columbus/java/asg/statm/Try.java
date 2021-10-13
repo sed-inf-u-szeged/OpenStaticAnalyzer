@@ -21,7 +21,7 @@
 package columbus.java.asg.statm;
 
 import columbus.java.asg.*;
-import columbus.java.asg.struc.Variable;
+import columbus.java.asg.base.Base;
 
 /**
  * Interface Try, which represents the {@link columbus.java.asg.statm.Try Try} node.
@@ -29,7 +29,7 @@ import columbus.java.asg.struc.Variable;
  * @columbus.attr resourceLeftParenPosition (Range) : (missing)
  * @columbus.attr resourceRightParenPosition (Range) : (missing)
  * @columbus.attr finallyPosition (Range) : (missing)
- * @columbus.edge hasResources ({@link columbus.java.asg.struc.Variable Variable}, multiple) : (missing)
+ * @columbus.edge hasResources ({@link columbus.java.asg.base.Base Base}, multiple) : (missing)
  * @columbus.edge hasBlock ({@link columbus.java.asg.statm.Block Block}, single) : (missing)
  * @columbus.edge hasHandlers ({@link columbus.java.asg.statm.Handler Handler}, multiple) : (missing)
  * @columbus.edge hasFinallyBlock ({@link columbus.java.asg.statm.Block Block}, single) : (missing)
@@ -76,7 +76,7 @@ public interface Try extends Statement {
 	 * Gives back iterator for the {@link columbus.java.asg.statm.Try#edgeHasResources hasResources} edges.
 	 * @return Returns an iterator for the hasResources edges.
 	 */
-	public EdgeIterator<Variable> getResourcesIterator();
+	public EdgeIterator<Base> getResourcesIterator();
 
 	/**
 	 * Tells whether the node has {@link columbus.java.asg.statm.Try#edgeHasResources hasResources} edges or not.
@@ -100,7 +100,7 @@ public interface Try extends Statement {
 	 * Adds a new {@link columbus.java.asg.statm.Try#edgeHasResources hasResources} edge to the node.
 	 * @param node The end point of the new hasResources edge.
 	 */
-	public void addResources(Variable node);
+	public void addResources(Base node);
 
 	/**
 	 * Gives back the reference of the node the {@link columbus.java.asg.statm.Try#edgeHasBlock hasBlock} edge points to.

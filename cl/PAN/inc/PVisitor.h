@@ -22,13 +22,13 @@
 #define __ASTVISITOR_H_
 
 #ifdef PY3
-#include <python3.6/Python.h>
+#include <python3.8/Python.h>
 #else
 #include <python2.7/Python.h>
 #endif
 #include "PBuilder.h"
 #ifdef PY3
-#include <python3.6/Python-ast.h>
+#include <python3.8/Python-ast.h>
 #else
 #include <python2.7/Python-ast.h>
 #endif
@@ -36,14 +36,14 @@
 #include <stdlib.h>
 #include <iostream>
 #ifdef PY3
-#include <python3.6/node.h>
-#include <python3.6/token.h>
-#include <python3.6/grammar.h>
-#include <python3.6/parsetok.h>
-#include <python3.6/errcode.h>
-#include <python3.6/code.h>
-#include <python3.6/pyarena.h>
-#include <python3.6/asdl.h>
+#include <python3.8/node.h>
+#include <python3.8/token.h>
+#include <python3.8/grammar.h>
+#include <python3.8/parsetok.h>
+#include <python3.8/errcode.h>
+#include <python3.8/code.h>
+#include <python3.8/pyarena.h>
+#include <python3.8/asdl.h>
 #else
 #include <python2.7/node.h>
 #include <python2.7/token.h>
@@ -134,13 +134,27 @@ private:
 
   NodeId visitSlice(slice_ty parent);
 
-  NodeId createParamAndObject(std::string name, python::asg::ParameterKind kind, NodeId lastParam = 0);
+#ifdef PY3
+  void visitArg(std::vector<NodeId>& params, arg_ty parent, python::asg::ParameterKind kind);
+  void visitArg(std::vector<NodeId>& params, asdl_seq* parent, python::asg::ParameterKind kind);
+#endif
+
+  NodeId createParamAndObject(std::string name, python::asg::ParameterKind kind, NodeId annotation, NodeId lastParam = 0);
 
   int getLLOC(int first_line, int last_line, std::vector<int> logical_lines);
 
   NodeId getDocstring(asdl_seq* ch_list);
 
   void getOuterNodeInLine(NodeId id, int forcedLine = 0);
+
+  template<typename T>
+  NodeId visitFunctionDef(const T& stmt, bool isAsync);
+
+  template<typename T>
+  NodeId visitFor(const T& stmt, bool isAsync);
+
+  template<typename T>
+  NodeId visitWith(const T& stmt, bool isAsync);
 
 };
 }

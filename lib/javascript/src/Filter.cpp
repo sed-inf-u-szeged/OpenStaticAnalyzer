@@ -34,7 +34,7 @@ void Filter::initializeFilter() {
 
 bool Filter::getIsFiltered(NodeId id) const {
   if (container.size() <= id)
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
   return container[id] == Filtered;
 }
 
@@ -73,7 +73,7 @@ void Filter::setNotFilteredThisNode(NodeId id) {
 
 void Filter::setFilteredThisNodeOnly(NodeId id) {
   if (container.size() <= id)
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
   // do not let filter the root node
   if (id == factory.getRoot()->getId())
     return;
@@ -82,13 +82,13 @@ void Filter::setFilteredThisNodeOnly(NodeId id) {
 
 void Filter::setNotFilteredThisNodeOnly(NodeId id) {
   if (container.size() <= id)
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
   container[id] = NotFiltered;
 }
 
 Filter::FilterState Filter::getFilterState(NodeId id) const {
   if (container.size() <= id)
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
   return container[id];
 }
 

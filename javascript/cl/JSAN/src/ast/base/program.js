@@ -39,7 +39,7 @@ module.exports = function (node, parent, firstVisit) {
         var program = factory.createProgramWrapper(factory);
         program.setName(path.basename(actualJsFilePath, path.extname(actualJsFilePath)));
         globals.setPositionInfo(node, program);
-        factory.getRoot(factory).addProgramsProgram(program);
+        factory.getRoot(factory).addPrograms(program);
         program.setSourceType(conversions.convertSourceType(node.sourceType));
         return program;
     } else {
@@ -48,15 +48,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.body.length; i++) {
                 if (node.body[i] != null) {
                     var bodyWrapper = globals.getWrapperOfNode(node.body[i]);
-                    if (node.body[i].type !== "Literal") {
-                        var bodyWrapperFunctionString = "addBody" + node.body[i].type;
-                    } else {
-                        var bodyWrapperFunctionString = "addBody" + globals.getLiteralType(node.body[i]) + node.body[i].type;
-                    }
                     try {
-                        programWrapper[bodyWrapperFunctionString](bodyWrapper);
+                        programWrapper.addBody(bodyWrapper);
                     } catch (e) {
-                        console.error("PROGRAM - Function not exist: programWrapper." + bodyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("Cannot add body to program - " + e + "\n");
                     }
                 }
             }

@@ -18,8 +18,8 @@
  *  limitations under the Licence.
  */
 
-#ifndef _SMCSHARP_CONTR_TASK_H_
-#define _SMCSHARP_CONTR_TASK_H_
+#ifndef _OSACSHARP_CONTR_TASK_H_
+#define _OSACSHARP_CONTR_TASK_H_
 
 #include <vector>
 #include <string>
@@ -30,12 +30,30 @@
 
 DEFINETASK(SolutionAnalysisTask)
 DEFINETASK(ProfileTask)
+#ifndef __unix__
 DEFINETASK(FxCop2GraphTask)
+#endif
 DEFINETASK(Lim2metricsTask)
 DEFINETASK(DcfTask)
 DEFINETASK(GraphMergeTask)
 DEFINETASK(GraphDumpTask)
 DEFINETASK(CleanResultsTask)
 DEFINETASK(MetricHunterTask)
+DEFINETASK(Sonar2GraphTask)
+DEFINETASK(LIM2PatternsTask)
+DEFINETASK(Roslyn2GraphTask)
+
+class UserDefinedMetricsTask : public columbus::controller::Task
+{
+private:
+  std::list<std::string>& inactives;
+public:
+  const static std::string name;
+  UserDefinedMetricsTask(std::list<std::string>& inactives, const Properties& properties);
+  virtual ExecutionResult execute();
+  virtual const std::string& getName() const {
+    return name;
+  }
+};
 
 #endif

@@ -12,7 +12,6 @@ file (MAKE_DIRECTORY
       ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/Demo
       ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/${CMAKE_SYSTEM_NAME}Tools
       ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/${CMAKE_SYSTEM_NAME}Wrapper/WrapperBins/Tools
-      ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/${CMAKE_SYSTEM_NAME}Wrapper/WrapperBins/Tools/PMD
 )
 
 # These functions copy the SOURCE file into different directories of the OpenStaticAnalyzer package.
@@ -38,7 +37,7 @@ add_custom_generated_copy_dependency_to_root_dir (OpenStaticAnalyzerJava${EXE})
 
 add_custom_generated_copy_dependency_to_tools_dir (rules_java.csv OpenStaticAnalyzerJava)
 add_custom_generated_copy_dependency_to_tools_dir (DuplicatedCodeFinder_java${EXE} DuplicatedCodeFinder_java DuplicatedCodeFinder${EXE})
-add_custom_generated_copy_dependency_to_tools_dir (DCF.rul DuplicatedCodeFinder_java_copy_DCF.rul)
+add_custom_generated_copy_dependency_to_tools_dir (DCF.rul DCFRulCopy)
 add_custom_generated_copy_dependency_to_tools_dir (FindBugs2Graph${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (FindBugs.rul FindBugs2Graph_copy_FindBugs.rul)
 add_custom_generated_copy_dependency_to_tools_dir (GraphDump${EXE})
@@ -52,21 +51,16 @@ add_custom_generated_copy_dependency_to_tools_dir (MetricHunter_java${EXE} Metri
 add_custom_generated_copy_dependency_to_tools_dir (MetricHunter_JAVA.threshold MetricHunter_java_copy_MetricHunter_JAVA.threshold MetricHunter.threshold)
 add_custom_generated_copy_dependency_to_tools_dir (PMD2Graph${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (PMD.rul PMD2Graph)
+add_custom_generated_copy_dependency_to_tools_dir (UserDefinedMetrics${EXE})
+add_custom_generated_copy_dependency_to_tools_dir (Sonar2Graph${EXE})
+add_custom_generated_copy_dependency_to_tools_dir (LIM2Patterns_java${EXE} LIM2Patterns_java LIM2Patterns${EXE})
+add_custom_generated_copy_dependency_to_tools_dir (Patterns LIM2Patterns_java Patterns DIRECTORY)
+add_custom_generated_copy_dependency_to_tools_dir (Lib LIM2Patterns_java Lib DIRECTORY)
 
-add_custom_generated_copy_dependency_to_wrapper_dir (AntWrapper${EXE})
-add_custom_generated_copy_dependency_to_wrapper_dir (EnvironmentSetup${EXE})
-add_custom_generated_copy_dependency_to_wrapper_dir (JarWrapper${EXE})
-add_custom_generated_copy_dependency_to_wrapper_dir (JavacWrapper${EXE})
-add_custom_generated_copy_dependency_to_wrapper_dir (WrapperEnvironmentConfig${EXE})
-add_custom_generated_copy_dependency_to_wrapper_dir (exewrapper${EXE})
-
-add_custom_generated_copy_dependency_to_wrapper_tools_dir (JANLink${EXE})
 add_custom_generated_copy_dependency_to_wrapper_tools_dir (GenericConfig${EXE})
-
 add_custom_generated_copy_dependency_to_wrapper_tools_dir (JAN.jar JAN)
+add_custom_generated_copy_dependency_to_wrapper_tools_dir (jdk.compiler.jar JAN)
 add_custom_generated_copy_dependency_to_wrapper_tools_dir (toolchain.ini JAN)
-
-add_custom_generated_copy_dependency_to_wrapper_tools_dir (JColumbusAntWrapper.jar JColumbusAntWrapper)
 
 add_custom_generated_copy_dependency(
     ${OSA_TARGET_NAME}
@@ -85,11 +79,7 @@ add_custom_generated_copy_dependency(
 )
 
 set (DEMO_SCRIPTS_AND_FILES
-    analyze-ant${SCRIPT_EXT}
     analyze-dir${SCRIPT_EXT}
-    analyze-maven${SCRIPT_EXT}
-    build-ant${SCRIPT_EXT}
-    build-maven${SCRIPT_EXT}
     SoftFilter.txt
     fbfilelist.txt
 )
@@ -112,16 +102,10 @@ add_custom_extract_target (
 
 add_custom_extract_target (
     ${OSA_TARGET_NAME}
-    ${CMAKE_CURRENT_SOURCE_DIR}/demo/log4j-2.3-src.zip
-    ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/Demo
-    ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/Demo/apache-log4j-2.3-src
-)
-
-add_custom_extract_target (
-    ${OSA_TARGET_NAME}
-    ${COLUMBUS_3RDPARTY_SOURCE_DIR}/findbugs/findbugs-3.0.0.tar.gz
+    ${COLUMBUS_3RDPARTY_INSTALL_DIR}/spotbugs.zip
     ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/${CMAKE_SYSTEM_NAME}Wrapper/WrapperBins/Tools
-    ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/${CMAKE_SYSTEM_NAME}Wrapper/WrapperBins/Tools/findbugs-3.0.0
+    ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/${CMAKE_SYSTEM_NAME}Wrapper/WrapperBins/Tools/spotbugs/bin
+    spotbugs
 )
 
 add_custom_extract_target (
@@ -131,27 +115,5 @@ add_custom_extract_target (
     ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/${CMAKE_SYSTEM_NAME}Wrapper/WrapperBins/Tools/PMD/bin
     PMD
 )
-
-set (WRAPPER_TOOLS_DIR ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/${CMAKE_SYSTEM_NAME}Wrapper/WrapperBins/Tools)
-set (MAVEN_PLUGIN_DIR ${CMAKE_SOURCE_DIR}/java/columbus-toolchain-maven-plugin)
-
-add_custom_create_file_target (
-    ${OSA_TARGET_NAME}
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-4.0.jar
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.jar
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.pom
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.0.jar
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.0.pom
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.1.jar
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.1.pom
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-4.0-V2.pom
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-4.0-V3.pom
-    ${WRAPPER_TOOLS_DIR}/OpenStaticAnalyzer-maven-plugin-4.0-V31.pom
-    ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/installMavenWrapper${SCRIPT_EXT}
-    COMMAND mvn${MVN_POSTFIX} install -f ${MAVEN_PLUGIN_DIR}/ext/mojoExecutorModule/v3/pom.xml > ${CMAKE_CURRENT_BINARY_DIR}/v3install.log
-    COMMAND mvn${MVN_POSTFIX} install -f ${MAVEN_PLUGIN_DIR}/ext/mojoExecutorModule/v31/pom.xml > ${CMAKE_CURRENT_BINARY_DIR}/v31install.log
-    COMMAND ${CMAKE_COMMAND} -E env OSA_DIR=${OSA_PACKAGE_DIR}/${PACKAGE_LANG} mvn${MVN_POSTFIX} install -f ${MAVEN_PLUGIN_DIR}/pom.xml > ${CMAKE_CURRENT_BINARY_DIR}/plugininstall.log
-)
-
 
 copy_licenses()

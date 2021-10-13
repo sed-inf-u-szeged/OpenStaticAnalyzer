@@ -35,7 +35,8 @@ typedef boost::crc_32_type  Crc_type;
 namespace expression { 
   YieldExpression::YieldExpression(NodeId _id, Factory *_factory) :
     Expression(_id, _factory),
-    m_hasYieldExpression(0)
+    m_isFrom(false),
+    m_hasExpression(0)
   {
   }
 
@@ -43,7 +44,7 @@ namespace expression {
   }
 
   void YieldExpression::prepareDelete(bool tryOnVirtualParent){
-    removeYieldExpression();
+    removeExpression();
     expression::Expression::prepareDelete(false);
   }
 
@@ -51,10 +52,18 @@ namespace expression {
     return ndkYieldExpression;
   }
 
-  expression::ExpressionList* YieldExpression::getYieldExpression() const {
-    expression::ExpressionList *_node = NULL;
-    if (m_hasYieldExpression != 0)
-      _node = dynamic_cast<expression::ExpressionList*>(factory->getPointer(m_hasYieldExpression));
+  bool YieldExpression::getIsFrom() const {
+    return m_isFrom;
+  }
+
+  void YieldExpression::setIsFrom(bool _isFrom) {
+    m_isFrom = _isFrom;
+  }
+
+  expression::Expression* YieldExpression::getExpression() const {
+    expression::Expression *_node = NULL;
+    if (m_hasExpression != 0)
+      _node = dynamic_cast<expression::Expression*>(factory->getPointer(m_hasExpression));
     if ( (_node == NULL) || factory->getIsFiltered(_node))
       return NULL;
 
@@ -63,8 +72,8 @@ namespace expression {
 
   bool YieldExpression::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
-      case edkYieldExpression_HasYieldExpression:
-        setYieldExpression(edgeEnd);
+      case edkYieldExpression_HasExpression:
+        setExpression(edgeEnd);
         return true;
       default:
         break;
@@ -77,8 +86,8 @@ namespace expression {
 
   bool YieldExpression::removeEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
-      case edkYieldExpression_HasYieldExpression:
-        removeYieldExpression();
+      case edkYieldExpression_HasExpression:
+        removeExpression();
         return true;
       default:
         break;
@@ -89,50 +98,50 @@ namespace expression {
     return false;
   }
 
-  void YieldExpression::setYieldExpression(NodeId _id) {
-    expression::ExpressionList *_node = NULL;
+  void YieldExpression::setExpression(NodeId _id) {
+    expression::Expression *_node = NULL;
     if (_id) {
       if (!factory->getExist(_id))
         throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
-      _node = dynamic_cast<expression::ExpressionList*> (factory->getPointer(_id));
+      _node = dynamic_cast<expression::Expression*> (factory->getPointer(_id));
       if ( _node == NULL) {
         throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
       if (&(_node->getFactory()) != this->factory)
         throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
 
-      if (m_hasYieldExpression) {
-        removeParentEdge(m_hasYieldExpression);
+      if (m_hasExpression) {
+        removeParentEdge(m_hasExpression);
         if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_hasYieldExpression, m_id, edkYieldExpression_HasYieldExpression);
+          factory->reverseEdges->removeEdge(m_hasExpression, m_id, edkYieldExpression_HasExpression);
       }
-      m_hasYieldExpression = _node->getId();
-      if (m_hasYieldExpression != 0)
-        setParentEdge(factory->getPointer(m_hasYieldExpression), edkYieldExpression_HasYieldExpression);
+      m_hasExpression = _node->getId();
+      if (m_hasExpression != 0)
+        setParentEdge(factory->getPointer(m_hasExpression), edkYieldExpression_HasExpression);
       if (factory->getExistsReverseEdges())
-        factory->reverseEdges->insertEdge(m_hasYieldExpression, this->getId(), edkYieldExpression_HasYieldExpression);
+        factory->reverseEdges->insertEdge(m_hasExpression, this->getId(), edkYieldExpression_HasExpression);
     } else {
-      if (m_hasYieldExpression) {
+      if (m_hasExpression) {
         throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
       }
     }
   }
 
-  void YieldExpression::setYieldExpression(expression::ExpressionList *_node) {
+  void YieldExpression::setExpression(expression::Expression *_node) {
     if (_node == NULL)
       throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
 
-    setYieldExpression(_node->getId());
+    setExpression(_node->getId());
   }
 
-  void YieldExpression::removeYieldExpression() {
-      if (m_hasYieldExpression) {
-        removeParentEdge(m_hasYieldExpression);
+  void YieldExpression::removeExpression() {
+      if (m_hasExpression) {
+        removeParentEdge(m_hasExpression);
         if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_hasYieldExpression, m_id, edkYieldExpression_HasYieldExpression);
+          factory->reverseEdges->removeEdge(m_hasExpression, m_id, edkYieldExpression_HasExpression);
       }
-      m_hasYieldExpression = 0;
+      m_hasExpression = 0;
   }
 
   void YieldExpression::accept(Visitor &visitor) const {
@@ -145,7 +154,10 @@ namespace expression {
 
   double YieldExpression::getSimilarity(const base::Base& base){
     if(base.getNodeKind() == getNodeKind()) {
-      return 1.0;
+      const YieldExpression& node = dynamic_cast<const YieldExpression&>(base);
+      double matchAttrs = 0;
+      if(node.getIsFrom() == getIsFrom()) ++matchAttrs;
+      return matchAttrs / (1 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
     }
@@ -175,16 +187,26 @@ namespace expression {
   void YieldExpression::save(io::BinaryIO &binIo,bool withVirtualBase  /*= true*/) const {
     Expression::save(binIo,false);
 
-    binIo.writeUInt4(m_hasYieldExpression);
+    unsigned char boolValues = 0;
+    boolValues <<= 1;
+    if (m_isFrom) 
+      boolValues |= 1;
+    binIo.writeUByte1(boolValues);
+
+    binIo.writeUInt4(m_hasExpression);
 
   }
 
   void YieldExpression::load(io::BinaryIO &binIo, bool withVirtualBase /*= true*/) {
     Expression::load(binIo,false);
 
-    m_hasYieldExpression =  binIo.readUInt4();
-    if (m_hasYieldExpression != 0)
-      setParentEdge(factory->getPointer(m_hasYieldExpression),edkYieldExpression_HasYieldExpression);
+    unsigned char boolValues = binIo.readUByte1();
+    m_isFrom = boolValues & 1;
+    boolValues >>= 1;
+
+    m_hasExpression =  binIo.readUInt4();
+    if (m_hasExpression != 0)
+      setParentEdge(factory->getPointer(m_hasExpression),edkYieldExpression_HasExpression);
 
   }
 

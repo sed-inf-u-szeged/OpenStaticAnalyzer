@@ -25,15 +25,38 @@
 * \file JAVASCRIPT.h
 * \brief Header can be used for precompiled header.
 */
-
+/*********** Options *************************
+ *  SchemaGeneratorc9e9f4bd0b
+ *  IndentInNamespace = 1
+ *  IndentInClass = 1
+ *  IndentUnderPubProtPri = 1
+ *  UseShortRange = false
+ *  ACommonGetIsForLeaf = true
+ *  AlgPreorderSafeMode = true
+ *  GenerateInOutForComment = true
+ *  GenerateFilter = true
+ *  GenerateReverseEdges = true
+ *  GenerateAsgStat = true
+ *  GenerateSpecFilterVisitor = false
+ *  GenerateSpecXml = false
+ *  GenerateDOT = false
+ *  GenerateGraphml = true
+ *  GenerateJSON = false
+ *  GenerateSerialize = false
+ *  GenerateParentEdge = true
+ *  FactoryModes = 
+ *  APIVersion = 0.2.3
+ *  BinaryVersion = 0.2.3
+ *  CSIHeaderText = JavaScriptLanguage
+ *********************************************/
 #include <list>
 #include <cstring>
 #include <map>
 #include <set>
 #include <string>
 #include <boost/crc.hpp>
-
-#include "csi/inc/HeaderData.h" 
+
+#include "csi/inc/HeaderData.h" 
 #include "csi/inc/PropertyData.h" 
 #include "Forwards.h"
 
@@ -46,7 +69,7 @@
 #include "Constant.h"
 #include "Types.h"
 #include "Range.h"
-#include "JavaScriptException.h"
+#include "JavascriptException.h"
 #include "ListIterator.h"
 #include "Common.h"
 #include "ReverseEdges.h"

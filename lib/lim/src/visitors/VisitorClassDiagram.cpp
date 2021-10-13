@@ -243,7 +243,7 @@ namespace columbus { namespace lim { namespace asg {
         aiter = ((logical::Method&)next).getIsContainedInListIteratorAssocBegin();
         if(aiter != node.getIsContainedInListIteratorAssocEnd())
         {
-          to = aiter->getId();
+          to = aiter->getId(); //TODO ell
         }else
         {
           to = 0;
@@ -254,7 +254,7 @@ namespace columbus { namespace lim { namespace asg {
         aiter = ((logical::Attribute&)next).getIsContainedInListIteratorAssocBegin();
         if(aiter != ((logical::Attribute&)next).getIsContainedInListIteratorAssocEnd())
         {
-          to = aiter->getId();
+          to = aiter->getId(); //TODO ell
         }else
         {
           to = 0;

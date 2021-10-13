@@ -32,16 +32,46 @@ using namespace std;
 
 namespace columbus { namespace graphsupport {
   
-  void removeINVALIDMetric(graph::Graph& graph, graph::Node& node, const string& name) {
-    Attribute::AttributeIterator metricIt = node.findAttribute(Attribute::atString, name, graphconstants::ATTRVALUE_INVALID);
-    AttributeString* invalidAttribute = NULL;
-    if(metricIt.hasNext()) {
-      // we found the INVALID attribute
-      invalidAttribute = dynamic_cast<AttributeString*>(&metricIt.next());
+  bool WarningComparator::operator() (const Warning& a, const Warning& b) const
+  {
+    if (a.position.line != b.position.line)
+      return a.position.line < b.position.line;
+
+    if (a.position.col != b.position.col)
+      return a.position.col < b.position.col;
+
+    if (a.position.endline != b.position.endline)
+      return a.position.endline < b.position.endline;
+
+    if (a.position.endcol != b.position.endcol)
+      return a.position.endcol < b.position.endcol;
+
+    if (a.position.path != b.position.path)
+      return a.position.path < b.position.path;
+
+    if (a.text != b.text)
+      return a.text < b.text;
+
+    return false;
+  }
+
+  void removeINVALIDMetric(graph::Graph& graph, graph::Node& node, const string& name)
+  {
+    Attribute::AttributeIterator metricIt = node.findAttribute(Attribute::atString, name, graphconstants::CONTEXT_METRIC);
+    Attribute* invalidAttribute = NULL;
+    while (metricIt.hasNext())
+    {
+      auto& attr = metricIt.next();
+      if (attr.getStringValue() == graphconstants::ATTRVALUE_INVALID)
+      {
+        // we found the INVALID attribute
+        invalidAttribute = &attr;
+        break;
+      }
     }
-    if(invalidAttribute != NULL) {
+
+    if(invalidAttribute != NULL)
       node.deleteAttribute(*invalidAttribute);
-    }
   }
 
 
@@ -81,53 +111,63 @@ namespace columbus { namespace graphsupport {
     addWarning(graph, node, name, path, line, col, endLine, endCol, text);
   }
 
-  static bool addWarningOnce(Graph& graph,Node& node, const string& name, const string& path, int line, int col, int endLine, int endCol, const string& text, const AttributeComposite* extraInfo) {
-    Attribute::AttributeIterator it = node.findAttribute(Attribute::atComposite, name, graphconstants::CONTEXT_WARNING);
-    while(it.hasNext()) {
-      int sameValues = 0;
-      AttributeComposite& compAttr = static_cast<AttributeComposite&>(it.next());
-      Attribute::AttributeIterator compIt = compAttr.getAttributes();
-      while(compIt.hasNext()) {
-        Attribute& attr = compIt.next();
-        const string& attrName = attr.getName();
-        if(attrName == graphconstants::ATTR_PATH) {
-          if(path == static_cast<AttributeString&>(attr).getValue()) sameValues++;
-          else break;
-        } else if(attrName == graphconstants::ATTR_WARNINGTEXT) {
-          if(text == static_cast<AttributeString&>(attr).getValue()) sameValues++;
-          else break;
-        } else if(attrName == graphconstants::ATTR_LINE) {
-          if(line == static_cast<AttributeInt&>(attr).getValue()) sameValues++;
-          else break;
-        } else if(attrName == graphconstants::ATTR_COLUMN) {
-          if(col == static_cast<AttributeInt&>(attr).getValue()) sameValues++;
-          else break;
-        } else if(attrName == graphconstants::ATTR_ENDLINE) {
-          if(endLine == static_cast<AttributeInt&>(attr).getValue()) sameValues++;
-          else break;
-        } else if(attrName == graphconstants::ATTR_ENDCOLUMN) {
-          if(endCol == static_cast<AttributeInt&>(attr).getValue()) sameValues++;
-          else break;
-        }
-      }
-      if(sameValues == 6)
+  static bool addWarningOnce(Graph& graph,Node& node, const string& name, const string& path, int line, int col, int endLine, int endCol, const string& text, const AttributeComposite* extraInfo, WarningCache* warningCache)
+  {
+    if (warningCache)  // use the cache to find out if the warning was already added earlier
+    {
+      auto it = warningCache->insert({ { path, line, col, endLine, endCol } , text});
+      if (!it.second)
         return false;
+    }
+    else   // use simple linear search
+    {
+      Attribute::AttributeIterator it = node.findAttribute(Attribute::atComposite, name, graphconstants::CONTEXT_WARNING);
+      while(it.hasNext()) {
+        int sameValues = 0;
+        AttributeComposite& compAttr = static_cast<AttributeComposite&>(it.next());
+        Attribute::AttributeIterator compIt = compAttr.getAttributes();
+        while(compIt.hasNext()) {
+          Attribute& attr = compIt.next();
+          const string& attrName = attr.getName();
+          if(attrName == graphconstants::ATTR_PATH) {
+            if(path == static_cast<AttributeString&>(attr).getValue()) sameValues++;
+            else break;
+          } else if(attrName == graphconstants::ATTR_WARNINGTEXT) {
+            if(text == static_cast<AttributeString&>(attr).getValue()) sameValues++;
+            else break;
+          } else if(attrName == graphconstants::ATTR_LINE) {
+            if(line == static_cast<AttributeInt&>(attr).getValue()) sameValues++;
+            else break;
+          } else if(attrName == graphconstants::ATTR_COLUMN) {
+            if(col == static_cast<AttributeInt&>(attr).getValue()) sameValues++;
+            else break;
+          } else if(attrName == graphconstants::ATTR_ENDLINE) {
+            if(endLine == static_cast<AttributeInt&>(attr).getValue()) sameValues++;
+            else break;
+          } else if(attrName == graphconstants::ATTR_ENDCOLUMN) {
+            if(endCol == static_cast<AttributeInt&>(attr).getValue()) sameValues++;
+            else break;
+          }
+        }
+        if(sameValues == 6)
+          return false;
+      }
     }
     addWarning(graph, node, name, path, line, col, endLine, endCol, text, extraInfo);
     return true;
   }
   
-  bool addWarningOnce(Graph& graph,Node& node, const string& name, const string& path, int line, int col, int endLine, int endCol, const string& text ) {
-    return addWarningOnce(graph, node, name, path, line, col, endLine, endCol, text, NULL);
+  bool addWarningOnce(Graph& graph,Node& node, const string& name, const string& path, int line, int col, int endLine, int endCol, const string& text, WarningCache* warningCache ) {
+    return addWarningOnce(graph, node, name, path, line, col, endLine, endCol, text, nullptr, warningCache);
   }
 
-  bool addWarningOnce(Graph& graph, const string& UID, const string& name, const string& path, int line, int col, int endLine, int endCol, const string& text ) {
+  bool addWarningOnce(Graph& graph, const string& UID, const string& name, const string& path, int line, int col, int endLine, int endCol, const string& text, WarningCache* warningCache ) {
     Node node = graph.findNode(UID);
-    return addWarningOnce(graph, node, name, path, line, col, endLine, endCol, text);
+    return addWarningOnce(graph, node, name, path, line, col, endLine, endCol, text, nullptr, warningCache);
   }
 
-  bool addWarningOnce(Graph& graph,Node& node, const string& name, const string& path, int line, int col, int endLine, int endCol, const string& text, const AttributeComposite& extraInfo) {
-    return addWarningOnce(graph, node, name, path, line, col, endLine, endCol, text, &extraInfo);
+  bool addWarningOnce(Graph& graph,Node& node, const string& name, const string& path, int line, int col, int endLine, int endCol, const string& text, const AttributeComposite& extraInfo, WarningCache* warningCache) {
+    return addWarningOnce(graph, node, name, path, line, col, endLine, endCol, text, &extraInfo, warningCache);
   }
 
 
@@ -377,6 +417,20 @@ namespace columbus { namespace graphsupport {
     }
     return !positionAttributes.empty();
   }
+
+  std::string getRealizationLevel(const graph::Node& node)
+  {
+    Attribute::AttributeIterator nodePositionAttributes = node.findAttribute(Attribute::atComposite, graphconstants::ATTR_POSITION, graphconstants::CONTEXT_ATTRIBUTE);
+    while(nodePositionAttributes.hasNext())
+    {
+      AttributeComposite& nodePositionAttribute = static_cast<AttributeComposite&>(nodePositionAttributes.next());
+      auto attributeIt = nodePositionAttribute.findAttributeByName(graphconstants::ATTR_REALIZATIONLEVEL);
+      if (attributeIt.hasNext())
+        return attributeIt.next().getStringValue();
+    }
+    return "";
+  }
+
 
   bool getPositionAttribute(const graph::Node& node, string& path, int& line, int& col, int& endLine, int& endCol, bool& realizationLevel, bool& definition) {
     line = 0;

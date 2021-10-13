@@ -61,7 +61,8 @@ namespace columbus { namespace lim { namespace metrics {
       case clkEnum:         name = "NEN"; publicName = "NPEN"; break;
       case clkStruct:       name = "NST"; publicName = "NPST"; break;
       case clkUnion:        name = "NUN"; publicName = "NPUN"; break;
-      default: break;
+      default:
+          break;
     }
 
     if ( name.empty() ) return;

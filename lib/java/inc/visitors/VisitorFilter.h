@@ -71,6 +71,12 @@ namespace columbus { namespace java { namespace asg {
       * \brief Deselects the actual node (and only this).
       * \param node [in] The node which is visited.
       */
+      virtual void visitEnd(const expr::AnnotatedTypeExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
       virtual void visitEnd(const expr::ArrayAccess& node , bool callVirtualBase = true);
 
       /**
@@ -173,6 +179,12 @@ namespace columbus { namespace java { namespace asg {
       * \brief Deselects the actual node (and only this).
       * \param node [in] The node which is visited.
       */
+      virtual void visitEnd(const expr::Lambda& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
       virtual void visitEnd(const expr::LongLiteral& node , bool callVirtualBase = true);
 
       /**
@@ -180,6 +192,12 @@ namespace columbus { namespace java { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expr::MarkerAnnotation& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expr::MemberReference& node , bool callVirtualBase = true);
 
       /**
       * \brief Deselects the actual node (and only this).
@@ -287,6 +305,12 @@ namespace columbus { namespace java { namespace asg {
       * \brief Deselects the actual node (and only this).
       * \param node [in] The node which is visited.
       */
+      virtual void visitEnd(const expr::TypeIntersectionExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
       virtual void visitEnd(const expr::TypeUnionExpression& node , bool callVirtualBase = true);
 
       /**
@@ -294,6 +318,36 @@ namespace columbus { namespace java { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expr::WildcardExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const module::Exports& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const module::Opens& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const module::Provides& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const module::Requires& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const module::Uses& node , bool callVirtualBase = true);
 
       /**
       * \brief Deselects the actual node (and only this).
@@ -503,6 +557,18 @@ namespace columbus { namespace java { namespace asg {
       * \brief Deselects the actual node (and only this).
       * \param node [in] The node which is visited.
       */
+      virtual void visitEnd(const struc::Module& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const struc::ModuleDeclaration& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
       virtual void visitEnd(const struc::Package& node , bool callVirtualBase = true);
 
       /**
@@ -593,6 +659,12 @@ namespace columbus { namespace java { namespace asg {
       * \brief Deselects the actual node (and only this).
       * \param node [in] The node which is visited.
       */
+      virtual void visitEnd(const type::IntersectionType& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
       virtual void visitEnd(const type::LongType& node , bool callVirtualBase = true);
 
       /**
@@ -606,6 +678,12 @@ namespace columbus { namespace java { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const type::MethodType& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const type::ModuleType& node , bool callVirtualBase = true);
 
       /**
       * \brief Deselects the actual node (and only this).

@@ -55,6 +55,9 @@
 
 
 //Stat
+#define CMSG_LOG_STACK_MISMATCH_ERROR              common::WriteMsg::mlError,  "Error:The top of the performance log stack (%s) is not the one that is expected (%s)!\n"
+#define CMSG_LOG_SECTION_LIMIT_IS_REACHED_WARNING  common::WriteMsg::mlWarning, "Warning:The section limit (%lu) is reached!\n"
+
 #define CMSG_EX_PROC_READ_ERROR          "Faild to read the stats from the proc file system."
 #define CMSG_EX_STAT_WRITE_ERROR         "Faild to open stat file for writing."
 #endif

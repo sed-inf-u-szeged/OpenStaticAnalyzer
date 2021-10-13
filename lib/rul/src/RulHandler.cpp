@@ -2033,6 +2033,19 @@ string RulHandler::getRuleIdByOriginalId( const string& originalId ) const
   return it->second;
 }
 
+string RulHandler::getOriginalIdByRuleId( const string& ruleId ) const
+{
+  map <string,string >::const_iterator it;
+  for(it =  rulData.originalIdRuleId.begin(); it != rulData.originalIdRuleId.end(); ++it){
+    if(it->second.compare(ruleId) == 0)
+      break;
+  }
+  if (it == rulData.originalIdRuleId.end()){
+     throw RulHandlerException("RulHandler::getOriginalIdByRuleId",CMSG_EX_NONEXIST_OR_ALREADY_EXIST(ruleId,ruleId));
+  }
+  return it->first;
+}
+
 void RulHandler::setOriginalId( const string& ruleId,const string& originalId )
 {
     setConfSpecData(ruleId, &RulConfiguration::originalId,originalId );

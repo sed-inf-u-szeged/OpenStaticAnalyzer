@@ -36,7 +36,7 @@ static const char* unhandled_preproc_arguments[] = {
   "-MG",                            // -MG
   "-MP",                            // -MP
   "-MD",                            // -MD
-  "-MMD",                           // -MMD
+  "-MMD"                            // -MMD
 };
 
 // Unhandled preprocessor argument with any parameter
@@ -44,7 +44,7 @@ static const char* unhandled_preproc_arguments_with_parameter[] = {
   "-d",                             // -d??, -dD  -dI  -dM  -dN
   "-MF",                            // -MF file
   "-MT",                            // -MT target
-  "-MQ",                            // -MQ target
+  "-MQ"                             // -MQ target
 };
 
 
@@ -109,7 +109,7 @@ static const char* unhandled_compiler_arguments[] = {
   "-fuse-cxa-atexit",               // -fuse-cxa-atexit
   "-fvisibility-inlines-hidden",    // -fvisibility-inlines-hidden
   "-pipe",                          // -pipe
-  "-fno-enforce-eh-specs",          // -fno-enforce-eh-specs
+  "-fno-enforce-eh-specs"           // -fno-enforce-eh-specs
 };
 
 // Unhandled compiler arguments with any parameter
@@ -117,7 +117,7 @@ static const char* unhandled_compiler_arguments_with_parameter[] = {
   "-B",                             // -Bprefix
   "-specs",                         // -specs=file
   "-fmessage-length",               // -fmessage-length=n
-  "-fvisibility",                   // -fvisibility=visibility
+  "-fvisibility"                    // -fvisibility=visibility
 };
 
 
@@ -184,40 +184,6 @@ ColumbusWrappers::ParErrorCode ColumbusWrappers::GccWrapperSup::examinePreprocAr
   } else if (common::isPrefix(*args_it, "-U", remain)) {
 
     return insertParameterOfArgumentIntoArgumentList(args_it, args_end, actArg, preprocArgs.prep_undefs, remain, true);
-
-  } else if (*args_it == "-undef") {
-
-    insertArgumentIntoArgumentList(actArg, preprocArgs.prep_args, string("-u"));
-    return EC_FOUND;
-
-  } else if (*args_it == "-fno-exceptions") {
-
-    insertArgumentIntoArgumentList(actArg, preprocArgs.prep_args, string("-edg:--no_exceptions"));
-    return EC_FOUND;
-
-  } else if (*args_it == "-fexceptions") {
-
-    insertArgumentIntoArgumentList(actArg, preprocArgs.prep_args, string("-edg:--exceptions"));
-    return EC_FOUND;
-
-  } else if (common::isPrefix(*args_it, "-ftemplate-depth-", remain)) {
-
-    return insertParameterOfArgumentIntoArgumentList(args_it, args_end, actArg, preprocArgs.prep_args, string("-edg:--pending_instantiations=" + remain), false);
-
-  } else if (*args_it == "-C") {
-
-    insertArgumentIntoArgumentList(actArg, preprocArgs.prep_args, string("-edg:--comments"));
-    return EC_FOUND;
-
-  } else if (*args_it == "-nostdinc" || *args_it == "-nostdinc++") {
-
-    insertArgumentIntoArgumentList(actArg, preprocArgs.prep_args, string("-nostdinc"));
-    return EC_FOUND;
-
-  } else if (*args_it == "-trigraphs") {
-
-    insertArgumentIntoArgumentList(actArg, preprocArgs.prep_args, string("-edg:--trigraphs"));
-    return EC_FOUND;
 
   } else {
 
@@ -370,7 +336,7 @@ bool ColumbusWrappers::GccWrapperSup::compilerArguments(list<string> args, Warni
       continue;
     }
 
-     ++actArg.position;
+    ++actArg.position;
 
     if (*args_it == "-E") {
 
@@ -431,30 +397,8 @@ bool ColumbusWrappers::GccWrapperSup::compilerArguments(list<string> args, Warni
         ++actArg.position;
         insertArgumentIntoArgumentList(actArg, preprocArgs.prep_defs, string("__SSSE3__=1"));
       }
-
-    } else if (*args_it == "-ansi") {
-
-      insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-edg:--c89"));
-
     } else if (common::isPrefix(*args_it, "-std=", remain)) {
-
-      if (remain == "c90" || remain == "c89" || remain == "iso9899:1990" || remain == "gnu90" || remain == "gnu89") {
-        insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-std:c89"));
-      }
-      if (remain == "c99" || remain == "c9x" || remain == "iso9899:1999" || remain == "iso9899:199x" || remain == "gnu99" || remain == "gnu9x") {
-        insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-std:c99"));
-      }
-      if (remain == "c++99" || remain == "gnu++98") {
-        insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-std:c++03"));
-      }
-      if (remain == "c11" || remain == "c1x" || remain == "iso9899:2011" || remain == "gnu11" || remain == "gnu1x" || remain == "gnu++11" || remain == "gnu++0x" || remain == "c++11" || remain == "c++0x") {
-        insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-std:c++11"));
-      }
-
-    } else if (*args_it == "-pthreads" || *args_it == "-pthread") {
-
-      insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, string("-edg:--thread_local_storage"));
-
+      insertArgumentIntoArgumentList(actArg, compilerArgs.comp_args, *args_it);
     } else if ((*args_it)[0] != '-') {
 
       actArg.name = *args_it;

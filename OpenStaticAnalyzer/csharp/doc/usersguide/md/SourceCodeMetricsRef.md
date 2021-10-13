@@ -20,81 +20,81 @@ In the case of the documentation metrics all the comments found immediately befo
 
 The following table summarizes the metrics, their abbreviations and their correspondence to different source code element kinds:
 
-  Category               Metric name                              Abbrev.   Method   Class, Struct   Interface   Enum   Namespace   File   Comp. 
-  ---------------------- ---------------------------------------- -------- -------- --------------- ----------- ------ ----------- ------ -------
-  Cohesion metrics       Lack of Cohesion in Methods 5            LCOM5             X                                                            
-  Complexity metrics     McCabe's Cyclomatic Complexity           McCC     X                                                       X             
-                         Nesting Level                            NL       X        X                                                            
-                         Nesting Level Else-If                    NLE      X        X                                                            
-                         Weighted Methods per Class               WMC               X                                                            
-  Coupling metrics       Coupling Between Object classes          CBO               X               X                                            
-                         Coupling Between Object classes Inverse  CBOI              X               X                                            
-                         Number of Incoming Invocations           NII      X        X               X                                            
-                         Number of Outgoing Invocations           NOI      X        X                                                            
-                         Response set For Class                   RFC               X                                                            
-  Documentation metrics  API Documentation                        AD                X               X           X      X                         
-                         Comment Density                          CD       X        X                                  X                         
-                         Comment Lines of Code                    CLOC     X        X               X                  X           X             
-                         Documentation Lines of Code              DLOC     X        X               X           X                                
-                         Public Documented API                    PDA               X               X                  X           X             
-                         Public Undocumented API                  PUA               X               X                  X           X             
-                         Total API Documentation                  TAD                                                  X                  X      
-                         Total Comment Density                    TCD      X        X                                  X                  X      
-                         Total Comment Lines of Code              TCLOC    X        X               X                  X                  X      
-                         Total Public Documented API              TPDA                                                 X                  X      
-                         Total Public Undocumented API            TPUA                                                 X                  X      
-  Inheritance metrics    Depth of Inheritance Tree                DIT               X               X                                            
-                         Number of Ancestors                      NOA               X               X                                            
-                         Number of Children                       NOC               X               X                                            
-                         Number of Descendants                    NOD               X               X                                            
-                         Number of Parents                        NOP               X               X                                            
-  Size metrics           Lines of Code                            LOC      X        X               X           X      X           X             
-                         Logical Lines of Code                    LLOC     X        X               X           X      X           X             
-                         Number of Attributes                     NA                X               X           X      X                         
-                         Number of Classes                        NCL                                                  X                         
-                         Number of Enums                          NEN                                                  X                         
-                         Number of Getters                        NG                X               X                  X                         
-                         Number of Interfaces                     NIN                                                  X                         
-                         Number of Local Attributes               NLA               X               X                                            
-                         Number of Local Getters                  NLG               X               X                                            
-                         Number of Local Methods                  NLM               X               X                                            
-                         Number of Local Public Attributes        NLPA              X               X                                            
-                         Number of Local Public Methods           NLPM              X               X                                            
-                         Number of Local Setters                  NLS               X               X                                            
-                         Number of Methods                        NM                X               X                  X                         
-                         Number of Packages                       NPKG                                                 X                         
-                         Number of Parameters                     NUMPAR   X                                                                     
-                         Number of Public Attributes              NPA               X               X                  X                         
-                         Number of Public Methods                 NPM               X               X                  X                         
-                         Number of Setters                        NS                X               X                  X                         
-                         Number of Statements                     NOS      X        X                                                            
-                         Number of Structures                     NST                                                  X                         
-                         Total Lines of Code                      TLOC     X        X               X           X      X                  X      
-                         Total Logical Lines of Code              TLLOC    X        X               X           X      X                  X      
-                         Total Number of Attributes               TNA               X               X                  X                  X      
-                         Total Number of Classes                  TNCL                                                 X                  X      
-                         Total Number of Directories              TNDI                                                 X                  X      
-                         Total Number of Enums                    TNEN                                                 X                  X      
-                         Total Number of Files                    TNFI                                                 X                  X      
-                         Total Number of Getters                  TNG               X               X                  X                  X      
-                         Total Number of Interfaces               TNIN                                                 X                  X      
-                         Total Number of Local Attributes         TNLA              X               X                                     X      
-                         Total Number of Local Getters            TNLG              X               X                                     X      
-                         Total Number of Local Methods            TNLM              X               X                                     X      
-                         Total Number of Local Public Attributes  TNLPA             X               X                                     X      
-                         Total Number of Local Public Methods     TNLPM             X               X                                     X      
-                         Total Number of Local Setters            TNLS              X               X                                     X      
-                         Total Number of Methods                  TNM               X               X                  X                  X      
-                         Total Number of Packages                 TNPKG                                                X                  X      
-                         Total Number of Public Attributes        TNPA              X               X                  X                  X      
-                         Total Number of Public Classes           TNPCL                                                X                  X      
-                         Total Number of Public Enums             TNPEN                                                X                  X      
-                         Total Number of Public Interfaces        TNPIN                                                X                  X      
-                         Total Number of Public Methods           TNPM              X               X                  X                  X      
-                         Total Number of Public Structures        TNPST                                                X                  X      
-                         Total Number of Setters                  TNS               X               X                  X                  X      
-                         Total Number of Statements               TNOS     X        X                                  X                  X      
-                         Total Number of Structures               TNST                                                 X                  X      
+  Category               Metric name                              Abbreviation   Class   Component   Delegate   Enum   File   Interface   Method   Namespace   Structure
+  ---------------------- ---------------------------------------- ------------- ------- ----------- ---------- ------ ------ ----------- -------- ----------- -----------
+  Cohesion metrics       Lack of Cohesion in Methods 5            LCOM5         X                                                                             X
+  Complexity metrics     McCabe's Cyclomatic Complexity           McCC                                                X                  X
+                         Nesting Level                            NL            X                                                        X                    X
+                         Nesting Level Else-If                    NLE           X                                                        X                    X
+                         Weighted Methods per Class               WMC           X                                                                             X
+  Coupling metrics       Coupling Between Object classes          CBO           X                                            X                                X
+                         Coupling Between Object classes Inverse  CBOI          X                                            X                                X
+                         Number of Incoming Invocations           NII           X                                            X           X                    X
+                         Number of Outgoing Invocations           NOI           X                                                        X                    X
+                         Response set For Class                   RFC           X                                                                             X
+  Documentation metrics  API Documentation                        AD            X                              X             X                    X           X
+                         Comment Density                          CD            X                   X                                    X        X           X
+                         Comment Lines of Code                    CLOC          X                   X                 X      X           X        X           X
+                         Documentation Lines of Code              DLOC          X                   X          X             X           X                    X
+                         Public Documented API                    PDA           X                                     X      X                    X           X
+                         Public Undocumented API                  PUA           X                                     X      X                    X           X
+                         Total API Documentation                  TAD                   X                                                         X
+                         Total Comment Density                    TCD           X       X           X                                    X        X           X
+                         Total Comment Lines of Code              TCLOC         X       X           X                        X           X        X           X
+                         Total Public Documented API              TPDA                  X                                                         X
+                         Total Public Undocumented API            TPUA                  X                                                         X
+  Inheritance metrics    Depth of Inheritance Tree                DIT           X                                            X                                X
+                         Number of Ancestors                      NOA           X                                            X                                X
+                         Number of Children                       NOC           X                                            X                                X
+                         Number of Descendants                    NOD           X                                            X                                X
+                         Number of Parents                        NOP           X                                            X                                X
+  Size metrics           Lines of Code                            LOC           X                   X          X      X      X           X        X           X
+                         Logical Lines of Code                    LLOC          X                   X          X      X      X           X        X           X
+                         Number of Attributes                     NA            X                              X             X                    X           X
+                         Number of Classes                        NCL                                                                             X
+                         Number of Enums                          NEN                                                                             X
+                         Number of Getters                        NG            X                                            X                    X           X
+                         Number of Interfaces                     NIN                                                                             X
+                         Number of Local Attributes               NLA           X                                            X                                X
+                         Number of Local Getters                  NLG           X                                            X                                X
+                         Number of Local Methods                  NLM           X                                            X                                X
+                         Number of Local Public Attributes        NLPA          X                                            X                                X
+                         Number of Local Public Methods           NLPM          X                                            X                                X
+                         Number of Local Setters                  NLS           X                                            X                                X
+                         Number of Methods                        NM            X                                            X                    X           X
+                         Number of Packages                       NPKG                                                                            X
+                         Number of Parameters                     NUMPAR                                                                 X
+                         Number of Public Attributes              NPA           X                                            X                    X           X
+                         Number of Public Methods                 NPM           X                                            X                    X           X
+                         Number of Setters                        NS            X                                            X                    X           X
+                         Number of Statements                     NOS           X                                                        X                    X
+                         Number of Structures                     NST                                                                             X
+                         Total Lines of Code                      TLOC          X       X           X          X             X           X        X           X
+                         Total Logical Lines of Code              TLLOC         X       X           X          X             X           X        X           X
+                         Total Number of Attributes               TNA           X       X                                    X                    X           X
+                         Total Number of Classes                  TNCL                  X                                                         X
+                         Total Number of Directories              TNDI                  X                                                         X
+                         Total Number of Enums                    TNEN                  X                                                         X
+                         Total Number of Files                    TNFI                  X                                                         X
+                         Total Number of Getters                  TNG           X       X                                    X                    X           X
+                         Total Number of Interfaces               TNIN                  X                                                         X
+                         Total Number of Local Attributes         TNLA          X       X                                    X                                X
+                         Total Number of Local Getters            TNLG          X       X                                    X                                X
+                         Total Number of Local Methods            TNLM          X       X                                    X                                X
+                         Total Number of Local Public Attributes  TNLPA         X       X                                    X                                X
+                         Total Number of Local Public Methods     TNLPM         X       X                                    X                                X
+                         Total Number of Local Setters            TNLS          X       X                                    X                                X
+                         Total Number of Methods                  TNM           X       X                                    X                    X           X
+                         Total Number of Packages                 TNPKG                 X                                                         X
+                         Total Number of Public Attributes        TNPA          X       X                                    X                    X           X
+                         Total Number of Public Classes           TNPCL                 X                                                         X
+                         Total Number of Public Enums             TNPEN                 X                                                         X
+                         Total Number of Public Interfaces        TNPIN                 X                                                         X
+                         Total Number of Public Methods           TNPM          X       X                                    X                    X           X
+                         Total Number of Public Structures        TNPST                 X                                                         X
+                         Total Number of Setters                  TNS           X       X                                    X                    X           X
+                         Total Number of Statements               TNOS          X       X                                                X        X           X
+                         Total Number of Structures               TNST                  X                                                         X
 
 ### Cohesion metrics
 

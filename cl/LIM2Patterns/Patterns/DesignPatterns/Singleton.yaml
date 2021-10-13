@@ -1,0 +1,36 @@
+name : Singleton
+kind : ndkClass
+role : SingletonClass
+category: DesignPattern
+priority: Info
+description: Application needs one, and only one, instance of an object. Additionally, lazy initialization and global access are necessary.
+displayName: Singleton
+conditions:
+  - any :
+      direction : forward
+      edge : edkScope_HasMember
+      kind : ndkAttribute
+      role : attr1*
+      conditions :
+        - accessibility == ackPrivate
+        - isStatic == true
+        - attr1.type ~= SingletonClass.type # its type is the singleton Type
+  - any :
+      direction : forward
+      edge : edkScope_HasMember
+      kind : ndkMethod
+      role : m1*
+      conditions :
+        - isStatic == true
+        - accessibility == ackPublic
+        - returnType ~= SingletonClass.type
+  - all :
+      direction : forward
+      edge : edkScope_HasMember
+      kind : ndkMethod
+      role : m2*
+      filters:
+        - methodKind == mekConstructor
+      conditions: 
+        - accessibility != ackPublic
+

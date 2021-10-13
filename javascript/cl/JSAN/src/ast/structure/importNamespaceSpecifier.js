@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var importNamespaceSpecifier = factory.createImportNamespaceSpecifierWrapper(factory);
+        var importNamespaceSpecifier = factory.createImportNamespaceSpecifierWrapper();
         globals.setPositionInfo(node, importNamespaceSpecifier);
         return importNamespaceSpecifier;
     } else {
@@ -34,15 +34,10 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.local != null) {
             var localWrapper = globals.getWrapperOfNode(node.local);
-            if (node.local.type !== "Literal") {
-                var localWrapperFunctionString = "setLocal" + node.local.type;
-            } else {
-                var localWrapperFunctionString = "setLocal" + globals.getLiteralType(node.local) + node.local.type;
-            }
             try {
-                importNamespaceSpecifierWrapper[localWrapperFunctionString](localWrapper);
+                importNamespaceSpecifierWrapper.setLocal(localWrapper);
             } catch (e) {
-                console.error("IMPORTNAMESPACESPECIFIER - Function not exist: importNamespaceSpecifierWrapper." + localWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("IMPORTNAMESPACESPECIFIER - Could not set local! Reason of the error: " + e + "\n");
             }
         }
 

@@ -36,7 +36,6 @@ VisitorPYTHONML::~VisitorPYTHONML() {
 
 void VisitorPYTHONML::beginVisit() {
   ofs << "<?xml version='1.0' encoding=\"utf-8\"?>\n";
-  ofs << "<!DOCTYPE Project SYSTEM 'python-1.2.4.dtd'>\n";
   ofs << "<Project name='" << projectName << "'"
       << " xmlns:base='columbus_python_schema/base'"
       << " xmlns:expression='columbus_python_schema/expression'"
@@ -107,6 +106,20 @@ void VisitorPYTHONML::visitEnd(const expression::AttributeRef& node , bool callV
   ofs << "</expression:AttributeRef>\n";
 }
 
+void VisitorPYTHONML::visit(const expression::Await& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:Await";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorPYTHONML::visitEnd(const expression::Await& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:Await>\n";
+}
+
 void VisitorPYTHONML::visit(const expression::BinaryArithmetic& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<expression:BinaryArithmetic";
@@ -133,6 +146,20 @@ void VisitorPYTHONML::visit(const expression::BinaryLogical& node , bool callVir
 void VisitorPYTHONML::visitEnd(const expression::BinaryLogical& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</expression:BinaryLogical>\n";
+}
+
+void VisitorPYTHONML::visit(const expression::BytesLiteral& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:BytesLiteral";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorPYTHONML::visitEnd(const expression::BytesLiteral& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:BytesLiteral>\n";
 }
 
 void VisitorPYTHONML::visit(const expression::Call& node , bool callVirtualBase) {
@@ -233,6 +260,20 @@ void VisitorPYTHONML::visitEnd(const expression::FloatNumber& node , bool callVi
   ofs << "</expression:FloatNumber>\n";
 }
 
+void VisitorPYTHONML::visit(const expression::FormattedValue& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:FormattedValue";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorPYTHONML::visitEnd(const expression::FormattedValue& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:FormattedValue>\n";
+}
+
 void VisitorPYTHONML::visit(const expression::Generator& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<expression:Generator";
@@ -331,6 +372,20 @@ void VisitorPYTHONML::visitEnd(const expression::IntegerLiteral& node , bool cal
   ofs << "</expression:IntegerLiteral>\n";
 }
 
+void VisitorPYTHONML::visit(const expression::JoinedStr& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:JoinedStr";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorPYTHONML::visitEnd(const expression::JoinedStr& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:JoinedStr>\n";
+}
+
 void VisitorPYTHONML::visit(const expression::KeyValue& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<expression:KeyValue";
@@ -415,6 +470,20 @@ void VisitorPYTHONML::visitEnd(const expression::LongInteger& node , bool callVi
   ofs << "</expression:LongInteger>\n";
 }
 
+void VisitorPYTHONML::visit(const expression::NamedExpr& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:NamedExpr";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorPYTHONML::visitEnd(const expression::NamedExpr& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:NamedExpr>\n";
+}
+
 void VisitorPYTHONML::visit(const expression::Set& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<expression:Set";
@@ -455,6 +524,20 @@ void VisitorPYTHONML::visit(const expression::Slice& node , bool callVirtualBase
 void VisitorPYTHONML::visitEnd(const expression::Slice& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</expression:Slice>\n";
+}
+
+void VisitorPYTHONML::visit(const expression::Starred& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:Starred";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorPYTHONML::visitEnd(const expression::Starred& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:Starred>\n";
 }
 
 void VisitorPYTHONML::visit(const expression::StringConversion& node , bool callVirtualBase) {
@@ -581,6 +664,20 @@ void VisitorPYTHONML::visit(const statement::Alias& node , bool callVirtualBase)
 void VisitorPYTHONML::visitEnd(const statement::Alias& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</statement:Alias>\n";
+}
+
+void VisitorPYTHONML::visit(const statement::AnnAssign& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<statement:AnnAssign";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorPYTHONML::visitEnd(const statement::AnnAssign& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</statement:AnnAssign>\n";
 }
 
 void VisitorPYTHONML::visit(const statement::Assert& node , bool callVirtualBase) {
@@ -807,6 +904,20 @@ void VisitorPYTHONML::visitEnd(const statement::ImportStatement& node , bool cal
   ofs << "</statement:ImportStatement>\n";
 }
 
+void VisitorPYTHONML::visit(const statement::Nonlocal& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<statement:Nonlocal";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorPYTHONML::visitEnd(const statement::Nonlocal& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</statement:Nonlocal>\n";
+}
+
 void VisitorPYTHONML::visit(const statement::Parameter& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<statement:Parameter";
@@ -905,32 +1016,18 @@ void VisitorPYTHONML::visitEnd(const statement::TargetList& node , bool callVirt
   ofs << "</statement:TargetList>\n";
 }
 
-void VisitorPYTHONML::visit(const statement::TryExcept& node , bool callVirtualBase) {
+void VisitorPYTHONML::visit(const statement::Try& node , bool callVirtualBase) {
   createIndentation();
-  ofs << "<statement:TryExcept";
+  ofs << "<statement:Try";
   writeAttributes(node,false,true);
   ofs << ">\n";
 
   writeAttributes(node,true,true);
 }
 
-void VisitorPYTHONML::visitEnd(const statement::TryExcept& node , bool callVirtualBase) {
+void VisitorPYTHONML::visitEnd(const statement::Try& node , bool callVirtualBase) {
   createIndentation();
-  ofs << "</statement:TryExcept>\n";
-}
-
-void VisitorPYTHONML::visit(const statement::TryFinal& node , bool callVirtualBase) {
-  createIndentation();
-  ofs << "<statement:TryFinal";
-  writeAttributes(node,false,true);
-  ofs << ">\n";
-
-  writeAttributes(node,true,true);
-}
-
-void VisitorPYTHONML::visitEnd(const statement::TryFinal& node , bool callVirtualBase) {
-  createIndentation();
-  ofs << "</statement:TryFinal>\n";
+  ofs << "</statement:Try>\n";
 }
 
 void VisitorPYTHONML::visit(const statement::While& node , bool callVirtualBase) {
@@ -959,6 +1056,20 @@ void VisitorPYTHONML::visit(const statement::With& node , bool callVirtualBase) 
 void VisitorPYTHONML::visitEnd(const statement::With& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</statement:With>\n";
+}
+
+void VisitorPYTHONML::visit(const statement::WithItem& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<statement:WithItem";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorPYTHONML::visitEnd(const statement::WithItem& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</statement:WithItem>\n";
 }
 
 void VisitorPYTHONML::visit(const type::DictType& node , bool callVirtualBase) {
@@ -1068,6 +1179,18 @@ void VisitorPYTHONML::visitEndArgumentList_HasTuple(const expression::ArgumentLi
   decDepth();
   createIndentation();
   ofs << "</ArgumentList_HasTuple>\n";
+}
+
+void VisitorPYTHONML::visitAwait_HasValue(const expression::Await& begin, const expression::Expression& end) {
+  createIndentation();
+  ofs << "<Await_HasValue>\n";
+  incDepth();
+}
+
+void VisitorPYTHONML::visitEndAwait_HasValue(const expression::Await& begin, const expression::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Await_HasValue>\n";
 }
 
 void VisitorPYTHONML::visitBinary_HasLeftExpression(const expression::Binary& begin, const expression::Expression& end) {
@@ -1188,6 +1311,30 @@ void VisitorPYTHONML::visitEndExtSlice_HasItem(const expression::ExtSlice& begin
   ofs << "</ExtSlice_HasItem>\n";
 }
 
+void VisitorPYTHONML::visitFormattedValue_HasValue(const expression::FormattedValue& begin, const expression::Expression& end) {
+  createIndentation();
+  ofs << "<FormattedValue_HasValue>\n";
+  incDepth();
+}
+
+void VisitorPYTHONML::visitEndFormattedValue_HasValue(const expression::FormattedValue& begin, const expression::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</FormattedValue_HasValue>\n";
+}
+
+void VisitorPYTHONML::visitFormattedValue_HasFormatSpec(const expression::FormattedValue& begin, const expression::Expression& end) {
+  createIndentation();
+  ofs << "<FormattedValue_HasFormatSpec>\n";
+  incDepth();
+}
+
+void VisitorPYTHONML::visitEndFormattedValue_HasFormatSpec(const expression::FormattedValue& begin, const expression::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</FormattedValue_HasFormatSpec>\n";
+}
+
 void VisitorPYTHONML::visitGenerator_HasCondition(const expression::Generator& begin, const expression::Expression& end) {
   createIndentation();
   ofs << "<Generator_HasCondition>\n";
@@ -1293,6 +1440,18 @@ void VisitorPYTHONML::visitEndIfExpression_HasTest(const expression::IfExpressio
   decDepth();
   createIndentation();
   ofs << "</IfExpression_HasTest>\n";
+}
+
+void VisitorPYTHONML::visitJoinedStr_HasValue(const expression::JoinedStr& begin, const expression::Expression& end) {
+  createIndentation();
+  ofs << "<JoinedStr_HasValue>\n";
+  incDepth();
+}
+
+void VisitorPYTHONML::visitEndJoinedStr_HasValue(const expression::JoinedStr& begin, const expression::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</JoinedStr_HasValue>\n";
 }
 
 void VisitorPYTHONML::visitKeyValue_HasKey(const expression::KeyValue& begin, const expression::Expression& end) {
@@ -1415,6 +1574,30 @@ void VisitorPYTHONML::visitEndListComp_HasGenerator(const expression::ListComp& 
   ofs << "</ListComp_HasGenerator>\n";
 }
 
+void VisitorPYTHONML::visitNamedExpr_HasTarget(const expression::NamedExpr& begin, const expression::Expression& end) {
+  createIndentation();
+  ofs << "<NamedExpr_HasTarget>\n";
+  incDepth();
+}
+
+void VisitorPYTHONML::visitEndNamedExpr_HasTarget(const expression::NamedExpr& begin, const expression::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</NamedExpr_HasTarget>\n";
+}
+
+void VisitorPYTHONML::visitNamedExpr_HasValue(const expression::NamedExpr& begin, const expression::Expression& end) {
+  createIndentation();
+  ofs << "<NamedExpr_HasValue>\n";
+  incDepth();
+}
+
+void VisitorPYTHONML::visitEndNamedExpr_HasValue(const expression::NamedExpr& begin, const expression::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</NamedExpr_HasValue>\n";
+}
+
 void VisitorPYTHONML::visitSet_HasExpression(const expression::Set& begin, const expression::Expression& end) {
   createIndentation();
   ofs << "<Set_HasExpression>\n";
@@ -1487,6 +1670,18 @@ void VisitorPYTHONML::visitEndSlice_HasUpperBound(const expression::Slice& begin
   ofs << "</Slice_HasUpperBound>\n";
 }
 
+void VisitorPYTHONML::visitStarred_HasValue(const expression::Starred& begin, const expression::Expression& end) {
+  createIndentation();
+  ofs << "<Starred_HasValue>\n";
+  incDepth();
+}
+
+void VisitorPYTHONML::visitEndStarred_HasValue(const expression::Starred& begin, const expression::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Starred_HasValue>\n";
+}
+
 void VisitorPYTHONML::visitStringConversion_HasExpressionList(const expression::StringConversion& begin, const expression::ExpressionList& end) {
   createIndentation();
   ofs << "<StringConversion_HasExpressionList>\n";
@@ -1523,16 +1718,16 @@ void VisitorPYTHONML::visitEndUnary_HasExpression(const expression::Unary& begin
   ofs << "</Unary_HasExpression>\n";
 }
 
-void VisitorPYTHONML::visitYieldExpression_HasYieldExpression(const expression::YieldExpression& begin, const expression::ExpressionList& end) {
+void VisitorPYTHONML::visitYieldExpression_HasExpression(const expression::YieldExpression& begin, const expression::Expression& end) {
   createIndentation();
-  ofs << "<YieldExpression_HasYieldExpression>\n";
+  ofs << "<YieldExpression_HasExpression>\n";
   incDepth();
 }
 
-void VisitorPYTHONML::visitEndYieldExpression_HasYieldExpression(const expression::YieldExpression& begin, const expression::ExpressionList& end) {
+void VisitorPYTHONML::visitEndYieldExpression_HasExpression(const expression::YieldExpression& begin, const expression::Expression& end) {
   decDepth();
   createIndentation();
-  ofs << "</YieldExpression_HasYieldExpression>\n";
+  ofs << "</YieldExpression_HasExpression>\n";
 }
 
 void VisitorPYTHONML::visitModule_HasObject(const module::Module& begin, const module::Object& end) {
@@ -1625,6 +1820,18 @@ void VisitorPYTHONML::visitAlias_RefersTo(const statement::Alias& begin, const b
 }
 
 void VisitorPYTHONML::visitEndAlias_RefersTo(const statement::Alias& begin, const base::Base& end) {
+}
+
+void VisitorPYTHONML::visitAnnAssign_HasAnnotation(const statement::AnnAssign& begin, const expression::Expression& end) {
+  createIndentation();
+  ofs << "<AnnAssign_HasAnnotation>\n";
+  incDepth();
+}
+
+void VisitorPYTHONML::visitEndAnnAssign_HasAnnotation(const statement::AnnAssign& begin, const expression::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</AnnAssign_HasAnnotation>\n";
 }
 
 void VisitorPYTHONML::visitAssert_HasMsgExpression(const statement::Assert& begin, const expression::Expression& end) {
@@ -1720,6 +1927,18 @@ void VisitorPYTHONML::visitEndClassDef_HasBaseSpecifier(const statement::ClassDe
   decDepth();
   createIndentation();
   ofs << "</ClassDef_HasBaseSpecifier>\n";
+}
+
+void VisitorPYTHONML::visitClassDef_HasKeyword(const statement::ClassDef& begin, const expression::Keyword& end) {
+  createIndentation();
+  ofs << "<ClassDef_HasKeyword>\n";
+  incDepth();
+}
+
+void VisitorPYTHONML::visitEndClassDef_HasKeyword(const statement::ClassDef& begin, const expression::Keyword& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</ClassDef_HasKeyword>\n";
 }
 
 void VisitorPYTHONML::visitClassDef_HasDecorator(const statement::ClassDef& begin, const expression::Expression& end) {
@@ -1876,6 +2095,18 @@ void VisitorPYTHONML::visitEndFunctionDef_HasParameter(const statement::Function
   ofs << "</FunctionDef_HasParameter>\n";
 }
 
+void VisitorPYTHONML::visitFunctionDef_HasReturnAnnotation(const statement::FunctionDef& begin, const expression::Expression& end) {
+  createIndentation();
+  ofs << "<FunctionDef_HasReturnAnnotation>\n";
+  incDepth();
+}
+
+void VisitorPYTHONML::visitEndFunctionDef_HasReturnAnnotation(const statement::FunctionDef& begin, const expression::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</FunctionDef_HasReturnAnnotation>\n";
+}
+
 void VisitorPYTHONML::visitFunctionDef_RefersTo(const statement::FunctionDef& begin, const module::Object& end) {
   createIndentation();
   ofs << "<FunctionDef_RefersTo ref='";
@@ -2005,6 +2236,18 @@ void VisitorPYTHONML::visitEndIteration_HasElseBody(const statement::Iteration& 
   ofs << "</Iteration_HasElseBody>\n";
 }
 
+void VisitorPYTHONML::visitNonlocal_HasIdentifier(const statement::Nonlocal& begin, const expression::Identifier& end) {
+  createIndentation();
+  ofs << "<Nonlocal_HasIdentifier>\n";
+  incDepth();
+}
+
+void VisitorPYTHONML::visitEndNonlocal_HasIdentifier(const statement::Nonlocal& begin, const expression::Identifier& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Nonlocal_HasIdentifier>\n";
+}
+
 void VisitorPYTHONML::visitParameter_HasDefaultValue(const statement::Parameter& begin, const expression::Expression& end) {
   createIndentation();
   ofs << "<Parameter_HasDefaultValue>\n";
@@ -2015,6 +2258,18 @@ void VisitorPYTHONML::visitEndParameter_HasDefaultValue(const statement::Paramet
   decDepth();
   createIndentation();
   ofs << "</Parameter_HasDefaultValue>\n";
+}
+
+void VisitorPYTHONML::visitParameter_HasAnnotation(const statement::Parameter& begin, const expression::Expression& end) {
+  createIndentation();
+  ofs << "<Parameter_HasAnnotation>\n";
+  incDepth();
+}
+
+void VisitorPYTHONML::visitEndParameter_HasAnnotation(const statement::Parameter& begin, const expression::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Parameter_HasAnnotation>\n";
 }
 
 void VisitorPYTHONML::visitParameter_RefersTo(const statement::Parameter& begin, const module::Object& end) {
@@ -2052,40 +2307,64 @@ void VisitorPYTHONML::visitEndPrint_HasDestination(const statement::Print& begin
   ofs << "</Print_HasDestination>\n";
 }
 
-void VisitorPYTHONML::visitRaise_HasTracebackExpression(const statement::Raise& begin, const expression::Expression& end) {
+void VisitorPYTHONML::visitRaise_HasType(const statement::Raise& begin, const expression::Expression& end) {
   createIndentation();
-  ofs << "<Raise_HasTracebackExpression>\n";
+  ofs << "<Raise_HasType>\n";
   incDepth();
 }
 
-void VisitorPYTHONML::visitEndRaise_HasTracebackExpression(const statement::Raise& begin, const expression::Expression& end) {
+void VisitorPYTHONML::visitEndRaise_HasType(const statement::Raise& begin, const expression::Expression& end) {
   decDepth();
   createIndentation();
-  ofs << "</Raise_HasTracebackExpression>\n";
+  ofs << "</Raise_HasType>\n";
 }
 
-void VisitorPYTHONML::visitRaise_HasTypeExpression(const statement::Raise& begin, const expression::Expression& end) {
+void VisitorPYTHONML::visitRaise_HasValue(const statement::Raise& begin, const expression::Expression& end) {
   createIndentation();
-  ofs << "<Raise_HasTypeExpression>\n";
+  ofs << "<Raise_HasValue>\n";
   incDepth();
 }
 
-void VisitorPYTHONML::visitEndRaise_HasTypeExpression(const statement::Raise& begin, const expression::Expression& end) {
+void VisitorPYTHONML::visitEndRaise_HasValue(const statement::Raise& begin, const expression::Expression& end) {
   decDepth();
   createIndentation();
-  ofs << "</Raise_HasTypeExpression>\n";
+  ofs << "</Raise_HasValue>\n";
 }
 
-void VisitorPYTHONML::visitRaise_HasValueExpression(const statement::Raise& begin, const expression::Expression& end) {
+void VisitorPYTHONML::visitRaise_HasTraceback(const statement::Raise& begin, const expression::Expression& end) {
   createIndentation();
-  ofs << "<Raise_HasValueExpression>\n";
+  ofs << "<Raise_HasTraceback>\n";
   incDepth();
 }
 
-void VisitorPYTHONML::visitEndRaise_HasValueExpression(const statement::Raise& begin, const expression::Expression& end) {
+void VisitorPYTHONML::visitEndRaise_HasTraceback(const statement::Raise& begin, const expression::Expression& end) {
   decDepth();
   createIndentation();
-  ofs << "</Raise_HasValueExpression>\n";
+  ofs << "</Raise_HasTraceback>\n";
+}
+
+void VisitorPYTHONML::visitRaise_HasException(const statement::Raise& begin, const expression::Expression& end) {
+  createIndentation();
+  ofs << "<Raise_HasException>\n";
+  incDepth();
+}
+
+void VisitorPYTHONML::visitEndRaise_HasException(const statement::Raise& begin, const expression::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Raise_HasException>\n";
+}
+
+void VisitorPYTHONML::visitRaise_HasCause(const statement::Raise& begin, const expression::Expression& end) {
+  createIndentation();
+  ofs << "<Raise_HasCause>\n";
+  incDepth();
+}
+
+void VisitorPYTHONML::visitEndRaise_HasCause(const statement::Raise& begin, const expression::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Raise_HasCause>\n";
 }
 
 void VisitorPYTHONML::visitReturn_HasExpression(const statement::Return& begin, const expression::Expression& end) {
@@ -2124,52 +2403,40 @@ void VisitorPYTHONML::visitEndTargetList_HasTarget(const statement::TargetList& 
   ofs << "</TargetList_HasTarget>\n";
 }
 
-void VisitorPYTHONML::visitTryExcept_HasElseBody(const statement::TryExcept& begin, const statement::Suite& end) {
+void VisitorPYTHONML::visitTry_HasHandler(const statement::Try& begin, const statement::Handler& end) {
   createIndentation();
-  ofs << "<TryExcept_HasElseBody>\n";
+  ofs << "<Try_HasHandler>\n";
   incDepth();
 }
 
-void VisitorPYTHONML::visitEndTryExcept_HasElseBody(const statement::TryExcept& begin, const statement::Suite& end) {
+void VisitorPYTHONML::visitEndTry_HasHandler(const statement::Try& begin, const statement::Handler& end) {
   decDepth();
   createIndentation();
-  ofs << "</TryExcept_HasElseBody>\n";
+  ofs << "</Try_HasHandler>\n";
 }
 
-void VisitorPYTHONML::visitTryExcept_HasHandler(const statement::TryExcept& begin, const statement::Handler& end) {
+void VisitorPYTHONML::visitTry_HasElseBody(const statement::Try& begin, const statement::Suite& end) {
   createIndentation();
-  ofs << "<TryExcept_HasHandler>\n";
+  ofs << "<Try_HasElseBody>\n";
   incDepth();
 }
 
-void VisitorPYTHONML::visitEndTryExcept_HasHandler(const statement::TryExcept& begin, const statement::Handler& end) {
+void VisitorPYTHONML::visitEndTry_HasElseBody(const statement::Try& begin, const statement::Suite& end) {
   decDepth();
   createIndentation();
-  ofs << "</TryExcept_HasHandler>\n";
+  ofs << "</Try_HasElseBody>\n";
 }
 
-void VisitorPYTHONML::visitTryExcept_HasFinallyBody(const statement::TryExcept& begin, const statement::Suite& end) {
+void VisitorPYTHONML::visitTry_HasFinallyBody(const statement::Try& begin, const statement::Suite& end) {
   createIndentation();
-  ofs << "<TryExcept_HasFinallyBody>\n";
+  ofs << "<Try_HasFinallyBody>\n";
   incDepth();
 }
 
-void VisitorPYTHONML::visitEndTryExcept_HasFinallyBody(const statement::TryExcept& begin, const statement::Suite& end) {
+void VisitorPYTHONML::visitEndTry_HasFinallyBody(const statement::Try& begin, const statement::Suite& end) {
   decDepth();
   createIndentation();
-  ofs << "</TryExcept_HasFinallyBody>\n";
-}
-
-void VisitorPYTHONML::visitTryFinal_HasFinallyBody(const statement::TryFinal& begin, const statement::Suite& end) {
-  createIndentation();
-  ofs << "<TryFinal_HasFinallyBody>\n";
-  incDepth();
-}
-
-void VisitorPYTHONML::visitEndTryFinal_HasFinallyBody(const statement::TryFinal& begin, const statement::Suite& end) {
-  decDepth();
-  createIndentation();
-  ofs << "</TryFinal_HasFinallyBody>\n";
+  ofs << "</Try_HasFinallyBody>\n";
 }
 
 void VisitorPYTHONML::visitWhile_HasTestExpression(const statement::While& begin, const expression::Expression& end) {
@@ -2184,28 +2451,40 @@ void VisitorPYTHONML::visitEndWhile_HasTestExpression(const statement::While& be
   ofs << "</While_HasTestExpression>\n";
 }
 
-void VisitorPYTHONML::visitWith_HasExpression(const statement::With& begin, const expression::Expression& end) {
+void VisitorPYTHONML::visitWith_HasWithItem(const statement::With& begin, const statement::WithItem& end) {
   createIndentation();
-  ofs << "<With_HasExpression>\n";
+  ofs << "<With_HasWithItem>\n";
   incDepth();
 }
 
-void VisitorPYTHONML::visitEndWith_HasExpression(const statement::With& begin, const expression::Expression& end) {
+void VisitorPYTHONML::visitEndWith_HasWithItem(const statement::With& begin, const statement::WithItem& end) {
   decDepth();
   createIndentation();
-  ofs << "</With_HasExpression>\n";
+  ofs << "</With_HasWithItem>\n";
 }
 
-void VisitorPYTHONML::visitWith_HasTargetList(const statement::With& begin, const statement::TargetList& end) {
+void VisitorPYTHONML::visitWithItem_HasContext(const statement::WithItem& begin, const expression::Expression& end) {
   createIndentation();
-  ofs << "<With_HasTargetList>\n";
+  ofs << "<WithItem_HasContext>\n";
   incDepth();
 }
 
-void VisitorPYTHONML::visitEndWith_HasTargetList(const statement::With& begin, const statement::TargetList& end) {
+void VisitorPYTHONML::visitEndWithItem_HasContext(const statement::WithItem& begin, const expression::Expression& end) {
   decDepth();
   createIndentation();
-  ofs << "</With_HasTargetList>\n";
+  ofs << "</WithItem_HasContext>\n";
+}
+
+void VisitorPYTHONML::visitWithItem_HasTarget(const statement::WithItem& begin, const expression::Expression& end) {
+  createIndentation();
+  ofs << "<WithItem_HasTarget>\n";
+  incDepth();
+}
+
+void VisitorPYTHONML::visitEndWithItem_HasTarget(const statement::WithItem& begin, const expression::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</WithItem_HasTarget>\n";
 }
 
 void VisitorPYTHONML::visitReferenceType_RefersTo(const type::ReferenceType& begin, const base::Positioned& end) {
@@ -2330,6 +2609,11 @@ void VisitorPYTHONML::writeAttributes(const expression::AttributeRef& node,bool 
 
 }
 
+void VisitorPYTHONML::writeAttributes(const expression::Await& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::Expression&)node,composite,false);
+
+}
+
 void VisitorPYTHONML::writeAttributes(const expression::Binary& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((expression::Expression&)node,composite,false);
 
@@ -2348,6 +2632,14 @@ void VisitorPYTHONML::writeAttributes(const expression::BinaryLogical& node,bool
 
   if (!composite) {
     ofs << " kind='" << Common::toString(node.getKind()) << "'";
+  }
+}
+
+void VisitorPYTHONML::writeAttributes(const expression::BytesLiteral& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::Literal&)node,composite,false);
+
+  if (!composite) {
+    ofs << " value='" << chk(node.getValue()) << "'";
   }
 }
 
@@ -2394,6 +2686,14 @@ void VisitorPYTHONML::writeAttributes(const expression::FloatNumber& node,bool c
 
   if (!composite) {
     ofs << " value='" << node.getValue() << "'";
+  }
+}
+
+void VisitorPYTHONML::writeAttributes(const expression::FormattedValue& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::Literal&)node,composite,false);
+
+  if (!composite) {
+    ofs << " conversion='" << node.getConversion() << "'";
   }
 }
 
@@ -2444,6 +2744,11 @@ void VisitorPYTHONML::writeAttributes(const expression::IntegerLiteral& node,boo
   }
 }
 
+void VisitorPYTHONML::writeAttributes(const expression::JoinedStr& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::Expression&)node,composite,false);
+
+}
+
 void VisitorPYTHONML::writeAttributes(const expression::KeyValue& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((base::Positioned&)node,composite,false);
 
@@ -2485,6 +2790,11 @@ void VisitorPYTHONML::writeAttributes(const expression::LongInteger& node,bool c
   }
 }
 
+void VisitorPYTHONML::writeAttributes(const expression::NamedExpr& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::Expression&)node,composite,false);
+
+}
+
 void VisitorPYTHONML::writeAttributes(const expression::Set& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((expression::Expression&)node,composite,false);
 
@@ -2502,6 +2812,11 @@ void VisitorPYTHONML::writeAttributes(const expression::Slice& node,bool composi
 
 void VisitorPYTHONML::writeAttributes(const expression::Slicing& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((expression::Unary&)node,composite,false);
+
+}
+
+void VisitorPYTHONML::writeAttributes(const expression::Starred& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((expression::Expression&)node,composite,false);
 
 }
 
@@ -2539,6 +2854,9 @@ void VisitorPYTHONML::writeAttributes(const expression::UnaryOperation& node,boo
 void VisitorPYTHONML::writeAttributes(const expression::YieldExpression& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((expression::Expression&)node,composite,false);
 
+  if (!composite) {
+    ofs << " isFrom='" << (node.getIsFrom() ? "true" : "false") << "'";
+  }
 }
 
 void VisitorPYTHONML::writeAttributes(const module::Module& node,bool composite, bool bWithParent /*= true*/ ) {
@@ -2573,6 +2891,14 @@ void VisitorPYTHONML::writeAttributes(const statement::Alias& node,bool composit
 
   if (!composite) {
     ofs << " alias='" << chk(node.getAlias()) << "'";
+  }
+}
+
+void VisitorPYTHONML::writeAttributes(const statement::AnnAssign& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((statement::Assign&)node,composite,false);
+
+  if (!composite) {
+    ofs << " isSimple='" << (node.getIsSimple() ? "true" : "false") << "'";
   }
 }
 
@@ -2638,6 +2964,9 @@ void VisitorPYTHONML::writeAttributes(const statement::Exec& node,bool composite
 void VisitorPYTHONML::writeAttributes(const statement::For& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((statement::Iteration&)node,composite,false);
 
+  if (!composite) {
+    ofs << " isAsync='" << (node.getIsAsync() ? "true" : "false") << "'";
+  }
 }
 
 void VisitorPYTHONML::writeAttributes(const statement::FunctionDef& node,bool composite, bool bWithParent /*= true*/ ) {
@@ -2649,6 +2978,9 @@ void VisitorPYTHONML::writeAttributes(const statement::FunctionDef& node,bool co
   if (!composite) {
     ofs << " lloc='" << node.getLloc() << "'";
   }
+  if (!composite) {
+    ofs << " isAsync='" << (node.getIsAsync() ? "true" : "false") << "'";
+  }
 }
 
 void VisitorPYTHONML::writeAttributes(const statement::Global& node,bool composite, bool bWithParent /*= true*/ ) {
@@ -2657,7 +2989,7 @@ void VisitorPYTHONML::writeAttributes(const statement::Global& node,bool composi
 }
 
 void VisitorPYTHONML::writeAttributes(const statement::Handler& node,bool composite, bool bWithParent /*= true*/ ) {
-  writeAttributes((statement::Statement&)node,composite,false);
+  writeAttributes((base::Positioned&)node,composite,false);
 
 }
 
@@ -2684,6 +3016,11 @@ void VisitorPYTHONML::writeAttributes(const statement::ImportStatement& node,boo
 
 void VisitorPYTHONML::writeAttributes(const statement::Iteration& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((statement::CompoundStatement&)node,composite,false);
+
+}
+
+void VisitorPYTHONML::writeAttributes(const statement::Nonlocal& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((statement::SimpleStatement&)node,composite,false);
 
 }
 
@@ -2743,16 +3080,6 @@ void VisitorPYTHONML::writeAttributes(const statement::Try& node,bool composite,
 
 }
 
-void VisitorPYTHONML::writeAttributes(const statement::TryExcept& node,bool composite, bool bWithParent /*= true*/ ) {
-  writeAttributes((statement::Try&)node,composite,false);
-
-}
-
-void VisitorPYTHONML::writeAttributes(const statement::TryFinal& node,bool composite, bool bWithParent /*= true*/ ) {
-  writeAttributes((statement::Try&)node,composite,false);
-
-}
-
 void VisitorPYTHONML::writeAttributes(const statement::While& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((statement::Iteration&)node,composite,false);
 
@@ -2760,6 +3087,14 @@ void VisitorPYTHONML::writeAttributes(const statement::While& node,bool composit
 
 void VisitorPYTHONML::writeAttributes(const statement::With& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((statement::CompoundStatement&)node,composite,false);
+
+  if (!composite) {
+    ofs << " isAsync='" << (node.getIsAsync() ? "true" : "false") << "'";
+  }
+}
+
+void VisitorPYTHONML::writeAttributes(const statement::WithItem& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((base::Positioned&)node,composite,false);
 
 }
 

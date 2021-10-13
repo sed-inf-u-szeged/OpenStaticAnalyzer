@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class PrefixExpressionImpl extends BaseImpl implements PrefixExpression {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(PrefixExpressionImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

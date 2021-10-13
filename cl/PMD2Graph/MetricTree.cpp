@@ -52,7 +52,7 @@ MetricTree::MetricTree(std::string& fileName, std::string& rul, std::string& rul
     graphIndexer(graphIndexer)
 {
   std::string iniFileName = ((common::pathFindFileName(rul) == rul) ? "." + std::string(DIRDIVSTRING) : "") + rul;
-  xRulhandler = new columbus::rul::RulHandler(iniFileName, rulConfig, "eng", "ISO-8859-1");
+  xRulhandler = new columbus::rul::RulHandler(iniFileName, rulConfig, "eng");
   this->graphIndexer.turnOn(this->graph);
 }
 
@@ -90,7 +90,7 @@ void MetricTree::buildtree() {
 }
 
 
-void MetricTree::addWarningToNode(const string& path, int line, int col, int endline, int endcol, const string& groupID, const string& warningID, const string& warningText, bool we_is_component, FILE *f) {
+void MetricTree::addWarningToNode(const string& path, int line, int col, int endline, int endcol, const string& groupID, const string& warningID, const string& warningText, FILE *f) {
   if (!xRulhandler->getIsEnabled(warningID)) {
     return; // rule is not enabled
   }
@@ -138,7 +138,7 @@ void MetricTree::addWarningToNode(const string& path, int line, int col, int end
   }
   
   if(node != Graph::invalidNode) {
-    if (graphsupport::addWarningOnce(graph, node, warningID, path, line, col, endline, endcol, warningText)) {
+    if (graphsupport::addWarningOnce(graph, node, warningID, path, line, col, endline, endcol, warningText, &warningCache)) {
       WriteMsg::writeWarningMessage(f, CMSG_PMD2GRAPH_ADDED_WARNING, path.c_str(), line, warningID.c_str(), warningText.c_str());
     } else {
       WriteMsg::write(CMSG_PMD2GRAPH_WARNING_ALREADY_ADDED, warningID.c_str(), node.getUID().c_str(), path.c_str(), line, col, endline, endcol, warningText.c_str());

@@ -311,6 +311,9 @@ namespace common {
     size_t last = 0;
     size_t current = 0;
 
+    if (size == 0)
+      return source;
+
     while ((current = source.find(from, last)) != std::string::npos) {
       res += source.substr(last, current - last);
       res += to;
@@ -471,6 +474,22 @@ namespace common {
       path[0] += ('A'-'a');
   }
 
+  std::tm getCurrentTimeAndDate()
+  {
+    std::time_t rawtime;
+    std::tm timeinfo;
+
+    std::time(&rawtime);
+#ifdef _WIN32
+    localtime_s(&timeinfo, &rawtime);
+#else
+    localtime_r(&rawtime, &timeinfo);
+#endif
+
+    return timeinfo;
+  }
+
+
   string getCurrentTimeAndDate(const char* format)
   {
     std::time_t rawtime;
@@ -485,6 +504,13 @@ namespace common {
 #endif
     
     std::strftime(buffer, 200, format, &timeinfo);
+    return string(buffer);
+  }
+
+  string getCurrentTimeAndDate(const char* format, const std::tm& td)
+  {
+    char buffer [200];
+    std::strftime(buffer, 200, format, &td);
     return string(buffer);
   }
 

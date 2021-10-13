@@ -1,10 +1,11 @@
 @echo off
-IF "%VS140COMNTOOLS%" == "" (
-  echo No Microsoft Visual Studio 2015 has been found!
-  echo The demo project will not be compiled and no fxcop warnings will be generated!
-) else (
-  call "%VS140COMNTOOLS%vsvars32.bat"
-  msbuild log4net-1.2.13\src\log4net.vs2010.csproj /t:Rebuild /p:Configuration=Debug
+WHERE dotnet >nul 2>nul
+IF %ERRORLEVEL% NEQ 0 (
+  echo dotnet was not found on PATH
+  echo OpenStaticAnalyzer for C# requires the .NET Core SDK to be installed
+  echo See the User's Guide for details
+  exit /b 1
 )
-..\OpenStaticAnalyzerCSharp -input:log4net-1.2.13\src\log4net.vs2010.csproj -projectName=log4net-1.2.13 -resultsDir=Results -externalSoftFilter=softfilter -externalHardFilter=hardfilter -configuration=Debug -platform=AnyCPU
 
+dotnet build log4net-2.0.10\src\log4net.sln
+..\OpenStaticAnalyzerCSharp -input:log4net-2.0.10\src\log4net.sln -projectName=log4net-2.0.10 -resultsDir=Results -externalSoftFilter=softfilter -externalHardFilter=hardfilter -configuration=Debug -platform=AnyCPU

@@ -54,7 +54,6 @@ struct Config {
     , patternMinFullLength(100)
     , exportRul(false)
     , stat()
-    , freeVersion(false)
     , statementFilter(true)
     , smallGenealogy(true)
     , xmlDumpFile ("")
@@ -112,7 +111,6 @@ struct Config {
 
   } stat;
 
-  bool freeVersion;
   bool statementFilter;
   bool smallGenealogy;                          ///< keep the string attributes of the last system only in the genealogy output
   std::string            xmlDumpFile;

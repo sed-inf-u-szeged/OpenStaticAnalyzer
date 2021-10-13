@@ -1,26 +1,6 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using static Columbus.Common;
 
 namespace Columbus
@@ -30,11 +10,24 @@ namespace Columbus
         public static bool ProcessArguments(string[] argv, Option[] options, string optionPrefixes, DelegateOption unrecOption)
         {
             List<Option> defCallbacks = new List<Option>();
+            var neededOptions = new Dictionary<int, ICollection<Option>>();
 
             if (options == null)
             {
                 WriteMsg.WriteLine("Error: No option given", WriteMsg.MsgLevel.Error);
                 return false;
+            }
+
+            foreach (var option in options)
+            {
+                if (option.Needed <= 0)
+                    continue;
+
+                ICollection<Option> list;
+                if (neededOptions.TryGetValue(option.Needed, out list))
+                    list.Add(option);
+                else
+                    neededOptions.Add(option.Needed, new List<Option> {option});
             }
 
             for (int pnum = 0; pnum < argv.Length; ++pnum)
@@ -187,6 +180,9 @@ namespace Columbus
 
                         pnum += found_option.Value.NumberOfParameters;
                     }
+
+                    if (found_option.Value.Needed > 0)
+                        neededOptions.Remove(found_option.Value.Needed);
                 }
                 else
                 {
@@ -209,7 +205,15 @@ namespace Columbus
                 opt.DefaultProcess(opt);
             }
 
-            return true;
+            foreach (var pair in neededOptions)
+            {
+                if (pair.Value.Count > 1)
+                    WriteMsg.WriteLine($"Error: One of the options {string.Join(", ", pair.Value)} should be provided.", WriteMsg.MsgLevel.Error);
+                else
+                    WriteMsg.WriteLine($"Error: Option {pair.Value.First()} is needed", WriteMsg.MsgLevel.Error);
+            }
+
+            return neededOptions.Count == 0;
         }
 
         public static void WriteHelp(Option[] options, bool displayInternal = false)
@@ -237,7 +241,7 @@ namespace Columbus
                 }
                 if (!string.IsNullOrEmpty(opt.Description))
                 {
-                    WriteMsg.WriteWithBreak(opt.Description, WriteMsg.MsgLevel.Silent, 4);
+                    WriteMsg.WriteLine("    " + opt.Description, WriteMsg.MsgLevel.Silent);
                     WriteMsg.WriteLine("", WriteMsg.MsgLevel.Silent);
                 }
             }

@@ -172,12 +172,9 @@ Task::ExecutionResult JSANTask::execute()
     split(props.JSANOptions, JSANOptionsV, ' ');
     sv.insert(sv.end(), JSANOptionsV.begin(), JSANOptionsV.end());
     const string out = (props.asgDir / (props.projectName + ".jssi")).string();
-    //sv.push_back("-d");
 
-    //sv.push_back("-r");
     sv.push_back("-o");
     sv.push_back(out);
-    sv.push_back("-s");
 
     if (!props.externalHardFilter.empty()) {
       if (!exists(props.externalHardFilter.string())) {
@@ -189,9 +186,6 @@ Task::ExecutionResult JSANTask::execute()
       }
     }
 
-    /*if (props.relativePath) {
-      sv.push_back("--useRelativePath");
-    }*/
 
     const string baseDir = (props.projectBaseDir).string();
     sv.push_back(baseDir);
@@ -219,7 +213,7 @@ Task::ExecutionResult JSAN2ChangePathTask::execute()
     vector<string> sv;
     addMessageLevel(sv);
     sv.push_back((props.asgDir / (props.projectName + ".jssi")).string());
-    sv.push_back("-changepathfrom:" + props.projectBaseDir.string() + DIRDIVCHAR);
+    sv.push_back("-from:" + props.projectBaseDir.string() + DIRDIVCHAR);
 
     checkedExec(props.toolsDir / "JSAN2ChangePath", sv, logger);
 
@@ -252,9 +246,6 @@ Task::ExecutionResult RunESLintTask::execute()
     const string ESLintRunnerPath = (props.toolsDir / "node_modules" / "eslintrunner" / "ESLintRunner.js").string();
     sv.push_back(ESLintRunnerPath);
 
-    sv.push_back("--input");
-    const string input = (props.asgDir / (props.projectName + ".ast")).string();
-    sv.push_back(input);
 
     if (!props.profileXML.empty()) {
       sv.push_back("--rul");
@@ -268,6 +259,7 @@ Task::ExecutionResult RunESLintTask::execute()
 
     const string baseDir = (props.projectBaseDir).string();
     sv.push_back(baseDir);
+
 
     checkedExec("node", sv, logger);
   }
@@ -392,10 +384,11 @@ Task::ExecutionResult DcfTask::execute()
     vector<string> sv;
     addMessageLevel(sv);
 
-    sv.push_back("-out:" + (props.projectTimedResultDir / (props.projectName + "-clones.txt")).string());
     sv.push_back("-lim:" + (props.asgDir / (props.projectName + ".lim")).string());
     sv.push_back("-graph:" + (props.graphDir / (props.projectName + "-DCF.graph")).string());
     sv.push_back("-metrics");
+
+    sv.push_back("-out:" + (props.projectTimedResultDir / (props.projectName + "-clones.txt")).string());
 
     sv.push_back("-multipleasgroot");
     sv.push_back("-onlyfunctionclone");
@@ -430,36 +423,6 @@ DcfTask::DcfTask(const Properties& properties)
   addDependsOn(JSAN2LimTask::name);
 }
 
-TASK_NAME_DEF(AddLicenceTask);
-
-Task::ExecutionResult AddLicenceTask::execute()
-{
-  ExecutionResult result;
-  ExecutionLogger logger(this, result);
-  try {
-    string filename = (props.projectTimedResultDir / (props.projectName + ".graph")).string();
-    columbus::graph::Graph graph;
-    graph.loadBinary(filename);
-
-    for (list<string>::const_iterator it = inactives.begin(); it != inactives.end(); ++it) {
-      graph.setHeaderInfo(*it + graphsupport::graphconstants::HEADER_MODE_KEY_SUFFIX, graphsupport::graphconstants::HEADER_MODE_VALUE_INACTIVE);
-    }
-
-    graph.saveBinary(filename);
-  }
-  HANDLE_TASK_EXCEPTIONS
-
-  return result;
-}
-
-AddLicenceTask::AddLicenceTask(const list<string>& inactives, const Properties& properties)
-  : Task(properties)
-  , inactives(inactives)
-{
-  addDependsOn(GraphMergeTask::name);
-  addDependsOn(MetricHunterTask::name);
-}
-
 TASK_NAME_DEF(GraphMergeTask);
 
 Task::ExecutionResult GraphMergeTask::execute()
@@ -478,6 +441,7 @@ Task::ExecutionResult GraphMergeTask::execute()
     }
     sort(sv.begin(), sv.end());
     sv.push_back("-out:" + (props.projectTimedResultDir / (props.projectName + ".graph")).string());
+    sv.push_back("-summary");
 
 
     checkedExec(props.toolsDir / "GraphMerge", sv, logger);
@@ -494,6 +458,7 @@ GraphMergeTask::GraphMergeTask(const Properties& properties)
   addDependsOn(ESLint2GraphTask::name);
   addDependsOn(LIM2MetricsTask::name);
   addDependsOn(DcfTask::name);
+  addDependsOn(Sonar2GraphTask::name);
 }
 
 TASK_NAME_DEF(GraphDumpTask);
@@ -502,18 +467,34 @@ Task::ExecutionResult GraphDumpTask::execute()
 {
   ExecutionResult result;
   ExecutionLogger logger(this, result);
-  try {
+  try
+  {
+    {
+      vector<string> sv;
+      addMessageLevel(sv);
 
-    vector<string> sv;
-    addMessageLevel(sv);
+      sv.push_back((props.projectTimedResultDir / (props.projectName + ".graph")).string());
+      sv.push_back("-csv");
+      sv.push_back("-xml");
+      sv.push_back("-csvseparator:" + string(1, props.csvSeparator));
+      sv.push_back("-csvdecimalmark:" + string(1, props.csvDecimalmark));
 
-    sv.push_back((props.projectTimedResultDir / (props.projectName + ".graph")).string());
-    sv.push_back("-csv");
-    sv.push_back("-xml");
-    sv.push_back("-csvseparator:" + string(1, props.csvSeparator));
-    sv.push_back("-csvdecimalmark:" + string(1, props.csvDecimalmark));
+      sv.push_back("-sarif");
+      sv.push_back("-sarifseverity:" + props.sarifSeverityLevel);
 
-    checkedExec(props.toolsDir / "GraphDump", sv, logger);
+      checkedExec(props.toolsDir / "GraphDump", sv, logger);
+    }
+
+    {
+      vector<string> sv;
+      addMessageLevel(sv);
+
+      sv.push_back((props.projectTimedResultDir / (props.projectName + "-summary.graph")).string());
+      sv.push_back("-xml");
+      sv.push_back("-json");
+      checkedExec(props.toolsDir / "GraphDump", sv, logger);
+    }
+
   }
   HANDLE_TASK_EXCEPTIONS
 
@@ -525,7 +506,7 @@ GraphDumpTask::GraphDumpTask(const Properties& properties)
 {
   addDependsOn(GraphMergeTask::name);
   addDependsOn(MetricHunterTask::name);
-  addDependsOn(AddLicenceTask::name);
+  addDependsOn(LIM2PatternsTask::name);
 }
 
 TASK_NAME_DEF(MetricHunterTask);
@@ -608,6 +589,33 @@ Task::ExecutionResult ProfileTask::execute()
 
     //process thresholds
     profileProcessToolThresholds(profile, "MetricHunter", MetricHunterThresholdsFileOrig.string(), MetricHunterThresholdsFile.string());
+
+    //process udm metrics
+    bool UDM_result = profileProcessUDM(profile, (props.tempDir / "UDM.rul").string(), "javascript");
+    if (!props.runUDMExplicit) {
+      // if runUDM wasn't explicitly set, we decide by the presence of UDM metrics in the profile
+      props.runUDM = UDM_result;
+    }
+    else if (props.runUDMExplicit && props.runUDM && !UDM_result) {
+      // if, however, runUDM was explicitly set to true, but there are no valid UDM metrics, we abort
+      throw Exception(COLUMBUS_LOCATION, "UDM explicitly set to run without corresponding setup in the profile XML");
+    }
+
+    //process lim2patterns parameters
+    if (props.runLIM2Patterns) {
+      map<string, string> parameters;
+      if (profileProcessLIM2Patterns(profile, "LIM2Patterns", parameters)) {
+        if (parameters.find("whitelist") != parameters.end()) {
+          props.whitelist = parameters["whitelist"];
+        }
+        if (parameters.find("blacklist") != parameters.end()) {
+          props.blacklist = parameters["blacklist"];
+        }
+        if (parameters.find("pattern_directories") != parameters.end()) {
+          props.patternFile = parameters["pattern_directories"];
+        }
+      }
+    }
   }
   HANDLE_TASK_EXCEPTIONS
   return result;
@@ -619,3 +627,79 @@ ProfileTask::ProfileTask(const Properties& properties)
   addDependsOn(JSAN2LimTask::name);
 }
 
+TASK_NAME_DEF(UserDefinedMetricsTask);
+TOOL_RUL_CONFIG_DEF(UserDefinedMetrics, javascript);
+
+Task::ExecutionResult UserDefinedMetricsTask::execute()
+{
+  ExecutionResult result;
+  if (!props.runUDM) {
+    inactives.push_back("UserDefinedMetrics");
+    return result;
+  }
+
+  ExecutionLogger logger(this, result);
+
+  try {
+    vector<string> sv;
+    sv.push_back((props.projectTimedResultDir / (props.projectName + ".graph")).string());
+    sv.push_back("-rul:" + (props.tempDir / "UDM.rul").string());
+    sv.push_back("-rulconfig:" + TOOL_RUL_CONFIG(UserDefinedMetrics));
+    sv.push_back("-graph:" + (props.projectTimedResultDir / (props.projectName + ".graph")).string());
+
+    checkedExec(props.toolsDir / "UserDefinedMetrics", sv, logger);
+  }
+  HANDLE_TASK_EXCEPTIONS
+
+  return result;
+}
+
+UserDefinedMetricsTask::UserDefinedMetricsTask(list<string>& inactives, const Properties& properties)
+  : Task(properties)
+  , inactives(inactives)
+{
+  addDependsOn(GraphMergeTask::name);
+  addDependsOn(MetricHunterTask::name);
+}
+
+SONAR2GRAPH_TASK(js)
+
+Sonar2GraphTask::Sonar2GraphTask(const Properties& properties) : Task(properties)
+{
+  addDependsOn(JSAN2LimTask::name);
+}
+
+TASK_NAME_DEF(LIM2PatternsTask);
+
+Task::ExecutionResult LIM2PatternsTask::execute()
+{
+  ExecutionResult result;
+  ExecutionLogger logger(this, result);
+  try {
+    vector<string> sv;
+
+    sv.push_back("-graph:" + (props.projectTimedResultDir / (props.projectName + ".graph")).string());
+    sv.push_back("-lim:" + (props.asgDir / (props.projectName + ".lim")).string());
+    sv.push_back("-pattern:" + props.patternFile + (!props.patternFile.empty() ? "," : "") + (props.toolsDir / "Patterns" / "AntiPatterns").string());
+    sv.push_back("-metrics:" + (props.toolsDir / "MET.rul").string());
+    sv.push_back("-out:" + (props.projectTimedResultDir / (props.projectName + ".txt")).string());
+
+    if (!props.whitelist.empty()) {
+        sv.push_back("-whitelist:" + props.whitelist);
+    }
+    if (!props.blacklist.empty()) {
+        sv.push_back("-blacklist:" + props.blacklist);
+    }
+
+    checkedExec(props.toolsDir / "LIM2Patterns", sv, logger);
+
+  } HANDLE_TASK_EXCEPTIONS
+
+    return result;
+}
+
+LIM2PatternsTask::LIM2PatternsTask(const Properties& properties) : Task(properties) {
+  addDependsOn(GraphMergeTask::name);
+  addDependsOn(MetricHunterTask::name);
+  addDependsOn(UserDefinedMetricsTask::name);
+}

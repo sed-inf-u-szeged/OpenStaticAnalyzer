@@ -41,6 +41,7 @@ namespace struc {
     NamedDeclaration(_id, _factory),
     m_isAbstract(false),
     m_isStrictfp(false),
+    m_lloc(0),
     m_abstractPosition(),
     m_strictfpPosition(),
     m_parametersStartPosition(),
@@ -102,6 +103,7 @@ namespace struc {
     }
     struc::NamedDeclaration::clone(other, false);
 
+    m_lloc = other.m_lloc;
     m_isAbstract = other.m_isAbstract;
     m_abstractPosition.posInfo = other.m_abstractPosition.posInfo;
     m_isStrictfp = other.m_isStrictfp;
@@ -132,6 +134,10 @@ namespace struc {
       struc::Member::prepareDelete(false);
     }
     struc::NamedDeclaration::prepareDelete(false);
+  }
+
+  int MethodDeclaration::getLloc() const {
+    return m_lloc;
   }
 
   bool MethodDeclaration::getIsAbstract() const {
@@ -244,6 +250,10 @@ namespace struc {
       return (getNodeKind() < other.getNodeKind()) ? -1 :1 ;
     };
     return 0;
+  }
+
+  void MethodDeclaration::setLloc(int _lloc) {
+    m_lloc = _lloc;
   }
 
   void MethodDeclaration::setIsAbstract(bool _isAbstract) {
@@ -540,9 +550,10 @@ namespace struc {
       if(node.getAccessibility() == getAccessibility()) ++matchAttrs;
       if(node.getIsStatic() == getIsStatic()) ++matchAttrs;
       if(node.getIsFinal() == getIsFinal()) ++matchAttrs;
+      if(node.getLloc() == getLloc()) ++matchAttrs;
       if(node.getIsAbstract() == getIsAbstract()) ++matchAttrs;
       if(node.getIsStrictfp() == getIsStrictfp()) ++matchAttrs;
-      return matchAttrs / (8 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
+      return matchAttrs / (9 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
     }
@@ -607,6 +618,7 @@ namespace struc {
     if (m_isStrictfp) 
       boolValues |= 1;
     binIo.writeUByte1(boolValues);
+    binIo.writeUInt4(m_lloc);
     factory->getStringTable().setType(m_abstractPosition.posInfo.path, StrTable::strToSave);
     binIo.writeUInt4(m_abstractPosition.posInfo.path);
     binIo.writeUInt4(m_abstractPosition.posInfo.line);
@@ -675,6 +687,7 @@ namespace struc {
     boolValues >>= 1;
     m_isAbstract = boolValues & 1;
     boolValues >>= 1;
+    m_lloc = binIo.readUInt4();
     m_abstractPosition.posInfo.path = binIo.readUInt4();
     m_abstractPosition.posInfo.line = binIo.readUInt4();
     m_abstractPosition.posInfo.col = binIo.readUInt4();

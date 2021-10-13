@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var withStatement = factory.createWithStatementWrapper(factory);
+        var withStatement = factory.createWithStatementWrapper();
         globals.setPositionInfo(node, withStatement);
         return withStatement;
     } else {
@@ -34,29 +34,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.object != null) {
             var objectWrapper = globals.getWrapperOfNode(node.object);
-            if (node.object.type !== "Literal") {
-                var objectWrapperFunctionString = "setObject" + node.object.type;
-            } else {
-                var objectWrapperFunctionString = "setObject" + globals.getLiteralType(node.object) + node.object.type;
-            }
             try {
-                withStatementWrapper[objectWrapperFunctionString](objectWrapper);
+                withStatementWrapper.setObject(objectWrapper);
             } catch (e) {
-                console.error("WITHSTATEMENT - Function not exist: withStatementWrapper." + objectWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("WITHSTATEMENT - Could not set object! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.body != null) {
             var bodyWrapper = globals.getWrapperOfNode(node.body);
-            if (node.body.type !== "Literal") {
-                var bodyWrapperFunctionString = "setBody" + node.body.type;
-            } else {
-                var bodyWrapperFunctionString = "setBody" + globals.getLiteralType(node.body) + node.body.type;
-            }
             try {
-                withStatementWrapper[bodyWrapperFunctionString](bodyWrapper);
+                withStatementWrapper.setBody(bodyWrapper);
             } catch (e) {
-                console.error("WITHSTATEMENT - Function not exist: withStatementWrapper." + bodyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("WITHSTATEMENT - Could not set body! Reason of the error: " + e + "\n");
             }
         }
 

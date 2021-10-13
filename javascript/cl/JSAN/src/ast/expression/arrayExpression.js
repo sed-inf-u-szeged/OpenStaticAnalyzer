@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var arrayExpression = factory.createArrayExpressionWrapper(factory);
+        var arrayExpression = factory.createArrayExpressionWrapper();
         globals.setPositionInfo(node, arrayExpression);
         return arrayExpression;
     } else {
@@ -35,15 +35,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.elements.length; i++) {
                 if (node.elements[i] != null) {
                     var elementsWrapper = globals.getWrapperOfNode(node.elements[i]);
-                    if (node.elements[i].type !== "Literal") {
-                        var elementsWrapperFunctionString = "addElements" + node.elements[i].type;
-                    } else {
-                        var elementsWrapperFunctionString = "addElements" + globals.getLiteralType(node.elements[i]) + node.elements[i].type;
-                    }
                     try {
-                        arrayExpressionWrapper[elementsWrapperFunctionString](elementsWrapper);
+                        arrayExpressionWrapper.addElements(elementsWrapper);
                     } catch (e) {
-                        console.error("ARRAYEXPRESSION - Function not exist: arrayExpressionWrapper." + elementsWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("ARRAYEXPRESSION - Could not add element! Reason of the error: " + e + "\n");
                     }
                 }
             }

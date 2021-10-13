@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var exportSpecifier = factory.createExportSpecifierWrapper(factory);
+        var exportSpecifier = factory.createExportSpecifierWrapper();
         globals.setPositionInfo(node, exportSpecifier);
         return exportSpecifier;
     } else {
@@ -34,29 +34,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.exported != null) {
             var exportedWrapper = globals.getWrapperOfNode(node.exported);
-            if (node.exported.type !== "Literal") {
-                var exportedWrapperFunctionString = "setExported" + node.exported.type;
-            } else {
-                var exportedWrapperFunctionString = "setExported" + globals.getLiteralType(node.exported) + node.exported.type;
-            }
             try {
-                exportSpecifierWrapper[exportedWrapperFunctionString](exportedWrapper);
+                exportSpecifierWrapper.setExported(exportedWrapper);
             } catch (e) {
-                console.error("EXPORTSPECIFIER - Function not exist: exportSpecifierWrapper." + exportedWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("EXPORTSPECIFIER - Could not set exported! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.local != null) {
             var localWrapper = globals.getWrapperOfNode(node.local);
-            if (node.local.type !== "Literal") {
-                var localWrapperFunctionString = "setLocal" + node.local.type;
-            } else {
-                var localWrapperFunctionString = "setLocal" + globals.getLiteralType(node.local) + node.local.type;
-            }
             try {
-                exportSpecifierWrapper[localWrapperFunctionString](localWrapper);
+                exportSpecifierWrapper.setLocal(localWrapper);
             } catch (e) {
-                console.error("EXPORTSPECIFIER - Function not exist: exportSpecifierWrapper." + localWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("EXPORTSPECIFIER - Could not set local! Reason of the error: " + e + "\n");
             }
         }
 

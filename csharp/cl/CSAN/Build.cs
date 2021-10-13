@@ -1,159 +1,154 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
-using System;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System;
 using System.Collections.Generic;
-
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Columbus.CSAN.Contexts;
+using Columbus.CSAN.Diagnostics;
+using Columbus.CSAN.LimBuilder;
+using Columbus.CSAN.Metrics;
+using Columbus.CSAN.RoslynParser;
+using Columbus.CSAN.Utils;
+using Columbus.Csharp.Asg.Algorithms;
+using Columbus.Csharp.Asg.Visitors;
+using Columbus.Lim.Asg;
+using Columbus.Lim.Asg.Nodes.Base;
+using Columbus.Lim.Asg.Nodes.Logical;
+using Columbus.Lim.Asg.Visitors;
 using Microsoft.CodeAnalysis;
 
 namespace Columbus.CSAN
 {
-    using Lim.Asg;
-    using Lim.Asg.Nodes.Base;
-
-    using Utils;
-    using Commons;
-    using Metrics;
-    using LimBuilder;
-    using RoslynParser;
-    using RoslynVisitors;
-
-    using static Common;
-
     static class Build
     {
         /// <summary>
         /// List of cssi/lcssi files path.
         /// </summary>
-        private static List<string> outfiles = new List<string>();
+        private static readonly List<string> CsharpAsgFiles = new List<string>();
 
         /// <summary>
         /// UTF8 encoder to the XML file dump without BOM.
         /// </summary>
-        private static System.Text.UTF8Encoding utf8Encoding = new System.Text.UTF8Encoding(false);
+        private static readonly UTF8Encoding Utf8Encoding = new UTF8Encoding(false);
+
+        private const int RestoreTimeoutMs = 10 * 60 * 1000; // 10min
 
         /// <summary>
-        /// Building main entry point.
+        /// C# and LIM ASG building entry point.
         /// </summary>
-        /// <param name="abstractOpen"></param>
-        /// <param name="output"></param>
-        /// <param name="fxCopPath">FxCopCmd.exe path</param>
-        /// <param name="fXCopOut">FxCop result directory</param>
-        /// <param name="row">CSV file second row</param>
-        public static void Start(AbstractOpen abstractOpen, string output, string fxCopPath, string fXCopOut, string outListFilePath)
+        /// <param name="abstractOpen">Input project</param>
+        /// <param name="optionBag">Commandline options</param>
+        /// <param name="watchBag">Stopwatches</param>
+        /// <param name="buildTask">If the solution is being built to binaries, the task representing the building process, null otherwise.</param>
+        /// <param name="statistic">Statistics</param>
+        public static void Start(AbstractOpen abstractOpen, OptionBag optionBag, WatchBag watchBag, Task buildTask, Statistic statistic)
         {
-            WriteMsg.WriteLine("Starting analysis...");
-            MainDeclaration.Instance.CSSIExtension = (abstractOpen is FileOpen) ? Constants.CSSIEXTENSION : Constants.LCSSIEXTENSION;
-            MainDeclaration.Instance.Solution = abstractOpen.Solution;
+            var asgBuildingWatch = Stopwatch.StartNew();
 
+            WriteMsg.WriteLine("Starting analysis...");
+
+            SolutionContext solutionContext = new SolutionContext(abstractOpen.Solution, optionBag, watchBag);
+            DiagnosticsExporter diagnosticsExporter = new DiagnosticsExporter(solutionContext);
+            ICollection<Task> diagnosticsExporterTasks = new LinkedList<Task>();
+
+            int i = 0;
             foreach (Project project in abstractOpen.TopologicallySortedProjectDependencies)
             {
-                if (Commons.Common.CheckOuterFilters(project.FilePath)) continue;
+                i++;
+                WriteMsg.Write($"    ({i}/{abstractOpen.TopologicallySortedProjectDependencies.Count}) ");
+                if (!solutionContext.HardFilter.IsNecessaryToAnalyse(project.FilePath))
+                {
+                    WriteMsg.WriteLine($"Skipping {project.AssemblyName} because it is hard filtered");
+                    continue;
+                }
+                if (!project.HasDocuments)
+                {
+                    WriteMsg.WriteLine($"Skipping empty project {project.AssemblyName}. This might be caused by an MsBuild loading error.");
+                    continue;
+                }
+                if (project.OutputFilePath == null)
+                {
+                    WriteMsg.WriteLine($"Skipping project {project.AssemblyName} because its output path is not set. This might be caused by an MsBuild loading error.", WriteMsg.MsgLevel.Warning);
+                    continue;
+                }
 
-                WriteMsg.WriteWithBreak("Analyzing {0}...", WriteMsg.MsgLevel.Normal, 4, project.AssemblyName);
-                Analyse(project, output, fxCopPath, fXCopOut);
+                WriteMsg.Write($"Analyzing {project.AssemblyName}... ");
+                ProjectContext projectContext = new ProjectContext(solutionContext, project);
+
+                if (optionBag.RestorePackages)
+                    RestorePackages(project);
+
+                if (optionBag.RunAnalyzers)
+                    diagnosticsExporterTasks.Add(Task.Run(async () =>
+                        await diagnosticsExporter.ExportAnalyzerDiagnosticsAsync(project, Path.Combine(optionBag.AnalyzersOut, Path.GetFileName(project.OutputFilePath + ".xml")))
+                    ));
+
+                AnalyseProject(projectContext, optionBag, abstractOpen.CssiExtension, buildTask);
             }
 
-            MainDeclaration.Instance.Statistics[0].CSharpASGBuildingTime = MainDeclaration.Instance.CSSIWatch.ElapsedSeconds;
-            MainDeclaration.Instance.Statistics[0].LIMASGBildingTime = MainDeclaration.Instance.LIMWatch.ElapsedSeconds;
-
-            LineMetrics.Calculate();
+            var lineMetrics = new LineMetrics(solutionContext);
+            lineMetrics.Calculate();
 
             WriteMsg.WriteLine("Analysis finished");
-            if (!string.IsNullOrEmpty(outListFilePath))
+            if (!string.IsNullOrEmpty(optionBag.OutList))
             {
-                File.WriteAllText(outListFilePath, string.Join(Environment.NewLine, outfiles));
+                File.WriteAllLines(optionBag.OutList, CsharpAsgFiles);
             }
-            MainDeclaration.Instance.FxCopTasks.WaitAll();
+
+            statistic.ASGBuildingTime = asgBuildingWatch.ElapsedSeconds;
+
+            var saveWatch = Stopwatch.StartNew();
+            SaveLimAsg(optionBag, solutionContext);
+            statistic.SaveTime = saveWatch.ElapsedSeconds;
+
+            buildTask?.Wait();
+            diagnosticsExporterTasks.WaitAll();
         }
 
         /// <summary>
-        /// Saving LIM file to the targeted path.
+        /// Analyse a Project
         /// </summary>
-        /// <param name="intput">Input file with full path</param>
-        /// <param name="output">Output file path</param>
-        /// <param name="limName">Output LIM file name</param>
-        public static void SaveLimASG(string intput, string output, string limName)
+        /// <param name="projectContext">Context of the project being analysed</param>
+        /// <param name="optionBag">Commandline options</param>
+        /// <param name="cssiExtension">lcssi or cssi based on the type of analysis</param>
+        /// <param name="buildTask">If the solution is being built to binaries, the task representing the building process, null otherwise.</param>
+        private static void AnalyseProject(ProjectContext projectContext, OptionBag optionBag, string cssiExtension, Task buildTask)
         {
-            if (MainDeclaration.Instance.DumpLimml)
+            Task<IEnumerable<KeyValuePair<WriteMsg.MsgLevel, string>>> fxCopTask = null;
+            if (optionBag.RunFxCop)
+                fxCopTask = Task.Run(() => StartFxCopAnalysis(projectContext.RoslynProject.OutputFilePath, optionBag.FxCopOut, optionBag.FxCopPath, buildTask));
+
+            var progressDisplay = new WriteMsg.ProgressDisplay(projectContext.RoslynProject.Documents.Count(), true);
+
+            foreach (var document in projectContext.RoslynProject.Documents)
             {
-                SaveLimML(intput, output, limName);
+                progressDisplay.AdvanceAndPrint();
+                if (!projectContext.SolutionContext.HardFilter.IsNecessaryToAnalyse(document.FilePath)) {
+                    WriteMsg.WriteLine($"Skipping {document.FilePath} because it is hard filtered", WriteMsg.MsgLevel.Debug);
+                    continue;
+                }
+
+                WriteMsg.WriteLine($"Analyzing {document.FilePath}", WriteMsg.MsgLevel.Debug);
+                var fileContext = new FileContext(projectContext, document);
+
+                projectContext.SolutionContext.WatchBag.CSSIWatch.Start();
+                BuildCsharpAsg(fileContext);
+                projectContext.SolutionContext.WatchBag.CSSIWatch.Stop();
+                projectContext.SolutionContext.WatchBag.LIMWatch.Start();
+                BuildLimAsg(fileContext);
+                projectContext.SolutionContext.WatchBag.LIMWatch.Stop();
             }
+            WriteMsg.WriteLine();
 
-            List<IHeaderData> headers = new List<IHeaderData>();
+            SaveCsharpAsg(projectContext, optionBag.Output, optionBag.DumpCsharpml, cssiExtension);
 
-            headers.Add(MainDeclaration.Instance.LimOrigin);
-            headers.Add(MainDeclaration.Instance.OverrideRelations);
-            WriteMsg.WriteLine("LIM saving...");
-
-            //Save LIM
-            MainDeclaration.Instance.LimFactory.save(
-                output
-                + ((limName != string.Empty) ? Path.GetFileName(limName) : Path.GetFileNameWithoutExtension(intput))
-                + Constants.LIMEXTENSION, headers);
-
-            //Save Filtered LIM
-            MainDeclaration.Instance.LimFactory.saveFilter(
-                output
-                + ((limName != string.Empty) ? Path.GetFileName(limName) : Path.GetFileNameWithoutExtension(intput))
-                + Constants.FILTEREDLIMEXTENSION);
-            WriteMsg.WriteLine("LIM saved");
-        }
-
-        /// <summary>
-        /// Project file analysis phase
-        /// </summary>
-        /// <param name="project">Porject file object</param>
-        /// <param name="output">C# ASG output path</param>
-        /// <param name="fxCopPath">FxCopCmd.exe path</param>
-        /// <param name="fXCopOut">FxCop result directory</param>
-        private static void Analyse(Project project, string output, string fxCopPath, string fXCopOut)
-        {
-            if (!string.IsNullOrEmpty(fxCopPath))
-                MainDeclaration.Instance.FxCopTasks.Add(Task.Run(() => StartFxCopAnalysis(project.OutputFilePath, (string.IsNullOrEmpty(fXCopOut)) ? output : fXCopOut, fxCopPath)));
-            CreateComponent(project);
-
-            Csharp.Asg.Factory Factory = new Csharp.Asg.Factory(new StrTable());
-            Dictionary<Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode, uint> CSharpMap = new Dictionary<Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode, uint>();
-            NodeBuilder mapBuilder = new NodeBuilder(Factory, CSharpMap);
-            TreeEdgeBuilder edgeBuilder = new TreeEdgeBuilder(Factory, CSharpMap);
-            CrossEdgeFiller crossEdgeFiller = new CrossEdgeFiller(Factory, CSharpMap);
-
-            foreach (var document in project.Documents)
+            if (fxCopTask != null)
             {
-                if (Commons.Common.CheckOuterFilters(document.FilePath)) continue;
-
-                MainDeclaration.Instance.RoslynWatch.Start();
-                MainDeclaration.Instance.Model = document.GetSemanticModelAsync().Result;
-                MainDeclaration.Instance.RoslynWatch.Stop();
-                MainDeclaration.Instance.CSSIWatch.Start();
-                BuildCSSIASG(document, mapBuilder, edgeBuilder);
-                MainDeclaration.Instance.CSSIWatch.Stop();
-                MainDeclaration.Instance.LIMWatch.Start();
-                BuildLIMASG(CSharpMap, crossEdgeFiller);
-                MainDeclaration.Instance.LIMWatch.Stop();
+                foreach (var pair in fxCopTask.Result)
+                    WriteMsg.WriteLine("    " + pair.Value, pair.Key);
             }
-
-            SaveCsharpASG(project, output, Factory);
         }
 
         /// <summary>
@@ -162,45 +157,51 @@ namespace Columbus.CSAN
         /// <param name="inputBinary">Binary file location</param>
         /// <param name="resultOutputPath">FxCop result directory</param>
         /// <param name="fxCopPath">FxCopCmd.exe path</param>
-        private static void StartFxCopAnalysis(string inputBinary, string resultOutputPath, string fxCopPath)
+        /// <param name="buildTask"></param>
+        private static IEnumerable<KeyValuePair<WriteMsg.MsgLevel, string>> StartFxCopAnalysis(string inputBinary, string resultOutputPath, string fxCopPath, Task buildTask)
         {
-            if (string.IsNullOrEmpty(fxCopPath))
-                return;
-            string output_filename = Path.GetFileNameWithoutExtension(inputBinary) + ".xml";
-            string output_directory = Path.GetDirectoryName(inputBinary);
-            string result = Path.Combine(output_directory, output_filename);
+            var messages = new List<KeyValuePair<WriteMsg.MsgLevel, string>>();
+            if (string.IsNullOrEmpty(fxCopPath) || string.IsNullOrEmpty(inputBinary))
+                return messages;
+            string outputFilename = Path.GetFileNameWithoutExtension(inputBinary) + ".xml";
+            string outputDirectory = Path.GetDirectoryName(inputBinary) ?? "/";
+            string result = Path.Combine(outputDirectory, outputFilename);
 
             if (!string.IsNullOrEmpty(resultOutputPath) && resultOutputPath[resultOutputPath.Length - 1] != Path.DirectorySeparatorChar)
                 resultOutputPath += Path.DirectorySeparatorChar;
 
-            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo()
+            var startInfo = new ProcessStartInfo
             {
                 CreateNoWindow = false,
                 UseShellExecute = false,
                 FileName = fxCopPath.EndsWith(".exe") ? fxCopPath : fxCopPath + "FxCopCmd.exe",
-                WorkingDirectory = fxCopPath.EndsWith(".exe") ? Path.GetDirectoryName(fxCopPath) : fxCopPath,
-                WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden,
+                WorkingDirectory = fxCopPath.EndsWith(".exe") ? (Path.GetDirectoryName(fxCopPath) ?? "/") : fxCopPath,
+                WindowStyle = ProcessWindowStyle.Hidden,
                 Arguments = string.Format("/f:\"{0}\" /d:\"{1}\" /r:\"{2}\" /o:\"{3}{4}\" /gac",
-                                        inputBinary, output_directory, (fxCopPath.Contains(".exe") ? Path.GetDirectoryName(fxCopPath) : fxCopPath) + "Rules", resultOutputPath, output_filename),
+                    inputBinary,
+                    outputDirectory,
+                    (fxCopPath.Contains(".exe") ? Path.GetDirectoryName(fxCopPath) : fxCopPath) + "Rules",
+                    resultOutputPath,
+                    outputFilename
+                ),
                 RedirectStandardOutput = true,
                 RedirectStandardError = true
             };
 
-            if (MainDeclaration.Instance.BuildTask != null)
-                MainDeclaration.Instance.BuildTask.Wait();
+            buildTask?.Wait();
 
             if (!File.Exists(inputBinary))
             {
-                WriteMsg.WriteWithBreak("[FxCopAnalysis] {0} is missing, skipped", WriteMsg.MsgLevel.Warning, 4, inputBinary);
-                return;
+                messages.Add(new KeyValuePair<WriteMsg.MsgLevel, string>(WriteMsg.MsgLevel.Warning, $"[FxCopAnalysis] {inputBinary} is missing, skipped"));
+                return messages;
             }
 
-            WriteMsg.WriteWithBreak("[FxCopAnalysis] Starting FxCop analysis for {0}...", WriteMsg.MsgLevel.Normal, 4, inputBinary);
+            messages.Add(new KeyValuePair<WriteMsg.MsgLevel, string>(WriteMsg.MsgLevel.Debug, $"[FxCopAnalysis] Starting FxCop analysis for {inputBinary}..."));
             try
             {
-                string output = string.Format("{0}{1}{2}.log", resultOutputPath, Path.DirectorySeparatorChar, output_filename);
+                string output = Path.Combine(resultOutputPath, outputFilename + ".log");
 
-                using (System.Diagnostics.Process exeProcess = new System.Diagnostics.Process())
+                using (Process exeProcess = new Process())
                 using (StreamWriter sw = new StreamWriter(output, false))
                 {
                     exeProcess.OutputDataReceived += (sender, e) =>
@@ -219,56 +220,84 @@ namespace Columbus.CSAN
                     exeProcess.BeginErrorReadLine();
                     exeProcess.WaitForExit();
                 }
-                WriteMsg.WriteWithBreak("[FxCopAnalysis] FxCop for {0} terminated", WriteMsg.MsgLevel.Normal, 4, Path.GetFileName(inputBinary));
+                messages.Add(new KeyValuePair<WriteMsg.MsgLevel, string>(WriteMsg.MsgLevel.Debug, $"[FxCopAnalysis] FxCop for {Path.GetFileName(inputBinary)} terminated"));
+            }
+            catch (Exception)
+            {
+                if (File.Exists(result))
+                    File.Delete(result);
+                throw;
+            }
+
+            return messages;
+        }
+
+        private static void RestorePackages(Project project)
+        {
+            WriteMsg.WriteLine("Restoring packages", WriteMsg.MsgLevel.Debug);
+            var info = new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                ArgumentList = {"restore", project.FilePath},
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+            };
+
+            try
+            {
+                using (var restoreProcess = Process.Start(info))
+                {
+                    if (restoreProcess == null)
+                    {
+                        WriteMsg.WriteLine($"Could not start package restore for project file {project.FilePath}", WriteMsg.MsgLevel.Warning);
+                    }
+                    else
+                    {
+                        restoreProcess.WaitForExit(RestoreTimeoutMs);
+                        if (!restoreProcess.HasExited)
+                        {
+                            WriteMsg.WriteLine($"Package restore timed out after {RestoreTimeoutMs / 1000 / 60} minutes.", WriteMsg.MsgLevel.Warning);
+                            WriteMsg.WriteLine("Missing packages may cause the analysis to fail.", WriteMsg.MsgLevel.Warning);
+                            restoreProcess.Kill(true);
+                        }
+                        else if (restoreProcess.ExitCode != 0)
+                        {
+                            WriteMsg.WriteLine($"Package restore exited with code {restoreProcess.ExitCode}", WriteMsg.MsgLevel.Warning);
+                            WriteMsg.WriteLine("Standard output:", WriteMsg.MsgLevel.Debug);
+                            WriteMsg.WriteLine(restoreProcess.StandardOutput.ReadToEnd(), WriteMsg.MsgLevel.Debug);
+                            WriteMsg.WriteLine("Standard error:", WriteMsg.MsgLevel.Warning);
+                            WriteMsg.WriteLine(restoreProcess.StandardError.ReadToEnd(), WriteMsg.MsgLevel.Warning);
+                            WriteMsg.WriteLine("Missing packages may cause the analysis to fail.", WriteMsg.MsgLevel.Warning);
+                        }
+                        else
+                        {
+                            WriteMsg.WriteLine(restoreProcess.StandardOutput.ReadToEnd(), WriteMsg.MsgLevel.Debug);
+                            WriteMsg.WriteLine(restoreProcess.StandardError.ReadToEnd(), WriteMsg.MsgLevel.Debug);
+                        }
+                    }
+                }
             }
             catch (FileNotFoundException e)
             {
-                if (File.Exists(result))
-                    File.Delete(result);
-                WriteMsg.WriteWithBreak("[FxCopAnalysis][FileNotFoundException] {0}: {1}", WriteMsg.MsgLevel.Warning, 4, e.Message, startInfo.FileName);
-            }
-            catch (System.ComponentModel.Win32Exception e)
-            {
-                if (File.Exists(result))
-                    File.Delete(result);
-                WriteMsg.WriteWithBreak("[FxCopAnalysis][Win32Exception] " + e.Message, WriteMsg.MsgLevel.Warning, 4);
-            }
-            catch (System.IO.IOException e)
-            {
-                if (File.Exists(result))
-                    File.Delete(result);
-                WriteMsg.WriteWithBreak("[FxCopAnalysis][IOException] " + e.Message, WriteMsg.MsgLevel.Warning, 4);
+                WriteMsg.WriteLine("Error during package restore: 'dotnet' command not found.", WriteMsg.MsgLevel.Warning);
+                WriteMsg.WriteLine("Make sure that you have installed the appropriate .NET Core SDK and the PATH environment variable is set up correctly.", WriteMsg.MsgLevel.Warning);
+                WriteMsg.WriteLine("Missing packages may cause the analysis to fail.", WriteMsg.MsgLevel.Warning);
             }
             catch (Exception e)
             {
-                if (File.Exists(result))
-                    File.Delete(result);
-                WriteMsg.WriteWithBreak("[FxCopAnalysis][{0}] {1}", WriteMsg.MsgLevel.Warning, 4, e.GetType().ToString(), e.Message);
+                WriteMsg.WriteLine($"Unexpected error occured during package restore: {e.Message}", WriteMsg.MsgLevel.Warning);
+                WriteMsg.WriteLine("Missing packages may cause the analysis to fail.", WriteMsg.MsgLevel.Warning);
             }
-        }
-
-        /// <summary>
-        /// Create LIM component from the Project
-        /// </summary>
-        /// <param name="project">Project file object</param>
-        private static void CreateComponent(Project project)
-        {
-            MainDeclaration.Instance.Component = MainDeclaration.Instance.LimFactory.createComponent(Commons.Common.ProcessPath(project.OutputFilePath));
-            MainDeclaration.Instance.RevEdges = MainDeclaration.Instance.LimFactory.GetReverseEdges();
-
-            SetNotFilteredComponentUp(MainDeclaration.Instance.Component, true);
-
-            MainDeclaration.Instance.Component.ShortName = Path.GetFileName(project.OutputFilePath);
         }
 
         /// <summary>
         /// Check Root component node contains the actual component
         /// </summary>
         /// <returns></returns>
-        private static bool GetAlreadyContain(Component node)
+        private static bool GetAlreadyContain(Component node, Component componentRoot)
         {
             bool alreadyContain = false;
-            ListIterator<Component> it = MainDeclaration.Instance.LimFactory.ComponentRootRef.ContainsListIteratorBegin;
+            ListIterator<Component> it = componentRoot.ContainsListIteratorBegin;
             while (it.getValue() != null)
             {
                 Component comp = it.getValue();
@@ -285,83 +314,55 @@ namespace Columbus.CSAN
         /// <summary>
         /// C# ASG building phase
         /// </summary>
-        /// <param name="document">C# file's object</param>
-        /// <param name="mapBuilder">Node builder reference</param>
-        /// <param name="edgeBuilder">Edge builder reference</param>
-        private static void BuildCSSIASG(Document document, NodeBuilder mapBuilder, TreeEdgeBuilder edgeBuilder)
+        private static void BuildCsharpAsg(FileContext fileContext)
         {
-            MainDeclaration.Instance.RoslynWatch.Start();
-            SyntaxNode root = document.GetSyntaxRootAsync().Result;
-            MainDeclaration.Instance.RoslynWatch.Stop();
+            fileContext.ProjectContext.SolutionContext.WatchBag.RoslynWatch.Start();
+            SyntaxNode root = fileContext.Document.GetSyntaxRootAsync().Result;
+            fileContext.ProjectContext.SolutionContext.WatchBag.RoslynWatch.Stop();
 
-            mapBuilder.Visit(root);
-            edgeBuilder.Visit(root);
+            fileContext.TreeBuilder.Visit(root);
         }
 
         /// <summary>
         /// LIM ASG building phase
         /// </summary>
-        /// <param name="map">Roslyn node and C# ASG ids map</param>
-        /// <param name="crossEdgeFiller">C# ASG cross edge filler object</param>
-        private static void BuildLIMASG(Dictionary<Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode, uint> map, CrossEdgeFiller crossEdgeFiller)
+        private static void BuildLimAsg(FileContext fileContext)
         {
-            if (!MainDeclaration.Instance.LocalMap.ContainsKey(MainDeclaration.Instance.Model.Compilation.Assembly.GlobalNamespace))
+            var solutionContext = fileContext.ProjectContext.SolutionContext;
+            var globalNamespace = fileContext.SemanticModel.Compilation.Assembly.GlobalNamespace;
+
+            // TODO move this global namespace creation to a more appropriate place
+            if (!solutionContext.MainMap.ContainsKey(globalNamespace))
             {
-                MainDeclaration.Instance.LocalMap.Add(MainDeclaration.Instance.Model.Compilation.Assembly.GlobalNamespace, MainDeclaration.Instance.LimFactory.Root);
-                MainDeclaration.Instance.Root = MainDeclaration.Instance.LimFactory.getRef(MainDeclaration.Instance.LimFactory.Root) as Lim.Asg.Nodes.Logical.Package;
-                SymbolBuilder.BuildDispatch<Lim.Asg.Nodes.Logical.Package, INamespaceSymbol>(MainDeclaration.Instance.Model.Compilation.Assembly.GlobalNamespace);
-                MainDeclaration.Instance.UsesStack.Pop();
+                solutionContext.MainMap.Add(globalNamespace, solutionContext.LimFactory.Root);
+                var symbolBuilder = new SymbolBuilder(fileContext);
+                symbolBuilder.BuildDispatch<Package, INamespaceSymbol>(globalNamespace);
+                fileContext.UsesStack.Pop();
             }
 
-            Commons.Common.Safe_Edge(MainDeclaration.Instance.Root, "BelongsTo", MainDeclaration.Instance.Component.Id);
-
-            if (!GetAlreadyContain(MainDeclaration.Instance.Component))
+            if (!GetAlreadyContain(fileContext.ProjectContext.Component, solutionContext.LimFactory.ComponentRootRef))
             {
-                MainDeclaration.Instance.LimFactory.ComponentRootRef.addContains(MainDeclaration.Instance.Component);
+                solutionContext.LimFactory.ComponentRootRef.addContains(fileContext.ProjectContext.Component);
             }
 
-            MainDeclaration.Instance.RoslynWatch.Start();
-            var root = MainDeclaration.Instance.Model.SyntaxTree.GetRoot();
-            MainDeclaration.Instance.RoslynWatch.Stop();
-            //Visitor.Visit(root, ref map, crossEdgeFiller);
-            RoslynVisitor.GetInstance(map, crossEdgeFiller).Visit(root);
-        }
-
-        /// <summary>
-        /// Set up the analysis time and the filter to the component.
-        /// </summary>
-        /// <param name="node">Actual component</param>
-        private static void SetNotFilteredComponentUp(Component node, bool hasStructureInfo)
-        {
-            MainDeclaration.Instance.LimFactory.setNotFilteredThisNodeOnly(node.Id);
-
-            if (node.AnalysisTime == Types.AnalysisTimeKind.atkNever)
-            {
-                if (hasStructureInfo)
-                {
-                    node.AnalysisTime = Types.AnalysisTimeKind.atkBefore;
-                }
-                else
-                {
-                    node.AnalysisTime = Types.AnalysisTimeKind.atkNow;
-                }
-            }
-
-            for (var it = node.ContainsListIteratorBegin; it.getValue() != null; it = it.getNext())
-                SetNotFilteredComponentUp(it.getValue(), hasStructureInfo);
+            solutionContext.WatchBag.RoslynWatch.Start();
+            var root = fileContext.SemanticModel.SyntaxTree.GetRoot();
+            solutionContext.WatchBag.RoslynWatch.Stop();
+            fileContext.RoslynVisitor.Visit(root);
         }
 
         /// <summary>
         /// Saving C# ASG to the target path.
         /// </summary>
-        /// <param name="project">Project file's object</param>
+        /// <param name="projectContext">Project context</param>
         /// <param name="output">Output file path</param>
-        /// <param name="Factory">C# ASG's factory object</param>
-        private static void SaveCsharpASG(Project project, string output, Csharp.Asg.Factory Factory)
+        /// <param name="dumpCsharpml">Make an XML dump of the ASG</param>
+        /// <param name="cssiExtension">Extension of the saved ASG</param>
+        private static void SaveCsharpAsg(ProjectContext projectContext, string output, bool dumpCsharpml, string cssiExtension)
         {
             List<IHeaderData> header = new List<IHeaderData>();
             PropertyData propertyData = new PropertyData();
-            propertyData.add(PropertyData.csih_OriginalLocation, Commons.Common.ProcessPath(project.OutputFilePath));
+            propertyData.add(PropertyData.csih_OriginalLocation, projectContext.SolutionContext.ProcessPath(projectContext.RoslynProject.OutputFilePath));
             header.Add(propertyData);
 
             string basePath =
@@ -369,40 +370,63 @@ namespace Columbus.CSAN
                     ? output
                     : Path.GetDirectoryName( output )
                       + Path.DirectorySeparatorChar
-                      + project.Name
+                      + projectContext.RoslynProject.Name
                       + Constants.PROJECTEXTENSION;
 
-            Factory.save(basePath + MainDeclaration.Instance.CSSIExtension, header);
-            Factory.saveFilter(basePath + Constants.FILTEREDCSSIEXTENSION);
-            outfiles.Add(basePath + MainDeclaration.Instance.CSSIExtension);
-            if (MainDeclaration.Instance.DumpCsharpml)
+            var fileName = basePath + cssiExtension;
+            projectContext.CsharpFactory.save(fileName, header);
+            projectContext.CsharpFactory.saveFilter(basePath + Constants.FILTEREDCSSIEXTENSION);
+            CsharpAsgFiles.Add(fileName);
+            if (dumpCsharpml)
             {
-                using (StreamWriter sw = new StreamWriter(basePath + Constants.CSHARPDUMPEXTENSION, false, utf8Encoding))
+                using (StreamWriter sw = new StreamWriter(basePath + Constants.CSHARPDUMPEXTENSION, false, Utf8Encoding))
                 {
-                    var visitor = new Csharp.Asg.Visitors.VisitorCSHARPML(sw, project.Name, true, x => { }, false);  //message writer seems to be unused
-                    var ap = new Csharp.Asg.Algorithms.AlgorithmPreorder();
-                    ap.run(Factory, visitor);
+                    var visitor = new VisitorCSHARPML(sw, projectContext.RoslynProject.Name, true, x => { }, false);  //message writer seems to be unused
+                    var ap = new AlgorithmPreorder();
+                    ap.run(projectContext.CsharpFactory, visitor);
                 }
             }
         }
 
         /// <summary>
+        /// Saving LIM file to the targeted path.
+        /// </summary>
+        /// <param name="optionBag">Command line options</param>
+        /// <param name="solutionContext">The solution context</param>
+        private static void SaveLimAsg(OptionBag optionBag, SolutionContext solutionContext)
+        {
+            if (optionBag.DumpLimml)
+                SaveLimml(optionBag.Input, optionBag.Output, optionBag.LimName, solutionContext);
+
+            var headers = new List<IHeaderData> {solutionContext.LimOrigin, solutionContext.OverrideRelations};
+            var baseName = optionBag.Output + (string.IsNullOrEmpty(optionBag.LimName) ? Path.GetFileNameWithoutExtension(optionBag.Input) : Path.GetFileName(optionBag.LimName));
+
+            WriteMsg.WriteLine("LIM saving...");
+            //Save LIM
+            solutionContext.LimFactory.save(baseName + Constants.LIMEXTENSION, headers);
+            //Save Filtered LIM
+            solutionContext.LimFactory.saveFilter(baseName + Constants.FILTEREDLIMEXTENSION);
+            WriteMsg.WriteLine("LIM saved");
+        }
+
+        /// <summary>
         /// Saving LIM file to the target path.
         /// </summary>
-        /// <param name="intput">Input file path</param>
+        /// <param name="input">Input file path</param>
         /// <param name="output">Output file path</param>
         /// <param name="limName">[Output LIM file name]</param>
-        private static void SaveLimML(string intput, string output, string limName)
+        /// <param name="solutionContext"></param>
+        private static void SaveLimml(string input, string output, string limName, SolutionContext solutionContext)
         {
-            string path = output + ((limName != string.Empty) ? limName : Path.GetFileNameWithoutExtension(intput)) + Constants.LIMDUMPEXTENSION;
-            using (System.IO.StreamWriter streamWriter = new System.IO.StreamWriter(path, false, utf8Encoding))
+            string path = output + (string.IsNullOrEmpty(limName) ? Path.GetFileNameWithoutExtension(input) : limName) + Constants.LIMDUMPEXTENSION;
+            using (StreamWriter streamWriter = new StreamWriter(path, false, Utf8Encoding))
             {
-                string solutionName = System.IO.Path.GetFileNameWithoutExtension(MainDeclaration.Instance.Solution.FilePath);
-                Columbus.Lim.Asg.Visitors.VisitorLIMML visitorLimml = new Columbus.Lim.Asg.Visitors.VisitorLIMML(streamWriter, solutionName, true, m => { }, false);
-                Columbus.Lim.Asg.Algorithms.AlgorithmPreorder ap = new Columbus.Lim.Asg.Algorithms.AlgorithmPreorder();
+                string solutionName = Path.GetFileNameWithoutExtension(solutionContext.Solution.FilePath);
+                VisitorLIMML visitorLimml = new VisitorLIMML(streamWriter, solutionName, true, m => { }, false);
+                Lim.Asg.Algorithms.AlgorithmPreorder ap = new Lim.Asg.Algorithms.AlgorithmPreorder();
                 ap.setVisitSpecialNodes(true, true);
                 ap.setSafeMode();
-                ap.run(MainDeclaration.Instance.LimFactory, visitorLimml);
+                ap.run(solutionContext.LimFactory, visitorLimml);
             }
         }
     }

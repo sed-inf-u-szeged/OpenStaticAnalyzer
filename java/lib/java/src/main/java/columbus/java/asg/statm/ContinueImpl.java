@@ -35,6 +35,7 @@ import columbus.logger.LoggerHandler;
  */
 public class ContinueImpl extends BaseImpl implements Continue {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(ContinueImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

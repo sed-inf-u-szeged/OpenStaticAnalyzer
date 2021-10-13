@@ -38,6 +38,7 @@ import columbus.logger.LoggerHandler;
  */
 public class EnumConstantImpl extends BaseImpl implements EnumConstant {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(EnumConstantImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

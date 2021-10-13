@@ -42,7 +42,6 @@ namespace structure {
   * Edges:
   *   - ConstraintClauses (structure::TypeParameterConstraintClauseSyntax, multiple) : (missing)
   *   - ExplicitInterfaceSpecifier (structure::ExplicitInterfaceSpecifierSyntax, single) : (missing)
-  *   - ExpressionBody (structure::ArrowExpressionClauseSyntax, single) : (missing)
   *   - ReturnType (expression::TypeSyntax, single) : (missing)
   */
   class MethodDeclarationSyntax : public BaseMethodDeclarationSyntax {
@@ -178,12 +177,6 @@ namespace structure {
       structure::ExplicitInterfaceSpecifierSyntax* getExplicitInterfaceSpecifier() const;
 
       /**
-      * \brief Gives back the pointer of the node the ExpressionBody edge points to.
-      * \return Returns the end point of the ExpressionBody edge.
-      */
-      structure::ArrowExpressionClauseSyntax* getExpressionBody() const;
-
-      /**
       * \brief Gives back the pointer of the node the ReturnType edge points to.
       * \return Returns the end point of the ReturnType edge.
       */
@@ -234,23 +227,6 @@ namespace structure {
       void removeExplicitInterfaceSpecifier();
 
       /**
-      * \brief Sets the ExpressionBody edge.
-      * \param id [in] The new end point of the ExpressionBody edge.
-      */
-      void setExpressionBody(NodeId id);
-
-      /**
-      * \brief Sets the ExpressionBody edge.
-      * \param node [in] The new end point of the ExpressionBody edge.
-      */
-      void setExpressionBody(ArrowExpressionClauseSyntax *node);
-
-      /**
-      * \brief remove the ExpressionBody edge.
-      */
-      void removeExpressionBody();
-
-      /**
       * \brief Sets the ReturnType edge.
       * \param id [in] The new end point of the ReturnType edge.
       */
@@ -276,9 +252,6 @@ namespace structure {
 
       /** \internal \brief The id of the node the ExplicitInterfaceSpecifier edge points to. */
       NodeId m_ExplicitInterfaceSpecifier;
-
-      /** \internal \brief The id of the node the ExpressionBody edge points to. */
-      NodeId m_ExpressionBody;
 
       /** \internal \brief The id of the node the ReturnType edge points to. */
       NodeId m_ReturnType;

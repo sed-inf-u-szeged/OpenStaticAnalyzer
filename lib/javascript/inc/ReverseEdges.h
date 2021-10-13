@@ -84,7 +84,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Gives back a ListIterator for the given node with the given edge kind.
       * \param id                  [in] The id of the node whose edges will be iterated.
       * \param edge                [in] The kind of the edge.
-      * \throw JavaScriptException Throws exception if there is node for the id or the edge kind is invalid for this node (it is not invalid if the node can have such edge but it has not got at that moment).
+      * \throw JavascriptException Throws exception if there is node for the id or the edge kind is invalid for this node (it is not invalid if the node can have such edge but it has not got at that moment).
       * \return Returns with a iterator which iterates the node's reverse edges of the given kind.
       */
       const ListIterator<base::Base> constIteratorBegin(NodeId id, EdgeKind edge) const;
@@ -93,7 +93,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Gives back a ListIterator for the given node with the given edge kind.
       * \param id                  [in] The id of the node whose edges will be iterated.
       * \param edge                [in] The kind of the edge.
-      * \throw JavaScriptException Throws exception if there is node for the id or the edge kind is invalid for this node (it is not invalid if the node can have such edge but it has not got at that moment).
+      * \throw JavascriptException Throws exception if there is node for the id or the edge kind is invalid for this node (it is not invalid if the node can have such edge but it has not got at that moment).
       * \return Returns with a iterator which iterates the node's reverse edges of the given kind.
       */
       const ListIterator<base::Base> constIteratorEnd(NodeId id, EdgeKind edge) const;
@@ -102,7 +102,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Tells all kind of edges the node actually has.
       * \param id                  [in] The id of the node whose edges we want to know.
       * \param edges               [out] A vector containing all kind of edges the node has (the vector is cleared before inserting new elements).
-      * \throw JavaScriptException Throws exception if the node does not exist.
+      * \throw JavascriptException Throws exception if the node does not exist.
       */
       void getAllExistingEdges(NodeId id, std::vector<EdgeKind>& edges) const;
 
@@ -110,7 +110,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Tells all kind of edges the node actually has.
       * \param id                  [in] The id of the node whose edges we want to know.
       * \param edges               [out] A set containing all kind of edges the node has (the vector is cleared before inserting new elements).
-      * \throw JavaScriptException Throws exception if the node does not exist.
+      * \throw JavascriptException Throws exception if the node does not exist.
       */
       void getAllExistingEdges(NodeId id, std::set<EdgeKind>& edges) const;
 
@@ -118,7 +118,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Tells all kind of edges this kind of node can have.
       * \param kind                [in] The kind of the node whose edges we want to know.
       * \param edges               [out] A vector containing all kind of edges this kind of node can have (the vector is cleared before inserting new elements).
-      * \throw JavaScriptException Throws exception if the kind is invalid.
+      * \throw JavascriptException Throws exception if the kind is invalid.
       */
       void getAllPossibleEdges(NodeKind kind, std::vector<EdgeKind>& edges) const;
 
@@ -126,7 +126,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Tells all kind of edges this kind of node can have.
       * \param kind                [in] The kind of the node whose edges we want to know.
       * \param edges               [out] A set containing all kind of edges this kind of node can have (the vector is cleared before inserting new elements).
-      * \throw JavaScriptException Throws exception if the kind is invalid.
+      * \throw JavascriptException Throws exception if the kind is invalid.
       */
       void getAllPossibleEdges(NodeKind kind, std::set<EdgeKind>& edges) const;
 
@@ -136,7 +136,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \internal
       * \brief Inserts a node (if the node has already been inserted nothing happens, otherwise the node is inserted without its edges).
       * \param id                  [in] The id of the node which will be inserted.
-      * \throw JavaScriptException Throws Exception if the node does not exist.
+      * \throw JavascriptException Throws Exception if the node does not exist.
       */
       void insertNode(NodeId id);
 
@@ -144,7 +144,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \internal
       * \brief Removes a node (with out without its edges?).
       * \param id                  [in] The id of the node which will be removed.
-      * \throw JavaScriptException Throws JavaScriptException if there is no node for the id.
+      * \throw JavascriptException Throws JavascriptException if there is no node for the id.
       */
       void removeNode(NodeId id);
 
@@ -154,7 +154,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param from                [in] The reversed edge starts from that node (originally it was the target of the edge).
       * \param to                  [in] The target of the reversed edge (originally it was the start of the edge).
       * \param edge                [in] The kind of the edge.
-      * \throw JavaScriptException Throws JavaScriptException if the from node is not valid.
+      * \throw JavascriptException Throws JavascriptException if the from node is not valid.
       */
       void insertEdge(const base::Base* from, const base::Base* to, EdgeKind edge);
 
@@ -164,7 +164,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param from                [in] The reversed edge starts from that node (originally it was the target of the edge).
       * \param to                  [in] The target of the reversed edge (originally it was the start of the edge).
       * \param edge                [in] The kind of the edge.
-      * \throw JavaScriptException Throws JavaScriptException if the from node is not valid.
+      * \throw JavascriptException Throws JavascriptException if the from node is not valid.
       */
       void insertEdge(NodeId from, NodeId to, EdgeKind edge);
 
@@ -174,7 +174,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param from                [in] The reversed edge starts from that node (originally it was the target of the edge).
       * \param to                  [in] The target of the reversed edge (originally it was the start of the edge).
       * \param edge                [in] The kind of the edge.
-      * \throw JavaScriptException todo.
+      * \throw JavascriptException todo.
       */
       void removeEdge(NodeId from, NodeId to, EdgeKind edge);
 
@@ -188,7 +188,7 @@ namespace columbus { namespace javascript { namespace asg {
       RevEdgesContainer reContainer;
 
       /** \internal \brief The possible edges by nodes. */
-      static bool possibleEdges[86][93];
+      static bool possibleEdges[86][95];
 
       friend class Factory;
       friend class VisitorReverseEdges;

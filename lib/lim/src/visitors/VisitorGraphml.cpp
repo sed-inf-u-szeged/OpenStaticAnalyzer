@@ -82,6 +82,16 @@ void VisitorGraphml::filterNodeTypeMatch( std::string pattern)
       nodeTypeFilter.insert(*it);
 }
 
+const std::string getSourcePositionContent(const SourcePosition& attr) {
+  std::string content;
+  content += "realizationLevel : " + Common::toString(attr.getRealizationLevel()) + ", ";
+  content += "line : " + common::toString(attr.getLine()) + ", ";
+  content += "column : " + common::toString(attr.getColumn()) + ", ";
+  content += "endLine : " + common::toString(attr.getEndLine()) + ", ";
+  content += "endColumn : " + common::toString(attr.getEndColumn()) + "";
+  return content;
+}
+
 static void compositeContentFormatter(std::string& content) {
   if(content.size()==0) return;
   std::string formattedcontent = "";
@@ -2057,6 +2067,32 @@ void VisitorGraphml::visitEnd(const type::TypeFormerType& node, bool callVirtual
   }
 }
 
+void  VisitorGraphml::visitComponent_CompilationUnit(const base::Component& begin, const physical::File& end) {
+  if (!visitCrossEdge)
+    return;
+  if ( (this->getDepth() >= maxDrawingDepth) && ( maxDrawingDepth > 0))
+    return;
+  if ( !((edgeFilter.empty()) || ( edgeFilter.find("Component_CompilationUnit") != edgeFilter.end())))
+  {
+    return;
+  }
+  if ( maxDrawingDepth > 0)
+  {
+    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( begin.getId());
+    if ( foundDrawedNode == idsToDrawedNodes.end())
+      return;
+  }
+  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("base::Component") == nodeTypeFilter.end() && nodeTypeFilter.find("physical::File") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if(isGroupingTreeNodes)
+    io.writeEdgeBuffer(Common::toString(begin.getId()), Common::toString(end.getId()), "Component_CompilationUnit", 1, GraphmlIO::ls_line, GraphmlIO::at_none, GraphmlIO::at_standard);
+  else
+    io.writeEdge(Common::toString(begin.getId()), Common::toString(end.getId()), "Component_CompilationUnit", 1, GraphmlIO::ls_line, GraphmlIO::at_none, GraphmlIO::at_standard);
+  idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
+}
+
 void  VisitorGraphml::visitComponent_Contains(const base::Component& begin, const base::Component& end) {
   if (!visitCrossEdge)
     return;
@@ -2262,6 +2298,32 @@ void  VisitorGraphml::visitAttributeAccess_Attribute(const logical::AttributeAcc
     io.writeEdgeBuffer(Common::toString(begin.getId()), Common::toString(end.getId()), "AttributeAccess_Attribute", 1, GraphmlIO::ls_line, GraphmlIO::at_none, GraphmlIO::at_standard);
   else
     io.writeEdge(Common::toString(begin.getId()), Common::toString(end.getId()), "AttributeAccess_Attribute", 1, GraphmlIO::ls_line, GraphmlIO::at_none, GraphmlIO::at_standard);
+  idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
+}
+
+void  VisitorGraphml::visitClass_Extends(const logical::Class& begin, const logical::Class& end) {
+  if (!visitCrossEdge)
+    return;
+  if ( (this->getDepth() >= maxDrawingDepth) && ( maxDrawingDepth > 0))
+    return;
+  if ( !((edgeFilter.empty()) || ( edgeFilter.find("Class_Extends") != edgeFilter.end())))
+  {
+    return;
+  }
+  if ( maxDrawingDepth > 0)
+  {
+    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( begin.getId());
+    if ( foundDrawedNode == idsToDrawedNodes.end())
+      return;
+  }
+  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("logical::Class") == nodeTypeFilter.end() && nodeTypeFilter.find("logical::Class") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if(isGroupingTreeNodes)
+    io.writeEdgeBuffer(Common::toString(begin.getId()), Common::toString(end.getId()), "Class_Extends", 1, GraphmlIO::ls_line, GraphmlIO::at_none, GraphmlIO::at_standard);
+  else
+    io.writeEdge(Common::toString(begin.getId()), Common::toString(end.getId()), "Class_Extends", 1, GraphmlIO::ls_line, GraphmlIO::at_none, GraphmlIO::at_standard);
   idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
 }
 

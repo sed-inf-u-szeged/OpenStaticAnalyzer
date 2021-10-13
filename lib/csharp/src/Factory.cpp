@@ -329,7 +329,7 @@ base::Base* Factory::getPointer(NodeId id) const {
   base::Base* p = NULL;
   try {
     p = container.at(id);
-  } catch (std::out_of_range e) {
+  } catch (const std::out_of_range&) {
     throw CsharpException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
   }
   return p;
@@ -577,6 +577,7 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkCheckedExpressionSyntax: p = new expression::CheckedExpressionSyntax(id, this); break;
     case ndkConditionalAccessExpressionSyntax: p = new expression::ConditionalAccessExpressionSyntax(id, this); break;
     case ndkConditionalExpressionSyntax: p = new expression::ConditionalExpressionSyntax(id, this); break;
+    case ndkDeclarationExpressionSyntax: p = new expression::DeclarationExpressionSyntax(id, this); break;
     case ndkDefaultExpressionSyntax: p = new expression::DefaultExpressionSyntax(id, this); break;
     case ndkElementAccessExpressionSyntax: p = new expression::ElementAccessExpressionSyntax(id, this); break;
     case ndkElementBindingExpressionSyntax: p = new expression::ElementBindingExpressionSyntax(id, this); break;
@@ -584,9 +585,11 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkIdentifierNameSyntax: p = new expression::IdentifierNameSyntax(id, this); break;
     case ndkImplicitArrayCreationExpressionSyntax: p = new expression::ImplicitArrayCreationExpressionSyntax(id, this); break;
     case ndkImplicitElementAccessSyntax: p = new expression::ImplicitElementAccessSyntax(id, this); break;
+    case ndkImplicitStackAllocArrayCreationExpressionSyntax: p = new expression::ImplicitStackAllocArrayCreationExpressionSyntax(id, this); break;
     case ndkInitializerExpressionSyntax: p = new expression::InitializerExpressionSyntax(id, this); break;
     case ndkInterpolatedStringExpressionSyntax: p = new expression::InterpolatedStringExpressionSyntax(id, this); break;
     case ndkInvocationExpressionSyntax: p = new expression::InvocationExpressionSyntax(id, this); break;
+    case ndkIsPatternExpressionSyntax: p = new expression::IsPatternExpressionSyntax(id, this); break;
     case ndkLiteralExpressionSyntax: p = new expression::LiteralExpressionSyntax(id, this); break;
     case ndkMakeRefExpressionSyntax: p = new expression::MakeRefExpressionSyntax(id, this); break;
     case ndkMemberAccessExpressionSyntax: p = new expression::MemberAccessExpressionSyntax(id, this); break;
@@ -603,12 +606,19 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkPrefixUnaryExpressionSyntax: p = new expression::PrefixUnaryExpressionSyntax(id, this); break;
     case ndkQualifiedNameSyntax: p = new expression::QualifiedNameSyntax(id, this); break;
     case ndkQueryExpressionSyntax: p = new expression::QueryExpressionSyntax(id, this); break;
+    case ndkRangeExpressionSyntax: p = new expression::RangeExpressionSyntax(id, this); break;
+    case ndkRefExpressionSyntax: p = new expression::RefExpressionSyntax(id, this); break;
     case ndkRefTypeExpressionSyntax: p = new expression::RefTypeExpressionSyntax(id, this); break;
+    case ndkRefTypeSyntax: p = new expression::RefTypeSyntax(id, this); break;
     case ndkRefValueExpressionSyntax: p = new expression::RefValueExpressionSyntax(id, this); break;
     case ndkSimpleLambdaExpressionSyntax: p = new expression::SimpleLambdaExpressionSyntax(id, this); break;
     case ndkSizeOfExpressionSyntax: p = new expression::SizeOfExpressionSyntax(id, this); break;
     case ndkStackAllocArrayCreationExpressionSyntax: p = new expression::StackAllocArrayCreationExpressionSyntax(id, this); break;
+    case ndkSwitchExpressionSyntax: p = new expression::SwitchExpressionSyntax(id, this); break;
     case ndkThisExpressionSyntax: p = new expression::ThisExpressionSyntax(id, this); break;
+    case ndkThrowExpressionSyntax: p = new expression::ThrowExpressionSyntax(id, this); break;
+    case ndkTupleExpressionSyntax: p = new expression::TupleExpressionSyntax(id, this); break;
+    case ndkTupleTypeSyntax: p = new expression::TupleTypeSyntax(id, this); break;
     case ndkTypeOfExpressionSyntax: p = new expression::TypeOfExpressionSyntax(id, this); break;
     case ndkBlockSyntax: p = new statement::BlockSyntax(id, this); break;
     case ndkBreakStatementSyntax: p = new statement::BreakStatementSyntax(id, this); break;
@@ -619,11 +629,13 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkExpressionStatementSyntax: p = new statement::ExpressionStatementSyntax(id, this); break;
     case ndkFixedStatementSyntax: p = new statement::FixedStatementSyntax(id, this); break;
     case ndkForEachStatementSyntax: p = new statement::ForEachStatementSyntax(id, this); break;
+    case ndkForEachVariableStatementSyntax: p = new statement::ForEachVariableStatementSyntax(id, this); break;
     case ndkForStatementSyntax: p = new statement::ForStatementSyntax(id, this); break;
     case ndkGotoStatementSyntax: p = new statement::GotoStatementSyntax(id, this); break;
     case ndkIfStatementSyntax: p = new statement::IfStatementSyntax(id, this); break;
     case ndkLabeledStatementSyntax: p = new statement::LabeledStatementSyntax(id, this); break;
     case ndkLocalDeclarationStatementSyntax: p = new statement::LocalDeclarationStatementSyntax(id, this); break;
+    case ndkLocalFunctionStatementSyntax: p = new statement::LocalFunctionStatementSyntax(id, this); break;
     case ndkLockStatementSyntax: p = new statement::LockStatementSyntax(id, this); break;
     case ndkReturnStatementSyntax: p = new statement::ReturnStatementSyntax(id, this); break;
     case ndkSwitchStatementSyntax: p = new statement::SwitchStatementSyntax(id, this); break;
@@ -648,6 +660,7 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkBaseListSyntax: p = new structure::BaseListSyntax(id, this); break;
     case ndkBracketedArgumentListSyntax: p = new structure::BracketedArgumentListSyntax(id, this); break;
     case ndkBracketedParameterListSyntax: p = new structure::BracketedParameterListSyntax(id, this); break;
+    case ndkCasePatternSwitchLabelSyntax: p = new structure::CasePatternSwitchLabelSyntax(id, this); break;
     case ndkCaseSwitchLabelSyntax: p = new structure::CaseSwitchLabelSyntax(id, this); break;
     case ndkCatchClauseSyntax: p = new structure::CatchClauseSyntax(id, this); break;
     case ndkCatchDeclarationSyntax: p = new structure::CatchDeclarationSyntax(id, this); break;
@@ -655,6 +668,7 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkClassDeclarationSyntax: p = new structure::ClassDeclarationSyntax(id, this); break;
     case ndkClassOrStructConstraintSyntax: p = new structure::ClassOrStructConstraintSyntax(id, this); break;
     case ndkCompilationUnitSyntax: p = new structure::CompilationUnitSyntax(id, this); break;
+    case ndkConstantPatternSyntax: p = new structure::ConstantPatternSyntax(id, this); break;
     case ndkConstructorConstraintSyntax: p = new structure::ConstructorConstraintSyntax(id, this); break;
     case ndkConstructorDeclarationSyntax: p = new structure::ConstructorDeclarationSyntax(id, this); break;
     case ndkConstructorInitializerSyntax: p = new structure::ConstructorInitializerSyntax(id, this); break;
@@ -663,9 +677,12 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkCrefBracketedParameterListSyntax: p = new structure::CrefBracketedParameterListSyntax(id, this); break;
     case ndkCrefParameterListSyntax: p = new structure::CrefParameterListSyntax(id, this); break;
     case ndkCrefParameterSyntax: p = new structure::CrefParameterSyntax(id, this); break;
+    case ndkDeclarationPatternSyntax: p = new structure::DeclarationPatternSyntax(id, this); break;
     case ndkDefaultSwitchLabelSyntax: p = new structure::DefaultSwitchLabelSyntax(id, this); break;
     case ndkDelegateDeclarationSyntax: p = new structure::DelegateDeclarationSyntax(id, this); break;
     case ndkDestructorDeclarationSyntax: p = new structure::DestructorDeclarationSyntax(id, this); break;
+    case ndkDiscardDesignationSyntax: p = new structure::DiscardDesignationSyntax(id, this); break;
+    case ndkDiscardPatternSyntax: p = new structure::DiscardPatternSyntax(id, this); break;
     case ndkElseClauseSyntax: p = new structure::ElseClauseSyntax(id, this); break;
     case ndkEnumDeclarationSyntax: p = new structure::EnumDeclarationSyntax(id, this); break;
     case ndkEnumMemberDeclarationSyntax: p = new structure::EnumMemberDeclarationSyntax(id, this); break;
@@ -701,15 +718,23 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkOrderingSyntax: p = new structure::OrderingSyntax(id, this); break;
     case ndkParameterListSyntax: p = new structure::ParameterListSyntax(id, this); break;
     case ndkParameterSyntax: p = new structure::ParameterSyntax(id, this); break;
+    case ndkParenthesizedVariableDesignationSyntax: p = new structure::ParenthesizedVariableDesignationSyntax(id, this); break;
+    case ndkPositionalPatternClauseSyntax: p = new structure::PositionalPatternClauseSyntax(id, this); break;
     case ndkPropertyDeclarationSyntax: p = new structure::PropertyDeclarationSyntax(id, this); break;
+    case ndkPropertyPatternClauseSyntax: p = new structure::PropertyPatternClauseSyntax(id, this); break;
     case ndkQualifiedCrefSyntax: p = new structure::QualifiedCrefSyntax(id, this); break;
     case ndkQueryBodySyntax: p = new structure::QueryBodySyntax(id, this); break;
     case ndkQueryContinuationSyntax: p = new structure::QueryContinuationSyntax(id, this); break;
+    case ndkRecursivePatternSyntax: p = new structure::RecursivePatternSyntax(id, this); break;
     case ndkSelectClauseSyntax: p = new structure::SelectClauseSyntax(id, this); break;
     case ndkSimpleBaseTypeSyntax: p = new structure::SimpleBaseTypeSyntax(id, this); break;
+    case ndkSingleVariableDesignationSyntax: p = new structure::SingleVariableDesignationSyntax(id, this); break;
     case ndkStructDeclarationSyntax: p = new structure::StructDeclarationSyntax(id, this); break;
+    case ndkSubpatternSyntax: p = new structure::SubpatternSyntax(id, this); break;
+    case ndkSwitchExpressionArmSyntax: p = new structure::SwitchExpressionArmSyntax(id, this); break;
     case ndkSwitchSectionSyntax: p = new structure::SwitchSectionSyntax(id, this); break;
     case ndkSyntaxToken: p = new structure::SyntaxToken(id, this); break;
+    case ndkTupleElementSyntax: p = new structure::TupleElementSyntax(id, this); break;
     case ndkTypeArgumentListSyntax: p = new structure::TypeArgumentListSyntax(id, this); break;
     case ndkTypeConstraintSyntax: p = new structure::TypeConstraintSyntax(id, this); break;
     case ndkTypeCrefSyntax: p = new structure::TypeCrefSyntax(id, this); break;
@@ -717,8 +742,10 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkTypeParameterListSyntax: p = new structure::TypeParameterListSyntax(id, this); break;
     case ndkTypeParameterSyntax: p = new structure::TypeParameterSyntax(id, this); break;
     case ndkUsingDirectiveSyntax: p = new structure::UsingDirectiveSyntax(id, this); break;
+    case ndkVarPatternSyntax: p = new structure::VarPatternSyntax(id, this); break;
     case ndkVariableDeclarationSyntax: p = new structure::VariableDeclarationSyntax(id, this); break;
     case ndkVariableDeclaratorSyntax: p = new structure::VariableDeclaratorSyntax(id, this); break;
+    case ndkWhenClauseSyntax: p = new structure::WhenClauseSyntax(id, this); break;
     case ndkWhereClauseSyntax: p = new structure::WhereClauseSyntax(id, this); break;
     case ndkXmlCDataSectionSyntax: p = new structure::XmlCDataSectionSyntax(id, this); break;
     case ndkXmlCommentSyntax: p = new structure::XmlCommentSyntax(id, this); break;
@@ -767,6 +794,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkCheckedExpressionSyntax: p = new expression::CheckedExpressionSyntax(i,this); break;
     case ndkConditionalAccessExpressionSyntax: p = new expression::ConditionalAccessExpressionSyntax(i,this); break;
     case ndkConditionalExpressionSyntax: p = new expression::ConditionalExpressionSyntax(i,this); break;
+    case ndkDeclarationExpressionSyntax: p = new expression::DeclarationExpressionSyntax(i,this); break;
     case ndkDefaultExpressionSyntax: p = new expression::DefaultExpressionSyntax(i,this); break;
     case ndkElementAccessExpressionSyntax: p = new expression::ElementAccessExpressionSyntax(i,this); break;
     case ndkElementBindingExpressionSyntax: p = new expression::ElementBindingExpressionSyntax(i,this); break;
@@ -774,9 +802,11 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkIdentifierNameSyntax: p = new expression::IdentifierNameSyntax(i,this); break;
     case ndkImplicitArrayCreationExpressionSyntax: p = new expression::ImplicitArrayCreationExpressionSyntax(i,this); break;
     case ndkImplicitElementAccessSyntax: p = new expression::ImplicitElementAccessSyntax(i,this); break;
+    case ndkImplicitStackAllocArrayCreationExpressionSyntax: p = new expression::ImplicitStackAllocArrayCreationExpressionSyntax(i,this); break;
     case ndkInitializerExpressionSyntax: p = new expression::InitializerExpressionSyntax(i,this); break;
     case ndkInterpolatedStringExpressionSyntax: p = new expression::InterpolatedStringExpressionSyntax(i,this); break;
     case ndkInvocationExpressionSyntax: p = new expression::InvocationExpressionSyntax(i,this); break;
+    case ndkIsPatternExpressionSyntax: p = new expression::IsPatternExpressionSyntax(i,this); break;
     case ndkLiteralExpressionSyntax: p = new expression::LiteralExpressionSyntax(i,this); break;
     case ndkMakeRefExpressionSyntax: p = new expression::MakeRefExpressionSyntax(i,this); break;
     case ndkMemberAccessExpressionSyntax: p = new expression::MemberAccessExpressionSyntax(i,this); break;
@@ -793,12 +823,19 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkPrefixUnaryExpressionSyntax: p = new expression::PrefixUnaryExpressionSyntax(i,this); break;
     case ndkQualifiedNameSyntax: p = new expression::QualifiedNameSyntax(i,this); break;
     case ndkQueryExpressionSyntax: p = new expression::QueryExpressionSyntax(i,this); break;
+    case ndkRangeExpressionSyntax: p = new expression::RangeExpressionSyntax(i,this); break;
+    case ndkRefExpressionSyntax: p = new expression::RefExpressionSyntax(i,this); break;
     case ndkRefTypeExpressionSyntax: p = new expression::RefTypeExpressionSyntax(i,this); break;
+    case ndkRefTypeSyntax: p = new expression::RefTypeSyntax(i,this); break;
     case ndkRefValueExpressionSyntax: p = new expression::RefValueExpressionSyntax(i,this); break;
     case ndkSimpleLambdaExpressionSyntax: p = new expression::SimpleLambdaExpressionSyntax(i,this); break;
     case ndkSizeOfExpressionSyntax: p = new expression::SizeOfExpressionSyntax(i,this); break;
     case ndkStackAllocArrayCreationExpressionSyntax: p = new expression::StackAllocArrayCreationExpressionSyntax(i,this); break;
+    case ndkSwitchExpressionSyntax: p = new expression::SwitchExpressionSyntax(i,this); break;
     case ndkThisExpressionSyntax: p = new expression::ThisExpressionSyntax(i,this); break;
+    case ndkThrowExpressionSyntax: p = new expression::ThrowExpressionSyntax(i,this); break;
+    case ndkTupleExpressionSyntax: p = new expression::TupleExpressionSyntax(i,this); break;
+    case ndkTupleTypeSyntax: p = new expression::TupleTypeSyntax(i,this); break;
     case ndkTypeOfExpressionSyntax: p = new expression::TypeOfExpressionSyntax(i,this); break;
     case ndkBlockSyntax: p = new statement::BlockSyntax(i,this); break;
     case ndkBreakStatementSyntax: p = new statement::BreakStatementSyntax(i,this); break;
@@ -809,11 +846,13 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkExpressionStatementSyntax: p = new statement::ExpressionStatementSyntax(i,this); break;
     case ndkFixedStatementSyntax: p = new statement::FixedStatementSyntax(i,this); break;
     case ndkForEachStatementSyntax: p = new statement::ForEachStatementSyntax(i,this); break;
+    case ndkForEachVariableStatementSyntax: p = new statement::ForEachVariableStatementSyntax(i,this); break;
     case ndkForStatementSyntax: p = new statement::ForStatementSyntax(i,this); break;
     case ndkGotoStatementSyntax: p = new statement::GotoStatementSyntax(i,this); break;
     case ndkIfStatementSyntax: p = new statement::IfStatementSyntax(i,this); break;
     case ndkLabeledStatementSyntax: p = new statement::LabeledStatementSyntax(i,this); break;
     case ndkLocalDeclarationStatementSyntax: p = new statement::LocalDeclarationStatementSyntax(i,this); break;
+    case ndkLocalFunctionStatementSyntax: p = new statement::LocalFunctionStatementSyntax(i,this); break;
     case ndkLockStatementSyntax: p = new statement::LockStatementSyntax(i,this); break;
     case ndkReturnStatementSyntax: p = new statement::ReturnStatementSyntax(i,this); break;
     case ndkSwitchStatementSyntax: p = new statement::SwitchStatementSyntax(i,this); break;
@@ -838,6 +877,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkBaseListSyntax: p = new structure::BaseListSyntax(i,this); break;
     case ndkBracketedArgumentListSyntax: p = new structure::BracketedArgumentListSyntax(i,this); break;
     case ndkBracketedParameterListSyntax: p = new structure::BracketedParameterListSyntax(i,this); break;
+    case ndkCasePatternSwitchLabelSyntax: p = new structure::CasePatternSwitchLabelSyntax(i,this); break;
     case ndkCaseSwitchLabelSyntax: p = new structure::CaseSwitchLabelSyntax(i,this); break;
     case ndkCatchClauseSyntax: p = new structure::CatchClauseSyntax(i,this); break;
     case ndkCatchDeclarationSyntax: p = new structure::CatchDeclarationSyntax(i,this); break;
@@ -845,6 +885,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkClassDeclarationSyntax: p = new structure::ClassDeclarationSyntax(i,this); break;
     case ndkClassOrStructConstraintSyntax: p = new structure::ClassOrStructConstraintSyntax(i,this); break;
     case ndkCompilationUnitSyntax: p = new structure::CompilationUnitSyntax(i,this); break;
+    case ndkConstantPatternSyntax: p = new structure::ConstantPatternSyntax(i,this); break;
     case ndkConstructorConstraintSyntax: p = new structure::ConstructorConstraintSyntax(i,this); break;
     case ndkConstructorDeclarationSyntax: p = new structure::ConstructorDeclarationSyntax(i,this); break;
     case ndkConstructorInitializerSyntax: p = new structure::ConstructorInitializerSyntax(i,this); break;
@@ -853,9 +894,12 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkCrefBracketedParameterListSyntax: p = new structure::CrefBracketedParameterListSyntax(i,this); break;
     case ndkCrefParameterListSyntax: p = new structure::CrefParameterListSyntax(i,this); break;
     case ndkCrefParameterSyntax: p = new structure::CrefParameterSyntax(i,this); break;
+    case ndkDeclarationPatternSyntax: p = new structure::DeclarationPatternSyntax(i,this); break;
     case ndkDefaultSwitchLabelSyntax: p = new structure::DefaultSwitchLabelSyntax(i,this); break;
     case ndkDelegateDeclarationSyntax: p = new structure::DelegateDeclarationSyntax(i,this); break;
     case ndkDestructorDeclarationSyntax: p = new structure::DestructorDeclarationSyntax(i,this); break;
+    case ndkDiscardDesignationSyntax: p = new structure::DiscardDesignationSyntax(i,this); break;
+    case ndkDiscardPatternSyntax: p = new structure::DiscardPatternSyntax(i,this); break;
     case ndkElseClauseSyntax: p = new structure::ElseClauseSyntax(i,this); break;
     case ndkEnumDeclarationSyntax: p = new structure::EnumDeclarationSyntax(i,this); break;
     case ndkEnumMemberDeclarationSyntax: p = new structure::EnumMemberDeclarationSyntax(i,this); break;
@@ -891,15 +935,23 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkOrderingSyntax: p = new structure::OrderingSyntax(i,this); break;
     case ndkParameterListSyntax: p = new structure::ParameterListSyntax(i,this); break;
     case ndkParameterSyntax: p = new structure::ParameterSyntax(i,this); break;
+    case ndkParenthesizedVariableDesignationSyntax: p = new structure::ParenthesizedVariableDesignationSyntax(i,this); break;
+    case ndkPositionalPatternClauseSyntax: p = new structure::PositionalPatternClauseSyntax(i,this); break;
     case ndkPropertyDeclarationSyntax: p = new structure::PropertyDeclarationSyntax(i,this); break;
+    case ndkPropertyPatternClauseSyntax: p = new structure::PropertyPatternClauseSyntax(i,this); break;
     case ndkQualifiedCrefSyntax: p = new structure::QualifiedCrefSyntax(i,this); break;
     case ndkQueryBodySyntax: p = new structure::QueryBodySyntax(i,this); break;
     case ndkQueryContinuationSyntax: p = new structure::QueryContinuationSyntax(i,this); break;
+    case ndkRecursivePatternSyntax: p = new structure::RecursivePatternSyntax(i,this); break;
     case ndkSelectClauseSyntax: p = new structure::SelectClauseSyntax(i,this); break;
     case ndkSimpleBaseTypeSyntax: p = new structure::SimpleBaseTypeSyntax(i,this); break;
+    case ndkSingleVariableDesignationSyntax: p = new structure::SingleVariableDesignationSyntax(i,this); break;
     case ndkStructDeclarationSyntax: p = new structure::StructDeclarationSyntax(i,this); break;
+    case ndkSubpatternSyntax: p = new structure::SubpatternSyntax(i,this); break;
+    case ndkSwitchExpressionArmSyntax: p = new structure::SwitchExpressionArmSyntax(i,this); break;
     case ndkSwitchSectionSyntax: p = new structure::SwitchSectionSyntax(i,this); break;
     case ndkSyntaxToken: p = new structure::SyntaxToken(i,this); break;
+    case ndkTupleElementSyntax: p = new structure::TupleElementSyntax(i,this); break;
     case ndkTypeArgumentListSyntax: p = new structure::TypeArgumentListSyntax(i,this); break;
     case ndkTypeConstraintSyntax: p = new structure::TypeConstraintSyntax(i,this); break;
     case ndkTypeCrefSyntax: p = new structure::TypeCrefSyntax(i,this); break;
@@ -907,8 +959,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkTypeParameterListSyntax: p = new structure::TypeParameterListSyntax(i,this); break;
     case ndkTypeParameterSyntax: p = new structure::TypeParameterSyntax(i,this); break;
     case ndkUsingDirectiveSyntax: p = new structure::UsingDirectiveSyntax(i,this); break;
+    case ndkVarPatternSyntax: p = new structure::VarPatternSyntax(i,this); break;
     case ndkVariableDeclarationSyntax: p = new structure::VariableDeclarationSyntax(i,this); break;
     case ndkVariableDeclaratorSyntax: p = new structure::VariableDeclaratorSyntax(i,this); break;
+    case ndkWhenClauseSyntax: p = new structure::WhenClauseSyntax(i,this); break;
     case ndkWhereClauseSyntax: p = new structure::WhereClauseSyntax(i,this); break;
     case ndkXmlCDataSectionSyntax: p = new structure::XmlCDataSectionSyntax(i,this); break;
     case ndkXmlCommentSyntax: p = new structure::XmlCommentSyntax(i,this); break;
@@ -993,6 +1047,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <expression::ConditionalExpressionSyntax*>( createNode(ndkConditionalExpressionSyntax));
   }
 
+  expression::DeclarationExpressionSyntax* Factory::createDeclarationExpressionSyntaxNode(){
+    return  dynamic_cast <expression::DeclarationExpressionSyntax*>( createNode(ndkDeclarationExpressionSyntax));
+  }
+
   expression::DefaultExpressionSyntax* Factory::createDefaultExpressionSyntaxNode(){
     return  dynamic_cast <expression::DefaultExpressionSyntax*>( createNode(ndkDefaultExpressionSyntax));
   }
@@ -1021,6 +1079,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <expression::ImplicitElementAccessSyntax*>( createNode(ndkImplicitElementAccessSyntax));
   }
 
+  expression::ImplicitStackAllocArrayCreationExpressionSyntax* Factory::createImplicitStackAllocArrayCreationExpressionSyntaxNode(){
+    return  dynamic_cast <expression::ImplicitStackAllocArrayCreationExpressionSyntax*>( createNode(ndkImplicitStackAllocArrayCreationExpressionSyntax));
+  }
+
   expression::InitializerExpressionSyntax* Factory::createInitializerExpressionSyntaxNode(){
     return  dynamic_cast <expression::InitializerExpressionSyntax*>( createNode(ndkInitializerExpressionSyntax));
   }
@@ -1031,6 +1093,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
 
   expression::InvocationExpressionSyntax* Factory::createInvocationExpressionSyntaxNode(){
     return  dynamic_cast <expression::InvocationExpressionSyntax*>( createNode(ndkInvocationExpressionSyntax));
+  }
+
+  expression::IsPatternExpressionSyntax* Factory::createIsPatternExpressionSyntaxNode(){
+    return  dynamic_cast <expression::IsPatternExpressionSyntax*>( createNode(ndkIsPatternExpressionSyntax));
   }
 
   expression::LiteralExpressionSyntax* Factory::createLiteralExpressionSyntaxNode(){
@@ -1097,8 +1163,20 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <expression::QueryExpressionSyntax*>( createNode(ndkQueryExpressionSyntax));
   }
 
+  expression::RangeExpressionSyntax* Factory::createRangeExpressionSyntaxNode(){
+    return  dynamic_cast <expression::RangeExpressionSyntax*>( createNode(ndkRangeExpressionSyntax));
+  }
+
+  expression::RefExpressionSyntax* Factory::createRefExpressionSyntaxNode(){
+    return  dynamic_cast <expression::RefExpressionSyntax*>( createNode(ndkRefExpressionSyntax));
+  }
+
   expression::RefTypeExpressionSyntax* Factory::createRefTypeExpressionSyntaxNode(){
     return  dynamic_cast <expression::RefTypeExpressionSyntax*>( createNode(ndkRefTypeExpressionSyntax));
+  }
+
+  expression::RefTypeSyntax* Factory::createRefTypeSyntaxNode(){
+    return  dynamic_cast <expression::RefTypeSyntax*>( createNode(ndkRefTypeSyntax));
   }
 
   expression::RefValueExpressionSyntax* Factory::createRefValueExpressionSyntaxNode(){
@@ -1117,8 +1195,24 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <expression::StackAllocArrayCreationExpressionSyntax*>( createNode(ndkStackAllocArrayCreationExpressionSyntax));
   }
 
+  expression::SwitchExpressionSyntax* Factory::createSwitchExpressionSyntaxNode(){
+    return  dynamic_cast <expression::SwitchExpressionSyntax*>( createNode(ndkSwitchExpressionSyntax));
+  }
+
   expression::ThisExpressionSyntax* Factory::createThisExpressionSyntaxNode(){
     return  dynamic_cast <expression::ThisExpressionSyntax*>( createNode(ndkThisExpressionSyntax));
+  }
+
+  expression::ThrowExpressionSyntax* Factory::createThrowExpressionSyntaxNode(){
+    return  dynamic_cast <expression::ThrowExpressionSyntax*>( createNode(ndkThrowExpressionSyntax));
+  }
+
+  expression::TupleExpressionSyntax* Factory::createTupleExpressionSyntaxNode(){
+    return  dynamic_cast <expression::TupleExpressionSyntax*>( createNode(ndkTupleExpressionSyntax));
+  }
+
+  expression::TupleTypeSyntax* Factory::createTupleTypeSyntaxNode(){
+    return  dynamic_cast <expression::TupleTypeSyntax*>( createNode(ndkTupleTypeSyntax));
   }
 
   expression::TypeOfExpressionSyntax* Factory::createTypeOfExpressionSyntaxNode(){
@@ -1161,6 +1255,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <statement::ForEachStatementSyntax*>( createNode(ndkForEachStatementSyntax));
   }
 
+  statement::ForEachVariableStatementSyntax* Factory::createForEachVariableStatementSyntaxNode(){
+    return  dynamic_cast <statement::ForEachVariableStatementSyntax*>( createNode(ndkForEachVariableStatementSyntax));
+  }
+
   statement::ForStatementSyntax* Factory::createForStatementSyntaxNode(){
     return  dynamic_cast <statement::ForStatementSyntax*>( createNode(ndkForStatementSyntax));
   }
@@ -1179,6 +1277,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
 
   statement::LocalDeclarationStatementSyntax* Factory::createLocalDeclarationStatementSyntaxNode(){
     return  dynamic_cast <statement::LocalDeclarationStatementSyntax*>( createNode(ndkLocalDeclarationStatementSyntax));
+  }
+
+  statement::LocalFunctionStatementSyntax* Factory::createLocalFunctionStatementSyntaxNode(){
+    return  dynamic_cast <statement::LocalFunctionStatementSyntax*>( createNode(ndkLocalFunctionStatementSyntax));
   }
 
   statement::LockStatementSyntax* Factory::createLockStatementSyntaxNode(){
@@ -1277,6 +1379,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <structure::BracketedParameterListSyntax*>( createNode(ndkBracketedParameterListSyntax));
   }
 
+  structure::CasePatternSwitchLabelSyntax* Factory::createCasePatternSwitchLabelSyntaxNode(){
+    return  dynamic_cast <structure::CasePatternSwitchLabelSyntax*>( createNode(ndkCasePatternSwitchLabelSyntax));
+  }
+
   structure::CaseSwitchLabelSyntax* Factory::createCaseSwitchLabelSyntaxNode(){
     return  dynamic_cast <structure::CaseSwitchLabelSyntax*>( createNode(ndkCaseSwitchLabelSyntax));
   }
@@ -1303,6 +1409,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
 
   structure::CompilationUnitSyntax* Factory::createCompilationUnitSyntaxNode(){
     return  dynamic_cast <structure::CompilationUnitSyntax*>( createNode(ndkCompilationUnitSyntax));
+  }
+
+  structure::ConstantPatternSyntax* Factory::createConstantPatternSyntaxNode(){
+    return  dynamic_cast <structure::ConstantPatternSyntax*>( createNode(ndkConstantPatternSyntax));
   }
 
   structure::ConstructorConstraintSyntax* Factory::createConstructorConstraintSyntaxNode(){
@@ -1337,6 +1447,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <structure::CrefParameterSyntax*>( createNode(ndkCrefParameterSyntax));
   }
 
+  structure::DeclarationPatternSyntax* Factory::createDeclarationPatternSyntaxNode(){
+    return  dynamic_cast <structure::DeclarationPatternSyntax*>( createNode(ndkDeclarationPatternSyntax));
+  }
+
   structure::DefaultSwitchLabelSyntax* Factory::createDefaultSwitchLabelSyntaxNode(){
     return  dynamic_cast <structure::DefaultSwitchLabelSyntax*>( createNode(ndkDefaultSwitchLabelSyntax));
   }
@@ -1347,6 +1461,14 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
 
   structure::DestructorDeclarationSyntax* Factory::createDestructorDeclarationSyntaxNode(){
     return  dynamic_cast <structure::DestructorDeclarationSyntax*>( createNode(ndkDestructorDeclarationSyntax));
+  }
+
+  structure::DiscardDesignationSyntax* Factory::createDiscardDesignationSyntaxNode(){
+    return  dynamic_cast <structure::DiscardDesignationSyntax*>( createNode(ndkDiscardDesignationSyntax));
+  }
+
+  structure::DiscardPatternSyntax* Factory::createDiscardPatternSyntaxNode(){
+    return  dynamic_cast <structure::DiscardPatternSyntax*>( createNode(ndkDiscardPatternSyntax));
   }
 
   structure::ElseClauseSyntax* Factory::createElseClauseSyntaxNode(){
@@ -1489,8 +1611,20 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <structure::ParameterSyntax*>( createNode(ndkParameterSyntax));
   }
 
+  structure::ParenthesizedVariableDesignationSyntax* Factory::createParenthesizedVariableDesignationSyntaxNode(){
+    return  dynamic_cast <structure::ParenthesizedVariableDesignationSyntax*>( createNode(ndkParenthesizedVariableDesignationSyntax));
+  }
+
+  structure::PositionalPatternClauseSyntax* Factory::createPositionalPatternClauseSyntaxNode(){
+    return  dynamic_cast <structure::PositionalPatternClauseSyntax*>( createNode(ndkPositionalPatternClauseSyntax));
+  }
+
   structure::PropertyDeclarationSyntax* Factory::createPropertyDeclarationSyntaxNode(){
     return  dynamic_cast <structure::PropertyDeclarationSyntax*>( createNode(ndkPropertyDeclarationSyntax));
+  }
+
+  structure::PropertyPatternClauseSyntax* Factory::createPropertyPatternClauseSyntaxNode(){
+    return  dynamic_cast <structure::PropertyPatternClauseSyntax*>( createNode(ndkPropertyPatternClauseSyntax));
   }
 
   structure::QualifiedCrefSyntax* Factory::createQualifiedCrefSyntaxNode(){
@@ -1505,6 +1639,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <structure::QueryContinuationSyntax*>( createNode(ndkQueryContinuationSyntax));
   }
 
+  structure::RecursivePatternSyntax* Factory::createRecursivePatternSyntaxNode(){
+    return  dynamic_cast <structure::RecursivePatternSyntax*>( createNode(ndkRecursivePatternSyntax));
+  }
+
   structure::SelectClauseSyntax* Factory::createSelectClauseSyntaxNode(){
     return  dynamic_cast <structure::SelectClauseSyntax*>( createNode(ndkSelectClauseSyntax));
   }
@@ -1513,8 +1651,20 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <structure::SimpleBaseTypeSyntax*>( createNode(ndkSimpleBaseTypeSyntax));
   }
 
+  structure::SingleVariableDesignationSyntax* Factory::createSingleVariableDesignationSyntaxNode(){
+    return  dynamic_cast <structure::SingleVariableDesignationSyntax*>( createNode(ndkSingleVariableDesignationSyntax));
+  }
+
   structure::StructDeclarationSyntax* Factory::createStructDeclarationSyntaxNode(){
     return  dynamic_cast <structure::StructDeclarationSyntax*>( createNode(ndkStructDeclarationSyntax));
+  }
+
+  structure::SubpatternSyntax* Factory::createSubpatternSyntaxNode(){
+    return  dynamic_cast <structure::SubpatternSyntax*>( createNode(ndkSubpatternSyntax));
+  }
+
+  structure::SwitchExpressionArmSyntax* Factory::createSwitchExpressionArmSyntaxNode(){
+    return  dynamic_cast <structure::SwitchExpressionArmSyntax*>( createNode(ndkSwitchExpressionArmSyntax));
   }
 
   structure::SwitchSectionSyntax* Factory::createSwitchSectionSyntaxNode(){
@@ -1523,6 +1673,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
 
   structure::SyntaxToken* Factory::createSyntaxTokenNode(){
     return  dynamic_cast <structure::SyntaxToken*>( createNode(ndkSyntaxToken));
+  }
+
+  structure::TupleElementSyntax* Factory::createTupleElementSyntaxNode(){
+    return  dynamic_cast <structure::TupleElementSyntax*>( createNode(ndkTupleElementSyntax));
   }
 
   structure::TypeArgumentListSyntax* Factory::createTypeArgumentListSyntaxNode(){
@@ -1553,12 +1707,20 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <structure::UsingDirectiveSyntax*>( createNode(ndkUsingDirectiveSyntax));
   }
 
+  structure::VarPatternSyntax* Factory::createVarPatternSyntaxNode(){
+    return  dynamic_cast <structure::VarPatternSyntax*>( createNode(ndkVarPatternSyntax));
+  }
+
   structure::VariableDeclarationSyntax* Factory::createVariableDeclarationSyntaxNode(){
     return  dynamic_cast <structure::VariableDeclarationSyntax*>( createNode(ndkVariableDeclarationSyntax));
   }
 
   structure::VariableDeclaratorSyntax* Factory::createVariableDeclaratorSyntaxNode(){
     return  dynamic_cast <structure::VariableDeclaratorSyntax*>( createNode(ndkVariableDeclaratorSyntax));
+  }
+
+  structure::WhenClauseSyntax* Factory::createWhenClauseSyntaxNode(){
+    return  dynamic_cast <structure::WhenClauseSyntax*>( createNode(ndkWhenClauseSyntax));
   }
 
   structure::WhereClauseSyntax* Factory::createWhereClauseSyntaxNode(){
@@ -1631,6 +1793,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("expression::CheckedExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::CheckedExpressionSyntax)); 
     printf("expression::ConditionalAccessExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::ConditionalAccessExpressionSyntax)); 
     printf("expression::ConditionalExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::ConditionalExpressionSyntax)); 
+    printf("expression::DeclarationExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::DeclarationExpressionSyntax)); 
     printf("expression::DefaultExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::DefaultExpressionSyntax)); 
     printf("expression::ElementAccessExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::ElementAccessExpressionSyntax)); 
     printf("expression::ElementBindingExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::ElementBindingExpressionSyntax)); 
@@ -1638,9 +1801,11 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("expression::IdentifierNameSyntax node: %dbyte(s)\n",(int)sizeof(expression::IdentifierNameSyntax)); 
     printf("expression::ImplicitArrayCreationExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::ImplicitArrayCreationExpressionSyntax)); 
     printf("expression::ImplicitElementAccessSyntax node: %dbyte(s)\n",(int)sizeof(expression::ImplicitElementAccessSyntax)); 
+    printf("expression::ImplicitStackAllocArrayCreationExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::ImplicitStackAllocArrayCreationExpressionSyntax)); 
     printf("expression::InitializerExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::InitializerExpressionSyntax)); 
     printf("expression::InterpolatedStringExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::InterpolatedStringExpressionSyntax)); 
     printf("expression::InvocationExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::InvocationExpressionSyntax)); 
+    printf("expression::IsPatternExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::IsPatternExpressionSyntax)); 
     printf("expression::LiteralExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::LiteralExpressionSyntax)); 
     printf("expression::MakeRefExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::MakeRefExpressionSyntax)); 
     printf("expression::MemberAccessExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::MemberAccessExpressionSyntax)); 
@@ -1657,12 +1822,19 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("expression::PrefixUnaryExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::PrefixUnaryExpressionSyntax)); 
     printf("expression::QualifiedNameSyntax node: %dbyte(s)\n",(int)sizeof(expression::QualifiedNameSyntax)); 
     printf("expression::QueryExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::QueryExpressionSyntax)); 
+    printf("expression::RangeExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::RangeExpressionSyntax)); 
+    printf("expression::RefExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::RefExpressionSyntax)); 
     printf("expression::RefTypeExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::RefTypeExpressionSyntax)); 
+    printf("expression::RefTypeSyntax node: %dbyte(s)\n",(int)sizeof(expression::RefTypeSyntax)); 
     printf("expression::RefValueExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::RefValueExpressionSyntax)); 
     printf("expression::SimpleLambdaExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::SimpleLambdaExpressionSyntax)); 
     printf("expression::SizeOfExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::SizeOfExpressionSyntax)); 
     printf("expression::StackAllocArrayCreationExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::StackAllocArrayCreationExpressionSyntax)); 
+    printf("expression::SwitchExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::SwitchExpressionSyntax)); 
     printf("expression::ThisExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::ThisExpressionSyntax)); 
+    printf("expression::ThrowExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::ThrowExpressionSyntax)); 
+    printf("expression::TupleExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::TupleExpressionSyntax)); 
+    printf("expression::TupleTypeSyntax node: %dbyte(s)\n",(int)sizeof(expression::TupleTypeSyntax)); 
     printf("expression::TypeOfExpressionSyntax node: %dbyte(s)\n",(int)sizeof(expression::TypeOfExpressionSyntax)); 
     printf("statement::BlockSyntax node: %dbyte(s)\n",(int)sizeof(statement::BlockSyntax)); 
     printf("statement::BreakStatementSyntax node: %dbyte(s)\n",(int)sizeof(statement::BreakStatementSyntax)); 
@@ -1673,11 +1845,13 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("statement::ExpressionStatementSyntax node: %dbyte(s)\n",(int)sizeof(statement::ExpressionStatementSyntax)); 
     printf("statement::FixedStatementSyntax node: %dbyte(s)\n",(int)sizeof(statement::FixedStatementSyntax)); 
     printf("statement::ForEachStatementSyntax node: %dbyte(s)\n",(int)sizeof(statement::ForEachStatementSyntax)); 
+    printf("statement::ForEachVariableStatementSyntax node: %dbyte(s)\n",(int)sizeof(statement::ForEachVariableStatementSyntax)); 
     printf("statement::ForStatementSyntax node: %dbyte(s)\n",(int)sizeof(statement::ForStatementSyntax)); 
     printf("statement::GotoStatementSyntax node: %dbyte(s)\n",(int)sizeof(statement::GotoStatementSyntax)); 
     printf("statement::IfStatementSyntax node: %dbyte(s)\n",(int)sizeof(statement::IfStatementSyntax)); 
     printf("statement::LabeledStatementSyntax node: %dbyte(s)\n",(int)sizeof(statement::LabeledStatementSyntax)); 
     printf("statement::LocalDeclarationStatementSyntax node: %dbyte(s)\n",(int)sizeof(statement::LocalDeclarationStatementSyntax)); 
+    printf("statement::LocalFunctionStatementSyntax node: %dbyte(s)\n",(int)sizeof(statement::LocalFunctionStatementSyntax)); 
     printf("statement::LockStatementSyntax node: %dbyte(s)\n",(int)sizeof(statement::LockStatementSyntax)); 
     printf("statement::ReturnStatementSyntax node: %dbyte(s)\n",(int)sizeof(statement::ReturnStatementSyntax)); 
     printf("statement::SwitchStatementSyntax node: %dbyte(s)\n",(int)sizeof(statement::SwitchStatementSyntax)); 
@@ -1702,6 +1876,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("structure::BaseListSyntax node: %dbyte(s)\n",(int)sizeof(structure::BaseListSyntax)); 
     printf("structure::BracketedArgumentListSyntax node: %dbyte(s)\n",(int)sizeof(structure::BracketedArgumentListSyntax)); 
     printf("structure::BracketedParameterListSyntax node: %dbyte(s)\n",(int)sizeof(structure::BracketedParameterListSyntax)); 
+    printf("structure::CasePatternSwitchLabelSyntax node: %dbyte(s)\n",(int)sizeof(structure::CasePatternSwitchLabelSyntax)); 
     printf("structure::CaseSwitchLabelSyntax node: %dbyte(s)\n",(int)sizeof(structure::CaseSwitchLabelSyntax)); 
     printf("structure::CatchClauseSyntax node: %dbyte(s)\n",(int)sizeof(structure::CatchClauseSyntax)); 
     printf("structure::CatchDeclarationSyntax node: %dbyte(s)\n",(int)sizeof(structure::CatchDeclarationSyntax)); 
@@ -1709,6 +1884,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("structure::ClassDeclarationSyntax node: %dbyte(s)\n",(int)sizeof(structure::ClassDeclarationSyntax)); 
     printf("structure::ClassOrStructConstraintSyntax node: %dbyte(s)\n",(int)sizeof(structure::ClassOrStructConstraintSyntax)); 
     printf("structure::CompilationUnitSyntax node: %dbyte(s)\n",(int)sizeof(structure::CompilationUnitSyntax)); 
+    printf("structure::ConstantPatternSyntax node: %dbyte(s)\n",(int)sizeof(structure::ConstantPatternSyntax)); 
     printf("structure::ConstructorConstraintSyntax node: %dbyte(s)\n",(int)sizeof(structure::ConstructorConstraintSyntax)); 
     printf("structure::ConstructorDeclarationSyntax node: %dbyte(s)\n",(int)sizeof(structure::ConstructorDeclarationSyntax)); 
     printf("structure::ConstructorInitializerSyntax node: %dbyte(s)\n",(int)sizeof(structure::ConstructorInitializerSyntax)); 
@@ -1717,9 +1893,12 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("structure::CrefBracketedParameterListSyntax node: %dbyte(s)\n",(int)sizeof(structure::CrefBracketedParameterListSyntax)); 
     printf("structure::CrefParameterListSyntax node: %dbyte(s)\n",(int)sizeof(structure::CrefParameterListSyntax)); 
     printf("structure::CrefParameterSyntax node: %dbyte(s)\n",(int)sizeof(structure::CrefParameterSyntax)); 
+    printf("structure::DeclarationPatternSyntax node: %dbyte(s)\n",(int)sizeof(structure::DeclarationPatternSyntax)); 
     printf("structure::DefaultSwitchLabelSyntax node: %dbyte(s)\n",(int)sizeof(structure::DefaultSwitchLabelSyntax)); 
     printf("structure::DelegateDeclarationSyntax node: %dbyte(s)\n",(int)sizeof(structure::DelegateDeclarationSyntax)); 
     printf("structure::DestructorDeclarationSyntax node: %dbyte(s)\n",(int)sizeof(structure::DestructorDeclarationSyntax)); 
+    printf("structure::DiscardDesignationSyntax node: %dbyte(s)\n",(int)sizeof(structure::DiscardDesignationSyntax)); 
+    printf("structure::DiscardPatternSyntax node: %dbyte(s)\n",(int)sizeof(structure::DiscardPatternSyntax)); 
     printf("structure::ElseClauseSyntax node: %dbyte(s)\n",(int)sizeof(structure::ElseClauseSyntax)); 
     printf("structure::EnumDeclarationSyntax node: %dbyte(s)\n",(int)sizeof(structure::EnumDeclarationSyntax)); 
     printf("structure::EnumMemberDeclarationSyntax node: %dbyte(s)\n",(int)sizeof(structure::EnumMemberDeclarationSyntax)); 
@@ -1755,15 +1934,23 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("structure::OrderingSyntax node: %dbyte(s)\n",(int)sizeof(structure::OrderingSyntax)); 
     printf("structure::ParameterListSyntax node: %dbyte(s)\n",(int)sizeof(structure::ParameterListSyntax)); 
     printf("structure::ParameterSyntax node: %dbyte(s)\n",(int)sizeof(structure::ParameterSyntax)); 
+    printf("structure::ParenthesizedVariableDesignationSyntax node: %dbyte(s)\n",(int)sizeof(structure::ParenthesizedVariableDesignationSyntax)); 
+    printf("structure::PositionalPatternClauseSyntax node: %dbyte(s)\n",(int)sizeof(structure::PositionalPatternClauseSyntax)); 
     printf("structure::PropertyDeclarationSyntax node: %dbyte(s)\n",(int)sizeof(structure::PropertyDeclarationSyntax)); 
+    printf("structure::PropertyPatternClauseSyntax node: %dbyte(s)\n",(int)sizeof(structure::PropertyPatternClauseSyntax)); 
     printf("structure::QualifiedCrefSyntax node: %dbyte(s)\n",(int)sizeof(structure::QualifiedCrefSyntax)); 
     printf("structure::QueryBodySyntax node: %dbyte(s)\n",(int)sizeof(structure::QueryBodySyntax)); 
     printf("structure::QueryContinuationSyntax node: %dbyte(s)\n",(int)sizeof(structure::QueryContinuationSyntax)); 
+    printf("structure::RecursivePatternSyntax node: %dbyte(s)\n",(int)sizeof(structure::RecursivePatternSyntax)); 
     printf("structure::SelectClauseSyntax node: %dbyte(s)\n",(int)sizeof(structure::SelectClauseSyntax)); 
     printf("structure::SimpleBaseTypeSyntax node: %dbyte(s)\n",(int)sizeof(structure::SimpleBaseTypeSyntax)); 
+    printf("structure::SingleVariableDesignationSyntax node: %dbyte(s)\n",(int)sizeof(structure::SingleVariableDesignationSyntax)); 
     printf("structure::StructDeclarationSyntax node: %dbyte(s)\n",(int)sizeof(structure::StructDeclarationSyntax)); 
+    printf("structure::SubpatternSyntax node: %dbyte(s)\n",(int)sizeof(structure::SubpatternSyntax)); 
+    printf("structure::SwitchExpressionArmSyntax node: %dbyte(s)\n",(int)sizeof(structure::SwitchExpressionArmSyntax)); 
     printf("structure::SwitchSectionSyntax node: %dbyte(s)\n",(int)sizeof(structure::SwitchSectionSyntax)); 
     printf("structure::SyntaxToken node: %dbyte(s)\n",(int)sizeof(structure::SyntaxToken)); 
+    printf("structure::TupleElementSyntax node: %dbyte(s)\n",(int)sizeof(structure::TupleElementSyntax)); 
     printf("structure::TypeArgumentListSyntax node: %dbyte(s)\n",(int)sizeof(structure::TypeArgumentListSyntax)); 
     printf("structure::TypeConstraintSyntax node: %dbyte(s)\n",(int)sizeof(structure::TypeConstraintSyntax)); 
     printf("structure::TypeCrefSyntax node: %dbyte(s)\n",(int)sizeof(structure::TypeCrefSyntax)); 
@@ -1771,8 +1958,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("structure::TypeParameterListSyntax node: %dbyte(s)\n",(int)sizeof(structure::TypeParameterListSyntax)); 
     printf("structure::TypeParameterSyntax node: %dbyte(s)\n",(int)sizeof(structure::TypeParameterSyntax)); 
     printf("structure::UsingDirectiveSyntax node: %dbyte(s)\n",(int)sizeof(structure::UsingDirectiveSyntax)); 
+    printf("structure::VarPatternSyntax node: %dbyte(s)\n",(int)sizeof(structure::VarPatternSyntax)); 
     printf("structure::VariableDeclarationSyntax node: %dbyte(s)\n",(int)sizeof(structure::VariableDeclarationSyntax)); 
     printf("structure::VariableDeclaratorSyntax node: %dbyte(s)\n",(int)sizeof(structure::VariableDeclaratorSyntax)); 
+    printf("structure::WhenClauseSyntax node: %dbyte(s)\n",(int)sizeof(structure::WhenClauseSyntax)); 
     printf("structure::WhereClauseSyntax node: %dbyte(s)\n",(int)sizeof(structure::WhereClauseSyntax)); 
     printf("structure::XmlCDataSectionSyntax node: %dbyte(s)\n",(int)sizeof(structure::XmlCDataSectionSyntax)); 
     printf("structure::XmlCommentSyntax node: %dbyte(s)\n",(int)sizeof(structure::XmlCommentSyntax)); 

@@ -3,10 +3,10 @@ set (PROGRAM_NAME OpenStaticAnalyzerPython)
 set (SOURCES
     src/Task.cpp
     src/main.cpp
-    
+
     inc/messages.h
     inc/Properties.h
-    inc/Task.h
+    inc/Task.h     
 )
 
 add_executable(${PROGRAM_NAME} ${SOURCES})

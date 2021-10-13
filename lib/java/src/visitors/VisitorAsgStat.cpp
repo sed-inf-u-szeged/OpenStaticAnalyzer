@@ -33,6 +33,7 @@ const char* VisitorAsgStat::nodeNames[] = {
         "base::NonJavadocComment",
         "base::Positioned",
         "base::PositionedWithoutComment",
+        "expr::AnnotatedTypeExpression",
         "expr::Annotation",
         "expr::ArrayAccess",
         "expr::ArrayTypeExpression",
@@ -49,13 +50,16 @@ const char* VisitorAsgStat::nodeNames[] = {
         "expr::ExternalTypeExpression",
         "expr::FieldAccess",
         "expr::FloatLiteral",
+        "expr::FunctionalExpression",
         "expr::Identifier",
         "expr::InfixExpression",
         "expr::InstanceOf",
         "expr::IntegerLiteral",
+        "expr::Lambda",
         "expr::Literal",
         "expr::LongLiteral",
         "expr::MarkerAnnotation",
+        "expr::MemberReference",
         "expr::MethodInvocation",
         "expr::NewArray",
         "expr::NewClass",
@@ -63,6 +67,7 @@ const char* VisitorAsgStat::nodeNames[] = {
         "expr::NullLiteral",
         "expr::NumberLiteral",
         "expr::ParenthesizedExpression",
+        "expr::PolyExpression",
         "expr::PostfixExpression",
         "expr::PrefixExpression",
         "expr::PrimitiveTypeExpression",
@@ -75,9 +80,16 @@ const char* VisitorAsgStat::nodeNames[] = {
         "expr::TypeApplyExpression",
         "expr::TypeCast",
         "expr::TypeExpression",
+        "expr::TypeIntersectionExpression",
         "expr::TypeUnionExpression",
         "expr::Unary",
         "expr::WildcardExpression",
+        "module::Exports",
+        "module::ModuleDirective",
+        "module::Opens",
+        "module::Provides",
+        "module::Requires",
+        "module::Uses",
         "statm::Assert",
         "statm::BasicFor",
         "statm::Block",
@@ -126,6 +138,8 @@ const char* VisitorAsgStat::nodeNames[] = {
         "struc::Method",
         "struc::MethodDeclaration",
         "struc::MethodGeneric",
+        "struc::Module",
+        "struc::ModuleDeclaration",
         "struc::NamedDeclaration",
         "struc::NormalMethod",
         "struc::Package",
@@ -147,9 +161,11 @@ const char* VisitorAsgStat::nodeNames[] = {
         "type::ErrorType",
         "type::FloatType",
         "type::IntType",
+        "type::IntersectionType",
         "type::LongType",
         "type::LowerBoundedWildcardType",
         "type::MethodType",
+        "type::ModuleType",
         "type::NoType",
         "type::NullType",
         "type::PackageType",
@@ -177,6 +193,7 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
         sizeof(base::NonJavadocComment),
         sizeof(base::Positioned),
         sizeof(base::PositionedWithoutComment),
+        sizeof(expr::AnnotatedTypeExpression),
         sizeof(expr::Annotation),
         sizeof(expr::ArrayAccess),
         sizeof(expr::ArrayTypeExpression),
@@ -193,13 +210,16 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
         sizeof(expr::ExternalTypeExpression),
         sizeof(expr::FieldAccess),
         sizeof(expr::FloatLiteral),
+        sizeof(expr::FunctionalExpression),
         sizeof(expr::Identifier),
         sizeof(expr::InfixExpression),
         sizeof(expr::InstanceOf),
         sizeof(expr::IntegerLiteral),
+        sizeof(expr::Lambda),
         sizeof(expr::Literal),
         sizeof(expr::LongLiteral),
         sizeof(expr::MarkerAnnotation),
+        sizeof(expr::MemberReference),
         sizeof(expr::MethodInvocation),
         sizeof(expr::NewArray),
         sizeof(expr::NewClass),
@@ -207,6 +227,7 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
         sizeof(expr::NullLiteral),
         sizeof(expr::NumberLiteral),
         sizeof(expr::ParenthesizedExpression),
+        sizeof(expr::PolyExpression),
         sizeof(expr::PostfixExpression),
         sizeof(expr::PrefixExpression),
         sizeof(expr::PrimitiveTypeExpression),
@@ -219,9 +240,16 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
         sizeof(expr::TypeApplyExpression),
         sizeof(expr::TypeCast),
         sizeof(expr::TypeExpression),
+        sizeof(expr::TypeIntersectionExpression),
         sizeof(expr::TypeUnionExpression),
         sizeof(expr::Unary),
         sizeof(expr::WildcardExpression),
+        sizeof(module::Exports),
+        sizeof(module::ModuleDirective),
+        sizeof(module::Opens),
+        sizeof(module::Provides),
+        sizeof(module::Requires),
+        sizeof(module::Uses),
         sizeof(statm::Assert),
         sizeof(statm::BasicFor),
         sizeof(statm::Block),
@@ -270,6 +298,8 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
         sizeof(struc::Method),
         sizeof(struc::MethodDeclaration),
         sizeof(struc::MethodGeneric),
+        sizeof(struc::Module),
+        sizeof(struc::ModuleDeclaration),
         sizeof(struc::NamedDeclaration),
         sizeof(struc::NormalMethod),
         sizeof(struc::Package),
@@ -291,9 +321,11 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
         sizeof(type::ErrorType),
         sizeof(type::FloatType),
         sizeof(type::IntType),
+        sizeof(type::IntersectionType),
         sizeof(type::LongType),
         sizeof(type::LowerBoundedWildcardType),
         sizeof(type::MethodType),
+        sizeof(type::ModuleType),
         sizeof(type::NoType),
         sizeof(type::NullType),
         sizeof(type::PackageType),
@@ -311,13 +343,13 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
 };
 
   VisitorAsgStat::VisitorAsgStat() : VisitorAbstractNodes() {
-    for (int i = 0; i < 141; ++i)
+    for (int i = 0; i < 157; ++i)
       nodeStatSimple[i] = 0;
 
-    for (int i = 0; i < 141; ++i)
+    for (int i = 0; i < 157; ++i)
       nodeStatParent[i] = 0;
 
-    for (int i = 0; i < 105; ++i)
+    for (int i = 0; i < 133; ++i)
       edgeStat[i] = 0;
 
   }
@@ -403,6 +435,14 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++nodeStatParent[ndkPositionedWithoutComment];
     if (node.getNodeKind() == ndkPositionedWithoutComment)
       ++nodeStatSimple[ndkPositionedWithoutComment];
+  }
+
+  void VisitorAsgStat::visit(const expr::AnnotatedTypeExpression& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkAnnotatedTypeExpression];
+    if (node.getNodeKind() == ndkAnnotatedTypeExpression)
+      ++nodeStatSimple[ndkAnnotatedTypeExpression];
   }
 
   void VisitorAsgStat::visit(const expr::Annotation& node,bool callVirtualBase ) {
@@ -533,6 +573,14 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
       ++nodeStatSimple[ndkFloatLiteral];
   }
 
+  void VisitorAsgStat::visit(const expr::FunctionalExpression& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkFunctionalExpression];
+    if (node.getNodeKind() == ndkFunctionalExpression)
+      ++nodeStatSimple[ndkFunctionalExpression];
+  }
+
   void VisitorAsgStat::visit(const expr::Identifier& node,bool callVirtualBase ) {
     VisitorAbstractNodes::visit(node,callVirtualBase);
 
@@ -565,6 +613,14 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
       ++nodeStatSimple[ndkIntegerLiteral];
   }
 
+  void VisitorAsgStat::visit(const expr::Lambda& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkLambda];
+    if (node.getNodeKind() == ndkLambda)
+      ++nodeStatSimple[ndkLambda];
+  }
+
   void VisitorAsgStat::visit(const expr::Literal& node,bool callVirtualBase ) {
     VisitorAbstractNodes::visit(node,callVirtualBase);
 
@@ -587,6 +643,14 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++nodeStatParent[ndkMarkerAnnotation];
     if (node.getNodeKind() == ndkMarkerAnnotation)
       ++nodeStatSimple[ndkMarkerAnnotation];
+  }
+
+  void VisitorAsgStat::visit(const expr::MemberReference& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkMemberReference];
+    if (node.getNodeKind() == ndkMemberReference)
+      ++nodeStatSimple[ndkMemberReference];
   }
 
   void VisitorAsgStat::visit(const expr::MethodInvocation& node,bool callVirtualBase ) {
@@ -643,6 +707,14 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++nodeStatParent[ndkParenthesizedExpression];
     if (node.getNodeKind() == ndkParenthesizedExpression)
       ++nodeStatSimple[ndkParenthesizedExpression];
+  }
+
+  void VisitorAsgStat::visit(const expr::PolyExpression& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkPolyExpression];
+    if (node.getNodeKind() == ndkPolyExpression)
+      ++nodeStatSimple[ndkPolyExpression];
   }
 
   void VisitorAsgStat::visit(const expr::PostfixExpression& node,bool callVirtualBase ) {
@@ -741,6 +813,14 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
       ++nodeStatSimple[ndkTypeExpression];
   }
 
+  void VisitorAsgStat::visit(const expr::TypeIntersectionExpression& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkTypeIntersectionExpression];
+    if (node.getNodeKind() == ndkTypeIntersectionExpression)
+      ++nodeStatSimple[ndkTypeIntersectionExpression];
+  }
+
   void VisitorAsgStat::visit(const expr::TypeUnionExpression& node,bool callVirtualBase ) {
     VisitorAbstractNodes::visit(node,callVirtualBase);
 
@@ -763,6 +843,54 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++nodeStatParent[ndkWildcardExpression];
     if (node.getNodeKind() == ndkWildcardExpression)
       ++nodeStatSimple[ndkWildcardExpression];
+  }
+
+  void VisitorAsgStat::visit(const module::Exports& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkExports];
+    if (node.getNodeKind() == ndkExports)
+      ++nodeStatSimple[ndkExports];
+  }
+
+  void VisitorAsgStat::visit(const module::ModuleDirective& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkModuleDirective];
+    if (node.getNodeKind() == ndkModuleDirective)
+      ++nodeStatSimple[ndkModuleDirective];
+  }
+
+  void VisitorAsgStat::visit(const module::Opens& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkOpens];
+    if (node.getNodeKind() == ndkOpens)
+      ++nodeStatSimple[ndkOpens];
+  }
+
+  void VisitorAsgStat::visit(const module::Provides& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkProvides];
+    if (node.getNodeKind() == ndkProvides)
+      ++nodeStatSimple[ndkProvides];
+  }
+
+  void VisitorAsgStat::visit(const module::Requires& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkRequires];
+    if (node.getNodeKind() == ndkRequires)
+      ++nodeStatSimple[ndkRequires];
+  }
+
+  void VisitorAsgStat::visit(const module::Uses& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkUses];
+    if (node.getNodeKind() == ndkUses)
+      ++nodeStatSimple[ndkUses];
   }
 
   void VisitorAsgStat::visit(const statm::Assert& node,bool callVirtualBase ) {
@@ -1149,6 +1277,22 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
       ++nodeStatSimple[ndkMethodGeneric];
   }
 
+  void VisitorAsgStat::visit(const struc::Module& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkModule];
+    if (node.getNodeKind() == ndkModule)
+      ++nodeStatSimple[ndkModule];
+  }
+
+  void VisitorAsgStat::visit(const struc::ModuleDeclaration& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkModuleDeclaration];
+    if (node.getNodeKind() == ndkModuleDeclaration)
+      ++nodeStatSimple[ndkModuleDeclaration];
+  }
+
   void VisitorAsgStat::visit(const struc::NamedDeclaration& node,bool callVirtualBase ) {
     VisitorAbstractNodes::visit(node,callVirtualBase);
 
@@ -1317,6 +1461,14 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
       ++nodeStatSimple[ndkIntType];
   }
 
+  void VisitorAsgStat::visit(const type::IntersectionType& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkIntersectionType];
+    if (node.getNodeKind() == ndkIntersectionType)
+      ++nodeStatSimple[ndkIntersectionType];
+  }
+
   void VisitorAsgStat::visit(const type::LongType& node,bool callVirtualBase ) {
     VisitorAbstractNodes::visit(node,callVirtualBase);
 
@@ -1339,6 +1491,14 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++nodeStatParent[ndkMethodType];
     if (node.getNodeKind() == ndkMethodType)
       ++nodeStatSimple[ndkMethodType];
+  }
+
+  void VisitorAsgStat::visit(const type::ModuleType& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkModuleType];
+    if (node.getNodeKind() == ndkModuleType)
+      ++nodeStatSimple[ndkModuleType];
   }
 
   void VisitorAsgStat::visit(const type::NoType& node,bool callVirtualBase ) {
@@ -1457,6 +1617,14 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkCommentable_Comments];
   }
 
+  void VisitorAsgStat::visitAnnotatedTypeExpression_HasAnnotations(const expr::AnnotatedTypeExpression& begin, const expr::Annotation& end) {
+    ++edgeStat[edkAnnotatedTypeExpression_HasAnnotations];
+  }
+
+  void VisitorAsgStat::visitAnnotatedTypeExpression_HasUnderlyingType(const expr::AnnotatedTypeExpression& begin, const expr::TypeExpression& end) {
+    ++edgeStat[edkAnnotatedTypeExpression_HasUnderlyingType];
+  }
+
   void VisitorAsgStat::visitAnnotation_HasAnnotationName(const expr::Annotation& begin, const expr::TypeExpression& end) {
     ++edgeStat[edkAnnotation_HasAnnotationName];
   }
@@ -1501,12 +1669,36 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkExpression_Type];
   }
 
+  void VisitorAsgStat::visitFunctionalExpression_Target(const expr::FunctionalExpression& begin, const type::Type& end) {
+    ++edgeStat[edkFunctionalExpression_Target];
+  }
+
   void VisitorAsgStat::visitIdentifier_RefersTo(const expr::Identifier& begin, const base::Named& end) {
     ++edgeStat[edkIdentifier_RefersTo];
   }
 
   void VisitorAsgStat::visitInstanceOf_HasTypeOperand(const expr::InstanceOf& begin, const expr::TypeExpression& end) {
     ++edgeStat[edkInstanceOf_HasTypeOperand];
+  }
+
+  void VisitorAsgStat::visitLambda_HasParameters(const expr::Lambda& begin, const struc::Parameter& end) {
+    ++edgeStat[edkLambda_HasParameters];
+  }
+
+  void VisitorAsgStat::visitLambda_HasBody(const expr::Lambda& begin, const base::Positioned& end) {
+    ++edgeStat[edkLambda_HasBody];
+  }
+
+  void VisitorAsgStat::visitMemberReference_HasQualifierExpression(const expr::MemberReference& begin, const expr::Expression& end) {
+    ++edgeStat[edkMemberReference_HasQualifierExpression];
+  }
+
+  void VisitorAsgStat::visitMemberReference_HasTypeArguments(const expr::MemberReference& begin, const expr::TypeExpression& end) {
+    ++edgeStat[edkMemberReference_HasTypeArguments];
+  }
+
+  void VisitorAsgStat::visitMemberReference_ReferredMethod(const expr::MemberReference& begin, const struc::MethodDeclaration& end) {
+    ++edgeStat[edkMemberReference_ReferredMethod];
   }
 
   void VisitorAsgStat::visitMethodInvocation_HasTypeArguments(const expr::MethodInvocation& begin, const expr::TypeExpression& end) {
@@ -1585,6 +1777,10 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkTypeCast_HasTypeOperand];
   }
 
+  void VisitorAsgStat::visitTypeIntersectionExpression_HasBounds(const expr::TypeIntersectionExpression& begin, const expr::TypeExpression& end) {
+    ++edgeStat[edkTypeIntersectionExpression_HasBounds];
+  }
+
   void VisitorAsgStat::visitTypeUnionExpression_HasAlternatives(const expr::TypeUnionExpression& begin, const expr::TypeExpression& end) {
     ++edgeStat[edkTypeUnionExpression_HasAlternatives];
   }
@@ -1595,6 +1791,38 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
 
   void VisitorAsgStat::visitWildcardExpression_HasBound(const expr::WildcardExpression& begin, const expr::TypeExpression& end) {
     ++edgeStat[edkWildcardExpression_HasBound];
+  }
+
+  void VisitorAsgStat::visitExports_HasPackageName(const module::Exports& begin, const expr::Expression& end) {
+    ++edgeStat[edkExports_HasPackageName];
+  }
+
+  void VisitorAsgStat::visitExports_HasModuleNames(const module::Exports& begin, const expr::Expression& end) {
+    ++edgeStat[edkExports_HasModuleNames];
+  }
+
+  void VisitorAsgStat::visitOpens_HasPackageName(const module::Opens& begin, const expr::Expression& end) {
+    ++edgeStat[edkOpens_HasPackageName];
+  }
+
+  void VisitorAsgStat::visitOpens_HasModuleNames(const module::Opens& begin, const expr::Expression& end) {
+    ++edgeStat[edkOpens_HasModuleNames];
+  }
+
+  void VisitorAsgStat::visitProvides_HasServiceName(const module::Provides& begin, const expr::Expression& end) {
+    ++edgeStat[edkProvides_HasServiceName];
+  }
+
+  void VisitorAsgStat::visitProvides_HasImplementationNames(const module::Provides& begin, const expr::Expression& end) {
+    ++edgeStat[edkProvides_HasImplementationNames];
+  }
+
+  void VisitorAsgStat::visitRequires_HasModuleName(const module::Requires& begin, const expr::Expression& end) {
+    ++edgeStat[edkRequires_HasModuleName];
+  }
+
+  void VisitorAsgStat::visitUses_HasServiceName(const module::Uses& begin, const expr::Expression& end) {
+    ++edgeStat[edkUses_HasServiceName];
   }
 
   void VisitorAsgStat::visitAssert_HasCondition(const statm::Assert& begin, const expr::Expression& end) {
@@ -1697,7 +1925,7 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkThrow_HasExpression];
   }
 
-  void VisitorAsgStat::visitTry_HasResources(const statm::Try& begin, const struc::Variable& end) {
+  void VisitorAsgStat::visitTry_HasResources(const statm::Try& begin, const base::Base& end) {
     ++edgeStat[edkTry_HasResources];
   }
 
@@ -1733,12 +1961,20 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkCompilationUnit_HasImports];
   }
 
+  void VisitorAsgStat::visitCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) {
+    ++edgeStat[edkCompilationUnit_HasOthers];
+  }
+
+  void VisitorAsgStat::visitCompilationUnit_HasModuleDeclaration(const struc::CompilationUnit& begin, const struc::ModuleDeclaration& end) {
+    ++edgeStat[edkCompilationUnit_HasModuleDeclaration];
+  }
+
   void VisitorAsgStat::visitCompilationUnit_TypeDeclarations(const struc::CompilationUnit& begin, const struc::TypeDeclaration& end) {
     ++edgeStat[edkCompilationUnit_TypeDeclarations];
   }
 
-  void VisitorAsgStat::visitCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) {
-    ++edgeStat[edkCompilationUnit_HasOthers];
+  void VisitorAsgStat::visitCompilationUnit_IsInModule(const struc::CompilationUnit& begin, const struc::Module& end) {
+    ++edgeStat[edkCompilationUnit_IsInModule];
   }
 
   void VisitorAsgStat::visitEnumConstant_HasNewClass(const struc::EnumConstant& begin, const expr::NewClass& end) {
@@ -1769,6 +2005,26 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkMethodDeclaration_Overrides];
   }
 
+  void VisitorAsgStat::visitModule_Packages(const struc::Module& begin, const struc::Package& end) {
+    ++edgeStat[edkModule_Packages];
+  }
+
+  void VisitorAsgStat::visitModuleDeclaration_HasName(const struc::ModuleDeclaration& begin, const expr::Expression& end) {
+    ++edgeStat[edkModuleDeclaration_HasName];
+  }
+
+  void VisitorAsgStat::visitModuleDeclaration_HasDirectives(const struc::ModuleDeclaration& begin, const module::ModuleDirective& end) {
+    ++edgeStat[edkModuleDeclaration_HasDirectives];
+  }
+
+  void VisitorAsgStat::visitModuleDeclaration_ModuleType(const struc::ModuleDeclaration& begin, const type::ModuleType& end) {
+    ++edgeStat[edkModuleDeclaration_ModuleType];
+  }
+
+  void VisitorAsgStat::visitModuleDeclaration_RefersTo(const struc::ModuleDeclaration& begin, const struc::Module& end) {
+    ++edgeStat[edkModuleDeclaration_RefersTo];
+  }
+
   void VisitorAsgStat::visitNormalMethod_HasParameters(const struc::NormalMethod& begin, const struc::Parameter& end) {
     ++edgeStat[edkNormalMethod_HasParameters];
   }
@@ -1785,6 +2041,10 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkPackage_HasCompilationUnits];
   }
 
+  void VisitorAsgStat::visitPackage_IsInModule(const struc::Package& begin, const struc::Module& end) {
+    ++edgeStat[edkPackage_IsInModule];
+  }
+
   void VisitorAsgStat::visitPackageDeclaration_HasPackageName(const struc::PackageDeclaration& begin, const expr::Expression& end) {
     ++edgeStat[edkPackageDeclaration_HasPackageName];
   }
@@ -1797,10 +2057,6 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkScope_HasMembers];
   }
 
-  void VisitorAsgStat::visitTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) {
-    ++edgeStat[edkTypeDeclaration_IsInCompilationUnit];
-  }
-
   void VisitorAsgStat::visitTypeDeclaration_HasSuperClass(const struc::TypeDeclaration& begin, const expr::TypeExpression& end) {
     ++edgeStat[edkTypeDeclaration_HasSuperClass];
   }
@@ -1811,6 +2067,14 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
 
   void VisitorAsgStat::visitTypeDeclaration_HasOthers(const struc::TypeDeclaration& begin, const base::Positioned& end) {
     ++edgeStat[edkTypeDeclaration_HasOthers];
+  }
+
+  void VisitorAsgStat::visitTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) {
+    ++edgeStat[edkTypeDeclaration_IsInCompilationUnit];
+  }
+
+  void VisitorAsgStat::visitTypeDeclaration_IsInModule(const struc::TypeDeclaration& begin, const struc::Module& end) {
+    ++edgeStat[edkTypeDeclaration_IsInModule];
   }
 
   void VisitorAsgStat::visitTypeParameter_HasBounds(const struc::TypeParameter& begin, const expr::TypeExpression& end) {
@@ -1833,6 +2097,10 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkClassType_RefersTo];
   }
 
+  void VisitorAsgStat::visitIntersectionType_Bounds(const type::IntersectionType& begin, const type::Type& end) {
+    ++edgeStat[edkIntersectionType_Bounds];
+  }
+
   void VisitorAsgStat::visitMethodType_ReturnType(const type::MethodType& begin, const type::Type& end) {
     ++edgeStat[edkMethodType_ReturnType];
   }
@@ -1843,6 +2111,10 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
 
   void VisitorAsgStat::visitMethodType_ThrownTypes(const type::MethodType& begin, const type::Type& end) {
     ++edgeStat[edkMethodType_ThrownTypes];
+  }
+
+  void VisitorAsgStat::visitModuleType_RefersTo(const type::ModuleType& begin, const struc::Module& end) {
+    ++edgeStat[edkModuleType_RefersTo];
   }
 
   void VisitorAsgStat::visitPackageType_RefersTo(const type::PackageType& begin, const struc::Package& end) {

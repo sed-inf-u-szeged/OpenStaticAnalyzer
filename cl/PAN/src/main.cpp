@@ -27,6 +27,8 @@
 #define EXECUTABLE_NAME PROGRAM_NAME
 
 #include <boost/regex.hpp>
+#include <boost/filesystem.hpp>
+
 #include "../inc/PVisitor.h"
 #include "../inc/VisitorType.h"
 #include "../inc/messages.h"
@@ -35,7 +37,6 @@
 #include <common/inc/DirectoryFilter.h>
 #include <common/inc/PlatformDependentDefines.h>
 #include <io/inc/CsvIO.h>
-#include <boost/filesystem.hpp>
 #include <python/inc/PythonCollector.h>
 
 using namespace std;

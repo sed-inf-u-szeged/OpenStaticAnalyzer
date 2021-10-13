@@ -39,11 +39,13 @@ namespace statement {
   * Attributes:
   *   - name (String) : (missing)
   *   - lloc (int) : (missing)
+  *   - isAsync (boolean) : (missing)
   * 
   * Edges:
   *   - hasDecorator (expression::Expression, multiple) : (missing)
   *   - hasObject (module::Object, multiple) : (missing)
   *   - hasParameter (statement::Parameter, multiple) : (missing)
+  *   - hasReturnAnnotation (expression::Expression, single) : (missing)
   *   - refersTo (module::Object, single) : (missing)
   *   - returnType (type::Type, single) : (missing)
   *   - docstring (base::Docstring, single) : (missing)
@@ -108,6 +110,12 @@ namespace statement {
       */
       int getLloc() const;
 
+      /**
+      * \brief Gives back the isAsync of the node.
+      * \return Returns with the isAsync.
+      */
+      bool getIsAsync() const;
+
 
       // ---------- Attribute setter function(s) ----------
 
@@ -127,6 +135,13 @@ namespace statement {
 
       /**
       * \internal
+      * \brief Sets the isAsync of the node.
+      * \param isAsync [in] The new value of the isAsync.
+      */
+      void setIsAsync(bool _isAsync);
+
+      /**
+      * \internal
       * \brief Sets the name of the node.
       * \param name [in] The new Key of the name.
       */
@@ -135,6 +150,9 @@ namespace statement {
     protected:
 
       // ---------- Attribute(s) ----------
+
+      /** \internal \brief Stores whether the node is `Async` or not. */
+      bool m_isAsync : 1;
 
       /** \internal \brief The value of the `lloc`. */
       int m_lloc;
@@ -239,6 +257,12 @@ namespace statement {
       unsigned getParameterSize() const;
 
       /**
+      * \brief Gives back the pointer of the node the hasReturnAnnotation edge points to.
+      * \return Returns the end point of the hasReturnAnnotation edge.
+      */
+      expression::Expression* getReturnAnnotation() const;
+
+      /**
       * \brief Gives back the pointer of the node the refersTo edge points to.
       * \return Returns the end point of the refersTo edge.
       */
@@ -332,6 +356,23 @@ namespace statement {
       void removeParameter(Parameter *node);
 
       /**
+      * \brief Sets the hasReturnAnnotation edge.
+      * \param id [in] The new end point of the hasReturnAnnotation edge.
+      */
+      void setReturnAnnotation(NodeId id);
+
+      /**
+      * \brief Sets the hasReturnAnnotation edge.
+      * \param node [in] The new end point of the hasReturnAnnotation edge.
+      */
+      void setReturnAnnotation(expression::Expression *node);
+
+      /**
+      * \brief remove the hasReturnAnnotation edge.
+      */
+      void removeReturnAnnotation();
+
+      /**
       * \brief Sets the refersTo edge.
       * \param id [in] The new end point of the refersTo edge.
       */
@@ -394,6 +435,9 @@ namespace statement {
 
       /** \internal \brief Container stores the id of the nodes the hasParameter edge points to. */
       ListIterator<statement::Parameter>::Container hasParameterContainer;
+
+      /** \internal \brief The id of the node the hasReturnAnnotation edge points to. */
+      NodeId m_hasReturnAnnotation;
 
       /** \internal \brief The id of the node the refersTo edge points to. */
       NodeId m_refersTo;

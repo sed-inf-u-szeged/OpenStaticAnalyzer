@@ -21,7 +21,7 @@
 #ifndef __PlatformDependentDefines_H
 #define __PlatformDependentDefines_H
 
-#if defined(__unix__)
+#if defined(__linux__)
 
 
 #define COPY_COMMAND          "cp -f "           // copy

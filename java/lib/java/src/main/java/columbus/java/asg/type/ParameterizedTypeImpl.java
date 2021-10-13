@@ -34,6 +34,7 @@ import columbus.logger.LoggerHandler;
  */
 public class ParameterizedTypeImpl extends BaseImpl implements ParameterizedType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(ParameterizedTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected int _owner;
 

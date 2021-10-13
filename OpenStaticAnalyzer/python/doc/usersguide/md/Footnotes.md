@@ -8,3 +8,7 @@
     counted starting from the root, meaning that running the analysis
     from directories that are at different depths will cause the value
     of the TNDI metric to change.
+
+[^4]: [http://legacy.python.org/dev/peps/pep-0008/]
+
+[http://legacy.python.org/dev/peps/pep-0008/]:http://legacy.python.org/dev/peps/pep-0008/

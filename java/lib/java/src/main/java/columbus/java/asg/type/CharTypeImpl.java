@@ -33,6 +33,7 @@ import columbus.logger.LoggerHandler;
  */
 public class CharTypeImpl extends BaseImpl implements CharType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(CharTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	public CharTypeImpl(int id, Factory factory) {
 		super(id, factory);

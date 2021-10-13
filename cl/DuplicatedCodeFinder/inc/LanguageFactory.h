@@ -33,10 +33,8 @@ protected:
   bool loaded;
   std::map<std::string, Factory*> factories;
   std::map<std::string, std::string> limComponentNameFileNameMap;
- 
-  
   std::map<std::string, std::size_t> hashCodes;
-
+  
 public:
   LanguageFactory();
   virtual ~LanguageFactory();
@@ -46,30 +44,28 @@ public:
   Factory* getByComponentID(const std::string& component) ;
 
   void loadComponent(const std::string& fname, bool deleteFiltered=false, unsigned long long* hash = NULL , std::string* componentID = NULL);
-  
+
 public:
 
 #ifdef GENEALOGY
   void load(columbus::genealogy::System& system, bool deleteFiltered=false) ;
 #endif
 
-
   std::string getFileNameByComponentId(const std::string& id);
   void release() ;
+  Factory* operator()(const std::string& component) ;
 
   LanguageFactory& operator=(LanguageFactory& lf) ;
-
-  Factory* operator()(const std::string& component) ;
+  std::size_t calculateHash(const Factory* factory, const std::string& name);
   bool isLoaded() const {return loaded;}
 
-  std::size_t calculateHash(const Factory* factory, const std::string& name);
 
   /**
    * @brief This function is fill the limComponentNameFileNameMap data structure.
    * @parameter listOfInputFile the list of string with the language asg names.
    */
   void fillComponentList (std::list<std::string> listOfInputFile);
-
+  
 };
 
 }}

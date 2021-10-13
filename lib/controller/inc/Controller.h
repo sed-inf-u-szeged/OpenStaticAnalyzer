@@ -21,11 +21,18 @@
 #ifndef _CONTROLLER_H_
 #define _CONTROLLER_H_
 
-#include <vector>
 #include <map>
+#include <queue>
 #include <string>
+#include <unordered_set>
+
+#include <boost/thread.hpp>
+
+#include <threadpool/inc/ThreadPool.h>
+
 #include "Task.h"
 #include "Properties.h"
+#include "DirectedAcyclicGraph.h"
 
 namespace columbus
 {
@@ -35,28 +42,33 @@ namespace controller
 
 class Controller {
   
-  public:
-    enum ExecutionMode {
-      EM_FAIL_ON_ANY_ERROR,
-      EM_FAIL_ON_CRITICAL_ERROR_ONLY
-    };
+public:
+  typedef std::pair<std::string, Task::ExecutionResult> Result;
     
-  public:
-    Controller(const BaseProperties& properties) : _props(properties) {}
-    ~Controller();
+  enum ExecutionMode {
+    EM_FAIL_ON_ANY_ERROR,
+    EM_FAIL_ON_CRITICAL_ERROR_ONLY
+  };
 
-    int executeTasks(ExecutionMode executionMode);
-    void addTask(Task* task);
+public:
+  Controller(const BaseProperties& properties, columbus::thread::ThreadPool& threadPool) : _props(properties), threadPool(threadPool) {}
+  ~Controller();
 
-  protected:
+  int executeTasks(ExecutionMode executionMode);
+  void addTask(Task* task);
 
-    int getTaskId(Task* t);
-    Task* getTask(const std::string& str);
-    std::map<std::string, Task*> _taskMap;
-    std::vector<Task*> _tasks;
-    const BaseProperties& _props;
+protected:
+  std::map<const std::string, Task*> tasks;
+  const BaseProperties& _props;
+  columbus::thread::ThreadPool& threadPool;
   
+  bool isReady(const std::string& taskName, const DirectedAcyclicGraph<std::string>& dependencyGraph);
+  void executeTask(const std::string& taskName, std::vector<boost::shared_future<Result>>& futures);
+  bool buildGraph(DirectedAcyclicGraph<std::string>& dependencyGraph);
 };
+
+void logCommandLineArguments(const BaseProperties& props, int argc, char* argv[]);
+void logEnvironment(const BaseProperties& props);
 
 } // namespace controller
 

@@ -18,18 +18,12 @@
  *  limitations under the Licence.
  */
 
-#ifndef _SMJ_CONTR_PROP_H_
-#define _SMJ_CONTR_PROP_H_
+#ifndef _OSAJ_CONTR_PROP_H_
+#define _OSAJ_CONTR_PROP_H_
 
 #include <string>
 #include <boost/filesystem/path.hpp>
 #include <controller/inc/Properties.h>
-
-typedef struct WrappedTool {
-  bool fullpath;
-  boost::filesystem::path wrappedToolName;
-  boost::filesystem::path wrapperToolName;
-} WrappedTool;
 
 struct Properties : public columbus::controller::BaseProperties
 {
@@ -45,7 +39,10 @@ struct Properties : public columbus::controller::BaseProperties
      runDCF(true),
      runLimMetrics(true),
      runMetricHunter(true),
-     analysisOutputDir(".columbus_java")
+     runUDM(false),
+     runUDMExplicit(false),
+     analysisOutputDir(".columbus_java"),
+     runLIM2Patterns(true)
   {}
 
   bool cloneGenealogy;                                // Create clone genealogy or no.
@@ -60,7 +57,6 @@ struct Properties : public columbus::controller::BaseProperties
   boost::filesystem::path toolsDir;                   // Absolute path of the directory of the tools inside the CA package
   
   boost::filesystem::path resultsDir;                 // Absolute path of the result directory given by the user
-  boost::filesystem::path buildScript;                // Absolute path of the build script given by the user
   boost::filesystem::path currentDate;                // The current date
   boost::filesystem::path projectResultDir;           // resultsDir / projectName /
   boost::filesystem::path projectTimedResultDir;      // projectResultDir / currentDate
@@ -68,8 +64,6 @@ struct Properties : public columbus::controller::BaseProperties
   boost::filesystem::path tempDir;                    // Absolute path of the directory of the temporary files
   boost::filesystem::path asgDir;                     // Absolute path of the directory of the asg files
   boost::filesystem::path graphDir;                   // Absolute path of the directory of the graph files
-  boost::filesystem::path columbusWrapperTmpDir;      // Absolute path of the directory where the wrapper is assembled
-  boost::filesystem::path columbusWrapperTmpDirName;  // Name of the directory where the wrapper is assembled (osaDir / temp / wrapper)
   boost::filesystem::path externalHardFilter;         // Absolute path of the external hardfilter file
   boost::filesystem::path externalSoftFilter;         // Absolute path of the external softfilter file
 
@@ -82,14 +76,15 @@ struct Properties : public columbus::controller::BaseProperties
   std::string javacOptions;                           // In directory analysis mode, the necessary parameters for compilation can be set with this option.
   std::string JVMOptions;                             // TODO:
   std::string JANJvmOptions;                          // 
+  std::string JANOptions;                             //
   std::string PMDOptions;                             // 
   std::string FBOptions;                              // 
-  std::string mavenFilter;                            //
   std::string FBFileList;                             //
   int cloneMinLines;                                  //
 
   char csvSeparator;                                  // Column separator character of the csv outputs.
   char csvDecimalmark;                                // Decimal mark character in the csv outputs.
+  std::string sarifSeverityLevel;                     // Severity level to be converted into sarif
   int cleanResults;                                   // Keep the last 'cleanResults' number of timestamped directory of the project in the results.
   bool cleanProject;                                  // Removes all files created outside the results directory during previous analyses, but does not remove anything from the results directory.
   bool runPMD;                                        // Run PMD.
@@ -97,7 +92,26 @@ struct Properties : public columbus::controller::BaseProperties
   bool runDCF;                                        // Run DCF.
   bool runLimMetrics;                                 // Run Lim2Metrics.
   bool runMetricHunter;                               // Run MetricHunter.
+  bool runUDM;                                        // Run UserDefinedMetrics
+  bool runUDMExplicit;                                // Was the "runUDM" switch explicitly set on the command line?
   std::string analysisOutputDir;                      // The name of the output directory (.columbus_java)
+
+  bool runSonar2Graph;                                // Run Sonar2Graph tool to extrat issues from SonarQube server.
+  std::string host;                                   // IP of the SonarQube server.
+  std::string port;                                   // Port of the SonarQube server.
+  std::string projectKey;                             // Key of the project on the SonarQube server.
+  std::string projectPrefix;                          // Prefix path of the project's base directory.
+  std::string jsonPath;                               // For testing only.
+  std::string sqUsername;                             // Username for the SonarQube server.
+  std::string sqPassword;                             // Password for the SonarQube server.
+  std::string languageKey;                            // Key of the language in SonarQube.
+  bool sonar2GraphVerbose;                            // Prints more information about the running of Sonar2Graph tool.
+  bool strict;                                        // If true, the tool will stop working if finds too many issues in one file.
+
+  bool runLIM2Patterns;                               // Run LIM2Patterns
+  std::string patternFile;                            // Location of the pattern file
+  std::string whitelist;                              // Pattern whitelist, can be set from profileXML
+  std::string blacklist;                              // Pattern blacklist, can be set from profileXML
 };
 
 extern Properties props;

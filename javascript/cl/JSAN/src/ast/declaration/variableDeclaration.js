@@ -27,7 +27,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var variableDeclaration = factory.createVariableDeclarationWrapper(factory);
+        var variableDeclaration = factory.createVariableDeclarationWrapper();
         globals.setPositionInfo(node, variableDeclaration);
         variableDeclaration.setKind(conversions.convertDeclarationKind(node.kind));
         return variableDeclaration;
@@ -37,15 +37,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.declarations.length; i++) {
                 if (node.declarations[i] != null) {
                     var declarationsWrapper = globals.getWrapperOfNode(node.declarations[i]);
-                    if (node.declarations[i].type !== "Literal") {
-                        var declarationsWrapperFunctionString = "addDeclarations" + node.declarations[i].type;
-                    } else {
-                        var declarationsWrapperFunctionString = "addDeclarations" + globals.getLiteralType(node.declarations[i]) + node.declarations[i].type;
-                    }
                     try {
-                        variableDeclarationWrapper[declarationsWrapperFunctionString](declarationsWrapper);
+                        variableDeclarationWrapper.addDeclarations(declarationsWrapper);
                     } catch (e) {
-                        console.error("VARIABLEDECLARATION - Function not exist: variableDeclarationWrapper." + declarationsWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("VARIABLEDECLARATION - Could not add declaration! Reason of the error: " + e + "\n");
                     }
                 }
             }

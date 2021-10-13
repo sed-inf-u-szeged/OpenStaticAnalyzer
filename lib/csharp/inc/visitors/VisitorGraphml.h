@@ -73,6 +73,7 @@ namespace columbus { namespace csharp { namespace asg {
         cmpTable.insert( std::make_pair( "CheckedExpressionSyntax", &Common::getIsCheckedExpressionSyntax));
         cmpTable.insert( std::make_pair( "ConditionalAccessExpressionSyntax", &Common::getIsConditionalAccessExpressionSyntax));
         cmpTable.insert( std::make_pair( "ConditionalExpressionSyntax", &Common::getIsConditionalExpressionSyntax));
+        cmpTable.insert( std::make_pair( "DeclarationExpressionSyntax", &Common::getIsDeclarationExpressionSyntax));
         cmpTable.insert( std::make_pair( "DefaultExpressionSyntax", &Common::getIsDefaultExpressionSyntax));
         cmpTable.insert( std::make_pair( "ElementAccessExpressionSyntax", &Common::getIsElementAccessExpressionSyntax));
         cmpTable.insert( std::make_pair( "ElementBindingExpressionSyntax", &Common::getIsElementBindingExpressionSyntax));
@@ -81,10 +82,12 @@ namespace columbus { namespace csharp { namespace asg {
         cmpTable.insert( std::make_pair( "IdentifierNameSyntax", &Common::getIsIdentifierNameSyntax));
         cmpTable.insert( std::make_pair( "ImplicitArrayCreationExpressionSyntax", &Common::getIsImplicitArrayCreationExpressionSyntax));
         cmpTable.insert( std::make_pair( "ImplicitElementAccessSyntax", &Common::getIsImplicitElementAccessSyntax));
+        cmpTable.insert( std::make_pair( "ImplicitStackAllocArrayCreationExpressionSyntax", &Common::getIsImplicitStackAllocArrayCreationExpressionSyntax));
         cmpTable.insert( std::make_pair( "InitializerExpressionSyntax", &Common::getIsInitializerExpressionSyntax));
         cmpTable.insert( std::make_pair( "InstanceExpressionSyntax", &Common::getIsInstanceExpressionSyntax));
         cmpTable.insert( std::make_pair( "InterpolatedStringExpressionSyntax", &Common::getIsInterpolatedStringExpressionSyntax));
         cmpTable.insert( std::make_pair( "InvocationExpressionSyntax", &Common::getIsInvocationExpressionSyntax));
+        cmpTable.insert( std::make_pair( "IsPatternExpressionSyntax", &Common::getIsIsPatternExpressionSyntax));
         cmpTable.insert( std::make_pair( "LambdaExpressionSyntax", &Common::getIsLambdaExpressionSyntax));
         cmpTable.insert( std::make_pair( "LiteralExpressionSyntax", &Common::getIsLiteralExpressionSyntax));
         cmpTable.insert( std::make_pair( "MakeRefExpressionSyntax", &Common::getIsMakeRefExpressionSyntax));
@@ -103,29 +106,39 @@ namespace columbus { namespace csharp { namespace asg {
         cmpTable.insert( std::make_pair( "PrefixUnaryExpressionSyntax", &Common::getIsPrefixUnaryExpressionSyntax));
         cmpTable.insert( std::make_pair( "QualifiedNameSyntax", &Common::getIsQualifiedNameSyntax));
         cmpTable.insert( std::make_pair( "QueryExpressionSyntax", &Common::getIsQueryExpressionSyntax));
+        cmpTable.insert( std::make_pair( "RangeExpressionSyntax", &Common::getIsRangeExpressionSyntax));
+        cmpTable.insert( std::make_pair( "RefExpressionSyntax", &Common::getIsRefExpressionSyntax));
         cmpTable.insert( std::make_pair( "RefTypeExpressionSyntax", &Common::getIsRefTypeExpressionSyntax));
+        cmpTable.insert( std::make_pair( "RefTypeSyntax", &Common::getIsRefTypeSyntax));
         cmpTable.insert( std::make_pair( "RefValueExpressionSyntax", &Common::getIsRefValueExpressionSyntax));
         cmpTable.insert( std::make_pair( "SimpleLambdaExpressionSyntax", &Common::getIsSimpleLambdaExpressionSyntax));
         cmpTable.insert( std::make_pair( "SimpleNameSyntax", &Common::getIsSimpleNameSyntax));
         cmpTable.insert( std::make_pair( "SizeOfExpressionSyntax", &Common::getIsSizeOfExpressionSyntax));
         cmpTable.insert( std::make_pair( "StackAllocArrayCreationExpressionSyntax", &Common::getIsStackAllocArrayCreationExpressionSyntax));
+        cmpTable.insert( std::make_pair( "SwitchExpressionSyntax", &Common::getIsSwitchExpressionSyntax));
         cmpTable.insert( std::make_pair( "ThisExpressionSyntax", &Common::getIsThisExpressionSyntax));
+        cmpTable.insert( std::make_pair( "ThrowExpressionSyntax", &Common::getIsThrowExpressionSyntax));
+        cmpTable.insert( std::make_pair( "TupleExpressionSyntax", &Common::getIsTupleExpressionSyntax));
+        cmpTable.insert( std::make_pair( "TupleTypeSyntax", &Common::getIsTupleTypeSyntax));
         cmpTable.insert( std::make_pair( "TypeOfExpressionSyntax", &Common::getIsTypeOfExpressionSyntax));
         cmpTable.insert( std::make_pair( "TypeSyntax", &Common::getIsTypeSyntax));
         cmpTable.insert( std::make_pair( "BlockSyntax", &Common::getIsBlockSyntax));
         cmpTable.insert( std::make_pair( "BreakStatementSyntax", &Common::getIsBreakStatementSyntax));
         cmpTable.insert( std::make_pair( "CheckedStatementSyntax", &Common::getIsCheckedStatementSyntax));
+        cmpTable.insert( std::make_pair( "CommonForEachStatementSyntax", &Common::getIsCommonForEachStatementSyntax));
         cmpTable.insert( std::make_pair( "ContinueStatementSyntax", &Common::getIsContinueStatementSyntax));
         cmpTable.insert( std::make_pair( "DoStatementSyntax", &Common::getIsDoStatementSyntax));
         cmpTable.insert( std::make_pair( "EmptyStatementSyntax", &Common::getIsEmptyStatementSyntax));
         cmpTable.insert( std::make_pair( "ExpressionStatementSyntax", &Common::getIsExpressionStatementSyntax));
         cmpTable.insert( std::make_pair( "FixedStatementSyntax", &Common::getIsFixedStatementSyntax));
         cmpTable.insert( std::make_pair( "ForEachStatementSyntax", &Common::getIsForEachStatementSyntax));
+        cmpTable.insert( std::make_pair( "ForEachVariableStatementSyntax", &Common::getIsForEachVariableStatementSyntax));
         cmpTable.insert( std::make_pair( "ForStatementSyntax", &Common::getIsForStatementSyntax));
         cmpTable.insert( std::make_pair( "GotoStatementSyntax", &Common::getIsGotoStatementSyntax));
         cmpTable.insert( std::make_pair( "IfStatementSyntax", &Common::getIsIfStatementSyntax));
         cmpTable.insert( std::make_pair( "LabeledStatementSyntax", &Common::getIsLabeledStatementSyntax));
         cmpTable.insert( std::make_pair( "LocalDeclarationStatementSyntax", &Common::getIsLocalDeclarationStatementSyntax));
+        cmpTable.insert( std::make_pair( "LocalFunctionStatementSyntax", &Common::getIsLocalFunctionStatementSyntax));
         cmpTable.insert( std::make_pair( "LockStatementSyntax", &Common::getIsLockStatementSyntax));
         cmpTable.insert( std::make_pair( "ReturnStatementSyntax", &Common::getIsReturnStatementSyntax));
         cmpTable.insert( std::make_pair( "StatementSyntax", &Common::getIsStatementSyntax));
@@ -159,6 +172,7 @@ namespace columbus { namespace csharp { namespace asg {
         cmpTable.insert( std::make_pair( "BaseTypeSyntax", &Common::getIsBaseTypeSyntax));
         cmpTable.insert( std::make_pair( "BracketedArgumentListSyntax", &Common::getIsBracketedArgumentListSyntax));
         cmpTable.insert( std::make_pair( "BracketedParameterListSyntax", &Common::getIsBracketedParameterListSyntax));
+        cmpTable.insert( std::make_pair( "CasePatternSwitchLabelSyntax", &Common::getIsCasePatternSwitchLabelSyntax));
         cmpTable.insert( std::make_pair( "CaseSwitchLabelSyntax", &Common::getIsCaseSwitchLabelSyntax));
         cmpTable.insert( std::make_pair( "CatchClauseSyntax", &Common::getIsCatchClauseSyntax));
         cmpTable.insert( std::make_pair( "CatchDeclarationSyntax", &Common::getIsCatchDeclarationSyntax));
@@ -166,6 +180,7 @@ namespace columbus { namespace csharp { namespace asg {
         cmpTable.insert( std::make_pair( "ClassDeclarationSyntax", &Common::getIsClassDeclarationSyntax));
         cmpTable.insert( std::make_pair( "ClassOrStructConstraintSyntax", &Common::getIsClassOrStructConstraintSyntax));
         cmpTable.insert( std::make_pair( "CompilationUnitSyntax", &Common::getIsCompilationUnitSyntax));
+        cmpTable.insert( std::make_pair( "ConstantPatternSyntax", &Common::getIsConstantPatternSyntax));
         cmpTable.insert( std::make_pair( "ConstructorConstraintSyntax", &Common::getIsConstructorConstraintSyntax));
         cmpTable.insert( std::make_pair( "ConstructorDeclarationSyntax", &Common::getIsConstructorDeclarationSyntax));
         cmpTable.insert( std::make_pair( "ConstructorInitializerSyntax", &Common::getIsConstructorInitializerSyntax));
@@ -175,9 +190,12 @@ namespace columbus { namespace csharp { namespace asg {
         cmpTable.insert( std::make_pair( "CrefParameterListSyntax", &Common::getIsCrefParameterListSyntax));
         cmpTable.insert( std::make_pair( "CrefParameterSyntax", &Common::getIsCrefParameterSyntax));
         cmpTable.insert( std::make_pair( "CrefSyntax", &Common::getIsCrefSyntax));
+        cmpTable.insert( std::make_pair( "DeclarationPatternSyntax", &Common::getIsDeclarationPatternSyntax));
         cmpTable.insert( std::make_pair( "DefaultSwitchLabelSyntax", &Common::getIsDefaultSwitchLabelSyntax));
         cmpTable.insert( std::make_pair( "DelegateDeclarationSyntax", &Common::getIsDelegateDeclarationSyntax));
         cmpTable.insert( std::make_pair( "DestructorDeclarationSyntax", &Common::getIsDestructorDeclarationSyntax));
+        cmpTable.insert( std::make_pair( "DiscardDesignationSyntax", &Common::getIsDiscardDesignationSyntax));
+        cmpTable.insert( std::make_pair( "DiscardPatternSyntax", &Common::getIsDiscardPatternSyntax));
         cmpTable.insert( std::make_pair( "ElseClauseSyntax", &Common::getIsElseClauseSyntax));
         cmpTable.insert( std::make_pair( "EnumDeclarationSyntax", &Common::getIsEnumDeclarationSyntax));
         cmpTable.insert( std::make_pair( "EnumMemberDeclarationSyntax", &Common::getIsEnumMemberDeclarationSyntax));
@@ -216,18 +234,27 @@ namespace columbus { namespace csharp { namespace asg {
         cmpTable.insert( std::make_pair( "OrderingSyntax", &Common::getIsOrderingSyntax));
         cmpTable.insert( std::make_pair( "ParameterListSyntax", &Common::getIsParameterListSyntax));
         cmpTable.insert( std::make_pair( "ParameterSyntax", &Common::getIsParameterSyntax));
+        cmpTable.insert( std::make_pair( "ParenthesizedVariableDesignationSyntax", &Common::getIsParenthesizedVariableDesignationSyntax));
+        cmpTable.insert( std::make_pair( "PatternSyntax", &Common::getIsPatternSyntax));
+        cmpTable.insert( std::make_pair( "PositionalPatternClauseSyntax", &Common::getIsPositionalPatternClauseSyntax));
         cmpTable.insert( std::make_pair( "PropertyDeclarationSyntax", &Common::getIsPropertyDeclarationSyntax));
+        cmpTable.insert( std::make_pair( "PropertyPatternClauseSyntax", &Common::getIsPropertyPatternClauseSyntax));
         cmpTable.insert( std::make_pair( "QualifiedCrefSyntax", &Common::getIsQualifiedCrefSyntax));
         cmpTable.insert( std::make_pair( "QueryBodySyntax", &Common::getIsQueryBodySyntax));
         cmpTable.insert( std::make_pair( "QueryClauseSyntax", &Common::getIsQueryClauseSyntax));
         cmpTable.insert( std::make_pair( "QueryContinuationSyntax", &Common::getIsQueryContinuationSyntax));
+        cmpTable.insert( std::make_pair( "RecursivePatternSyntax", &Common::getIsRecursivePatternSyntax));
         cmpTable.insert( std::make_pair( "SelectClauseSyntax", &Common::getIsSelectClauseSyntax));
         cmpTable.insert( std::make_pair( "SelectOrGroupClauseSyntax", &Common::getIsSelectOrGroupClauseSyntax));
         cmpTable.insert( std::make_pair( "SimpleBaseTypeSyntax", &Common::getIsSimpleBaseTypeSyntax));
+        cmpTable.insert( std::make_pair( "SingleVariableDesignationSyntax", &Common::getIsSingleVariableDesignationSyntax));
         cmpTable.insert( std::make_pair( "StructDeclarationSyntax", &Common::getIsStructDeclarationSyntax));
+        cmpTable.insert( std::make_pair( "SubpatternSyntax", &Common::getIsSubpatternSyntax));
+        cmpTable.insert( std::make_pair( "SwitchExpressionArmSyntax", &Common::getIsSwitchExpressionArmSyntax));
         cmpTable.insert( std::make_pair( "SwitchLabelSyntax", &Common::getIsSwitchLabelSyntax));
         cmpTable.insert( std::make_pair( "SwitchSectionSyntax", &Common::getIsSwitchSectionSyntax));
         cmpTable.insert( std::make_pair( "SyntaxToken", &Common::getIsSyntaxToken));
+        cmpTable.insert( std::make_pair( "TupleElementSyntax", &Common::getIsTupleElementSyntax));
         cmpTable.insert( std::make_pair( "TypeArgumentListSyntax", &Common::getIsTypeArgumentListSyntax));
         cmpTable.insert( std::make_pair( "TypeConstraintSyntax", &Common::getIsTypeConstraintSyntax));
         cmpTable.insert( std::make_pair( "TypeCrefSyntax", &Common::getIsTypeCrefSyntax));
@@ -237,8 +264,11 @@ namespace columbus { namespace csharp { namespace asg {
         cmpTable.insert( std::make_pair( "TypeParameterListSyntax", &Common::getIsTypeParameterListSyntax));
         cmpTable.insert( std::make_pair( "TypeParameterSyntax", &Common::getIsTypeParameterSyntax));
         cmpTable.insert( std::make_pair( "UsingDirectiveSyntax", &Common::getIsUsingDirectiveSyntax));
+        cmpTable.insert( std::make_pair( "VarPatternSyntax", &Common::getIsVarPatternSyntax));
         cmpTable.insert( std::make_pair( "VariableDeclarationSyntax", &Common::getIsVariableDeclarationSyntax));
         cmpTable.insert( std::make_pair( "VariableDeclaratorSyntax", &Common::getIsVariableDeclaratorSyntax));
+        cmpTable.insert( std::make_pair( "VariableDesignationSyntax", &Common::getIsVariableDesignationSyntax));
+        cmpTable.insert( std::make_pair( "WhenClauseSyntax", &Common::getIsWhenClauseSyntax));
         cmpTable.insert( std::make_pair( "WhereClauseSyntax", &Common::getIsWhereClauseSyntax));
         cmpTable.insert( std::make_pair( "XmlAttributeSyntax", &Common::getIsXmlAttributeSyntax));
         cmpTable.insert( std::make_pair( "XmlCDataSectionSyntax", &Common::getIsXmlCDataSectionSyntax));
@@ -279,6 +309,7 @@ namespace columbus { namespace csharp { namespace asg {
         types.insert( "expression::CheckedExpressionSyntax");
         types.insert( "expression::ConditionalAccessExpressionSyntax");
         types.insert( "expression::ConditionalExpressionSyntax");
+        types.insert( "expression::DeclarationExpressionSyntax");
         types.insert( "expression::DefaultExpressionSyntax");
         types.insert( "expression::ElementAccessExpressionSyntax");
         types.insert( "expression::ElementBindingExpressionSyntax");
@@ -287,10 +318,12 @@ namespace columbus { namespace csharp { namespace asg {
         types.insert( "expression::IdentifierNameSyntax");
         types.insert( "expression::ImplicitArrayCreationExpressionSyntax");
         types.insert( "expression::ImplicitElementAccessSyntax");
+        types.insert( "expression::ImplicitStackAllocArrayCreationExpressionSyntax");
         types.insert( "expression::InitializerExpressionSyntax");
         types.insert( "expression::InstanceExpressionSyntax");
         types.insert( "expression::InterpolatedStringExpressionSyntax");
         types.insert( "expression::InvocationExpressionSyntax");
+        types.insert( "expression::IsPatternExpressionSyntax");
         types.insert( "expression::LambdaExpressionSyntax");
         types.insert( "expression::LiteralExpressionSyntax");
         types.insert( "expression::MakeRefExpressionSyntax");
@@ -309,29 +342,39 @@ namespace columbus { namespace csharp { namespace asg {
         types.insert( "expression::PrefixUnaryExpressionSyntax");
         types.insert( "expression::QualifiedNameSyntax");
         types.insert( "expression::QueryExpressionSyntax");
+        types.insert( "expression::RangeExpressionSyntax");
+        types.insert( "expression::RefExpressionSyntax");
         types.insert( "expression::RefTypeExpressionSyntax");
+        types.insert( "expression::RefTypeSyntax");
         types.insert( "expression::RefValueExpressionSyntax");
         types.insert( "expression::SimpleLambdaExpressionSyntax");
         types.insert( "expression::SimpleNameSyntax");
         types.insert( "expression::SizeOfExpressionSyntax");
         types.insert( "expression::StackAllocArrayCreationExpressionSyntax");
+        types.insert( "expression::SwitchExpressionSyntax");
         types.insert( "expression::ThisExpressionSyntax");
+        types.insert( "expression::ThrowExpressionSyntax");
+        types.insert( "expression::TupleExpressionSyntax");
+        types.insert( "expression::TupleTypeSyntax");
         types.insert( "expression::TypeOfExpressionSyntax");
         types.insert( "expression::TypeSyntax");
         types.insert( "statement::BlockSyntax");
         types.insert( "statement::BreakStatementSyntax");
         types.insert( "statement::CheckedStatementSyntax");
+        types.insert( "statement::CommonForEachStatementSyntax");
         types.insert( "statement::ContinueStatementSyntax");
         types.insert( "statement::DoStatementSyntax");
         types.insert( "statement::EmptyStatementSyntax");
         types.insert( "statement::ExpressionStatementSyntax");
         types.insert( "statement::FixedStatementSyntax");
         types.insert( "statement::ForEachStatementSyntax");
+        types.insert( "statement::ForEachVariableStatementSyntax");
         types.insert( "statement::ForStatementSyntax");
         types.insert( "statement::GotoStatementSyntax");
         types.insert( "statement::IfStatementSyntax");
         types.insert( "statement::LabeledStatementSyntax");
         types.insert( "statement::LocalDeclarationStatementSyntax");
+        types.insert( "statement::LocalFunctionStatementSyntax");
         types.insert( "statement::LockStatementSyntax");
         types.insert( "statement::ReturnStatementSyntax");
         types.insert( "statement::StatementSyntax");
@@ -365,6 +408,7 @@ namespace columbus { namespace csharp { namespace asg {
         types.insert( "structure::BaseTypeSyntax");
         types.insert( "structure::BracketedArgumentListSyntax");
         types.insert( "structure::BracketedParameterListSyntax");
+        types.insert( "structure::CasePatternSwitchLabelSyntax");
         types.insert( "structure::CaseSwitchLabelSyntax");
         types.insert( "structure::CatchClauseSyntax");
         types.insert( "structure::CatchDeclarationSyntax");
@@ -372,6 +416,7 @@ namespace columbus { namespace csharp { namespace asg {
         types.insert( "structure::ClassDeclarationSyntax");
         types.insert( "structure::ClassOrStructConstraintSyntax");
         types.insert( "structure::CompilationUnitSyntax");
+        types.insert( "structure::ConstantPatternSyntax");
         types.insert( "structure::ConstructorConstraintSyntax");
         types.insert( "structure::ConstructorDeclarationSyntax");
         types.insert( "structure::ConstructorInitializerSyntax");
@@ -381,9 +426,12 @@ namespace columbus { namespace csharp { namespace asg {
         types.insert( "structure::CrefParameterListSyntax");
         types.insert( "structure::CrefParameterSyntax");
         types.insert( "structure::CrefSyntax");
+        types.insert( "structure::DeclarationPatternSyntax");
         types.insert( "structure::DefaultSwitchLabelSyntax");
         types.insert( "structure::DelegateDeclarationSyntax");
         types.insert( "structure::DestructorDeclarationSyntax");
+        types.insert( "structure::DiscardDesignationSyntax");
+        types.insert( "structure::DiscardPatternSyntax");
         types.insert( "structure::ElseClauseSyntax");
         types.insert( "structure::EnumDeclarationSyntax");
         types.insert( "structure::EnumMemberDeclarationSyntax");
@@ -422,18 +470,27 @@ namespace columbus { namespace csharp { namespace asg {
         types.insert( "structure::OrderingSyntax");
         types.insert( "structure::ParameterListSyntax");
         types.insert( "structure::ParameterSyntax");
+        types.insert( "structure::ParenthesizedVariableDesignationSyntax");
+        types.insert( "structure::PatternSyntax");
+        types.insert( "structure::PositionalPatternClauseSyntax");
         types.insert( "structure::PropertyDeclarationSyntax");
+        types.insert( "structure::PropertyPatternClauseSyntax");
         types.insert( "structure::QualifiedCrefSyntax");
         types.insert( "structure::QueryBodySyntax");
         types.insert( "structure::QueryClauseSyntax");
         types.insert( "structure::QueryContinuationSyntax");
+        types.insert( "structure::RecursivePatternSyntax");
         types.insert( "structure::SelectClauseSyntax");
         types.insert( "structure::SelectOrGroupClauseSyntax");
         types.insert( "structure::SimpleBaseTypeSyntax");
+        types.insert( "structure::SingleVariableDesignationSyntax");
         types.insert( "structure::StructDeclarationSyntax");
+        types.insert( "structure::SubpatternSyntax");
+        types.insert( "structure::SwitchExpressionArmSyntax");
         types.insert( "structure::SwitchLabelSyntax");
         types.insert( "structure::SwitchSectionSyntax");
         types.insert( "structure::SyntaxToken");
+        types.insert( "structure::TupleElementSyntax");
         types.insert( "structure::TypeArgumentListSyntax");
         types.insert( "structure::TypeConstraintSyntax");
         types.insert( "structure::TypeCrefSyntax");
@@ -443,8 +500,11 @@ namespace columbus { namespace csharp { namespace asg {
         types.insert( "structure::TypeParameterListSyntax");
         types.insert( "structure::TypeParameterSyntax");
         types.insert( "structure::UsingDirectiveSyntax");
+        types.insert( "structure::VarPatternSyntax");
         types.insert( "structure::VariableDeclarationSyntax");
         types.insert( "structure::VariableDeclaratorSyntax");
+        types.insert( "structure::VariableDesignationSyntax");
+        types.insert( "structure::WhenClauseSyntax");
         types.insert( "structure::WhereClauseSyntax");
         types.insert( "structure::XmlAttributeSyntax");
         types.insert( "structure::XmlCDataSectionSyntax");
@@ -659,6 +719,18 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const expression::ConditionalExpressionSyntax& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the Graphml representation of the expression::DeclarationExpressionSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::DeclarationExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the expression::DeclarationExpressionSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::DeclarationExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the Graphml representation of the expression::DefaultExpressionSyntax node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -743,6 +815,18 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const expression::ImplicitElementAccessSyntax& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the Graphml representation of the expression::ImplicitStackAllocArrayCreationExpressionSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the expression::ImplicitStackAllocArrayCreationExpressionSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the Graphml representation of the expression::InitializerExpressionSyntax node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -777,6 +861,18 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::InvocationExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the expression::IsPatternExpressionSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::IsPatternExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the expression::IsPatternExpressionSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::IsPatternExpressionSyntax& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the Graphml representation of the expression::LiteralExpressionSyntax node into the output file.
@@ -971,6 +1067,30 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const expression::QueryExpressionSyntax& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the Graphml representation of the expression::RangeExpressionSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::RangeExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the expression::RangeExpressionSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::RangeExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the expression::RefExpressionSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::RefExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the expression::RefExpressionSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::RefExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the Graphml representation of the expression::RefTypeExpressionSyntax node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -981,6 +1101,18 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::RefTypeExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the expression::RefTypeSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::RefTypeSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the expression::RefTypeSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::RefTypeSyntax& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the Graphml representation of the expression::RefValueExpressionSyntax node into the output file.
@@ -1031,6 +1163,18 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const expression::StackAllocArrayCreationExpressionSyntax& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the Graphml representation of the expression::SwitchExpressionSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::SwitchExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the expression::SwitchExpressionSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::SwitchExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the Graphml representation of the expression::ThisExpressionSyntax node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -1041,6 +1185,42 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::ThisExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the expression::ThrowExpressionSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::ThrowExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the expression::ThrowExpressionSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::ThrowExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the expression::TupleExpressionSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::TupleExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the expression::TupleExpressionSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::TupleExpressionSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the expression::TupleTypeSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::TupleTypeSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the expression::TupleTypeSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::TupleTypeSyntax& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the Graphml representation of the expression::TypeOfExpressionSyntax node into the output file.
@@ -1163,6 +1343,18 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const statement::ForEachStatementSyntax& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the Graphml representation of the statement::ForEachVariableStatementSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const statement::ForEachVariableStatementSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the statement::ForEachVariableStatementSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const statement::ForEachVariableStatementSyntax& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the Graphml representation of the statement::ForStatementSyntax node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -1221,6 +1413,18 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const statement::LocalDeclarationStatementSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the statement::LocalFunctionStatementSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const statement::LocalFunctionStatementSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the statement::LocalFunctionStatementSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const statement::LocalFunctionStatementSyntax& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the Graphml representation of the statement::LockStatementSyntax node into the output file.
@@ -1511,6 +1715,18 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const structure::BracketedParameterListSyntax& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the Graphml representation of the structure::CasePatternSwitchLabelSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::CasePatternSwitchLabelSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::CasePatternSwitchLabelSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::CasePatternSwitchLabelSyntax& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the Graphml representation of the structure::CaseSwitchLabelSyntax node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -1593,6 +1809,18 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const structure::CompilationUnitSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the structure::ConstantPatternSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::ConstantPatternSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::ConstantPatternSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::ConstantPatternSyntax& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the Graphml representation of the structure::ConstructorConstraintSyntax node into the output file.
@@ -1691,6 +1919,18 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const structure::CrefParameterSyntax& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the Graphml representation of the structure::DeclarationPatternSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::DeclarationPatternSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::DeclarationPatternSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::DeclarationPatternSyntax& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the Graphml representation of the structure::DefaultSwitchLabelSyntax node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -1725,6 +1965,30 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const structure::DestructorDeclarationSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the structure::DiscardDesignationSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::DiscardDesignationSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::DiscardDesignationSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::DiscardDesignationSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the structure::DiscardPatternSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::DiscardPatternSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::DiscardPatternSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::DiscardPatternSyntax& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the Graphml representation of the structure::ElseClauseSyntax node into the output file.
@@ -2147,6 +2411,30 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const structure::ParameterSyntax& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the Graphml representation of the structure::ParenthesizedVariableDesignationSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::ParenthesizedVariableDesignationSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::ParenthesizedVariableDesignationSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::ParenthesizedVariableDesignationSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the structure::PositionalPatternClauseSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::PositionalPatternClauseSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::PositionalPatternClauseSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::PositionalPatternClauseSyntax& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the Graphml representation of the structure::PropertyDeclarationSyntax node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -2157,6 +2445,18 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const structure::PropertyDeclarationSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the structure::PropertyPatternClauseSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::PropertyPatternClauseSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::PropertyPatternClauseSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::PropertyPatternClauseSyntax& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the Graphml representation of the structure::QualifiedCrefSyntax node into the output file.
@@ -2195,6 +2495,18 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const structure::QueryContinuationSyntax& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the Graphml representation of the structure::RecursivePatternSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::RecursivePatternSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::RecursivePatternSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::RecursivePatternSyntax& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the Graphml representation of the structure::SelectClauseSyntax node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -2219,6 +2531,18 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const structure::SimpleBaseTypeSyntax& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the Graphml representation of the structure::SingleVariableDesignationSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::SingleVariableDesignationSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::SingleVariableDesignationSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::SingleVariableDesignationSyntax& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the Graphml representation of the structure::StructDeclarationSyntax node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -2229,6 +2553,30 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const structure::StructDeclarationSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the structure::SubpatternSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::SubpatternSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::SubpatternSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::SubpatternSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the structure::SwitchExpressionArmSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::SwitchExpressionArmSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::SwitchExpressionArmSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::SwitchExpressionArmSyntax& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the Graphml representation of the structure::SwitchSectionSyntax node into the output file.
@@ -2253,6 +2601,18 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const structure::SyntaxToken& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the structure::TupleElementSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::TupleElementSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::TupleElementSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::TupleElementSyntax& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the Graphml representation of the structure::TypeArgumentListSyntax node into the output file.
@@ -2339,6 +2699,18 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitEnd(const structure::UsingDirectiveSyntax& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the Graphml representation of the structure::VarPatternSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::VarPatternSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::VarPatternSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::VarPatternSyntax& node, bool callVirtualBase = true);
+
+      /**
       * \brief Writes the Graphml representation of the structure::VariableDeclarationSyntax node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -2361,6 +2733,18 @@ namespace columbus { namespace csharp { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const structure::VariableDeclaratorSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the structure::WhenClauseSyntax node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::WhenClauseSyntax& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::WhenClauseSyntax node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::WhenClauseSyntax& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the Graphml representation of the structure::WhereClauseSyntax node into the output file.
@@ -2545,11 +2929,18 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitAliasQualifiedNameSyntax_Name(const expression::AliasQualifiedNameSyntax& begin, const expression::SimpleNameSyntax& end);
 
       /**
-      * \brief Edge  visitor for Body edge which is called when the subtree of this edge is started.
+      * \brief Edge  visitor for Block edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitAnonymousFunctionExpressionSyntax_Body(const expression::AnonymousFunctionExpressionSyntax& begin, const base::Positioned& end);
+      virtual void visitAnonymousFunctionExpressionSyntax_Block(const expression::AnonymousFunctionExpressionSyntax& begin, const statement::BlockSyntax& end);
+
+      /**
+      * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitAnonymousFunctionExpressionSyntax_ExpressionBody(const expression::AnonymousFunctionExpressionSyntax& begin, const expression::ExpressionSyntax& end);
 
       /**
       * \brief Edge  visitor for ParameterList edge which is called when the subtree of this edge is started.
@@ -2713,6 +3104,20 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitConditionalExpressionSyntax_WhenTrue(const expression::ConditionalExpressionSyntax& begin, const expression::ExpressionSyntax& end);
 
       /**
+      * \brief Edge  visitor for Designation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitDeclarationExpressionSyntax_Designation(const expression::DeclarationExpressionSyntax& begin, const structure::VariableDesignationSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitDeclarationExpressionSyntax_Type(const expression::DeclarationExpressionSyntax& begin, const expression::TypeSyntax& end);
+
+      /**
       * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -2783,6 +3188,13 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitImplicitElementAccessSyntax_ArgumentList(const expression::ImplicitElementAccessSyntax& begin, const structure::BracketedArgumentListSyntax& end);
 
       /**
+      * \brief Edge  visitor for Initializer edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitImplicitStackAllocArrayCreationExpressionSyntax_Initializer(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end);
+
+      /**
       * \brief Edge  visitor for Expressions edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -2811,11 +3223,32 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitInvocationExpressionSyntax_Expression(const expression::InvocationExpressionSyntax& begin, const expression::ExpressionSyntax& end);
 
       /**
+      * \brief Edge visitor for LocalFunctionCall edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitInvocationExpressionSyntax_LocalFunctionCall(const expression::InvocationExpressionSyntax& begin, const statement::LocalFunctionStatementSyntax& end);
+
+      /**
       * \brief Edge visitor for MethodCall edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitInvocationExpressionSyntax_MethodCall(const expression::InvocationExpressionSyntax& begin, const structure::MethodDeclarationSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitIsPatternExpressionSyntax_Expression(const expression::IsPatternExpressionSyntax& begin, const expression::ExpressionSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Pattern edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitIsPatternExpressionSyntax_Pattern(const expression::IsPatternExpressionSyntax& begin, const structure::PatternSyntax& end);
 
       /**
       * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
@@ -2958,11 +3391,39 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitQueryExpressionSyntax_FromClause(const expression::QueryExpressionSyntax& begin, const structure::FromClauseSyntax& end);
 
       /**
+      * \brief Edge  visitor for LeftOperand edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitRangeExpressionSyntax_LeftOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end);
+
+      /**
+      * \brief Edge  visitor for RightOperand edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitRangeExpressionSyntax_RightOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitRefExpressionSyntax_Expression(const expression::RefExpressionSyntax& begin, const expression::ExpressionSyntax& end);
+
+      /**
       * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitRefTypeExpressionSyntax_Expression(const expression::RefTypeExpressionSyntax& begin, const expression::ExpressionSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitRefTypeSyntax_Type(const expression::RefTypeSyntax& begin, const expression::TypeSyntax& end);
 
       /**
       * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
@@ -2993,11 +3454,53 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitSizeOfExpressionSyntax_Type(const expression::SizeOfExpressionSyntax& begin, const expression::TypeSyntax& end);
 
       /**
+      * \brief Edge  visitor for Initializer edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitStackAllocArrayCreationExpressionSyntax_Initializer(const expression::StackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end);
+
+      /**
       * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitStackAllocArrayCreationExpressionSyntax_Type(const expression::StackAllocArrayCreationExpressionSyntax& begin, const expression::TypeSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Arms edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitSwitchExpressionSyntax_Arms(const expression::SwitchExpressionSyntax& begin, const structure::SwitchExpressionArmSyntax& end);
+
+      /**
+      * \brief Edge  visitor for GoverningExpression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitSwitchExpressionSyntax_GoverningExpression(const expression::SwitchExpressionSyntax& begin, const expression::ExpressionSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitThrowExpressionSyntax_Expression(const expression::ThrowExpressionSyntax& begin, const expression::ExpressionSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Arguments edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitTupleExpressionSyntax_Arguments(const expression::TupleExpressionSyntax& begin, const structure::ArgumentSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Elements edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitTupleTypeSyntax_Elements(const expression::TupleTypeSyntax& begin, const structure::TupleElementSyntax& end);
 
       /**
       * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
@@ -3026,6 +3529,20 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitCheckedStatementSyntax_Block(const statement::CheckedStatementSyntax& begin, const statement::BlockSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitCommonForEachStatementSyntax_Expression(const statement::CommonForEachStatementSyntax& begin, const expression::ExpressionSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Statement edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitCommonForEachStatementSyntax_Statement(const statement::CommonForEachStatementSyntax& begin, const statement::StatementSyntax& end);
 
       /**
       * \brief Edge  visitor for Condition edge which is called when the subtree of this edge is started.
@@ -3063,25 +3580,18 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitFixedStatementSyntax_Statement(const statement::FixedStatementSyntax& begin, const statement::StatementSyntax& end);
 
       /**
-      * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      virtual void visitForEachStatementSyntax_Expression(const statement::ForEachStatementSyntax& begin, const expression::ExpressionSyntax& end);
-
-      /**
-      * \brief Edge  visitor for Statement edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      virtual void visitForEachStatementSyntax_Statement(const statement::ForEachStatementSyntax& begin, const statement::StatementSyntax& end);
-
-      /**
       * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitForEachStatementSyntax_Type(const statement::ForEachStatementSyntax& begin, const expression::TypeSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Variable edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitForEachVariableStatementSyntax_Variable(const statement::ForEachVariableStatementSyntax& begin, const expression::ExpressionSyntax& end);
 
       /**
       * \brief Edge  visitor for Condition edge which is called when the subtree of this edge is started.
@@ -3161,6 +3671,48 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitLocalDeclarationStatementSyntax_Declaration(const statement::LocalDeclarationStatementSyntax& begin, const structure::VariableDeclarationSyntax& end);
 
       /**
+      * \brief Edge  visitor for Body edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitLocalFunctionStatementSyntax_Body(const statement::LocalFunctionStatementSyntax& begin, const statement::BlockSyntax& end);
+
+      /**
+      * \brief Edge  visitor for ConstraintClauses edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitLocalFunctionStatementSyntax_ConstraintClauses(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterConstraintClauseSyntax& end);
+
+      /**
+      * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitLocalFunctionStatementSyntax_ExpressionBody(const statement::LocalFunctionStatementSyntax& begin, const structure::ArrowExpressionClauseSyntax& end);
+
+      /**
+      * \brief Edge  visitor for ParameterList edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitLocalFunctionStatementSyntax_ParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::ParameterListSyntax& end);
+
+      /**
+      * \brief Edge  visitor for ReturnType edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitLocalFunctionStatementSyntax_ReturnType(const statement::LocalFunctionStatementSyntax& begin, const expression::TypeSyntax& end);
+
+      /**
+      * \brief Edge  visitor for TypeParameterList edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitLocalFunctionStatementSyntax_TypeParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterListSyntax& end);
+
+      /**
       * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -3180,6 +3732,13 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitReturnStatementSyntax_Expression(const statement::ReturnStatementSyntax& begin, const expression::ExpressionSyntax& end);
+
+      /**
+      * \brief Edge  visitor for AttributeLists edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitStatementSyntax_AttributeLists(const statement::StatementSyntax& begin, const structure::AttributeListSyntax& end);
 
       /**
       * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
@@ -3285,6 +3844,13 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitAccessorDeclarationSyntax_Body(const structure::AccessorDeclarationSyntax& begin, const statement::BlockSyntax& end);
+
+      /**
+      * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitAccessorDeclarationSyntax_ExpressionBody(const structure::AccessorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end);
 
       /**
       * \brief Edge  visitor for Accessors edge which is called when the subtree of this edge is started.
@@ -3448,6 +4014,13 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitBaseMethodDeclarationSyntax_Body(const structure::BaseMethodDeclarationSyntax& begin, const statement::BlockSyntax& end);
 
       /**
+      * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitBaseMethodDeclarationSyntax_ExpressionBody(const structure::BaseMethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end);
+
+      /**
       * \brief Edge  visitor for ParameterList edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -3509,6 +4082,20 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitBaseTypeSyntax_Type(const structure::BaseTypeSyntax& begin, const expression::TypeSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Pattern edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitCasePatternSwitchLabelSyntax_Pattern(const structure::CasePatternSwitchLabelSyntax& begin, const structure::PatternSyntax& end);
+
+      /**
+      * \brief Edge  visitor for WhenClause edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitCasePatternSwitchLabelSyntax_WhenClause(const structure::CasePatternSwitchLabelSyntax& begin, const structure::WhenClauseSyntax& end);
 
       /**
       * \brief Edge  visitor for Value edge which is called when the subtree of this edge is started.
@@ -3581,6 +4168,13 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitCompilationUnitSyntax_Usings(const structure::CompilationUnitSyntax& begin, const structure::UsingDirectiveSyntax& end);
 
       /**
+      * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitConstantPatternSyntax_Expression(const structure::ConstantPatternSyntax& begin, const expression::ExpressionSyntax& end);
+
+      /**
       * \brief Edge  visitor for Initializer edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -3600,13 +4194,6 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitConstructorInitializerSyntax_ConstructorCall(const structure::ConstructorInitializerSyntax& begin, const structure::ConstructorDeclarationSyntax& end);
-
-      /**
-      * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      virtual void visitConversionOperatorDeclarationSyntax_ExpressionBody(const structure::ConversionOperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end);
 
       /**
       * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
@@ -3635,6 +4222,20 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitCrefParameterSyntax_Type(const structure::CrefParameterSyntax& begin, const expression::TypeSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Designation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitDeclarationPatternSyntax_Designation(const structure::DeclarationPatternSyntax& begin, const structure::VariableDesignationSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitDeclarationPatternSyntax_Type(const structure::DeclarationPatternSyntax& begin, const expression::TypeSyntax& end);
 
       /**
       * \brief Edge  visitor for AttributeLists edge which is called when the subtree of this edge is started.
@@ -3868,13 +4469,6 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitMethodDeclarationSyntax_ExplicitInterfaceSpecifier(const structure::MethodDeclarationSyntax& begin, const structure::ExplicitInterfaceSpecifierSyntax& end);
 
       /**
-      * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      virtual void visitMethodDeclarationSyntax_ExpressionBody(const structure::MethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end);
-
-      /**
       * \brief Edge  visitor for ReturnType edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -3938,13 +4532,6 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitNamespaceDeclarationSyntax_Usings(const structure::NamespaceDeclarationSyntax& begin, const structure::UsingDirectiveSyntax& end);
 
       /**
-      * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      virtual void visitOperatorDeclarationSyntax_ExpressionBody(const structure::OperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end);
-
-      /**
       * \brief Edge  visitor for ReturnType edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -3994,6 +4581,20 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitParameterSyntax_Type(const structure::ParameterSyntax& begin, const expression::TypeSyntax& end);
 
       /**
+      * \brief Edge  visitor for Variables edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitParenthesizedVariableDesignationSyntax_Variables(const structure::ParenthesizedVariableDesignationSyntax& begin, const structure::VariableDesignationSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Subpatterns edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitPositionalPatternClauseSyntax_Subpatterns(const structure::PositionalPatternClauseSyntax& begin, const structure::SubpatternSyntax& end);
+
+      /**
       * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -4006,6 +4607,13 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitPropertyDeclarationSyntax_Initializer(const structure::PropertyDeclarationSyntax& begin, const structure::EqualsValueClauseSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Subpatterns edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitPropertyPatternClauseSyntax_Subpatterns(const structure::PropertyPatternClauseSyntax& begin, const structure::SubpatternSyntax& end);
 
       /**
       * \brief Edge  visitor for Container edge which is called when the subtree of this edge is started.
@@ -4050,11 +4658,67 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitQueryContinuationSyntax_Body(const structure::QueryContinuationSyntax& begin, const structure::QueryBodySyntax& end);
 
       /**
+      * \brief Edge  visitor for Designation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitRecursivePatternSyntax_Designation(const structure::RecursivePatternSyntax& begin, const structure::VariableDesignationSyntax& end);
+
+      /**
+      * \brief Edge  visitor for PositionalPatternClause edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitRecursivePatternSyntax_PositionalPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PositionalPatternClauseSyntax& end);
+
+      /**
+      * \brief Edge  visitor for PropertyPatternClause edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitRecursivePatternSyntax_PropertyPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PropertyPatternClauseSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitRecursivePatternSyntax_Type(const structure::RecursivePatternSyntax& begin, const expression::TypeSyntax& end);
+
+      /**
       * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitSelectClauseSyntax_Expression(const structure::SelectClauseSyntax& begin, const expression::ExpressionSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Pattern edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitSubpatternSyntax_Pattern(const structure::SubpatternSyntax& begin, const structure::PatternSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitSwitchExpressionArmSyntax_Expression(const structure::SwitchExpressionArmSyntax& begin, const expression::ExpressionSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Pattern edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitSwitchExpressionArmSyntax_Pattern(const structure::SwitchExpressionArmSyntax& begin, const structure::PatternSyntax& end);
+
+      /**
+      * \brief Edge  visitor for WhenClause edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitSwitchExpressionArmSyntax_WhenClause(const structure::SwitchExpressionArmSyntax& begin, const structure::WhenClauseSyntax& end);
 
       /**
       * \brief Edge  visitor for Labels edge which is called when the subtree of this edge is started.
@@ -4069,6 +4733,13 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitSwitchSectionSyntax_Statements(const structure::SwitchSectionSyntax& begin, const statement::StatementSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitTupleElementSyntax_Type(const structure::TupleElementSyntax& begin, const expression::TypeSyntax& end);
 
       /**
       * \brief Edge  visitor for Arguments edge which is called when the subtree of this edge is started.
@@ -4127,7 +4798,7 @@ namespace columbus { namespace csharp { namespace asg {
       virtual void visitTypeParameterConstraintClauseSyntax_Name(const structure::TypeParameterConstraintClauseSyntax& begin, const expression::IdentifierNameSyntax& end);
 
       /**
-      * \brief Edge visitor for Parameters edge which.
+      * \brief Edge  visitor for Parameters edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
@@ -4153,6 +4824,13 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitUsingDirectiveSyntax_Name(const structure::UsingDirectiveSyntax& begin, const expression::NameSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Designation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitVarPatternSyntax_Designation(const structure::VarPatternSyntax& begin, const structure::VariableDesignationSyntax& end);
 
       /**
       * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
@@ -4181,6 +4859,13 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitVariableDeclaratorSyntax_Initializer(const structure::VariableDeclaratorSyntax& begin, const structure::EqualsValueClauseSyntax& end);
+
+      /**
+      * \brief Edge  visitor for Condition edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitWhenClauseSyntax_Condition(const structure::WhenClauseSyntax& begin, const expression::ExpressionSyntax& end);
 
       /**
       * \brief Edge  visitor for Condition edge which is called when the subtree of this edge is started.
@@ -4380,6 +5065,12 @@ namespace columbus { namespace csharp { namespace asg {
 
       /**
       * \internal
+      * \brief Converts the attributes of the expression::DeclarationExpressionSyntax node.
+      */
+      void addAttributeToContent(const expression::DeclarationExpressionSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
       * \brief Converts the attributes of the expression::DefaultExpressionSyntax node.
       */
       void addAttributeToContent(const expression::DefaultExpressionSyntax& node, std::string& content, bool callVirtualBase);
@@ -4428,6 +5119,12 @@ namespace columbus { namespace csharp { namespace asg {
 
       /**
       * \internal
+      * \brief Converts the attributes of the expression::ImplicitStackAllocArrayCreationExpressionSyntax node.
+      */
+      void addAttributeToContent(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
       * \brief Converts the attributes of the expression::InitializerExpressionSyntax node.
       */
       void addAttributeToContent(const expression::InitializerExpressionSyntax& node, std::string& content, bool callVirtualBase);
@@ -4449,6 +5146,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Converts the attributes of the expression::InvocationExpressionSyntax node.
       */
       void addAttributeToContent(const expression::InvocationExpressionSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the expression::IsPatternExpressionSyntax node.
+      */
+      void addAttributeToContent(const expression::IsPatternExpressionSyntax& node, std::string& content, bool callVirtualBase);
 
       /**
       * \internal
@@ -4560,9 +5263,27 @@ namespace columbus { namespace csharp { namespace asg {
 
       /**
       * \internal
+      * \brief Converts the attributes of the expression::RangeExpressionSyntax node.
+      */
+      void addAttributeToContent(const expression::RangeExpressionSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the expression::RefExpressionSyntax node.
+      */
+      void addAttributeToContent(const expression::RefExpressionSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
       * \brief Converts the attributes of the expression::RefTypeExpressionSyntax node.
       */
       void addAttributeToContent(const expression::RefTypeExpressionSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the expression::RefTypeSyntax node.
+      */
+      void addAttributeToContent(const expression::RefTypeSyntax& node, std::string& content, bool callVirtualBase);
 
       /**
       * \internal
@@ -4596,9 +5317,33 @@ namespace columbus { namespace csharp { namespace asg {
 
       /**
       * \internal
+      * \brief Converts the attributes of the expression::SwitchExpressionSyntax node.
+      */
+      void addAttributeToContent(const expression::SwitchExpressionSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
       * \brief Converts the attributes of the expression::ThisExpressionSyntax node.
       */
       void addAttributeToContent(const expression::ThisExpressionSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the expression::ThrowExpressionSyntax node.
+      */
+      void addAttributeToContent(const expression::ThrowExpressionSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the expression::TupleExpressionSyntax node.
+      */
+      void addAttributeToContent(const expression::TupleExpressionSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the expression::TupleTypeSyntax node.
+      */
+      void addAttributeToContent(const expression::TupleTypeSyntax& node, std::string& content, bool callVirtualBase);
 
       /**
       * \internal
@@ -4629,6 +5374,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Converts the attributes of the statement::CheckedStatementSyntax node.
       */
       void addAttributeToContent(const statement::CheckedStatementSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the statement::CommonForEachStatementSyntax node.
+      */
+      void addAttributeToContent(const statement::CommonForEachStatementSyntax& node, std::string& content, bool callVirtualBase);
 
       /**
       * \internal
@@ -4668,6 +5419,12 @@ namespace columbus { namespace csharp { namespace asg {
 
       /**
       * \internal
+      * \brief Converts the attributes of the statement::ForEachVariableStatementSyntax node.
+      */
+      void addAttributeToContent(const statement::ForEachVariableStatementSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
       * \brief Converts the attributes of the statement::ForStatementSyntax node.
       */
       void addAttributeToContent(const statement::ForStatementSyntax& node, std::string& content, bool callVirtualBase);
@@ -4695,6 +5452,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Converts the attributes of the statement::LocalDeclarationStatementSyntax node.
       */
       void addAttributeToContent(const statement::LocalDeclarationStatementSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the statement::LocalFunctionStatementSyntax node.
+      */
+      void addAttributeToContent(const statement::LocalFunctionStatementSyntax& node, std::string& content, bool callVirtualBase);
 
       /**
       * \internal
@@ -4896,6 +5659,12 @@ namespace columbus { namespace csharp { namespace asg {
 
       /**
       * \internal
+      * \brief Converts the attributes of the structure::CasePatternSwitchLabelSyntax node.
+      */
+      void addAttributeToContent(const structure::CasePatternSwitchLabelSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
       * \brief Converts the attributes of the structure::CaseSwitchLabelSyntax node.
       */
       void addAttributeToContent(const structure::CaseSwitchLabelSyntax& node, std::string& content, bool callVirtualBase);
@@ -4935,6 +5704,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Converts the attributes of the structure::CompilationUnitSyntax node.
       */
       void addAttributeToContent(const structure::CompilationUnitSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the structure::ConstantPatternSyntax node.
+      */
+      void addAttributeToContent(const structure::ConstantPatternSyntax& node, std::string& content, bool callVirtualBase);
 
       /**
       * \internal
@@ -4992,6 +5767,12 @@ namespace columbus { namespace csharp { namespace asg {
 
       /**
       * \internal
+      * \brief Converts the attributes of the structure::DeclarationPatternSyntax node.
+      */
+      void addAttributeToContent(const structure::DeclarationPatternSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
       * \brief Converts the attributes of the structure::DefaultSwitchLabelSyntax node.
       */
       void addAttributeToContent(const structure::DefaultSwitchLabelSyntax& node, std::string& content, bool callVirtualBase);
@@ -5007,6 +5788,18 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Converts the attributes of the structure::DestructorDeclarationSyntax node.
       */
       void addAttributeToContent(const structure::DestructorDeclarationSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the structure::DiscardDesignationSyntax node.
+      */
+      void addAttributeToContent(const structure::DiscardDesignationSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the structure::DiscardPatternSyntax node.
+      */
+      void addAttributeToContent(const structure::DiscardPatternSyntax& node, std::string& content, bool callVirtualBase);
 
       /**
       * \internal
@@ -5238,9 +6031,33 @@ namespace columbus { namespace csharp { namespace asg {
 
       /**
       * \internal
+      * \brief Converts the attributes of the structure::ParenthesizedVariableDesignationSyntax node.
+      */
+      void addAttributeToContent(const structure::ParenthesizedVariableDesignationSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the structure::PatternSyntax node.
+      */
+      void addAttributeToContent(const structure::PatternSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the structure::PositionalPatternClauseSyntax node.
+      */
+      void addAttributeToContent(const structure::PositionalPatternClauseSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
       * \brief Converts the attributes of the structure::PropertyDeclarationSyntax node.
       */
       void addAttributeToContent(const structure::PropertyDeclarationSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the structure::PropertyPatternClauseSyntax node.
+      */
+      void addAttributeToContent(const structure::PropertyPatternClauseSyntax& node, std::string& content, bool callVirtualBase);
 
       /**
       * \internal
@@ -5268,6 +6085,12 @@ namespace columbus { namespace csharp { namespace asg {
 
       /**
       * \internal
+      * \brief Converts the attributes of the structure::RecursivePatternSyntax node.
+      */
+      void addAttributeToContent(const structure::RecursivePatternSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
       * \brief Converts the attributes of the structure::SelectClauseSyntax node.
       */
       void addAttributeToContent(const structure::SelectClauseSyntax& node, std::string& content, bool callVirtualBase);
@@ -5286,9 +6109,27 @@ namespace columbus { namespace csharp { namespace asg {
 
       /**
       * \internal
+      * \brief Converts the attributes of the structure::SingleVariableDesignationSyntax node.
+      */
+      void addAttributeToContent(const structure::SingleVariableDesignationSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
       * \brief Converts the attributes of the structure::StructDeclarationSyntax node.
       */
       void addAttributeToContent(const structure::StructDeclarationSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the structure::SubpatternSyntax node.
+      */
+      void addAttributeToContent(const structure::SubpatternSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the structure::SwitchExpressionArmSyntax node.
+      */
+      void addAttributeToContent(const structure::SwitchExpressionArmSyntax& node, std::string& content, bool callVirtualBase);
 
       /**
       * \internal
@@ -5307,6 +6148,12 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Converts the attributes of the structure::SyntaxToken node.
       */
       void addAttributeToContent(const structure::SyntaxToken& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the structure::TupleElementSyntax node.
+      */
+      void addAttributeToContent(const structure::TupleElementSyntax& node, std::string& content, bool callVirtualBase);
 
       /**
       * \internal
@@ -5364,6 +6211,12 @@ namespace columbus { namespace csharp { namespace asg {
 
       /**
       * \internal
+      * \brief Converts the attributes of the structure::VarPatternSyntax node.
+      */
+      void addAttributeToContent(const structure::VarPatternSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
       * \brief Converts the attributes of the structure::VariableDeclarationSyntax node.
       */
       void addAttributeToContent(const structure::VariableDeclarationSyntax& node, std::string& content, bool callVirtualBase);
@@ -5373,6 +6226,18 @@ namespace columbus { namespace csharp { namespace asg {
       * \brief Converts the attributes of the structure::VariableDeclaratorSyntax node.
       */
       void addAttributeToContent(const structure::VariableDeclaratorSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the structure::VariableDesignationSyntax node.
+      */
+      void addAttributeToContent(const structure::VariableDesignationSyntax& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the structure::WhenClauseSyntax node.
+      */
+      void addAttributeToContent(const structure::WhenClauseSyntax& node, std::string& content, bool callVirtualBase);
 
       /**
       * \internal

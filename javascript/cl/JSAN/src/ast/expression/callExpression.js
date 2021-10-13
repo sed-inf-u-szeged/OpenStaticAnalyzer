@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var callExpression = factory.createCallExpressionWrapper(factory);
+        var callExpression = factory.createCallExpressionWrapper();
         globals.setPositionInfo(node, callExpression);
         return callExpression;
     } else {
@@ -34,15 +34,10 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.callee != null) {
             var calleeWrapper = globals.getWrapperOfNode(node.callee);
-            if (node.callee.type !== "Literal") {
-                var calleeWrapperFunctionString = "setCallee" + node.callee.type;
-            } else {
-                var calleeWrapperFunctionString = "setCallee" + globals.getLiteralType(node.callee) + node.callee.type;
-            }
             try {
-                callExpressionWrapper[calleeWrapperFunctionString](calleeWrapper);
+                callExpressionWrapper.setCallee(calleeWrapper);
             } catch (e) {
-                console.error("CALLEXPRESSION - Function not exist: callExpressionWrapper." + calleeWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("CALLEXPRESSION - Could not set callee! Reason of the error: " + e + "\n");
             }
         }
 
@@ -50,15 +45,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.arguments.length; i++) {
                 if (node.arguments[i] != null) {
                     var argumentsWrapper = globals.getWrapperOfNode(node.arguments[i]);
-                    if (node.arguments[i].type !== "Literal") {
-                        var argumentsWrapperFunctionString = "addArguments" + node.arguments[i].type;
-                    } else {
-                        var argumentsWrapperFunctionString = "addArguments" + globals.getLiteralType(node.arguments[i]) + node.arguments[i].type;
-                    }
                     try {
-                        callExpressionWrapper[argumentsWrapperFunctionString](argumentsWrapper);
+                        callExpressionWrapper.addArguments(argumentsWrapper);
                     } catch (e) {
-                        console.error("CALLEXPRESSION - Function not exist: callExpressionWrapper." + argumentsWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("CALLEXPRESSION - Could not add argument! Reason of the error: " + e + "\n");
                     }
                 }
             }

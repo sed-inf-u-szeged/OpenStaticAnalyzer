@@ -35,7 +35,7 @@ namespace columbus { namespace lim { namespace metrics {
       /**
       * Constructs a new RulParser from a "built-in" RulHandler
       */
-      RulParser( rul::RulHandler& rul, SharedContainers& shared );
+      RulParser( rul::RulHandler& rul, SharedContainers& shared);
 
       /**
       * Deletes the allocated MetricHandlers

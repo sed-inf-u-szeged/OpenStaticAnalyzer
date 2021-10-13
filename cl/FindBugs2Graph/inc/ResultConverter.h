@@ -26,9 +26,9 @@
 #include <rul/inc/RulHandler.h>
 #include <graph/inc/graph.h>
 #include <graphsupport/inc/GraphRangeIndexer.h>
+#include <graphsupport/inc/Metric.h>
 #include <strtable/inc/RefDistributorStrTable.h>
 #include <lim/inc/Factory.h>
-#include <java/inc/java.h>
 
 class ResultConverter
 {
@@ -61,6 +61,7 @@ protected:
   std::vector<std::string> pathLim;
   std::map<std::string,std::string> pathMap;
   std::string txtOutputFileName;
+  columbus::graphsupport::WarningCache warningCache;
 };
 
 #endif

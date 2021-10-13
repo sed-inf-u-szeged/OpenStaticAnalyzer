@@ -39,6 +39,7 @@ import columbus.logger.LoggerHandler;
  */
 public class MethodImpl extends BaseImpl implements Method {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(MethodImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 
@@ -65,6 +66,8 @@ public class MethodImpl extends BaseImpl implements Method {
 	protected boolean isFinal;
 
 	protected Object finalPosition;
+
+	protected int lloc;
 
 	protected boolean isAbstract;
 
@@ -95,6 +98,8 @@ public class MethodImpl extends BaseImpl implements Method {
 	protected Object nativePosition;
 
 	protected Object throwsPosition;
+
+	protected boolean isDefault;
 
 	protected EdgeList<Parameter> _hasParameters;
 
@@ -254,6 +259,11 @@ public class MethodImpl extends BaseImpl implements Method {
 	}
 
 	@Override
+	public int getLloc() {
+		return lloc;
+	}
+
+	@Override
 	public boolean getIsAbstract() {
 		return isAbstract;
 	}
@@ -281,6 +291,11 @@ public class MethodImpl extends BaseImpl implements Method {
 	@Override
 	public Range getParametersEndPosition() {
 		return (Range)parametersEndPosition;
+	}
+
+	@Override
+	public void setLloc(int _lloc) {
+		lloc = _lloc;
 	}
 
 	@Override
@@ -356,6 +371,11 @@ public class MethodImpl extends BaseImpl implements Method {
 	}
 
 	@Override
+	public boolean getIsDefault() {
+		return isDefault;
+	}
+
+	@Override
 	public void setMethodKind(MethodKind _methodKind) {
 		methodKind = _methodKind;
 	}
@@ -392,6 +412,11 @@ public class MethodImpl extends BaseImpl implements Method {
 			throwsPosition = _throwsPosition;
 		else
 			throwsPosition = new Range(factory.getStringTable(), _throwsPosition);
+	}
+
+	@Override
+	public void setIsDefault(boolean _isDefault) {
+		isDefault = _isDefault;
 	}
 
 	@Override
@@ -849,6 +874,7 @@ public class MethodImpl extends BaseImpl implements Method {
 				boolValues |= 1;
 			io.writeByte1(boolValues);
 		}
+		io.writeInt4(lloc);
 		io.writeInt4(((Range)abstractPosition).getPathKey());
 		io.writeInt4(((Range)abstractPosition).getLine());
 		io.writeInt4(((Range)abstractPosition).getCol());
@@ -905,6 +931,9 @@ public class MethodImpl extends BaseImpl implements Method {
 				boolValues |= 1;
 			boolValues <<= 1;
 			if (isNative) 
+				boolValues |= 1;
+			boolValues <<= 1;
+			if (isDefault) 
 				boolValues |= 1;
 			io.writeByte1(boolValues);
 		}
@@ -1058,6 +1087,7 @@ public class MethodImpl extends BaseImpl implements Method {
 			boolValues >>>= 1;
 		}
 
+		lloc = io.readInt4();
 		((Range)abstractPosition).setPathKey(io.readInt4());
 		((Range)abstractPosition).setLine(io.readInt4());
 		((Range)abstractPosition).setCol(io.readInt4());
@@ -1112,6 +1142,8 @@ public class MethodImpl extends BaseImpl implements Method {
 		}
 		{
 			byte boolValues = io.readByte1();
+			isDefault = (boolValues & 1) != 0;
+			boolValues >>>= 1;
 			isNative = (boolValues & 1) != 0;
 			boolValues >>>= 1;
 			isSynchronized = (boolValues & 1) != 0;

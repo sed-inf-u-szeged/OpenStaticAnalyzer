@@ -1,26 +1,6 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
 using Columbus.CSAN.Commons;
+using Columbus.CSAN.Contexts;
 using Columbus.Lim.Asg;
 using Columbus.Lim.Asg.Nodes.Logical;
 
@@ -36,16 +16,25 @@ namespace Columbus.CSAN.Metrics.Size
     ///     Package:
     ///     number of code lines of the package, including empty and comment lines; however, its subpackages are not included.
     /// </summary>
-    internal static class LOC
+    internal class LOC
     {
-        public static void SetLOC( this Scope limScope )
+        private readonly SolutionContext solutionContext;
+        private readonly TLOC tloc;
+
+        public LOC(SolutionContext solutionContext)
+        {
+            this.solutionContext = solutionContext;
+            tloc = new TLOC(solutionContext);
+        }
+
+        public void SetLOC( Scope limScope )
         {
             var intervals = new List< Interval >( );
-            var m_LOC = ( long ) TLOC.Calculate( limScope, ref intervals );
-            if ( m_LOC == 0 ) return;
+            var loc = (long)tloc.Calculate(limScope, ref intervals);
+            if ( loc == 0 ) return;
             unchecked
             {
-                limScope.TLOC = ( uint ) m_LOC;
+                limScope.TLOC = ( uint ) loc;
             }
 
             var memberIt = limScope.HasMemberListIteratorBegin;
@@ -58,42 +47,42 @@ namespace Columbus.CSAN.Metrics.Size
                 if ( Lim.Asg.Common.getIsMethod( member ) && !Lim.Asg.Common.getIsMethod( limScope ) )
                 {
                     var method = member as Method;
-                    method.SetLOC( );
+                    SetLOC(method);
                     var methodLOC = method.LOC;
                     var temp = new List< Interval >( );
-                    var methodTLOC = ( uint ) TLOC.Calculate( method, ref temp );
+                    var methodTLOC = ( uint ) tloc.Calculate( method, ref temp );
 
-                    m_LOC -= ( methodTLOC - methodLOC );
+                    loc -= ( methodTLOC - methodLOC );
                 }
-                else if ( Lim.Asg.Common.getIsScope( member ) && limScope.LessOrEqualsThan( member as Scope ) &&
-                          limScope.Id != MainDeclaration.Instance.LimFactory.Root )
+                else if ( Lim.Asg.Common.getIsScope( member ) && LessOrEqualsThan( limScope, member as Scope ) &&
+                          limScope.Id != solutionContext.LimFactory.Root )
                 {
                     var visitedBorders = new Dictionary< uint, HashSet< uint > >( );
                     var memberScope = member as Scope;
                     var memberIntervals = new List< Interval >( );
-                    var memberTLOC = TLOC.Calculate( memberScope, ref memberIntervals );
+                    var memberTLOC = tloc.Calculate( memberScope, ref memberIntervals );
 
-                    m_LOC -= (long)memberTLOC;
+                    loc -= (long)memberTLOC;
 
                     foreach ( var interval in memberIntervals )
                     {
-                        if ( BorderCounts( limScope, interval.Key, interval.From, ref visitedBorders ) ) m_LOC++;
-                        if ( BorderCounts( limScope, interval.Key, interval.To, ref visitedBorders ) ) m_LOC++;
+                        if ( BorderCounts( limScope, interval.Key, interval.From, ref visitedBorders ) ) loc++;
+                        if ( BorderCounts( limScope, interval.Key, interval.To, ref visitedBorders ) ) loc++;
                     }
                 }
                 memberIt = memberIt.getNext( );
             }
 
-            if ( m_LOC < 0 )
+            if ( loc < 0 )
             {
                 //Console.WriteLine("Debug: would have been negative, set to 0");
-                m_LOC = 0;
+                loc = 0;
             }
 
-            limScope.LOC = ( uint ) m_LOC;
+            limScope.LOC = ( uint ) loc;
         }
 
-        private static bool BorderCounts( Scope limScope, uint key, uint line,
+        private bool BorderCounts( Scope limScope, uint key, uint line,
             ref Dictionary< uint, HashSet< uint > > visited )
         {
             if ( !visited.ContainsKey( key ) )
@@ -105,17 +94,17 @@ namespace Columbus.CSAN.Metrics.Size
             visited[ key ].Add( line );
 
             // if the parent also has something in this line
-            if ( MainDeclaration.Instance.LLOCMap.ContainsKey( limScope.Id ) &&
-                 MainDeclaration.Instance.LLOCMap[ limScope.Id ].ContainsKey( key ) )
+            if ( solutionContext.LLOCMap.ContainsKey( limScope.Id ) &&
+                 solutionContext.LLOCMap[ limScope.Id ].ContainsKey( key ) )
             {
-                mapped = MainDeclaration.Instance.LLOCMap[ limScope.Id ][ key ];
+                mapped = solutionContext.LLOCMap[ limScope.Id ][ key ];
                 if ( mapped.Contains( line ) ) return true;
             }
 
             return false;
         }
 
-        private static bool LessOrEqualsThan( this Scope lhs, Scope rhs )
+        private static bool LessOrEqualsThan( Scope lhs, Scope rhs )
         {
             if ( Lim.Asg.Common.getIsMethod( lhs ) ) return true;
             if ( Lim.Asg.Common.getIsClass( lhs ) ) return !Lim.Asg.Common.getIsMethod( rhs );
@@ -123,10 +112,10 @@ namespace Columbus.CSAN.Metrics.Size
             return false;
         }
 
-        public static void AddLocToComponent( uint NodeId, uint Key, ulong lastLineNumber )
+        public void AddLocToComponent( uint NodeId, uint Key, ulong lastLineNumber )
         {
-            TLOC.InsertComponentTLOCMap( NodeId, Key, lastLineNumber );
-            var itBegin = MainDeclaration.Instance.RevEdges.constIteratorBegin( NodeId,
+            tloc.InsertComponentTLOCMap( NodeId, Key, lastLineNumber );
+            var itBegin = solutionContext.ReverseEdges.constIteratorBegin( NodeId,
                 Types.EdgeKind.edkComponent_Contains );
             while ( itBegin.getValue( ) != null )
             {

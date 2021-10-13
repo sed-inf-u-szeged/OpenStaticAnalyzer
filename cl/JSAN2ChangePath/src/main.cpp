@@ -57,9 +57,9 @@ static bool ppChangePathTo(const Option *o, char *argv[]) {
 }
 
 const common::Option OPTIONS_OBJ [] = {
-    { true,   "-changepathfrom", 1, CL_KIND_STRING, 0,  OT_WC,        ppChangePathFrom, NULL, "Set the path fragment, which will be replaced." },\
-    { true,   "-changepathto",   1, CL_KIND_STRING, 0,  OT_WC,        ppChangePathTo,   NULL, "The new value of the replaced path fragment."},
-    COMMON_CL_ARGS
+ { false,   "-from", 1, CL_KIND_STRING, 0,  OT_WC,        ppChangePathFrom, NULL, "Replaces the path 'from' to path 'to' in the checker's results."},
+ { false,   "-to",   1, CL_KIND_STRING, 0,  OT_WC,        ppChangePathTo,   NULL, "Replaces the path 'from' to path 'to' in the checker's results."},
+  COMMON_CL_ARGS
 };
 
 
@@ -108,7 +108,7 @@ int main(int argc, char* argv[]) {
       try {
           factory.load(it->c_str(), listData);
       }
-      catch (IOException e) {
+      catch (const IOException&) {
           WriteMsg::write(CMSG_MISSING_INPUT_FILES, it->c_str());
           continue;
       }

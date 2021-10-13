@@ -25,6 +25,30 @@
 * \file PYTHON.h
 * \brief Header can be used for precompiled header.
 */
+/*********** Options *************************
+ *  SchemaGenerator0190980bbb
+ *  IndentInNamespace = 1
+ *  IndentInClass = 1
+ *  IndentUnderPubProtPri = 1
+ *  UseShortRange = true
+ *  ACommonGetIsForLeaf = true
+ *  AlgPreorderSafeMode = true
+ *  GenerateInOutForComment = true
+ *  GenerateFilter = true
+ *  GenerateReverseEdges = true
+ *  GenerateAsgStat = false
+ *  GenerateSpecFilterVisitor = false
+ *  GenerateSpecXml = false
+ *  GenerateDOT = false
+ *  GenerateGraphml = false
+ *  GenerateJSON = false
+ *  GenerateSerialize = false
+ *  GenerateParentEdge = true
+ *  FactoryModes = 
+ *  APIVersion = 2.0.12
+ *  BinaryVersion = 2.0.12
+ *  CSIHeaderText = PythonLanguage
+ *********************************************/
 #include <list>
 #include <cstring>
 #include <map>
@@ -64,9 +88,11 @@
 #include "expression/KeyValue.h"
 #include "expression/Keyword.h"
 #include "statement/BaseSpecifier.h"
+#include "statement/Handler.h"
 #include "statement/Statement.h"
 #include "statement/Suite.h"
 #include "statement/TargetList.h"
+#include "statement/WithItem.h"
 #include "type/DictType.h"
 #include "type/ReferenceType.h"
 #include "type/SequenceType.h"
@@ -74,6 +100,7 @@
 #include "module/Module.h"
 #include "statement/Alias.h"
 #include "statement/Parameter.h"
+#include "expression/Await.h"
 #include "expression/Binary.h"
 #include "expression/DictComp.h"
 #include "expression/Dictionary.h"
@@ -81,22 +108,26 @@
 #include "expression/GeneratorExpression.h"
 #include "expression/Identifier.h"
 #include "expression/IfExpression.h"
+#include "expression/JoinedStr.h"
 #include "expression/Lambda.h"
 #include "expression/List.h"
 #include "expression/ListComp.h"
 #include "expression/Literal.h"
+#include "expression/NamedExpr.h"
 #include "expression/Set.h"
 #include "expression/SetComp.h"
+#include "expression/Starred.h"
 #include "expression/StringConversion.h"
 #include "expression/Unary.h"
 #include "expression/YieldExpression.h"
 #include "statement/CompoundStatement.h"
-#include "statement/Handler.h"
 #include "statement/SimpleStatement.h"
 #include "expression/AttributeRef.h"
 #include "expression/BinaryArithmetic.h"
 #include "expression/BinaryLogical.h"
+#include "expression/BytesLiteral.h"
 #include "expression/FloatNumber.h"
+#include "expression/FormattedValue.h"
 #include "expression/ImagNumber.h"
 #include "expression/IntegerLiteral.h"
 #include "expression/LongInteger.h"
@@ -119,6 +150,7 @@
 #include "statement/Exec.h"
 #include "statement/Global.h"
 #include "statement/ImportStatement.h"
+#include "statement/Nonlocal.h"
 #include "statement/Pass.h"
 #include "statement/Print.h"
 #include "statement/Raise.h"
@@ -129,8 +161,7 @@
 #include "expression/Slice.h"
 #include "statement/For.h"
 #include "statement/While.h"
-#include "statement/TryExcept.h"
-#include "statement/TryFinal.h"
+#include "statement/AnnAssign.h"
 #include "statement/AugAssign.h"
 #include "statement/ImportFrom.h"
 

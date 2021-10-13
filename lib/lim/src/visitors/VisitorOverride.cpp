@@ -73,6 +73,8 @@ void VisitorOverride::visit(const logical::Method &method, bool callVirtualBase)
 
   if (Common::getIsClassGenericInstance(*lim_parent))
   {
+    //TODO ell
+    //TODO extrem esetek figyelese, a genericInstance-ok altal fellepo tipusegyezes vizsgalata
     const base::Base &b = ((type::TypeFormerType&) *lim_parent);//.getInstantiates());
     const logical::Class &c = static_cast<const logical::ClassGeneric&> (b);
     //ListIterator member_it = c.getMemberListIterator();
@@ -95,6 +97,9 @@ void VisitorOverride::visit(const logical::Method &method, bool callVirtualBase)
     }
   }
 }
+
+//TODO Egyelore a lim-ben felfedezett const property hianya miatt
+//ez az algoritmus nem működik megfelelően. Az override-hoz ennek is meg kell egyezni.
 
 bool VisitorOverride::_getIsOverride(const logical::Method &m1, const logical::Method &m2) const {
 

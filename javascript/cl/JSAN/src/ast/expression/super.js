@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var superNode = factory.createSuperWrapper(factory);
+        var superNode = factory.createSuperWrapper();
         globals.setPositionInfo(node, superNode);
         return superNode;
     }

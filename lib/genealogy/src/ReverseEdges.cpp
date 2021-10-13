@@ -152,7 +152,7 @@ void ReverseEdges::insertEdge(NodeId from, NodeId to, EdgeKind edge) {
         return;
     insertNode(from);
   }
-  catch (GenealogyException) {
+  catch (const GenealogyException&) {
     NodeId id = from;
     throw GenealogyException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
   }

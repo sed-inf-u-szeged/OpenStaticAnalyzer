@@ -89,6 +89,7 @@ namespace columbus {
       extern const std::string NTYPE_LIM_ROOT;
       extern const std::string NTYPE_LIM_CLASS;
       extern const std::string NTYPE_LIM_STRUCTURE;
+      extern const std::string NTYPE_LIM_DELEGATE;
       extern const std::string NTYPE_LIM_UNION;
       extern const std::string NTYPE_LIM_INTERFACE;
       extern const std::string NTYPE_LIM_ENUM;

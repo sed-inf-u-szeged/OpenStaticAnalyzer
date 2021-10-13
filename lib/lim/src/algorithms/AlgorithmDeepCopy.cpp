@@ -207,6 +207,11 @@ void AlgorithmDeepCopy::clone(base::Component* dest, const base::Component* src)
   dest->setChangesetID(src->getChangesetID());
   dest->setShortName(src->getShortName());
   // Copying edges
+  for ( ListIterator<physical::File> it = src->getCompilationUnitListIteratorBegin(); it != src->getCompilationUnitListIteratorEnd(); ++it ) {
+    physical::File* pNewEdge = dynamic_cast<physical::File*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addCompilationUnit(pNewEdge);
+  }
   for ( ListIterator<base::Component> it = src->getContainsListIteratorBegin(); it != src->getContainsListIteratorEnd(); ++it ) {
     base::Component* pNewEdge = dynamic_cast<base::Component*>(getMappedNode(&(*it)));
     if (pNewEdge)
@@ -422,6 +427,11 @@ void AlgorithmDeepCopy::clone(logical::Class* dest, const logical::Class* src) {
   dest->setIsAbstract(src->getIsAbstract());
   dest->setObjectSize(src->getObjectSize());
   // Copying edges
+  for ( ListIterator<logical::Class> it = src->getExtendsListIteratorBegin(); it != src->getExtendsListIteratorEnd(); ++it ) {
+    logical::Class* pNewEdge = dynamic_cast<logical::Class*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addExtends(pNewEdge);
+  }
   for ( ListIterator<logical::Friendship> it = src->getGrantsFriendshipListIteratorBegin(); it != src->getGrantsFriendshipListIteratorEnd(); ++it ) {
     logical::Friendship* pNewEdge = dynamic_cast<logical::Friendship*>(getMappedNode(&(*it)));
     if (pNewEdge)
@@ -516,6 +526,11 @@ void AlgorithmDeepCopy::clone(logical::ClassGeneric* dest, const logical::ClassG
   dest->setIsAbstract(src->getIsAbstract());
   dest->setObjectSize(src->getObjectSize());
   // Copying edges
+  for ( ListIterator<logical::Class> it = src->getExtendsListIteratorBegin(); it != src->getExtendsListIteratorEnd(); ++it ) {
+    logical::Class* pNewEdge = dynamic_cast<logical::Class*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addExtends(pNewEdge);
+  }
   for ( ListIterator<logical::Friendship> it = src->getGrantsFriendshipListIteratorBegin(); it != src->getGrantsFriendshipListIteratorEnd(); ++it ) {
     logical::Friendship* pNewEdge = dynamic_cast<logical::Friendship*>(getMappedNode(&(*it)));
     if (pNewEdge)
@@ -617,6 +632,11 @@ void AlgorithmDeepCopy::clone(logical::ClassGenericInstance* dest, const logical
   dest->setIsAbstract(src->getIsAbstract());
   dest->setObjectSize(src->getObjectSize());
   // Copying edges
+  for ( ListIterator<logical::Class> it = src->getExtendsListIteratorBegin(); it != src->getExtendsListIteratorEnd(); ++it ) {
+    logical::Class* pNewEdge = dynamic_cast<logical::Class*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addExtends(pNewEdge);
+  }
   for ( ListIterator<logical::Friendship> it = src->getGrantsFriendshipListIteratorBegin(); it != src->getGrantsFriendshipListIteratorEnd(); ++it ) {
     logical::Friendship* pNewEdge = dynamic_cast<logical::Friendship*>(getMappedNode(&(*it)));
     if (pNewEdge)
@@ -719,6 +739,11 @@ void AlgorithmDeepCopy::clone(logical::ClassGenericSpec* dest, const logical::Cl
   dest->setIsAbstract(src->getIsAbstract());
   dest->setObjectSize(src->getObjectSize());
   // Copying edges
+  for ( ListIterator<logical::Class> it = src->getExtendsListIteratorBegin(); it != src->getExtendsListIteratorEnd(); ++it ) {
+    logical::Class* pNewEdge = dynamic_cast<logical::Class*>(getMappedNode(&(*it)));
+    if (pNewEdge)
+      dest->addExtends(pNewEdge);
+  }
   for ( ListIterator<logical::Friendship> it = src->getGrantsFriendshipListIteratorBegin(); it != src->getGrantsFriendshipListIteratorEnd(); ++it ) {
     logical::Friendship* pNewEdge = dynamic_cast<logical::Friendship*>(getMappedNode(&(*it)));
     if (pNewEdge)

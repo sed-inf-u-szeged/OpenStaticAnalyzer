@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var templateElement = factory.createTemplateElementWrapper(factory);
+        var templateElement = factory.createTemplateElementWrapper();
         globals.setPositionInfo(node, templateElement);
         templateElement.setTail(node.tail);
         templateElement.setCooked(node.value.cooked);

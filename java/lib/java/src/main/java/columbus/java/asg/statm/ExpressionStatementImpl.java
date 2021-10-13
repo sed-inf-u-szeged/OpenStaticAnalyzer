@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class ExpressionStatementImpl extends BaseImpl implements ExpressionStatement {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(ExpressionStatementImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

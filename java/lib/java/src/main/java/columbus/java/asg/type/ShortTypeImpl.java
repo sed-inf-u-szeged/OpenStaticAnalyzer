@@ -33,6 +33,7 @@ import columbus.logger.LoggerHandler;
  */
 public class ShortTypeImpl extends BaseImpl implements ShortType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(ShortTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	public ShortTypeImpl(int id, Factory factory) {
 		super(id, factory);

@@ -25,25 +25,36 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.lang.model.type.TypeKind;
 import javax.tools.JavaFileObject;
 
 import columbus.java.asg.Common;
+import columbus.java.asg.EdgeIterator;
 import columbus.java.asg.Factory;
 import columbus.java.asg.JavaException;
 import columbus.java.asg.Range;
+import columbus.java.asg.algorithms.AlgorithmPreorder;
 import columbus.java.asg.base.Base;
 import columbus.java.asg.base.Named;
 import columbus.java.asg.base.Positioned;
 import columbus.java.asg.enums.AssignmentOperatorKind;
 import columbus.java.asg.enums.InfixOperatorKind;
+import columbus.java.asg.enums.LambdaBodyKind;
+import columbus.java.asg.enums.LambdaParameterKind;
+import columbus.java.asg.enums.MemberReferenceKind;
+import columbus.java.asg.enums.MemberReferenceModeKind;
+import columbus.java.asg.enums.MemberReferenceOverloadKind;
 import columbus.java.asg.enums.MethodKind;
+import columbus.java.asg.enums.ModuleKind;
 import columbus.java.asg.enums.NodeKind;
+import columbus.java.asg.enums.PolyExpressionKind;
 import columbus.java.asg.enums.PostfixOperatorKind;
 import columbus.java.asg.enums.PrefixOperatorKind;
 import columbus.java.asg.enums.PrimitiveTypeKind;
 import columbus.java.asg.enums.TypeBoundKind;
+import columbus.java.asg.expr.AnnotatedTypeExpression;
 import columbus.java.asg.expr.Annotation;
 import columbus.java.asg.expr.ArrayAccess;
 import columbus.java.asg.expr.ArrayTypeExpression;
@@ -61,14 +72,17 @@ import columbus.java.asg.expr.Identifier;
 import columbus.java.asg.expr.InfixExpression;
 import columbus.java.asg.expr.InstanceOf;
 import columbus.java.asg.expr.IntegerLiteral;
+import columbus.java.asg.expr.Lambda;
 import columbus.java.asg.expr.LongLiteral;
 import columbus.java.asg.expr.MarkerAnnotation;
+import columbus.java.asg.expr.MemberReference;
 import columbus.java.asg.expr.MethodInvocation;
 import columbus.java.asg.expr.NewArray;
 import columbus.java.asg.expr.NewClass;
 import columbus.java.asg.expr.NormalAnnotation;
 import columbus.java.asg.expr.NullLiteral;
 import columbus.java.asg.expr.ParenthesizedExpression;
+import columbus.java.asg.expr.PolyExpression;
 import columbus.java.asg.expr.PostfixExpression;
 import columbus.java.asg.expr.PrefixExpression;
 import columbus.java.asg.expr.PrimitiveTypeExpression;
@@ -81,9 +95,15 @@ import columbus.java.asg.expr.This;
 import columbus.java.asg.expr.TypeApplyExpression;
 import columbus.java.asg.expr.TypeCast;
 import columbus.java.asg.expr.TypeExpression;
+import columbus.java.asg.expr.TypeIntersectionExpression;
 import columbus.java.asg.expr.TypeUnionExpression;
 import columbus.java.asg.expr.Unary;
 import columbus.java.asg.expr.WildcardExpression;
+import columbus.java.asg.module.Exports;
+import columbus.java.asg.module.Opens;
+import columbus.java.asg.module.Provides;
+import columbus.java.asg.module.Requires;
+import columbus.java.asg.module.Uses;
 import columbus.java.asg.statm.Assert;
 import columbus.java.asg.statm.BasicFor;
 import columbus.java.asg.statm.Block;
@@ -123,6 +143,8 @@ import columbus.java.asg.struc.InterfaceGeneric;
 import columbus.java.asg.struc.Method;
 import columbus.java.asg.struc.MethodDeclaration;
 import columbus.java.asg.struc.MethodGeneric;
+import columbus.java.asg.struc.Module;
+import columbus.java.asg.struc.ModuleDeclaration;
 import columbus.java.asg.struc.NamedDeclaration;
 import columbus.java.asg.struc.NormalMethod;
 import columbus.java.asg.struc.Package;
@@ -133,19 +155,23 @@ import columbus.java.asg.struc.TypeDeclaration;
 import columbus.java.asg.struc.TypeParameter;
 import columbus.java.asg.struc.Variable;
 import columbus.java.asg.struc.VariableDeclaration;
+import columbus.java.asg.type.ModuleType;
+import columbus.java.asg.visitors.VisitorAbstractNodes;
 import columbus.logger.LoggerHandler;
 
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.ModuleSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.comp.DuplicatedHack;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
-import com.sun.tools.javac.columbus.DuplicatedHack;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCAnnotatedType;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCArrayAccess;
 import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
@@ -164,23 +190,33 @@ import com.sun.tools.javac.tree.JCTree.JCContinue;
 import com.sun.tools.javac.tree.JCTree.JCDoWhileLoop;
 import com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop;
 import com.sun.tools.javac.tree.JCTree.JCErroneous;
+import com.sun.tools.javac.tree.JCTree.JCExports;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCForLoop;
+import com.sun.tools.javac.tree.JCTree.JCFunctionalExpression;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCIf;
 import com.sun.tools.javac.tree.JCTree.JCImport;
 import com.sun.tools.javac.tree.JCTree.JCInstanceOf;
 import com.sun.tools.javac.tree.JCTree.JCLabeledStatement;
+import com.sun.tools.javac.tree.JCTree.JCLambda;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
+import com.sun.tools.javac.tree.JCTree.JCMemberReference;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
+import com.sun.tools.javac.tree.JCTree.JCModuleDecl;
 import com.sun.tools.javac.tree.JCTree.JCNewArray;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
+import com.sun.tools.javac.tree.JCTree.JCOpens;
+import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.JCTree.JCParens;
+import com.sun.tools.javac.tree.JCTree.JCPolyExpression;
 import com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree;
+import com.sun.tools.javac.tree.JCTree.JCProvides;
+import com.sun.tools.javac.tree.JCTree.JCRequires;
 import com.sun.tools.javac.tree.JCTree.JCReturn;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCSwitch;
@@ -189,9 +225,11 @@ import com.sun.tools.javac.tree.JCTree.JCThrow;
 import com.sun.tools.javac.tree.JCTree.JCTry;
 import com.sun.tools.javac.tree.JCTree.JCTypeApply;
 import com.sun.tools.javac.tree.JCTree.JCTypeCast;
+import com.sun.tools.javac.tree.JCTree.JCTypeIntersection;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
 import com.sun.tools.javac.tree.JCTree.JCTypeUnion;
 import com.sun.tools.javac.tree.JCTree.JCUnary;
+import com.sun.tools.javac.tree.JCTree.JCUses;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.JCTree.JCWhileLoop;
 import com.sun.tools.javac.tree.JCTree.JCWildcard;
@@ -212,13 +250,17 @@ public class TreeBuilder {
 	private SymbolMaps symMaps;
 	private Package rootNode;
 	private Package unnamedPackage = null;
+	private PackageSymbol unnamedPackageSym = null;
+	private Module unnamedModule = null;
 
 	private Set<Integer> defaultPackageChilds = new HashSet<>();
 
 	private JCCompilationUnit actualJCCU;
 	private CompilationUnit actualColumbusCU;
+	private Package actualColumbusPackage;
 	private int actualColumbusCuPathKey;
 	private LineMap lineMap;
+	private int actualModuleId;
 
 	// flag variables, must reset them if an Exception occurred
 	private JCBlock lastBlockNode;
@@ -240,7 +282,6 @@ public class TreeBuilder {
 	}
 
 	public void visit(JCCompilationUnit jcCU) {
-
 		actualJCCU = jcCU;
 		JavaFileObject sourcefile = jcCU.sourcefile;
 		lineMap = jcCU.lineMap;
@@ -248,16 +289,52 @@ public class TreeBuilder {
 		if (logger.isInfoEnabled()) {
 			logger.info("info.jan.TreeBuilder.sourceFile", sourcefile.getName());
 		}
-
+		
 		CompilationUnit cuNode = (CompilationUnit) fact.createNode(NodeKind.ndkCompilationUnit);
 		cuNode.setFileEncoding(OptionParser.encoding);
 		actualColumbusCU = cuNode;
-
-		PackageSymbol pkgSym = jcCU.packge;
-
-		int actualPackageId = createAndAddPackages(pkgSym);
-
-		Package pkgNode = (Package) fact.getRef(actualPackageId);
+		
+		//Declare the pkgNode. We refer it later but we'd not create it if the current comp.unit is a module-info file.
+		Package pkgNode = null;
+		
+		actualModuleId = createModule(jcCU.modle);
+		Module moduleNode = (Module) fact.getRef(actualModuleId);
+		
+		if (jcCU.getModuleDecl() == null) {
+			//Create the module, when the compilation unit is not a module-info file.
+			PackageSymbol pkgSym = jcCU.packge;
+			int actualPackageId = createAndAddPackages(pkgSym);
+			
+			pkgNode = (Package) fact.getRef(actualPackageId);
+			actualColumbusPackage = pkgNode;
+			pkgNode.addCompilationUnits(cuNode);
+	
+			//Handle packages for modules. If the module already has the package we want to add, we won't do it.
+			Map<Integer, HashSet<Integer>> packagesOfModulesMap = symMaps.getPackagesOfModulesMap();
+			HashSet<Integer> packageSet = packagesOfModulesMap.get(actualModuleId);
+			
+			if (packageSet == null) {
+				//The set is null, so we didn't meet with this module before.
+				HashSet<Integer> ps = new HashSet<>();
+				ps.add(actualPackageId);
+				packagesOfModulesMap.put(actualModuleId, ps);
+				moduleNode.addPackages(actualPackageId);
+				pkgNode.addIsInModule(moduleNode);
+			} else {
+				//If the set doesn't contain the package id, we add it and add the package to the module as well. Otherwise, we do nothing.
+				if (!packageSet.contains(actualPackageId)) {
+					packageSet.add(actualPackageId);
+					moduleNode.addPackages(actualPackageId);
+					pkgNode.addIsInModule(moduleNode);
+				}
+			}
+		} else if (pkgNode == null) {
+			//Add module-info files to the unnamed package.
+			createUnnamedPackage();
+			unnamedPackage.addCompilationUnits(cuNode);
+		}
+		
+		cuNode.setIsInModule(actualModuleId);
 		
  		// set position 
 		int endline = 1, endcol = 1;
@@ -269,36 +346,26 @@ public class TreeBuilder {
 		Range range = new Range(fact.getStringTable(), jcCU.sourcefile.getName(), 1, 1, endline, endcol, 1, 1, endline, endcol);
 		cuNode.setPosition(range);
 		actualColumbusCuPathKey = actualColumbusCU.getPosition().getPathKey();
-		
-		pkgNode.addCompilationUnits(cuNode);
-
-		if (jcCU.pid != null) {
-			PackageDeclaration pkgDecLNode = (PackageDeclaration) fact.createNode(NodeKind.ndkPackageDeclaration);
-			if (jcCU.packge.owner != null) {
-				pkgDecLNode.setPackageName(visit(jcCU.packge, jcCU.pid));
-			}
-			pkgDecLNode.setRefersTo(actualPackageId);
-			setPositionAndGenerated(jcCU.pid, pkgDecLNode.getId());
-
-			cuNode.setPackageDeclaration(pkgDecLNode);
-		}
-
-		for (JCAnnotation a : jcCU.packageAnnotations) {
-			pkgNode.addAnnotations(visit(a));
-		}
 
 		for (JCTree t : jcCU.defs) {
 			Base node = fact.getRef(visit(t));
 			duplicatedTypeDeclarationName = null;
 			if (Common.getIsTypeDeclaration(node)) {
 				cuNode.addTypeDeclarations((TypeDeclaration) node);
-				pkgNode.addMembers((TypeDeclaration) node);
+				//The pkgNode is null when the current comp.unit is a module-info file. 
+				if (pkgNode != null) {
+					pkgNode.addMembers((TypeDeclaration) node);
+				}
 			} else if (Common.getIsEmpty(node)) {
 				cuNode.addOthers((Empty) node);
 			} else if (Common.getIsImport(node)) {
 				cuNode.addImports((Import) node);
 			} else if (Common.getIsErroneous(node)) {
 				cuNode.addOthers((Erroneous) node);
+			} else if (Common.getIsPackageDeclaration(node)) {
+				cuNode.setPackageDeclaration((PackageDeclaration) node);
+			} else if (Common.getIsModuleDeclaration(node)) {
+				cuNode.setModuleDeclaration((ModuleDeclaration) node);
 			} else {
 				throw new JavaException(logger.formatMessage("ex.jan.TreeBuilder.notHandledPackageMember",
 						node.getNodeKind()));
@@ -337,20 +404,29 @@ public class TreeBuilder {
 
 	public int createAndAddPackages(PackageSymbol pkgSym) {
 		int ret = 0;
-		if (pkgSym == symtab.unnamedPackage) {
-			if (unnamedPackage == null) {
-				int unnamedPackageId = createUnnamedPackage();
-				symMaps.getPackageMap().put(pkgSym, unnamedPackageId);
-			}
-			return unnamedPackage.getId();
-		}
-		ret = createPackageHierarchy(pkgSym);
 
-		addToDefaultPackage(ret);
+		if (pkgSym != null) {
+			if (pkgSym.isUnnamed()) {
+				ret = createUnnamedPackage();
+				if (unnamedPackageSym == null) {
+					unnamedPackageSym = pkgSym;
+					symMaps.getPackageMap().put(pkgSym, ret);
+				}
+			} else {
+				ret = createPackageHierarchy(pkgSym);
+				addToDefaultPackage(ret);
+			}
+		} else {
+			ret = createUnnamedPackage();
+		}
+
 		return ret;
 	}
 
 	private int createUnnamedPackage() {
+		if (unnamedPackage != null)
+			return unnamedPackage.getId();
+
 		Package pkg = (Package) fact.createNode(NodeKind.ndkPackage);
 		pkg.setName("unnamed package");
 		pkg.setQualifiedName("unnamed package");
@@ -372,43 +448,74 @@ public class TreeBuilder {
 		}
 	}
 
+
 	private int createPackageHierarchy(PackageSymbol sym) {
 		int pkgId = 0;
-		if (sym.owner != null && !sym.owner.name.isEmpty()) {
-			Integer key = symMaps.getPackageMap().get(sym);
-			if (key != null) {
-				pkgId = key;
-			} else {
-				PackageSymbol owner = (PackageSymbol) sym.owner;
 
-				Package packageNode = (Package) fact.createNode(NodeKind.ndkPackage);
-				packageNode.setName(sym.name.toString());
-
-				packageNode.setQualifiedName(sym.type.toString());
-
-				pkgId = packageNode.getId();
-
-				symMaps.getPackageMap().put(sym, packageNode.getId());
-
-				Package parentPkg = (Package) fact.getRef(createPackageHierarchy(owner));
-				parentPkg.addMembers(packageNode);
-			}
+		Integer key = symMaps.getPackageMap().get(sym);
+		if (key != null) {
+			pkgId = key;
 		} else {
-			Integer key = symMaps.getPackageMap().get(sym);
+			String fullName = sym.type.toString();
+			if (fullName.isEmpty())
+//				throw new JavaException(logger.formatMessage("ex.jan.TreeBuilder.emptyPkgName", sym));
+				return createUnnamedPackage();
+
+			key = symMaps.getPackageNameMap().get(fullName);
 			if (key != null) {
 				pkgId = key;
 			} else {
-
 				Package packageNode = (Package) fact.createNode(NodeKind.ndkPackage);
-
-				packageNode.setName(sym.toString());
-				packageNode.setQualifiedName(sym.toString());
-
+		
+				packageNode.setName(sym.name.toString());
+				packageNode.setQualifiedName(fullName);
+	
 				pkgId = packageNode.getId();
 				symMaps.getPackageMap().put(sym, pkgId);
+				symMaps.getPackageNameMap().put(fullName, pkgId);
+
+				if (sym.owner != null && !sym.owner.name.isEmpty()) {
+					PackageSymbol owner = (PackageSymbol) sym.owner;
+					Package parentPkg = (Package) fact.getRef(createPackageHierarchy(owner));
+					parentPkg.addMembers(packageNode);
+				}
 			}
 		}
+
 		return pkgId;
+	}
+	
+	private int createModule(ModuleSymbol moduleSym) {
+		int moduleId = 0;
+		
+		if (moduleSym.isUnnamed()) {
+			if (unnamedModule == null) {
+				unnamedModule = (Module) fact.createNode(NodeKind.ndkModule);
+				unnamedModule.setName("unnamed module");
+				symMaps.getModuleMap().put(moduleSym, unnamedModule.getId());
+				symMaps.getModuleNameMap().put("unnamed module", unnamedModule.getId());
+			}
+			
+			moduleId = unnamedModule.getId();
+		} else {
+			//Handle named module.
+			Integer id = symMaps.getModuleMap().get(moduleSym);
+			
+			if (id != null) {
+				moduleId = id;
+			} else {
+				Module mod = (Module) fact.createNode(NodeKind.ndkModule);
+				String fullname = moduleSym.name.toString();
+				mod.setName(fullname);
+				
+				moduleId = mod.getId();
+				
+				symMaps.getModuleMap().put(moduleSym,  moduleId);
+				symMaps.getModuleNameMap().put(fullname, moduleId);
+			}
+		}
+		
+		return moduleId;
 	}
 
 	private int visit(JCTree jcTree) {
@@ -561,12 +668,116 @@ public class TreeBuilder {
 							symMaps.getMethodDeclarationMap().put(jcMethod.sym, ret);
 						}
 
-						symMaps.addNodeType(jcMethod.type, methodDecl.getId());
+						symMaps.addMethodType(jcMethod.type, methodDecl.getId());
 					} finally {
 						methodType = MethodType.NORMAL;
 					}
 					break;
 				}
+				// Java 9 package declaration
+				case PACKAGE: {
+					JCPackageDecl jcPackageDecl = (JCPackageDecl) jcTree;
+					PackageDeclaration pkgDeclNode = (PackageDeclaration) fact.createNode(NodeKind.ndkPackageDeclaration);
+					ret = pkgDeclNode.getId();
+
+					if (jcPackageDecl.pid != null) {
+						if (jcPackageDecl.packge != null && jcPackageDecl.packge.owner != null) {
+							pkgDeclNode.setPackageName(visit(jcPackageDecl.packge, jcPackageDecl.pid));
+						}
+
+						pkgDeclNode.setRefersTo(actualColumbusPackage);
+						setPositionAndGenerated(jcPackageDecl.pid, pkgDeclNode.getId());
+					}
+
+					for (JCAnnotation a : jcPackageDecl.annotations) {
+						actualColumbusPackage.addAnnotations(visit(a));
+					}
+
+					break;
+				}
+				case MODULE: {
+					JCModuleDecl jcModuleDecl = (JCModuleDecl) jcTree;
+					ModuleDeclaration moduleDecl = (ModuleDeclaration) fact.createNode(NodeKind.ndkModuleDeclaration);
+					
+					//Set the module kind.
+					switch (jcModuleDecl.getModuleType()) {
+						case OPEN:
+							moduleDecl.setModuleKind(ModuleKind.mkOpen);
+							break;
+						case STRONG:
+							moduleDecl.setModuleKind(ModuleKind.mkStrong);
+							break;
+					}
+					
+					moduleDecl.setName(visit(jcModuleDecl.qualId));
+					moduleDecl.setRefersTo(actualModuleId);
+					
+					jcModuleDecl.directives.forEach(item -> {
+						moduleDecl.addDirectives(visit(item));
+					});
+					
+					if (jcModuleDecl.sym != null) {
+						int modTypeNodeId = createModuleTypeNode(jcModuleDecl.sym.type);
+						moduleDecl.setModuleType(modTypeNodeId);
+					}
+					
+					ret = moduleDecl.getId();
+					break;
+				}
+				case EXPORTS:
+					JCExports jcExports = (JCExports) jcTree;
+					Exports exportsNode = (Exports) fact.createNode(NodeKind.ndkExports);
+					
+					exportsNode.setPackageName(visit(jcExports.qualid));
+					
+					//If the moduleNames is null it means the package is exported to everyone, so null is not a problem in this case.
+					if (jcExports.moduleNames != null) {
+						jcExports.moduleNames.forEach(item -> exportsNode.addModuleNames(visit(item)));
+					}
+					
+					ret = exportsNode.getId();
+					break;
+				case OPENS:
+					JCOpens jcOpens = (JCOpens) jcTree;
+					Opens opensNode = (Opens) fact.createNode(NodeKind.ndkOpens);
+					
+					opensNode.setPackageName(visit(jcOpens.qualid));
+					
+					//If the moduleNames is null it means anyone can open the package, so null is not a problem in this case. 
+					if (jcOpens.moduleNames != null) {
+						jcOpens.moduleNames.forEach(item -> opensNode.addModuleNames(visit(item)));
+					}
+					
+					ret = opensNode.getId();
+					break;
+				case PROVIDES:
+					JCProvides jcProvides = (JCProvides) jcTree;
+					Provides providesNode = (Provides) fact.createNode(NodeKind.ndkProvides);
+					
+					providesNode.setServiceName(visit(jcProvides.serviceName));
+					
+					jcProvides.implNames.forEach(item -> providesNode.addImplementationNames(visit(item)));
+					
+					ret = providesNode.getId();
+					break;
+				case REQUIRES:
+					JCRequires jcRequires = (JCRequires) jcTree;
+					Requires requiresNode = (Requires) fact.createNode(NodeKind.ndkRequires);
+					
+					requiresNode.setIsTransitive(jcRequires.isTransitive);
+					requiresNode.setIsStatic(jcRequires.isStaticPhase);
+					requiresNode.setModuleName(visit(jcRequires.moduleName));
+					
+					ret = requiresNode.getId();
+					break;
+				case USES:
+					JCUses jcUses = (JCUses) jcTree;
+					Uses usesNode = (Uses) fact.createNode(NodeKind.ndkUses);
+					
+					usesNode.setServiceName(visit(jcUses.qualid));
+					
+					ret = usesNode.getId();
+					break;
 				default:
 					throw new JavaException(logger.formatMessage("ex.jan.TreeBuilder.invalidJCTreeKind",
 							jcTree.getKind()));
@@ -618,6 +829,7 @@ public class TreeBuilder {
 							} else {
 								typeDeclNode = (ClassGeneric) fact.createNode(NodeKind.ndkClassGeneric);
 							}
+							
 							break;
 						case INTERFACE:
 							if (jcClassDecl.typarams.isEmpty()) {
@@ -677,6 +889,12 @@ public class TreeBuilder {
 						}
 						typeDeclNode.setBinaryName(binaryName.toString());
 						symMaps.getInnerTypeDeclarationMap().put(jcClassDecl.sym, ret);
+						
+						//The top level of type declarations in a compilation unit. The program connects it to the module it belongs to.
+						if (jcClassDecl.sym.owner instanceof PackageSymbol) {
+							Integer parentModuleId = symMaps.getModuleMap().get(jcClassDecl.sym.packge().modle);
+							typeDeclNode.setIsInModule(parentModuleId);
+						}
 					} else {
 						if (logger.isDebugEnabled()) {
 							logger.debug("debug.jan.TreeBuilder.typeDeclSymIsNull", ret);
@@ -976,7 +1194,10 @@ public class TreeBuilder {
 					ret = tryNode.getId();
 
 					for (JCTree resource : jcTry.resources) {
-						varDeclType = VarDeclType.VARIABLE;
+						if (resource instanceof JCVariableDecl) {
+							varDeclType = VarDeclType.VARIABLE;
+						}
+						
 						tryNode.addResources(visit(resource));
 					}
 
@@ -1047,7 +1268,15 @@ public class TreeBuilder {
 						}
 
 						if (jcVariableDecl.vartype != null) {
-							int id = visitTypeExpression(jcVariableDecl.vartype);
+							int id;
+							
+							if (jcVariableDecl.vartype.pos < 0) {
+								id = createSimpleTypeExpression(jcVariableDecl.type);
+								((SimpleTypeExpression) fact.getRef(id)).setName("var");
+							} else {
+								id = visitTypeExpression(jcVariableDecl.vartype);
+							}
+							
 							varDeclNode.setType(id);
 							if (varDeclNode.getNodeKind() == NodeKind.ndkEnumConstant) {
 								varDeclNode.getType().setIsCompilerGenerated(true);
@@ -1452,6 +1681,7 @@ public class TreeBuilder {
 				}
 				break;
 			}
+			case TYPE_ANNOTATION:
 			case ANNOTATION: {
 				// 0 -> marker
 				// 1( !Assign) -> single
@@ -1473,12 +1703,15 @@ public class TreeBuilder {
 							annotationNode = (Annotation) fact.createNode(NodeKind.ndkSingleElementAnnotation);
 							((SingleElementAnnotation) annotationNode).setArgument(visit(jcAssign.rhs));
 							break;
+						} else {
+							// fall-through
 						}
 					} else {
 						annotationNode = (Annotation) fact.createNode(NodeKind.ndkSingleElementAnnotation);
 						((SingleElementAnnotation) annotationNode).setArgument(visit(jcArgZero));
 						break;
 					}
+					// no break here, fall-through from 1 branch
 
 				default:
 					annotationNode = (NormalAnnotation) fact.createNode(NodeKind.ndkNormalAnnotation);
@@ -1623,53 +1856,42 @@ public class TreeBuilder {
 				JCNewClass jcNewClass = (JCNewClass) jcExpr;
 				NewClass newClassNode = (NewClass) fact.createNode(NodeKind.ndkNewClass);
 				ret = newClassNode.getId();
-
-				// to handle a.new XY(){};
-				JCUnary moveArgToEncl = null;
-				for (JCExpression exp : jcNewClass.args) {
-					if (exp instanceof JCUnary) {
-						JCUnary jcUnary = (JCUnary) exp;
-						if (jcUnary.operator != null && jcUnary.operator == symtab.nullcheck) {
-							moveArgToEncl = jcUnary;
-						}
-					}
+				
+				if (jcNewClass.encl != null) {
+					newClassNode.setEnclosingExpression(visit(jcNewClass.encl));
 				}
-
-				if (moveArgToEncl == null) {
-					if (jcNewClass.encl != null) {
-						newClassNode.setEnclosingExpression(visit(jcNewClass.encl));
-					}
-				} else {
-					newClassNode.setEnclosingExpression(visit(moveArgToEncl.arg));
-				}
-
-				if (moveArgToEncl != null) {
-					innerAnonymusClassSuperClass = jcNewClass.clazz;
-				}
-
+				
+				//No need to check for null value, the program does it later anyways.
+				//innerAnonymusClassSuperClass = jcNewClass.clazz;
+				
 				if (jcNewClass.clazz != null) {
 					newClassNode.setTypeName(visitTypeExpression(jcNewClass.clazz));
 				}
-
+				
 				if (jcNewClass.constructor != null) {
 					symMaps.getNewClassConstructorMap().put(ret, jcNewClass.constructor);
 					symMaps.addClassAndInterfaceToFullBuildSet(jcNewClass.constructor.owner);
 				}
-
+				
 				for (JCExpression exp : jcNewClass.args) {
-					if (!exp.equals(moveArgToEncl)) {
-						newClassNode.addArguments(visit(exp));
-					}
+					newClassNode.addArguments(visit(exp));
 				}
-
+				
 				for (JCExpression exp : jcNewClass.typeargs) {
 					newClassNode.addTypeArguments(visitTypeExpression(exp));
 				}
-
+				
 				if (jcNewClass.def != null) {
-					isAnonymusClass = true;
-					newClassNode.setAnonymousClass(visit(jcNewClass.def));
+					try {
+						isAnonymusClass = true;
+						if (jcNewClass.clazz != null)
+							innerAnonymusClassSuperClass = jcNewClass.clazz;
+						newClassNode.setAnonymousClass(visit(jcNewClass.def));
+					} finally {
+						innerAnonymusClassSuperClass = null;
+					}
 				}
+				
 				break;
 			}
 			case PARENTHESIZED: {
@@ -1692,13 +1914,146 @@ public class TreeBuilder {
 				ret = typeCastNode.getId();
 				break;
 			}
-			// TODO java 1.8
 			case LAMBDA_EXPRESSION:
+				JCLambda jcLambda = (JCLambda) jcExpr;
+				Lambda lambdaNode = (Lambda) fact.createNode(NodeKind.ndkLambda);
+				
+				jcLambda.params.forEach(param -> {
+					varDeclType = VarDeclType.PARAMETER;
+					lambdaNode.addParameters(visit(param));
+				});
+				
+				lambdaNode.setBody(visit(jcLambda.body));
+				
+				switch (jcLambda.paramKind) {
+					case IMPLICIT:
+						lambdaNode.setParamKind(LambdaParameterKind.lpkImplicit);
+						break;
+					case EXPLICIT:
+						lambdaNode.setParamKind(LambdaParameterKind.lpkExplicit);
+						break;
+				}
+				
+				switch (jcLambda.getBodyKind()) {
+					case EXPRESSION:
+						lambdaNode.setBodyKind(LambdaBodyKind.lbkExpression);
+						break;
+					case STATEMENT:
+						lambdaNode.setBodyKind(LambdaBodyKind.lbkStatement);
+						break;
+				}
+				
+				ret = lambdaNode.getId();
+				break;
 			case MEMBER_REFERENCE:
 			{
-				logger.debug("ex.jan.TreeBuilder.erroneousInsteadOfJava18Expr", jcExpr.getKind());
-				Erroneous erroneous = (Erroneous) fact.createNode(NodeKind.ndkErroneous);
-				ret = erroneous.getId();
+				JCMemberReference jcMemberReference = (JCMemberReference) jcExpr;
+				MemberReference memberReferenceNode = (MemberReference) fact.createNode(NodeKind.ndkMemberReference);
+				
+				if (jcMemberReference.mode != null) {
+					switch (jcMemberReference.mode) {
+						case INVOKE:
+							memberReferenceNode.setMode(MemberReferenceModeKind.mrmkInvoke);
+							break;
+						case NEW:
+							memberReferenceNode.setMode(MemberReferenceModeKind.mrmkNew);
+							break;
+					}
+				}
+
+				memberReferenceNode.setName(jcMemberReference.name.toString());
+				
+				if (jcMemberReference.getOverloadKind() != null) {
+					switch (jcMemberReference.getOverloadKind()) {
+						case OVERLOADED:
+							memberReferenceNode.setOverloadKind(MemberReferenceOverloadKind.mrokOverloaded);
+							break;
+						case UNOVERLOADED:
+							memberReferenceNode.setOverloadKind(MemberReferenceOverloadKind.mrokUnoverloaded);
+							break;
+					}
+				}
+				
+				if (jcMemberReference.kind != null) {
+					switch (jcMemberReference.kind) {
+						case SUPER:
+							memberReferenceNode.setReferenceKind(MemberReferenceKind.mrkSuper);
+							break;
+						case UNBOUND:
+							memberReferenceNode.setReferenceKind(MemberReferenceKind.mrkUnbound);
+							break;
+						case STATIC:
+							memberReferenceNode.setReferenceKind(MemberReferenceKind.mrkStatic);
+							break;
+						case BOUND:
+							memberReferenceNode.setReferenceKind(MemberReferenceKind.mrkBound);
+							break;
+						case IMPLICIT_INNER:
+							memberReferenceNode.setReferenceKind(MemberReferenceKind.mrkImplicitInner);
+							break;
+						case TOPLEVEL:
+							memberReferenceNode.setReferenceKind(MemberReferenceKind.mrkToplevel);
+							break;
+						case ARRAY_CTOR:
+							memberReferenceNode.setReferenceKind(MemberReferenceKind.mrkArrayCtor);
+							break;
+					}
+				}
+				
+				if (jcMemberReference.typeargs != null) {
+					jcMemberReference.typeargs.forEach(arg -> memberReferenceNode.addTypeArguments(visitTypeExpression(arg)));
+				}
+				
+				boolean buildTypeExpr = false;
+				//When the expr is a FieldAccess or an Identifier, the program has to decide whether build an expression or a type.
+				//It does it using the sym attribute.
+				if (jcMemberReference.expr instanceof JCFieldAccess) {
+					JCFieldAccess jcfa = (JCFieldAccess) jcMemberReference.expr;
+					
+					if (jcfa.sym instanceof ClassSymbol) {
+						buildTypeExpr = true;
+					}
+				} else if (jcMemberReference.expr instanceof JCIdent) {
+					JCIdent jci = (JCIdent) jcMemberReference.expr;
+					
+					if (jci.sym instanceof ClassSymbol) {
+						buildTypeExpr = true;
+					}
+				} else if (jcMemberReference.expr instanceof JCWildcard) {
+					buildTypeExpr = true;
+				} else { //If the program can't decide until this point, the program looks at its kind.
+					switch (jcMemberReference.expr.getKind()) {
+						case ARRAY_TYPE:
+						case PRIMITIVE_TYPE:
+						case PARAMETERIZED_TYPE:
+						case UNION_TYPE:
+						case ANNOTATED_TYPE:
+						case INTERSECTION_TYPE:
+							buildTypeExpr = true;
+							break;
+						default:
+							//We can log here or something.
+					}
+				}
+				
+				if (buildTypeExpr) {
+					memberReferenceNode.setQualifierExpression(visitTypeExpression(jcMemberReference.expr));
+				} else {
+					memberReferenceNode.setQualifierExpression(visit(jcMemberReference.expr));
+				}
+				
+				ret = memberReferenceNode.getId();
+				
+				if (jcMemberReference.sym != null) {
+					symMaps.getMemberReferenceMap().put(ret, jcMemberReference.sym);
+					symMaps.addClassAndInterfaceToFullBuildSet(jcMemberReference.sym.owner);
+				} else {
+					//We can log here or something when the sym is null.
+				}
+				
+				//TODO Build referent type on member reference if needed.
+				//We can build later if needed. It contains the type the referred method returns. For example in case of "Hello"::length it will be int.
+				
 				break;
 			}
 			default:
@@ -1710,19 +2065,38 @@ public class TreeBuilder {
 		} else {
 			setPositionAndGenerated(jcExpr, ret);
 			if (jcExpr.type != null) {
-				// TODO fix conditional expression's type building after schema changes.
-				if (jcExpr.getKind() == Kind.CONDITIONAL_EXPRESSION
-						&& (jcExpr.type.tsym == null || jcExpr.type.tsym.toString().equals("<anonymous >"))) {
-					symMaps.addNodeType(((JCConditional) jcExpr).truepart.type, ret);
-				} else {
-					symMaps.addNodeType(jcExpr.type, ret);
-				}
+				symMaps.addNodeType(jcExpr.type, ret);
 			} else {
 				if (inImport) {
 					// the last part of the field accesses in imports dont have type nor symbol
 				} else {
 					if (logger.isDebugEnabled()) {
 						logger.debug("debug.jan.TreeBuilder.exprDontHaveAType", ret);
+					}
+				}
+			}
+
+			if (jcExpr instanceof JCPolyExpression) {
+				Base node = fact.getRef(ret);
+
+				if (Common.getIsPolyExpression(node)) {
+					// TODO the old nodes Conditional, MethodInvocation and NewClass are not yet
+					// handled as PolyExpression in our schema
+					PolyExpression polyExpr = (PolyExpression) node;
+					switch (((JCPolyExpression) jcExpr).polyKind) {
+					case STANDALONE:
+						polyExpr.setPolyKind(PolyExpressionKind.pekStandalone);
+						break;
+					case POLY:
+						polyExpr.setPolyKind(PolyExpressionKind.pekPoly);
+						break;
+					}
+
+					if (Common.getIsFunctionalExpression(node)) {
+						JCFunctionalExpression jcFunctionalExpression = (JCFunctionalExpression) jcExpr;
+						if (jcFunctionalExpression.target != null) {
+							symMaps.addFuncExprTarget(jcFunctionalExpression.target, ret);
+						}
 					}
 				}
 			}
@@ -1881,8 +2255,11 @@ public class TreeBuilder {
 								SimpleTypeExpression sTExprNode = (SimpleTypeExpression) fact
 										.createNode(NodeKind.ndkSimpleTypeExpression);
 								sTExprNode.setName(jFA.name.toString());
-								setPositionOfRightExpr(qualiTypeExprNode, sTExprNode, jcFieldAccess.name.toString()
-										.length());
+								if (jcFieldAccess.pos == Position.NOPOS)
+									sTExprNode.setIsCompilerGenerated(true);
+								else
+									setPositionOfRightExpr(qualiTypeExprNode, sTExprNode, jcFieldAccess.name.toString()
+											.length());
 								symMaps.addNodeType(jcFieldAccess.type, sTExprNode.getId());
 								qualiTypeExprNode.setQualifierType(sTExprNode.getId());
 							}
@@ -1896,7 +2273,10 @@ public class TreeBuilder {
 							.createNode(NodeKind.ndkSimpleTypeExpression);
 					simpleTypeExprNode.setName(jcFieldAccess.name.toString());
 					setPositionAndGenerated(jcFieldAccess, qualiTypeExprNode.getId());
-					setPositionOfRightExpr(qualiTypeExprNode, simpleTypeExprNode, jcFieldAccess.name.toString()
+					if (jcFieldAccess.pos == Position.NOPOS)
+						simpleTypeExprNode.setIsCompilerGenerated(true);
+					else
+						setPositionOfRightExpr(qualiTypeExprNode, simpleTypeExprNode, jcFieldAccess.name.toString()
 							.length());
 					symMaps.addNodeType(jcFieldAccess.type, simpleTypeExprNode.getId());
 
@@ -1925,14 +2305,24 @@ public class TreeBuilder {
 					ret = erroneousTypeExprNode.getId();
 					break;
 				}
-				// TODO java 1.8
-				case ANNOTATED_TYPE:
+				case ANNOTATED_TYPE: {
+					JCAnnotatedType jcAnnotatedType = (JCAnnotatedType) jcTree;
+					AnnotatedTypeExpression annotatedTypeNode = (AnnotatedTypeExpression) fact.createNode(NodeKind.ndkAnnotatedTypeExpression);
+					
+					jcAnnotatedType.annotations.forEach(annotation -> annotatedTypeNode.addAnnotations(visit(annotation)));
+					annotatedTypeNode.setUnderlyingType(visitTypeExpression(jcAnnotatedType.underlyingType));
+					ret = annotatedTypeNode.getId();
+					
+					break;
+				}
 				case INTERSECTION_TYPE:
 				{
-					logger.debug("ex.jan.TreeBuilder.erroneousInsteadOfJava18TypeExpr", jcTree.getKind());
-					ErroneousTypeExpression erroneousTypeExprNode = (ErroneousTypeExpression) fact
-							.createNode(NodeKind.ndkErroneousTypeExpression);
-					ret = erroneousTypeExprNode.getId();
+					JCTypeIntersection jcTypeIntersection = (JCTypeIntersection) jcTree;
+					TypeIntersectionExpression typeIntersectionNode = (TypeIntersectionExpression) fact.createNode(NodeKind.ndkTypeIntersectionExpression);
+					
+					jcTypeIntersection.bounds.forEach(bound -> typeIntersectionNode.addBounds(visitTypeExpression(bound)));
+					
+					ret = typeIntersectionNode.getId();
 					break;
 				}
 				default:
@@ -1971,7 +2361,9 @@ public class TreeBuilder {
 			if (OptionParser.isBuildExtFromSource()) {
 				symMaps.addClassAndInterfaceToFullBuildSet(t.tsym);
 			}
-			symMaps.addClassAndInterfaceUsageSet(t.tsym);			
+			if (!t.isPrimitive()) {
+				symMaps.addClassAndInterfaceUsageSet(t.tsym);
+			}
 		} else {
 			typeExprNode = (ErroneousTypeExpression) fact
 					.createNode(NodeKind.ndkErroneousTypeExpression);
@@ -2018,7 +2410,7 @@ public class TreeBuilder {
 	private void setPositionAndGenerated(JCTree jcTree, int nodeId) {
 		Positioned nodeC = (Positioned) fact.getRef(nodeId);
 
-		if (generatedTreeRoot != null) {
+		if (generatedTreeRoot != null || jcTree.pos == Position.NOPOS) {
 			nodeC.setIsCompilerGenerated(true);
 		} else {
 			if (jcTree != null) {
@@ -2404,6 +2796,55 @@ public class TreeBuilder {
 		}
 	}
 
+	public void setLLOCToSubTree(TreeSet<Integer> usefulLines) {
+		AlgorithmPreorder preorder = new AlgorithmPreorder();
+		preorder.setVisitSpecialNodes(false, false);
+
+		// The visitor to set the LLOC values of given nodes.
+		VisitorAbstractNodes v = new VisitorAbstractNodes() {
+			@Override
+			public void visit(TypeDeclaration node, boolean callVirtualBase) {
+				super.visit(node, callVirtualBase);
+				node.setLloc(getLLOC(node));
+			}
+
+			@Override
+			public void visit(MethodDeclaration node, boolean callVirtualBase) {
+				super.visit(node, callVirtualBase);
+				node.setLloc(getLLOC(node));
+			}
+
+			public void visit(Lambda node, boolean callVirtualBase) {
+				super.visit(node, callVirtualBase);
+				node.setLloc(getLLOC(node));
+			};
+
+			@Override
+			public void visit(InitializerBlock node, boolean callVirtualBase) {
+				super.visit(node, callVirtualBase);
+				node.setLloc(getLLOC(node));
+			}
+
+			private int getLLOC(Positioned node) {
+				return usefulLines
+						.subSet(node.getPosition().getWideLine(), true, node.getPosition().getWideEndLine(), true)
+						.size();
+			}
+		};
+
+		EdgeIterator<TypeDeclaration> typeDeclarationsIterator = actualColumbusCU.getTypeDeclarationsIterator();
+
+		while (typeDeclarationsIterator.hasNext()) {
+			preorder.run(fact, v, typeDeclarationsIterator.next());
+		}
+	}
+
+	private int createModuleTypeNode(Type modType) {
+		ModuleType modTypeNode = (ModuleType) fact.createNode(NodeKind.ndkModuleType);
+		modTypeNode.setRefersTo(actualModuleId);
+		symMaps.getModuleTypeMap().put(modType, modTypeNode.getId());
+		return modTypeNode.getId();
+	}
 }
 
 enum MethodType {

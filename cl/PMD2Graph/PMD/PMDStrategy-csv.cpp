@@ -61,7 +61,7 @@ void PMDStrategy::makeCsv(std::string& lim, std::string& rul, std::string& rulCo
   CheckerStrategy::makeCsv(lim, rul, rulConfig, file_names, metrics, groupedmetrics, monitor, checkerbasedir, levelMap);
 
   std::string iniFileName = ((common::pathFindFileName(rul) == rul) ? "." + string(DIRDIVSTRING) : "") + rul;
-  rul::RulHandler rulHandler(iniFileName, "Default", "eng", "ISO-8859-1");
+  rul::RulHandler rulHandler(iniFileName, "Default", "eng");
 
   graph.setHeaderInfo("asg", "java");
 
@@ -69,8 +69,7 @@ void PMDStrategy::makeCsv(std::string& lim, std::string& rul, std::string& rulCo
     collectdata(*it, rulHandler, checkerbasedir, pathfrom, pathto, f);
 
   // summarize warnings
-  graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENT, graph::Edge::edtDirectional), true);
-  graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENTTREE, graph::Edge::edtReverse), false);
+  graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENT, graph::Edge::edtDirectional), true, std::set<std::string>(), true);
   graphsupport::cumSum(graph, graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_LOGICALTREE, graph::Edge::edtReverse), false);
   // create group metrics
   columbus::graphsupport::createGroupMetrics(graph, rulHandler);
@@ -151,7 +150,7 @@ void PMDStrategy::collectdata(std::string& fileName,rul::RulHandler& rul, std::s
                     XMLString::collapseWS((XMLCh*)wtext);
                     we_warningtext = toUTF8String(wtext);
                     try {
-                      mt->addWarningToNode(chkbasedir + we_path, we_line, we_col, we_endline, we_endcol, we_groupID, we_warningID, we_warningtext, false, f);
+                      mt->addWarningToNode(chkbasedir + we_path, we_line, we_col, we_endline, we_endcol, we_groupID, we_warningID, we_warningtext, f);
                     } catch(Exception &e) {
                       WriteMsg::write(CMSG_PMD2GRAPH_EXCEPTION_INFO, e.getLocation().c_str(), e.getMessage().c_str());
                     }

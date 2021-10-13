@@ -123,36 +123,32 @@ namespace expression {
     base::Positioned *_node = NULL;
     if (_id) {
       if (!factory->getExist(_id))
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
       _node = dynamic_cast<base::Positioned*> (factory->getPointer(_id));
       if ( _node == NULL) {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
       if (&(_node->getFactory()) != this->factory)
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
 
-      if (Common::getIsBaseClassKind(_node->getNodeKind(), ndkPattern) || _node->getNodeKind() == ndkVariableDeclarator || Common::getIsBaseClassKind(_node->getNodeKind(), ndkFunction)) {
-        if (m_refersTo) {
-          if (factory->getExistsReverseEdges())
-            factory->reverseEdges->removeEdge(m_refersTo, m_id, edkIdentifier_RefersTo);
-        }
-        m_refersTo = _node->getId();
+      if (m_refersTo) {
         if (factory->getExistsReverseEdges())
-          factory->reverseEdges->insertEdge(m_refersTo, this->getId(), edkIdentifier_RefersTo);
-      } else {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+          factory->reverseEdges->removeEdge(m_refersTo, m_id, edkIdentifier_RefersTo);
       }
+      m_refersTo = _node->getId();
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->insertEdge(m_refersTo, this->getId(), edkIdentifier_RefersTo);
     } else {
       if (m_refersTo) {
-        throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
       }
     }
   }
 
   void Identifier::setRefersTo(base::Positioned *_node) {
     if (_node == NULL)
-      throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
 
     setRefersTo(_node->getId());
   }

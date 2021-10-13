@@ -36,6 +36,9 @@ namespace statement {
   * \brief For class, which represents the statement::For node.
   * (missing)
   * 
+  * Attributes:
+  *   - isAsync (boolean) : (missing)
+  * 
   * Edges:
   *   - hasExpressionList (expression::ExpressionList, single) : (missing)
   *   - hasTargetList (statement::TargetList, single) : (missing)
@@ -78,6 +81,32 @@ namespace statement {
       * \brief Delete all edge.
       */
       virtual void prepareDelete(bool tryOnVirtualParent);
+
+
+      // ---------- Attribute getter function(s) ----------
+
+      /**
+      * \brief Gives back the isAsync of the node.
+      * \return Returns with the isAsync.
+      */
+      bool getIsAsync() const;
+
+
+      // ---------- Attribute setter function(s) ----------
+
+      /**
+      * \internal
+      * \brief Sets the isAsync of the node.
+      * \param isAsync [in] The new value of the isAsync.
+      */
+      void setIsAsync(bool _isAsync);
+
+    protected:
+
+      // ---------- Attribute(s) ----------
+
+      /** \internal \brief Stores whether the node is `Async` or not. */
+      bool m_isAsync : 1;
 
     protected:
       /**

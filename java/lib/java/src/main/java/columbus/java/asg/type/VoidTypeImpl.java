@@ -33,6 +33,7 @@ import columbus.logger.LoggerHandler;
  */
 public class VoidTypeImpl extends BaseImpl implements VoidType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(VoidTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	public VoidTypeImpl(int id, Factory factory) {
 		super(id, factory);

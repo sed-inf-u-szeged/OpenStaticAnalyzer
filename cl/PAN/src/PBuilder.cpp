@@ -219,17 +219,25 @@ NodeId PBuilder::buildTargetList( std::vector<NodeId>& list ){
 
 NodeId PBuilder::buildRaise( NodeId type, NodeId value, NodeId traceback ){
   statement::Raise& node = dynamic_cast<statement::Raise&>(*factory->createNode(ndkRaise));
-  node.setTypeExpression(type);
-  node.setValueExpression(value);
-  node.setTracebackExpression(traceback);
+  node.setType(type);
+  node.setValue(value);
+  node.setTraceback(traceback);
   return node.getId();
 }
 
-NodeId PBuilder::buildParameter( std::string name, NodeId obj, ParameterKind kind ){
+NodeId PBuilder::buildRaise3( NodeId exception, NodeId cause ){
+  statement::Raise& node = dynamic_cast<statement::Raise&>(*factory->createNode(ndkRaise));
+  node.setException(exception);
+  node.setCause(cause);
+  return node.getId();
+}
+
+NodeId PBuilder::buildParameter( std::string name, NodeId obj, ParameterKind kind, NodeId annotation ) {
   statement::Parameter& node = dynamic_cast<statement::Parameter&>(*factory->createNode(ndkParameter));
   node.setName(name);
   node.setKind(kind);
   if(obj != 0) node.setRefersTo(obj);
+  if(annotation != 0) node.setAnnotation(annotation);
   return node.getId();
 }
 
@@ -320,8 +328,9 @@ NodeId PBuilder::buildAssign( NodeId list, NodeId expression ){
   return node.getId();
 }
 
-NodeId PBuilder::buildFunctionDef( std::string name, NodeId docstring, NodeId body, std::vector<NodeId>& parameter_list, std::vector<NodeId>& decorator_list, std::vector<NodeId>& local_object, NodeId object, int lloc ){
+NodeId PBuilder::buildFunctionDef( std::string name, NodeId docstring, NodeId body, std::vector<NodeId>& parameter_list, std::vector<NodeId>& decorator_list, NodeId returns, std::vector<NodeId>& local_object, NodeId object, int lloc, bool isAsync ){
   statement::FunctionDef& node = dynamic_cast<statement::FunctionDef&>(*factory->createNode(ndkFunctionDef));
+  node.setIsAsync(isAsync);
   node.setBody(body);
   node.setName(name);
   if (docstring){
@@ -332,6 +341,9 @@ NodeId PBuilder::buildFunctionDef( std::string name, NodeId docstring, NodeId bo
   }
   for(vector<NodeId>::iterator it = decorator_list.begin(); it != decorator_list.end(); it++){
     node.addDecorator(*it);
+  }
+  if (returns) {
+    node.setReturnAnnotation(returns);
   }
   for(vector<NodeId>::iterator it = local_object.begin(); it != local_object.end(); it++){
     node.addObject(*it);
@@ -352,15 +364,20 @@ NodeId PBuilder::buildGlobal( std::vector<NodeId>& identifier ){
   return node.getId();
 }
 
-NodeId PBuilder::buildWith( NodeId body, NodeId target, NodeId expression ){
+NodeId PBuilder::buildWithItem(NodeId context, NodeId target) {
+  statement::WithItem& node = dynamic_cast<statement::WithItem&>(*factory->createNode(ndkWithItem));
+  node.setContext(context);
+  if (target) node.setTarget(target);
+  return node.getId();
+}
+
+NodeId PBuilder::buildWith(NodeId body, const std::vector<NodeId>& items, bool isAsync) {
   statement::With& node = dynamic_cast<statement::With&>(*factory->createNode(ndkWith));
+  node.setIsAsync(isAsync);
   node.setBody(body);
-
-  vector<NodeId> targets;
-  if (target) targets.push_back(target);
-  node.setTargetList(buildTargetList(targets));
-
-  node.setExpression(expression);
+  for (vector<NodeId>::const_iterator it = items.begin(); it != items.end(); ++it) {
+    node.addWithItem(*it);
+  }
   return node.getId();
 }
 
@@ -372,11 +389,12 @@ NodeId PBuilder::buildWhile( NodeId test, NodeId body, NodeId else_body ){
   return node.getId();
 }
 
-NodeId PBuilder::buildTryFinal( NodeId body, NodeId finally_body ){
-  statement::TryFinal& node = dynamic_cast<statement::TryFinal&>(*factory->createNode(ndkTryFinal));
-  node.setBody(body);
-  if(finally_body != 0) node.setFinallyBody(finally_body);
-  return node.getId();
+NodeId PBuilder::buildTryFinal(NodeId body, NodeId finally_body) {
+  return buildTry(body, std::vector<NodeId>(), 0, finally_body);
+}
+
+NodeId PBuilder::buildTryExcept(std::vector<NodeId>& handlerl, NodeId body, NodeId else_body) {
+  return buildTry(body, handlerl, else_body, 0);
 }
 
 NodeId PBuilder::buildAugAssign( NodeId target_list, NodeId expression, AssignmentKind kind ){
@@ -387,7 +405,7 @@ NodeId PBuilder::buildAugAssign( NodeId target_list, NodeId expression, Assignme
   return node.getId();
 }
 
-NodeId PBuilder::buildClassDef( std::string name, NodeId docstring, NodeId body, std::vector<NodeId>& base, std::vector<NodeId>& decorator_list, std::vector<NodeId>& local_object, NodeId object, int lloc ){
+NodeId PBuilder::buildClassDef( std::string name, NodeId docstring, NodeId body, std::vector<NodeId>& base, std::vector<NodeId>& keywords, std::vector<NodeId>& decorator_list, std::vector<NodeId>& local_object, NodeId object, int lloc ){
   statement::ClassDef& node = dynamic_cast<statement::ClassDef&>(*factory->createNode(ndkClassDef));
   node.setBody(body);
   node.setName(name);
@@ -396,6 +414,9 @@ NodeId PBuilder::buildClassDef( std::string name, NodeId docstring, NodeId body,
   }
   for(vector<NodeId>::iterator it = base.begin(); it != base.end(); it++){
     node.addBaseSpecifier(*it);
+  }
+  for (vector<NodeId>::iterator it = keywords.begin(); it != keywords.end(); it++) {
+    node.addKeyword(*it);
   }
   for(vector<NodeId>::iterator it = decorator_list.begin(); it != decorator_list.end(); it++){
     node.addDecorator(*it);
@@ -410,20 +431,9 @@ NodeId PBuilder::buildClassDef( std::string name, NodeId docstring, NodeId body,
   return node.getId();
 }
 
-NodeId PBuilder::buildTryExcept( std::vector<NodeId>& handlerl, NodeId body, NodeId else_body ){
-  statement::TryExcept& node = dynamic_cast<statement::TryExcept&>(*factory->createNode(ndkTryExcept));
-  
-  for(vector<NodeId>::iterator it = handlerl.begin(); it != handlerl.end(); it++){
-    node.addHandler(*it);
-  }
-
-  if(body != 0) node.setBody(body);
-  if(else_body != 0) node.setElseBody(else_body);
-  return node.getId();
-}
-
-NodeId PBuilder::buildFor(NodeId target_list, NodeId body, NodeId else_body, NodeId expression_list ){
+NodeId PBuilder::buildFor( NodeId target_list, NodeId body, NodeId else_body, NodeId expression_list, bool isAsync ){
   statement::For& node = dynamic_cast<statement::For&>(*factory->createNode(ndkFor));
+  node.setIsAsync(isAsync);
   node.setBody(body);
   if(else_body != 0) node.setElseBody(else_body);
   node.setTargetList(target_list);
@@ -714,9 +724,10 @@ NodeId PBuilder::buildStringConversion( NodeId expression_list ){
   return node.getId();
 }
 
-NodeId PBuilder::buildYield( NodeId expression_list ){
+NodeId PBuilder::buildYield(NodeId expression, bool from) {
   expression::YieldExpression& node = dynamic_cast<expression::YieldExpression&>(*factory->createNode(ndkYieldExpression));
-  node.setYieldExpression(expression_list);
+  node.setIsFrom(from);
+  node.setExpression(expression);
   return node.getId();
 }
 
@@ -775,4 +786,71 @@ NodeId PBuilder::buildDictComp( NodeId key_value, std::vector<NodeId>& generator
   return node.getId();
 }
 
+NodeId PBuilder::buildNonlocal(const std::vector<NodeId>& identifier) {
+  statement::Nonlocal& node = dynamic_cast<statement::Nonlocal&>(*factory->createNode(ndkNonlocal));
+  for (vector<NodeId>::const_iterator it = identifier.begin(); it != identifier.end(); ++it) {
+    node.addIdentifier(*it);
+  }
+  return node.getId();
+}
 
+NodeId PBuilder::buildAnnAssign(NodeId target_list, NodeId expression, NodeId annotation, bool simple) {
+  statement::AnnAssign& node = dynamic_cast<statement::AnnAssign&>(*factory->createNode(ndkAnnAssign));
+  node.setTargetList(target_list);
+  if (expression) node.setExpression(expression);
+  node.setAnnotation(annotation);
+  node.setIsSimple(simple);
+  return node.getId();
+}
+
+NodeId PBuilder::buildTry(NodeId body, const std::vector<NodeId>& handlerl, NodeId else_body, NodeId finally_body) {
+  statement::Try& node = dynamic_cast<statement::Try&>(*factory->createNode(ndkTry));
+  node.setBody(body);
+  for (vector<NodeId>::const_iterator it = handlerl.begin(); it != handlerl.end(); ++it) {
+    node.addHandler(*it);
+  }
+  if (else_body != 0) node.setElseBody(else_body);
+  if (finally_body != 0) node.setFinallyBody(finally_body);
+  return node.getId();
+}
+
+NodeId PBuilder::buildAwait(NodeId value) {
+  expression::Await& node = dynamic_cast<expression::Await&>(*factory->createNode(ndkAwait));
+  node.setValue(value);
+  return node.getId();
+}
+
+NodeId PBuilder::buildFormattedValue(NodeId value, NodeId format_spec, int conversion) {
+  expression::FormattedValue& node = dynamic_cast<expression::FormattedValue&>(*factory->createNode(ndkFormattedValue));
+  node.setValue(value);
+  node.setFormatSpec(format_spec);
+  node.setConversion(conversion);
+  return node.getId();
+}
+
+NodeId PBuilder::buildJoinedStr(const std::vector<NodeId>& values) {
+  expression::JoinedStr& node = dynamic_cast<expression::JoinedStr&>(*factory->createNode(ndkJoinedStr));
+  for (vector<NodeId>::const_iterator it = values.begin(); it != values.end(); ++it) {
+    node.addValue(*it);
+  }
+  return node.getId();
+}
+
+NodeId PBuilder::buildBytesLiteral(const std::string& value) {
+  expression::BytesLiteral& node = dynamic_cast<expression::BytesLiteral&>(*factory->createNode(ndkBytesLiteral));
+  node.setValue(value);
+  return node.getId();
+}
+
+NodeId PBuilder::buildStarred(NodeId value) {
+  expression::Starred& node = dynamic_cast<expression::Starred&>(*factory->createNode(ndkStarred));
+  node.setValue(value);
+  return node.getId();
+}
+
+NodeId PBuilder::buildNamedExpr(NodeId target, NodeId value) {
+  expression::NamedExpr& node = dynamic_cast<expression::NamedExpr&>(*factory->createNode(ndkNamedExpr));
+  node.setTarget(target);
+  node.setValue(value);
+  return node.getId();
+}

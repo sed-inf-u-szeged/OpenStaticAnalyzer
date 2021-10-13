@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var templateLiteral = factory.createTemplateLiteralWrapper(factory);
+        var templateLiteral = factory.createTemplateLiteralWrapper();
         globals.setPositionInfo(node, templateLiteral);
         return templateLiteral;
     } else {
@@ -34,15 +34,10 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.quasi != null) {
             var quasiWrapper = globals.getWrapperOfNode(node.quasi);
-            if (node.quasi.type !== "Literal") {
-                var quasiWrapperFunctionString = "setQuasi" + node.quasi.type;
-            } else {
-                var quasiWrapperFunctionString = "setQuasi" + globals.getLiteralType(node.quasi) + node.quasi.type;
-            }
             try {
-                templateLiteralWrapper[quasiWrapperFunctionString](quasiWrapper);
+                templateLiteralWrapper.setQuasi(quasiWrapper);
             } catch (e) {
-                console.error("TEMPLATELITERAL - Function not exist: templateLiteralWrapper." + quasiWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("TEMPLATELITERAL - Could not set quasi! Reason of the error: " + e + "\n");
             }
         }
 
@@ -50,15 +45,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.expressions.length; i++) {
                 if (node.expressions[i] != null) {
                     var expressionsWrapper = globals.getWrapperOfNode(node.expressions[i]);
-                    if (node.expressions[i].type !== "Literal") {
-                        var expressionsWrapperFunctionString = "addExpressions" + node.expressions[i].type;
-                    } else {
-                        var expressionsWrapperFunctionString = "addExpressions" + globals.getLiteralType(node.expressions[i]) + node.expressions[i].type;
-                    }
                     try {
-                        templateLiteralWrapper[expressionsWrapperFunctionString](expressionsWrapper);
+                        templateLiteralWrapper.addExpressions(expressionsWrapper);
                     } catch (e) {
-                        console.error("TEMPLATELITERAL - Function not exist: templateLiteralWrapper." + expressionsWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("TEMPLATELITERAL - Could not add expression! Reason of the error: " + e + "\n");
                     }
                 }
             }
@@ -67,15 +57,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.quasis.length; i++) {
                 if (node.quasis[i] != null) {
                     var quasisWrapper = globals.getWrapperOfNode(node.quasis[i]);
-                    if (node.quasis[i].type !== "Literal") {
-                        var quasisWrapperFunctionString = "addQuasis" + node.quasis[i].type;
-                    } else {
-                        var quasisWrapperFunctionString = "addQuasis" + globals.getLiteralType(node.quasis[i]) + node.quasis[i].type;
-                    }
                     try {
-                        templateLiteralWrapper[quasisWrapperFunctionString](quasisWrapper);
+                        templateLiteralWrapper.addQuasis(quasisWrapper);
                     } catch (e) {
-                        console.error("TEMPLATELITERAL - Function not exist: templateLiteralWrapper." + quasisWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("TEMPLATELITERAL - Could not add quasi! Reason of the error: " + e + "\n");
                     }
                 }
             }

@@ -31,10 +31,6 @@ namespace columbus { namespace lim { namespace metrics {
     // Method level NII
     this->registerHandler( phaseVisit, NTYPE_LIM_METHOD, limLangOther, false, [this]( NodeWrapper& node ) {
 
-      if ( ! node.isDefinition() ) {
-        return;
-      }
-
       const logical::Method& method = node.getLimNode<logical::Method>();
       set<NodeId> s;
 
@@ -65,6 +61,14 @@ namespace columbus { namespace lim { namespace metrics {
       addMetric( node, (int) this->shared->currentClassInfo().sets[this->name].size() );
 
       cleanup( node );
+    });
+
+    // C vs. C++ compat
+    registerHandler( phaseVisit, NTYPE_LIM_STRUCTURE, limLangC, false, [this] ( NodeWrapper& node ) {
+      setInvalid( node );
+    });
+    registerHandler( phaseVisit, NTYPE_LIM_UNION, limLangC, false, [this] ( NodeWrapper& node ) {
+      setInvalid( node );
     });
 
   }

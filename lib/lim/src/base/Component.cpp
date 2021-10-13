@@ -40,6 +40,7 @@ namespace base {
     m_analysisTime(atkNow),
     m_changesetID(0),
     m_shortName(0),
+    compilationUnitContainer(),
     containsContainer(),
     hasFilesContainer()
   {
@@ -56,11 +57,18 @@ namespace base {
     m_analysisTime = other.m_analysisTime;
     m_changesetID = other.m_changesetID;
     m_shortName = other.m_shortName;
+    compilationUnitContainer = other.compilationUnitContainer;
     containsContainer = other.containsContainer;
     hasFilesContainer = other.hasFilesContainer;
   }
 
   void Component::prepareDelete(bool tryOnVirtualParent){
+    while (!compilationUnitContainer.empty()) {
+      const NodeId id = *compilationUnitContainer.begin();
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->removeEdge(id, this->getId(), edkComponent_CompilationUnit);
+      compilationUnitContainer.pop_front();
+    }
     while (!containsContainer.empty()) {
       const NodeId id = *containsContainer.begin();
       if (factory->getExistsReverseEdges())
@@ -136,6 +144,27 @@ namespace base {
     m_shortName = factory->getStringTable().set(_shortName);
   }
 
+  ListIterator<physical::File> Component::getCompilationUnitListIteratorBegin() const {
+    return ListIterator<physical::File>(&compilationUnitContainer, factory, true);
+  }
+
+  ListIterator<physical::File> Component::getCompilationUnitListIteratorEnd() const {
+    return ListIterator<physical::File>(&compilationUnitContainer, factory, false);
+  }
+
+  bool Component::getCompilationUnitIsEmpty() const {
+    return getCompilationUnitListIteratorBegin() == getCompilationUnitListIteratorEnd();
+  }
+
+  unsigned int Component::getCompilationUnitSize() const {
+    unsigned int size = 0;
+    ListIterator<physical::File> endIt = getCompilationUnitListIteratorEnd();
+    for (ListIterator<physical::File> it = getCompilationUnitListIteratorBegin(); it != endIt; ++it) {
+      ++size;
+    }
+    return size;
+  }
+
   ListIterator<base::Component> Component::getContainsListIteratorBegin() const {
     return ListIterator<base::Component>(&containsContainer, factory, true);
   }
@@ -180,6 +209,9 @@ namespace base {
 
   bool Component::setEdge(EdgeKind edgeKind, NodeId edgeEnd, void* acValue, bool tryOnVirtualParent) {
     switch (edgeKind) {
+      case edkComponent_CompilationUnit:
+        addCompilationUnit(edgeEnd);
+        return true;
       case edkComponent_Contains:
         addContains(edgeEnd);
         return true;
@@ -197,6 +229,9 @@ namespace base {
 
   bool Component::removeEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
+      case edkComponent_CompilationUnit:
+        removeCompilationUnit(edgeEnd);
+        return true;
       case edkComponent_Contains:
         removeContains(edgeEnd);
         return true;
@@ -210,6 +245,50 @@ namespace base {
       return true;
     }
     return false;
+  }
+
+  void Component::addCompilationUnit(const physical::File *_node) {
+    if (_node == NULL)
+      throw LimException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
+
+    if (&(_node->getFactory()) != this->factory)
+      throw LimException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
+
+    if (!((_node->getNodeKind() == ndkFile) ))
+      throw LimException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+
+    compilationUnitContainer.push_back(_node->getId());
+    if (factory->reverseEdges)
+      factory->reverseEdges->insertEdge(_node, this, edkComponent_CompilationUnit);
+  }
+
+  void Component::addCompilationUnit(NodeId _id) {
+    const physical::File *node = dynamic_cast<physical::File*>(factory->getPointer(_id));
+    if (node == NULL)
+      throw LimException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    addCompilationUnit( node );
+  }
+
+  void Component::removeCompilationUnit(NodeId id) {
+    if (!factory->getExist(id))
+      throw LimException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    ListIterator<physical::File>::Container::iterator it = find(compilationUnitContainer.begin(), compilationUnitContainer.end(), id);
+
+    if (it == compilationUnitContainer.end())
+      throw LimException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    compilationUnitContainer.erase(it);
+
+    if (factory->getExistsReverseEdges())
+      factory->reverseEdges->removeEdge(id, this->getId(), edkComponent_CompilationUnit);
+  }
+
+  void Component::removeCompilationUnit(physical::File *_node) {
+    if (_node == NULL)
+      throw LimException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
+
+    removeCompilationUnit(_node->getId());
   }
 
   void Component::addContains(const base::Component *_node) {
@@ -402,6 +481,11 @@ namespace base {
     binIo.writeUInt4(m_shortName);
 
 
+    for (ListIterator<physical::File>::Container::const_iterator it = compilationUnitContainer.begin(); it != compilationUnitContainer.end(); ++it) {
+      binIo.writeUInt4(*it);
+    }
+    binIo.writeUInt4(0); // This is the end sign
+
     for (ListIterator<base::Component>::Container::const_iterator it = containsContainer.begin(); it != containsContainer.end(); ++it) {
       binIo.writeUInt4(*it);
     }
@@ -423,6 +507,12 @@ namespace base {
     m_shortName = binIo.readUInt4();
 
     NodeId _id;
+
+    _id = binIo.readUInt4();
+    while (_id) {
+      compilationUnitContainer.push_back(_id);
+      _id = binIo.readUInt4();
+    }
 
     _id = binIo.readUInt4();
     while (_id) {

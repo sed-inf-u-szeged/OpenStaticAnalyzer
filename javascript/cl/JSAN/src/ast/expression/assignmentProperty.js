@@ -19,5 +19,5 @@
  */
 
 module.exports = function (node, parent, firstVisit) {
-    console.log("ASSIGNMENTPROPERTY - Unimplemented");
+    //TODO: implement when supported
 }

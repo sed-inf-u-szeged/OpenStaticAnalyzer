@@ -106,7 +106,7 @@ namespace columbus { namespace rul {
 
     string filledWarningText = common::replace(warningText.c_str(), "%", name.c_str());
 
-    if(graphsupport::addWarningOnce(theGraph, node, warningName, path, line, col, endline, endcol, filledWarningText)) {
+    if(graphsupport::addWarningOnce(theGraph, node, warningName, path, line, col, endline, endcol, filledWarningText, &warningCache)) {
       ofstream txtOutputStream(txtOutputFileName.c_str(), ios::app);
       ostream* output = NULL;
 
@@ -171,5 +171,5 @@ namespace columbus { namespace rul {
     } else { WriteMsg::write(CMSG_UNKNOWN_REL_ERROR); }
 
   };
-  
+
 } }

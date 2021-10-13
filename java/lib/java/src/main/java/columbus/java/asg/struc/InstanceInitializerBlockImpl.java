@@ -37,6 +37,7 @@ import columbus.logger.LoggerHandler;
  */
 public class InstanceInitializerBlockImpl extends BaseImpl implements InstanceInitializerBlock {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(InstanceInitializerBlockImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 
@@ -47,6 +48,8 @@ public class InstanceInitializerBlockImpl extends BaseImpl implements InstanceIn
 	protected boolean isCompilerGenerated;
 
 	protected boolean isToolGenerated;
+
+	protected int lloc;
 
 	protected int _hasBody;
 
@@ -91,6 +94,16 @@ public class InstanceInitializerBlockImpl extends BaseImpl implements InstanceIn
 	@Override
 	public void setIsToolGenerated(boolean _isToolGenerated) {
 		isToolGenerated = _isToolGenerated;
+	}
+
+	@Override
+	public int getLloc() {
+		return lloc;
+	}
+
+	@Override
+	public void setLloc(int _lloc) {
+		lloc = _lloc;
 	}
 
 	@Override
@@ -280,6 +293,8 @@ public class InstanceInitializerBlockImpl extends BaseImpl implements InstanceIn
 			io.writeByte1(boolValues);
 		}
 
+		io.writeInt4(lloc);
+
 
 		io.writeInt4(!factory.getIsFiltered(_hasBody) ? _hasBody : 0);
 	}
@@ -330,6 +345,8 @@ public class InstanceInitializerBlockImpl extends BaseImpl implements InstanceIn
 			boolValues >>>= 1;
 		}
 
+
+		lloc = io.readInt4();
 
 		_hasBody = io.readInt4();
 		if (_hasBody != 0)

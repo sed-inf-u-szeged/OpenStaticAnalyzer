@@ -36,7 +36,6 @@ VisitorLIMML::~VisitorLIMML() {
 
 void VisitorLIMML::beginVisit() {
   ofs << "<?xml version='1.0' encoding=\"utf-8\"?>\n";
-  ofs << "<!DOCTYPE Project SYSTEM 'lim-3.0.28.dtd'>\n";
   ofs << "<Project name='" << projectName << "'"
       << " xmlns:base='columbus_lim_schema/base'"
       << " xmlns:logical='columbus_lim_schema/logical'"
@@ -432,6 +431,17 @@ void VisitorLIMML::visitEnd(const type::TypeFormerType& node , bool callVirtualB
   ofs << "</type:TypeFormerType>\n";
 }
 
+void VisitorLIMML::visitComponent_CompilationUnit(const base::Component& begin, const physical::File& end) {
+  createIndentation();
+  ofs << "<Component_CompilationUnit ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
+}
+
+void VisitorLIMML::visitEndComponent_CompilationUnit(const base::Component& begin, const physical::File& end) {
+}
+
 void VisitorLIMML::visitComponent_Contains(const base::Component& begin, const base::Component& end) {
   createIndentation();
   ofs << "<Component_Contains ref='";
@@ -518,6 +528,17 @@ void VisitorLIMML::visitAttributeAccess_Attribute(const logical::AttributeAccess
 }
 
 void VisitorLIMML::visitEndAttributeAccess_Attribute(const logical::AttributeAccess& begin, const logical::Attribute& end) {
+}
+
+void VisitorLIMML::visitClass_Extends(const logical::Class& begin, const logical::Class& end) {
+  createIndentation();
+  ofs << "<Class_Extends ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
+}
+
+void VisitorLIMML::visitEndClass_Extends(const logical::Class& begin, const logical::Class& end) {
 }
 
 void VisitorLIMML::visitClass_GrantsFriendship(const logical::Class& begin, const logical::Friendship& end) {

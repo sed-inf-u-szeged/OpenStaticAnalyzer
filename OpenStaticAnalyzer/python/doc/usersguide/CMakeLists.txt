@@ -4,6 +4,9 @@ set (UG_INPUTS
     md/SourceCodeMetricsRef.md
     md/CodeDuplicationMetricsRef.md
     md/PylintRef.md
+    md/PylintRef2.md
+    ../../../doc/md/UserDefinedMetricsRef.md
+    ../../../doc/md/UserDefinedPatternsRef.md
     md/Footnotes.md
 )
 

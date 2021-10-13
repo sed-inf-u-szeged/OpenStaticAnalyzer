@@ -1,28 +1,9 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Columbus.CSAN.Commons;
+using Columbus.CSAN.LimBuilder;
 using Columbus.Lim.Asg.Nodes.Base;
 using Columbus.Lim.Asg.Nodes.Logical;
 using Columbus.Lim.Asg.Nodes.Physical;
@@ -245,15 +226,6 @@ namespace Columbus.CSAN.Extensions
             return sb.ToString();
         }
 
-        public static void CreateCommentForCU(this SyntaxNode root)
-        {
-            string commentForCU = root.GetCommentForCU(root.SyntaxTree.GetText());
-            File file = root.GetLocation().CreateFile();
-            if (string.IsNullOrEmpty(commentForCU)) return;
-            Comment comment = MainDeclaration.Instance.LimFactory.createCommentNode(commentForCU.TrimEnd('\r', '\n'));
-            Commons.Common.Safe_Edge(file, "HasComment", comment.Id);
-        }
-
         public static bool IsAcceptableCommentKind(this SyntaxTrivia trivia)
         {
             SyntaxKind knd = trivia.Kind();
@@ -262,19 +234,6 @@ namespace Columbus.CSAN.Extensions
                    || knd == SyntaxKind.DocumentationCommentExteriorTrivia
                    || knd == SyntaxKind.SingleLineDocumentationCommentTrivia
                    || knd == SyntaxKind.MultiLineDocumentationCommentTrivia;
-        }
-
-        public static void CreateCommentNode(this SyntaxNode node, ISymbol symbol)
-        {
-            string commentStr = node.GetDocumentationComment();
-            if (commentStr == string.Empty) return;
-            if (symbol.IsLimCompatibile())
-            {
-                Member limNode = symbol.ConvertToLimNode() as Member;
-
-                Comment comment = MainDeclaration.Instance.LimFactory.createCommentNode(commentStr.TrimEnd('\r', '\n'));
-                Commons.Common.Safe_Edge(limNode, "HasComment", comment.Id);
-            }
         }
 
         public static bool IsMethodLevel(this SyntaxNode node)

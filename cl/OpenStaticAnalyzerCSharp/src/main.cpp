@@ -26,6 +26,7 @@
 #include <common/inc/PlatformDependentDefines.h>
 #include <threadpool/inc/ThreadPool.h>
 #include <boost/filesystem.hpp>
+#include <Environment.h>
 
 #include "../inc/messages.h"
 #include "../inc/Properties.h"
@@ -168,6 +169,15 @@ bool ppVerbose(const common::Option *o, char *argv[]) {
   return true;
 }
 
+bool ppRunUDM(const common::Option *o, char *argv[]) {
+  props.runUDMExplicit = true;
+  if (strcmp(argv[0], "true") == 0)
+    props.runUDM = true;
+  else
+    props.runUDM = false;
+  return true;
+}
+
 bool ppConfiguration(const common::Option *o, char *argv[]) {
   props.config = argv[0];
   return true;
@@ -175,6 +185,86 @@ bool ppConfiguration(const common::Option *o, char *argv[]) {
 
 bool ppPlatform(const common::Option *o, char *argv[]) {
   props.platform = argv[0];
+  return true;
+}
+
+CL_PPSARIFSEVERITY
+
+bool ppRunSonar2Graph(const common::Option *o, char *argv[]) {
+  props.runSonar2Graph = argv[0];
+  return true;
+}
+
+bool ppHost(const common::Option *o, char *argv[]) {
+  props.host = argv[0];
+  return true;
+}
+
+bool ppPort(const common::Option *o, char *argv[]) {
+  props.port = argv[0];
+  return true;
+}
+
+bool ppProjectKey(const common::Option *o, char *argv[]) {
+  props.projectKey = argv[0];
+  return true;
+}
+
+bool ppProjectPrefix(const common::Option *o, char *argv[]) {
+  props.projectPrefix = argv[0];
+  return true;
+}
+
+bool ppJsonPath(const common::Option *o, char *argv[]) {
+  props.jsonPath = argv[0];
+  return true;
+}
+
+bool ppSqUsername(const common::Option *o, char *argv[]) {
+  props.sqUsername = argv[0];
+  return true;
+}
+
+bool ppSqPassword(const common::Option *o, char *argv[]) {
+  props.sqPassword = argv[0];
+  return true;
+}
+
+bool ppLanguageKey(const common::Option *o, char *argv[]) {
+  props.languageKey = argv[0];
+  return true;
+}
+
+bool ppStrict(const common::Option *o, char *argv[]) {
+  if(strcmp(argv[0], "true") == 0)
+    props.strict = true;
+  else
+    props.strict = false;
+  return true;
+}
+
+// LIM2Patterns start::
+bool ppRunLIM2Patterns(const common::Option *o, char *argv[]) {
+    if (strcmp(argv[0], "true") == 0)
+        props.runLIM2Patterns = true;
+    else
+        props.runLIM2Patterns = false;
+    return true;
+}
+
+static bool ppGetPattern(const Option *o, char *argv[]) {
+    props.patternFile = argv[0];
+    return true;
+}
+// LIM2Patterns end::
+
+bool ppRunRoslynAnalyzers(const common::Option *o, char *argv[]) {
+  props.runRoslynAnalyzers = strcmp(argv[0], "true") == 0;
+  return true;
+}
+
+bool ppRestorePackages(const common::Option *o, char *argv[]) {
+  props.restorePackages = strcmp(argv[0], "true") == 0;
   return true;
 }
 
@@ -200,6 +290,14 @@ const Option OPTIONS_OBJ [] = {
   { false,  "-runFxCop",             1, CL_KIND_BOOL,     0, OT_WE | OT_WC,     ppRunFxCop,              NULL, "This parameter turns on or off the FxCop analysis. FxCop is a tool developed by Microsoft, and it provides several coding rule violation checks. Find out more in the User's Guide. The default value is \"true\""},
   { false,  "-profileXML",           1, CL_KIND_FILE,     0, OT_WE | OT_WC,     ppProfileXML,            NULL, "Global configuration file for OpenStaticAnalyzer. Its 'tool-options' tag can be used to override the default metric thresholds for the MetricHunter tool. Furthermore, its 'rule-options' tag can enable/disable or modify the priorities of multiple rules."},
   { false,  "-rulesCSV",             1, CL_KIND_FILE,     0, OT_WE | OT_WC,     ppRulesCSV,              NULL, "There are certain rule violations that are computed by more than one tool. E.g. ADLIBDC (Avoid Decimal Literals In BigDecimal Constructor) is checked by both FindBugs and PMD. In these cases, in order to avoid duplications, there is a priority order among the tools. This parameter can be used to override these default priorizations by specifying a .csv file."},
+  { false,  "-runLIM2Patterns",      1, CL_KIND_BOOL,     0, OT_WE | OT_WC,     ppRunLIM2Patterns,       NULL, "Run LIM2Patterns." },
+  { false,  "-runRoslynAnalyzers",   1, CL_KIND_BOOL,     0, OT_WE | OT_WC,     ppRunRoslynAnalyzers,    NULL, "Run Roslyn analyzers and import their results to the graph. The default value is \"true\"." },
+  { false,  "-restorePackages",      1, CL_KIND_BOOL,     0, OT_WE | OT_WC,     ppRestorePackages,       NULL, "Restore NuGet packages automatically before analysis. The default value is \"true\"." },
+  CL_SONAR2GRAPH_RUN
+  CL_SONAR2GRAPH_ARGS
+  CL_UDM_OPTIONS
+  CL_SARIFSEVERITY
+  CL_LIM2PATTERNS
   CL_VERBOSE
   CL_MESSAGELEVEL
   CL_HELP
@@ -239,6 +337,12 @@ void dumpProperties() {
   DUMP_PROPERTY_INT(cloneMinLines);
   DUMP_PROPERTY_STRING(config);
   DUMP_PROPERTY_STRING(platform);
+  DUMP_PROPERTY_INT(runUDM);
+  DUMP_PROPERTY_INT(runUDMExplicit);
+  DUMP_PROPERTY_INT(runLIM2Patterns);
+  DUMP_PROPERTY_INT(runRoslynAnalyzers);
+  DUMP_PROPERTY_PATH(roslynAnalyzersOutPath);
+  DUMP_PROPERTY_INT(restorePackages);
 }
 
 bool checkIfBinaryInPackage(const string& toolName) {
@@ -276,7 +380,7 @@ void checkUserProperties()
   props.inputFile = canonical(props.inputFile).make_preferred();
 
   if (props.currentDate.empty())
-    props.currentDate = common::getCurrentTimeAndDate("%Y-%m-%d-%H-%M-%S"); // pattern="yyyy-MM-dd_HH-mm-ss"
+    props.currentDate = common::getCurrentTimeAndDate("%Y-%m-%d-%H-%M-%S"); // pattern="yyyy-MM-dd-HH-mm-ss"
 
   props.projectResultDir = props.resultsDir / props.projectName / "csharp";
   props.projectTimedResultDir =  props.projectResultDir / props.currentDate;
@@ -307,11 +411,14 @@ void checkUserProperties()
   props.lcssiList = props.tempDir / "lcssi.list";
 
   props.fxcopOutPath = props.tempDir / "FxCopOut";
+  props.roslynAnalyzersOutPath = props.tempDir / "AnalyzersOut";
 
   props.runFxCop = props.runFxCop && checkIfBinaryInPackage("FxCop2Graph");
   props.runLimMetrics = props.runLimMetrics && checkIfBinaryInPackage("LIM2Metrics");
   props.runDCF = props.runDCF && checkIfBinaryInPackage("DuplicatedCodeFinder");
   props.runMetricHunter = props.runMetricHunter && checkIfBinaryInPackage("MetricHunter");
+  props.runLIM2Patterns = props.runLIM2Patterns && checkIfBinaryInPackage("GraphMerge");
+  props.runRoslynAnalyzers = props.runRoslynAnalyzers && checkIfBinaryInPackage("Roslyn2Graph");
 }
 
 
@@ -362,36 +469,34 @@ void makedirs()
     WriteMsg::write(WriteMsg::mlError, CMSG_ERROR_CREATE_DIR, props.graphDir.string().c_str());
     exit(EXIT_FAILURE);
   }
-}
-
-void logEnvironment()
-{
-  ofstream envlog;
-  envlog.open((props.logDir / "environment.txt").string().c_str());
-  vector<string> variables;
-
-  common::getEnvironmentVariables(variables);
-
-  for(vector<string>::iterator it = variables.begin(); it != variables.end(); ++it){
-    envlog << *it <<endl;
+  if(!create_directories(props.roslynAnalyzersOutPath)){
+    WriteMsg::write(WriteMsg::mlError, CMSG_ERROR_CREATE_DIR, props.roslynAnalyzersOutPath.string().c_str());
+    exit(EXIT_FAILURE);
   }
-  envlog.close();
 }
 
 int runAnalyzeMode()
 {
-  Controller ctrl(props);
+  columbus::thread::ThreadPool threadPool(props.maxThreads);
+  Controller ctrl(props, threadPool);
+  list<string> inactives;
 
   ctrl.addTask(new SolutionAnalysisTask(props));
 
-
   ctrl.addTask(new ProfileTask(props));
 
-  list<string> inactives;
+  // skipping UDM can only be decided here if it's explicit on the command line
+  // otherwise, we run it, and it exits, if there was nothing to do according to the profile
+  if (!props.runUDMExplicit || props.runUDM)
+    ctrl.addTask(new UserDefinedMetricsTask(inactives, props));
+  else
+    inactives.push_back("UserDefinedMetrics");
 
+#ifndef __unix__
   if (props.runFxCop)
     ctrl.addTask(new FxCop2GraphTask(props));
   else
+#endif
     inactives.push_back("FxCop2Graph");
 
   if (props.runLimMetrics)
@@ -413,8 +518,22 @@ int runAnalyzeMode()
 
   ctrl.addTask(new GraphDumpTask(props));
 
+  if (props.runLIM2Patterns)
+    ctrl.addTask(new LIM2PatternsTask(props));
+  else
+    inactives.push_back("LIM2Patterns");
+
+  if (props.runRoslynAnalyzers)
+    ctrl.addTask(new Roslyn2GraphTask(props));
+  else
+    inactives.push_back("Roslyn2Graph");
+
   if (props.cleanResults != -1)
     ctrl.addTask(new CleanResultsTask(props));
+
+  if (props.runSonar2Graph) {
+    ctrl.addTask(new Sonar2GraphTask(props));
+  }
 
   return ctrl.executeTasks(Controller::EM_FAIL_ON_ANY_ERROR);
 }
@@ -435,7 +554,8 @@ int main(int argc, char* argv[])
     dumpProperties();
 
     makedirs();
-    logEnvironment();
+    logEnvironment(props);
+    logCommandLineArguments(props, argc, argv);
 
     ret = runAnalyzeMode();
 

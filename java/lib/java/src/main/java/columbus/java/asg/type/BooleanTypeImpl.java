@@ -33,6 +33,7 @@ import columbus.logger.LoggerHandler;
  */
 public class BooleanTypeImpl extends BaseImpl implements BooleanType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(BooleanTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	public BooleanTypeImpl(int id, Factory factory) {
 		super(id, factory);

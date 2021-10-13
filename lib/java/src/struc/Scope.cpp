@@ -21,12 +21,12 @@
 #include "java/inc/java.h"
 #include "java/inc/Common.h"
 #include "common/inc/WriteMessage.h"
+#include "common/inc/StringSup.h"
 
 #include "java/inc/messages.h"
 #include <algorithm>
 #include <string.h>
 #include "common/inc/math/common.h"
-#include <common/inc/StringSup.h>
 #include <sstream>
 
 

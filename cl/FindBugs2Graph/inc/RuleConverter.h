@@ -25,7 +25,7 @@
 
 class RuleConverter{
   public:
-    void convertRuleFile(const std::string& messagesXML, const std::string& findbugsXML, const std::string& rulesXML, const std::string& rulName, const std::string& rulConfig);
+    void convertRuleFile(const std::string& messagesXML, const std::string& findbugsXML, const std::string& rulesXML, const std::string& rulName, const std::string& rulConfig, const std::string& idsFileName);
     static void formatMetricId(std::string& id);
 };
 

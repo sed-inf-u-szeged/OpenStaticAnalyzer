@@ -42,29 +42,9 @@ typedef std::list<std::string> File_Names;
 
 extern bool print_debug;
 
-#define WRITE_CSV(DEFINED, MEMBER) \
-    mt->initialize_warnings(DEFINED); \
-    for(vector<WarningElement>::iterator it = wevec.begin(); it != wevec.end(); it++){ \
-      if(DEFINED.find(it->MEMBER) == DEFINED.end()){ \
-        if(print_debug) \
-          WriteMsg::write(WriteMsg::mlError, "WARNING: rul file is different than in making configuration file! Warning that is not set is occured in result xml! Different setting for warningID: %s\n", it->warningID.c_str()); \
-      } \
-      else{ \
-        if(!it->path.empty()) \
-          mt->addWarning_ID_Path(*it, it->MEMBER); \
-        else if(it->is_component) \
-          mt->addWarning_ID_Component(*it, it->MEMBER); \
-        else if(!it->uniquename.empty()) \
-          mt->addWarning_ID_Scope(*it, it->MEMBER); \
-        else if(print_debug) \
-          WriteMsg::write(WriteMsg::mlError, "WARNING (macro WRITE_CSV): Warning cannot be forwarded to MetricTree.\n"); \
-      } \
-    } 
-
-
 class CheckerStrategy{
 public:
-  CheckerStrategy() : doc(0), mt(0), shortnames(), graph(), graphIndexer(columbus::graphsupport::GraphRangeIndexer::getGraphRangeIndexerInstance())
+  CheckerStrategy() : doc(0), mt(0), graph(), graphIndexer(columbus::graphsupport::GraphRangeIndexer::getGraphRangeIndexerInstance())
   {
     this->graphIndexer.turnOn(this->graph);
   }
@@ -72,7 +52,7 @@ public:
   virtual void makeRul(File_Names&,std::string& rul, std::string& rulConfig, std::string& rul_option_filename) = 0;
   virtual void makeConfig(File_Names&, std::string&, std::string& rulConfig, std::string& configFile) = 0;
   virtual void makeCsv(std::string& lim, std::string& rul, std::string& rulConfig, File_Names& file_names, std::string& metrics, std::string& groupedmetrics, std::string& monitor, std::string& checkerbasedir);
-  virtual void makeCsv(std::string& lim, std::string& rul, std::string& rulConfig , File_Names& file_names, std::string& metrics, std::string& groupedmetrics, std::string& monitor, std::string& checkerbasedir, const std::map<std::string, std::string>& levelMap);
+  virtual void makeCsv(std::string& lim, std::string& rul, std::string& rulConfig, File_Names& file_names, std::string& metrics, std::string& groupedmetrics, std::string& monitor, std::string& checkerbasedir, const std::map<std::string, std::string>& levelMap);
 
   virtual void saveGraph(const std::string& filename, bool exportRul);
 
@@ -85,13 +65,8 @@ protected:
   void loaddom(const char* filename);
   void savedom(const char * filename);
 
-  bool getIsNeeded (const std::string& id, const columbus::rul::RulHandler& xRulHandler);
-
   //makerul common
   virtual void setConstantData(columbus::rul::RulHandler& rh) = 0;
-  void setShortName(std::string& rulename,std::string& shortname, int small = 0 , int ext = 0);
-
-  std::set<std::string> shortnames;
 
   columbus::graph::Graph graph;
   columbus::graphsupport::GraphRangeIndexer& graphIndexer;

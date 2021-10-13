@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var emptyStatements = factory.createEmptyStatementWrapper(factory);
+        var emptyStatements = factory.createEmptyStatementWrapper();
         globals.setPositionInfo(node, emptyStatements);
         return emptyStatements;
     }

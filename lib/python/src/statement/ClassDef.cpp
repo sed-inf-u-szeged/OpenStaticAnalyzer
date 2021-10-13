@@ -39,6 +39,7 @@ namespace statement {
     m_name(0),
     hasObjectContainer(),
     hasBaseSpecifierContainer(),
+    hasKeywordContainer(),
     hasDecoratorContainer(),
     m_refersTo(0),
     m_docstring(0)
@@ -62,6 +63,13 @@ namespace statement {
       if (factory->getExistsReverseEdges())
         factory->reverseEdges->removeEdge(id, this->getId(), edkClassDef_HasBaseSpecifier);
       hasBaseSpecifierContainer.pop_front();
+    }
+    while (!hasKeywordContainer.empty()) {
+      const NodeId id = *hasKeywordContainer.begin();
+      removeParentEdge(id);
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->removeEdge(id, this->getId(), edkClassDef_HasKeyword);
+      hasKeywordContainer.pop_front();
     }
     while (!hasDecoratorContainer.empty()) {
       const NodeId id = *hasDecoratorContainer.begin();
@@ -145,6 +153,27 @@ namespace statement {
     return size;
   }
 
+  ListIterator<expression::Keyword> ClassDef::getKeywordListIteratorBegin() const {
+    return ListIterator<expression::Keyword>(&hasKeywordContainer, factory, true);
+  }
+
+  ListIterator<expression::Keyword> ClassDef::getKeywordListIteratorEnd() const {
+    return ListIterator<expression::Keyword>(&hasKeywordContainer, factory, false);
+  }
+
+  bool ClassDef::getKeywordIsEmpty() const {
+    return getKeywordListIteratorBegin() == getKeywordListIteratorEnd();
+  }
+
+  unsigned int ClassDef::getKeywordSize() const {
+    unsigned int size = 0;
+    ListIterator<expression::Keyword> endIt = getKeywordListIteratorEnd();
+    for (ListIterator<expression::Keyword> it = getKeywordListIteratorBegin(); it != endIt; ++it) {
+      ++size;
+    }
+    return size;
+  }
+
   ListIterator<expression::Expression> ClassDef::getDecoratorListIteratorBegin() const {
     return ListIterator<expression::Expression>(&hasDecoratorContainer, factory, true);
   }
@@ -194,6 +223,9 @@ namespace statement {
       case edkClassDef_HasBaseSpecifier:
         addBaseSpecifier(edgeEnd);
         return true;
+      case edkClassDef_HasKeyword:
+        addKeyword(edgeEnd);
+        return true;
       case edkClassDef_HasDecorator:
         addDecorator(edgeEnd);
         return true;
@@ -219,6 +251,9 @@ namespace statement {
         return true;
       case edkClassDef_HasBaseSpecifier:
         removeBaseSpecifier(edgeEnd);
+        return true;
+      case edkClassDef_HasKeyword:
+        removeKeyword(edgeEnd);
         return true;
       case edkClassDef_HasDecorator:
         removeDecorator(edgeEnd);
@@ -332,6 +367,54 @@ namespace statement {
       throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
 
     removeBaseSpecifier(_node->getId());
+  }
+
+  void ClassDef::addKeyword(const expression::Keyword *_node) {
+    if (_node == NULL)
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
+
+    if (&(_node->getFactory()) != this->factory)
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
+
+    if (!((_node->getNodeKind() == ndkKeyword) ))
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+
+    hasKeywordContainer.push_back(_node->getId());
+    setParentEdge(_node,edkClassDef_HasKeyword);
+
+    if (factory->reverseEdges)
+      factory->reverseEdges->insertEdge(_node, this, edkClassDef_HasKeyword);
+  }
+
+  void ClassDef::addKeyword(NodeId _id) {
+    const expression::Keyword *node = dynamic_cast<expression::Keyword*>(factory->getPointer(_id));
+    if (node == NULL)
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    addKeyword( node );
+  }
+
+  void ClassDef::removeKeyword(NodeId id) {
+    if (!factory->getExist(id))
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    ListIterator<expression::Keyword>::Container::iterator it = find(hasKeywordContainer.begin(), hasKeywordContainer.end(), id);
+
+    if (it == hasKeywordContainer.end())
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    hasKeywordContainer.erase(it);
+
+    removeParentEdge(id);
+
+    if (factory->getExistsReverseEdges())
+      factory->reverseEdges->removeEdge(id, this->getId(), edkClassDef_HasKeyword);
+  }
+
+  void ClassDef::removeKeyword(expression::Keyword *_node) {
+    if (_node == NULL)
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
+
+    removeKeyword(_node->getId());
   }
 
   void ClassDef::addDecorator(const expression::Expression *_node) {
@@ -545,6 +628,11 @@ namespace statement {
     }
     binIo.writeUInt4(0); // This is the end sign
 
+    for (ListIterator<expression::Keyword>::Container::const_iterator it = hasKeywordContainer.begin(); it != hasKeywordContainer.end(); ++it) {
+      binIo.writeUInt4(*it);
+    }
+    binIo.writeUInt4(0); // This is the end sign
+
     for (ListIterator<expression::Expression>::Container::const_iterator it = hasDecoratorContainer.begin(); it != hasDecoratorContainer.end(); ++it) {
       binIo.writeUInt4(*it);
     }
@@ -574,6 +662,13 @@ namespace statement {
     while (_id) {
       hasBaseSpecifierContainer.push_back(_id);
       setParentEdge(factory->getPointer(_id),edkClassDef_HasBaseSpecifier);
+      _id = binIo.readUInt4();
+    }
+
+    _id = binIo.readUInt4();
+    while (_id) {
+      hasKeywordContainer.push_back(_id);
+      setParentEdge(factory->getPointer(_id),edkClassDef_HasKeyword);
       _id = binIo.readUInt4();
     }
 

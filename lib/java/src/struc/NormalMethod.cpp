@@ -41,6 +41,7 @@ namespace struc {
     MethodDeclaration(_id, _factory),
     m_isSynchronized(false),
     m_isNative(false),
+    m_isDefault(false),
     m_methodKind(mekNormal),
     m_synchronizedPosition(),
     m_nativePosition(),
@@ -99,6 +100,7 @@ namespace struc {
     m_isNative = other.m_isNative;
     m_nativePosition.posInfo = other.m_nativePosition.posInfo;
     m_throwsPosition.posInfo = other.m_throwsPosition.posInfo;
+    m_isDefault = other.m_isDefault;
     hasParametersContainer = other.hasParametersContainer;
     m_hasBody = other.m_hasBody;
     hasThrownExceptionsContainer = other.hasThrownExceptionsContainer;
@@ -222,6 +224,10 @@ namespace struc {
     return 0;
   }
 
+  bool NormalMethod::getIsDefault() const {
+    return m_isDefault;
+  }
+
   void NormalMethod::setMethodKind(MethodKind _methodKind) {
     m_methodKind = _methodKind;
   }
@@ -250,6 +256,10 @@ namespace struc {
     m_throwsPosition.posInfo = _throwsPosition.positionInfo;
     if (_throwsPosition.strTable != &factory->getStringTable())
       m_throwsPosition.posInfo.path = factory->getStringTable().set(_throwsPosition.getPath());
+  }
+
+  void NormalMethod::setIsDefault(bool _isDefault) {
+    m_isDefault = _isDefault;
   }
 
   ListIterator<struc::Parameter> NormalMethod::getParametersListIteratorBegin() const {
@@ -535,12 +545,14 @@ namespace struc {
       if(node.getAccessibility() == getAccessibility()) ++matchAttrs;
       if(node.getIsStatic() == getIsStatic()) ++matchAttrs;
       if(node.getIsFinal() == getIsFinal()) ++matchAttrs;
+      if(node.getLloc() == getLloc()) ++matchAttrs;
       if(node.getIsAbstract() == getIsAbstract()) ++matchAttrs;
       if(node.getIsStrictfp() == getIsStrictfp()) ++matchAttrs;
       if(node.getMethodKind() == getMethodKind()) ++matchAttrs;
       if(node.getIsSynchronized() == getIsSynchronized()) ++matchAttrs;
       if(node.getIsNative() == getIsNative()) ++matchAttrs;
-      return matchAttrs / (11 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
+      if(node.getIsDefault() == getIsDefault()) ++matchAttrs;
+      return matchAttrs / (13 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
     }
@@ -604,6 +616,9 @@ namespace struc {
     boolValues <<= 1;
     if (m_isNative) 
       boolValues |= 1;
+    boolValues <<= 1;
+    if (m_isDefault) 
+      boolValues |= 1;
     binIo.writeUByte1(boolValues);
     binIo.writeUByte1(m_methodKind);
     factory->getStringTable().setType(m_synchronizedPosition.posInfo.path, StrTable::strToSave);
@@ -664,6 +679,8 @@ namespace struc {
     MethodDeclaration::load(binIo,false);
 
     unsigned char boolValues = binIo.readUByte1();
+    m_isDefault = boolValues & 1;
+    boolValues >>= 1;
     m_isNative = boolValues & 1;
     boolValues >>= 1;
     m_isSynchronized = boolValues & 1;

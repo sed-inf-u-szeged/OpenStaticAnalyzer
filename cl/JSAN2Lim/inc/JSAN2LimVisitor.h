@@ -23,6 +23,7 @@
 
 #include "lim/inc/lim.h"
 #include "javascript/inc/javascript.h"
+#include "HalsteadVisitor.h"
 #include <map>
 #include <set>
 
@@ -52,10 +53,10 @@ namespace JSAN2Lim {
     typedef std::map<NodeId, NodeId> CallExprMap;
     typedef std::map<std::string, NodeId> ClassMap;
 
-    JSAN2LimVisitor(lim::asg::Factory&, columbus::javascript::asg::Factory& javascriptFact, LimOrigin& origin, std::string& componentName);
-
+    JSAN2LimVisitor(lim::asg::Factory&, columbus::javascript::asg::Factory& javascriptFact, LimOrigin& origin, std::string& componentName, std::map<NodeId, HalsteadVisitor::HalsteadInfo>);
     lim::asg::Factory& limFactory;
     LimOrigin& origin;
+    std::map<NodeId, HalsteadVisitor::HalsteadInfo> halsteadValues;    ///< Stores the halstead info for each method
 
     static std::map<Key, NodeId> fileMap;
 

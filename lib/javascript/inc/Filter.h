@@ -64,7 +64,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Tells whether the node is filtered or not.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException if the id is too large (larger than the size of the Filter).
+      * \throw JavascriptException Throws JavascriptException if the id is too large (larger than the size of the Filter).
       * \return Returns true if the node with the given id is filtered.
       */
       bool getIsFiltered(NodeId id) const;
@@ -72,21 +72,21 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Filters out the given node and all of its descendants.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException if the id is too large (larger than the size of the Filter).
+      * \throw JavascriptException Throws JavascriptException if the id is too large (larger than the size of the Filter).
       */
       void setFiltered(NodeId id);
 
       /**
       * \brief Sets the state of the node, all of its descendants and all of its ancestors to not filtered.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException if the id is too large (larger than the size of the Filter).
+      * \throw JavascriptException Throws JavascriptException if the id is too large (larger than the size of the Filter).
       */
       void setNotFiltered(NodeId id);
 
       /**
       * \brief Sets the state of the node and all of its ancestors to not filtered.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException if the id is too large (larger than the size of the Filter).
+      * \throw JavascriptException Throws JavascriptException if the id is too large (larger than the size of the Filter).
       */
       void setNotFilteredThisNode(NodeId id);
 
@@ -94,7 +94,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \internal
       * \brief Filter out only the given node (without its children).
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException if the id is too large (larger than the size of the Filter).
+      * \throw JavascriptException Throws JavascriptException if the id is too large (larger than the size of the Filter).
       */
       void setFilteredThisNodeOnly(NodeId id);
 
@@ -102,7 +102,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \internal
       * \brief Sets the state of the given node (without its children) to not filtered.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException if the id is too large (larger than the size of the Filter).
+      * \throw JavascriptException Throws JavascriptException if the id is too large (larger than the size of the Filter).
       */
       void setNotFilteredThisNodeOnly(NodeId id);
 
@@ -110,7 +110,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \internal
       * \brief Gives back the state of the node.
       * \param id                  [in] The id of the node.
-      * \throw JavaScriptException Throws JavaScriptException if the id is too large (larger than the size of the Filter).
+      * \throw JavascriptException Throws JavascriptException if the id is too large (larger than the size of the Filter).
       * \return Returns the state of the node.
       */
       FilterState getFilterState(NodeId id) const;

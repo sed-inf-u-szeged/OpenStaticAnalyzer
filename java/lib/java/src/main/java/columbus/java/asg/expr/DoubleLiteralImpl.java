@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class DoubleLiteralImpl extends BaseImpl implements DoubleLiteral {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(DoubleLiteralImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

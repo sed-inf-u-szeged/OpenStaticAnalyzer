@@ -53,9 +53,10 @@ namespace JSAN2Lim {
   using namespace std;
   using namespace javascript::asg;
 
-  JSAN2LimVisitor::JSAN2LimVisitor(lim::asg::Factory& limFact ,columbus::javascript::asg::Factory& javascriptFact, LimOrigin& origin, string& componentName)
+  JSAN2LimVisitor::JSAN2LimVisitor(lim::asg::Factory& limFact ,columbus::javascript::asg::Factory& javascriptFact, LimOrigin& origin, string& componentName, std::map<NodeId, HalsteadVisitor::HalsteadInfo> halVal)
     : limFactory(limFact)
     , origin(origin)
+    , halsteadValues(halVal)
     , attributeStack()
     , classStack()
     , methodStack()
@@ -199,6 +200,12 @@ namespace JSAN2Lim {
     lastLimMemberNodeId.push(limNode.getId());
     lastLimScopeNodeId.push(limNode.getId());
 
+    HalsteadVisitor::HalsteadInfo& mi = halsteadValues[jsNode.getId()];
+    limNode.setTotalOperators(mi.N1);
+    limNode.setTotalOperands(mi.N2);
+    limNode.setDistinctOperators(mi.n1);
+    limNode.setDistinctOperands(mi.n2);
+
     if (javascript::asg::Common::getIsIdentifier(*jsNode.getKey())) {
       javascript::asg::expression::Identifier& identifier = dynamic_cast<javascript::asg::expression::Identifier&>(*jsNode.getKey());
       limNode.setName(identifier.getName());
@@ -264,33 +271,32 @@ namespace JSAN2Lim {
     lastLimMemberNodeId.push(limNode.getId());
     lastLimScopeNodeId.push(limNode.getId());
 
+    // Add Halstead information to the lim node
+    HalsteadVisitor::HalsteadInfo& mi = halsteadValues[jsNode.getId()];
+    limNode.setTotalOperators(mi.N1);
+    limNode.setTotalOperands(mi.N2);
+    limNode.setDistinctOperators(mi.n1);
+    limNode.setDistinctOperands(mi.n2);
+
     /*Determine the name for the function. Anonym functions are handled.*/
     if (jsNode.getIdentifier() != NULL) {
       javascript::asg::expression::Identifier& identifier = *jsNode.getIdentifier();
       limNode.setName(identifier.getName());
+      limNode.setIsAnonymous(false);
     }
     else {
       limNode.setIsAnonymous(true);
-      if (!jsNode.getParent()) {
-        common::WriteMsg::write(common::WriteMsg::mlDebug, "Missing parent of node %d", jsNode.getId());
-      }
-      if (jsNode.getParent() && javascript::asg::Common::getIsProperty(*jsNode.getParent())) {
-        javascript::asg::expression::Property& propertyNode = dynamic_cast<javascript::asg::expression::Property&>(*jsNode.getParent());
-        if (propertyNode.getKey() != NULL && javascript::asg::Common::getIsIdentifier(*propertyNode.getKey())) {
-          javascript::asg::expression::Identifier& propertyIdentifier = dynamic_cast<javascript::asg::expression::Identifier&>(*propertyNode.getKey());
-          limNode.setName(propertyIdentifier.getName());
-        }
-      }
-      else {
-        stringstream ss;
-        if (javascript::asg::Common::getIsFunctionExpression(jsNode)) {
+      stringstream ss;
+      if (javascript::asg::Common::getIsFunctionExpression(jsNode)) {
           ss << anonymusFunctionCounter++;
           limNode.setName("anonymousFunctionExpression" + ss.str());
-        }
-        else {
+      }
+      else if (javascript::asg::Common::getIsFunctionDeclaration(jsNode)) {
+          ss << anonymusFunctionCounter++;
+          limNode.setName("anonymousFunctionDeclaration" + ss.str());
+      } else {
           ss << anonymusArrowCounter++;
           limNode.setName("anonymusArrowFunctionExpression" + ss.str());
-        }
       }
     }
 

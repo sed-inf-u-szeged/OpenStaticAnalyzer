@@ -20,25 +20,16 @@
 
 //#include <boost/config.hpp> // put this first to suppress some VC++ warnings
 
-
-#include <iterator>
-#include <algorithm>
 #include <time.h>
-
-#include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/topological_sort.hpp>
-#include <boost/graph/depth_first_search.hpp>
-#include <boost/graph/visitors.hpp>
-#include <boost/date_time.hpp>
+#include <fstream>
 
 #include <common/inc/WriteMessage.h>
 #include <common/inc/StringSup.h>
-
-#include <threadpool/inc/ThreadPool.h>
-
+#include <common/inc/FileSup.h>
 
 #include "../inc/Controller.h"
 #include "../inc/Properties.h"
+#include "../inc/messages.h"
 
 using namespace std;
 using namespace boost;
@@ -51,214 +42,268 @@ namespace columbus
 namespace controller
 {
 
+namespace {
+  void writeToLog(const boost::filesystem::path& logDir, const char* message)
+  {
+      ofstream controllerLog;
+      controllerLog.open((logDir / "controler.txt").string().c_str(), ios_base::app);
+      if (controllerLog)
+      {
+        controllerLog << message;
+        controllerLog.close();
+      }
+  }
+}
+
 // Worker is a functor class defines the operator() functions.
 // It can be passed for a new thread as well as a simple function,
 // but it can be parameterized through it's constructor. It only
 // calls the 'execute' method of a task on a new thread.
+
 class Worker : public columbus::thread::Task 
 {
 public:
-  Worker(columbus::controller::Task* task, columbus::controller::Task::ExecutionResult* result, boost::shared_mutex& taskLockSharedMutex) : _task(task), _result(result), _taskLockSharedMutex(taskLockSharedMutex) {}
+  Worker(columbus::controller::Task& task, promise<Controller::Result> p, boost::shared_mutex& taskLockSharedMutex, const boost::filesystem::path& logDir)
+    : task(task)
+    , p(std::move(p))
+    , _taskLockSharedMutex(taskLockSharedMutex)
+    , logDir (logDir)
+  {}
 
   void operator()()
   {
+    std::tm startTime;
     {
       columbus::thread::ThreadPool::TaskLock lock(_taskLockSharedMutex);
-      WriteMsg::write(WriteMsg::mlNormal, "  [%s] Starting task: %s\n",  common::getCurrentTimeAndDate("%Y-%m-%d %H:%M:%S").c_str(), _task->getName().c_str());
+      startTime = common::getCurrentTimeAndDate();
+      char buffer[1024];
+      snprintf(buffer, 1023, "  [%s] Starting task:          %s\n",  common::getCurrentTimeAndDate("%Y-%m-%d %H:%M:%S", startTime).c_str(), task.getName().c_str());
+      WriteMsg::write(WriteMsg::mlNormal, "%s", buffer);
+      writeToLog(logDir, buffer);
     }
     
     fflush(stdout);
     fflush(stderr);
-    *_result = _task->execute();
+    columbus::controller::Task::ExecutionResult exResult = task.execute();
+    fflush(stdout);
+    fflush(stderr);
+
+    task.closeLogFile();
+    std::tm endTime = common::getCurrentTimeAndDate();
     
     {
       columbus::thread::ThreadPool::TaskLock lock(_taskLockSharedMutex);
-      WriteMsg::write(WriteMsg::mlNormal, "  [%s] Task ended: %s Result:%s\n", common::getCurrentTimeAndDate("%Y-%m-%d %H:%M:%S").c_str(), _task->getName().c_str(), _result->toString().c_str());
+      int diff = difftime(mktime(&endTime), mktime(&startTime));
+      char buffer[1024];
+      snprintf(buffer, 1023, "  [%s] Task ended (+%02d:%02d:%02d): %-30s Result:%s\n", common::getCurrentTimeAndDate("%Y-%m-%d %H:%M:%S", endTime).c_str(), diff / 3600, (diff / 60) % 60, diff % 60, task.getName().c_str(), exResult.toString().c_str());
+      WriteMsg::write(WriteMsg::mlNormal, buffer);
+      writeToLog(logDir, buffer);
     }
+    // Use promise to set value of it's corresponding future owned by the main thread
+    p.set_value(Controller::Result(task.getName(), exResult));
   }
       
 protected:
-  columbus::controller::Task* _task;
-  columbus::controller::Task::ExecutionResult* _result;
+  columbus::controller::Task& task;
+  promise<Controller::Result> p;
   boost::shared_mutex& _taskLockSharedMutex;
+  const boost::filesystem::path& logDir;
 };
 
 
-// Gets a pointer to a Task object by it's name.
-Task* Controller::getTask(const string& str)
-{
-  map<string, Task*>::iterator it = _taskMap.find(str);
-  if(it != _taskMap.end())
-    return it->second;
-  else return NULL;
-}
-
-int Controller::getTaskId(Task* t)
-{
-  int ret = 0;
-  for( vector<Task*>::iterator it = _tasks.begin(); it != _tasks.end(); it++, ret++)
-    if(*it == t)
-      return ret;
-
-  // task not found
-  return -1;
-}
 
 int Controller::executeTasks(ExecutionMode executionMode)
 {
-  // contains the parallel topological sort's result. The key is the execution level, the 
-  // second vector contains the tasks, that are can be executed in the same time parallelly
-  map<unsigned, vector<string> > sortedMap;
-  
-  vector<string> names;
-  typedef pair<int, int> Edge_s;
-  vector<Edge_s> edges;
+  // Set up a representation of the dependencies, also output debug info consisting of a list of all edges
+  DirectedAcyclicGraph<string> dependencyGraph;
+  if (!buildGraph(dependencyGraph))
+    return 1;
 
-  for(vector<Task*>::iterator it = _tasks.begin(); it != _tasks.end(); it++)
-  {
-    Task* t = *it;
-    int currentTaskId = getTaskId(t);
-    string n = t->getName();
-    names.push_back(n);
-    vector<string> dep = t->getDependsOn();
-    for(vector<string>::iterator it2 = dep.begin(); it2 != dep.end(); it2++) {
-      int dependentTaskId = getTaskId(getTask(*it2));
-      if (dependentTaskId != -1)
-        edges.push_back(make_pair(dependentTaskId, currentTaskId));
-    }
-  }
+  // Execute Tasks
+  WriteMsg::write(WriteMsg::mlNormal, "Executing tasks. (Multithread:%d)\n", _props.maxThreads);
 
-  WriteMsg::write(WriteMsg::mlDDebug, "TASKS:\n");
-
-  for(vector<string>::iterator it = names.begin(); it != names.end(); it++)
-    WriteMsg::write(WriteMsg::mlDDebug, "  %s\n", it->c_str());
-
-  WriteMsg::write(WriteMsg::mlDDebug, "\nDEPENDENCIES BETWEEN TASKS:\n");
-
-  for(vector<Edge_s>::iterator it = edges.begin(); it != edges.end(); it++)
-    WriteMsg::write(WriteMsg::mlDDebug, "  %d -> %d\n", it->first, it->second);
-  WriteMsg::write(WriteMsg::mlDDebug, "\n");
-
-  size_t N = names.size();
-  
-  const size_t nedges = edges.size();
-  typedef pair<int,int> Edge;
-  vector<Edge> used_by;
-  used_by.resize(nedges);
-
-  vector<Edge_s>::iterator it2;
-  size_t cnt;
-  for(it2 = edges.begin(), cnt = 0; it2 != edges.end(); it2++, cnt++)
-    used_by[cnt] = make_pair(it2->first, it2->second);
-
-
-  typedef adjacency_list<vecS, vecS, bidirectionalS> Graph;
-  Graph g(N);
-  
-  for (size_t j = 0; j < nedges; ++j)
-    add_edge(used_by[j].first, used_by[j].second, g);
-  
-
-  typedef graph_traits<Graph>::vertex_descriptor Vertex;
-  
+  // Stores the results of each task
+  vector<shared_future<Result>> futures;
   bool failed = false;
-
-  // Determine ordering for a full run of the tasks
-  // and provide the order of tasks that can be executed in parallel
-  {
-    typedef list<Vertex> MakeOrder;
-    MakeOrder::iterator i;
-    MakeOrder make_order;
-    
-    // Linear execution ordering
-    topological_sort(g, front_inserter(make_order));
-    
-    // Parallel execution ordering
-    vector<int> time(N, 0);
-    for (i = make_order.begin(); i != make_order.end(); ++i) {    
-      // Walk through the in_edges an calculate the maximum time.
-      if (in_degree (*i, g) > 0) {
-        Graph::in_edge_iterator j, j_end;
-        int maxdist = 0;
-        // Through the order from topological sort, we are sure that every 
-        // time we are using here is already initialized.
-        for (boost::tuples::tie(j, j_end) = in_edges(*i, g); j != j_end; ++j)
-          maxdist = max(time[source(*j, g)], maxdist);
-        time[*i] = maxdist+1;
-      }
-    }
-
-    {
-      graph_traits<Graph>::vertex_iterator i, iend;
-      for (boost::tuples::tie(i,iend) = vertices(g); i != iend; ++i)
-      {
-        sortedMap[time[*i]].push_back(names[*i]);
-      }
-
-      WriteMsg::write(WriteMsg::mlDebug, "EXECUTION ORDER:\n");
-      
-      map<unsigned, vector<string> >::iterator it;
-      for(it = sortedMap.begin(); it != sortedMap.end(); it++) {
-        WriteMsg::write(WriteMsg::mlDebug, "  ");
-        for(vector<string>::iterator s_it = it->second.begin(); s_it != it->second.end(); s_it++)
-          WriteMsg::write(WriteMsg::mlDebug, "%s ", getTask(*s_it)->getName().c_str());
-        WriteMsg::write(WriteMsg::mlDebug, "\n");
-      }
-      WriteMsg::write(WriteMsg::mlDebug, "\n");
-      
-      WriteMsg::write(WriteMsg::mlNormal, "Executing tasks. (Multithread:%d)\n",  _props.maxThreads);
-
-      for(it = sortedMap.begin(); it != sortedMap.end() && !failed; it++)
-      {
-        typedef list<pair<Task*, Task::ExecutionResult> > TaskResultVector;
-        TaskResultVector runningTasks;
-        
-        columbus::thread::ThreadPool threadPool(_props.maxThreads);
-        
-        for(vector<string>::iterator s_it = it->second.begin(); s_it != it->second.end(); s_it++)
-        {
-          Task* task = getTask(*s_it);
-          if (!task->openLogFile())
-          {
-            string logfilename = (_props.logDir / (task->getName() + ".log")).string();
-            WriteMsg::write(WriteMsg::mlError, "Can not open log file for writing: %s\n", logfilename.c_str());
-          }
-
-          runningTasks.push_back(make_pair(task, Task::ExecutionResult()));
-          threadPool.add(columbus::thread::ThreadPool::PtrTask(new Worker(runningTasks.back().first, &runningTasks.back().second, threadPool.getTaskLockMutex())));
-        }
-        threadPool.wait();
-        
-        for(const auto& taskResultPair : runningTasks)
-        {
-          const Task::ExecutionResult& result = taskResultPair.second;
-
-          if (result.hasCriticalError())
-            failed = true;
-
-          if (result.hasError() && executionMode == EM_FAIL_ON_ANY_ERROR)
-            failed = true;
-        }
-      }
-    }
-    WriteMsg::write(WriteMsg::mlDebug, "\nParallel runing is finished.\n");
-  }
   
+  futures.reserve(tasks.size());
+
+  // Execute tasks with no dependencies
+  for (const auto& it : tasks)
+    if (isReady(it.second->getName(), dependencyGraph))
+      executeTask(it.second->getName(), futures);
+
+  // futures will be empty only if there are no tasks running and no results waiting to be processed
+  while (!futures.empty())
+  {
+    // Wait for a task to finish
+    auto futureIterator = wait_for_any(futures.begin(), futures.end());
+    Result result = futureIterator->get();
+    futures.erase(futureIterator);
+
+    // Process finished task
+    const Task::ExecutionResult& taskResult = result.second;
+    if (taskResult.hasCriticalError())
+      failed = true;
+
+    if (taskResult.hasError() && executionMode == EM_FAIL_ON_ANY_ERROR)
+      failed = true;
+
+    if (!failed)
+    {
+      const string& finishedTaskName = result.first;
+      const list<string> *dependents = dependencyGraph.getOutEdges(finishedTaskName);
+
+      if (dependents != nullptr)
+      {
+        const list<string> savedDependents = *dependents;
+        // Remove the task from the dependencyGraph
+        dependencyGraph.removeNode(finishedTaskName);
+
+        // Execute ready dependent tasks
+        for (const string& dependent : savedDependents)
+          if (isReady(dependent, dependencyGraph))
+            executeTask(dependent, futures);
+      }
+  
+    }
+  }
+
+  WriteMsg::write(WriteMsg::mlDebug, "\nParallel runing is finished.\n");
+
+  if (failed)
+  {
+    writeToLog(_props.logDir, CMSG_FAILURE);
+    WriteMsg::write(WriteMsg::mlNormal, CMSG_FAILURE);
+  }
+  else
+  {
+    writeToLog(_props.logDir, CMSG_SUCCESSFUL);
+    WriteMsg::write(WriteMsg::mlNormal, CMSG_SUCCESSFUL);
+  }
+
   return failed?1:0;
 }
-
-void Controller::addTask( Task* task )
+  
+void Controller::executeTask(const string& taskName, vector<shared_future<Result>>& futures)
 {
-  _taskMap[task->getName()] = task;
-  _tasks.push_back(task);
+  // Check task exists
+  const auto& it = tasks.find(taskName);
+  if (it == tasks.end())
+    return;
+  
+  Task& task = *it->second;
+
+  if (!task.openLogFile())
+  {
+    string logfilename = (_props.logDir / (task.getName() + ".log")).string();
+    WriteMsg::write(WriteMsg::mlError, "Can not open log file for writing: %s\n", logfilename.c_str());
+  }
+  
+  // Add future result to futures, give Worker a promise to that future, allowing it to set it's result which notifies the main thread of the Worker thread's result.
+  promise<Result> p;
+  shared_future<Result> f = p.get_future();
+  futures.push_back(std::move(f));
+
+  // Start running task
+  threadPool.add(columbus::thread::ThreadPool::PtrTask(new Worker(task, std::move(p), threadPool.getTaskLockMutex(), _props.logDir)));
+}
+    
+bool Controller::isReady(const string& taskName, const DirectedAcyclicGraph<string>& dependencyGraph)
+{
+  // Check it exists
+  const list<string>* dependencies = dependencyGraph.getInEdges(taskName);
+  if (!dependencies)
+    return false;
+    
+  // Check if all dependencies have been completed
+  if (dependencies->empty())
+    return true;
+
+  return false;
+}
+
+bool Controller::buildGraph(DirectedAcyclicGraph<string>& dependencyGraph)
+{
+  WriteMsg::write(WriteMsg::mlDDebug, "DEPENDENCIES BETWEEN TASKS:\n");
+      
+  // For each task add it to the graph and set up it's edges
+  for (const auto& it : tasks)
+  {
+    const Task* task = it.second;
+    const string& taskName = task->getName();
+      
+    // Add task to the dependency graph
+    dependencyGraph.addNode(taskName);
+
+    // Add edges between the task and it's dependencies
+    for (const auto& dependencyName : task->getDependsOn())
+    {
+      if (tasks.find(dependencyName) != tasks.end())
+      {
+        auto result = dependencyGraph.addEdge(dependencyName, taskName);
+        if(result == DirectedAcyclicGraph<string>::errorType::EDGE_ADDED)
+          WriteMsg::write(WriteMsg::mlDDebug, "  %s -> %s\n", dependencyName.c_str(), taskName.c_str());
+        else if(result == DirectedAcyclicGraph<string>::errorType::EDGE_ALREADY_EXISTS)
+          WriteMsg::write(WriteMsg::mlDDebug, "Attempted to add duplicate dependency: %s -> %s \n", dependencyName.c_str(), taskName.c_str());
+        else if(result == DirectedAcyclicGraph<string>::errorType::NODE_CANNOT_HAVE_EDGE_TO_ITSELF)
+          WriteMsg::write(WriteMsg::mlDDebug, "Attempted to add task dependency to self: %s -> %s \n", dependencyName.c_str(), taskName.c_str());
+        else
+        {
+          // Return error if edge would of introduced a cycle
+          WriteMsg::write(WriteMsg::mlError, "Adding dependency would introduce cycle:  %s -> %s \n", dependencyName.c_str(), taskName.c_str());
+          return false;
+        }
+      }
+    }
+  }
+  WriteMsg::write(WriteMsg::mlDDebug, "\n");
+  
+  return true;
+}
+
+void Controller::addTask(Task* task)
+{
+  // Add it to the task map
+  tasks.insert(make_pair(task->getName(), task));
 }
 
 Controller::~Controller()
 {
-  for(unsigned i = 0; i < _tasks.size(); i++) {
-    delete _tasks[i];
+  // Delete all the tasks
+  for (auto it : tasks)
+    delete it.second;
+}
+
+
+
+void logCommandLineArguments(const BaseProperties& props, int argc, char* argv[])
+{
+  ofstream commandlineLogFile;
+  commandlineLogFile.open((props.logDir / "commandline.txt").string().c_str());
+
+  if (commandlineLogFile)
+  {
+    for(int i = 0; i < argc; ++i)
+      commandlineLogFile << argv[i] << endl;
+    commandlineLogFile.close();
   }
 }
+
+void logEnvironment(const BaseProperties& props)
+{
+  ofstream envlog;
+  envlog.open((props.logDir / "environment.txt").string().c_str());
+  vector<string> variables;
+
+  common::getEnvironmentVariables(variables);
+
+  for(vector<string>::iterator it = variables.begin(); it != variables.end(); ++it){
+    envlog << *it <<endl;
+  }
+  envlog.close();
+}
+
 
 } // namespace controller
 

@@ -38,6 +38,7 @@ namespace logical {
     m_isAbstract(false),
     m_classKind(clkAnnotation),
     m_objectSize(0),
+    extendsContainer(),
     grantsFriendshipContainer(),
     isSubclassContainer()
   {
@@ -52,11 +53,18 @@ namespace logical {
     m_classKind = other.m_classKind;
     m_isAbstract = other.m_isAbstract;
     m_objectSize = other.m_objectSize;
+    extendsContainer = other.extendsContainer;
     grantsFriendshipContainer = other.grantsFriendshipContainer;
     isSubclassContainer = other.isSubclassContainer;
   }
 
   void Class::prepareDelete(bool tryOnVirtualParent){
+    while (!extendsContainer.empty()) {
+      const NodeId id = *extendsContainer.begin();
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->removeEdge(id, this->getId(), edkClass_Extends);
+      extendsContainer.pop_front();
+    }
     while (!grantsFriendshipContainer.empty()) {
       const NodeId id = *grantsFriendshipContainer.begin();
       if (factory->getExistsReverseEdges())
@@ -98,6 +106,27 @@ namespace logical {
 
   void Class::setObjectSize(unsigned _objectSize) {
     m_objectSize = _objectSize;
+  }
+
+  ListIterator<logical::Class> Class::getExtendsListIteratorBegin() const {
+    return ListIterator<logical::Class>(&extendsContainer, factory, true);
+  }
+
+  ListIterator<logical::Class> Class::getExtendsListIteratorEnd() const {
+    return ListIterator<logical::Class>(&extendsContainer, factory, false);
+  }
+
+  bool Class::getExtendsIsEmpty() const {
+    return getExtendsListIteratorBegin() == getExtendsListIteratorEnd();
+  }
+
+  unsigned int Class::getExtendsSize() const {
+    unsigned int size = 0;
+    ListIterator<logical::Class> endIt = getExtendsListIteratorEnd();
+    for (ListIterator<logical::Class> it = getExtendsListIteratorBegin(); it != endIt; ++it) {
+      ++size;
+    }
+    return size;
   }
 
   ListIterator<logical::Friendship> Class::getGrantsFriendshipListIteratorBegin() const {
@@ -144,6 +173,9 @@ namespace logical {
 
   bool Class::setEdge(EdgeKind edgeKind, NodeId edgeEnd, void* acValue, bool tryOnVirtualParent) {
     switch (edgeKind) {
+      case edkClass_Extends:
+        addExtends(edgeEnd);
+        return true;
       case edkClass_GrantsFriendship:
         addGrantsFriendship(edgeEnd);
         return true;
@@ -161,6 +193,9 @@ namespace logical {
 
   bool Class::removeEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
+      case edkClass_Extends:
+        removeExtends(edgeEnd);
+        return true;
       case edkClass_GrantsFriendship:
         removeGrantsFriendship(edgeEnd);
         return true;
@@ -174,6 +209,50 @@ namespace logical {
       return true;
     }
     return false;
+  }
+
+  void Class::addExtends(const logical::Class *_node) {
+    if (_node == NULL)
+      throw LimException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
+
+    if (&(_node->getFactory()) != this->factory)
+      throw LimException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
+
+    if (!(Common::getIsClass(*_node)))
+      throw LimException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+
+    extendsContainer.push_back(_node->getId());
+    if (factory->reverseEdges)
+      factory->reverseEdges->insertEdge(_node, this, edkClass_Extends);
+  }
+
+  void Class::addExtends(NodeId _id) {
+    const logical::Class *node = dynamic_cast<logical::Class*>(factory->getPointer(_id));
+    if (node == NULL)
+      throw LimException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    addExtends( node );
+  }
+
+  void Class::removeExtends(NodeId id) {
+    if (!factory->getExist(id))
+      throw LimException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    ListIterator<logical::Class>::Container::iterator it = find(extendsContainer.begin(), extendsContainer.end(), id);
+
+    if (it == extendsContainer.end())
+      throw LimException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    extendsContainer.erase(it);
+
+    if (factory->getExistsReverseEdges())
+      factory->reverseEdges->removeEdge(id, this->getId(), edkClass_Extends);
+  }
+
+  void Class::removeExtends(logical::Class *_node) {
+    if (_node == NULL)
+      throw LimException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
+
+    removeExtends(_node->getId());
   }
 
   void Class::addGrantsFriendship(const logical::Friendship *_node) {
@@ -376,6 +455,11 @@ namespace logical {
     binIo.writeUInt4(m_objectSize);
 
 
+    for (ListIterator<logical::Class>::Container::const_iterator it = extendsContainer.begin(); it != extendsContainer.end(); ++it) {
+      binIo.writeUInt4(*it);
+    }
+    binIo.writeUInt4(0); // This is the end sign
+
     for (ListIterator<logical::Friendship>::Container::const_iterator it = grantsFriendshipContainer.begin(); it != grantsFriendshipContainer.end(); ++it) {
       binIo.writeUInt4(*it);
     }
@@ -397,6 +481,12 @@ namespace logical {
     m_objectSize = binIo.readUInt4();
 
     NodeId _id;
+
+    _id = binIo.readUInt4();
+    while (_id) {
+      extendsContainer.push_back(_id);
+      _id = binIo.readUInt4();
+    }
 
     _id = binIo.readUInt4();
     while (_id) {

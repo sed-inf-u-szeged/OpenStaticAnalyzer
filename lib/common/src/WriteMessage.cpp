@@ -23,6 +23,8 @@
 #include <cstdlib>
 #include <common/inc/WriteMessage.h>
 #include <common/inc/messages.h>
+#include "../inc/StringSup.h"
+
 
 namespace common {
 
@@ -32,6 +34,8 @@ namespace common {
   FILE *WriteMsg::writeOutput = stdout;
   bool WriteMsg::canBeChanged = true;
   bool WriteMsg::needToFlush = false;
+  bool WriteMsg::enableTimestamps = false;
+
 
   bool WriteMsg::setMessageLevel(MsgLevel newLevel)
   {
@@ -56,6 +60,10 @@ namespace common {
   {
     if (msgLevel == mlSilent || msgLevel < level)
       return;
+
+    if (enableTimestamps)
+      fprintf(stdout, "[%s] ", getCurrentTimeAndDate("%Y-%m-%d %H:%M:%S").c_str());
+
     va_list al;
     va_start(al, format);
     vfprintf(stdout, format, al);
@@ -68,6 +76,10 @@ namespace common {
   {
     if (msgLevel == mlSilent || msgLevel < level)
       return;
+
+    if (enableTimestamps)
+      fprintf(out, "[%s] ", getCurrentTimeAndDate("%Y-%m-%d %H:%M:%S").c_str());
+
     va_list al;
     va_start(al, format);
     vfprintf(out, format, al);
@@ -80,6 +92,10 @@ namespace common {
   {
     if (msgLevel == mlSilent || msgLevel < level)
       return;
+
+    if (enableTimestamps)
+      fprintf(stderr, "[%s] ", getCurrentTimeAndDate("%Y-%m-%d %H:%M:%S").c_str());
+
     va_list al;
     va_start(al, format);
     vfprintf(stderr, format, al);
@@ -90,11 +106,15 @@ namespace common {
 
   void WriteMsg::write(MsgLevel level, const char* format, ...)
   {
-    if ( level < WriteMsg::mlNormal) {
+    if (level < WriteMsg::mlNormal)
       wasWarning = true;
-    }
+
     if (msgLevel == mlSilent || msgLevel < level)
       return;
+
+    if (enableTimestamps)
+      fprintf(writeOutput, "[%s] ", getCurrentTimeAndDate("%Y-%m-%d %H:%M:%S").c_str());
+
     va_list al;
     va_start(al, format);
     vfprintf(writeOutput, format, al);
@@ -105,11 +125,14 @@ namespace common {
 
   void WriteMsg::writeVaList(MsgLevel level, const char* format, va_list ap)
   {
-    if ( level < WriteMsg::mlNormal) {
+    if ( level < WriteMsg::mlNormal)
       wasWarning = true;
-    }
+
     if (msgLevel == mlSilent || msgLevel < level)
       return;
+
+    if (enableTimestamps)
+      fprintf(writeOutput, "[%s] ", getCurrentTimeAndDate("%Y-%m-%d %H:%M:%S").c_str());
 
     vfprintf(writeOutput, format, ap);
     if (needToFlush)
@@ -124,6 +147,10 @@ namespace common {
 
     if (msgLevel == mlSilent || msgLevel < level)
       return;
+
+    if (enableTimestamps)
+      fprintf(writeOutput, "[%s] ", getCurrentTimeAndDate("%Y-%m-%d %H:%M:%S").c_str());
+
     fprintf(writeOutput, "%s", message.c_str());
     if (needToFlush)
       fflush(writeOutput);
@@ -133,6 +160,10 @@ namespace common {
   {
     if (!writeOutWarningMessages)
       return;
+
+    if (enableTimestamps)
+      fprintf(writeOutput, "[%s] ", getCurrentTimeAndDate("%Y-%m-%d %H:%M:%S").c_str());
+
     va_list al;
     va_start(al, format);
     vfprintf(writeOutput, format, al);
@@ -145,6 +176,10 @@ namespace common {
   {
     if (!writeOutWarningMessages)
       return;
+
+    if (enableTimestamps)
+      fprintf(out, "[%s] ", getCurrentTimeAndDate("%Y-%m-%d %H:%M:%S").c_str());
+
     va_list al;
     va_start(al, format);
     vfprintf(out, format, al);
@@ -158,7 +193,7 @@ namespace common {
     // searching for "-silent"
     for (int i = 0; i < argc; i++)
       if (!strcmp(argv[i], "-silent")) {
-        common::WriteMsg::msgLevel = common::WriteMsg::mlError;
+        WriteMsg::msgLevel = WriteMsg::mlError;
         canBeChanged = false;
         return;
       }
@@ -212,6 +247,11 @@ namespace common {
   void WriteMsg::setAutomaticFlush(bool needToFlush)
   {
     WriteMsg::needToFlush = needToFlush;
+  }
+
+  void WriteMsg::setSetTimestampPrefixes(bool enable)
+  {
+    WriteMsg::enableTimestamps = enable;
   }
   
   bool WriteMsg::getWasWarning()

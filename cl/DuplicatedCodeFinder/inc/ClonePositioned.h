@@ -70,10 +70,15 @@ public:
   unsigned int  getEndLine() const { return endLine; }
   unsigned int  getEndCol() const { return endCol; }
 
+  int getPathsSize() const { return paths.getNumberOfBuckets(); }
+
   unsigned int getNodeKind() const { return nodeKind; }
   columbus::NodeId getId() const { return nodeId; }
   columbus::NodeId getLimNodeId() const { return limNodeId; }
   columbus::NodeId getLimComponentId() const { return limComponentId; }
+  
+  void setLimNodeId(columbus::NodeId nId) { limNodeId = nId; }
+  void setLimComponentId(columbus::NodeId nId) { limComponentId = nId; }
 };
 
 #endif

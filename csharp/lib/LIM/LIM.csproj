@@ -1,0 +1,78 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="..\..\DefaultValues.props" Condition="Exists('..\..\DefaultValues.props')" />
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>7.3</LangVersion>
+        <OutputPath>$(CSHARP_BUILD_DIR)\Lib\$(AssemblyName).dir\</OutputPath>
+        <Configurations>Release_CS;Debug_CS</Configurations>
+        <Platforms>x64;x86</Platforms>
+        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <AssemblyTitle>LIM</AssemblyTitle>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Algorithms\Algorithm.cs" />
+        <Compile Include="Algorithms\AlgorithmPreorder.cs" />
+        <Compile Include="Common.cs" />
+        <Compile Include="Constant.cs" />
+        <Compile Include="Factory.cs" />
+        <Compile Include="Filter.cs" />
+        <Compile Include="LimException.cs" />
+        <Compile Include="LimOrigin.cs" />
+        <Compile Include="ListIterator.cs" />
+        <Compile Include="ListIteratorAssoc.cs" />
+        <Compile Include="Nodes\Base\Base.cs" />
+        <Compile Include="Nodes\Base\Comment.cs" />
+        <Compile Include="Nodes\Base\Component.cs" />
+        <Compile Include="Nodes\Base\ControlFlowBlock.cs" />
+        <Compile Include="Nodes\Base\Named.cs" />
+        <Compile Include="Nodes\Logical\Attribute.cs" />
+        <Compile Include="Nodes\Logical\AttributeAccess.cs" />
+        <Compile Include="Nodes\Logical\Class.cs" />
+        <Compile Include="Nodes\Logical\ClassGeneric.cs" />
+        <Compile Include="Nodes\Logical\ClassGenericInstance.cs" />
+        <Compile Include="Nodes\Logical\ClassGenericSpec.cs" />
+        <Compile Include="Nodes\Logical\Friendship.cs" />
+        <Compile Include="Nodes\Logical\GenericParameter.cs" />
+        <Compile Include="Nodes\Logical\Member.cs" />
+        <Compile Include="Nodes\Logical\Method.cs" />
+        <Compile Include="Nodes\Logical\MethodCall.cs" />
+        <Compile Include="Nodes\Logical\MethodGeneric.cs" />
+        <Compile Include="Nodes\Logical\MethodGenericInstance.cs" />
+        <Compile Include="Nodes\Logical\MethodGenericSpec.cs" />
+        <Compile Include="Nodes\Logical\Package.cs" />
+        <Compile Include="Nodes\Logical\Parameter.cs" />
+        <Compile Include="Nodes\Logical\Scope.cs" />
+        <Compile Include="Nodes\Physical\File.cs" />
+        <Compile Include="Nodes\Physical\FileSystem.cs" />
+        <Compile Include="Nodes\Physical\Folder.cs" />
+        <Compile Include="Nodes\Physical\FSEntry.cs" />
+        <Compile Include="Nodes\Type\SimpleType.cs" />
+        <Compile Include="Nodes\Type\Type.cs" />
+        <Compile Include="Nodes\Type\TypeFormer.cs" />
+        <Compile Include="Nodes\Type\TypeFormerArray.cs" />
+        <Compile Include="Nodes\Type\TypeFormerMethod.cs" />
+        <Compile Include="Nodes\Type\TypeFormerNonType.cs" />
+        <Compile Include="Nodes\Type\TypeFormerPointer.cs" />
+        <Compile Include="Nodes\Type\TypeFormerType.cs" />
+        <Compile Include="OverrideRelations.cs" />
+        <Compile Include="ReverseEdges.cs" />
+        <Compile Include="SourcePosition.cs" />
+        <Compile Include="Types.cs" />
+        <Compile Include="Utils\ListExtension.cs" />
+        <Compile Include="Visitors\Visitor.cs" />
+        <Compile Include="Visitors\VisitorAbstractNodes.cs" />
+        <Compile Include="Visitors\VisitorFilter.cs" />
+        <Compile Include="Visitors\VisitorLIMML.cs" />
+        <Compile Include="Visitors\VisitorReverseEdges.cs" />
+        <Compile Include="Visitors\VisitorSave.cs" />
+        <Compile Include="Visitors\VisitorSubtreeCollector.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Columbus\Columbus.csproj" />
+    </ItemGroup>
+</Project>

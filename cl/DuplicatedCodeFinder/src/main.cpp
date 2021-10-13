@@ -38,6 +38,7 @@ using namespace columbus::dcf;
 
 Config config;
 
+string g_filterfile;
 
 //-------------------------------------------------------
 // Callback methods for argument processing
@@ -87,7 +88,6 @@ static bool ppOccur (const Option *o, char *argv[]) {
   return true;
 }
 
-
 #ifdef GENEALOGY
 static bool ppGenealogy (const Option *o, char *argv[]) {
   config.genealogyFilename = argv[0];
@@ -136,9 +136,23 @@ static bool ppFc(const Option *o, char *argv[]) {
   return true;
 }
 
+static bool ppSysName(const Option *o, char *argv[]) {
+  config.systemName = argv[0];
+  return true;
+}
+
+static bool ppSysVersion(const Option *o, char *argv[]) {
+  config.systemVersion = argv[0];
+  return true;
+}
 
 static bool  ppFst (const Option *o, char *argv[]) {
   config.statementFilter = false;
+  return true;
+}
+
+static bool ppFilterPath (const Option *o, char *argv[]) {
+  g_filterfile = argv[0];
   return true;
 }
 
@@ -160,11 +174,15 @@ const common::Option OPTIONS_OBJ [] = {
   { false, "-patternfilter",   2, "number number",        0, OT_WS,    ppPatternFilter,NULL,   "Enable pattern filter with the given parameters. The first number is the maximum length (default value is 10) of a single pattern "
                                                                                                "and the second number is the minimum length (default value is 100) of the whole repeating patter series to be detected."},
   { false,  "-multipleasgroot",      0, "",               0, OT_WC,    ppMultipleAsgRoot, NULL,"Clone instances can have multiple ASG root."},
+  { false,  "-sysname",              1, "name",           0, OT_WC,    ppSysName,         NULL,"The name of the system."},
+  { false,  "-sysversion",           1, "version",        0, OT_WC,    ppSysVersion,      NULL,"The version of the system."},
+
   { false,  "-onlyfunctionclone",    0, "",               0, OT_WC,    ppFc,              NULL,"Clones are detected only inside the functions."},
   { false,  "-statementNotReq",      0, "",               0, OT_WC,    ppFst,             NULL,"Not filter clone instance which has not contained statement."},
   CL_RUL_AND_RULCONFIG("DCF.rul")
   CL_EXPORTRUL
   CL_INPUT_LIST
+  CL_FLTP
   COMMON_CL_ARGS
 };
 
@@ -183,14 +201,14 @@ void initValues() {
     }
     // create rule handler
     if(config.rulConfig.empty()) {
-#ifdef SCHEMA_JAVA
+#if defined(SCHEMA_JAVA)
       config.rulConfig = "java";
-#elif defined(SCHEMA_PYTHON)
-	  config.rulConfig = "python";
-#elif defined(SCHEMA_CSHARP)
-		config.rulConfig = "csharp";
 #elif defined(SCHEMA_JAVASCRIPT)
       config.rulConfig = "javascript";
+#elif defined(SCHEMA_PYTHON)
+      config.rulConfig = "python";
+#elif defined(SCHEMA_CSHARP)
+      config.rulConfig = "csharp";
 #endif
     }
 
@@ -234,6 +252,7 @@ void initValues() {
   common::WriteMsg::write(CMSG_THE_LIM_INPUT_FILE,config.limFileName.c_str());
   common::WriteMsg::write(CMSG_LINE_INFO_CASE , (config.lp ? CMSG_LINE_INFO_CASE_LOWERED : CMSG_LINE_INFO_CASE_DEFAULT));
   common::WriteMsg::write(CMSG_MINIMUM_NUMBER_OF_LINES,config.minLines);
+  common::WriteMsg::write(CMSG_MINIMUM_NUMBER_OF_ASG_NODES, config.minAsgNodes);
   common::WriteMsg::write(CMSG_MAXIMUM_PATTERN_SIZE,config.patternMaxSingleLength);
   common::WriteMsg::write(CMSG_MINIMUM_PATTERN_FULL_LENGTH, config.patternMinFullLength);
 }

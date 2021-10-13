@@ -18,8 +18,8 @@
  *  limitations under the Licence.
  */
 
-#ifndef _SMCSHARP_CONTR_PROP_H_
-#define _SMCSHARP_CONTR_PROP_H_
+#ifndef _OSACSHARP_CONTR_PROP_H_
+#define _OSACSHARP_CONTR_PROP_H_
 
 #include <string>
 #include <controller/inc/Properties.h>
@@ -34,12 +34,18 @@ struct Properties : public columbus::controller::BaseProperties
      csvSeparator(','),
      csvDecimalmark('.'),
      cleanResults(-1),
+     analyzeOnly(false),
      runLimMetrics(true),
      runFxCop(true),
      runDCF(true),
      runMetricHunter(true),
+     runUDM(false),
+     runUDMExplicit(false),
      config(""),
-     platform("")
+     platform(""),
+     runLIM2Patterns(true),
+     runRoslynAnalyzers(true),
+     restorePackages(true)
   {}
 
   bool cloneGenealogy;                                // Create clone genealogy or no.
@@ -71,14 +77,41 @@ struct Properties : public columbus::controller::BaseProperties
   boost::filesystem::path externalSoftFilter;         // Absolute path of the external softfilter file
   char csvSeparator;                                  // Column separator character of the csv outputs.
   char csvDecimalmark;                                // Decimal mark character in the csv outputs.
+  std::string sarifSeverityLevel;                     // Severity level to be converted into sarif
   bool createStats;                                   // Invoke the tools with -stat commandline options.
   int cleanResults;                                   // Keep the last 'cleanResults' number of timestamped directory of the project in the results.
+  bool analyzeOnly;                                   // Run the analysis only.
   bool runLimMetrics;                                 // Run Lim2Metrics.
   bool runFxCop;                                      // Run FxCop.
   bool runDCF;                                        // Run DCF.
   bool runMetricHunter;                               // Run MetricHunter.
+  bool runUDM;                                        // Run UserDefinedMetrics
+  bool runUDMExplicit;                                // Was the "runUDM" switch explicitly set on the command line?
+  bool GenealogyDump;                                 // Genealogy dump
   std::string config;
   std::string platform;
+
+  bool runSonar2Graph;                                // Run Sonar2Graph tool to extrat issues from SonarQube server.
+  std::string host;                                   // IP of the SonarQube server.
+  std::string port;                                   // Port of the SonarQube server.
+  std::string projectKey;                             // Key of the project on the SonarQube server.
+  std::string projectPrefix;                          // Prefix path of the project's base directory.
+  std::string jsonPath;                               // For testing only.
+  std::string sqUsername;                             // Username for the SonarQube server.
+  std::string sqPassword;                             // Password for the SonarQube server.
+  std::string languageKey;                            // Key of the language in SonarQube.
+  bool sonar2GraphVerbose;                            // Prints more information about the running of Sonar2Graph tool.
+  bool strict;                                        // If true, the tool will stop working if finds too many issues in one file.
+
+  bool runLIM2Patterns;                               // Run LIM2Patterns
+  std::string patternFile;                            // Location of the pattern file
+  std::string whitelist;                              // Pattern whitelist, can be set from profileXML
+  std::string blacklist;                              // Pattern blacklist, can be set from profileXML
+
+  bool runRoslynAnalyzers;                            // Run Roslyn Analyzers
+  boost::filesystem::path roslynAnalyzersOutPath;     // Absolute path of the Roslyn Analyzers output directory
+
+  bool restorePackages;                               // Restore NuGet packages automatically
 };
 
 extern Properties props;

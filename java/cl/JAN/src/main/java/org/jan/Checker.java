@@ -36,14 +36,22 @@ import columbus.java.asg.base.Base;
 import columbus.java.asg.base.Named;
 import columbus.java.asg.base.Positioned;
 import columbus.java.asg.enums.MethodKind;
+import columbus.java.asg.expr.AnnotatedTypeExpression;
 import columbus.java.asg.expr.Expression;
 import columbus.java.asg.expr.FieldAccess;
+import columbus.java.asg.expr.FunctionalExpression;
 import columbus.java.asg.expr.Identifier;
+import columbus.java.asg.expr.Lambda;
+import columbus.java.asg.expr.MemberReference;
 import columbus.java.asg.expr.MethodInvocation;
 import columbus.java.asg.expr.NewClass;
+import columbus.java.asg.expr.TypeIntersectionExpression;
+import columbus.java.asg.module.ModuleDirective;
 import columbus.java.asg.statm.Jump;
+import columbus.java.asg.struc.CompilationUnit;
 import columbus.java.asg.struc.Import;
 import columbus.java.asg.struc.MethodDeclaration;
+import columbus.java.asg.struc.ModuleDeclaration;
 import columbus.java.asg.struc.NormalMethod;
 import columbus.java.asg.struc.PackageDeclaration;
 import columbus.java.asg.struc.TypeDeclaration;
@@ -107,7 +115,8 @@ public class Checker extends VisitorAbstractNodes {
 	@Override
 	public void visit(Base node, boolean callVirtualBase) {
 		super.visit(node, callVirtualBase);
-		if (node.getParent() == null && node != fact.getRoot() && !Common.getIsType(node) && !Common.getIsComment(node)) {
+		if (node.getParent() == null && node != fact.getRoot() && !Common.getIsType(node) && !Common.getIsComment(node)
+				&& !(node instanceof columbus.java.asg.struc.Module) && !(node instanceof CompilationUnit)) {
 			logger.warn("warn.jan.Checker.missingParent", getNodeInfo(node));
 		}
 	}
@@ -116,8 +125,8 @@ public class Checker extends VisitorAbstractNodes {
 	public void visit(Named node, boolean callVirtualBase) {
 		super.visit(node, callVirtualBase);
 		if (node.getNameKey() == 0) {
-			if (!Common.getIsAnonymousClass(node)
-					&& !(Common.getIsMethodDeclaration(node) && ((NormalMethod) node).getMethodKind() == MethodKind.mekGeneratedAnonymousClassConstructor)) {
+			if (!Common.getIsAnonymousClass(node) && !(Common.getIsMethodDeclaration(node)
+					&& ((NormalMethod) node).getMethodKind() == MethodKind.mekGeneratedAnonymousClassConstructor)) {
 				logger.warn("warn.jan.Checker.missingName", getNodeInfo(node));
 			}
 		}
@@ -237,9 +246,9 @@ public class Checker extends VisitorAbstractNodes {
 		super.visit(node, callVirtualBase);
 		if (node.getInvokes() == null) {
 			Expression op = node.getOperand();
-			if (Common.getIsFieldAccess(op)){
+			if (Common.getIsFieldAccess(op)) {
 				FieldAccess fa = (FieldAccess) op;
-				if (!((Identifier) fa.getRightOperand()).getName().equals(names.clone.toString())){
+				if (!((Identifier) fa.getRightOperand()).getName().equals(names.clone.toString())) {
 					logger.warn("warn.jan.Checker.missingInvokes", getNodeInfo(node));	
 				}
 			}
@@ -252,10 +261,21 @@ public class Checker extends VisitorAbstractNodes {
 		if (node.getType() == null) {
 			// import with *
 			if (!(node instanceof FieldAccess && node.getParent() instanceof Import)
-					&& !(node instanceof Identifier && node.getParent().getParent() instanceof Import)) {
+					&& !(node instanceof Identifier && node.getParent().getParent() instanceof Import)
+					&& !(isParentAModuleDirective(node.getParent()))) {
 				logger.warn("warn.jan.Checker.missingType", getNodeInfo(node));
 			}
 		}
+	}
+
+	private boolean isParentAModuleDirective(Base node) {
+		if (node == null) {
+			return false;
+		} else if (node instanceof ModuleDirective || node instanceof ModuleDeclaration) {
+			return true;
+		}
+
+		return isParentAModuleDirective(node.getParent());
 	}
 
 	@Override
@@ -343,6 +363,55 @@ public class Checker extends VisitorAbstractNodes {
 		super.visit(node, callVirtualBase);
 		if (node.getAlternativesIsEmpty()) {
 			logger.warn("warn.jan.Checker.missingAlternative", getNodeInfo(node));
+		}
+	}
+
+	@Override
+	public void visit(AnnotatedTypeExpression node, boolean callVirtualBase) {
+		super.visit(node, callVirtualBase);
+		if (node.getAnnotationsIsEmpty()) {
+			logger.warn("warn.jan.Checker.missingAnnotation", getNodeInfo(node));
+		}
+		if (node.getUnderlyingType() == null) {
+			logger.warn("warn.jan.Checker.missingUnderlyingType", getNodeInfo(node));
+		}
+	}
+
+	@Override
+	public void visit(TypeIntersectionExpression node, boolean callVirtualBase) {
+		super.visit(node, callVirtualBase);
+		if (node.getBoundsIsEmpty()) {
+			logger.warn("warn.jan.Checker.missingBound", getNodeInfo(node));
+		}
+	}
+
+	@Override
+	public void visit(FunctionalExpression node, boolean callVirtualBase) {
+		super.visit(node, callVirtualBase);
+		if (node.getTarget() == null) {
+			logger.warn("warn.jan.Checker.missingTarget", getNodeInfo(node));
+		}
+	}
+
+	@Override
+	public void visit(Lambda node, boolean callVirtualBase) {
+		super.visit(node, callVirtualBase);
+		if (node.getBody() == null) {
+			logger.warn("warn.jan.Checker.missingBody", getNodeInfo(node));
+		}
+	}
+
+	@Override
+	public void visit(MemberReference node, boolean callVirtualBase) {
+		super.visit(node, callVirtualBase);
+		if (node.getName().isEmpty()) {
+			logger.warn("warn.jan.Checker.missingName", getNodeInfo(node));
+		}
+		if (node.getQualifierExpression() == null) {
+			logger.warn("warn.jan.Checker.missingQualifierExpr", getNodeInfo(node));
+		}
+		if (node.getReferredMethod() == null) {
+			logger.warn("warn.jan.Checker.missingReferredMethod", getNodeInfo(node));
 		}
 	}
 

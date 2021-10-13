@@ -58,6 +58,5 @@ set (SOURCES
 
 add_library (${LIBNAME} STATIC ${SOURCES})
 add_dependencies (${LIBNAME} lim)
-add_pch_generation(${LIBNAME} lim)
 set_visual_studio_project_folder(${LIBNAME} FALSE)
 

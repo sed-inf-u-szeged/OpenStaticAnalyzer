@@ -25,6 +25,8 @@
 #include <set>
 #include "AbstractWrapper.h"
 #include "AbstractWrapperLib/inc/paramsup/ParamsupCommon.h"
+#include <boost/interprocess/sync/file_lock.hpp>
+
 
 #if defined _WIN64
 #define CPPCHECK_PLATFORM "win64"
@@ -57,20 +59,25 @@ namespace ColumbusWrappers {
      */
     bool executeCompiler(CompilerArgs& compArgs, PreprocArgs& preprocArgs, std::list<Argument>& generated_files) const;
 
-    /**
-     * @brief Collects the arguments for preprocessing, instrumenter calling and compiling with preprocessed, instrumented files, and calls these commands.
-     * @param inputArgs          [in] The original input arguments.
-     * @param compArgs           [in] The arguments of CAN (which are according to known compiler arguments) are in this struct.
-     * @param linkArgs           [in] The arguments of CANLink (which are according to known linker arguments) are in this struct.
-     * @return                        True, if there is no problem with executions.
-     */
-    bool executeInstrumenter(std::list<std::string> inputArgs, CompilerArgs& compArgs, LinkerArgs& linkArgs) const;
-
   protected:
     /**
      * @brief Reads options from config file.
      */
     void readConfig();
+
+    /**
+     * @brief Sets the version array either by reading it from the config file or by executing the compiler and parsing the output.
+     * @param f_lock                  [in]  File lock for locking the config file.
+     * @param version                 [out] The compiler version.
+     * @param commandlineArguments    [in]  The command line arguments with which the version can be get.
+     * @param versionRegex            [in]  The regular expression for parsing the output of the compiler
+     */
+    void setCompilerVersion(boost::interprocess::file_lock& f_lock, int version[3], const std::vector<std::string>& commandlineArguments, const std::string& versionRegexString);
+
+    /**
+     * @brief Tries to figure out the exact version of the compiler
+     */
+    void readCompilerVersion();
 
     /**
      * @brief Processes input list. Put prefix before the elements of the list and concatenate them to a string.
@@ -85,13 +92,20 @@ namespace ColumbusWrappers {
     int instrument_mode;                                            ///< define instrumentatation mode
     int comp_needstat;                                              ///< CAN needed to create stat file or not
     int run_cppcheck;                                               ///< cppcheck need to run or not
+    int no_delayed_template_parsing;                                ///< pass -fno-delayed-template-parsing to CAN or not
     int comp_ml;                                                    ///< CAN message level
     std::set<std::pair<std::string, int> > comp_paramtoskip;        ///< arguments and their number of parameters to skip
     int comp_numofparamtoskip;                                      ///< number of arguments to skip
     std::vector<std::string> comp_extraparam;                       ///< extra parameters for CAN
     int comp_numofextraparam;                                       ///< number of extra parameters
+    std::string filter_path;                                        ///< path to the softfilter file
 
     std::string comp_tool;                                          ///< name of the compiler tool (CAN)
+    std::string comp_config_tool;                                   ///< name of the compiler configuration tool (CANConfig)
+    int cl_version[3];                                              ///< version of the wrapped cl
+    int clang_version[3];                                           ///< version of the wrapped clang
+    int gcc_version[3];                                             ///< version of the wrapped gcc
+
   };
 }
 

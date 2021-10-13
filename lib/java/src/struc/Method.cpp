@@ -147,12 +147,14 @@ namespace struc {
       if(node.getAccessibility() == getAccessibility()) ++matchAttrs;
       if(node.getIsStatic() == getIsStatic()) ++matchAttrs;
       if(node.getIsFinal() == getIsFinal()) ++matchAttrs;
+      if(node.getLloc() == getLloc()) ++matchAttrs;
       if(node.getIsAbstract() == getIsAbstract()) ++matchAttrs;
       if(node.getIsStrictfp() == getIsStrictfp()) ++matchAttrs;
       if(node.getMethodKind() == getMethodKind()) ++matchAttrs;
       if(node.getIsSynchronized() == getIsSynchronized()) ++matchAttrs;
       if(node.getIsNative() == getIsNative()) ++matchAttrs;
-      return matchAttrs / (11 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
+      if(node.getIsDefault() == getIsDefault()) ++matchAttrs;
+      return matchAttrs / (13 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
     }

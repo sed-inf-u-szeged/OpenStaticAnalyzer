@@ -64,6 +64,14 @@ namespace common
   bool pathCanonicalize(std::string& dst, const std::string& src);
 
   /**
+  * \brief Canonicalize the given path. It uses internal cache to check the filesystem once for
+  * every distinct path. If the filesystem changes then this can give wrong result!
+  * \param path    [in] The string that contains the path to be canonicalized.
+  * \return        Returns the canonicalized path.
+  */
+  std::string pathCanonicalize(const std::string& path);
+
+  /**
   * \brief Creates directory resursively.
   * \param dirName [in] The path of the new directory.
   * \return        If there is no error, it returns with 0, otherwise returns with the error code.
@@ -236,6 +244,13 @@ namespace common
   std::string correctDirDivs(std::string path);
 
   /**
+  * \brief Replaces the '\' path separator characters to the '/' on windows.
+  * \param path             [in] The input path string.
+  * \return                 Returns the modified path in that all '\' path separators are replaced with '/' on windows. On linux it gives back the original sunmodified string.
+  */
+  std::string correctDirDivsToUnix(std::string path);
+
+  /**
   * \brief Compares the given files' last modification time.
   * \param first            [in] The first input path string.
   * \param second           [in] The second input path string.
@@ -246,9 +261,10 @@ namespace common
   /**
   * \brief Deletes the given path.
   * \param path             [in] The input path string.
+  * \param recursive        [in] If it is true, then it removes recursively everithing inside the given path.
   * \return                 Returns true if the deletion successful, false otherwise.
   */
-  bool pathDeleteFile(const std::string& path);
+  bool pathDeleteFile(const std::string& path, bool recursive = false);
 
   /**
   * \brief Checks whether the given string is a valid directory.
@@ -345,6 +361,13 @@ namespace common
   bool iscpplang(const std::string& ext);
 
   /**
+  * \brief Checks whether the given extension is a valid 'objective-c' file extension.
+  * \param ext           [in] The extension to be checked.
+  * \return              Returns true if the given extension is a valid 'objective-c' file extension.
+  */
+  bool isobjclang(const std::string& ext);
+
+  /**
   * \brief Checks whether the given name is a predefined macro name.
   * \param name          [in] The name to be checked.
   * \return              Returns true if the given name is a predefined macro name.
@@ -357,9 +380,10 @@ namespace common
   * \param test             [in] The string that will tested whether it is a prefix of the input string 'str'.
   * \param remain           [out] The output that is the remaining string when the 'test' is removed from the front of the input string. If the remain's frist character is '=' and the parameter 'skipeq' is true than the remain won't contain the '=' character.
   * \param skipeq           [in] If true than if the 'remain' first character is '=' than the remain won't contain it
-  * \return                 Returns the list of the input files sorted by descending by size. If the 'skipFirst' parameter is true than the first item does not take part of the sorting, it remains the first in the output list.
+  * \param caseSensitive    [in] Use case sensitive compare or no.
+  * \return                 True if the `test` is prefix of the `str`, and false otherwise.
   */
-  bool isPrefix(const std::string& str, const std::string& test, std::string& remain, bool skipeq = false);
+  bool isPrefix(const std::string& str, const std::string& test, std::string& remain, bool skipeq = false, bool caseSensitive = true);
 
   /**
   * \brief Sorts the list of filenames by the sizes of the files (except the first one if the 'skipFirst' is true).
@@ -413,6 +437,12 @@ namespace common
    */
   std::string getLockFileName(const std::string& fileName);
 
+  /**
+   * \brief Gives back a name, which can be used to create a temporary file or directory.
+   *
+   * \return             Returns the full path of the temporary file/directory name.
+   */
+  std::string getTemporaryName();
 } // namespace common
 
 #endif /* _FILESUP_H */

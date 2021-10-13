@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var restElement = factory.createRestElementWrapper(factory);
+        var restElement = factory.createRestElementWrapper();
         globals.setPositionInfo(node, restElement);
         return restElement;
     } else {
@@ -34,15 +34,10 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.argument != null) {
             var argumentWrapper = globals.getWrapperOfNode(node.argument);
-            if (node.argument.type !== "Literal") {
-                var argumentWrapperFunctionString = "setArgument" + node.argument.type;
-            } else {
-                var argumentWrapperFunctionString = "setArgument" + globals.getLiteralType(node.argument) + node.argument.type;
-            }
             try {
-                restElementWrapper[argumentWrapperFunctionString](argumentWrapper);
+                restElementWrapper.setArgument(argumentWrapper);
             } catch (e) {
-                console.error("RESTELEMENT - Function not exist: restElementWrapper." + argumentWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("RESTELEMENT - Could not set argument! Reason of the error: " + e + "\n");
             }
         }
 

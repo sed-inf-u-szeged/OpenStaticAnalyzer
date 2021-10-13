@@ -661,7 +661,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back the string representation of the AssignmentOperator kind.
       * \param kind                [in] The AssignmentOperator.
-      * \throw JavaScriptException If the kind is not "valid" JavaScriptException is thrown.
+      * \throw JavascriptException If the kind is not "valid" JavascriptException is thrown.
       * \return The string representation of the kind given in the parameter.
       */
       const std::string toString(AssignmentOperator kind);
@@ -669,7 +669,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back the string representation of the BinaryOperator kind.
       * \param kind                [in] The BinaryOperator.
-      * \throw JavaScriptException If the kind is not "valid" JavaScriptException is thrown.
+      * \throw JavascriptException If the kind is not "valid" JavascriptException is thrown.
       * \return The string representation of the kind given in the parameter.
       */
       const std::string toString(BinaryOperator kind);
@@ -677,7 +677,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back the string representation of the CommentLocation kind.
       * \param kind                [in] The CommentLocation.
-      * \throw JavaScriptException If the kind is not "valid" JavaScriptException is thrown.
+      * \throw JavascriptException If the kind is not "valid" JavascriptException is thrown.
       * \return The string representation of the kind given in the parameter.
       */
       const std::string toString(CommentLocation kind);
@@ -685,7 +685,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back the string representation of the CommentType kind.
       * \param kind                [in] The CommentType.
-      * \throw JavaScriptException If the kind is not "valid" JavaScriptException is thrown.
+      * \throw JavascriptException If the kind is not "valid" JavascriptException is thrown.
       * \return The string representation of the kind given in the parameter.
       */
       const std::string toString(CommentType kind);
@@ -693,7 +693,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back the string representation of the DeclarationKind kind.
       * \param kind                [in] The DeclarationKind.
-      * \throw JavaScriptException If the kind is not "valid" JavaScriptException is thrown.
+      * \throw JavascriptException If the kind is not "valid" JavascriptException is thrown.
       * \return The string representation of the kind given in the parameter.
       */
       const std::string toString(DeclarationKind kind);
@@ -701,7 +701,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back the string representation of the LogicalOperator kind.
       * \param kind                [in] The LogicalOperator.
-      * \throw JavaScriptException If the kind is not "valid" JavaScriptException is thrown.
+      * \throw JavascriptException If the kind is not "valid" JavascriptException is thrown.
       * \return The string representation of the kind given in the parameter.
       */
       const std::string toString(LogicalOperator kind);
@@ -709,7 +709,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back the string representation of the MethodDefinitionKind kind.
       * \param kind                [in] The MethodDefinitionKind.
-      * \throw JavaScriptException If the kind is not "valid" JavaScriptException is thrown.
+      * \throw JavascriptException If the kind is not "valid" JavascriptException is thrown.
       * \return The string representation of the kind given in the parameter.
       */
       const std::string toString(MethodDefinitionKind kind);
@@ -717,7 +717,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back the string representation of the ProgramSourceType kind.
       * \param kind                [in] The ProgramSourceType.
-      * \throw JavaScriptException If the kind is not "valid" JavaScriptException is thrown.
+      * \throw JavascriptException If the kind is not "valid" JavascriptException is thrown.
       * \return The string representation of the kind given in the parameter.
       */
       const std::string toString(ProgramSourceType kind);
@@ -725,7 +725,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back the string representation of the PropertyKind kind.
       * \param kind                [in] The PropertyKind.
-      * \throw JavaScriptException If the kind is not "valid" JavaScriptException is thrown.
+      * \throw JavascriptException If the kind is not "valid" JavascriptException is thrown.
       * \return The string representation of the kind given in the parameter.
       */
       const std::string toString(PropertyKind kind);
@@ -733,7 +733,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back the string representation of the UnaryOperator kind.
       * \param kind                [in] The UnaryOperator.
-      * \throw JavaScriptException If the kind is not "valid" JavaScriptException is thrown.
+      * \throw JavascriptException If the kind is not "valid" JavascriptException is thrown.
       * \return The string representation of the kind given in the parameter.
       */
       const std::string toString(UnaryOperator kind);
@@ -741,7 +741,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back the string representation of the UpdateOperator kind.
       * \param kind                [in] The UpdateOperator.
-      * \throw JavaScriptException If the kind is not "valid" JavaScriptException is thrown.
+      * \throw JavascriptException If the kind is not "valid" JavascriptException is thrown.
       * \return The string representation of the kind given in the parameter.
       */
       const std::string toString(UpdateOperator kind);
@@ -749,7 +749,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back the string representation of the NodeKind kind.
       * \param kind                [in] The NodeKind.
-      * \throw JavaScriptException If the kind is not "valid" JavaScriptException is thrown.
+      * \throw JavascriptException If the kind is not "valid" JavascriptException is thrown.
       * \return The string representation of the kind given in the parameter.
       */
       const std::string toString(NodeKind kind);
@@ -757,7 +757,7 @@ namespace columbus { namespace javascript { namespace asg {
       /**
       * \brief Gives back the string representation of the EdgeKind kind.
       * \param kind                [in] The EdgeKind.
-      * \throw JavaScriptException If the kind is not "valid" JavaScriptException is thrown.
+      * \throw JavascriptException If the kind is not "valid" JavascriptException is thrown.
       * \return The string representation of the kind given in the parameter.
       */
       const std::string toString(EdgeKind kind);
@@ -820,6 +820,12 @@ namespace columbus { namespace javascript { namespace asg {
       */
       void setSimilarityMinForEdges(double value);
 
+      /**
+      * \brief Get long name for Base nodes.
+      * \param node [in] The base node.
+      * \return A name for the node.
+      */
+      std::string getLongName(const base::Base& node);
 
   } // Common
 

@@ -161,40 +161,6 @@ void CheckerStrategy::makeCsv(std::string& lim, std::string& rul, std::string& r
   makeCsv(lim, rul, rulConfig, file_names, metrics, groupedmetrics, monitor, checkerbasedir, levelMap) ;
 }
 
-void CheckerStrategy::setShortName(std::string& rulename,std::string& shortname, int small /* = 0 */, int ext /* = 0 */ ){
-  int tsmall = small;
-  for(unsigned int i = 0; i < rulename.size(); i++){
-    if( (rulename[i] >= 'A' && rulename[i] <= 'Z')
-        ||(rulename[i] >= '0' && rulename[i] <= '9') )
-      shortname += rulename[i];
-    else if(rulename[i] >= 'a' && rulename[i] <= 'z' && tsmall > 0){
-      shortname += rulename[i];
-      tsmall--;
-    }
-  }
-  if(ext > 0)
-    shortname += toString(ext);
-  if(shortname.empty())
-    setShortName(rulename,shortname,++small);
-  else{
-    set<string>::iterator it1 = shortnames.find(shortname);
-    set<string>::iterator it2 = shortnames.end();
-    if(it1 != it2){
-      shortname.clear();
-      if(tsmall > 0)
-        setShortName(rulename, shortname, ++small, ++ext);
-      else
-        setShortName(rulename, shortname, ++small);
-    }
-    else{
-      shortnames.insert(shortname);
-    }
-  }
-}
-
-bool CheckerStrategy::getIsNeeded (const std::string& id, const rul::RulHandler& xRulHandler) {
-  return xRulHandler.getIsEnabled(id);
-}
 
 void CheckerStrategy::saveGraph(const std::string& filename, bool exportRul) {
   if(exportRul)

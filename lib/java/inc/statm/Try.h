@@ -44,7 +44,7 @@ namespace statm {
   *   - finallyPosition (Range) : (missing)
   * 
   * Edges:
-  *   - hasResources (struc::Variable, multiple) : (missing)
+  *   - hasResources (base::Base, multiple) : (missing)
   *   - hasBlock (statm::Block, single) : (missing)
   *   - hasHandlers (statm::Handler, multiple) : (missing)
   *   - hasFinallyBlock (statm::Block, single) : (missing)
@@ -199,13 +199,13 @@ namespace statm {
       * \brief Gives back iterator for the hasResources edges.
       * \return Returns an iterator for the hasResources edges.
       */
-      ListIterator<struc::Variable> getResourcesListIteratorBegin() const;
+      ListIterator<base::Base> getResourcesListIteratorBegin() const;
 
       /**
       * \brief Gives back iterator for the hasResources edges.
       * \return Returns an iterator for the hasResources edges.
       */
-      ListIterator<struc::Variable> getResourcesListIteratorEnd() const;
+      ListIterator<base::Base> getResourcesListIteratorEnd() const;
 
       /**
       * \brief Tells whether the node has hasResources edges or not.
@@ -262,7 +262,7 @@ namespace statm {
       * \brief Adds a new hasResources edge to the node and inserts it after the other ones.
       * \param node [in] The end point of the new hasResources edge.
       */
-      void addResources(const struc::Variable *node);
+      void addResources(const base::Base *node);
 
       /**
       * \brief Adds a new hasResources edge to the node and inserts it after the other ones.
@@ -280,7 +280,7 @@ namespace statm {
       * \brief Remove the hasResources edge from the node.
       * \param node [in] The end point of the hasResources edge.
       */
-      void removeResources(struc::Variable *node);
+      void removeResources(base::Base *node);
 
       /**
       * \brief Sets the hasBlock edge.
@@ -345,7 +345,7 @@ namespace statm {
       // ---------- Edges ----------
 
       /** \internal \brief Container stores the id of the nodes the hasResources edge points to. */
-      ListIterator<struc::Variable>::Container hasResourcesContainer;
+      ListIterator<base::Base>::Container hasResourcesContainer;
 
       /** \internal \brief The id of the node the hasBlock edge points to. */
       NodeId m_hasBlock;

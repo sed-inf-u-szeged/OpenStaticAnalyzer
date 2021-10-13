@@ -54,12 +54,12 @@ namespace expression {
 
     private:
       /**
-      * \brief This function always throws a JavaScriptException due to copying is not allowed!
+      * \brief This function always throws a JavascriptException due to copying is not allowed!
       */
       Expression & operator=(const Expression&);
 
       /**
-      * \brief This function always throws a JavaScriptException due to copying is not allowed!
+      * \brief This function always throws a JavascriptException due to copying is not allowed!
       */
       Expression(const Expression&);
 

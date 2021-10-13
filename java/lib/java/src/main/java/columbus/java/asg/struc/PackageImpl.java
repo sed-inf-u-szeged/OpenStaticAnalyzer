@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class PackageImpl extends BaseImpl implements Package {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(PackageImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 
@@ -50,6 +51,8 @@ public class PackageImpl extends BaseImpl implements Package {
 	protected int qualifiedName;
 
 	protected EdgeList<CompilationUnit> _hasCompilationUnits;
+
+	protected EdgeList<Module> _isInModule;
 
 	public PackageImpl(int id, Factory factory) {
 		super(id, factory);
@@ -271,6 +274,30 @@ public class PackageImpl extends BaseImpl implements Package {
 	}
 
 	@Override
+	public EdgeIterator<Module> getIsInModuleIterator() {
+		if (_isInModule == null)
+			return EdgeList.<Module>emptyList().iterator();
+		else
+			return _isInModule.iterator();
+	}
+
+	@Override
+	public boolean getIsInModuleIsEmpty() {
+		if (_isInModule == null)
+			return true;
+		else
+			return _isInModule.isEmpty();
+	}
+
+	@Override
+	public int getIsInModuleSize() {
+		if (_isInModule == null)
+			return 0;
+		else
+			return _isInModule.size();
+	}
+
+	@Override
 	public void addCompilationUnits(int _id) {
 		if (!factory.getExist(_id))
 			throw new JavaException(logger.formatMessage("ex.java.Node.No_end_point"));
@@ -292,6 +319,28 @@ public class PackageImpl extends BaseImpl implements Package {
 			_hasCompilationUnits = new EdgeList<CompilationUnit>(factory);
 		_hasCompilationUnits.add(_node);
 		setParentEdge(_node);
+	}
+
+	@Override
+	public void addIsInModule(int _id) {
+		if (!factory.getExist(_id))
+			throw new JavaException(logger.formatMessage("ex.java.Node.No_end_point"));
+
+		Base _node = factory.getRef(_id);
+		if (_node.getNodeKind() == NodeKind.ndkModule) {
+			if (_isInModule == null)
+				_isInModule = new EdgeList<Module>(factory);
+			_isInModule.add(_id);
+		} else {
+			throw new JavaException(logger.formatMessage("ex.java.Node.Invalid","NodeKind", _node.getNodeKind() ));
+		}
+	}
+
+	@Override
+	public void addIsInModule(Module _node) {
+		if (_isInModule == null)
+			_isInModule = new EdgeList<Module>(factory);
+		_isInModule.add(_node);
 	}
 
 
@@ -360,6 +409,14 @@ public class PackageImpl extends BaseImpl implements Package {
 			}
 		}
 		io.writeInt4(0);
+
+		if (_isInModule != null) {
+			EdgeIterator<Module> it = getIsInModuleIterator();
+			while (it.hasNext()) {
+				io.writeInt4(it.next().getId());
+			}
+		}
+		io.writeInt4(0);
 	}
 
 
@@ -422,6 +479,15 @@ public class PackageImpl extends BaseImpl implements Package {
 			while (_id != 0) {
 				_hasCompilationUnits.add(_id);
 				setParentEdge(_id);
+				_id = io.readInt4();
+			}
+		}
+
+		_id = io.readInt4();
+		if (_id != 0) {
+			_isInModule = new EdgeList<Module>(factory);
+			while (_id != 0) {
+				_isInModule.add(_id);
 				_id = io.readInt4();
 			}
 		}

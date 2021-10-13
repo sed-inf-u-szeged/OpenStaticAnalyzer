@@ -1,25 +1,7 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
+#include <node_api.h>
 
-#include <nan.h>                           
-#include "Factory.h"         
+#include "Factory.h"
+
 #include "inc/SystemWrapper.h"
 #include "inc/CommentWrapper.h"
 #include "inc/ModuleDeclarationWrapper.h"
@@ -95,86 +77,87 @@
 #include "inc/ImportDefaultSpecifierWrapper.h"
 #include "inc/ImportNamespaceSpecifierWrapper.h"
 #include "inc/ImportSpecifierWrapper.h"
-                                           
-                                           
-                                           
-void InitAll(v8::Local<v8::Object> exports) {     
-  columbus::javascript::asg::addon::Factory::Init(exports);           
-  columbus::javascript::asg::addon::SystemWrapper::Init(exports);           
-  columbus::javascript::asg::addon::CommentWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ModuleDeclarationWrapper::Init(exports);           
-  columbus::javascript::asg::addon::VariableDeclaratorWrapper::Init(exports);           
-  columbus::javascript::asg::addon::PropertyWrapper::Init(exports);           
-  columbus::javascript::asg::addon::SpreadElementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::SuperWrapper::Init(exports);           
-  columbus::javascript::asg::addon::TemplateElementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::CatchClauseWrapper::Init(exports);           
-  columbus::javascript::asg::addon::FunctionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::SwitchCaseWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ClassBodyWrapper::Init(exports);           
-  columbus::javascript::asg::addon::MethodDefinitionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ProgramWrapper::Init(exports);           
-  columbus::javascript::asg::addon::IdentifierWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ExportNamedDeclarationWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ImportDeclarationWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ArrayExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ArrowFunctionExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::AssignmentExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::AwaitExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::BinaryExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::CallExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ClassExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ConditionalExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::FunctionExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::LogicalExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::MemberExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::MetaPropertyWrapper::Init(exports);           
-  columbus::javascript::asg::addon::NewExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ObjectExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::SequenceExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::TaggedTemplateExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::TemplateLiteralWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ThisExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::UnaryExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::UpdateExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::YieldExpressionWrapper::Init(exports);           
-  columbus::javascript::asg::addon::BooleanLiteralWrapper::Init(exports);           
-  columbus::javascript::asg::addon::NullLiteralWrapper::Init(exports);           
-  columbus::javascript::asg::addon::NumberLiteralWrapper::Init(exports);           
-  columbus::javascript::asg::addon::RegExpLiteralWrapper::Init(exports);           
-  columbus::javascript::asg::addon::StringLiteralWrapper::Init(exports);           
-  columbus::javascript::asg::addon::AssignmentPropertyWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ArrayPatternWrapper::Init(exports);           
-  columbus::javascript::asg::addon::AssignmentPatternWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ObjectPatternWrapper::Init(exports);           
-  columbus::javascript::asg::addon::RestElementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::BlockStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::BreakStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ContinueStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::DebuggerStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::EmptyStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ExpressionStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ForInStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ForStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::IfStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::LabeledStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ReturnStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::SwitchStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ThrowStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::TryStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::WhileStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::WithStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ClassDeclarationWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ExportSpecifierWrapper::Init(exports);           
-  columbus::javascript::asg::addon::FunctionDeclarationWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ExportAllDeclarationWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ExportDefaultDeclarationWrapper::Init(exports);           
-  columbus::javascript::asg::addon::VariableDeclarationWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ForOfStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::DoWhileStatementWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ImportDefaultSpecifierWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ImportNamespaceSpecifierWrapper::Init(exports);           
-  columbus::javascript::asg::addon::ImportSpecifierWrapper::Init(exports);           
-}                                          
-                                           
-NODE_MODULE(javascriptaddon, InitAll)              
+#define DECLARE_NAPI_METHOD(name, func) \
+  { name, 0, func, 0, 0, 0, napi_default, 0 } 
+
+napi_value Init(napi_env env, napi_value exports){
+    columbus::javascript::asg::addon::Factory::Init(env, exports);
+  columbus::javascript::asg::addon::SystemWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::CommentWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ModuleDeclarationWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::VariableDeclaratorWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::PropertyWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::SpreadElementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::SuperWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::TemplateElementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::CatchClauseWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::FunctionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::SwitchCaseWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ClassBodyWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::MethodDefinitionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ProgramWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::IdentifierWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ExportNamedDeclarationWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ImportDeclarationWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ArrayExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ArrowFunctionExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::AssignmentExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::AwaitExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::BinaryExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::CallExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ClassExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ConditionalExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::FunctionExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::LogicalExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::MemberExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::MetaPropertyWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::NewExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ObjectExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::SequenceExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::TaggedTemplateExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::TemplateLiteralWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ThisExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::UnaryExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::UpdateExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::YieldExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::BooleanLiteralWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::NullLiteralWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::NumberLiteralWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::RegExpLiteralWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::StringLiteralWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::AssignmentPropertyWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ArrayPatternWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::AssignmentPatternWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ObjectPatternWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::RestElementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::BlockStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::BreakStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ContinueStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::DebuggerStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::EmptyStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ExpressionStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ForInStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ForStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::IfStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::LabeledStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ReturnStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::SwitchStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ThrowStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::TryStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::WhileStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::WithStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ClassDeclarationWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ExportSpecifierWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::FunctionDeclarationWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ExportAllDeclarationWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ExportDefaultDeclarationWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::VariableDeclarationWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ForOfStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::DoWhileStatementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ImportDefaultSpecifierWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ImportNamespaceSpecifierWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ImportSpecifierWrapper::Init(env, exports);
+    return exports;
+}
+
+NAPI_MODULE(javascriptaddon, Init)              

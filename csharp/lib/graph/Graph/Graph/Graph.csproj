@@ -33,8 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AKindnessCommons, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\SourceMeter_VS_plugin\FrontEndART Tools\packages\AKindnessCommons.1.0.0.0\lib\net45\AKindnessCommons.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\AKindnessCommons.1.0.0.0\lib\net45\AKindnessCommons.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>

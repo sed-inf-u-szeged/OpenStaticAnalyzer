@@ -24,5 +24,6 @@ module.exports.banner =
   "_| |\\__ \\|   ||   |\n" +
   "\\__/<___/|_|_||_\\_|\n";
 
+
 module.exports.header = 'JSAN - JavaScript Static Code Analyzer';
-module.exports.description = 'A JavaScript Static Analyzer that uses espree in its core to create an AST. Comment attaching, cross references are handled inside. It also transforms the ast into a OpenStaticAnalyzer-style AST.'
+module.exports.description = 'A JavaScript Static Analyzer that uses espree in its core to create an AST. Comment attaching, cross references are handled inside. It also transforms the ast into a Columbus-style AST.'

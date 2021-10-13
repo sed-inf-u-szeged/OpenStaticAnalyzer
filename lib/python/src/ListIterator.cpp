@@ -211,5 +211,6 @@ namespace columbus { namespace python { namespace asg {
   template class ListIterator<expression::Identifier>;
   template class ListIterator<statement::Alias>;
   template class ListIterator<statement::Handler>;
+  template class ListIterator<statement::WithItem>;
 
 }}}

@@ -650,7 +650,7 @@ namespace columbus { namespace lim { namespace asg {
 
       Factory* fact;
 
-      bool traversaldCrossEdges[49];
+      bool traversaldCrossEdges[51];
 
   }; // AlgorithmPreorder
 

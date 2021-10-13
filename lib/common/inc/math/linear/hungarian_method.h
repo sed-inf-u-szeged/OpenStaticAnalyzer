@@ -79,7 +79,7 @@ namespace common { namespace math {
     void step_0() {
     /*  std::cout << "Step 0...Starting" << std::endl;
       dump();*/
-      double linf=std::numeric_limits<double>::max();
+      double linf=std::numeric_limits<double>::infinity();
       zero_system.clear();
       zero_system_inv.clear();
       for (unsigned i = 0; i < m.size1 (); ++ i) {
@@ -123,7 +123,7 @@ namespace common { namespace math {
       dump();*/
     }
     void run() {
-      double linf=std::numeric_limits<double>::max();
+      double linf=std::numeric_limits<double>::infinity();
       step_0();
       std::pair<unsigned int, unsigned int> p;
       unsigned int i,j,k;
@@ -267,7 +267,7 @@ step_5:
   public: 
     HungarianMethod(boost::numeric::ublas::matrix<eType>& _m) : m((boost::numeric::ublas::matrix<eType>&)_m) {};
     std::map<unsigned int, unsigned int> solve(int _kind) { 
-      double linf=std::numeric_limits<double>::max();
+      double linf=std::numeric_limits<double>::infinity();
       kind=_kind;
       unsigned int prevRows=m.size1();
       unsigned int prevCols=m.size2();

@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var newExpression = factory.createNewExpressionWrapper(factory);
+        var newExpression = factory.createNewExpressionWrapper();
         globals.setPositionInfo(node, newExpression);
         return newExpression;
     } else {
@@ -34,15 +34,10 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.callee != null) {
             var calleeWrapper = globals.getWrapperOfNode(node.callee);
-            if (node.callee.type !== "Literal") {
-                var calleeWrapperFunctionString = "setCallee" + node.callee.type;
-            } else {
-                var calleeWrapperFunctionString = "setCallee" + globals.getLiteralType(node.callee) + node.callee.type;
-            }
             try {
-                newExpressionWrapper[calleeWrapperFunctionString](calleeWrapper);
+                newExpressionWrapper.setCallee(calleeWrapper);
             } catch (e) {
-                console.error("NEWEXPRESSION - Function not exist: newExpressionWrapper." + calleeWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("NEWEXPRESSION - Could not set callee! Reason of the error: " + e + "\n");
             }
         }
 
@@ -50,15 +45,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.arguments.length; i++) {
                 if (node.arguments[i] != null) {
                     var argumentsWrapper = globals.getWrapperOfNode(node.arguments[i]);
-                    if (node.arguments[i].type !== "Literal") {
-                        var argumentsWrapperFunctionString = "addArguments" + node.arguments[i].type;
-                    } else {
-                        var argumentsWrapperFunctionString = "addArguments" + globals.getLiteralType(node.arguments[i]) + node.arguments[i].type;
-                    }
                     try {
-                        newExpressionWrapper[argumentsWrapperFunctionString](argumentsWrapper);
+                        newExpressionWrapper.addArguments(argumentsWrapper);
                     } catch (e) {
-                        console.error("NEWEXPRESSION - Function not exist: newExpressionWrapper." + argumentsWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("NEWEXPRESSION - Could not add argument! Reason of the error: " + e + "\n");
                     }
                 }
             }

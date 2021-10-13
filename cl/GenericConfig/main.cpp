@@ -125,9 +125,9 @@ bool processOptions(int argc, char** argv)
   return 0;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   MAIN_BEGIN
-
   MainInit(argc, argv, "-");
 
   if (processOptions(argc, argv)){

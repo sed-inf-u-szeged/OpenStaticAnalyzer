@@ -40,6 +40,7 @@ namespace expression {
   * Edges:
   *   - hasCallee (expression::Expression, single) : (missing)
   *   - hasArguments (base::Positioned, multiple) : (missing)
+  *   - calls (statement::Function, multiple) : (missing)
   */
   class NewExpression : public Expression {
     protected:
@@ -59,12 +60,12 @@ namespace expression {
 
     private:
       /**
-      * \brief This function always throws a JavaScriptException due to copying is not allowed!
+      * \brief This function always throws a JavascriptException due to copying is not allowed!
       */
       NewExpression & operator=(const NewExpression&);
 
       /**
-      * \brief This function always throws a JavaScriptException due to copying is not allowed!
+      * \brief This function always throws a JavascriptException due to copying is not allowed!
       */
       NewExpression(const NewExpression&);
 
@@ -134,6 +135,30 @@ namespace expression {
       */
       unsigned getArgumentsSize() const;
 
+      /**
+      * \brief Gives back iterator for the calls edges.
+      * \return Returns an iterator for the calls edges.
+      */
+      ListIterator<statement::Function> getCallsListIteratorBegin() const;
+
+      /**
+      * \brief Gives back iterator for the calls edges.
+      * \return Returns an iterator for the calls edges.
+      */
+      ListIterator<statement::Function> getCallsListIteratorEnd() const;
+
+      /**
+      * \brief Tells whether the node has calls edges or not.
+      * \return Returns true if the node doesn't have any calls edge.
+      */
+      bool getCallsIsEmpty() const;
+
+      /**
+      * \brief Gives back how many calls edges the node has.
+      * \return Returns with the number of calls edges.
+      */
+      unsigned getCallsSize() const;
+
 
       // ---------- Edge setter function(s) ----------
 
@@ -178,6 +203,30 @@ namespace expression {
       */
       void removeArguments(base::Positioned *node);
 
+      /**
+      * \brief Adds a new calls edge to the node and inserts it after the other ones.
+      * \param node [in] The end point of the new calls edge.
+      */
+      void addCalls(const statement::Function *node);
+
+      /**
+      * \brief Adds a new calls edge to the node and inserts it after the other ones.
+      * \param id [in] The end point of the new calls edge.
+      */
+      void addCalls(NodeId id);
+
+      /**
+      * \brief Remove the calls edge by id from the node.
+      * \param id [in] The end point of the calls edge.
+      */
+      void removeCalls(NodeId id);
+
+      /**
+      * \brief Remove the calls edge from the node.
+      * \param node [in] The end point of the calls edge.
+      */
+      void removeCalls(statement::Function *node);
+
     protected:
 
       // ---------- Edges ----------
@@ -187,6 +236,9 @@ namespace expression {
 
       /** \internal \brief Container stores the id of the nodes the hasArguments edge points to. */
       ListIterator<base::Positioned>::Container hasArgumentsContainer;
+
+      /** \internal \brief Container stores the id of the nodes the calls edge points to. */
+      ListIterator<statement::Function>::Container callsContainer;
 
     public:
 

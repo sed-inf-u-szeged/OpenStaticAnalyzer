@@ -35,8 +35,8 @@ typedef boost::crc_32_type  Crc_type;
 namespace statement { 
   With::With(NodeId _id, Factory *_factory) :
     CompoundStatement(_id, _factory),
-    m_hasExpression(0),
-    m_hasTargetList(0)
+    m_isAsync(false),
+    hasWithItemContainer()
   {
   }
 
@@ -44,8 +44,13 @@ namespace statement {
   }
 
   void With::prepareDelete(bool tryOnVirtualParent){
-    removeExpression();
-    removeTargetList();
+    while (!hasWithItemContainer.empty()) {
+      const NodeId id = *hasWithItemContainer.begin();
+      removeParentEdge(id);
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->removeEdge(id, this->getId(), edkWith_HasWithItem);
+      hasWithItemContainer.pop_front();
+    }
     statement::CompoundStatement::prepareDelete(false);
   }
 
@@ -53,33 +58,39 @@ namespace statement {
     return ndkWith;
   }
 
-  expression::Expression* With::getExpression() const {
-    expression::Expression *_node = NULL;
-    if (m_hasExpression != 0)
-      _node = dynamic_cast<expression::Expression*>(factory->getPointer(m_hasExpression));
-    if ( (_node == NULL) || factory->getIsFiltered(_node))
-      return NULL;
-
-    return _node;
+  bool With::getIsAsync() const {
+    return m_isAsync;
   }
 
-  statement::TargetList* With::getTargetList() const {
-    statement::TargetList *_node = NULL;
-    if (m_hasTargetList != 0)
-      _node = dynamic_cast<statement::TargetList*>(factory->getPointer(m_hasTargetList));
-    if ( (_node == NULL) || factory->getIsFiltered(_node))
-      return NULL;
+  void With::setIsAsync(bool _isAsync) {
+    m_isAsync = _isAsync;
+  }
 
-    return _node;
+  ListIterator<statement::WithItem> With::getWithItemListIteratorBegin() const {
+    return ListIterator<statement::WithItem>(&hasWithItemContainer, factory, true);
+  }
+
+  ListIterator<statement::WithItem> With::getWithItemListIteratorEnd() const {
+    return ListIterator<statement::WithItem>(&hasWithItemContainer, factory, false);
+  }
+
+  bool With::getWithItemIsEmpty() const {
+    return getWithItemListIteratorBegin() == getWithItemListIteratorEnd();
+  }
+
+  unsigned int With::getWithItemSize() const {
+    unsigned int size = 0;
+    ListIterator<statement::WithItem> endIt = getWithItemListIteratorEnd();
+    for (ListIterator<statement::WithItem> it = getWithItemListIteratorBegin(); it != endIt; ++it) {
+      ++size;
+    }
+    return size;
   }
 
   bool With::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
-      case edkWith_HasExpression:
-        setExpression(edgeEnd);
-        return true;
-      case edkWith_HasTargetList:
-        setTargetList(edgeEnd);
+      case edkWith_HasWithItem:
+        addWithItem(edgeEnd);
         return true;
       default:
         break;
@@ -92,11 +103,8 @@ namespace statement {
 
   bool With::removeEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
-      case edkWith_HasExpression:
-        removeExpression();
-        return true;
-      case edkWith_HasTargetList:
-        removeTargetList();
+      case edkWith_HasWithItem:
+        removeWithItem(edgeEnd);
         return true;
       default:
         break;
@@ -107,96 +115,52 @@ namespace statement {
     return false;
   }
 
-  void With::setExpression(NodeId _id) {
-    expression::Expression *_node = NULL;
-    if (_id) {
-      if (!factory->getExist(_id))
-        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
-
-      _node = dynamic_cast<expression::Expression*> (factory->getPointer(_id));
-      if ( _node == NULL) {
-        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
-      }
-      if (&(_node->getFactory()) != this->factory)
-        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
-
-      if (m_hasExpression) {
-        removeParentEdge(m_hasExpression);
-        if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_hasExpression, m_id, edkWith_HasExpression);
-      }
-      m_hasExpression = _node->getId();
-      if (m_hasExpression != 0)
-        setParentEdge(factory->getPointer(m_hasExpression), edkWith_HasExpression);
-      if (factory->getExistsReverseEdges())
-        factory->reverseEdges->insertEdge(m_hasExpression, this->getId(), edkWith_HasExpression);
-    } else {
-      if (m_hasExpression) {
-        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
-      }
-    }
-  }
-
-  void With::setExpression(expression::Expression *_node) {
+  void With::addWithItem(const statement::WithItem *_node) {
     if (_node == NULL)
-      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
 
-    setExpression(_node->getId());
+    if (&(_node->getFactory()) != this->factory)
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
+
+    if (!((_node->getNodeKind() == ndkWithItem) ))
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+
+    hasWithItemContainer.push_back(_node->getId());
+    setParentEdge(_node,edkWith_HasWithItem);
+
+    if (factory->reverseEdges)
+      factory->reverseEdges->insertEdge(_node, this, edkWith_HasWithItem);
   }
 
-  void With::removeExpression() {
-      if (m_hasExpression) {
-        removeParentEdge(m_hasExpression);
-        if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_hasExpression, m_id, edkWith_HasExpression);
-      }
-      m_hasExpression = 0;
+  void With::addWithItem(NodeId _id) {
+    const statement::WithItem *node = dynamic_cast<statement::WithItem*>(factory->getPointer(_id));
+    if (node == NULL)
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+    addWithItem( node );
   }
 
-  void With::setTargetList(NodeId _id) {
-    statement::TargetList *_node = NULL;
-    if (_id) {
-      if (!factory->getExist(_id))
-        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+  void With::removeWithItem(NodeId id) {
+    if (!factory->getExist(id))
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
-      _node = dynamic_cast<statement::TargetList*> (factory->getPointer(_id));
-      if ( _node == NULL) {
-        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
-      }
-      if (&(_node->getFactory()) != this->factory)
-        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+    ListIterator<statement::WithItem>::Container::iterator it = find(hasWithItemContainer.begin(), hasWithItemContainer.end(), id);
 
-      if (m_hasTargetList) {
-        removeParentEdge(m_hasTargetList);
-        if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_hasTargetList, m_id, edkWith_HasTargetList);
-      }
-      m_hasTargetList = _node->getId();
-      if (m_hasTargetList != 0)
-        setParentEdge(factory->getPointer(m_hasTargetList), edkWith_HasTargetList);
-      if (factory->getExistsReverseEdges())
-        factory->reverseEdges->insertEdge(m_hasTargetList, this->getId(), edkWith_HasTargetList);
-    } else {
-      if (m_hasTargetList) {
-        throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
-      }
-    }
+    if (it == hasWithItemContainer.end())
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+    hasWithItemContainer.erase(it);
+
+    removeParentEdge(id);
+
+    if (factory->getExistsReverseEdges())
+      factory->reverseEdges->removeEdge(id, this->getId(), edkWith_HasWithItem);
   }
 
-  void With::setTargetList(statement::TargetList *_node) {
+  void With::removeWithItem(statement::WithItem *_node) {
     if (_node == NULL)
-      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
 
-    setTargetList(_node->getId());
-  }
-
-  void With::removeTargetList() {
-      if (m_hasTargetList) {
-        removeParentEdge(m_hasTargetList);
-        if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_hasTargetList, m_id, edkWith_HasTargetList);
-      }
-      m_hasTargetList = 0;
+    removeWithItem(_node->getId());
   }
 
   void With::accept(Visitor &visitor) const {
@@ -209,7 +173,10 @@ namespace statement {
 
   double With::getSimilarity(const base::Base& base){
     if(base.getNodeKind() == getNodeKind()) {
-      return 1.0;
+      const With& node = dynamic_cast<const With&>(base);
+      double matchAttrs = 0;
+      if(node.getIsAsync() == getIsAsync()) ++matchAttrs;
+      return matchAttrs / (1 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
     }
@@ -239,22 +206,34 @@ namespace statement {
   void With::save(io::BinaryIO &binIo,bool withVirtualBase  /*= true*/) const {
     CompoundStatement::save(binIo,false);
 
-    binIo.writeUInt4(m_hasExpression);
-    binIo.writeUInt4(m_hasTargetList);
+    unsigned char boolValues = 0;
+    boolValues <<= 1;
+    if (m_isAsync) 
+      boolValues |= 1;
+    binIo.writeUByte1(boolValues);
 
+
+    for (ListIterator<statement::WithItem>::Container::const_iterator it = hasWithItemContainer.begin(); it != hasWithItemContainer.end(); ++it) {
+      binIo.writeUInt4(*it);
+    }
+    binIo.writeUInt4(0); // This is the end sign
   }
 
   void With::load(io::BinaryIO &binIo, bool withVirtualBase /*= true*/) {
     CompoundStatement::load(binIo,false);
 
-    m_hasExpression =  binIo.readUInt4();
-    if (m_hasExpression != 0)
-      setParentEdge(factory->getPointer(m_hasExpression),edkWith_HasExpression);
+    unsigned char boolValues = binIo.readUByte1();
+    m_isAsync = boolValues & 1;
+    boolValues >>= 1;
 
-    m_hasTargetList =  binIo.readUInt4();
-    if (m_hasTargetList != 0)
-      setParentEdge(factory->getPointer(m_hasTargetList),edkWith_HasTargetList);
+    NodeId _id;
 
+    _id = binIo.readUInt4();
+    while (_id) {
+      hasWithItemContainer.push_back(_id);
+      setParentEdge(factory->getPointer(_id),edkWith_HasWithItem);
+      _id = binIo.readUInt4();
+    }
   }
 
 

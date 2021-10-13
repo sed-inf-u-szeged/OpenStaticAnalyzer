@@ -45,6 +45,38 @@ namespace columbus { namespace java { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge  visitor for hasAnnotations edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitAnnotatedTypeExpression_HasAnnotations(const expr::AnnotatedTypeExpression& begin, const expr::Annotation& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasAnnotations edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndAnnotatedTypeExpression_HasAnnotations(const expr::AnnotatedTypeExpression& begin, const expr::Annotation& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasUnderlyingType edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitAnnotatedTypeExpression_HasUnderlyingType(const expr::AnnotatedTypeExpression& begin, const expr::TypeExpression& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasUnderlyingType edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndAnnotatedTypeExpression_HasUnderlyingType(const expr::AnnotatedTypeExpression& begin, const expr::TypeExpression& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge  visitor for hasAnnotationName edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -221,6 +253,22 @@ namespace columbus { namespace java { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge visitor for target edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitFunctionalExpression_Target(const expr::FunctionalExpression& begin, const type::Type& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge visitor for target edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndFunctionalExpression_Target(const expr::FunctionalExpression& begin, const type::Type& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge visitor for refersTo edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -250,6 +298,86 @@ namespace columbus { namespace java { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndInstanceOf_HasTypeOperand(const expr::InstanceOf& begin, const expr::TypeExpression& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasParameters edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitLambda_HasParameters(const expr::Lambda& begin, const struc::Parameter& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasParameters edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndLambda_HasParameters(const expr::Lambda& begin, const struc::Parameter& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitLambda_HasBody(const expr::Lambda& begin, const base::Positioned& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndLambda_HasBody(const expr::Lambda& begin, const base::Positioned& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasQualifierExpression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitMemberReference_HasQualifierExpression(const expr::MemberReference& begin, const expr::Expression& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasQualifierExpression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndMemberReference_HasQualifierExpression(const expr::MemberReference& begin, const expr::Expression& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasTypeArguments edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitMemberReference_HasTypeArguments(const expr::MemberReference& begin, const expr::TypeExpression& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasTypeArguments edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndMemberReference_HasTypeArguments(const expr::MemberReference& begin, const expr::TypeExpression& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge visitor for referredMethod edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitMemberReference_ReferredMethod(const expr::MemberReference& begin, const struc::MethodDeclaration& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge visitor for referredMethod edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndMemberReference_ReferredMethod(const expr::MemberReference& begin, const struc::MethodDeclaration& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -557,6 +685,22 @@ namespace columbus { namespace java { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge  visitor for hasBounds edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitTypeIntersectionExpression_HasBounds(const expr::TypeIntersectionExpression& begin, const expr::TypeExpression& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasBounds edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndTypeIntersectionExpression_HasBounds(const expr::TypeIntersectionExpression& begin, const expr::TypeExpression& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge  visitor for hasAlternatives edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -602,6 +746,134 @@ namespace columbus { namespace java { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndWildcardExpression_HasBound(const expr::WildcardExpression& begin, const expr::TypeExpression& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasPackageName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitExports_HasPackageName(const module::Exports& begin, const expr::Expression& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasPackageName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndExports_HasPackageName(const module::Exports& begin, const expr::Expression& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasModuleNames edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitExports_HasModuleNames(const module::Exports& begin, const expr::Expression& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasModuleNames edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndExports_HasModuleNames(const module::Exports& begin, const expr::Expression& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasPackageName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitOpens_HasPackageName(const module::Opens& begin, const expr::Expression& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasPackageName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndOpens_HasPackageName(const module::Opens& begin, const expr::Expression& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasModuleNames edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitOpens_HasModuleNames(const module::Opens& begin, const expr::Expression& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasModuleNames edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndOpens_HasModuleNames(const module::Opens& begin, const expr::Expression& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasServiceName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitProvides_HasServiceName(const module::Provides& begin, const expr::Expression& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasServiceName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndProvides_HasServiceName(const module::Provides& begin, const expr::Expression& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasImplementationNames edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitProvides_HasImplementationNames(const module::Provides& begin, const expr::Expression& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasImplementationNames edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndProvides_HasImplementationNames(const module::Provides& begin, const expr::Expression& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasModuleName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitRequires_HasModuleName(const module::Requires& begin, const expr::Expression& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasModuleName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndRequires_HasModuleName(const module::Requires& begin, const expr::Expression& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasServiceName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitUses_HasServiceName(const module::Uses& begin, const expr::Expression& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasServiceName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndUses_HasServiceName(const module::Uses& begin, const expr::Expression& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -1009,7 +1281,7 @@ namespace columbus { namespace java { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      void VisitorSimpleEdge::visitTry_HasResources(const statm::Try& begin, const struc::Variable& end) {
+      void VisitorSimpleEdge::visitTry_HasResources(const statm::Try& begin, const base::Base& end) {
         visitAllEdge (begin, end);
       }
       /**
@@ -1017,7 +1289,7 @@ namespace columbus { namespace java { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      void VisitorSimpleEdge::visitEndTry_HasResources(const statm::Try& begin, const struc::Variable& end) {
+      void VisitorSimpleEdge::visitEndTry_HasResources(const statm::Try& begin, const base::Base& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -1149,6 +1421,38 @@ namespace columbus { namespace java { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge  visitor for hasOthers edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasOthers edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasModuleDeclaration edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitCompilationUnit_HasModuleDeclaration(const struc::CompilationUnit& begin, const struc::ModuleDeclaration& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasModuleDeclaration edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndCompilationUnit_HasModuleDeclaration(const struc::CompilationUnit& begin, const struc::ModuleDeclaration& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge visitor for typeDeclarations edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1165,19 +1469,19 @@ namespace columbus { namespace java { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
-      * \brief Edge  visitor for hasOthers edge which is called when the subtree of this edge is started.
+      * \brief Edge visitor for isInModule edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      void VisitorSimpleEdge::visitCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) {
+      void VisitorSimpleEdge::visitCompilationUnit_IsInModule(const struc::CompilationUnit& begin, const struc::Module& end) {
         visitAllEdge (begin, end);
       }
       /**
-      * \brief Edge end visitor for hasOthers edge which is called when the subtree of this edge is started.
+      * \brief Edge visitor for isInModule edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      void VisitorSimpleEdge::visitEndCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) {
+      void VisitorSimpleEdge::visitEndCompilationUnit_IsInModule(const struc::CompilationUnit& begin, const struc::Module& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -1293,6 +1597,86 @@ namespace columbus { namespace java { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge visitor for packages edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitModule_Packages(const struc::Module& begin, const struc::Package& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge visitor for packages edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndModule_Packages(const struc::Module& begin, const struc::Package& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitModuleDeclaration_HasName(const struc::ModuleDeclaration& begin, const expr::Expression& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasName edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndModuleDeclaration_HasName(const struc::ModuleDeclaration& begin, const expr::Expression& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for hasDirectives edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitModuleDeclaration_HasDirectives(const struc::ModuleDeclaration& begin, const module::ModuleDirective& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for hasDirectives edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndModuleDeclaration_HasDirectives(const struc::ModuleDeclaration& begin, const module::ModuleDirective& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge visitor for moduleType edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitModuleDeclaration_ModuleType(const struc::ModuleDeclaration& begin, const type::ModuleType& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge visitor for moduleType edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndModuleDeclaration_ModuleType(const struc::ModuleDeclaration& begin, const type::ModuleType& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge visitor for refersTo edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitModuleDeclaration_RefersTo(const struc::ModuleDeclaration& begin, const struc::Module& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge visitor for refersTo edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndModuleDeclaration_RefersTo(const struc::ModuleDeclaration& begin, const struc::Module& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge  visitor for hasParameters edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1357,6 +1741,22 @@ namespace columbus { namespace java { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge visitor for isInModule edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitPackage_IsInModule(const struc::Package& begin, const struc::Module& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge visitor for isInModule edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndPackage_IsInModule(const struc::Package& begin, const struc::Module& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge  visitor for hasPackageName edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1405,22 +1805,6 @@ namespace columbus { namespace java { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
-      * \brief Edge visitor for isInCompilationUnit edge which.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      void VisitorSimpleEdge::visitTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) {
-        visitAllEdge (begin, end);
-      }
-      /**
-      * \brief Edge visitor for isInCompilationUnit edge which.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      void VisitorSimpleEdge::visitEndTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) {
-        visitAllEdgeEnd (begin, end);
-      }
-      /**
       * \brief Edge  visitor for hasSuperClass edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1466,6 +1850,38 @@ namespace columbus { namespace java { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndTypeDeclaration_HasOthers(const struc::TypeDeclaration& begin, const base::Positioned& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge visitor for isInCompilationUnit edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge visitor for isInCompilationUnit edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge visitor for isInModule edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitTypeDeclaration_IsInModule(const struc::TypeDeclaration& begin, const struc::Module& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge visitor for isInModule edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndTypeDeclaration_IsInModule(const struc::TypeDeclaration& begin, const struc::Module& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -1549,6 +1965,22 @@ namespace columbus { namespace java { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge visitor for bounds edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitIntersectionType_Bounds(const type::IntersectionType& begin, const type::Type& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge visitor for bounds edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndIntersectionType_Bounds(const type::IntersectionType& begin, const type::Type& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge visitor for returnType edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1594,6 +2026,22 @@ namespace columbus { namespace java { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndMethodType_ThrownTypes(const type::MethodType& begin, const type::Type& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge visitor for refersTo edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitModuleType_RefersTo(const type::ModuleType& begin, const struc::Module& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge visitor for refersTo edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndModuleType_RefersTo(const type::ModuleType& begin, const struc::Module& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**

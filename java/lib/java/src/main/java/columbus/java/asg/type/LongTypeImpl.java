@@ -33,6 +33,7 @@ import columbus.logger.LoggerHandler;
  */
 public class LongTypeImpl extends BaseImpl implements LongType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(LongTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	public LongTypeImpl(int id, Factory factory) {
 		super(id, factory);

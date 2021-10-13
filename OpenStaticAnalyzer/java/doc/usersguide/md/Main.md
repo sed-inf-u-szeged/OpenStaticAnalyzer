@@ -16,17 +16,17 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
 
 - Platform-independent command line tools
 
-- Transparent integration into build processes
-
 - Powerful filter management
 
 - Coding issue detection:
 
     - Metric threshold violations (MetricHunter module)
 
-    - Re-prioritized and carefully selected [PMD] 5.2.3 coding rule violations
+    - Re-prioritized and carefully selected [PMD] 6.32.0 coding rule violations [^3]
 
-    - [FindBugs] 3.0.0 coding rule violations
+    - [SpotBugs] 4.2.2 coding rule violations
+
+    - [SONARQUBE™] platform 8.0 (“SonarQube” in the following) coding rule violations
 
 - Clone detection (copy-pasted source code fragments) extended with clone tracking and "clone smells"
 
@@ -40,8 +40,9 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
 
     - Coding rule violation metrics
 
-[PMD]:http://pmd.sourceforge.net/
-[FindBugs]:http://findbugs.sourceforge.net
+[PMD]:https://pmd.github.io
+[SpotBugs]:https://spotbugs.github.io
+[SONARQUBE™]:https://www.sonarqube.org
 
 By continuous static analysis, the software developers can:
 
@@ -51,11 +52,7 @@ By continuous static analysis, the software developers can:
 
 - the number of errors in delivered software can be reduced, so the operational risks can be decreased, increasing the company's reputation.
 
-OpenStaticAnalyzer can analyze source code conforming to Java 1.8.
-Two kinds of analysis processes are supported in the current version.
-For smaller systems, it is sufficient to set the source directory of the project to be analyzed and its classpath and java compiler settings, if needed.
-For more complex systems it is advised to analyze the system through its Ant or Maven build process.
-In this case, the analysis runs in parallel with the compilation process by wrapping the Ant or the Maven program.
+OpenStaticAnalyzer can analyze source code conforming to Java 11.
 
 With the help of the filtering mechanism it is possible to specify a certain part of the ASG to be used (or not to be used) during the analysis, hence the results can be made more focused and the usage of memory and CPU can be reduced (e.g. generated source files or test code can be filtered out).
 
@@ -68,7 +65,7 @@ During the static analysis, an Abstract Semantic Graph (ASG) is constructed from
 
 ## Supported platforms
 
-OpenStaticAnalyzer supports the following x86 and x86-64 platforms:
+OpenStaticAnalyzer supports the following x64 platforms:
 
 - Microsoft Windows 7, 8, 8.1, and 10
 
@@ -80,15 +77,13 @@ OpenStaticAnalyzer supports the following x86 and x86-64 platforms:
 
 ## Requirements
 
-In order to use OpenStaticAnalyzer it is necessary to have JDK 1.8 or newer installed on the computer and the necessary environment variables must be set correctly (JAVA\_HOME, PATH).
+In order to use OpenStaticAnalyzer it is necessary to have JDK 11 installed on the computer and the necessary environment variables must be set correctly (JAVA\_HOME, PATH).
 
-In case of Windows, the appropriate Microsoft Visual C++ 2015 Redistributable Package must be installed. It can be downloaded from the following URL:
+In case of Windows, the Microsoft Visual C++ 2017 Redistributable Package must be installed. It can be downloaded from the following URL:
 
-- [https://www.microsoft.com/en-us/download/details.aspx?id=48145] (x86/x64)
+- [https://aka.ms/vs/15/release/vc_redist.x64.exe] (x64)
 
-[https://www.microsoft.com/en-us/download/details.aspx?id=48145]:https://www.microsoft.com/en-us/download/details.aspx?id=48145
-
-If the Maven build analysis will be used then Maven 2.2.1, 3.0.5, 3.1.1, 3.2.2 or 3.2.5 has to be installed with the necessary environment variable (M2\_HOME).
+[https://aka.ms/vs/15/release/vc_redist.x64.exe]:https://aka.ms/vs/15/release/vc_redist.x64.exe
 
 The Linux package uses bash scripts.
 
@@ -97,16 +92,14 @@ The Linux package uses the code page conversion functions of the GNU C Library. 
 E.g.: for the Windows package:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.bash}
-set "JAVA_HOME=C:\Program Files\Java\jdk1.8.0_31"
-set "M2_HOME=C:\Program Files\apache-maven-3.2.5"
+set "JAVA_HOME=C:\Program Files\Java\jdk-11.0.2"
 set "PATH=%ANT_HOME%\bin;%JAVA_HOME%\bin;%M2_HOME%\bin;%PATH%"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 E.g.: for the Linux package:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.bash}
-export "JAVA_HOME=/opt/jdk1.8.0_31"
-export "M2_HOME=/opt/apache-maven-3.2.5"
+export "JAVA_HOME=/opt/jdk-11.0.2"
 export "PATH=$ANT_HOME/bin:$JAVA_HOME/bin:$M2_HOME/bin:$PATH"
 export "GCONV_PATH=/usr/lib/x86_64-linux-gnu/gconv"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -127,7 +120,6 @@ Windows:
 |                            | WindowsTools               |   \# ASG checker and exporter tools directory |
 |                            | WindowsWrapper             |   \# Wrapper and analyzer tools directory     |
 |                            | OpenStaticAnalyzerJava.exe |   \# Program file to execute the analysis     |
-|                            | installMavenWrapper.bat    |  \# Batch file to install the Maven wrapper   |
 |                            | UsersGuide.html            |  \# User's guide                              |
 
 
@@ -140,85 +132,18 @@ Linux:
 |                            | LinuxTools                | \# ASG checker and exporter tools directory |
 |                            | LinuxWrapper              | \# Wrapper and analyzer tools directory     |
 |                            | OpenStaticAnalyzerJava    | \# Program file to execute the analysis     |
-|                            | installMavenWrapper.sh    | \# Shell script to install the Maven wrapper|
 |                            | UsersGuide.html           | \# User's guide                             |
 
 
 
-To analyze Maven based projects, installMavenWrapper.bat (in case of Windows) or installMavenWrapper.sh (in case of Linux) must be executed in an environment where all the necessary environment variables of Maven are set and the user has write privilege for the Maven repository required for the install.
-
-During the execution of these scripts, every file required by OpenStaticAnalyzer will be installed to the local Maven repository. These are the following:
-
-- Inside the .m2/repository directory a hu/u-szeged/OpenStaticAnalyzer/OpenStaticAnalyzer-Maven-plugin-mojo-executer directory hierarchy will be created that contains:
-
-    - 2.2.1/OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.jar
-
-    - 2.2.1/OpenStaticAnalyzer-Maven-plugin-mojo-executer-2.2.1.pom
-
-    - 3.0/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.0.jar
-
-    - 3.0/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.0.pom
-
-    - 3.1/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.1.jar
-
-    - 3.1/OpenStaticAnalyzer-Maven-plugin-mojo-executer-3.1.pom
-
-- Inside the .m2/repository/org/apache/maven/plugins directory a OpenStaticAnalyzer-maven-plugin/7.0 directory hierarchy will be created that contains:
-
-    - OpenStaticAnalyzer-maven-plugin-7.0.jar
-
-    - OpenStaticAnalyzer-maven-plugin-7.0.pom
-
-
-If the local Maven repository is deleted then the appropriate installMavenWrapper batch/script must be executed again for the wrapper to function correctly.
 
 # Preconditions
 
-## Ant build analysis
-
-For the easy integration and precise analysis results, OpenStaticAnalyzer uses a so-called "wrapping" technique.
-Although this technique is the best choice in Ant build environments, it has its own limitations.
-The requirements listed below must be met to enable OpenStaticAnalyzer to analyze the subject system.
-
-- The software system shall be compilable with Java 1.8 and the build process must be managed with Ant version 1.8.4 or higher.
-
-- The PATH environment variable must not change during the build process regarding the compilers.
-
-- Compilers must not be invoked with relative or with absolute paths during the build process (only by name).
-
-- Since the analyzer redefines the javac, jar, war, ear, copy and delete tasks of Ant, if these tasks are redefined again during the build process, the analyzer might not produce the expected results.
-
-- If the desired functionality of the redefined tasks are reached via non-standard ways (e.g. by calling external programs), then the wrapper might erroneously finish running. For instance, if the exec task is used for the compilation instead of the javac task, the analyzer will not be invoked. Similarly, if archiving is done via the exec tasks instead of proper archiving tasks, then the temporary files of the analysis might become archived too.
-
-- The wrapper does not support performing tasks in parallel.
-
-If these conditions are not met, the build scripts must be modified accordingly.
-
-Using Ant build, besides the class files created by the standard javac compiler, OpenStaticAnalyzer creates the ASG files next to the class files. The different archiving tasks (jar, war, ear) trigger the linking of ASG files of the classes too, besides their usual tasks. Using the move, copy, and delete tasks in the build scripts are allowed, the operation will have the proper effect on the results of the static analysis as well.
-
-## Maven build analysis
-
-Similarly to the Ant build analysis, OpenStaticAnalyzer uses the so-called "wrapping" technique also in the case of the Maven build analysis. Although this technique is the best choice in Maven build environments, it has its own limitations. The requirements listed below must be met to enable OpenStaticAnalyzer to analyze the subject system.
-
-- The software system shall be compilable with Java 1.8 and the build process must be managed with Maven versions 2.2.1, 3.0.5, 3.1.1, 3.2.2 or 3.2.5.
-
-- Maven's built-in compiler plugin must execute the compilation, its built-in jar plugin must do the packaging and its built-in install and deploy plugins must be responsible for the placement of the final artifacts in the local or remote repositories, respectively.
-
-- Only those parts of the system are taken into consideration during the analysis which are either placed inside a jar archive by Maven's packaging plugin (org.apache.maven.plugins:maven-jar-plugin) or installed to the local repository by Maven's install plugin (org.apache.maven.plugins:maven-install-plugin).
-
-- The wrapper does not support performing tasks in parallel.
-
-All created output artifacts are placed in the local repository.
-
-## Directory analysis
-
-If Ant build scripts are not available, the so-called directory analysis mode can be used. In this case, it is enough to give only the directory of the source code (project directory) and a build script is not required. The only requirement in this case is the following:
-
-- The java files shall be compilable with Java 1.8.
+- The java files shall be compilable with Java 11.
 
 - If specific javac options are necessary for the compilation (classpath, sourcepath, target, etc.), these have to be specified to OpenStaticAnalyzer as well.
 
-In this analysis mode, the results may be less accurate, the possible compiler errors occur only as warnings, the results will be created, but the accuracy cannot be guaranteed mainly because of eventually missing types. In order to increase the accuracy of the analysis, external jar files with the missing types can be set with the javacOptions command line parameter.
+In order to increase the accuracy of the analysis, external jar files with the missing types can be set with the javacOptions command line parameter.
 
 # Command line parameters
 
@@ -235,10 +160,6 @@ OpenStaticAnalyzer can be executed with the following parameters:
 **-projectName**
 
   : The name of the analyzed software system. The name specified here will be used for storing the results.
-
-**-buildScript**
-
-  : Relative or absolute path name of the executable build script which manages the build process of the system. Using this option the Ant or Maven build analysis mode will be activated. If the build script does not return with 0, OpenStaticAnalyzer will stop with an error and no analysis results will be available.
 
 **-externalHardFilter**
 
@@ -284,7 +205,7 @@ Source code elements in the files marked with darker background will not be cons
 
 **-profileXML**
 
-  : Global configuration file for OpenStaticAnalyzer. Its *tool-options* tag can be used to override the default metric thresholds for the MetricHunter tool. Furthermore, its *rule-options* tag can enable/disable or modify the priorities of multiple rules. An example profile xml file is shown below:
+  : Global configuration file for OpenStaticAnalyzer. Its *tool-options* tag can be used to override the default metric thresholds for the MetricHunter tool or define custom metric formulas for the UserDefinedMetrics tool. Furthermore, its *rule-options* tag can enable/disable or modify the priorities of multiple rules. An example profile xml file is shown below:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.xml}
       <openstaticanalyzer-profile>
@@ -306,9 +227,13 @@ Source code elements in the files marked with darker background will not be cons
       </openstaticanalyzer-profile>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+**-runUDM**
+
+  : This parameter turns on or off the UserDefinedMetrics module. With this feature, OpenStaticAnalyzer computes custom source code metrics based on other, previously computed metrics. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is dependent on the presence of custom metric definitions in the profile xml.
+
 **-rulesCSV**
 
-  : There are certain rule violations that are computed by more than one tool. E.g. ADLIBDC (Avoid Decimal Literals In BigDecimal Constructor) is checked by both FindBugs and PMD. In these cases, in order to avoid duplications, there is a priority order among the tools. This parameter can be used to override these default priorizations by specifying a .csv file in the following format:
+  : There are certain rule violations that are computed by more than one tool. E.g. ADLIBDC (Avoid Decimal Literals In BigDecimal Constructor) is checked by both SpotBugs and PMD. In these cases, in order to avoid duplications, there is a priority order among the tools. This parameter can be used to override these default priorizations by specifying a .csv file in the following format:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.csv}
       toolId;FB;PMD
@@ -336,6 +261,10 @@ Source code elements in the files marked with darker background will not be cons
 
   : This parameter sets the decimal mark character in the CSV outputs. The default is value is the dot ("."). The character set here must be placed in quotation marks (e.g. -csvDecimalMark=",").
 
+**-sarifseverity**
+
+  : This parameter sets the severity levels to be saved in the SARIF output. (1 - Info, 2 - Minor, 3 - Major, 4 - Critical, 5 - Blocker, c/C - CloneClass). The value should not be placed in quotation marks (e.g. -sarifseverity=2345c). The default value is 2345c.
+
 **-maximumThreads**
 
   : This parameter sets the maximum number of parallel tasks the controller can start. The default value is the number of available CPU cores on the current system.
@@ -350,11 +279,11 @@ Source code elements in the files marked with darker background will not be cons
 
 **-cleanProject**
 
-  : Removes all files (from the directory set by the projectBaseDir parameter) created during the analysis (in case of directory or Ant build analysis .jsi, .ljsi, .fjsi files in the .columbus_java directories, in case of Maven build analysis .ajsi, .list, and other temp files in the target/openstaticanalyzer directories), but does not remove anything from the results directory (resultsDir). Its value can be "true" (turn this feature on, setting projectBaseDir is mandatory in this case) or "false" (turn this feature off). The default value is "false".
+  : Removes all files (from the directory set by the projectBaseDir parameter) created during the analysis (.ljsi, .fjsi files in the .columbus_java directories), but does not remove anything from the results directory (resultsDir). Its value can be "true" (turn this feature on, setting projectBaseDir is mandatory in this case) or "false" (turn this feature off). The default value is "false".
 
 **-projectBaseDir**
 
-  : Directory of the source code to be analyzed specified with relative or absolute path. Using this option the directory analysis mode will be activated. Setting projectBaseDir is mandatory, if buildScript is not set. If both buildScript and projectBaseDir are set, then the Ant or Maven build analysis mode will be activated.
+  : Directory of the source code to be analyzed specified with relative or absolute path. Using this option the directory analysis mode will be activated. Setting projectBaseDir is mandatory.
 
 **-javacOptions**
 
@@ -366,15 +295,15 @@ Source code elements in the files marked with darker background will not be cons
 
 **-runFB**
 
-  : This parameter turns on or off the FindBugs coding rule violation checking. With this feature, OpenStaticAnalyzer lists coding rule violations detected by FindBugs. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is "true". Currently, FindBugs is invoked only in the case of Directory analysis mode. The FBFileList parameter has to be provided.
+  : This parameter turns on or off the SpotBugs coding rule violation checking. With this feature, OpenStaticAnalyzer lists coding rule violations detected by SpotBugs. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is "true". Currently, SpotBugs is invoked only in the case of Directory analysis mode. The FBFileList parameter has to be provided.
 
 **-FBFileList**
 
-  : List file with binary inputs (class or jar files). If it is set then OpenStaticAnalyzer lists coding rule violations detected by the FindBugs tool. The given Java binaries have to be compiled with debug information.
+  : List file with binary inputs (class or jar files). If it is set then OpenStaticAnalyzer lists coding rule violations detected by the SpotBugs tool. The given Java binaries have to be compiled with debug information.
 
 **-FBOptions**
 
-  : Extra command line parameters for FindBugs can be set with this option. For instance if some auxiliary classes are needed, these can be set by adding the -FBOptions="-auxclasspath external.jar" option.
+  : Extra command line parameters for SpotBugs can be set with this option. For instance if some auxiliary classes are needed, these can be set by adding the -FBOptions="-auxclasspath external.jar" option.
 
 **-runPMD**
 
@@ -384,78 +313,49 @@ Source code elements in the files marked with darker background will not be cons
 
   : In directory analysis mode, the necessary parameters required by PMD can be set with this option, like the version or encoding for instance (e.g. -pmdOptions="-version 1.4 -encoding UTF-8").
 
-**-mavenFilter=regexp**
+**-runSQ**
 
-  : In Maven build analysis mode, the results of previous module builds and analyses are stored in the Maven repository. When analyzing a module, the ASGs of its dependencies are automatically downloaded from this repository. The regexp value of this parameter can specify which module's results should be downloaded (regexp should fit to [groupId]:[artifactID]:[Version]) and considered while creating the final results. This parameter only applies to Maven builds; in other cases, it will be ignored.
+  : Import issues from SonarQube server.
+
+**-SQHost**
+
+  : The URL address of the SonarQube server.
+
+**-SQPort**
+
+  : The port of the SonarQube server.
+
+**-SQProjectKey**
+
+  : The key of the project in the SonarQube server.
+
+**-SQProjectPrefix**
+
+  : Prefix path of the project's base directory (the path of the sonar-project.properties file).
+
+**-SQUserName**
+
+  : The user name for the SonarQube server.
+
+**-SQPassword**
+
+  : The password for the SonarQube server.
+
+**-SQLanguageKey**
+
+  : The key of the language in SonarQube.
+
+**-runLIM2Patterns**
+
+  : This parameter can be used to enable or disable the LIM2Patterns module during analysis (default = on). 
+
+**-pattern**
+
+  : The pattern file or pattern directory for LIM2Patterns. By default it searches for the predefined Anti Patterns found in Tools/Patterns/AntiPatterns.
 
 # Usage
 
-There are two ways to use OpenStaticAnalyzer. It can be used by simply invoking it on the directory, which contains the source files, or it can be invoked with an Ant or a Maven build script.
-
-## Ant and Maven build analysis
-
-The following steps have to be performed to analyze the source code of a software system:
-
-1.  The static analysis requires a build script, which contains the commands needed to compile the software system. If this build script is not readily available, it must be prepared as it can be seen in the following example.
-
-    Ant example (Windows):
-
-        ---------- build.bat ------------
-        @echo off
-        ant -f MyProject\build.xml clean jar
-
-
-    Ant example (Linux):
-
-        -------- build.sh ------------
-        #!/bin/sh
-        ant -f MyProject/build.xml clean jar
-
-    Maven example (Windows):
-
-        ---------- build.bat ------------
-        @echo off
-        mvn -f MyProject\pom.xml clean install -DskipTests
-
-    Maven example (Linux):
-
-        ---------- build.sh ------------
-        #!/bin/sh
-        mvn -f MyProject/pom.xml clean install -DskipTests
-
-2.  Create hard and/or soft filter file(s) to filter out unnecessary (e.g. external, generated, or unit test) source code, if necessary.
-
-    Example (Windows):
-
-        ---------- SoftFilter.txt --------
-        -C:\\Users\\UserName\\MyProject\\src\\generated
-        +C:\\Users\\UserName\\MyProject
-
-    Example (Linux):
-
-        ---------- SoftFilter.txt --------
-        -/home/UserName/MyProject/src/generated
-        +/home/UserName/MyProject
-
-3.  Execute OpenStaticAnalyzer:
-
-    Example (Windows):
-
-        C:\Users\UserName\OpenStaticAnalyzer\Java\OpenStaticAnalyzerJava
-         -projectName=MyProject
-         -buildScript=MyProject\build.bat
-         -resultsDir=Results
-         -externalSoftFilter=SoftFilter.txt
-
-    Example (Linux):
-
-        ~$ OpenStaticAnalyzer/Java/OpenStaticAnalyzerJava
-         -projectName=MyProject
-         -buildScript=MyProject/build.sh
-         -resultsDir=Results
-         -externalSoftFilter=SoftFilter.txt
-
-## Directory analysis
+It can be used by simply invoking it on the directory, which contains the source files.
 
 Execute the following command to analyze the source code of a software system:
 
@@ -511,7 +411,7 @@ Component, File, Package, Class, Interface, Enum, Method, Attribute, and Annotat
 
     - \$(projectName)\\java\\\$(DATE)\\\$(projectName)-FindBugs.txt
 
-        List of the FindBugs coding rule violations in the system.
+        List of the SpotBugs coding rule violations in the system.
 
     - \$(projectName)\\java\\\$(DATE)\\\$(projectName).graph
 
@@ -524,6 +424,22 @@ Component, File, Package, Class, Interface, Enum, Method, Attribute, and Annotat
     - \$(projectName)\\java\\\$(projectName).gsi
 
         Binary data file containing information for tracking the code clones through the consecutive revisions of the analyzed software system.
+
+    - \$(projectName)\\java\\\$(DATE)\\\$(projectName).sarif
+
+        SARIF representation of the rule violations.
+
+    - \$(projectName)\\java\\\$(DATE)\\\$(projectName)-summary.graph
+
+        Binary representation of the summary result graph containing only the System component node.
+
+    - \$(projectName)\\java\\\$(DATE)\\\$(projectName)-summary.xml
+
+        XML representation of the summary result graph containing only the System component node.
+
+    - \$(projectName)\\java\\\$(DATE)\\\$(projectName)-summary.json
+
+        JSON representation of the summary result graph containing only the System component node.
 
 - Other files and directories created in the results directory:
 
@@ -549,28 +465,20 @@ Component, File, Package, Class, Interface, Enum, Method, Attribute, and Annotat
 
 - Files created outside the results directory:
 
-    - .jsi
-
-        Java language dependent ASG file. In case of an Ant build analysis, the .jsi files are created in the .columbus_java directory located in the directory of the corresponding class files of the compiled Java source files.
-
     - .ljsi
 
-        Linked Java language dependent ASG file. In case of an Ant build analysis, it is created in the .columbus_java sub-directory of the directory containing the corresponding archive file (jar, war, ear) produced by the archiver programs. In case of a Maven build analysis, it is created in the OpenStaticAnalyzer sub-directory of the "target" (unless otherwise specified in the pom file) directory. This is where the analysis automatically downloads the dependent files and from where it uploads the result jar file of this component. In case of directory analysis, one .ljsi file is created in the .columbus_java sub-directory of the directory set by the projectBaseDir parameter.
+        Linked Java language dependent ASG file. One .ljsi file is created in the .columbus_java sub-directory of the directory set by the projectBaseDir parameter.
 
     - .fjsi
 
         Filter file belonging to the linked Java language dependent ASG file (.ljsi). It is created in the corresponding directory of the .ljsi file.
-
-    - .ajsi and .apmd
-
-        Archive files created in the OpenStaticAnalyzer directory in case of a Maven build analysis. The results of the analysis are also placed in the local Maven repository.
 
 
 It is important to note that "standard parts" are not taken into consideration while creating the results. This means that e.g. when a class does not have an explicit superclass, its number of parents (and ancestors) will be 0 (zero) despite the fact that every Java class inherits implicitly from Object, which would suggest that the number will be 1. Similarly, other metrics and results also disregard "standard parts".
 
 # Coding rule violation suppression
 
-The warnings issued by the integrated 3^rd^ party tools (PMD, FindBugs) can be suppressed with their own official warning suppression mechanisms in case they are found to be invalid or for any other reason.
+The warnings issued by the rule checker modules can be suppressed in case they are found to be invalid or for any other reason. In the case of the integrated 3^rd^ party tools (PMD, SpotBugs) the warnings can be suppressed with their own official warning suppression mechanisms.
 
 Example:
 
@@ -584,24 +492,20 @@ public class Foo {
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In this example, all PMD warnings are suppressed in the method "goo".
+In this example, all PMD warnings in the method "goo".
 
 The warnings of the MetricHunter module cannot be suppressed at the moment.
 
 # Demo
 
 The Demo directory of the installation package contains the directory structure, the build and analyzer scripts for the analysis of an example project.
-Version 1.2.17 and version 2.3 of the log4j open source program are included as example projects, which can also be downloaded from the following URLs:
+Version 1.2.17 of the log4j open source program are included as example projects, which can also be downloaded from the following URLs:
 
 [http://archive.apache.org/dist/logging/log4j/1.2.17/log4j-1.2.17.zip]
 
 [http://archive.apache.org/dist/logging/log4j/1.2.17/log4j-1.2.17.zip]:http://archive.apache.org/dist/logging/log4j/1.2.17/log4j-1.2.17.zip
 
-[http://archive.apache.org/dist/logging/log4j/2.3/apache-log4j-2.3-src.zip]
-
-[http://archive.apache.org/dist/logging/log4j/2.3/apache-log4j-2.3-src.zip]:http://archive.apache.org/dist/logging/log4j/2.3/apache-log4j-2.3-src.zip
-
-To perform the source code analysis of the demo project, one of the analyze-*.bat/analyze-*.sh scripts has to be executed.
+To perform the source code analysis of the demo project, one of the analyze-dir.bat/analyze-dir.sh scripts has to be executed.
 
 Contents of the Demo directory:
 
@@ -610,11 +514,6 @@ Windows:
 -------------  -----------------------  --------------------------------------
 Demo\\
                apache-log4j-1.2.17      \# source code of log4j version 1.2.17
-               apache-log4j-2.3-src     \# source code of log4j version 2.3
-               build-ant.bat            \# builds log4j (Ant call)
-               build-maven.bat          \# builds log4j (Maven call)
-               analyze-ant.bat          \# starts OpenStaticAnalyzer in Ant build analysis mode
-               analyze-maven.bat        \# starts OpenStaticAnalyzer in Maven build analysis mode
                analyze-dir.bat          \# starts OpenStaticAnalyzer in Directory analysis mode
 -------------  -----------------------  --------------------------------------
 
@@ -623,11 +522,6 @@ Linux:
 -------------  -----------------------  --------------------------------------
 Demo/
                apache-log4j-1.2.17      \# source code of log4j version 1.2.17
-               apache-log4j-2.3-src     \# source code of log4j version 2.3
-               build-ant.sh             \# builds log4j (Ant call)
-               build-maven.sh           \# builds log4j (Maven call)
-               analyze-ant.sh           \# starts OpenStaticAnalyzer in Ant build analysis mode
-               analyze-maven.sh         \# starts OpenStaticAnalyzer in Maven build analysis mode
                analyze-dir.sh           \# starts OpenStaticAnalyzer in Directory analysis mode
 -------------  -----------------------  --------------------------------------
 
@@ -641,28 +535,22 @@ Demo/
 
     Solution: The projectName parameter must be set.
 
-- Message: Please set the buildScript or projectBaseDir parameter. The usage of buildScript is recommended.
+- Message: Please set the projectBaseDir parameter.
 
-    Solution: At least one of the buildScript or projectBaseDir parameters must be set.
+    Solution: The projectBaseDir parameters must be set.
 
-- Message: Required java version is 1.8 or later
+- Message: Required java version is Java 11
 
-    Solution: In order to use OpenStaticAnalyzer the installation of JDK 1.8 or later version is required, and the corresponding environment variables must be set correctly.
-
-- Message: Required Ant version is 1.8.4 or later
-
-    Solution: To use OpenStaticAnalyzer the installation of Ant 1.8.4 or later version is required.
+    Solution: In order to use OpenStaticAnalyzer the installation of JDK 11 version is required, and the corresponding environment variables must be set correctly.
 
 - Message: ASG list file does not exist: .../openstaticanalyzer/log/superlinklist.txt
-
-    Solution 1: In case of an Ant or Maven build analysis check whether the build script calls the appropriate Ant target or Maven goal and whether any kind of archive files (jar, war, ear, etc.) is created. If not, the analyzer cannot produce the corresponding output files (.ljsi). Please modify the build script accordingly.
 
     Solution 2: Check if the JAVA\_HOME and PATH environment variables are set to the appropriate JDK and they do not point to some JRE. In the latter case the .../openstaticanalyzer/log/build.log file will contain an error message similar to the following:
 
         Unable to find a javac compiler; com.sun.tools.javac.Main is not on the classpath.
         Perhaps JAVA_HOME does not point to the JDK.
 
-        It is currently set to "c:\Program Files\Java\jre7"
+        It is currently set to "c:\Program Files\Java\jre11"
 
 - Message: exec returned: 255
 

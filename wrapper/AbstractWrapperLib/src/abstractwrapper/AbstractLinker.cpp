@@ -184,19 +184,21 @@ namespace ColumbusWrappers {
       insertDir(input, false);
 
       if (isObjectFile(input)) {
-        input += ".csi";
+        input += ".ast";
         fileArg.name = input;
         output_paramlist.push_back(fileArg);
         ret = true;
       } else if (isArchiveFile(input)) {
         if (linking_mode == 3) {
-          input += ".acsi";
+          input += ".aast";
           fileArg.name = input;
           output_paramlist.push_back(fileArg);
           ret = true;
         } else {
           writeInfoMsg(ABSTRACT_LINKER, CMSG_INFO_STATIC_LIB_IS_NOT_LINKED_IN, input.c_str(), linking_mode);
         }
+      } else {
+        writeInfoMsg(ABSTRACT_LINKER, CMSG_DEBUG_LINKER_UNKNOWN_INPUT, input.c_str());
       }
     }
 
@@ -253,11 +255,11 @@ namespace ColumbusWrappers {
     Argument outputFileArg;
     if (linkerArgs.linker_output_file.name == "") {
       writeDebugMsg(ABSTRACT_LINKER, CMSG_DEBUG_LINKER_OUTPUT);
-      output = indepFullpath("a.out") + ".lcsi";
+      output = indepFullpath("a.out") + ".component";
       outputFileArg.position = linkerArgs.max_arg + 1;
     } else {
       writeDebugMsg(ABSTRACT_LINKER, CMSG_DEBUG_LINKER_OUTPUT_FROM_PARAM, linkerArgs.linker_output_file.name.c_str());
-      output = indepFullpath(linkerArgs.linker_output_file.name) + ".lcsi";
+      output = indepFullpath(linkerArgs.linker_output_file.name) + ".component";
       outputFileArg.position = linkerArgs.linker_output_file.position;
     }
     replaceQuoteForQuoteWithBackslash(output);
@@ -301,10 +303,6 @@ namespace ColumbusWrappers {
       }
     }
 
-    if (linkerArgs.create_dll) {
-      sys_cmd += " " CL_PAR_PLUS "-DLL" CL_PAR_PLUS;
-    }
-
     sys_cmd += " " CL_PAR_PLUS "-ml:" + toString(linker_ml) + CL_PAR_PLUS;
     if (linker_needstat) {
       string statfile = wrapper_log_dir + DIRDIVSTRING + "statCANLink.csv";
@@ -337,20 +335,20 @@ namespace ColumbusWrappers {
     } else {
       string f, e;
       if (common::splitExt(output, f, e)) {
-        string lcsi_list = wrapper_log_dir + DIRDIVSTRING + "lcsi.list";
-        string lockFile = getLockFileName(lcsi_list);
-        ofstream lcsilist(lcsi_list.c_str(), ios::app);
+        string component_list = wrapper_log_dir + DIRDIVSTRING + "component.list";
+        string lockFile = getLockFileName(component_list);
+        ofstream componentlist(component_list.c_str(), ios::app);
         ofstream lock(lockFile.c_str());
 
         file_lock f_lock(lockFile.c_str());
 
-        if (lcsilist.is_open()) {
+        if (componentlist.is_open()) {
           //sets an exclusive lock on the file (no other processes can read or write it)
           scoped_lock<file_lock> e_lock(f_lock);
 
-          lcsilist << indepFullpath(output) << endl;
-          lcsilist.flush();
-          lcsilist.close();
+          componentlist << indepFullpath(output) << endl;
+          componentlist.flush();
+          componentlist.close();
         }
         lock.close();
       }

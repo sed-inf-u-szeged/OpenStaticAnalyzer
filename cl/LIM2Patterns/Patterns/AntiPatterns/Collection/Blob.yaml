@@ -1,0 +1,15 @@
+# https://sourcemaking.com/antipatterns/the-blob
+name : Blob
+kind : ndkClass
+role : BlobClass
+category : AntiPattern
+priority : Minor
+displayName : Blob
+description : "Also Known As: Winnebago and The God Class<br> The Blob is found in designs where one class monopolizes the processing, and other classes primarily encapsulate data. This AntiPattern is characterized by a class diagram composed of a single complex controller class surrounded by simple data classes. The key problem here is that the majority of the responsibilities are allocated to a single class."
+conditions :
+  - or:
+    #Single class with a large number of attributes, operations, or both. A class with 60 or more attributes and operations usually indicates the presence of the Blob
+    - NLA + NLM >= 60
+    - LLOC >= 1000
+    #A single controller class with associated simple, data-object classes.
+    #A disparate collection of unrelated attributes and operations encapsulated in a single class. An overall lack of cohesiveness of the attributes and operations is typical of the Blob.

@@ -28,7 +28,7 @@ add_custom_generated_copy_dependency_to_root_dir (OpenStaticAnalyzerPython${EXE}
 
 add_custom_generated_copy_dependency_to_tools_dir (rules_python.csv OpenStaticAnalyzerPython)
 add_custom_generated_copy_dependency_to_tools_dir (DuplicatedCodeFinder_python${EXE} DuplicatedCodeFinder_python DuplicatedCodeFinder${EXE})
-add_custom_generated_copy_dependency_to_tools_dir (DCF.rul DuplicatedCodeFinder_python_copy_DCF.rul)
+add_custom_generated_copy_dependency_to_tools_dir (DCF.rul DCFRulCopy)
 add_custom_generated_copy_dependency_to_tools_dir (GraphDump${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (GraphMerge${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (LIM2Metrics${EXE})
@@ -39,8 +39,14 @@ add_custom_generated_copy_dependency_to_tools_dir (PAN2${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (PAN3${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (PAN2Lim${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (Pylint2Graph${EXE})
-add_custom_generated_copy_dependency_to_tools_dir (Pylint.rul Pylint2Graph)
+add_custom_generated_copy_dependency_to_tools_dir (Pylint_1.rul Pylint2Graph)
+add_custom_generated_copy_dependency_to_tools_dir (Pylint_2.rul Pylint2Graph)
 add_custom_generated_copy_dependency_to_tools_dir (Pylint.conf Pylint2Graph)
+add_custom_generated_copy_dependency_to_tools_dir (UserDefinedMetrics${EXE})
+add_custom_generated_copy_dependency_to_tools_dir (Sonar2Graph${EXE})
+add_custom_generated_copy_dependency_to_tools_dir (LIM2Patterns_python${EXE} LIM2Patterns_python LIM2Patterns${EXE})
+add_custom_generated_copy_dependency_to_tools_dir (Patterns LIM2Patterns_python Patterns DIRECTORY)
+add_custom_generated_copy_dependency_to_tools_dir (Lib LIM2Patterns_python Lib DIRECTORY)
 
 add_custom_generated_copy_dependency(
     ${OSA_TARGET_NAME}

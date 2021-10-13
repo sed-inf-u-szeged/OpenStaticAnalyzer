@@ -116,8 +116,14 @@ void VisitorGraphConverter::visit(const lim::asg::base::Component& node, bool b)
       }
 
       if (attributes) {
-        addNodeNameAttribute(g, gnode, node.getName());
-        addNodeLongNameAttribute(g, gnode, lim::asg::Common::getScopedName(node));
+        if (factory.getLanguage() == lim::asg::limLangCsharp) {
+          addNodeNameAttribute(g, gnode, node.getShortName());
+          addNodeLongNameAttribute(g, gnode, node.getName());
+        } else {
+          addNodeNameAttribute(g, gnode, node.getName());
+          addNodeLongNameAttribute(g, gnode, lim::asg::Common::getScopedName(node));
+        }
+
         if (factory.getLanguage() == lim::asg::limLangJava) {
           gnode.addAttribute(g.createAttributeString(graphconstants::ATTR_CHANGESETID, graphconstants::CONTEXT_ATTRIBUTE, node.getChangesetID()));
           switch (node.getAnalysisTime()) {
@@ -166,14 +172,14 @@ void VisitorGraphConverter::visit(const lim::asg::logical::Package& node, bool b
         case lim::asg::limLangOther:
           gnode = g.createNode(determineNodeName(node), graph::Node::NodeType(graphconstants::NTYPE_LIM_ROOT));
           break;
-        case lim::asg::limLangRpg:
-          gnode = g.createNode(determineNodeName(node), graph::Node::NodeType(graphconstants::NTYPE_RPG_SYSTEM));
-          break;
         case lim::asg::limLangC:
         case lim::asg::limLangCpp:
           gnode = g.createNode(determineNodeName(node), graph::Node::NodeType(graphconstants::NTYPE_LIM_NAMESPACE));
           break;
         case lim::asg::limLangJava:
+          gnode = g.createNode(determineNodeName(node), graph::Node::NodeType(graphconstants::NTYPE_LIM_PACKAGE));
+          break;
+        case lim::asg::limLangJavaScript:
           gnode = g.createNode(determineNodeName(node), graph::Node::NodeType(graphconstants::NTYPE_LIM_PACKAGE));
           break;
         case lim::asg::limLangCsharp:
@@ -247,7 +253,16 @@ void VisitorGraphConverter::visit(const lim::asg::logical::Class& node, bool b) 
               gnode = g.createNode(determineNodeName(node), graph::Node::NodeType(graphconstants::NTYPE_LIM_ANNOTATION));
               break;
             case lim::asg::clkDelegate:
+              gnode = g.createNode(determineNodeName(node), graph::Node::NodeType(graphconstants::NTYPE_LIM_DELEGATE));
+              break;
+            case lim::asg::clkProtocol:
+              gnode = g.createNode(determineNodeName(node), graph::Node::NodeType(graphconstants::NTYPE_LIM_INTERFACE));
+              break;
+            case lim::asg::clkCategory:
               gnode = g.createNode(determineNodeName(node), graph::Node::NodeType(graphconstants::NTYPE_LIM_CLASS));
+              break;
+            case lim::asg::clkExtension:
+              gnode = g.createNode(determineNodeName(node), graph::Node::NodeType(graphconstants::NTYPE_LIM_INTERFACE));
               break;
             default:
               break;
@@ -274,7 +289,7 @@ void VisitorGraphConverter::visit(const lim::asg::logical::Class& node, bool b) 
       if (attributes) {
         graphsupport::addNodeNameAttribute(g, gnode, node.getName());
         graphsupport::addNodeLongNameAttribute(g, gnode, node.getDemangledName());
-        if (factory.getLanguage() == lim::asg::limLangJava || factory.getLanguage() == lim::asg::limLangCpp || factory.getLanguage() == lim::asg::limLangC || factory.getLanguage() == lim::asg::limLangCsharp ) {
+        if (factory.getLanguage() == lim::asg::limLangJava || factory.getLanguage() == lim::asg::limLangCpp || factory.getLanguage() == lim::asg::limLangC || factory.getLanguage() == lim::asg::limLangCsharp || factory.getLanguage() == lim::asg::limLangJavaScript) {
           graphsupport::setAnonymousAttribute(g, gnode, node.getIsAnonymous());
         }
       }
@@ -349,7 +364,7 @@ void VisitorGraphConverter::visit(const lim::asg::logical::Method& node, bool b)
       if (attributes) {
         graphsupport::addNodeNameAttribute(g, gnode, node.getName());
         graphsupport::addNodeLongNameAttribute(g, gnode, node.getDemangledName());
-        if (factory.getLanguage() == lim::asg::limLangCsharp ) {
+        if (factory.getLanguage() == lim::asg::limLangCsharp || factory.getLanguage() == lim::asg::limLangJavaScript) {
           graphsupport::setAnonymousAttribute(g, gnode, node.getIsAnonymous());
         }
       }
@@ -499,9 +514,16 @@ void VisitorGraphConverter::extraConversion(const lim::asg::base::Base &node, gr
   }
 }
 
-const std::string VisitorGraphConverter::determineNodeName(const lim::asg::base::Base &node) {
-  return "L"+lim::asg::Common::toString(node.getId());
+const std::string VisitorGraphConverter::determineNodeName(const lim::asg::base::Base &node)
+{
+  return determineNodeName(node.getId());
 }
+
+const std::string VisitorGraphConverter::determineNodeName(NodeId nodeId)
+{
+  return "L" + std::to_string(nodeId);
+}
+
 
 bool VisitorGraphConverter::needToConvert(const lim::asg::base::Base &node) const {
   if (lim::asg::Common::getIsComponent(node))

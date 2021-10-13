@@ -39,15 +39,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.params.length; i++) {
                 if (node.params[i] != null) {
                     var paramsWrapper = globals.getWrapperOfNode(node.params[i]);
-                    if (node.params[i].type !== "Literal") {
-                        var paramsWrapperFunctionString = "addParams" + node.params[i].type;
-                    } else {
-                        var paramsWrapperFunctionString = "addParams" + globals.getLiteralType(node.params[i]) + node.params[i].type;
-                    }
                     try {
-                        arrowFunctionExpressionWrapper[paramsWrapperFunctionString](paramsWrapper);
+                        arrowFunctionExpressionWrapper.addParams(paramsWrapper);
                     } catch (e) {
-                        console.error("ARROWFUNCTIONEXPRESSION - Function not exist: arrowFunctionExpressionWrapper." + paramsWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("ARROWFUNCTIONEXPRESSION - Could not add param! Reason of the error: " + e + "\n");
                     }
                 }
             }
@@ -55,29 +50,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.body != null) {
             var bodyWrapper = globals.getWrapperOfNode(node.body);
-            if (node.body.type !== "Literal") {
-                var bodyWrapperFunctionString = "setBody" + node.body.type;
-            } else {
-                var bodyWrapperFunctionString = "setBody" + globals.getLiteralType(node.body) + node.body.type;
-            }
             try {
-                arrowFunctionExpressionWrapper[bodyWrapperFunctionString](bodyWrapper);
+                arrowFunctionExpressionWrapper.setBody(bodyWrapper);
             } catch (e) {
-                console.error("ARROWFUNCTIONEXPRESSION - Function not exist: arrowFunctionExpressionWrapper." + bodyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("ARROWFUNCTIONEXPRESSION - Could not set body! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.id != null) {
             var identifierWrapper = globals.getWrapperOfNode(node.id);
-            if (node.id.type !== "Literal") {
-                var identifierWrapperFunctionString = "setIdentifier" + node.id.type;
-            } else {
-                var identifierWrapperFunctionString = "setIdentifier" + globals.getLiteralType(node.id) + node.id.type;
-            }
             try {
-                arrowFunctionExpressionWrapper[identifierWrapperFunctionString](identifierWrapper);
+                arrowFunctionExpressionWrapper.setIdentifier(identifierWrapper);
             } catch (e) {
-                console.error("ARROWFUNCTIONEXPRESSION - Function not exist: arrowFunctionExpressionWrapper." + identifierWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("ARROWFUNCTIONEXPRESSION - Could not set identifier! Reason of the error: " + e + "\n");
             }
         }
 

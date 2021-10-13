@@ -94,6 +94,7 @@ namespace columbus { namespace lim { namespace metrics {
       */
       void addMetric( const std::string& metric, int value );
       void addMetric( const std::string& metric, float value );
+      void setInvalid( const std::string& metric );
 
       /**
       * Metric value getters

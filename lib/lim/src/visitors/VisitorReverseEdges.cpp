@@ -33,6 +33,10 @@ void VisitorReverseEdges::visit(const base::Base &node, bool callVirtualBase ) {
     revEdges->reContainer[id] = new ReverseEdges::NodeEdgesType();
 }
 
+void VisitorReverseEdges::visitComponent_CompilationUnit(const base::Component& begin, const physical::File& end) {
+  revEdges->insertEdge(&end, &begin, edkComponent_CompilationUnit);
+}
+
 void VisitorReverseEdges::visitComponent_Contains(const base::Component& begin, const base::Component& end) {
   revEdges->insertEdge(&end, &begin, edkComponent_Contains);
 }
@@ -63,6 +67,10 @@ void VisitorReverseEdges::visitAttribute_HasType(const logical::Attribute& begin
 
 void VisitorReverseEdges::visitAttributeAccess_Attribute(const logical::AttributeAccess& begin, const logical::Attribute& end) {
   revEdges->insertEdge(&end, &begin, edkAttributeAccess_Attribute);
+}
+
+void VisitorReverseEdges::visitClass_Extends(const logical::Class& begin, const logical::Class& end) {
+  revEdges->insertEdge(&end, &begin, edkClass_Extends);
 }
 
 void VisitorReverseEdges::visitClass_GrantsFriendship(const logical::Class& begin, const logical::Friendship& end) {

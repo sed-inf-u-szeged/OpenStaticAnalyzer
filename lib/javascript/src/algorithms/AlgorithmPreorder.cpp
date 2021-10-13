@@ -43,7 +43,7 @@ AlgorithmPreorder::AlgorithmPreorder()
   fact(NULL),
   traversaldCrossEdges()
 {
-  memset(traversaldCrossEdges,false,sizeof(bool)*93);
+  memset(traversaldCrossEdges,false,sizeof(bool)*95);
 }
 
 AlgorithmPreorder::~AlgorithmPreorder() {
@@ -1433,6 +1433,36 @@ void AlgorithmPreorder::visitAllEdges(const expression::CallExpression& node, bo
     if(needPreorderStop)
       return;
   }
+
+  // edge: calls
+  for (ListIterator<statement::Function> it = node.getCallsListIteratorBegin(); it != node.getCallsListIteratorEnd(); ++it) {
+    const statement::Function& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitCallExpression_Calls(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot) {
+        if (visitCrossEdgeTree) {
+          unvisitedNodes[endNodeRef.getId()] = true;
+        }
+      }
+      if (traversaldCrossEdges[edkCallExpression_Calls]) {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndCallExpression_Calls(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
 }
 
 void AlgorithmPreorder::visit(const expression::CallExpression& node, bool callFirst /*= true*/){
@@ -2073,6 +2103,36 @@ void AlgorithmPreorder::visitAllEdges(const expression::NewExpression& node, boo
     if(needPreorderStop)
       return;
   }
+
+  // edge: calls
+  for (ListIterator<statement::Function> it = node.getCallsListIteratorBegin(); it != node.getCallsListIteratorEnd(); ++it) {
+    const statement::Function& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitNewExpression_Calls(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot) {
+        if (visitCrossEdgeTree) {
+          unvisitedNodes[endNodeRef.getId()] = true;
+        }
+      }
+      if (traversaldCrossEdges[edkNewExpression_Calls]) {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndNewExpression_Calls(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
 }
 
 void AlgorithmPreorder::visit(const expression::NewExpression& node, bool callFirst /*= true*/){
@@ -2194,8 +2254,8 @@ void AlgorithmPreorder::visitAllEdges(const expression::ObjectExpression& node, 
   std::list<Visitor*>::iterator itVisitors;
 
   // edge: hasProperties
-  for (ListIterator<expression::Property> it = node.getPropertiesListIteratorBegin(); it != node.getPropertiesListIteratorEnd(); ++it) {
-    const expression::Property& endNodeRef = *it;
+  for (ListIterator<base::Positioned> it = node.getPropertiesListIteratorBegin(); it != node.getPropertiesListIteratorEnd(); ++it) {
+    const base::Positioned& endNodeRef = *it;
     for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
       (*itVisitors)->visitObjectExpression_HasProperties(node, endNodeRef);
     }
@@ -4268,8 +4328,8 @@ void AlgorithmPreorder::visitAllEdges(const statement::ObjectPattern& node, bool
   std::list<Visitor*>::iterator itVisitors;
 
   // edge: hasProperties
-  for (ListIterator<expression::Property> it = node.getPropertiesListIteratorBegin(); it != node.getPropertiesListIteratorEnd(); ++it) {
-    const expression::Property& endNodeRef = *it;
+  for (ListIterator<base::Positioned> it = node.getPropertiesListIteratorBegin(); it != node.getPropertiesListIteratorEnd(); ++it) {
+    const base::Positioned& endNodeRef = *it;
     for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
       (*itVisitors)->visitObjectPattern_HasProperties(node, endNodeRef);
     }
@@ -5472,11 +5532,11 @@ void AlgorithmPreorder::visitAllEdges(const structure::ModuleSpecifier& node, bo
 void AlgorithmPreorder::startPreorder(){
 
   if (!fact){
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_YOU_MUST_GIVE_A_FACTORY_AT_FIRST);
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_YOU_MUST_GIVE_A_FACTORY_AT_FIRST);
   }
 
   if (visitorList.empty()){
-    throw JavaScriptException(COLUMBUS_LOCATION, CMSG_EX_DON_T_HAVE_ANY_VISITOR);
+    throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_DON_T_HAVE_ANY_VISITOR);
   }
 
   if (safeMode || visitCrossEdgeTree) {

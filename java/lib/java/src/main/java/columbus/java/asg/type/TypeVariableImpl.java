@@ -35,6 +35,7 @@ import columbus.logger.LoggerHandler;
  */
 public class TypeVariableImpl extends BaseImpl implements TypeVariable {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(TypeVariableImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected int _refersTo;
 

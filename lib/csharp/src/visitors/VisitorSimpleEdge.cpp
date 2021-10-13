@@ -61,19 +61,35 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
-      * \brief Edge  visitor for Body edge which is called when the subtree of this edge is started.
+      * \brief Edge  visitor for Block edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      void VisitorSimpleEdge::visitAnonymousFunctionExpressionSyntax_Body(const expression::AnonymousFunctionExpressionSyntax& begin, const base::Positioned& end) {
+      void VisitorSimpleEdge::visitAnonymousFunctionExpressionSyntax_Block(const expression::AnonymousFunctionExpressionSyntax& begin, const statement::BlockSyntax& end) {
         visitAllEdge (begin, end);
       }
       /**
-      * \brief Edge end visitor for Body edge which is called when the subtree of this edge is started.
+      * \brief Edge end visitor for Block edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      void VisitorSimpleEdge::visitEndAnonymousFunctionExpressionSyntax_Body(const expression::AnonymousFunctionExpressionSyntax& begin, const base::Positioned& end) {
+      void VisitorSimpleEdge::visitEndAnonymousFunctionExpressionSyntax_Block(const expression::AnonymousFunctionExpressionSyntax& begin, const statement::BlockSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitAnonymousFunctionExpressionSyntax_ExpressionBody(const expression::AnonymousFunctionExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for ExpressionBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndAnonymousFunctionExpressionSyntax_ExpressionBody(const expression::AnonymousFunctionExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -445,6 +461,38 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge  visitor for Designation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitDeclarationExpressionSyntax_Designation(const expression::DeclarationExpressionSyntax& begin, const structure::VariableDesignationSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Designation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndDeclarationExpressionSyntax_Designation(const expression::DeclarationExpressionSyntax& begin, const structure::VariableDesignationSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitDeclarationExpressionSyntax_Type(const expression::DeclarationExpressionSyntax& begin, const expression::TypeSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Type edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndDeclarationExpressionSyntax_Type(const expression::DeclarationExpressionSyntax& begin, const expression::TypeSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -605,6 +653,22 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge  visitor for Initializer edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitImplicitStackAllocArrayCreationExpressionSyntax_Initializer(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Initializer edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndImplicitStackAllocArrayCreationExpressionSyntax_Initializer(const expression::ImplicitStackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge  visitor for Expressions edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -669,6 +733,22 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge visitor for LocalFunctionCall edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitInvocationExpressionSyntax_LocalFunctionCall(const expression::InvocationExpressionSyntax& begin, const statement::LocalFunctionStatementSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge visitor for LocalFunctionCall edge which.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndInvocationExpressionSyntax_LocalFunctionCall(const expression::InvocationExpressionSyntax& begin, const statement::LocalFunctionStatementSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge visitor for MethodCall edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -682,6 +762,38 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndInvocationExpressionSyntax_MethodCall(const expression::InvocationExpressionSyntax& begin, const structure::MethodDeclarationSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitIsPatternExpressionSyntax_Expression(const expression::IsPatternExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndIsPatternExpressionSyntax_Expression(const expression::IsPatternExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Pattern edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitIsPatternExpressionSyntax_Pattern(const expression::IsPatternExpressionSyntax& begin, const structure::PatternSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Pattern edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndIsPatternExpressionSyntax_Pattern(const expression::IsPatternExpressionSyntax& begin, const structure::PatternSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -1005,6 +1117,54 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge  visitor for LeftOperand edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitRangeExpressionSyntax_LeftOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for LeftOperand edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndRangeExpressionSyntax_LeftOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for RightOperand edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitRangeExpressionSyntax_RightOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for RightOperand edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndRangeExpressionSyntax_RightOperand(const expression::RangeExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitRefExpressionSyntax_Expression(const expression::RefExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndRefExpressionSyntax_Expression(const expression::RefExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1018,6 +1178,22 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndRefTypeExpressionSyntax_Expression(const expression::RefTypeExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitRefTypeSyntax_Type(const expression::RefTypeSyntax& begin, const expression::TypeSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Type edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndRefTypeSyntax_Type(const expression::RefTypeSyntax& begin, const expression::TypeSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -1085,6 +1261,22 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge  visitor for Initializer edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitStackAllocArrayCreationExpressionSyntax_Initializer(const expression::StackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Initializer edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndStackAllocArrayCreationExpressionSyntax_Initializer(const expression::StackAllocArrayCreationExpressionSyntax& begin, const expression::InitializerExpressionSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1098,6 +1290,86 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndStackAllocArrayCreationExpressionSyntax_Type(const expression::StackAllocArrayCreationExpressionSyntax& begin, const expression::TypeSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Arms edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitSwitchExpressionSyntax_Arms(const expression::SwitchExpressionSyntax& begin, const structure::SwitchExpressionArmSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Arms edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndSwitchExpressionSyntax_Arms(const expression::SwitchExpressionSyntax& begin, const structure::SwitchExpressionArmSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for GoverningExpression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitSwitchExpressionSyntax_GoverningExpression(const expression::SwitchExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for GoverningExpression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndSwitchExpressionSyntax_GoverningExpression(const expression::SwitchExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitThrowExpressionSyntax_Expression(const expression::ThrowExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndThrowExpressionSyntax_Expression(const expression::ThrowExpressionSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Arguments edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitTupleExpressionSyntax_Arguments(const expression::TupleExpressionSyntax& begin, const structure::ArgumentSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Arguments edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndTupleExpressionSyntax_Arguments(const expression::TupleExpressionSyntax& begin, const structure::ArgumentSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Elements edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitTupleTypeSyntax_Elements(const expression::TupleTypeSyntax& begin, const structure::TupleElementSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Elements edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndTupleTypeSyntax_Elements(const expression::TupleTypeSyntax& begin, const structure::TupleElementSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -1162,6 +1434,38 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndCheckedStatementSyntax_Block(const statement::CheckedStatementSyntax& begin, const statement::BlockSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitCommonForEachStatementSyntax_Expression(const statement::CommonForEachStatementSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndCommonForEachStatementSyntax_Expression(const statement::CommonForEachStatementSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Statement edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitCommonForEachStatementSyntax_Statement(const statement::CommonForEachStatementSyntax& begin, const statement::StatementSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Statement edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndCommonForEachStatementSyntax_Statement(const statement::CommonForEachStatementSyntax& begin, const statement::StatementSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -1245,38 +1549,6 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
-      * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      void VisitorSimpleEdge::visitForEachStatementSyntax_Expression(const statement::ForEachStatementSyntax& begin, const expression::ExpressionSyntax& end) {
-        visitAllEdge (begin, end);
-      }
-      /**
-      * \brief Edge end visitor for Expression edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      void VisitorSimpleEdge::visitEndForEachStatementSyntax_Expression(const statement::ForEachStatementSyntax& begin, const expression::ExpressionSyntax& end) {
-        visitAllEdgeEnd (begin, end);
-      }
-      /**
-      * \brief Edge  visitor for Statement edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      void VisitorSimpleEdge::visitForEachStatementSyntax_Statement(const statement::ForEachStatementSyntax& begin, const statement::StatementSyntax& end) {
-        visitAllEdge (begin, end);
-      }
-      /**
-      * \brief Edge end visitor for Statement edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      void VisitorSimpleEdge::visitEndForEachStatementSyntax_Statement(const statement::ForEachStatementSyntax& begin, const statement::StatementSyntax& end) {
-        visitAllEdgeEnd (begin, end);
-      }
-      /**
       * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1290,6 +1562,22 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndForEachStatementSyntax_Type(const statement::ForEachStatementSyntax& begin, const expression::TypeSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Variable edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitForEachVariableStatementSyntax_Variable(const statement::ForEachVariableStatementSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Variable edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndForEachVariableStatementSyntax_Variable(const statement::ForEachVariableStatementSyntax& begin, const expression::ExpressionSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -1469,6 +1757,102 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge  visitor for Body edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitLocalFunctionStatementSyntax_Body(const statement::LocalFunctionStatementSyntax& begin, const statement::BlockSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Body edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndLocalFunctionStatementSyntax_Body(const statement::LocalFunctionStatementSyntax& begin, const statement::BlockSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for ConstraintClauses edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitLocalFunctionStatementSyntax_ConstraintClauses(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterConstraintClauseSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for ConstraintClauses edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndLocalFunctionStatementSyntax_ConstraintClauses(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterConstraintClauseSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitLocalFunctionStatementSyntax_ExpressionBody(const statement::LocalFunctionStatementSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for ExpressionBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndLocalFunctionStatementSyntax_ExpressionBody(const statement::LocalFunctionStatementSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for ParameterList edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitLocalFunctionStatementSyntax_ParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::ParameterListSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for ParameterList edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndLocalFunctionStatementSyntax_ParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::ParameterListSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for ReturnType edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitLocalFunctionStatementSyntax_ReturnType(const statement::LocalFunctionStatementSyntax& begin, const expression::TypeSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for ReturnType edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndLocalFunctionStatementSyntax_ReturnType(const statement::LocalFunctionStatementSyntax& begin, const expression::TypeSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for TypeParameterList edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitLocalFunctionStatementSyntax_TypeParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterListSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for TypeParameterList edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndLocalFunctionStatementSyntax_TypeParameterList(const statement::LocalFunctionStatementSyntax& begin, const structure::TypeParameterListSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1514,6 +1898,22 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndReturnStatementSyntax_Expression(const statement::ReturnStatementSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for AttributeLists edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitStatementSyntax_AttributeLists(const statement::StatementSyntax& begin, const structure::AttributeListSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for AttributeLists edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndStatementSyntax_AttributeLists(const statement::StatementSyntax& begin, const structure::AttributeListSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -1754,6 +2154,22 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndAccessorDeclarationSyntax_Body(const structure::AccessorDeclarationSyntax& begin, const statement::BlockSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitAccessorDeclarationSyntax_ExpressionBody(const structure::AccessorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for ExpressionBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndAccessorDeclarationSyntax_ExpressionBody(const structure::AccessorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -2125,6 +2541,22 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitBaseMethodDeclarationSyntax_ExpressionBody(const structure::BaseMethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for ExpressionBody edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndBaseMethodDeclarationSyntax_ExpressionBody(const structure::BaseMethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge  visitor for ParameterList edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -2266,6 +2698,38 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndBaseTypeSyntax_Type(const structure::BaseTypeSyntax& begin, const expression::TypeSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Pattern edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitCasePatternSwitchLabelSyntax_Pattern(const structure::CasePatternSwitchLabelSyntax& begin, const structure::PatternSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Pattern edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndCasePatternSwitchLabelSyntax_Pattern(const structure::CasePatternSwitchLabelSyntax& begin, const structure::PatternSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for WhenClause edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitCasePatternSwitchLabelSyntax_WhenClause(const structure::CasePatternSwitchLabelSyntax& begin, const structure::WhenClauseSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for WhenClause edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndCasePatternSwitchLabelSyntax_WhenClause(const structure::CasePatternSwitchLabelSyntax& begin, const structure::WhenClauseSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -2429,6 +2893,22 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitConstantPatternSyntax_Expression(const structure::ConstantPatternSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndConstantPatternSyntax_Expression(const structure::ConstantPatternSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge  visitor for Initializer edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -2474,22 +2954,6 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndConstructorInitializerSyntax_ConstructorCall(const structure::ConstructorInitializerSyntax& begin, const structure::ConstructorDeclarationSyntax& end) {
-        visitAllEdgeEnd (begin, end);
-      }
-      /**
-      * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      void VisitorSimpleEdge::visitConversionOperatorDeclarationSyntax_ExpressionBody(const structure::ConversionOperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
-        visitAllEdge (begin, end);
-      }
-      /**
-      * \brief Edge end visitor for ExpressionBody edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      void VisitorSimpleEdge::visitEndConversionOperatorDeclarationSyntax_ExpressionBody(const structure::ConversionOperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -2554,6 +3018,38 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndCrefParameterSyntax_Type(const structure::CrefParameterSyntax& begin, const expression::TypeSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Designation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitDeclarationPatternSyntax_Designation(const structure::DeclarationPatternSyntax& begin, const structure::VariableDesignationSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Designation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndDeclarationPatternSyntax_Designation(const structure::DeclarationPatternSyntax& begin, const structure::VariableDesignationSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitDeclarationPatternSyntax_Type(const structure::DeclarationPatternSyntax& begin, const expression::TypeSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Type edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndDeclarationPatternSyntax_Type(const structure::DeclarationPatternSyntax& begin, const expression::TypeSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -3085,22 +3581,6 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
-      * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      void VisitorSimpleEdge::visitMethodDeclarationSyntax_ExpressionBody(const structure::MethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
-        visitAllEdge (begin, end);
-      }
-      /**
-      * \brief Edge end visitor for ExpressionBody edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      void VisitorSimpleEdge::visitEndMethodDeclarationSyntax_ExpressionBody(const structure::MethodDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
-        visitAllEdgeEnd (begin, end);
-      }
-      /**
       * \brief Edge  visitor for ReturnType edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -3245,22 +3725,6 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
-      * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      void VisitorSimpleEdge::visitOperatorDeclarationSyntax_ExpressionBody(const structure::OperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
-        visitAllEdge (begin, end);
-      }
-      /**
-      * \brief Edge end visitor for ExpressionBody edge which is called when the subtree of this edge is started.
-      * \param begin [in] The reference of the node the edge starts from.
-      * \param end   [in] The reference of the node the edge points to.
-      */
-      void VisitorSimpleEdge::visitEndOperatorDeclarationSyntax_ExpressionBody(const structure::OperatorDeclarationSyntax& begin, const structure::ArrowExpressionClauseSyntax& end) {
-        visitAllEdgeEnd (begin, end);
-      }
-      /**
       * \brief Edge  visitor for ReturnType edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -3373,6 +3837,38 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge  visitor for Variables edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitParenthesizedVariableDesignationSyntax_Variables(const structure::ParenthesizedVariableDesignationSyntax& begin, const structure::VariableDesignationSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Variables edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndParenthesizedVariableDesignationSyntax_Variables(const structure::ParenthesizedVariableDesignationSyntax& begin, const structure::VariableDesignationSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Subpatterns edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitPositionalPatternClauseSyntax_Subpatterns(const structure::PositionalPatternClauseSyntax& begin, const structure::SubpatternSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Subpatterns edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndPositionalPatternClauseSyntax_Subpatterns(const structure::PositionalPatternClauseSyntax& begin, const structure::SubpatternSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge  visitor for ExpressionBody edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -3402,6 +3898,22 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndPropertyDeclarationSyntax_Initializer(const structure::PropertyDeclarationSyntax& begin, const structure::EqualsValueClauseSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Subpatterns edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitPropertyPatternClauseSyntax_Subpatterns(const structure::PropertyPatternClauseSyntax& begin, const structure::SubpatternSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Subpatterns edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndPropertyPatternClauseSyntax_Subpatterns(const structure::PropertyPatternClauseSyntax& begin, const structure::SubpatternSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -3501,6 +4013,70 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
+      * \brief Edge  visitor for Designation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitRecursivePatternSyntax_Designation(const structure::RecursivePatternSyntax& begin, const structure::VariableDesignationSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Designation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndRecursivePatternSyntax_Designation(const structure::RecursivePatternSyntax& begin, const structure::VariableDesignationSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for PositionalPatternClause edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitRecursivePatternSyntax_PositionalPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PositionalPatternClauseSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for PositionalPatternClause edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndRecursivePatternSyntax_PositionalPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PositionalPatternClauseSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for PropertyPatternClause edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitRecursivePatternSyntax_PropertyPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PropertyPatternClauseSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for PropertyPatternClause edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndRecursivePatternSyntax_PropertyPatternClause(const structure::RecursivePatternSyntax& begin, const structure::PropertyPatternClauseSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitRecursivePatternSyntax_Type(const structure::RecursivePatternSyntax& begin, const expression::TypeSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Type edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndRecursivePatternSyntax_Type(const structure::RecursivePatternSyntax& begin, const expression::TypeSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
       * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -3514,6 +4090,70 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndSelectClauseSyntax_Expression(const structure::SelectClauseSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Pattern edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitSubpatternSyntax_Pattern(const structure::SubpatternSyntax& begin, const structure::PatternSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Pattern edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndSubpatternSyntax_Pattern(const structure::SubpatternSyntax& begin, const structure::PatternSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitSwitchExpressionArmSyntax_Expression(const structure::SwitchExpressionArmSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Expression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndSwitchExpressionArmSyntax_Expression(const structure::SwitchExpressionArmSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Pattern edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitSwitchExpressionArmSyntax_Pattern(const structure::SwitchExpressionArmSyntax& begin, const structure::PatternSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Pattern edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndSwitchExpressionArmSyntax_Pattern(const structure::SwitchExpressionArmSyntax& begin, const structure::PatternSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for WhenClause edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitSwitchExpressionArmSyntax_WhenClause(const structure::SwitchExpressionArmSyntax& begin, const structure::WhenClauseSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for WhenClause edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndSwitchExpressionArmSyntax_WhenClause(const structure::SwitchExpressionArmSyntax& begin, const structure::WhenClauseSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -3546,6 +4186,22 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndSwitchSectionSyntax_Statements(const structure::SwitchSectionSyntax& begin, const statement::StatementSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Type edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitTupleElementSyntax_Type(const structure::TupleElementSyntax& begin, const expression::TypeSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Type edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndTupleElementSyntax_Type(const structure::TupleElementSyntax& begin, const expression::TypeSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -3677,7 +4333,7 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdgeEnd (begin, end);
       }
       /**
-      * \brief Edge visitor for Parameters edge which.
+      * \brief Edge  visitor for Parameters edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
@@ -3685,7 +4341,7 @@ namespace columbus { namespace csharp { namespace asg {
         visitAllEdge (begin, end);
       }
       /**
-      * \brief Edge visitor for Parameters edge which.
+      * \brief Edge end visitor for Parameters edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
@@ -3738,6 +4394,22 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndUsingDirectiveSyntax_Name(const structure::UsingDirectiveSyntax& begin, const expression::NameSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Designation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitVarPatternSyntax_Designation(const structure::VarPatternSyntax& begin, const structure::VariableDesignationSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Designation edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndVarPatternSyntax_Designation(const structure::VarPatternSyntax& begin, const structure::VariableDesignationSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**
@@ -3802,6 +4474,22 @@ namespace columbus { namespace csharp { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       void VisitorSimpleEdge::visitEndVariableDeclaratorSyntax_Initializer(const structure::VariableDeclaratorSyntax& begin, const structure::EqualsValueClauseSyntax& end) {
+        visitAllEdgeEnd (begin, end);
+      }
+      /**
+      * \brief Edge  visitor for Condition edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitWhenClauseSyntax_Condition(const structure::WhenClauseSyntax& begin, const expression::ExpressionSyntax& end) {
+        visitAllEdge (begin, end);
+      }
+      /**
+      * \brief Edge end visitor for Condition edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      void VisitorSimpleEdge::visitEndWhenClauseSyntax_Condition(const structure::WhenClauseSyntax& begin, const expression::ExpressionSyntax& end) {
         visitAllEdgeEnd (begin, end);
       }
       /**

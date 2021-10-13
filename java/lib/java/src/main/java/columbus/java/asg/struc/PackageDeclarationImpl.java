@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class PackageDeclarationImpl extends BaseImpl implements PackageDeclaration {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(PackageDeclarationImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

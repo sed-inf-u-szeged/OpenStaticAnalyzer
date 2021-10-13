@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var throwStatement = factory.createThrowStatementWrapper(factory);
+        var throwStatement = factory.createThrowStatementWrapper();
         globals.setPositionInfo(node, throwStatement);
 
         return throwStatement;
@@ -35,15 +35,10 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.argument != null) {
             var argumentWrapper = globals.getWrapperOfNode(node.argument);
-            if (node.argument.type !== "Literal") {
-                var argumentWrapperFunctionString = "setArgument" + node.argument.type;
-            } else {
-                var argumentWrapperFunctionString = "setArgument" + globals.getLiteralType(node.argument) + node.argument.type;
-            }
             try {
-                throwStatementWrapper[argumentWrapperFunctionString](argumentWrapper);
+                throwStatementWrapper.setArgument(argumentWrapper);
             } catch (e) {
-                console.error("THROWSTATEMENT - Function not exist: throwStatementWrapper." + argumentWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("THROWSTATEMENT - Could not set argument! Reason of the error: " + e + "\n");
             }
         }
 

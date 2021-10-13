@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var importDeclaration = factory.createImportDeclarationWrapper(factory);
+        var importDeclaration = factory.createImportDeclarationWrapper();
         globals.setPositionInfo(node, importDeclaration);
         return importDeclaration;
     } else {
@@ -34,15 +34,10 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.source != null) {
             var sourceWrapper = globals.getWrapperOfNode(node.source);
-            if (node.source.type !== "Literal") {
-                var sourceWrapperFunctionString = "setSource" + node.source.type;
-            } else {
-                var sourceWrapperFunctionString = "setSource" + globals.getLiteralType(node.source) + node.source.type;
-            }
             try {
-                importDeclarationWrapper[sourceWrapperFunctionString](sourceWrapper);
+                importDeclarationWrapper.setSource(sourceWrapper);
             } catch (e) {
-                console.error("IMPORTDECLARATION - Function not exist: importDeclarationWrapper." + sourceWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("IMPORTDECLARATION - Could not set source! Reason of the error: " + e + "\n");
             }
         }
 
@@ -50,15 +45,10 @@ module.exports = function (node, parent, firstVisit) {
             for (var i = 0; i < node.specifiers.length; i++) {
                 if (node.specifiers[i] != null) {
                     var specifiersWrapper = globals.getWrapperOfNode(node.specifiers[i]);
-                    if (node.specifiers[i].type !== "Literal") {
-                        var specifiersWrapperFunctionString = "addSpecifiers" + node.specifiers[i].type;
-                    } else {
-                        var specifiersWrapperFunctionString = "addSpecifiers" + globals.getLiteralType(node.specifiers[i]) + node.specifiers[i].type;
-                    }
                     try {
-                        importDeclarationWrapper[specifiersWrapperFunctionString](specifiersWrapper);
+                        importDeclarationWrapper.addSpecifiers(specifiersWrapper);
                     } catch (e) {
-                        console.error("IMPORTDECLARATION - Function not exist: importDeclarationWrapper." + specifiersWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                        console.error("IMPORTDECLARATION - Could not add specifiers! Reason of the error: " + e + "\n");
                     }
                 }
             }

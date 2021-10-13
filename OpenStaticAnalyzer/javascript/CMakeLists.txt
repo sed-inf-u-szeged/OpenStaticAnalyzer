@@ -41,10 +41,14 @@ add_custom_generated_copy_dependency_to_tools_dir (ESLint2Graph${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (LIM2Metrics${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (MET.rul LIM2Metrics)
 add_custom_generated_copy_dependency_to_tools_dir (DuplicatedCodeFinder_javascript${EXE} DuplicatedCodeFinder_javascript DuplicatedCodeFinder${EXE})
-add_custom_generated_copy_dependency_to_tools_dir (DCF.rul DuplicatedCodeFinder_javascript_copy_DCF.rul)
+add_custom_generated_copy_dependency_to_tools_dir (DCF.rul DCFRulCopy)
 add_custom_generated_copy_dependency_to_tools_dir (MetricHunter_javascript${EXE} MetricHunter_javascript MetricHunter${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (MetricHunter_JAVASCRIPT.threshold MetricHunter_javascript_copy_MetricHunter_JAVASCRIPT.threshold MetricHunter.threshold)
-
+add_custom_generated_copy_dependency_to_tools_dir (UserDefinedMetrics${EXE})
+add_custom_generated_copy_dependency_to_tools_dir (Sonar2Graph${EXE})
+add_custom_generated_copy_dependency_to_tools_dir (LIM2Patterns_javascript${EXE} LIM2Patterns_javascript LIM2Patterns${EXE})
+add_custom_generated_copy_dependency_to_tools_dir (Patterns LIM2Patterns_javascript Patterns DIRECTORY)
+add_custom_generated_copy_dependency_to_tools_dir (Lib LIM2Patterns_javascript Lib DIRECTORY)
 
 #user's guide
 add_custom_generated_copy_dependency(

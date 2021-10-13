@@ -223,7 +223,7 @@ base::Base* Factory::getPointer(NodeId id) const {
   base::Base* p = NULL;
   try {
     p = container.at(id);
-  } catch (std::out_of_range e) {
+  } catch (const std::out_of_range&) {
     throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_ID(id));
   }
   return p;
@@ -461,8 +461,10 @@ base::Base* Factory::createNode(NodeKind kind) {
   switch (kind) {
     case ndkArgumentList: p = new expression::ArgumentList(id, this); break;
     case ndkAttributeRef: p = new expression::AttributeRef(id, this); break;
+    case ndkAwait: p = new expression::Await(id, this); break;
     case ndkBinaryArithmetic: p = new expression::BinaryArithmetic(id, this); break;
     case ndkBinaryLogical: p = new expression::BinaryLogical(id, this); break;
+    case ndkBytesLiteral: p = new expression::BytesLiteral(id, this); break;
     case ndkCall: p = new expression::Call(id, this); break;
     case ndkDictComp: p = new expression::DictComp(id, this); break;
     case ndkDictionary: p = new expression::Dictionary(id, this); break;
@@ -470,6 +472,7 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkExpressionList: p = new expression::ExpressionList(id, this); break;
     case ndkExtSlice: p = new expression::ExtSlice(id, this); break;
     case ndkFloatNumber: p = new expression::FloatNumber(id, this); break;
+    case ndkFormattedValue: p = new expression::FormattedValue(id, this); break;
     case ndkGenerator: p = new expression::Generator(id, this); break;
     case ndkGeneratorExpression: p = new expression::GeneratorExpression(id, this); break;
     case ndkIdentifier: p = new expression::Identifier(id, this); break;
@@ -477,15 +480,18 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkImagNumber: p = new expression::ImagNumber(id, this); break;
     case ndkIndex: p = new expression::Index(id, this); break;
     case ndkIntegerLiteral: p = new expression::IntegerLiteral(id, this); break;
+    case ndkJoinedStr: p = new expression::JoinedStr(id, this); break;
     case ndkKeyValue: p = new expression::KeyValue(id, this); break;
     case ndkKeyword: p = new expression::Keyword(id, this); break;
     case ndkLambda: p = new expression::Lambda(id, this); break;
     case ndkList: p = new expression::List(id, this); break;
     case ndkListComp: p = new expression::ListComp(id, this); break;
     case ndkLongInteger: p = new expression::LongInteger(id, this); break;
+    case ndkNamedExpr: p = new expression::NamedExpr(id, this); break;
     case ndkSet: p = new expression::Set(id, this); break;
     case ndkSetComp: p = new expression::SetComp(id, this); break;
     case ndkSlice: p = new expression::Slice(id, this); break;
+    case ndkStarred: p = new expression::Starred(id, this); break;
     case ndkStringConversion: p = new expression::StringConversion(id, this); break;
     case ndkStringLiteral: p = new expression::StringLiteral(id, this); break;
     case ndkSubscription: p = new expression::Subscription(id, this); break;
@@ -495,6 +501,7 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkObject: p = new module::Object(id, this); break;
     case ndkPackage: p = new module::Package(id, this); break;
     case ndkAlias: p = new statement::Alias(id, this); break;
+    case ndkAnnAssign: p = new statement::AnnAssign(id, this); break;
     case ndkAssert: p = new statement::Assert(id, this); break;
     case ndkAssign: p = new statement::Assign(id, this); break;
     case ndkAugAssign: p = new statement::AugAssign(id, this); break;
@@ -511,6 +518,7 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkIf: p = new statement::If(id, this); break;
     case ndkImportFrom: p = new statement::ImportFrom(id, this); break;
     case ndkImportStatement: p = new statement::ImportStatement(id, this); break;
+    case ndkNonlocal: p = new statement::Nonlocal(id, this); break;
     case ndkParameter: p = new statement::Parameter(id, this); break;
     case ndkPass: p = new statement::Pass(id, this); break;
     case ndkPrint: p = new statement::Print(id, this); break;
@@ -518,10 +526,10 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkReturn: p = new statement::Return(id, this); break;
     case ndkSuite: p = new statement::Suite(id, this); break;
     case ndkTargetList: p = new statement::TargetList(id, this); break;
-    case ndkTryExcept: p = new statement::TryExcept(id, this); break;
-    case ndkTryFinal: p = new statement::TryFinal(id, this); break;
+    case ndkTry: p = new statement::Try(id, this); break;
     case ndkWhile: p = new statement::While(id, this); break;
     case ndkWith: p = new statement::With(id, this); break;
+    case ndkWithItem: p = new statement::WithItem(id, this); break;
     default: throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 
@@ -547,8 +555,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkDocstring: p = new base::Docstring(i,this); break;
     case ndkArgumentList: p = new expression::ArgumentList(i,this); break;
     case ndkAttributeRef: p = new expression::AttributeRef(i,this); break;
+    case ndkAwait: p = new expression::Await(i,this); break;
     case ndkBinaryArithmetic: p = new expression::BinaryArithmetic(i,this); break;
     case ndkBinaryLogical: p = new expression::BinaryLogical(i,this); break;
+    case ndkBytesLiteral: p = new expression::BytesLiteral(i,this); break;
     case ndkCall: p = new expression::Call(i,this); break;
     case ndkDictComp: p = new expression::DictComp(i,this); break;
     case ndkDictionary: p = new expression::Dictionary(i,this); break;
@@ -556,6 +566,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkExpressionList: p = new expression::ExpressionList(i,this); break;
     case ndkExtSlice: p = new expression::ExtSlice(i,this); break;
     case ndkFloatNumber: p = new expression::FloatNumber(i,this); break;
+    case ndkFormattedValue: p = new expression::FormattedValue(i,this); break;
     case ndkGenerator: p = new expression::Generator(i,this); break;
     case ndkGeneratorExpression: p = new expression::GeneratorExpression(i,this); break;
     case ndkIdentifier: p = new expression::Identifier(i,this); break;
@@ -563,15 +574,18 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkImagNumber: p = new expression::ImagNumber(i,this); break;
     case ndkIndex: p = new expression::Index(i,this); break;
     case ndkIntegerLiteral: p = new expression::IntegerLiteral(i,this); break;
+    case ndkJoinedStr: p = new expression::JoinedStr(i,this); break;
     case ndkKeyValue: p = new expression::KeyValue(i,this); break;
     case ndkKeyword: p = new expression::Keyword(i,this); break;
     case ndkLambda: p = new expression::Lambda(i,this); break;
     case ndkList: p = new expression::List(i,this); break;
     case ndkListComp: p = new expression::ListComp(i,this); break;
     case ndkLongInteger: p = new expression::LongInteger(i,this); break;
+    case ndkNamedExpr: p = new expression::NamedExpr(i,this); break;
     case ndkSet: p = new expression::Set(i,this); break;
     case ndkSetComp: p = new expression::SetComp(i,this); break;
     case ndkSlice: p = new expression::Slice(i,this); break;
+    case ndkStarred: p = new expression::Starred(i,this); break;
     case ndkStringConversion: p = new expression::StringConversion(i,this); break;
     case ndkStringLiteral: p = new expression::StringLiteral(i,this); break;
     case ndkSubscription: p = new expression::Subscription(i,this); break;
@@ -581,6 +595,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkObject: p = new module::Object(i,this); break;
     case ndkPackage: p = new module::Package(i,this); break;
     case ndkAlias: p = new statement::Alias(i,this); break;
+    case ndkAnnAssign: p = new statement::AnnAssign(i,this); break;
     case ndkAssert: p = new statement::Assert(i,this); break;
     case ndkAssign: p = new statement::Assign(i,this); break;
     case ndkAugAssign: p = new statement::AugAssign(i,this); break;
@@ -597,6 +612,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkIf: p = new statement::If(i,this); break;
     case ndkImportFrom: p = new statement::ImportFrom(i,this); break;
     case ndkImportStatement: p = new statement::ImportStatement(i,this); break;
+    case ndkNonlocal: p = new statement::Nonlocal(i,this); break;
     case ndkParameter: p = new statement::Parameter(i,this); break;
     case ndkPass: p = new statement::Pass(i,this); break;
     case ndkPrint: p = new statement::Print(i,this); break;
@@ -604,10 +620,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkReturn: p = new statement::Return(i,this); break;
     case ndkSuite: p = new statement::Suite(i,this); break;
     case ndkTargetList: p = new statement::TargetList(i,this); break;
-    case ndkTryExcept: p = new statement::TryExcept(i,this); break;
-    case ndkTryFinal: p = new statement::TryFinal(i,this); break;
+    case ndkTry: p = new statement::Try(i,this); break;
     case ndkWhile: p = new statement::While(i,this); break;
     case ndkWith: p = new statement::With(i,this); break;
+    case ndkWithItem: p = new statement::WithItem(i,this); break;
     case ndkDictType: p = new type::DictType(i,this); break;
     case ndkReferenceType: p = new type::ReferenceType(i,this); break;
     case ndkSequenceType: p = new type::SequenceType(i,this); break;
@@ -638,12 +654,20 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <expression::AttributeRef*>( createNode(ndkAttributeRef));
   }
 
+  expression::Await* Factory::createAwaitNode(){
+    return  dynamic_cast <expression::Await*>( createNode(ndkAwait));
+  }
+
   expression::BinaryArithmetic* Factory::createBinaryArithmeticNode(){
     return  dynamic_cast <expression::BinaryArithmetic*>( createNode(ndkBinaryArithmetic));
   }
 
   expression::BinaryLogical* Factory::createBinaryLogicalNode(){
     return  dynamic_cast <expression::BinaryLogical*>( createNode(ndkBinaryLogical));
+  }
+
+  expression::BytesLiteral* Factory::createBytesLiteralNode(){
+    return  dynamic_cast <expression::BytesLiteral*>( createNode(ndkBytesLiteral));
   }
 
   expression::Call* Factory::createCallNode(){
@@ -674,6 +698,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <expression::FloatNumber*>( createNode(ndkFloatNumber));
   }
 
+  expression::FormattedValue* Factory::createFormattedValueNode(){
+    return  dynamic_cast <expression::FormattedValue*>( createNode(ndkFormattedValue));
+  }
+
   expression::Generator* Factory::createGeneratorNode(){
     return  dynamic_cast <expression::Generator*>( createNode(ndkGenerator));
   }
@@ -702,6 +730,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <expression::IntegerLiteral*>( createNode(ndkIntegerLiteral));
   }
 
+  expression::JoinedStr* Factory::createJoinedStrNode(){
+    return  dynamic_cast <expression::JoinedStr*>( createNode(ndkJoinedStr));
+  }
+
   expression::KeyValue* Factory::createKeyValueNode(){
     return  dynamic_cast <expression::KeyValue*>( createNode(ndkKeyValue));
   }
@@ -726,6 +758,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <expression::LongInteger*>( createNode(ndkLongInteger));
   }
 
+  expression::NamedExpr* Factory::createNamedExprNode(){
+    return  dynamic_cast <expression::NamedExpr*>( createNode(ndkNamedExpr));
+  }
+
   expression::Set* Factory::createSetNode(){
     return  dynamic_cast <expression::Set*>( createNode(ndkSet));
   }
@@ -736,6 +772,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
 
   expression::Slice* Factory::createSliceNode(){
     return  dynamic_cast <expression::Slice*>( createNode(ndkSlice));
+  }
+
+  expression::Starred* Factory::createStarredNode(){
+    return  dynamic_cast <expression::Starred*>( createNode(ndkStarred));
   }
 
   expression::StringConversion* Factory::createStringConversionNode(){
@@ -772,6 +812,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
 
   statement::Alias* Factory::createAliasNode(){
     return  dynamic_cast <statement::Alias*>( createNode(ndkAlias));
+  }
+
+  statement::AnnAssign* Factory::createAnnAssignNode(){
+    return  dynamic_cast <statement::AnnAssign*>( createNode(ndkAnnAssign));
   }
 
   statement::Assert* Factory::createAssertNode(){
@@ -838,6 +882,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <statement::ImportStatement*>( createNode(ndkImportStatement));
   }
 
+  statement::Nonlocal* Factory::createNonlocalNode(){
+    return  dynamic_cast <statement::Nonlocal*>( createNode(ndkNonlocal));
+  }
+
   statement::Parameter* Factory::createParameterNode(){
     return  dynamic_cast <statement::Parameter*>( createNode(ndkParameter));
   }
@@ -866,12 +914,8 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <statement::TargetList*>( createNode(ndkTargetList));
   }
 
-  statement::TryExcept* Factory::createTryExceptNode(){
-    return  dynamic_cast <statement::TryExcept*>( createNode(ndkTryExcept));
-  }
-
-  statement::TryFinal* Factory::createTryFinalNode(){
-    return  dynamic_cast <statement::TryFinal*>( createNode(ndkTryFinal));
+  statement::Try* Factory::createTryNode(){
+    return  dynamic_cast <statement::Try*>( createNode(ndkTry));
   }
 
   statement::While* Factory::createWhileNode(){
@@ -882,13 +926,19 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <statement::With*>( createNode(ndkWith));
   }
 
+  statement::WithItem* Factory::createWithItemNode(){
+    return  dynamic_cast <statement::WithItem*>( createNode(ndkWithItem));
+  }
+
   void Factory::printNodeSizes() {
     printf("base::Comment node: %dbyte(s)\n",(int)sizeof(base::Comment)); 
     printf("base::Docstring node: %dbyte(s)\n",(int)sizeof(base::Docstring)); 
     printf("expression::ArgumentList node: %dbyte(s)\n",(int)sizeof(expression::ArgumentList)); 
     printf("expression::AttributeRef node: %dbyte(s)\n",(int)sizeof(expression::AttributeRef)); 
+    printf("expression::Await node: %dbyte(s)\n",(int)sizeof(expression::Await)); 
     printf("expression::BinaryArithmetic node: %dbyte(s)\n",(int)sizeof(expression::BinaryArithmetic)); 
     printf("expression::BinaryLogical node: %dbyte(s)\n",(int)sizeof(expression::BinaryLogical)); 
+    printf("expression::BytesLiteral node: %dbyte(s)\n",(int)sizeof(expression::BytesLiteral)); 
     printf("expression::Call node: %dbyte(s)\n",(int)sizeof(expression::Call)); 
     printf("expression::DictComp node: %dbyte(s)\n",(int)sizeof(expression::DictComp)); 
     printf("expression::Dictionary node: %dbyte(s)\n",(int)sizeof(expression::Dictionary)); 
@@ -896,6 +946,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("expression::ExpressionList node: %dbyte(s)\n",(int)sizeof(expression::ExpressionList)); 
     printf("expression::ExtSlice node: %dbyte(s)\n",(int)sizeof(expression::ExtSlice)); 
     printf("expression::FloatNumber node: %dbyte(s)\n",(int)sizeof(expression::FloatNumber)); 
+    printf("expression::FormattedValue node: %dbyte(s)\n",(int)sizeof(expression::FormattedValue)); 
     printf("expression::Generator node: %dbyte(s)\n",(int)sizeof(expression::Generator)); 
     printf("expression::GeneratorExpression node: %dbyte(s)\n",(int)sizeof(expression::GeneratorExpression)); 
     printf("expression::Identifier node: %dbyte(s)\n",(int)sizeof(expression::Identifier)); 
@@ -903,15 +954,18 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("expression::ImagNumber node: %dbyte(s)\n",(int)sizeof(expression::ImagNumber)); 
     printf("expression::Index node: %dbyte(s)\n",(int)sizeof(expression::Index)); 
     printf("expression::IntegerLiteral node: %dbyte(s)\n",(int)sizeof(expression::IntegerLiteral)); 
+    printf("expression::JoinedStr node: %dbyte(s)\n",(int)sizeof(expression::JoinedStr)); 
     printf("expression::KeyValue node: %dbyte(s)\n",(int)sizeof(expression::KeyValue)); 
     printf("expression::Keyword node: %dbyte(s)\n",(int)sizeof(expression::Keyword)); 
     printf("expression::Lambda node: %dbyte(s)\n",(int)sizeof(expression::Lambda)); 
     printf("expression::List node: %dbyte(s)\n",(int)sizeof(expression::List)); 
     printf("expression::ListComp node: %dbyte(s)\n",(int)sizeof(expression::ListComp)); 
     printf("expression::LongInteger node: %dbyte(s)\n",(int)sizeof(expression::LongInteger)); 
+    printf("expression::NamedExpr node: %dbyte(s)\n",(int)sizeof(expression::NamedExpr)); 
     printf("expression::Set node: %dbyte(s)\n",(int)sizeof(expression::Set)); 
     printf("expression::SetComp node: %dbyte(s)\n",(int)sizeof(expression::SetComp)); 
     printf("expression::Slice node: %dbyte(s)\n",(int)sizeof(expression::Slice)); 
+    printf("expression::Starred node: %dbyte(s)\n",(int)sizeof(expression::Starred)); 
     printf("expression::StringConversion node: %dbyte(s)\n",(int)sizeof(expression::StringConversion)); 
     printf("expression::StringLiteral node: %dbyte(s)\n",(int)sizeof(expression::StringLiteral)); 
     printf("expression::Subscription node: %dbyte(s)\n",(int)sizeof(expression::Subscription)); 
@@ -921,6 +975,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("module::Object node: %dbyte(s)\n",(int)sizeof(module::Object)); 
     printf("module::Package node: %dbyte(s)\n",(int)sizeof(module::Package)); 
     printf("statement::Alias node: %dbyte(s)\n",(int)sizeof(statement::Alias)); 
+    printf("statement::AnnAssign node: %dbyte(s)\n",(int)sizeof(statement::AnnAssign)); 
     printf("statement::Assert node: %dbyte(s)\n",(int)sizeof(statement::Assert)); 
     printf("statement::Assign node: %dbyte(s)\n",(int)sizeof(statement::Assign)); 
     printf("statement::AugAssign node: %dbyte(s)\n",(int)sizeof(statement::AugAssign)); 
@@ -937,6 +992,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("statement::If node: %dbyte(s)\n",(int)sizeof(statement::If)); 
     printf("statement::ImportFrom node: %dbyte(s)\n",(int)sizeof(statement::ImportFrom)); 
     printf("statement::ImportStatement node: %dbyte(s)\n",(int)sizeof(statement::ImportStatement)); 
+    printf("statement::Nonlocal node: %dbyte(s)\n",(int)sizeof(statement::Nonlocal)); 
     printf("statement::Parameter node: %dbyte(s)\n",(int)sizeof(statement::Parameter)); 
     printf("statement::Pass node: %dbyte(s)\n",(int)sizeof(statement::Pass)); 
     printf("statement::Print node: %dbyte(s)\n",(int)sizeof(statement::Print)); 
@@ -944,10 +1000,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("statement::Return node: %dbyte(s)\n",(int)sizeof(statement::Return)); 
     printf("statement::Suite node: %dbyte(s)\n",(int)sizeof(statement::Suite)); 
     printf("statement::TargetList node: %dbyte(s)\n",(int)sizeof(statement::TargetList)); 
-    printf("statement::TryExcept node: %dbyte(s)\n",(int)sizeof(statement::TryExcept)); 
-    printf("statement::TryFinal node: %dbyte(s)\n",(int)sizeof(statement::TryFinal)); 
+    printf("statement::Try node: %dbyte(s)\n",(int)sizeof(statement::Try)); 
     printf("statement::While node: %dbyte(s)\n",(int)sizeof(statement::While)); 
     printf("statement::With node: %dbyte(s)\n",(int)sizeof(statement::With)); 
+    printf("statement::WithItem node: %dbyte(s)\n",(int)sizeof(statement::WithItem)); 
     printf("type::DictType node: %dbyte(s)\n",(int)sizeof(type::DictType)); 
     printf("type::ReferenceType node: %dbyte(s)\n",(int)sizeof(type::ReferenceType)); 
     printf("type::SequenceType node: %dbyte(s)\n",(int)sizeof(type::SequenceType)); 

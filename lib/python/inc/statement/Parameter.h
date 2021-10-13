@@ -41,6 +41,7 @@ namespace statement {
   * 
   * Edges:
   *   - hasDefaultValue (expression::Expression, single) : (missing)
+  *   - hasAnnotation (expression::Expression, single) : (missing)
   *   - refersTo (module::Object, single) : (missing)
   */
   class Parameter : public base::Named {
@@ -139,6 +140,12 @@ namespace statement {
       expression::Expression* getDefaultValue() const;
 
       /**
+      * \brief Gives back the pointer of the node the hasAnnotation edge points to.
+      * \return Returns the end point of the hasAnnotation edge.
+      */
+      expression::Expression* getAnnotation() const;
+
+      /**
       * \brief Gives back the pointer of the node the refersTo edge points to.
       * \return Returns the end point of the refersTo edge.
       */
@@ -165,6 +172,23 @@ namespace statement {
       void removeDefaultValue();
 
       /**
+      * \brief Sets the hasAnnotation edge.
+      * \param id [in] The new end point of the hasAnnotation edge.
+      */
+      void setAnnotation(NodeId id);
+
+      /**
+      * \brief Sets the hasAnnotation edge.
+      * \param node [in] The new end point of the hasAnnotation edge.
+      */
+      void setAnnotation(expression::Expression *node);
+
+      /**
+      * \brief remove the hasAnnotation edge.
+      */
+      void removeAnnotation();
+
+      /**
       * \brief Sets the refersTo edge.
       * \param id [in] The new end point of the refersTo edge.
       */
@@ -187,6 +211,9 @@ namespace statement {
 
       /** \internal \brief The id of the node the hasDefaultValue edge points to. */
       NodeId m_hasDefaultValue;
+
+      /** \internal \brief The id of the node the hasAnnotation edge points to. */
+      NodeId m_hasAnnotation;
 
       /** \internal \brief The id of the node the refersTo edge points to. */
       NodeId m_refersTo;

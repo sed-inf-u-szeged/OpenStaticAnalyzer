@@ -21,6 +21,7 @@
 #ifndef _COLUMBUS_EXCEPTION_H_
 #define _COLUMBUS_EXCEPTION_H_
 
+#include <common/inc/PlatformDependentDefines.h>
 #include <string>
 
 #define COLUMBUS_STRINGIFY(x) #x
@@ -40,7 +41,14 @@ public:
   * \param location the place where the error is occured
   * \param message errormessage
   */  
-  Exception(const std::string &location, const std::string &message) : loc(location), msg(message) {}
+  Exception(const std::string &location, const std::string &message) : msg(message)
+  {
+    const auto dirdivpos = location.find_last_of(DIRDIVCHAR);
+    if (dirdivpos != std::string::npos)
+      loc = location.substr(dirdivpos + 1);
+    else
+      loc = location;
+  }
   /**
   * Destructor.
   */  

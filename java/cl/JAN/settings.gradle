@@ -1,4 +1,8 @@
-include JAVA
-include LANGTOOLS
-include COLUMBUSLOGGER
-include REVISION
+include ":java"
+project(":java").projectDir = file("../../lib/java")
+include ":ColumbusLogger"
+project(":ColumbusLogger").projectDir = file("../../lib/ColumbusLogger")
+include ":revision"
+project(":revision").projectDir = file("../../lib/revision")
+include ":openjdk"
+project(":openjdk").projectDir = file("../../lib/openjdk")

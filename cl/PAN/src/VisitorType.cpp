@@ -330,18 +330,20 @@ void VisitorType::visitEnd(const statement::Assign& node, bool callVirtualBase){
     statement::TargetList* target_list = node.getTargetList();
     expression::Expression* value = node.getExpression();
 
-    ListIterator<expression::Expression> trlit = target_list->getTargetListIteratorBegin();
-    for (; trlit != target_list->getTargetListIteratorEnd(); ++trlit){
-      const expression::Expression& rt = *trlit;
-      if(rt.getNodeKind() == ndkList){
-        ListAssign(const_cast<expression::List&>(dynamic_cast<const expression::List&>(rt)), *value);
-      }else if(rt.getNodeKind() == ndkIdentifier){
-        if(value->getType() && dynamic_cast<const expression::Identifier&>(rt).getRefersTo()){
-          setType(*dynamic_cast<const expression::Identifier&>(rt).getRefersTo(), *value->getType());
-          if(!rt.getType())
-            setType(const_cast<expression::Expression&>(rt), *value->getType());
-        }
-      }// TODO: else if(rt.getNodeKind() == ndkAttributeRef || ndkSubscript || ...) 
+    if (value) { // value is optional ?!
+      ListIterator<expression::Expression> trlit = target_list->getTargetListIteratorBegin();
+      for (; trlit != target_list->getTargetListIteratorEnd(); ++trlit){
+        const expression::Expression& rt = *trlit;
+        if(rt.getNodeKind() == ndkList){
+          ListAssign(const_cast<expression::List&>(dynamic_cast<const expression::List&>(rt)), *value);
+        }else if(rt.getNodeKind() == ndkIdentifier){
+          if(value->getType() && dynamic_cast<const expression::Identifier&>(rt).getRefersTo()){
+            setType(*dynamic_cast<const expression::Identifier&>(rt).getRefersTo(), *value->getType());
+            if(!rt.getType())
+              setType(const_cast<expression::Expression&>(rt), *value->getType());
+          }
+        }// TODO: else if(rt.getNodeKind() == ndkAttributeRef || ndkSubscript || ...)
+      }
     }
   }
 }

@@ -26,22 +26,17 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var expressionStatement = factory.createExpressionStatementWrapper(factory);
+        var expressionStatement = factory.createExpressionStatementWrapper();
         globals.setPositionInfo(node, expressionStatement);
         return expressionStatement;
     } else {
         var expressionStatementWrapper = globals.getWrapperOfNode(node);
         if (node.expression != null) {
             var expressionWrapper = globals.getWrapperOfNode(node.expression);
-            if (node.expression.type !== "Literal") {
-                var expressionWrapperFunctionString = "setExpression" + node.expression.type;
-            } else {
-                var expressionWrapperFunctionString = "setExpression" + globals.getLiteralType(node.expression) + node.expression.type;
-            }
             try {
-                expressionStatementWrapper[expressionWrapperFunctionString](expressionWrapper);
+                expressionStatementWrapper.setExpression(expressionWrapper);
             } catch (e) {
-                console.error("EXPRESSIONSTATEMENT - Function not exist: expressionStatementWrapper." + expressionWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("EXPRESSIONSTATEMENT - Could not set expression! Reason of the error: " + e + "\n");
             }
         }
 

@@ -25,15 +25,28 @@
 #include <xercesc/sax2/Attributes.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <rul/inc/RulHandler.h>
+#include <common/inc/FileSup.h>
+#include <common/inc/StringSup.h>
 #include <common/inc/WriteMessage.h>
 #include <algorithm>
 #include <iostream>
+#include <fstream>
+#include <regex>
+#include <boost/bimap.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/trim_all.hpp>
 
 using namespace std;
 using namespace columbus;
 using namespace common;
 
 XERCES_CPP_NAMESPACE_USE
+
+static const string RULE_PREFIX = "FB_";
+static const string DEFAULT_PRIORITY = "UNKNOWN";
+
+typedef boost::bimap<string, string> RuleId2NameMap;
+static RuleId2NameMap ruleIdMap; // rule id (without prefix) <-> original rule name
 
 bool getAttr(const Attributes& attrs, const char* attrName, string& val);
 bool parseXML(const string& filename, DefaultHandler* handler);
@@ -59,7 +72,6 @@ void removeUnderscoreAndMakeCamelcase(string& name) {
       name[i] = ::toupper(name[i]);
   }
 }
-
 
 string formatMetricDispName(const string& name){
   string dispName = name;
@@ -88,25 +100,115 @@ void formatCategoryName(string& categoryName) {
   categoryName += " Rules";
 }
 
+// TODO copied from PMD2Graph, and modified slightly
+static void setShortName(const string& origname, const string& rulename, string& shortname, int small = 0, int ext = 0) {
+  RuleId2NameMap::right_const_iterator it = ruleIdMap.right.find(origname);
+  if (it != ruleIdMap.right.end()) {
+    shortname = it->second;
+    return;
+  }
+
+  int tsmall = small;
+  for (unsigned int i = 0; i < rulename.size(); i++) {
+    if (::isupper(rulename[i])) {
+      shortname += rulename[i];
+    } else if (::islower(rulename[i]) && tsmall > 0) {
+      shortname += rulename[i];
+      tsmall--;
+    }
+  }
+  if (ext > 0)
+    shortname += toString(ext);
+  if (shortname.empty())
+    setShortName(origname, rulename, shortname, ++small);
+  else {
+    RuleId2NameMap::left_const_iterator it1 = ruleIdMap.left.find(shortname);
+    RuleId2NameMap::left_const_iterator it2 = ruleIdMap.left.end();
+    if (it1 != it2) {
+      shortname.clear();
+      if (tsmall > 0)
+        setShortName(origname, rulename, shortname, ++small, ++ext);
+      else
+        setShortName(origname, rulename, shortname, ++small);
+    } else {
+      ruleIdMap.insert(RuleId2NameMap::value_type(shortname, origname));
+    }
+  }
+}
+
+static bool isRuleSkipped(const string& name) {
+  // these rules are skipped by default
+  if (name == "DP_DO_INSIDE_DO_PRIVILEDGED" ||
+      name == "UNKNOWN" ||
+      name.compare(0, 5, "NOISE") == 0 || // NOISE_FIELD_REFERENCE, NOISE_METHOD_CALL, ...
+      name.compare(0, 7, "TESTING") == 0) // TESTING, TESTING1, TESTING2, ...
+    return true;
+  else
+    return false;
+}
+
+static bool isGroupSkipped(const string& name) {
+  return name == "NOISE";
+}
+
 void RuleConverter::formatMetricId(string& id) {
-  id = "FB_" + id;
+  if (isRuleSkipped(id)) {
+    id.clear();
+    return;
+  }
+
+  string shortname;
+  string dispNameForGen = id;
+  removeUnderscoreAndMakeCamelcase(dispNameForGen);
+  setShortName(id, dispNameForGen, shortname);
+  id = RULE_PREFIX + shortname;
 }
 
 bool bothAreSpaces(char lhs, char rhs) {
   return (lhs == rhs) && (lhs == ' ');
 }
 
-void removeWS(string& str){
-  
-  //delete CR
+void collapseWS(string& str) {
   str.erase(remove(str.begin(), str.end(), '\r'), str.end());
+  replace(str.begin(), str.end(), '\n', ' ');
+  boost::trim_all(str);
+}
 
-  //trim the string
-  while (!str.empty() && (str[0] == ' ' || str[0] == '\n'))
-    str.erase(0, 1);
+// use pandoc to convert html descriptions to markdown format
+void convertDesc(string& str) {
+  // temporary files
+  static const string src = std::tmpnam(nullptr);
+  static const string dst = std::tmpnam(nullptr);
 
-  while (!str.empty() && (str[str.length()-1] == ' ' || str[str.length()-1] == '\n'))
-    str.erase(str.length()-1);
+  // for syntax highlighting
+  boost::replace_all(str, "<pre><code>", "<pre class = \"java\"><code>");
+
+  // write out the original description
+  ofstream out(src.c_str());
+  if (out) {
+    out << str;
+    out.close();
+  }
+
+  vector<string> sv;
+  sv.push_back("-f");
+  sv.push_back("html");
+  sv.push_back("-t");
+  sv.push_back("markdown");
+  sv.push_back("-o");
+  sv.push_back(dst);
+  sv.push_back(src);
+
+  // convert
+  int ret = common::run("pandoc", sv);
+  if (ret != 0) {
+    WriteMsg::write(CMSG_FINDBUGS2GRAPH_PANDOC_ERROR, ret);
+    exit(EXIT_FAILURE);
+  }
+
+  // read back the result
+  ifstream in(dst.c_str());
+  str = string(std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>());
 }
 
 class CategoriesHandler : public DefaultHandler {
@@ -128,6 +230,11 @@ class CategoriesHandler : public DefaultHandler {
         bugCategory = true;
         getAttr(attrs,"category",id);
         string originalCatName =id ;
+
+        if (isGroupSkipped(id)) {
+          bugCategory = false;
+          return;
+        }
 
         formatCategoryName(id);
         
@@ -151,13 +258,13 @@ class CategoriesHandler : public DefaultHandler {
       content += XMLString::transcode(chars);
     }
 
-    virtual void endElement(const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname){
+    virtual void endElement(const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname) {
       string name = XMLString::transcode(localname);
-      if(name == "BugCategory") {
+      if (name == "BugCategory") {
         bugCategory = false;
       } else if (bugCategory && name == "Details") {
-        removeWS(content);
-        rul->setHelpText(id,content);
+        collapseWS(content);
+        rul->setHelpText(id, content);
       }
     }
 };
@@ -188,7 +295,12 @@ class BugPatternsHandler : public DefaultHandler {
             bugPattern = false;
             return;
           }
-        
+
+        if (isRuleSkipped(originalId)) {
+          bugPattern = false;
+          return;
+        }
+
         string displayName = formatMetricDispName(id);
         RuleConverter::formatMetricId(id);
         rul->defineMetric(id);
@@ -198,7 +310,7 @@ class BugPatternsHandler : public DefaultHandler {
         rul->setGroupType(id,"false");
         rul->createLanguage(id,"eng");
         rul->setHasWarningText(id,true);
-        rul->setSettingValue(id,"Priority","Critical",true);
+        rul->setSettingValue(id, "Priority", DEFAULT_PRIORITY, true);
         rul->setDisplayName(id, displayName);
         rul->setOriginalId(id, originalId);
       }
@@ -218,7 +330,7 @@ class BugPatternsHandler : public DefaultHandler {
       } else if (bugPattern && name == "LongDescription") {
         rul->setWarningText(id,content);
       } else if (bugPattern && name == "Details") {
-        removeWS(content);
+        convertDesc(content);
         rul->setHelpText(id, content);
       }
     }
@@ -238,10 +350,15 @@ class SetGroupsHandler : public DefaultHandler {
         getAttr(attrs,"type",id);
         RuleConverter::formatMetricId(id);
 
+        if (!rul->getIsDefined(id))
+          return;
+
         string deprecated;
         if (getAttr(attrs, "deprecated", deprecated))
           if (deprecated == "true") {
-            rul->deleteMetric(id);
+            if (rul->getIsDefined(id)) {
+              rul->deleteMetric(id);
+            }
             return;
           }
 
@@ -275,41 +392,102 @@ class SetPriorityHandler : public DefaultHandler {
       if(name == "rule") {
         getAttr(attrs,"key", key);
         RuleConverter::formatMetricId(key);
+        if (getAttr(attrs, "priority", content)) { // for newer xml files
+          setPriority();
+        }
       }
     }
-    
+
     virtual void  characters (const XMLCh *const chars, const XMLSize_t length) {
       content += XMLString::transcode(chars);
     }
 
     virtual void endElement(const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname) {
       string name = XMLString::transcode(localname);
-      try {
-        if (name == "priority") {
-          if (content == "BLOCKER") 
-            rul->setSettingValue(key, "Priority", "Blocker", true);
-          else if (content == "CRITICAL") 
-            rul->setSettingValue(key, "Priority", "Critical", true);
-          else if (content == "MAJOR") 
-            rul->setSettingValue(key, "Priority", "Major", true);
-          else if (content == "MINOR") 
-            rul->setSettingValue(key, "Priority", "Minor", true);
-          else if (content == "INFO") 
-            rul->setSettingValue(key, "Priority", "Info", true);
-        }
-      } catch (const rul::RulHandlerException& ex) {
-        WriteMsg::write(CMSG_FINDBUGS2GRAPH_RULE_EXCEPTION, ex.getMessage().c_str());
+      if (name == "priority")
+        setPriority();
+    }
+
+    void setPriority() {
+      if (rul->getIsDefined(key)) {
+        string prio = content;
+        // FB/SB priorities: BLOCKER, CRITICAL, MAJOR, MINOR, INFO
+        transform(++prio.begin(), prio.end(), ++prio.begin(), ::tolower);
+        rul->setSettingValue(key, "Priority", prio, true);
       }
     }
-    
 };
 
+static void loadRuleOptions(const string& fileName) {
+  if (fileName.empty())
+    return;
 
-void RuleConverter::convertRuleFile(const string& messagesXML, const string& findbugsXML, const string& rulesXML, const string& rulName, const string& rulConfig) {
+  // load config file
+  ifstream input(fileName.c_str());
+  if (input.is_open()) {
+    string line;
+    bool first = true;
+    while (input.good()) {
+      getline(input, line);
+      if (first) {
+        first = false;
+        continue; // skip header
+      }
+      if (!line.empty()) {
+        vector<string> items;
+        common::split(line, items, ';');
+        if (items.size() == 2) {
+          ruleIdMap.insert(RuleId2NameMap::value_type(items[0], items[1]));
+        }
+      }
+    }
+    input.close();
+  }
+}
 
+static void saveRuleOptions(const string& fileName, rul::RulHandler* rul) {
+  if (fileName.empty())
+    return;
+
+  ofstream output((fileName + "_out").c_str());
+  if (output) {
+    output << "ID;Name" << "\n";
+    // sort by ids
+    for (RuleId2NameMap::left_const_iterator it = ruleIdMap.left.begin(); it != ruleIdMap.left.end(); ++it) {
+      const string& ruleId = it->first;
+      const string& origName = it->second;
+      if (!rul->getIsDefined(RULE_PREFIX + ruleId)) {
+        // ignore deleted/skipped rules
+        continue;
+      }
+      output << ruleId << ";" << origName << "\n";
+    }
+    output.close();
+  }
+}
+
+static void checkPriorities(rul::RulHandler* rul) {
+  set<string> allIds;
+  rul->getRuleIdList(allIds);
+
+  for (const string& ruleId : allIds) {
+    if (rul->getGroupType(ruleId) != "false") {
+      continue;
+    }
+    string prio = rul->getSettingValue(ruleId, "Priority");
+    if (prio == DEFAULT_PRIORITY) {
+      WriteMsg::write(CMSG_FINDBUGS2GRAPH_MISSING_PRIORITY, ruleId.c_str(), rul->getOriginalIdByRuleId(ruleId).c_str());
+    }
+  }
+}
+
+void RuleConverter::convertRuleFile(const string& messagesXML, const string& findbugsXML, const string& rulesXML, const string& rulName, const string& rulConfig, const string& idsFileName) {
   rul::RulHandler rul(rulConfig,"eng");
   rul.setToolDescription("ID", "FindBugs");
-  
+
+  //Load previous rule ids
+  loadRuleOptions(idsFileName);
+
   //Processing messages.xml
   CategoriesHandler categoriesHandler(&rul);
   parseXML(messagesXML, &categoriesHandler);
@@ -325,6 +503,11 @@ void RuleConverter::convertRuleFile(const string& messagesXML, const string& fin
   SetPriorityHandler setPriorityHandler(&rul);
   parseXML(rulesXML, &setPriorityHandler);
 
-  
+  //Save rule ids
+  saveRuleOptions(idsFileName, &rul);
+
+  //Check rule priorities
+  checkPriorities(&rul);
+
   rul.saveRul(rulName);
 }

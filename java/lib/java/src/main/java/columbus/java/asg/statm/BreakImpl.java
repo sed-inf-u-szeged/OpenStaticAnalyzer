@@ -35,6 +35,7 @@ import columbus.logger.LoggerHandler;
  */
 public class BreakImpl extends BaseImpl implements Break {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(BreakImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

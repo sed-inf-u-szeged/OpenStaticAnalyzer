@@ -19,6 +19,7 @@
  */
 
 #include "java/inc/java.h"
+#include <sstream>
 
 using namespace std;
 
@@ -36,10 +37,10 @@ VisitorJAVAML::~VisitorJAVAML() {
 
 void VisitorJAVAML::beginVisit() {
   ofs << "<?xml version='1.0' encoding=\"utf-8\"?>\n";
-  ofs << "<!DOCTYPE Project SYSTEM 'java-2.0.40.dtd'>\n";
   ofs << "<Project name='" << projectName << "'"
       << " xmlns:base='columbus_java_schema/base'"
       << " xmlns:expr='columbus_java_schema/expr'"
+      << " xmlns:module='columbus_java_schema/module'"
       << " xmlns:statm='columbus_java_schema/statm'"
       << " xmlns:struc='columbus_java_schema/struc'"
       << " xmlns:type='columbus_java_schema/type'"
@@ -91,6 +92,20 @@ void VisitorJAVAML::visit(const base::LineComment& node , bool callVirtualBase) 
 void VisitorJAVAML::visitEnd(const base::LineComment& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</base:LineComment>\n";
+}
+
+void VisitorJAVAML::visit(const expr::AnnotatedTypeExpression& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expr:AnnotatedTypeExpression";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVAML::visitEnd(const expr::AnnotatedTypeExpression& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expr:AnnotatedTypeExpression>\n";
 }
 
 void VisitorJAVAML::visit(const expr::ArrayAccess& node , bool callVirtualBase) {
@@ -331,6 +346,20 @@ void VisitorJAVAML::visitEnd(const expr::IntegerLiteral& node , bool callVirtual
   ofs << "</expr:IntegerLiteral>\n";
 }
 
+void VisitorJAVAML::visit(const expr::Lambda& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expr:Lambda";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVAML::visitEnd(const expr::Lambda& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expr:Lambda>\n";
+}
+
 void VisitorJAVAML::visit(const expr::LongLiteral& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<expr:LongLiteral";
@@ -357,6 +386,20 @@ void VisitorJAVAML::visit(const expr::MarkerAnnotation& node , bool callVirtualB
 void VisitorJAVAML::visitEnd(const expr::MarkerAnnotation& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</expr:MarkerAnnotation>\n";
+}
+
+void VisitorJAVAML::visit(const expr::MemberReference& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expr:MemberReference";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVAML::visitEnd(const expr::MemberReference& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expr:MemberReference>\n";
 }
 
 void VisitorJAVAML::visit(const expr::MethodInvocation& node , bool callVirtualBase) {
@@ -597,6 +640,20 @@ void VisitorJAVAML::visitEnd(const expr::TypeCast& node , bool callVirtualBase) 
   ofs << "</expr:TypeCast>\n";
 }
 
+void VisitorJAVAML::visit(const expr::TypeIntersectionExpression& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expr:TypeIntersectionExpression";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVAML::visitEnd(const expr::TypeIntersectionExpression& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expr:TypeIntersectionExpression>\n";
+}
+
 void VisitorJAVAML::visit(const expr::TypeUnionExpression& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<expr:TypeUnionExpression";
@@ -623,6 +680,76 @@ void VisitorJAVAML::visit(const expr::WildcardExpression& node , bool callVirtua
 void VisitorJAVAML::visitEnd(const expr::WildcardExpression& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</expr:WildcardExpression>\n";
+}
+
+void VisitorJAVAML::visit(const module::Exports& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<module:Exports";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVAML::visitEnd(const module::Exports& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</module:Exports>\n";
+}
+
+void VisitorJAVAML::visit(const module::Opens& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<module:Opens";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVAML::visitEnd(const module::Opens& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</module:Opens>\n";
+}
+
+void VisitorJAVAML::visit(const module::Provides& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<module:Provides";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVAML::visitEnd(const module::Provides& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</module:Provides>\n";
+}
+
+void VisitorJAVAML::visit(const module::Requires& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<module:Requires";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVAML::visitEnd(const module::Requires& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</module:Requires>\n";
+}
+
+void VisitorJAVAML::visit(const module::Uses& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<module:Uses";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVAML::visitEnd(const module::Uses& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</module:Uses>\n";
 }
 
 void VisitorJAVAML::visit(const statm::Assert& node , bool callVirtualBase) {
@@ -1101,6 +1228,34 @@ void VisitorJAVAML::visitEnd(const struc::MethodGeneric& node , bool callVirtual
   ofs << "</struc:MethodGeneric>\n";
 }
 
+void VisitorJAVAML::visit(const struc::Module& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<struc:Module";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVAML::visitEnd(const struc::Module& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</struc:Module>\n";
+}
+
+void VisitorJAVAML::visit(const struc::ModuleDeclaration& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<struc:ModuleDeclaration";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVAML::visitEnd(const struc::ModuleDeclaration& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</struc:ModuleDeclaration>\n";
+}
+
 void VisitorJAVAML::visit(const struc::Package& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<struc:Package";
@@ -1297,6 +1452,20 @@ void VisitorJAVAML::visit(const type::IntType& node , bool callVirtualBase) {
 void VisitorJAVAML::visitEnd(const type::IntType& node , bool callVirtualBase) {
 }
 
+void VisitorJAVAML::visit(const type::IntersectionType& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<type:IntersectionType";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVAML::visitEnd(const type::IntersectionType& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</type:IntersectionType>\n";
+}
+
 void VisitorJAVAML::visit(const type::LongType& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<type:LongType";
@@ -1335,6 +1504,20 @@ void VisitorJAVAML::visit(const type::MethodType& node , bool callVirtualBase) {
 void VisitorJAVAML::visitEnd(const type::MethodType& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</type:MethodType>\n";
+}
+
+void VisitorJAVAML::visit(const type::ModuleType& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<type:ModuleType";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVAML::visitEnd(const type::ModuleType& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</type:ModuleType>\n";
 }
 
 void VisitorJAVAML::visit(const type::NoType& node , bool callVirtualBase) {
@@ -1480,6 +1663,30 @@ void VisitorJAVAML::visitCommentable_Comments(const base::Commentable& begin, co
 void VisitorJAVAML::visitEndCommentable_Comments(const base::Commentable& begin, const base::Comment& end) {
 }
 
+void VisitorJAVAML::visitAnnotatedTypeExpression_HasAnnotations(const expr::AnnotatedTypeExpression& begin, const expr::Annotation& end) {
+  createIndentation();
+  ofs << "<AnnotatedTypeExpression_HasAnnotations>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndAnnotatedTypeExpression_HasAnnotations(const expr::AnnotatedTypeExpression& begin, const expr::Annotation& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</AnnotatedTypeExpression_HasAnnotations>\n";
+}
+
+void VisitorJAVAML::visitAnnotatedTypeExpression_HasUnderlyingType(const expr::AnnotatedTypeExpression& begin, const expr::TypeExpression& end) {
+  createIndentation();
+  ofs << "<AnnotatedTypeExpression_HasUnderlyingType>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndAnnotatedTypeExpression_HasUnderlyingType(const expr::AnnotatedTypeExpression& begin, const expr::TypeExpression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</AnnotatedTypeExpression_HasUnderlyingType>\n";
+}
+
 void VisitorJAVAML::visitAnnotation_HasAnnotationName(const expr::Annotation& begin, const expr::TypeExpression& end) {
   createIndentation();
   ofs << "<Annotation_HasAnnotationName>\n";
@@ -1611,6 +1818,17 @@ void VisitorJAVAML::visitExpression_Type(const expr::Expression& begin, const ty
 void VisitorJAVAML::visitEndExpression_Type(const expr::Expression& begin, const type::Type& end) {
 }
 
+void VisitorJAVAML::visitFunctionalExpression_Target(const expr::FunctionalExpression& begin, const type::Type& end) {
+  createIndentation();
+  ofs << "<FunctionalExpression_Target ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
+}
+
+void VisitorJAVAML::visitEndFunctionalExpression_Target(const expr::FunctionalExpression& begin, const type::Type& end) {
+}
+
 void VisitorJAVAML::visitIdentifier_RefersTo(const expr::Identifier& begin, const base::Named& end) {
   createIndentation();
   ofs << "<Identifier_RefersTo ref='";
@@ -1632,6 +1850,65 @@ void VisitorJAVAML::visitEndInstanceOf_HasTypeOperand(const expr::InstanceOf& be
   decDepth();
   createIndentation();
   ofs << "</InstanceOf_HasTypeOperand>\n";
+}
+
+void VisitorJAVAML::visitLambda_HasParameters(const expr::Lambda& begin, const struc::Parameter& end) {
+  createIndentation();
+  ofs << "<Lambda_HasParameters>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndLambda_HasParameters(const expr::Lambda& begin, const struc::Parameter& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Lambda_HasParameters>\n";
+}
+
+void VisitorJAVAML::visitLambda_HasBody(const expr::Lambda& begin, const base::Positioned& end) {
+  createIndentation();
+  ofs << "<Lambda_HasBody>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndLambda_HasBody(const expr::Lambda& begin, const base::Positioned& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Lambda_HasBody>\n";
+}
+
+void VisitorJAVAML::visitMemberReference_HasQualifierExpression(const expr::MemberReference& begin, const expr::Expression& end) {
+  createIndentation();
+  ofs << "<MemberReference_HasQualifierExpression>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndMemberReference_HasQualifierExpression(const expr::MemberReference& begin, const expr::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</MemberReference_HasQualifierExpression>\n";
+}
+
+void VisitorJAVAML::visitMemberReference_HasTypeArguments(const expr::MemberReference& begin, const expr::TypeExpression& end) {
+  createIndentation();
+  ofs << "<MemberReference_HasTypeArguments>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndMemberReference_HasTypeArguments(const expr::MemberReference& begin, const expr::TypeExpression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</MemberReference_HasTypeArguments>\n";
+}
+
+void VisitorJAVAML::visitMemberReference_ReferredMethod(const expr::MemberReference& begin, const struc::MethodDeclaration& end) {
+  createIndentation();
+  ofs << "<MemberReference_ReferredMethod ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
+}
+
+void VisitorJAVAML::visitEndMemberReference_ReferredMethod(const expr::MemberReference& begin, const struc::MethodDeclaration& end) {
 }
 
 void VisitorJAVAML::visitMethodInvocation_HasTypeArguments(const expr::MethodInvocation& begin, const expr::TypeExpression& end) {
@@ -1860,6 +2137,18 @@ void VisitorJAVAML::visitEndTypeCast_HasTypeOperand(const expr::TypeCast& begin,
   ofs << "</TypeCast_HasTypeOperand>\n";
 }
 
+void VisitorJAVAML::visitTypeIntersectionExpression_HasBounds(const expr::TypeIntersectionExpression& begin, const expr::TypeExpression& end) {
+  createIndentation();
+  ofs << "<TypeIntersectionExpression_HasBounds>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndTypeIntersectionExpression_HasBounds(const expr::TypeIntersectionExpression& begin, const expr::TypeExpression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</TypeIntersectionExpression_HasBounds>\n";
+}
+
 void VisitorJAVAML::visitTypeUnionExpression_HasAlternatives(const expr::TypeUnionExpression& begin, const expr::TypeExpression& end) {
   createIndentation();
   ofs << "<TypeUnionExpression_HasAlternatives>\n";
@@ -1894,6 +2183,102 @@ void VisitorJAVAML::visitEndWildcardExpression_HasBound(const expr::WildcardExpr
   decDepth();
   createIndentation();
   ofs << "</WildcardExpression_HasBound>\n";
+}
+
+void VisitorJAVAML::visitExports_HasPackageName(const module::Exports& begin, const expr::Expression& end) {
+  createIndentation();
+  ofs << "<Exports_HasPackageName>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndExports_HasPackageName(const module::Exports& begin, const expr::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Exports_HasPackageName>\n";
+}
+
+void VisitorJAVAML::visitExports_HasModuleNames(const module::Exports& begin, const expr::Expression& end) {
+  createIndentation();
+  ofs << "<Exports_HasModuleNames>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndExports_HasModuleNames(const module::Exports& begin, const expr::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Exports_HasModuleNames>\n";
+}
+
+void VisitorJAVAML::visitOpens_HasPackageName(const module::Opens& begin, const expr::Expression& end) {
+  createIndentation();
+  ofs << "<Opens_HasPackageName>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndOpens_HasPackageName(const module::Opens& begin, const expr::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Opens_HasPackageName>\n";
+}
+
+void VisitorJAVAML::visitOpens_HasModuleNames(const module::Opens& begin, const expr::Expression& end) {
+  createIndentation();
+  ofs << "<Opens_HasModuleNames>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndOpens_HasModuleNames(const module::Opens& begin, const expr::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Opens_HasModuleNames>\n";
+}
+
+void VisitorJAVAML::visitProvides_HasServiceName(const module::Provides& begin, const expr::Expression& end) {
+  createIndentation();
+  ofs << "<Provides_HasServiceName>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndProvides_HasServiceName(const module::Provides& begin, const expr::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Provides_HasServiceName>\n";
+}
+
+void VisitorJAVAML::visitProvides_HasImplementationNames(const module::Provides& begin, const expr::Expression& end) {
+  createIndentation();
+  ofs << "<Provides_HasImplementationNames>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndProvides_HasImplementationNames(const module::Provides& begin, const expr::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Provides_HasImplementationNames>\n";
+}
+
+void VisitorJAVAML::visitRequires_HasModuleName(const module::Requires& begin, const expr::Expression& end) {
+  createIndentation();
+  ofs << "<Requires_HasModuleName>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndRequires_HasModuleName(const module::Requires& begin, const expr::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Requires_HasModuleName>\n";
+}
+
+void VisitorJAVAML::visitUses_HasServiceName(const module::Uses& begin, const expr::Expression& end) {
+  createIndentation();
+  ofs << "<Uses_HasServiceName>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndUses_HasServiceName(const module::Uses& begin, const expr::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</Uses_HasServiceName>\n";
 }
 
 void VisitorJAVAML::visitAssert_HasCondition(const statm::Assert& begin, const expr::Expression& end) {
@@ -2195,13 +2580,13 @@ void VisitorJAVAML::visitEndThrow_HasExpression(const statm::Throw& begin, const
   ofs << "</Throw_HasExpression>\n";
 }
 
-void VisitorJAVAML::visitTry_HasResources(const statm::Try& begin, const struc::Variable& end) {
+void VisitorJAVAML::visitTry_HasResources(const statm::Try& begin, const base::Base& end) {
   createIndentation();
   ofs << "<Try_HasResources>\n";
   incDepth();
 }
 
-void VisitorJAVAML::visitEndTry_HasResources(const statm::Try& begin, const struc::Variable& end) {
+void VisitorJAVAML::visitEndTry_HasResources(const statm::Try& begin, const base::Base& end) {
   decDepth();
   createIndentation();
   ofs << "</Try_HasResources>\n";
@@ -2303,6 +2688,30 @@ void VisitorJAVAML::visitEndCompilationUnit_HasImports(const struc::CompilationU
   ofs << "</CompilationUnit_HasImports>\n";
 }
 
+void VisitorJAVAML::visitCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) {
+  createIndentation();
+  ofs << "<CompilationUnit_HasOthers>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</CompilationUnit_HasOthers>\n";
+}
+
+void VisitorJAVAML::visitCompilationUnit_HasModuleDeclaration(const struc::CompilationUnit& begin, const struc::ModuleDeclaration& end) {
+  createIndentation();
+  ofs << "<CompilationUnit_HasModuleDeclaration>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndCompilationUnit_HasModuleDeclaration(const struc::CompilationUnit& begin, const struc::ModuleDeclaration& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</CompilationUnit_HasModuleDeclaration>\n";
+}
+
 void VisitorJAVAML::visitCompilationUnit_TypeDeclarations(const struc::CompilationUnit& begin, const struc::TypeDeclaration& end) {
   createIndentation();
   ofs << "<CompilationUnit_TypeDeclarations ref='";
@@ -2314,16 +2723,15 @@ void VisitorJAVAML::visitCompilationUnit_TypeDeclarations(const struc::Compilati
 void VisitorJAVAML::visitEndCompilationUnit_TypeDeclarations(const struc::CompilationUnit& begin, const struc::TypeDeclaration& end) {
 }
 
-void VisitorJAVAML::visitCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) {
+void VisitorJAVAML::visitCompilationUnit_IsInModule(const struc::CompilationUnit& begin, const struc::Module& end) {
   createIndentation();
-  ofs << "<CompilationUnit_HasOthers>\n";
-  incDepth();
+  ofs << "<CompilationUnit_IsInModule ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
 }
 
-void VisitorJAVAML::visitEndCompilationUnit_HasOthers(const struc::CompilationUnit& begin, const base::Positioned& end) {
-  decDepth();
-  createIndentation();
-  ofs << "</CompilationUnit_HasOthers>\n";
+void VisitorJAVAML::visitEndCompilationUnit_IsInModule(const struc::CompilationUnit& begin, const struc::Module& end) {
 }
 
 void VisitorJAVAML::visitEnumConstant_HasNewClass(const struc::EnumConstant& begin, const expr::NewClass& end) {
@@ -2408,6 +2816,63 @@ void VisitorJAVAML::visitMethodDeclaration_Overrides(const struc::MethodDeclarat
 void VisitorJAVAML::visitEndMethodDeclaration_Overrides(const struc::MethodDeclaration& begin, const struc::MethodDeclaration& end) {
 }
 
+void VisitorJAVAML::visitModule_Packages(const struc::Module& begin, const struc::Package& end) {
+  createIndentation();
+  ofs << "<Module_Packages ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
+}
+
+void VisitorJAVAML::visitEndModule_Packages(const struc::Module& begin, const struc::Package& end) {
+}
+
+void VisitorJAVAML::visitModuleDeclaration_HasName(const struc::ModuleDeclaration& begin, const expr::Expression& end) {
+  createIndentation();
+  ofs << "<ModuleDeclaration_HasName>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndModuleDeclaration_HasName(const struc::ModuleDeclaration& begin, const expr::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</ModuleDeclaration_HasName>\n";
+}
+
+void VisitorJAVAML::visitModuleDeclaration_HasDirectives(const struc::ModuleDeclaration& begin, const module::ModuleDirective& end) {
+  createIndentation();
+  ofs << "<ModuleDeclaration_HasDirectives>\n";
+  incDepth();
+}
+
+void VisitorJAVAML::visitEndModuleDeclaration_HasDirectives(const struc::ModuleDeclaration& begin, const module::ModuleDirective& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</ModuleDeclaration_HasDirectives>\n";
+}
+
+void VisitorJAVAML::visitModuleDeclaration_ModuleType(const struc::ModuleDeclaration& begin, const type::ModuleType& end) {
+  createIndentation();
+  ofs << "<ModuleDeclaration_ModuleType ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
+}
+
+void VisitorJAVAML::visitEndModuleDeclaration_ModuleType(const struc::ModuleDeclaration& begin, const type::ModuleType& end) {
+}
+
+void VisitorJAVAML::visitModuleDeclaration_RefersTo(const struc::ModuleDeclaration& begin, const struc::Module& end) {
+  createIndentation();
+  ofs << "<ModuleDeclaration_RefersTo ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
+}
+
+void VisitorJAVAML::visitEndModuleDeclaration_RefersTo(const struc::ModuleDeclaration& begin, const struc::Module& end) {
+}
+
 void VisitorJAVAML::visitNormalMethod_HasParameters(const struc::NormalMethod& begin, const struc::Parameter& end) {
   createIndentation();
   ofs << "<NormalMethod_HasParameters>\n";
@@ -2456,6 +2921,17 @@ void VisitorJAVAML::visitEndPackage_HasCompilationUnits(const struc::Package& be
   ofs << "</Package_HasCompilationUnits>\n";
 }
 
+void VisitorJAVAML::visitPackage_IsInModule(const struc::Package& begin, const struc::Module& end) {
+  createIndentation();
+  ofs << "<Package_IsInModule ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
+}
+
+void VisitorJAVAML::visitEndPackage_IsInModule(const struc::Package& begin, const struc::Module& end) {
+}
+
 void VisitorJAVAML::visitPackageDeclaration_HasPackageName(const struc::PackageDeclaration& begin, const expr::Expression& end) {
   createIndentation();
   ofs << "<PackageDeclaration_HasPackageName>\n";
@@ -2489,17 +2965,6 @@ void VisitorJAVAML::visitEndScope_HasMembers(const struc::Scope& begin, const st
   decDepth();
   createIndentation();
   ofs << "</Scope_HasMembers>\n";
-}
-
-void VisitorJAVAML::visitTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) {
-  createIndentation();
-  ofs << "<TypeDeclaration_IsInCompilationUnit ref='";
-  if (!noId)
-    ofs << "id" << end.getId();
-  ofs << "'/>\n";
-}
-
-void VisitorJAVAML::visitEndTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) {
 }
 
 void VisitorJAVAML::visitTypeDeclaration_HasSuperClass(const struc::TypeDeclaration& begin, const expr::TypeExpression& end) {
@@ -2536,6 +3001,28 @@ void VisitorJAVAML::visitEndTypeDeclaration_HasOthers(const struc::TypeDeclarati
   decDepth();
   createIndentation();
   ofs << "</TypeDeclaration_HasOthers>\n";
+}
+
+void VisitorJAVAML::visitTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) {
+  createIndentation();
+  ofs << "<TypeDeclaration_IsInCompilationUnit ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
+}
+
+void VisitorJAVAML::visitEndTypeDeclaration_IsInCompilationUnit(const struc::TypeDeclaration& begin, const struc::CompilationUnit& end) {
+}
+
+void VisitorJAVAML::visitTypeDeclaration_IsInModule(const struc::TypeDeclaration& begin, const struc::Module& end) {
+  createIndentation();
+  ofs << "<TypeDeclaration_IsInModule ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
+}
+
+void VisitorJAVAML::visitEndTypeDeclaration_IsInModule(const struc::TypeDeclaration& begin, const struc::Module& end) {
 }
 
 void VisitorJAVAML::visitTypeParameter_HasBounds(const struc::TypeParameter& begin, const expr::TypeExpression& end) {
@@ -2596,6 +3083,17 @@ void VisitorJAVAML::visitClassType_RefersTo(const type::ClassType& begin, const 
 void VisitorJAVAML::visitEndClassType_RefersTo(const type::ClassType& begin, const struc::TypeDeclaration& end) {
 }
 
+void VisitorJAVAML::visitIntersectionType_Bounds(const type::IntersectionType& begin, const type::Type& end) {
+  createIndentation();
+  ofs << "<IntersectionType_Bounds ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
+}
+
+void VisitorJAVAML::visitEndIntersectionType_Bounds(const type::IntersectionType& begin, const type::Type& end) {
+}
+
 void VisitorJAVAML::visitMethodType_ReturnType(const type::MethodType& begin, const type::Type& end) {
   createIndentation();
   ofs << "<MethodType_ReturnType ref='";
@@ -2627,6 +3125,17 @@ void VisitorJAVAML::visitMethodType_ThrownTypes(const type::MethodType& begin, c
 }
 
 void VisitorJAVAML::visitEndMethodType_ThrownTypes(const type::MethodType& begin, const type::Type& end) {
+}
+
+void VisitorJAVAML::visitModuleType_RefersTo(const type::ModuleType& begin, const struc::Module& end) {
+  createIndentation();
+  ofs << "<ModuleType_RefersTo ref='";
+  if (!noId)
+    ofs << "id" << end.getId();
+  ofs << "'/>\n";
+}
+
+void VisitorJAVAML::visitEndModuleType_RefersTo(const type::ModuleType& begin, const struc::Module& end) {
 }
 
 void VisitorJAVAML::visitPackageType_RefersTo(const type::PackageType& begin, const struc::Package& end) {
@@ -2863,6 +3372,17 @@ void VisitorJAVAML::writeAttributes(const base::PositionedWithoutComment& node,b
   }
 }
 
+void VisitorJAVAML::writeAttributes(const expr::AnnotatedTypeExpression& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Base&)node,composite,false);
+
+  if(bWithParent)
+    writeAttributes((base::Commentable&)node,composite,false);
+
+  writeAttributes((expr::TypeExpression&)node,composite,false);
+
+}
+
 void VisitorJAVAML::writeAttributes(const expr::Annotation& node,bool composite, bool bWithParent /*= true*/ ) {
   if(bWithParent)
     writeAttributes((base::Base&)node,composite,false);
@@ -2945,7 +3465,9 @@ void VisitorJAVAML::writeAttributes(const expr::CharacterLiteral& node,bool comp
   writeAttributes((expr::Literal&)node,composite,false);
 
   if (!composite) {
-    ofs << " charValue='" << node.getCharValue() << "'";
+    std::ostringstream hexStream;
+    hexStream << std::hex << "0x" << (unsigned)node.getCharValue();
+    ofs << " charValue='" << hexStream.str() << "'";
   }
   if (!composite) {
     ofs << " formatString='" << chk(node.getFormatString()) << "'";
@@ -3060,6 +3582,17 @@ void VisitorJAVAML::writeAttributes(const expr::FloatLiteral& node,bool composit
   }
 }
 
+void VisitorJAVAML::writeAttributes(const expr::FunctionalExpression& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Base&)node,composite,false);
+
+  if(bWithParent)
+    writeAttributes((base::Commentable&)node,composite,false);
+
+  writeAttributes((expr::PolyExpression&)node,composite,false);
+
+}
+
 void VisitorJAVAML::writeAttributes(const expr::Identifier& node,bool composite, bool bWithParent /*= true*/ ) {
   if(bWithParent)
     writeAttributes((base::Base&)node,composite,false);
@@ -3113,6 +3646,26 @@ void VisitorJAVAML::writeAttributes(const expr::IntegerLiteral& node,bool compos
   }
 }
 
+void VisitorJAVAML::writeAttributes(const expr::Lambda& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Base&)node,composite,false);
+
+  if(bWithParent)
+    writeAttributes((base::Commentable&)node,composite,false);
+
+  writeAttributes((expr::FunctionalExpression&)node,composite,false);
+
+  if (!composite) {
+    ofs << " lloc='" << node.getLloc() << "'";
+  }
+  if (!composite) {
+    ofs << " paramKind='" << Common::toString(node.getParamKind()) << "'";
+  }
+  if (!composite) {
+    ofs << " bodyKind='" << Common::toString(node.getBodyKind()) << "'";
+  }
+}
+
 void VisitorJAVAML::writeAttributes(const expr::Literal& node,bool composite, bool bWithParent /*= true*/ ) {
   if(bWithParent)
     writeAttributes((base::Base&)node,composite,false);
@@ -3147,6 +3700,29 @@ void VisitorJAVAML::writeAttributes(const expr::MarkerAnnotation& node,bool comp
 
   writeAttributes((expr::Annotation&)node,composite,false);
 
+}
+
+void VisitorJAVAML::writeAttributes(const expr::MemberReference& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Base&)node,composite,false);
+
+  if(bWithParent)
+    writeAttributes((base::Commentable&)node,composite,false);
+
+  writeAttributes((expr::FunctionalExpression&)node,composite,false);
+
+  if (!composite) {
+    ofs << " name='" << chk(node.getName()) << "'";
+  }
+  if (!composite) {
+    ofs << " mode='" << Common::toString(node.getMode()) << "'";
+  }
+  if (!composite) {
+    ofs << " referenceKind='" << Common::toString(node.getReferenceKind()) << "'";
+  }
+  if (!composite) {
+    ofs << " overloadKind='" << Common::toString(node.getOverloadKind()) << "'";
+  }
 }
 
 void VisitorJAVAML::writeAttributes(const expr::MethodInvocation& node,bool composite, bool bWithParent /*= true*/ ) {
@@ -3230,6 +3806,20 @@ void VisitorJAVAML::writeAttributes(const expr::ParenthesizedExpression& node,bo
 
   writeAttributes((expr::Unary&)node,composite,false);
 
+}
+
+void VisitorJAVAML::writeAttributes(const expr::PolyExpression& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Base&)node,composite,false);
+
+  if(bWithParent)
+    writeAttributes((base::Commentable&)node,composite,false);
+
+  writeAttributes((expr::Expression&)node,composite,false);
+
+  if (!composite) {
+    ofs << " polyKind='" << Common::toString(node.getPolyKind()) << "'";
+  }
 }
 
 void VisitorJAVAML::writeAttributes(const expr::PostfixExpression& node,bool composite, bool bWithParent /*= true*/ ) {
@@ -3382,6 +3972,17 @@ void VisitorJAVAML::writeAttributes(const expr::TypeExpression& node,bool compos
 
 }
 
+void VisitorJAVAML::writeAttributes(const expr::TypeIntersectionExpression& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Base&)node,composite,false);
+
+  if(bWithParent)
+    writeAttributes((base::Commentable&)node,composite,false);
+
+  writeAttributes((expr::TypeExpression&)node,composite,false);
+
+}
+
 void VisitorJAVAML::writeAttributes(const expr::TypeUnionExpression& node,bool composite, bool bWithParent /*= true*/ ) {
   if(bWithParent)
     writeAttributes((base::Base&)node,composite,false);
@@ -3416,6 +4017,78 @@ void VisitorJAVAML::writeAttributes(const expr::WildcardExpression& node,bool co
   if (!composite) {
     ofs << " kind='" << Common::toString(node.getKind()) << "'";
   }
+}
+
+void VisitorJAVAML::writeAttributes(const module::Exports& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Base&)node,composite,false);
+
+  if(bWithParent)
+    writeAttributes((base::Commentable&)node,composite,false);
+
+  writeAttributes((module::ModuleDirective&)node,composite,false);
+
+}
+
+void VisitorJAVAML::writeAttributes(const module::ModuleDirective& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Base&)node,composite,false);
+
+  if(bWithParent)
+    writeAttributes((base::Commentable&)node,composite,false);
+
+  writeAttributes((base::Positioned&)node,composite,false);
+
+}
+
+void VisitorJAVAML::writeAttributes(const module::Opens& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Base&)node,composite,false);
+
+  if(bWithParent)
+    writeAttributes((base::Commentable&)node,composite,false);
+
+  writeAttributes((module::ModuleDirective&)node,composite,false);
+
+}
+
+void VisitorJAVAML::writeAttributes(const module::Provides& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Base&)node,composite,false);
+
+  if(bWithParent)
+    writeAttributes((base::Commentable&)node,composite,false);
+
+  writeAttributes((module::ModuleDirective&)node,composite,false);
+
+}
+
+void VisitorJAVAML::writeAttributes(const module::Requires& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Base&)node,composite,false);
+
+  if(bWithParent)
+    writeAttributes((base::Commentable&)node,composite,false);
+
+  writeAttributes((module::ModuleDirective&)node,composite,false);
+
+  if (!composite) {
+    ofs << " isTransitive='" << (node.getIsTransitive() ? "true" : "false") << "'";
+  }
+  if (!composite) {
+    ofs << " isStatic='" << (node.getIsStatic() ? "true" : "false") << "'";
+  }
+}
+
+void VisitorJAVAML::writeAttributes(const module::Uses& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Base&)node,composite,false);
+
+  if(bWithParent)
+    writeAttributes((base::Commentable&)node,composite,false);
+
+  writeAttributes((module::ModuleDirective&)node,composite,false);
+
 }
 
 void VisitorJAVAML::writeAttributes(const statm::Assert& node,bool composite, bool bWithParent /*= true*/ ) {
@@ -3952,6 +4625,9 @@ void VisitorJAVAML::writeAttributes(const struc::InitializerBlock& node,bool com
 
   writeAttributes((struc::Declaration&)node,composite,false);
 
+  if (!composite) {
+    ofs << " lloc='" << node.getLloc() << "'";
+  }
 }
 
 void VisitorJAVAML::writeAttributes(const struc::InstanceInitializerBlock& node,bool composite, bool bWithParent /*= true*/ ) {
@@ -4050,6 +4726,9 @@ void VisitorJAVAML::writeAttributes(const struc::MethodDeclaration& node,bool co
   writeAttributes((struc::NamedDeclaration&)node,composite,false);
 
   if (!composite) {
+    ofs << " lloc='" << node.getLloc() << "'";
+  }
+  if (!composite) {
     ofs << " isAbstract='" << (node.getIsAbstract() ? "true" : "false") << "'";
   }
   if (composite) {
@@ -4083,6 +4762,28 @@ void VisitorJAVAML::writeAttributes(const struc::MethodGeneric& node,bool compos
 
   writeAttributes((struc::GenericDeclaration&)node,composite,false);
 
+}
+
+void VisitorJAVAML::writeAttributes(const struc::Module& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Base&)node,composite,false);
+
+  writeAttributes((base::Named&)node,composite,false);
+
+}
+
+void VisitorJAVAML::writeAttributes(const struc::ModuleDeclaration& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Base&)node,composite,false);
+
+  if(bWithParent)
+    writeAttributes((base::Commentable&)node,composite,false);
+
+  writeAttributes((base::Positioned&)node,composite,false);
+
+  if (!composite) {
+    ofs << " moduleKind='" << Common::toString(node.getModuleKind()) << "'";
+  }
 }
 
 void VisitorJAVAML::writeAttributes(const struc::NamedDeclaration& node,bool composite, bool bWithParent /*= true*/ ) {
@@ -4148,6 +4849,9 @@ void VisitorJAVAML::writeAttributes(const struc::NormalMethod& node,bool composi
   }
   if (composite) {
     writeRange("ThrowsPosition", node.getThrowsPosition());
+  }
+  if (!composite) {
+    ofs << " isDefault='" << (node.getIsDefault() ? "true" : "false") << "'";
   }
 }
 
@@ -4244,6 +4948,9 @@ void VisitorJAVAML::writeAttributes(const struc::TypeDeclaration& node,bool comp
 
   writeAttributes((struc::Scope&)node,composite,false);
 
+  if (!composite) {
+    ofs << " lloc='" << node.getLloc() << "'";
+  }
   if (composite) {
     writeRange("TypeNamePosition", node.getTypeNamePosition());
   }
@@ -4382,6 +5089,11 @@ void VisitorJAVAML::writeAttributes(const type::IntType& node,bool composite, bo
 
 }
 
+void VisitorJAVAML::writeAttributes(const type::IntersectionType& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((type::Type&)node,composite,false);
+
+}
+
 void VisitorJAVAML::writeAttributes(const type::LongType& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((type::PrimitiveType&)node,composite,false);
 
@@ -4393,6 +5105,11 @@ void VisitorJAVAML::writeAttributes(const type::LowerBoundedWildcardType& node,b
 }
 
 void VisitorJAVAML::writeAttributes(const type::MethodType& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((type::Type&)node,composite,false);
+
+}
+
+void VisitorJAVAML::writeAttributes(const type::ModuleType& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((type::Type&)node,composite,false);
 
 }

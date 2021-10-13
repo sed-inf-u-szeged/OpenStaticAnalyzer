@@ -56,43 +56,43 @@ typedef std::vector<std::string> File_Names;
 static File_Names* files = new File_Names();
 
 static bool ppMakeRul(const Option *o, char *argv[]) {
-    config.makerul = true;
-    config.pathDir = argv[0];
-    return true;
+	config.makerul = true;
+	config.pathDir = argv[0];
+	return true;
 }
 
 static bool ppGraph(const Option *o, char *argv[]) {
-    config.outGraph = argv[0];
-    return true;
+	config.outGraph = argv[0];
+	return true;
 }
 
 static bool ppOut(const Option *o, char *argv[]) {
-    config.outTxt = argv[0];
-    return true;
+	config.outTxt = argv[0];
+	return true;
 }
 
 static bool ppLimFile(const Option *o, char *argv[]) {
-    config.limFile = argv[0];
-    return true;
+	config.limFile = argv[0];
+	return true;
 }
 
 static bool ppRul(const Option *o, char *argv[]) {
-    config.rulFile = argv[0];
-    return true;
+	config.rulFile = argv[0];
+	return true;
 }
 
 static bool ppRulConfig(const Option *o, char *argv[]) {
-    config.rulConfig = argv[0];
-    return true;
+	config.rulConfig = argv[0];
+	return true;
 }
 
 static bool ppExportRul(const Option *o, char *argv[]) {
-    config.exportRul = true;
-    return true;
+	config.exportRul = true;
+	return true;
 }
 
 static void ppFile(char *filename) {
-    config.inputFile = filename;
+	config.inputFile = filename;
 }
 
 const Option OPTIONS_OBJ[] = {
@@ -106,123 +106,119 @@ const Option OPTIONS_OBJ[] = {
 };
 
 static File_Names getFileNames(string dirPath){
-    File_Names* files = new File_Names();
+	File_Names* files = new File_Names();
 
-    namespace fs = boost::filesystem;
-    boost::filesystem::path someDir(dirPath);
-    boost::filesystem::directory_iterator end_iter;
+	namespace fs = boost::filesystem;
+	boost::filesystem::path someDir(dirPath);
+	boost::filesystem::directory_iterator end_iter;
 
-    typedef std::multimap<std::time_t, fs::path> result_set_t;
-    result_set_t result_set;
+	typedef std::multimap<std::time_t, fs::path> result_set_t;
+	result_set_t result_set;
 
-    if (fs::exists(someDir) && fs::is_directory(someDir))
-    {
-        for (fs::directory_iterator dir_iter(someDir); dir_iter != end_iter; ++dir_iter)
-        {
-            if (dir_iter->path().extension().generic_string() == ".xml" &&  fs::is_regular_file(dir_iter->status()))
-            {
-                files->push_back(dir_iter->path().generic_string());
-                updateMemoryStat();
-            }
-        }
-    }
+	if (fs::exists(someDir) && fs::is_directory(someDir))
+	{
+		for (fs::directory_iterator dir_iter(someDir); dir_iter != end_iter; ++dir_iter)
+		{
+			if (dir_iter->path().extension().generic_string() == ".xml" &&  fs::is_regular_file(dir_iter->status()))
+			{
+				files->push_back(dir_iter->path().generic_string());
+			}
+		}
+	}
 
-    return *files;
+	return *files;
+
 }
 
 bool parseXML(const string& filename, DefaultHandler* handler) {
-    SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
+	SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
 
-    parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
-    parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);
-    parser->setFeature(XMLUni::fgXercesSchema, false);
-    parser->setFeature(XMLUni::fgXercesLoadExternalDTD, false);
-    parser->setContentHandler(handler);
-    parser->setErrorHandler(handler);
+	parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+	parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);
+	parser->setFeature(XMLUni::fgXercesSchema, false);
+	parser->setFeature(XMLUni::fgXercesLoadExternalDTD, false);
+	parser->setContentHandler(handler);
+	parser->setErrorHandler(handler);
 
-    try {
-        parser->parse(filename.c_str());
-    }
-    catch (const XMLException& toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        WriteMsg::write(CMSG_FILE_PARSE_ERROR, filename.c_str(), message);
-        XMLString::release(&message);
-        return false;
-    }
-    catch (const SAXParseException& toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        WriteMsg::write(CMSG_FILE_PARSE_ERROR, filename.c_str(), message);
-        XMLString::release(&message);
-        return false;
-    }
+	try {
+		parser->parse(filename.c_str());
+	}
+	catch (const XMLException& toCatch) {
+		char* message = XMLString::transcode(toCatch.getMessage());
+		WriteMsg::write(CMSG_FILE_PARSE_ERROR, filename.c_str(), message);
+		XMLString::release(&message);
+		return false;
+	}
+	catch (const SAXParseException& toCatch) {
+		char* message = XMLString::transcode(toCatch.getMessage());
+		WriteMsg::write(CMSG_FILE_PARSE_ERROR, filename.c_str(), message);
+		XMLString::release(&message);
+		return false;
+	}
 
-    delete parser;
-    return true;
+	delete parser;
+	return true;
 }
 
 bool getAttr(const Attributes& attrs, const char* attrName, string& val) {
-    bool ret = false;
-    XMLCh* nameCh = XMLString::transcode(attrName);
-    char* value = XMLString::transcode(attrs.getValue(nameCh));
-    if (value != NULL) {
-        val = value;
-        ret = true;
-    }
-    XMLString::release(&nameCh);
-    XMLString::release(&value);
-    return ret;
+	bool ret = false;
+	XMLCh* nameCh = XMLString::transcode(attrName);
+	char* value = XMLString::transcode(attrs.getValue(nameCh));
+	if (value != NULL) {
+		val = value;
+		ret = true;
+	}
+	XMLString::release(&nameCh);
+	XMLString::release(&value);
+	return ret;
 }
 
 int main(int argc, char *argv[]) {
 
-    MAIN_BEGIN
+	MAIN_BEGIN
 
-    MainInit(argc, argv, "-");
-    if (!config.makerul) {
-        if (config.inputFile.empty()) {
-            WriteMsg::write(CMSG_FXCOP2GRAPH_MISSING_ASG);
-            clError();
-        }
+	MainInit(argc, argv, "-");
+	if (!config.makerul) {
+		if (config.inputFile.empty()) {
+			WriteMsg::write(CMSG_FXCOP2GRAPH_MISSING_ASG);
+			clError();
+		}
 
-        if (config.limFile.empty()) {
-            WriteMsg::write(CMSG_FXCOP2GRAPH_MISSING_LIM);
-            clError();
-        }
-    }
-    // init xerces
-    try {
-        XMLPlatformUtils::Initialize();
-    }
-    catch (const XMLException& toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        WriteMsg::write(CMSG_XERCES_ERROR, message);
-        string exceptionMessage = "Error during XERCES initialization! ";
-        exceptionMessage += message;
-        XMLString::release(&message);
-        throw Exception("initxerces()", exceptionMessage);
-    }
+		if (config.limFile.empty()) {
+			WriteMsg::write(CMSG_FXCOP2GRAPH_MISSING_LIM);
+			clError();
+		}
+	}
+	// init xerces
+	try {
+		XMLPlatformUtils::Initialize();
+	}
+	catch (const XMLException& toCatch) {
+		char* message = XMLString::transcode(toCatch.getMessage());
+		WriteMsg::write(CMSG_XERCES_ERROR, message);
+		string exceptionMessage = "Error during XERCES initialization! ";
+		exceptionMessage += message;
+		XMLString::release(&message);
+		throw Exception("initxerces()", exceptionMessage);
+	}
 
-    updateMemoryStat(true);
 
-    //make rule
-    if (config.makerul) {
-        RuleConverter ruleConverter;
-        ruleConverter.convertRuleFile(getFileNames(config.pathDir), config);
-        updateMemoryStat();
-    } else {
+	//make rule
+	if (config.makerul) {
+		RuleConverter ruleConverter;
+		ruleConverter.convertRuleFile(getFileNames(config.pathDir), config);
+	} else {
 
-        //process fxcop output
-        if (!config.outTxt.empty()) {
-            ofstream txtOutputStream(config.outTxt.c_str(), std::ofstream::trunc);
-        }
+		//process fxcop output
+		if (!config.outTxt.empty()) {
+			ofstream txtOutputStream(config.outTxt.c_str(), std::ofstream::trunc);
+		}
+		ReportConverter rc(config);
 
-        ReportConverter rc(config);
-        updateMemoryStat();
         rc.buildtree(config.exportRul);
 
         if (rc.collectData(getFileNames(config.inputFile))) {
             rc.aggregateWarnings(true);
-            updateMemoryStat();
         }
         rc.saveGraph(config.outGraph);
     }

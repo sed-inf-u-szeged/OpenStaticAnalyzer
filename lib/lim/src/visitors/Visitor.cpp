@@ -158,6 +158,10 @@ void Visitor::visit(const type::TypeFormerType& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const type::TypeFormerType& node , bool callVirtualBase) { }
 
+void Visitor::visitComponent_CompilationUnit(const base::Component& begin, const physical::File& end) { }
+
+void Visitor::visitEndComponent_CompilationUnit(const base::Component& begin, const physical::File& end) { }
+
 void Visitor::visitComponent_Contains(const base::Component& begin, const base::Component& end) { }
 
 void Visitor::visitEndComponent_Contains(const base::Component& begin, const base::Component& end) { }
@@ -189,6 +193,10 @@ void Visitor::visitEndAttribute_HasType(const logical::Attribute& begin, const t
 void Visitor::visitAttributeAccess_Attribute(const logical::AttributeAccess& begin, const logical::Attribute& end) { }
 
 void Visitor::visitEndAttributeAccess_Attribute(const logical::AttributeAccess& begin, const logical::Attribute& end) { }
+
+void Visitor::visitClass_Extends(const logical::Class& begin, const logical::Class& end) { }
+
+void Visitor::visitEndClass_Extends(const logical::Class& begin, const logical::Class& end) { }
 
 void Visitor::visitClass_GrantsFriendship(const logical::Class& begin, const logical::Friendship& end) { }
 

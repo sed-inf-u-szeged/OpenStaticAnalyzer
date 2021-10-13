@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var classDeclaration = factory.createClassDeclarationWrapper(factory);
+        var classDeclaration = factory.createClassDeclarationWrapper();
         globals.setPositionInfo(node, classDeclaration);
         return classDeclaration;
     } else {
@@ -34,43 +34,28 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.superClass != null) {
             var superClassWrapper = globals.getWrapperOfNode(node.superClass);
-            if (node.superClass.type !== "Literal") {
-                var superClassWrapperFunctionString = "setSuperClass" + node.superClass.type;
-            } else {
-                var superClassWrapperFunctionString = "setSuperClass" + globals.getLiteralType(node.superClass) + node.superClass.type;
-            }
             try {
-                classDeclarationWrapper[superClassWrapperFunctionString](superClassWrapper);
+                classDeclarationWrapper.setSuperClass(superClassWrapper);
             } catch (e) {
-                console.error("CLASSDECLARATION - Function not exist: classDeclarationWrapper." + superClassWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("CLASSDECLARATION - Could not add superClass! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.body != null) {
             var bodyWrapper = globals.getWrapperOfNode(node.body);
-            if (node.body.type !== "Literal") {
-                var bodyWrapperFunctionString = "setBody" + node.body.type;
-            } else {
-                var bodyWrapperFunctionString = "setBody" + globals.getLiteralType(node.body) + node.body.type;
-            }
             try {
-                classDeclarationWrapper[bodyWrapperFunctionString](bodyWrapper);
+                classDeclarationWrapper.setBody(bodyWrapper);
             } catch (e) {
-                console.error("CLASSDECLARATION - Function not exist: classDeclarationWrapper." + bodyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("CLASSDECLARATION - Could not set body! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.id != null) {
             var identifierWrapper = globals.getWrapperOfNode(node.id);
-            if (node.id.type !== "Literal") {
-                var identifierWrapperFunctionString = "setIdentifier" + node.id.type;
-            } else {
-                var identifierWrapperFunctionString = "setIdentifier" + globals.getLiteralType(node.id) + node.id.type;
-            }
             try {
-                classDeclarationWrapper[identifierWrapperFunctionString](identifierWrapper);
+                classDeclarationWrapper.setIdentifier(identifierWrapper);
             } catch (e) {
-                console.error("CLASSDECLARATION - Function not exist: classDeclarationWrapper." + identifierWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("CLASSDECLARATION - Could not set Identifier! Reason of the error: " + e + "\n");
             }
         }
 

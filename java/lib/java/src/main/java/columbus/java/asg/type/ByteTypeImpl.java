@@ -33,6 +33,7 @@ import columbus.logger.LoggerHandler;
  */
 public class ByteTypeImpl extends BaseImpl implements ByteType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(ByteTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	public ByteTypeImpl(int id, Factory factory) {
 		super(id, factory);

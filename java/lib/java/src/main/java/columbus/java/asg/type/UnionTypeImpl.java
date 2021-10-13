@@ -34,6 +34,7 @@ import columbus.logger.LoggerHandler;
  */
 public class UnionTypeImpl extends BaseImpl implements UnionType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(UnionTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Type> _alternatives;
 

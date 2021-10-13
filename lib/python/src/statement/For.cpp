@@ -35,6 +35,7 @@ typedef boost::crc_32_type  Crc_type;
 namespace statement { 
   For::For(NodeId _id, Factory *_factory) :
     Iteration(_id, _factory),
+    m_isAsync(false),
     m_hasExpressionList(0),
     m_hasTargetList(0)
   {
@@ -51,6 +52,14 @@ namespace statement {
 
   NodeKind For::getNodeKind() const {
     return ndkFor;
+  }
+
+  bool For::getIsAsync() const {
+    return m_isAsync;
+  }
+
+  void For::setIsAsync(bool _isAsync) {
+    m_isAsync = _isAsync;
   }
 
   expression::ExpressionList* For::getExpressionList() const {
@@ -209,7 +218,10 @@ namespace statement {
 
   double For::getSimilarity(const base::Base& base){
     if(base.getNodeKind() == getNodeKind()) {
-      return 1.0;
+      const For& node = dynamic_cast<const For&>(base);
+      double matchAttrs = 0;
+      if(node.getIsAsync() == getIsAsync()) ++matchAttrs;
+      return matchAttrs / (1 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
     }
@@ -239,6 +251,12 @@ namespace statement {
   void For::save(io::BinaryIO &binIo,bool withVirtualBase  /*= true*/) const {
     Iteration::save(binIo,false);
 
+    unsigned char boolValues = 0;
+    boolValues <<= 1;
+    if (m_isAsync) 
+      boolValues |= 1;
+    binIo.writeUByte1(boolValues);
+
     binIo.writeUInt4(m_hasExpressionList);
     binIo.writeUInt4(m_hasTargetList);
 
@@ -246,6 +264,10 @@ namespace statement {
 
   void For::load(io::BinaryIO &binIo, bool withVirtualBase /*= true*/) {
     Iteration::load(binIo,false);
+
+    unsigned char boolValues = binIo.readUByte1();
+    m_isAsync = boolValues & 1;
+    boolValues >>= 1;
 
     m_hasExpressionList =  binIo.readUInt4();
     if (m_hasExpressionList != 0)

@@ -1,447 +1,256 @@
-/*
- *  This file is part of OpenStaticAnalyzer.
- *
- *  Copyright (c) 2004-2018 Department of Software Engineering - University of Szeged
- *
- *  Licensed under Version 1.2 of the EUPL (the "Licence");
- *
- *  You may not use this work except in compliance with the Licence.
- *
- *  You may obtain a copy of the Licence in the LICENSE file or at:
- *
- *  https://joinup.ec.europa.eu/software/page/eupl
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the Licence is distributed on an "AS IS" basis,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the Licence for the specific language governing permissions and
- *  limitations under the Licence.
- */
-
 #include "../inc/BlockStatementWrapper.h"
-#include <sstream>  
 #include <string>   
-#include <iomanip>  
-#include <algorithm>
-#include <cctype>   
-
-#include <nan.h>   
-
-using namespace v8;
-
 namespace columbus { namespace javascript { namespace asg { namespace addon {
 
-Persistent<Function> BlockStatementWrapper::constructor;
+napi_ref BlockStatementWrapper::constructor;
 
-void BlockStatementWrapper::Init(Handle<v8::Object> exports) {
-  Isolate* isolate = Isolate::GetCurrent();                                
-                                                                           
-  // Prepare constructor template                                          
-  Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);       
-  tpl->SetClassName(v8::String::NewFromUtf8(isolate, "BlockStatementWrapper"));             
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);                       
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyClassDeclaration", addBodyClassDeclaration);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyExportAllDeclaration", addBodyExportAllDeclaration);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyExportDefaultDeclaration", addBodyExportDefaultDeclaration);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyFunctionDeclaration", addBodyFunctionDeclaration);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyVariableDeclaration", addBodyVariableDeclaration);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyBlockStatement", addBodyBlockStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyBreakStatement", addBodyBreakStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyContinueStatement", addBodyContinueStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyDebuggerStatement", addBodyDebuggerStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyEmptyStatement", addBodyEmptyStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyExpressionStatement", addBodyExpressionStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyForInStatement", addBodyForInStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyForOfStatement", addBodyForOfStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyForStatement", addBodyForStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyIfStatement", addBodyIfStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyLabeledStatement", addBodyLabeledStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyReturnStatement", addBodyReturnStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodySwitchStatement", addBodySwitchStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyThrowStatement", addBodyThrowStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyTryStatement", addBodyTryStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyWhileStatement", addBodyWhileStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyDoWhileStatement", addBodyDoWhileStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addBodyWithStatement", addBodyWithStatement);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "addCommentsComment", addCommentsComment);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setPath", setPath);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setLine", setLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setCol", setCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setEndLine", setEndLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setEndCol", setEndCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideLine", setWideLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideCol", setWideCol);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideEndLine", setWideEndLine);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "setWideEndCol", setWideEndCol);
-                                                                           
-  constructor.Reset(isolate, tpl->GetFunction());                          
-  exports->Set(v8::String::NewFromUtf8(isolate, "BlockStatementWrapper"),                   
-               tpl->GetFunction());                                        
-}                                                                          
+BlockStatementWrapper::BlockStatementWrapper(): env_(nullptr), wrapper_(nullptr) {}
 
+BlockStatementWrapper::~BlockStatementWrapper(){ napi_delete_reference(env_, wrapper_); }
 
-void BlockStatementWrapper::New(const FunctionCallbackInfo<Value>& args) {                             
-  Isolate* isolate = Isolate::GetCurrent();                                         
-  HandleScope scope(isolate);                                                       
-                                                                                    
-  if (args.IsConstructCall()) {                                                     
-    // Invoked as constructor: `new BlockStatementWrapper(...)`                                        
-    Factory* fact = Nan::ObjectWrap::Unwrap<Factory>(args[0]->ToObject()); 
-    BlockStatementWrapper* obj = new BlockStatementWrapper(fact);                                                         
-    obj->Wrap(args.This());                                                         
-    args.GetReturnValue().Set(args.This());                                         
-  } else {                                                                          
-    // Invoked as plain function `BlockStatementWrapper(...)`, turn into construct call.               
-    const int argc = 1;                                                             
-    Handle<v8::Value> argv[argc] = { args[0] };                                         
-    Local<v8::Function> cons = Local<v8::Function>::New(isolate, constructor);              
-    args.GetReturnValue().Set(Nan::NewInstance(cons, argc, argv).ToLocalChecked()); 
-  }                                                                                 
-}                                                                                   
-
-
-BlockStatementWrapper::BlockStatementWrapper(Factory* fact)                        
-{                                                   
-  BlockStatement = fact->getFactory()->createBlockStatementNode();          
-}                                                   
-
-BlockStatementWrapper::~BlockStatementWrapper()
-{        
-}        
-
-void BlockStatementWrapper::NewInstance(const FunctionCallbackInfo<Value>& args) {              
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  const unsigned argc = 1;                                                   
-  Handle<Value> argv[argc] = { args[0] };                                    
-  Local<v8::Function> cons = Local<v8::Function>::New(isolate, constructor);         
-  Local<v8::Object> instance = Nan::NewInstance(cons, argc, argv).ToLocalChecked();  
-  args.GetReturnValue().Set(instance);                                       
-}                                                                            
-
-void BlockStatementWrapper::addBodyClassDeclaration(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ClassDeclarationWrapper* _ClassDeclaration1 = ObjectWrap::Unwrap<ClassDeclarationWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_ClassDeclaration1->ClassDeclaration);
+void BlockStatementWrapper::Destructor(napi_env env, void* nativeObject, void* ){
+  BlockStatementWrapper* obj = reinterpret_cast<BlockStatementWrapper*>(nativeObject);
+  //delete obj->_nativeObj;
+  obj->~BlockStatementWrapper();
 }
-void BlockStatementWrapper::addBodyExportAllDeclaration(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ExportAllDeclarationWrapper* _ExportAllDeclaration1 = ObjectWrap::Unwrap<ExportAllDeclarationWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
+napi_value BlockStatementWrapper::Init(napi_env env, napi_value& exports) {
+  napi_status status;
+  napi_property_descriptor props [] = {
+  DECLARE_NAPI_METHOD( "addBody", addBody),
+  DECLARE_NAPI_METHOD( "addComments", addComments),
+    DECLARE_NAPI_METHOD("setPath", setPath),
+    DECLARE_NAPI_METHOD("setPosition", setPosition),
+  };
 
-  _BlockStatement2->BlockStatement->addBody(_ExportAllDeclaration1->ExportAllDeclaration);
+  napi_value cons;
+  status = napi_define_class(env, "BlockStatementWrapper", NAPI_AUTO_LENGTH, New, nullptr, sizeof(props) / sizeof(*props), props, &cons );
+  assert(status == napi_ok);
+
+  status = napi_create_reference(env, cons, 1, &constructor);
+  assert(status == napi_ok);
+
+  return exports;
 }
-void BlockStatementWrapper::addBodyExportDefaultDeclaration(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ExportDefaultDeclarationWrapper* _ExportDefaultDeclaration1 = ObjectWrap::Unwrap<ExportDefaultDeclarationWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
+napi_value BlockStatementWrapper::New(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
 
-  _BlockStatement2->BlockStatement->addBody(_ExportDefaultDeclaration1->ExportDefaultDeclaration);
-}
-void BlockStatementWrapper::addBodyFunctionDeclaration(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  FunctionDeclarationWrapper* _FunctionDeclaration1 = ObjectWrap::Unwrap<FunctionDeclarationWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
+  status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
+  assert(status == napi_ok);
 
-  _BlockStatement2->BlockStatement->addBody(_FunctionDeclaration1->FunctionDeclaration);
-}
-void BlockStatementWrapper::addBodyVariableDeclaration(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  VariableDeclarationWrapper* _VariableDeclaration1 = ObjectWrap::Unwrap<VariableDeclarationWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
+  BlockStatementWrapper* obj = new BlockStatementWrapper();
+  obj->env_ = env;
+  status = napi_wrap(env, jsthis, reinterpret_cast<void*>(obj), BlockStatementWrapper::Destructor, nullptr, &obj->wrapper_);
+  assert(status == napi_ok);
 
-  _BlockStatement2->BlockStatement->addBody(_VariableDeclaration1->VariableDeclaration);
-}
-void BlockStatementWrapper::addBodyBlockStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  BlockStatementWrapper* _BlockStatement1 = ObjectWrap::Unwrap<BlockStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_BlockStatement1->BlockStatement);
-}
-void BlockStatementWrapper::addBodyBreakStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  BreakStatementWrapper* _BreakStatement1 = ObjectWrap::Unwrap<BreakStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_BreakStatement1->BreakStatement);
-}
-void BlockStatementWrapper::addBodyContinueStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ContinueStatementWrapper* _ContinueStatement1 = ObjectWrap::Unwrap<ContinueStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_ContinueStatement1->ContinueStatement);
-}
-void BlockStatementWrapper::addBodyDebuggerStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  DebuggerStatementWrapper* _DebuggerStatement1 = ObjectWrap::Unwrap<DebuggerStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_DebuggerStatement1->DebuggerStatement);
-}
-void BlockStatementWrapper::addBodyEmptyStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  EmptyStatementWrapper* _EmptyStatement1 = ObjectWrap::Unwrap<EmptyStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_EmptyStatement1->EmptyStatement);
-}
-void BlockStatementWrapper::addBodyExpressionStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ExpressionStatementWrapper* _ExpressionStatement1 = ObjectWrap::Unwrap<ExpressionStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_ExpressionStatement1->ExpressionStatement);
-}
-void BlockStatementWrapper::addBodyForInStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ForInStatementWrapper* _ForInStatement1 = ObjectWrap::Unwrap<ForInStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_ForInStatement1->ForInStatement);
-}
-void BlockStatementWrapper::addBodyForOfStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ForOfStatementWrapper* _ForOfStatement1 = ObjectWrap::Unwrap<ForOfStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_ForOfStatement1->ForOfStatement);
-}
-void BlockStatementWrapper::addBodyForStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ForStatementWrapper* _ForStatement1 = ObjectWrap::Unwrap<ForStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_ForStatement1->ForStatement);
-}
-void BlockStatementWrapper::addBodyIfStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  IfStatementWrapper* _IfStatement1 = ObjectWrap::Unwrap<IfStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_IfStatement1->IfStatement);
-}
-void BlockStatementWrapper::addBodyLabeledStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  LabeledStatementWrapper* _LabeledStatement1 = ObjectWrap::Unwrap<LabeledStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_LabeledStatement1->LabeledStatement);
-}
-void BlockStatementWrapper::addBodyReturnStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ReturnStatementWrapper* _ReturnStatement1 = ObjectWrap::Unwrap<ReturnStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_ReturnStatement1->ReturnStatement);
-}
-void BlockStatementWrapper::addBodySwitchStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  SwitchStatementWrapper* _SwitchStatement1 = ObjectWrap::Unwrap<SwitchStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_SwitchStatement1->SwitchStatement);
-}
-void BlockStatementWrapper::addBodyThrowStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  ThrowStatementWrapper* _ThrowStatement1 = ObjectWrap::Unwrap<ThrowStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_ThrowStatement1->ThrowStatement);
-}
-void BlockStatementWrapper::addBodyTryStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  TryStatementWrapper* _TryStatement1 = ObjectWrap::Unwrap<TryStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_TryStatement1->TryStatement);
-}
-void BlockStatementWrapper::addBodyWhileStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  WhileStatementWrapper* _WhileStatement1 = ObjectWrap::Unwrap<WhileStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_WhileStatement1->WhileStatement);
-}
-void BlockStatementWrapper::addBodyDoWhileStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  DoWhileStatementWrapper* _DoWhileStatement1 = ObjectWrap::Unwrap<DoWhileStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_DoWhileStatement1->DoWhileStatement);
-}
-void BlockStatementWrapper::addBodyWithStatement(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  WithStatementWrapper* _WithStatement1 = ObjectWrap::Unwrap<WithStatementWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addBody(_WithStatement1->WithStatement);
-}
-void BlockStatementWrapper::addCommentsComment(const v8::FunctionCallbackInfo<v8::Value>& args){
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);              
-  CommentWrapper* _Comment1 = ObjectWrap::Unwrap<CommentWrapper>(args[0]->ToObject());
-  BlockStatementWrapper* _BlockStatement2 = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-
-  _BlockStatement2->BlockStatement->addComments(_Comment1->Comment);
-}
-void BlockStatementWrapper::setPath(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();
-  HandleScope scope(isolate);
-
-  BlockStatementWrapper* _BlockStatement = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );
-  std::string param(*utfStr);
-  Range range = _BlockStatement->BlockStatement->getPosition();
-  range.setPath( param );
-  _BlockStatement->BlockStatement->setPosition( range );
+  return jsthis;
 }
 
-void BlockStatementWrapper::setLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  BlockStatementWrapper* _BlockStatement = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _BlockStatement->BlockStatement->getPosition();
-  range.setLine( ui );
-  _BlockStatement->BlockStatement->setPosition( range );
+
+napi_status BlockStatementWrapper::NewInstance(napi_env env, statement::BlockStatement* arg, napi_value* instance) {
+
+  napi_status status;
+  napi_value cons;
+
+  status = napi_get_reference_value(env, constructor, &cons);
+  if(status != napi_ok) return status;
+
+  status = napi_new_instance(env, cons, 0, nullptr, instance);
+  if(status != napi_ok) return status;
+
+  BlockStatementWrapper* obj;
+  status = napi_unwrap(env, *instance, reinterpret_cast<void**>(&obj));
+  obj->_nativeObj = arg;
+  return napi_ok;
 }
 
-void BlockStatementWrapper::setCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  BlockStatementWrapper* _BlockStatement = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _BlockStatement->BlockStatement->getPosition();
-  range.setCol( ui );
-  _BlockStatement->BlockStatement->setPosition( range );
+napi_value BlockStatementWrapper::addBody(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
+
+  BlockStatementWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
+
+  columbus::javascript::asg::statement::BlockStatement* source = dynamic_cast<columbus::javascript::asg::statement::BlockStatement*>(obj->_nativeObj);
+  columbus::javascript::asg::statement::Statement* target = dynamic_cast<columbus::javascript::asg::statement::Statement*>(param->_nativeObj);
+
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast statement::BlockStatement" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast statement::Statement" );
+  }
+
+  source->addBody(target);
+  return nullptr;
+}
+napi_value BlockStatementWrapper::addComments(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
+
+  BlockStatementWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
+
+  columbus::javascript::asg::statement::BlockStatement* source = dynamic_cast<columbus::javascript::asg::statement::BlockStatement*>(obj->_nativeObj);
+  columbus::javascript::asg::base::Comment* target = dynamic_cast<columbus::javascript::asg::base::Comment*>(param->_nativeObj);
+
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast statement::BlockStatement" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast base::Comment" );
+  }
+
+  source->addComments(target);
+  return nullptr;
+}
+napi_value BlockStatementWrapper::setPath(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments");
+    return nullptr;
+  }
+
+  BlockStatementWrapper* obj;
+  napi_valuetype valuetype;
+  status = napi_typeof(env, args[0], &valuetype);
+  assert(status == napi_ok);
+
+  if (valuetype != napi_string) {
+    napi_throw_type_error(env, nullptr, "Argument should be a string!");
+    return nullptr;
+  }
+
+  char buffer[1024];
+  size_t buffer_size = 1024, result_size = 0;
+  status = napi_get_value_string_utf8(env, args[0], buffer, buffer_size, &result_size);
+  assert(status == napi_ok);
+
+  std::string path(buffer);
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  Range range = dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->getPosition();
+  range.setPath( path );
+  dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->setPosition( range );
+  return nullptr;
 }
 
-void BlockStatementWrapper::setEndLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  BlockStatementWrapper* _BlockStatement = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _BlockStatement->BlockStatement->getPosition();
-  range.setEndLine( ui );
-  _BlockStatement->BlockStatement->setPosition( range );
+
+napi_value BlockStatementWrapper::setPosition(napi_env env, napi_callback_info info) {
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 8;
+  napi_value args[8];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1 && argc != 8) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments. Use a simple object with the positions or pass 8 parameters: line, col, endline, endcol and their wide equivalents!");
+    return nullptr;
+  }
+
+  BlockStatementWrapper* obj;
+  napi_valuetype valuetype[8];
+  int32_t position[8];
+  bool hasProp[8];
+  if(argc == 1){
+    status = napi_typeof(env, args[0], &valuetype[0]);
+    assert(status == napi_ok);
+
+    if(valuetype[0] != napi_object){
+      napi_throw_type_error(env, nullptr, "Argument should be an object!");
+      return nullptr;
+    }
+
+    std::string props[] = {"line", "col", "endline", "endcol", "wideline", "widecol", "wideendline", "wideendcol",};
+
+    for(int i = 0; i < 8; ++i){
+      status = napi_has_named_property(env, args[0], props[i].c_str(), &hasProp[i]);
+      assert(status == napi_ok);
+      napi_value value;
+      if(hasProp[i]){
+        status = napi_get_named_property(env, args[0], props[i].c_str(), &value);
+        assert(status == napi_ok);
+        status = napi_get_value_int32(env, value, &position[i]);
+        assert(status == napi_ok);
+      }
+
+    }
+  }
+  else{
+    for(int i = 0; i < 8; ++i){
+      status = napi_typeof(env, args[i], &valuetype[i]);
+      assert(status == napi_ok);
+      if(valuetype[i] != napi_number){
+        napi_throw_type_error(env, nullptr, "Argument should be an integer!");
+        return nullptr;
+      }
+      status = napi_get_value_int32(env, args[i], &position[i]);
+      assert(status == napi_ok);
+    }
+    for(int i = 0; i < 8; ++i){
+      hasProp[i] = true;
+    }
+  }
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  Range range = dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->getPosition();
+
+  if(hasProp[0])
+    range.setLine( (int)position[0] );
+  if(hasProp[1])
+    range.setCol( (int)position[1] );
+  if(hasProp[2])
+    range.setEndLine( (int)position[2] );
+  if(hasProp[3])
+    range.setEndCol( (int)position[3] );
+  if(hasProp[4])
+    range.setWideLine( (int)position[4] );
+  if(hasProp[5])
+    range.setWideCol( (int)position[5] );
+  if(hasProp[6])
+    range.setWideEndLine( (int)position[6] );
+  if(hasProp[7])
+    range.setWideEndCol( (int)position[7] );
+  dynamic_cast<columbus::javascript::asg::base::Positioned*>(obj->_nativeObj)->setPosition( range );
+  return nullptr;
 }
 
-void BlockStatementWrapper::setEndCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  BlockStatementWrapper* _BlockStatement = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _BlockStatement->BlockStatement->getPosition();
-  range.setEndCol( ui );
-  _BlockStatement->BlockStatement->setPosition( range );
-}
-
-void BlockStatementWrapper::setWideLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  BlockStatementWrapper* _BlockStatement = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _BlockStatement->BlockStatement->getPosition();
-  range.setWideLine( ui );
-  _BlockStatement->BlockStatement->setPosition( range );
-}
-
-void BlockStatementWrapper::setWideCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  BlockStatementWrapper* _BlockStatement = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _BlockStatement->BlockStatement->getPosition();
-  range.setWideCol( ui );
-  _BlockStatement->BlockStatement->setPosition( range );
-}
-
-void BlockStatementWrapper::setWideEndLine(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  BlockStatementWrapper* _BlockStatement = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _BlockStatement->BlockStatement->getPosition();
-  range.setWideEndLine( ui );
-  _BlockStatement->BlockStatement->setPosition( range );
-}
-
-void BlockStatementWrapper::setWideEndCol(const FunctionCallbackInfo<Value>& args){ 
-  Isolate* isolate = Isolate::GetCurrent();                                  
-  HandleScope scope(isolate);                                                
-                                                                             
-  BlockStatementWrapper* _BlockStatement = ObjectWrap::Unwrap<BlockStatementWrapper>(args.This());
-  v8::String::Utf8Value utfStr( args[0]->ToString() );                       
-  std::string param(*utfStr);                                                
-  std::istringstream is(param);
-  unsigned int ui;
-  is >> ui;
-  Range range = _BlockStatement->BlockStatement->getPosition();
-  range.setWideEndCol( ui );
-  _BlockStatement->BlockStatement->setPosition( range );
-}
 
 }}}} //end of namespaces

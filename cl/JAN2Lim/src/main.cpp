@@ -208,13 +208,25 @@ void loadFilter( java::asg::Factory& fact, const string& file )
   {
     fact.loadFilter( flt );
   }
-  catch ( IOException e )
+  catch (const IOException&)
   {
     WriteMsg::write(CMSG_CANNOT_OPEN_FILTER_FILE, flt.c_str());
   }
 }
 
-static inline void updateMemStat(uint64_t *max_mem)
+static inline void setStartTime(unsigned long *time)
+{
+  timestat usedtime= getProcessUsedTime();
+  *time= usedtime.user + usedtime.system;
+}
+
+static inline void setElapsedTime(unsigned long *time)
+{
+  timestat usedtime= getProcessUsedTime();
+  *time= usedtime.user + usedtime.system - *time;
+}
+
+static inline void updateMemStat(size_t *max_mem)
 {
   memstat ms = getProcessUsedMemSize();
   if (*max_mem < ms.size) {
@@ -323,9 +335,16 @@ int main( int argc, char* argv[] )
   int exitCode = 0;
   MAIN_BEGIN
 
-  uint64_t maxMem = 0;
+  unsigned long totalTime;
+  unsigned long conversionTime;
+  unsigned long saveTime;
+  unsigned long dumpTime;
+
+  size_t maxMem = 0;
 
   int missingFiles = 0;
+
+  setStartTime( &totalTime );
 
   // preparing comman line options
   options::parse( argc, argv);
@@ -344,6 +363,9 @@ int main( int argc, char* argv[] )
   JAN2LimVisitor::CGIMap cgiMap;
   std::map<NodeId, JAN2LimVisitor::CompletionStates> nodeStates;
   JAN2LimVisitor::VisitStat classStats;
+
+  setStartTime( &conversionTime );
+
 
   if (!options::compStructFile.empty()) {
     if (!organizeCompStruct(limFactory)) {
@@ -366,7 +388,7 @@ int main( int argc, char* argv[] )
     {
       factory.load( it->c_str(), header );
     }
-    catch ( IOException e )
+    catch (const IOException&)
     {
       WriteMsg::write(CMSG_WARN_CANNOT_READ_FILE, it->c_str());
       exitCode = 1;
@@ -398,7 +420,7 @@ int main( int argc, char* argv[] )
     HalsteadVisitor halsteadVisitor( factory );
     java::asg::AlgorithmPreorder().run( factory, halsteadVisitor );
     std::map<NodeId, HalsteadVisitor::HalsteadInfo> halMap = halsteadVisitor.getHalsteadValues();
-    JAN2LimVisitor jan2LimVisitor(limFactory, factory, map, cgiMap, nodeStates, compPath, classStats, origin, overrides, options::compStructFile.empty(), false, "", halMap);
+    JAN2LimVisitor jan2LimVisitor(limFactory, factory, map, cgiMap, nodeStates, compPath, classStats, origin, overrides, options::compStructFile.empty(), false, changesetID, halMap);
     java::asg::AlgorithmPreorder().run( factory, jan2LimVisitor );
     
     writeClassStats( classStats, limFactory );
@@ -418,6 +440,9 @@ int main( int argc, char* argv[] )
 
   updateMemStat( &maxMem );
 
+  setElapsedTime( &conversionTime );
+  setStartTime( &saveTime );
+
   // saving the lim graph
   WriteMsg::write(CMSG_SAVING_FILE, options::out.c_str());
 
@@ -429,7 +454,7 @@ int main( int argc, char* argv[] )
   {
     limFactory.save( options::out, limHeader );
   }
-  catch  (IOException e)
+  catch (const IOException&)
   {
     WriteMsg::write(CMSG_WARN_CANNOT_WRITE_FILE, options::out.c_str());
   }
@@ -440,10 +465,24 @@ int main( int argc, char* argv[] )
   {
     limFactory.saveFilter(filterfile);
   }
-  catch  (IOException e)
+  catch (const IOException&)
   {
     WriteMsg::write(CMSG_WARN_CANNOT_WRITE_FILE, filterfile.c_str());
   }
+
+  setElapsedTime( &saveTime );
+  setStartTime( &dumpTime );
+
+  setElapsedTime( &totalTime );
+
+  WriteMsg::write(
+      CMSG_STATISTICS,
+      ((float)conversionTime)/100,
+      ((float)saveTime)/100,
+      ((float)totalTime)/100,
+      ((float)maxMem)/1048576,
+      missingFiles
+  );
 
   MAIN_END
 

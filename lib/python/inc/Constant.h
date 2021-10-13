@@ -32,12 +32,12 @@ namespace columbus { namespace python { namespace asg {
   /**
   * \brief The API version of the schema.
   */
-  const std::string APIVersion = "1.2.4";
+  const std::string APIVersion = "2.0.12";
 
   /**
   * \brief The binary version of the schema.
   */
-  const std::string BinaryVersion = "1.2.4";
+  const std::string BinaryVersion = "2.0.12";
 
 
 }}}

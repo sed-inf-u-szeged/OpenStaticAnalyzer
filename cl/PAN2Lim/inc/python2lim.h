@@ -72,6 +72,7 @@ namespace columbus { namespace python {
     virtual void visit    (const columbus::python::asg::statement::Continue&, bool);
     virtual void visit    (const columbus::python::asg::statement::Exec&, bool);
     virtual void visit    (const columbus::python::asg::statement::Alias&, bool);
+    virtual void visit    (const columbus::python::asg::statement::Nonlocal&, bool);
 
     /* visiting EXPRESSION */
     virtual void visit    (const columbus::python::asg::expression::Identifier&, bool);

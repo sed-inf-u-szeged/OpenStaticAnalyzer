@@ -261,8 +261,13 @@ namespace columbus { namespace csharp { namespace asg {
       friend class expression::IdentifierNameSyntax;
       friend class expression::InitializerExpressionSyntax;
       friend class expression::InterpolatedStringExpressionSyntax;
+      friend class expression::SwitchExpressionSyntax;
+      friend class expression::TupleExpressionSyntax;
+      friend class expression::TupleTypeSyntax;
       friend class statement::BlockSyntax;
       friend class statement::ForStatementSyntax;
+      friend class statement::LocalFunctionStatementSyntax;
+      friend class statement::StatementSyntax;
       friend class statement::SwitchStatementSyntax;
       friend class statement::TryStatementSyntax;
       friend class structure::AccessorDeclarationSyntax;
@@ -287,6 +292,9 @@ namespace columbus { namespace csharp { namespace asg {
       friend class structure::NamespaceDeclarationSyntax;
       friend class structure::OrderByClauseSyntax;
       friend class structure::ParameterSyntax;
+      friend class structure::ParenthesizedVariableDesignationSyntax;
+      friend class structure::PositionalPatternClauseSyntax;
+      friend class structure::PropertyPatternClauseSyntax;
       friend class structure::QueryBodySyntax;
       friend class structure::SwitchSectionSyntax;
       friend class structure::TypeArgumentListSyntax;

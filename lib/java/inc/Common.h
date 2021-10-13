@@ -98,6 +98,13 @@ namespace columbus { namespace java { namespace asg {
       bool getIsPositionedWithoutComment(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is expr::AnnotatedTypeExpression or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expr::AnnotatedTypeExpression.
+      */
+      bool getIsAnnotatedTypeExpression(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is expr::Annotation or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is expr::Annotation.
@@ -210,6 +217,13 @@ namespace columbus { namespace java { namespace asg {
       bool getIsFloatLiteral(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is expr::FunctionalExpression or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expr::FunctionalExpression.
+      */
+      bool getIsFunctionalExpression(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is expr::Identifier or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is expr::Identifier.
@@ -238,6 +252,13 @@ namespace columbus { namespace java { namespace asg {
       bool getIsIntegerLiteral(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is expr::Lambda or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expr::Lambda.
+      */
+      bool getIsLambda(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is expr::Literal or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is expr::Literal.
@@ -257,6 +278,13 @@ namespace columbus { namespace java { namespace asg {
       * \return Returns true if the node is expr::MarkerAnnotation.
       */
       bool getIsMarkerAnnotation(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expr::MemberReference or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expr::MemberReference.
+      */
+      bool getIsMemberReference(const base::Base& node);
 
       /**
       * \brief Decides whether the node is expr::MethodInvocation or not.
@@ -306,6 +334,13 @@ namespace columbus { namespace java { namespace asg {
       * \return Returns true if the node is expr::ParenthesizedExpression.
       */
       bool getIsParenthesizedExpression(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expr::PolyExpression or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expr::PolyExpression.
+      */
+      bool getIsPolyExpression(const base::Base& node);
 
       /**
       * \brief Decides whether the node is expr::PostfixExpression or not.
@@ -392,6 +427,13 @@ namespace columbus { namespace java { namespace asg {
       bool getIsTypeExpression(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is expr::TypeIntersectionExpression or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expr::TypeIntersectionExpression.
+      */
+      bool getIsTypeIntersectionExpression(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is expr::TypeUnionExpression or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is expr::TypeUnionExpression.
@@ -411,6 +453,48 @@ namespace columbus { namespace java { namespace asg {
       * \return Returns true if the node is expr::WildcardExpression.
       */
       bool getIsWildcardExpression(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is module::Exports or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is module::Exports.
+      */
+      bool getIsExports(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is module::ModuleDirective or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is module::ModuleDirective.
+      */
+      bool getIsModuleDirective(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is module::Opens or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is module::Opens.
+      */
+      bool getIsOpens(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is module::Provides or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is module::Provides.
+      */
+      bool getIsProvides(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is module::Requires or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is module::Requires.
+      */
+      bool getIsRequires(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is module::Uses or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is module::Uses.
+      */
+      bool getIsUses(const base::Base& node);
 
       /**
       * \brief Decides whether the node is statm::Assert or not.
@@ -749,6 +833,20 @@ namespace columbus { namespace java { namespace asg {
       bool getIsMethodGeneric(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is struc::Module or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is struc::Module.
+      */
+      bool getIsModule(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is struc::ModuleDeclaration or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is struc::ModuleDeclaration.
+      */
+      bool getIsModuleDeclaration(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is struc::NamedDeclaration or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is struc::NamedDeclaration.
@@ -896,6 +994,13 @@ namespace columbus { namespace java { namespace asg {
       bool getIsIntType(const base::Base& node);
 
       /**
+      * \brief Decides whether the node is type::IntersectionType or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is type::IntersectionType.
+      */
+      bool getIsIntersectionType(const base::Base& node);
+
+      /**
       * \brief Decides whether the node is type::LongType or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is type::LongType.
@@ -915,6 +1020,13 @@ namespace columbus { namespace java { namespace asg {
       * \return Returns true if the node is type::MethodType.
       */
       bool getIsMethodType(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is type::ModuleType or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is type::ModuleType.
+      */
+      bool getIsModuleType(const base::Base& node);
 
       /**
       * \brief Decides whether the node is type::NoType or not.
@@ -1075,12 +1187,68 @@ namespace columbus { namespace java { namespace asg {
       const std::string toString(InfixOperatorKind kind);
 
       /**
+      * \brief Gives back the string representation of the LambdaBodyKind kind.
+      * \param kind          [in] The LambdaBodyKind.
+      * \throw JavaException If the kind is not "valid" JavaException is thrown.
+      * \return The string representation of the kind given in the parameter.
+      */
+      const std::string toString(LambdaBodyKind kind);
+
+      /**
+      * \brief Gives back the string representation of the LambdaParameterKind kind.
+      * \param kind          [in] The LambdaParameterKind.
+      * \throw JavaException If the kind is not "valid" JavaException is thrown.
+      * \return The string representation of the kind given in the parameter.
+      */
+      const std::string toString(LambdaParameterKind kind);
+
+      /**
+      * \brief Gives back the string representation of the MemberReferenceKind kind.
+      * \param kind          [in] The MemberReferenceKind.
+      * \throw JavaException If the kind is not "valid" JavaException is thrown.
+      * \return The string representation of the kind given in the parameter.
+      */
+      const std::string toString(MemberReferenceKind kind);
+
+      /**
+      * \brief Gives back the string representation of the MemberReferenceModeKind kind.
+      * \param kind          [in] The MemberReferenceModeKind.
+      * \throw JavaException If the kind is not "valid" JavaException is thrown.
+      * \return The string representation of the kind given in the parameter.
+      */
+      const std::string toString(MemberReferenceModeKind kind);
+
+      /**
+      * \brief Gives back the string representation of the MemberReferenceOverloadKind kind.
+      * \param kind          [in] The MemberReferenceOverloadKind.
+      * \throw JavaException If the kind is not "valid" JavaException is thrown.
+      * \return The string representation of the kind given in the parameter.
+      */
+      const std::string toString(MemberReferenceOverloadKind kind);
+
+      /**
       * \brief Gives back the string representation of the MethodKind kind.
       * \param kind          [in] The MethodKind.
       * \throw JavaException If the kind is not "valid" JavaException is thrown.
       * \return The string representation of the kind given in the parameter.
       */
       const std::string toString(MethodKind kind);
+
+      /**
+      * \brief Gives back the string representation of the ModuleKind kind.
+      * \param kind          [in] The ModuleKind.
+      * \throw JavaException If the kind is not "valid" JavaException is thrown.
+      * \return The string representation of the kind given in the parameter.
+      */
+      const std::string toString(ModuleKind kind);
+
+      /**
+      * \brief Gives back the string representation of the PolyExpressionKind kind.
+      * \param kind          [in] The PolyExpressionKind.
+      * \throw JavaException If the kind is not "valid" JavaException is thrown.
+      * \return The string representation of the kind given in the parameter.
+      */
+      const std::string toString(PolyExpressionKind kind);
 
       /**
       * \brief Gives back the string representation of the PostfixOperatorKind kind.

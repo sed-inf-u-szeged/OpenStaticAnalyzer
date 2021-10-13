@@ -45,7 +45,7 @@ AlgorithmPreorder::AlgorithmPreorder()
   fact(NULL),
   traversaldCrossEdges()
 {
-  memset(traversaldCrossEdges,false,sizeof(bool)*105);
+  memset(traversaldCrossEdges,false,sizeof(bool)*133);
 }
 
 AlgorithmPreorder::~AlgorithmPreorder() {
@@ -346,6 +346,105 @@ void AlgorithmPreorder::visitAllEdges(const base::Positioned& node, bool callFir
 void AlgorithmPreorder::visitAllEdges(const base::PositionedWithoutComment& node, bool callFirst /*= true*/){
   if (callFirst)
     visitAllEdges(dynamic_cast<const base::Base&>(node),false);
+}
+
+void AlgorithmPreorder::visitAllEdges(const expr::AnnotatedTypeExpression& node, bool callFirst /*= true*/){
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Base&>(node),false);
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Commentable&>(node),false);
+  visitAllEdges(dynamic_cast<const expr::TypeExpression&>(node),false);
+
+  std::list<Visitor*>::iterator itVisitors;
+
+  // edge: hasAnnotations
+  for (ListIterator<expr::Annotation> it = node.getAnnotationsListIteratorBegin(); it != node.getAnnotationsListIteratorEnd(); ++it) {
+    const expr::Annotation& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitAnnotatedTypeExpression_HasAnnotations(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndAnnotatedTypeExpression_HasAnnotations(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+
+  const base::Base* genNodePtr;
+  // edge: hasUnderlyingType
+  genNodePtr = node.getUnderlyingType() ;
+  if (genNodePtr) {
+    const expr::TypeExpression& endNodeRef = dynamic_cast<const expr::TypeExpression&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitAnnotatedTypeExpression_HasUnderlyingType(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndAnnotatedTypeExpression_HasUnderlyingType(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+}
+
+void AlgorithmPreorder::visit(const expr::AnnotatedTypeExpression& node, bool callFirst /*= true*/){
+#ifdef DEBUG_PREORDER
+  std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
+#endif
+  if (safeMode || visitCrossEdgeTree || visitSpecialNodes) {
+    if (safeMode) {
+      if (visitedNodes[node.getId()]) { // for safemode
+        common::WriteMsg::write(CMSG_THE_PRE_ORDER_HAS_TOUCHED_A_NODE_TWICE,node.getId(),Common::toString(node.getNodeKind()).c_str() );
+        return;
+      }
+    }
+    visitedNodes[node.getId()] = true;
+  }
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    (*itVisitors)->visit(node);
+    incVisitorDepth((**itVisitors));
+  }
+
+  clearStoppedVisitors();
+  if(needPreorderStop)
+    return;
+
+  visitAllEdges(node,true);
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    decVisitorDepth(**itVisitors);
+    (*itVisitors)->visitEnd(node);
+  }
+
+  clearStoppedVisitors();
 }
 
 void AlgorithmPreorder::visitAllEdges(const expr::Annotation& node, bool callFirst /*= true*/){
@@ -1236,6 +1335,48 @@ void AlgorithmPreorder::visit(const expr::FloatLiteral& node, bool callFirst /*=
   clearStoppedVisitors();
 }
 
+void AlgorithmPreorder::visitAllEdges(const expr::FunctionalExpression& node, bool callFirst /*= true*/){
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Base&>(node),false);
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Commentable&>(node),false);
+  visitAllEdges(dynamic_cast<const expr::PolyExpression&>(node),false);
+
+  std::list<Visitor*>::iterator itVisitors;
+
+  const base::Base* genNodePtr;
+  // edge: target
+  genNodePtr = node.getTarget() ;
+  if (genNodePtr) {
+    const type::Type& endNodeRef = dynamic_cast<const type::Type&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitFunctionalExpression_Target(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot) {
+        if (visitCrossEdgeTree || (visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef))) {
+          unvisitedNodes[endNodeRef.getId()] = true;
+        }
+      }
+      if (traversaldCrossEdges[edkFunctionalExpression_Target]) {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndFunctionalExpression_Target(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+}
+
 void AlgorithmPreorder::visitAllEdges(const expr::Identifier& node, bool callFirst /*= true*/){
   if (callFirst)
     visitAllEdges(dynamic_cast<const base::Base&>(node),false);
@@ -1465,6 +1606,105 @@ void AlgorithmPreorder::visit(const expr::IntegerLiteral& node, bool callFirst /
   clearStoppedVisitors();
 }
 
+void AlgorithmPreorder::visitAllEdges(const expr::Lambda& node, bool callFirst /*= true*/){
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Base&>(node),false);
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Commentable&>(node),false);
+  visitAllEdges(dynamic_cast<const expr::FunctionalExpression&>(node),false);
+
+  std::list<Visitor*>::iterator itVisitors;
+
+  // edge: hasParameters
+  for (ListIterator<struc::Parameter> it = node.getParametersListIteratorBegin(); it != node.getParametersListIteratorEnd(); ++it) {
+    const struc::Parameter& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitLambda_HasParameters(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndLambda_HasParameters(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+
+  const base::Base* genNodePtr;
+  // edge: hasBody
+  genNodePtr = node.getBody() ;
+  if (genNodePtr) {
+    const base::Positioned& endNodeRef = dynamic_cast<const base::Positioned&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitLambda_HasBody(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndLambda_HasBody(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+}
+
+void AlgorithmPreorder::visit(const expr::Lambda& node, bool callFirst /*= true*/){
+#ifdef DEBUG_PREORDER
+  std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
+#endif
+  if (safeMode || visitCrossEdgeTree || visitSpecialNodes) {
+    if (safeMode) {
+      if (visitedNodes[node.getId()]) { // for safemode
+        common::WriteMsg::write(CMSG_THE_PRE_ORDER_HAS_TOUCHED_A_NODE_TWICE,node.getId(),Common::toString(node.getNodeKind()).c_str() );
+        return;
+      }
+    }
+    visitedNodes[node.getId()] = true;
+  }
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    (*itVisitors)->visit(node);
+    incVisitorDepth((**itVisitors));
+  }
+
+  clearStoppedVisitors();
+  if(needPreorderStop)
+    return;
+
+  visitAllEdges(node,true);
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    decVisitorDepth(**itVisitors);
+    (*itVisitors)->visitEnd(node);
+  }
+
+  clearStoppedVisitors();
+}
+
 void AlgorithmPreorder::visitAllEdges(const expr::Literal& node, bool callFirst /*= true*/){
   if (callFirst)
     visitAllEdges(dynamic_cast<const base::Base&>(node),false);
@@ -1523,6 +1763,136 @@ void AlgorithmPreorder::visitAllEdges(const expr::MarkerAnnotation& node, bool c
 }
 
 void AlgorithmPreorder::visit(const expr::MarkerAnnotation& node, bool callFirst /*= true*/){
+#ifdef DEBUG_PREORDER
+  std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
+#endif
+  if (safeMode || visitCrossEdgeTree || visitSpecialNodes) {
+    if (safeMode) {
+      if (visitedNodes[node.getId()]) { // for safemode
+        common::WriteMsg::write(CMSG_THE_PRE_ORDER_HAS_TOUCHED_A_NODE_TWICE,node.getId(),Common::toString(node.getNodeKind()).c_str() );
+        return;
+      }
+    }
+    visitedNodes[node.getId()] = true;
+  }
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    (*itVisitors)->visit(node);
+    incVisitorDepth((**itVisitors));
+  }
+
+  clearStoppedVisitors();
+  if(needPreorderStop)
+    return;
+
+  visitAllEdges(node,true);
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    decVisitorDepth(**itVisitors);
+    (*itVisitors)->visitEnd(node);
+  }
+
+  clearStoppedVisitors();
+}
+
+void AlgorithmPreorder::visitAllEdges(const expr::MemberReference& node, bool callFirst /*= true*/){
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Base&>(node),false);
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Commentable&>(node),false);
+  visitAllEdges(dynamic_cast<const expr::FunctionalExpression&>(node),false);
+
+  std::list<Visitor*>::iterator itVisitors;
+
+  const base::Base* genNodePtr;
+  // edge: hasQualifierExpression
+  genNodePtr = node.getQualifierExpression() ;
+  if (genNodePtr) {
+    const expr::Expression& endNodeRef = dynamic_cast<const expr::Expression&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitMemberReference_HasQualifierExpression(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndMemberReference_HasQualifierExpression(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+
+  // edge: hasTypeArguments
+  for (ListIterator<expr::TypeExpression> it = node.getTypeArgumentsListIteratorBegin(); it != node.getTypeArgumentsListIteratorEnd(); ++it) {
+    const expr::TypeExpression& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitMemberReference_HasTypeArguments(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndMemberReference_HasTypeArguments(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+
+  // edge: referredMethod
+  genNodePtr = node.getReferredMethod() ;
+  if (genNodePtr) {
+    const struc::MethodDeclaration& endNodeRef = dynamic_cast<const struc::MethodDeclaration&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitMemberReference_ReferredMethod(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot) {
+        if (visitCrossEdgeTree || (visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef))) {
+          unvisitedNodes[endNodeRef.getId()] = true;
+        }
+      }
+      if (traversaldCrossEdges[edkMemberReference_ReferredMethod]) {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndMemberReference_ReferredMethod(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+}
+
+void AlgorithmPreorder::visit(const expr::MemberReference& node, bool callFirst /*= true*/){
 #ifdef DEBUG_PREORDER
   std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
 #endif
@@ -2183,6 +2553,14 @@ void AlgorithmPreorder::visit(const expr::ParenthesizedExpression& node, bool ca
   clearStoppedVisitors();
 }
 
+void AlgorithmPreorder::visitAllEdges(const expr::PolyExpression& node, bool callFirst /*= true*/){
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Base&>(node),false);
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Commentable&>(node),false);
+  visitAllEdges(dynamic_cast<const expr::Expression&>(node),false);
+}
+
 void AlgorithmPreorder::visitAllEdges(const expr::PostfixExpression& node, bool callFirst /*= true*/){
   if (callFirst)
     visitAllEdges(dynamic_cast<const base::Base&>(node),false);
@@ -2821,6 +3199,76 @@ void AlgorithmPreorder::visitAllEdges(const expr::TypeExpression& node, bool cal
   visitAllEdges(dynamic_cast<const expr::Expression&>(node),false);
 }
 
+void AlgorithmPreorder::visitAllEdges(const expr::TypeIntersectionExpression& node, bool callFirst /*= true*/){
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Base&>(node),false);
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Commentable&>(node),false);
+  visitAllEdges(dynamic_cast<const expr::TypeExpression&>(node),false);
+
+  std::list<Visitor*>::iterator itVisitors;
+
+  // edge: hasBounds
+  for (ListIterator<expr::TypeExpression> it = node.getBoundsListIteratorBegin(); it != node.getBoundsListIteratorEnd(); ++it) {
+    const expr::TypeExpression& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitTypeIntersectionExpression_HasBounds(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndTypeIntersectionExpression_HasBounds(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+}
+
+void AlgorithmPreorder::visit(const expr::TypeIntersectionExpression& node, bool callFirst /*= true*/){
+#ifdef DEBUG_PREORDER
+  std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
+#endif
+  if (safeMode || visitCrossEdgeTree || visitSpecialNodes) {
+    if (safeMode) {
+      if (visitedNodes[node.getId()]) { // for safemode
+        common::WriteMsg::write(CMSG_THE_PRE_ORDER_HAS_TOUCHED_A_NODE_TWICE,node.getId(),Common::toString(node.getNodeKind()).c_str() );
+        return;
+      }
+    }
+    visitedNodes[node.getId()] = true;
+  }
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    (*itVisitors)->visit(node);
+    incVisitorDepth((**itVisitors));
+  }
+
+  clearStoppedVisitors();
+  if(needPreorderStop)
+    return;
+
+  visitAllEdges(node,true);
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    decVisitorDepth(**itVisitors);
+    (*itVisitors)->visitEnd(node);
+  }
+
+  clearStoppedVisitors();
+}
+
 void AlgorithmPreorder::visitAllEdges(const expr::TypeUnionExpression& node, bool callFirst /*= true*/){
   if (callFirst)
     visitAllEdges(dynamic_cast<const base::Base&>(node),false);
@@ -2970,6 +3418,455 @@ void AlgorithmPreorder::visitAllEdges(const expr::WildcardExpression& node, bool
 }
 
 void AlgorithmPreorder::visit(const expr::WildcardExpression& node, bool callFirst /*= true*/){
+#ifdef DEBUG_PREORDER
+  std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
+#endif
+  if (safeMode || visitCrossEdgeTree || visitSpecialNodes) {
+    if (safeMode) {
+      if (visitedNodes[node.getId()]) { // for safemode
+        common::WriteMsg::write(CMSG_THE_PRE_ORDER_HAS_TOUCHED_A_NODE_TWICE,node.getId(),Common::toString(node.getNodeKind()).c_str() );
+        return;
+      }
+    }
+    visitedNodes[node.getId()] = true;
+  }
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    (*itVisitors)->visit(node);
+    incVisitorDepth((**itVisitors));
+  }
+
+  clearStoppedVisitors();
+  if(needPreorderStop)
+    return;
+
+  visitAllEdges(node,true);
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    decVisitorDepth(**itVisitors);
+    (*itVisitors)->visitEnd(node);
+  }
+
+  clearStoppedVisitors();
+}
+
+void AlgorithmPreorder::visitAllEdges(const module::Exports& node, bool callFirst /*= true*/){
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Base&>(node),false);
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Commentable&>(node),false);
+  visitAllEdges(dynamic_cast<const module::ModuleDirective&>(node),false);
+
+  std::list<Visitor*>::iterator itVisitors;
+
+  const base::Base* genNodePtr;
+  // edge: hasPackageName
+  genNodePtr = node.getPackageName() ;
+  if (genNodePtr) {
+    const expr::Expression& endNodeRef = dynamic_cast<const expr::Expression&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitExports_HasPackageName(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndExports_HasPackageName(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+
+  // edge: hasModuleNames
+  for (ListIterator<expr::Expression> it = node.getModuleNamesListIteratorBegin(); it != node.getModuleNamesListIteratorEnd(); ++it) {
+    const expr::Expression& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitExports_HasModuleNames(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndExports_HasModuleNames(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+}
+
+void AlgorithmPreorder::visit(const module::Exports& node, bool callFirst /*= true*/){
+#ifdef DEBUG_PREORDER
+  std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
+#endif
+  if (safeMode || visitCrossEdgeTree || visitSpecialNodes) {
+    if (safeMode) {
+      if (visitedNodes[node.getId()]) { // for safemode
+        common::WriteMsg::write(CMSG_THE_PRE_ORDER_HAS_TOUCHED_A_NODE_TWICE,node.getId(),Common::toString(node.getNodeKind()).c_str() );
+        return;
+      }
+    }
+    visitedNodes[node.getId()] = true;
+  }
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    (*itVisitors)->visit(node);
+    incVisitorDepth((**itVisitors));
+  }
+
+  clearStoppedVisitors();
+  if(needPreorderStop)
+    return;
+
+  visitAllEdges(node,true);
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    decVisitorDepth(**itVisitors);
+    (*itVisitors)->visitEnd(node);
+  }
+
+  clearStoppedVisitors();
+}
+
+void AlgorithmPreorder::visitAllEdges(const module::ModuleDirective& node, bool callFirst /*= true*/){
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Base&>(node),false);
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Commentable&>(node),false);
+  visitAllEdges(dynamic_cast<const base::Positioned&>(node),false);
+}
+
+void AlgorithmPreorder::visitAllEdges(const module::Opens& node, bool callFirst /*= true*/){
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Base&>(node),false);
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Commentable&>(node),false);
+  visitAllEdges(dynamic_cast<const module::ModuleDirective&>(node),false);
+
+  std::list<Visitor*>::iterator itVisitors;
+
+  const base::Base* genNodePtr;
+  // edge: hasPackageName
+  genNodePtr = node.getPackageName() ;
+  if (genNodePtr) {
+    const expr::Expression& endNodeRef = dynamic_cast<const expr::Expression&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitOpens_HasPackageName(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndOpens_HasPackageName(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+
+  // edge: hasModuleNames
+  for (ListIterator<expr::Expression> it = node.getModuleNamesListIteratorBegin(); it != node.getModuleNamesListIteratorEnd(); ++it) {
+    const expr::Expression& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitOpens_HasModuleNames(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndOpens_HasModuleNames(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+}
+
+void AlgorithmPreorder::visit(const module::Opens& node, bool callFirst /*= true*/){
+#ifdef DEBUG_PREORDER
+  std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
+#endif
+  if (safeMode || visitCrossEdgeTree || visitSpecialNodes) {
+    if (safeMode) {
+      if (visitedNodes[node.getId()]) { // for safemode
+        common::WriteMsg::write(CMSG_THE_PRE_ORDER_HAS_TOUCHED_A_NODE_TWICE,node.getId(),Common::toString(node.getNodeKind()).c_str() );
+        return;
+      }
+    }
+    visitedNodes[node.getId()] = true;
+  }
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    (*itVisitors)->visit(node);
+    incVisitorDepth((**itVisitors));
+  }
+
+  clearStoppedVisitors();
+  if(needPreorderStop)
+    return;
+
+  visitAllEdges(node,true);
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    decVisitorDepth(**itVisitors);
+    (*itVisitors)->visitEnd(node);
+  }
+
+  clearStoppedVisitors();
+}
+
+void AlgorithmPreorder::visitAllEdges(const module::Provides& node, bool callFirst /*= true*/){
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Base&>(node),false);
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Commentable&>(node),false);
+  visitAllEdges(dynamic_cast<const module::ModuleDirective&>(node),false);
+
+  std::list<Visitor*>::iterator itVisitors;
+
+  const base::Base* genNodePtr;
+  // edge: hasServiceName
+  genNodePtr = node.getServiceName() ;
+  if (genNodePtr) {
+    const expr::Expression& endNodeRef = dynamic_cast<const expr::Expression&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitProvides_HasServiceName(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndProvides_HasServiceName(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+
+  // edge: hasImplementationNames
+  for (ListIterator<expr::Expression> it = node.getImplementationNamesListIteratorBegin(); it != node.getImplementationNamesListIteratorEnd(); ++it) {
+    const expr::Expression& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitProvides_HasImplementationNames(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndProvides_HasImplementationNames(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+}
+
+void AlgorithmPreorder::visit(const module::Provides& node, bool callFirst /*= true*/){
+#ifdef DEBUG_PREORDER
+  std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
+#endif
+  if (safeMode || visitCrossEdgeTree || visitSpecialNodes) {
+    if (safeMode) {
+      if (visitedNodes[node.getId()]) { // for safemode
+        common::WriteMsg::write(CMSG_THE_PRE_ORDER_HAS_TOUCHED_A_NODE_TWICE,node.getId(),Common::toString(node.getNodeKind()).c_str() );
+        return;
+      }
+    }
+    visitedNodes[node.getId()] = true;
+  }
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    (*itVisitors)->visit(node);
+    incVisitorDepth((**itVisitors));
+  }
+
+  clearStoppedVisitors();
+  if(needPreorderStop)
+    return;
+
+  visitAllEdges(node,true);
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    decVisitorDepth(**itVisitors);
+    (*itVisitors)->visitEnd(node);
+  }
+
+  clearStoppedVisitors();
+}
+
+void AlgorithmPreorder::visitAllEdges(const module::Requires& node, bool callFirst /*= true*/){
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Base&>(node),false);
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Commentable&>(node),false);
+  visitAllEdges(dynamic_cast<const module::ModuleDirective&>(node),false);
+
+  std::list<Visitor*>::iterator itVisitors;
+
+  const base::Base* genNodePtr;
+  // edge: hasModuleName
+  genNodePtr = node.getModuleName() ;
+  if (genNodePtr) {
+    const expr::Expression& endNodeRef = dynamic_cast<const expr::Expression&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitRequires_HasModuleName(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndRequires_HasModuleName(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+}
+
+void AlgorithmPreorder::visit(const module::Requires& node, bool callFirst /*= true*/){
+#ifdef DEBUG_PREORDER
+  std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
+#endif
+  if (safeMode || visitCrossEdgeTree || visitSpecialNodes) {
+    if (safeMode) {
+      if (visitedNodes[node.getId()]) { // for safemode
+        common::WriteMsg::write(CMSG_THE_PRE_ORDER_HAS_TOUCHED_A_NODE_TWICE,node.getId(),Common::toString(node.getNodeKind()).c_str() );
+        return;
+      }
+    }
+    visitedNodes[node.getId()] = true;
+  }
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    (*itVisitors)->visit(node);
+    incVisitorDepth((**itVisitors));
+  }
+
+  clearStoppedVisitors();
+  if(needPreorderStop)
+    return;
+
+  visitAllEdges(node,true);
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    decVisitorDepth(**itVisitors);
+    (*itVisitors)->visitEnd(node);
+  }
+
+  clearStoppedVisitors();
+}
+
+void AlgorithmPreorder::visitAllEdges(const module::Uses& node, bool callFirst /*= true*/){
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Base&>(node),false);
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Commentable&>(node),false);
+  visitAllEdges(dynamic_cast<const module::ModuleDirective&>(node),false);
+
+  std::list<Visitor*>::iterator itVisitors;
+
+  const base::Base* genNodePtr;
+  // edge: hasServiceName
+  genNodePtr = node.getServiceName() ;
+  if (genNodePtr) {
+    const expr::Expression& endNodeRef = dynamic_cast<const expr::Expression&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitUses_HasServiceName(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndUses_HasServiceName(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+}
+
+void AlgorithmPreorder::visit(const module::Uses& node, bool callFirst /*= true*/){
 #ifdef DEBUG_PREORDER
   std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
 #endif
@@ -4547,8 +5444,8 @@ void AlgorithmPreorder::visitAllEdges(const statm::Try& node, bool callFirst /*=
   std::list<Visitor*>::iterator itVisitors;
 
   // edge: hasResources
-  for (ListIterator<struc::Variable> it = node.getResourcesListIteratorBegin(); it != node.getResourcesListIteratorEnd(); ++it) {
-    const struc::Variable& endNodeRef = *it;
+  for (ListIterator<base::Base> it = node.getResourcesListIteratorBegin(); it != node.getResourcesListIteratorEnd(); ++it) {
+    const base::Base& endNodeRef = *it;
     for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
       (*itVisitors)->visitTry_HasResources(node, endNodeRef);
     }
@@ -5118,6 +6015,61 @@ void AlgorithmPreorder::visitAllEdges(const struc::CompilationUnit& node, bool c
       return;
   }
 
+  // edge: hasOthers
+  for (ListIterator<base::Positioned> it = node.getOthersListIteratorBegin(); it != node.getOthersListIteratorEnd(); ++it) {
+    const base::Positioned& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitCompilationUnit_HasOthers(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndCompilationUnit_HasOthers(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+
+  // edge: hasModuleDeclaration
+  genNodePtr = node.getModuleDeclaration() ;
+  if (genNodePtr) {
+    const struc::ModuleDeclaration& endNodeRef = dynamic_cast<const struc::ModuleDeclaration&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitCompilationUnit_HasModuleDeclaration(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndCompilationUnit_HasModuleDeclaration(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+
   // edge: typeDeclarations
   for (ListIterator<struc::TypeDeclaration> it = node.getTypeDeclarationsListIteratorBegin(); it != node.getTypeDeclarationsListIteratorEnd(); ++it) {
     const struc::TypeDeclaration& endNodeRef = *it;
@@ -5148,11 +6100,12 @@ void AlgorithmPreorder::visitAllEdges(const struc::CompilationUnit& node, bool c
       return;
   }
 
-  // edge: hasOthers
-  for (ListIterator<base::Positioned> it = node.getOthersListIteratorBegin(); it != node.getOthersListIteratorEnd(); ++it) {
-    const base::Positioned& endNodeRef = *it;
+  // edge: isInModule
+  genNodePtr = node.getIsInModule() ;
+  if (genNodePtr) {
+    const struc::Module& endNodeRef = dynamic_cast<const struc::Module&>(*genNodePtr);
     for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
-      (*itVisitors)->visitCompilationUnit_HasOthers(node, endNodeRef);
+      (*itVisitors)->visitCompilationUnit_IsInModule(node, endNodeRef);
     }
 
     clearStoppedVisitors();
@@ -5160,14 +6113,17 @@ void AlgorithmPreorder::visitAllEdges(const struc::CompilationUnit& node, bool c
       return;
 
     if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
-      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
-        unvisitedNodes[endNodeRef.getId()] = true;
-      } else {
+      if (apRoot) {
+        if (visitCrossEdgeTree || (visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef))) {
+          unvisitedNodes[endNodeRef.getId()] = true;
+        }
+      }
+      if (traversaldCrossEdges[edkCompilationUnit_IsInModule]) {
         endNodeRef.accept(*this);
       }
     }
     for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
-      (*itVisitors)->visitEndCompilationUnit_HasOthers(node, endNodeRef);
+      (*itVisitors)->visitEndCompilationUnit_IsInModule(node, endNodeRef);
     }
 
     clearStoppedVisitors();
@@ -5820,6 +6776,238 @@ void AlgorithmPreorder::visit(const struc::MethodGeneric& node, bool callFirst /
   clearStoppedVisitors();
 }
 
+void AlgorithmPreorder::visitAllEdges(const struc::Module& node, bool callFirst /*= true*/){
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Base&>(node),false);
+  visitAllEdges(dynamic_cast<const base::Named&>(node),false);
+
+  std::list<Visitor*>::iterator itVisitors;
+
+  // edge: packages
+  for (ListIterator<struc::Package> it = node.getPackagesListIteratorBegin(); it != node.getPackagesListIteratorEnd(); ++it) {
+    const struc::Package& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitModule_Packages(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot) {
+        if (visitCrossEdgeTree || (visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef))) {
+          unvisitedNodes[endNodeRef.getId()] = true;
+        }
+      }
+      if (traversaldCrossEdges[edkModule_Packages]) {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndModule_Packages(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+}
+
+void AlgorithmPreorder::visit(const struc::Module& node, bool callFirst /*= true*/){
+#ifdef DEBUG_PREORDER
+  std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
+#endif
+  if (safeMode || visitCrossEdgeTree || visitSpecialNodes) {
+    if (safeMode) {
+      if (visitedNodes[node.getId()]) { // for safemode
+        common::WriteMsg::write(CMSG_THE_PRE_ORDER_HAS_TOUCHED_A_NODE_TWICE,node.getId(),Common::toString(node.getNodeKind()).c_str() );
+        return;
+      }
+    }
+    visitedNodes[node.getId()] = true;
+  }
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    (*itVisitors)->visit(node);
+    incVisitorDepth((**itVisitors));
+  }
+
+  clearStoppedVisitors();
+  if(needPreorderStop)
+    return;
+
+  visitAllEdges(node,true);
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    decVisitorDepth(**itVisitors);
+    (*itVisitors)->visitEnd(node);
+  }
+
+  clearStoppedVisitors();
+}
+
+void AlgorithmPreorder::visitAllEdges(const struc::ModuleDeclaration& node, bool callFirst /*= true*/){
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Base&>(node),false);
+  if (callFirst)
+    visitAllEdges(dynamic_cast<const base::Commentable&>(node),false);
+  visitAllEdges(dynamic_cast<const base::Positioned&>(node),false);
+
+  std::list<Visitor*>::iterator itVisitors;
+
+  const base::Base* genNodePtr;
+  // edge: hasName
+  genNodePtr = node.getName() ;
+  if (genNodePtr) {
+    const expr::Expression& endNodeRef = dynamic_cast<const expr::Expression&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitModuleDeclaration_HasName(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndModuleDeclaration_HasName(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+
+  // edge: hasDirectives
+  for (ListIterator<module::ModuleDirective> it = node.getDirectivesListIteratorBegin(); it != node.getDirectivesListIteratorEnd(); ++it) {
+    const module::ModuleDirective& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitModuleDeclaration_HasDirectives(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot && visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef)) {
+        unvisitedNodes[endNodeRef.getId()] = true;
+      } else {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndModuleDeclaration_HasDirectives(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+
+  // edge: moduleType
+  genNodePtr = node.getModuleType() ;
+  if (genNodePtr) {
+    const type::ModuleType& endNodeRef = dynamic_cast<const type::ModuleType&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitModuleDeclaration_ModuleType(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot) {
+        if (visitCrossEdgeTree || (visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef))) {
+          unvisitedNodes[endNodeRef.getId()] = true;
+        }
+      }
+      if (traversaldCrossEdges[edkModuleDeclaration_ModuleType]) {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndModuleDeclaration_ModuleType(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+
+  // edge: refersTo
+  genNodePtr = node.getRefersTo() ;
+  if (genNodePtr) {
+    const struc::Module& endNodeRef = dynamic_cast<const struc::Module&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitModuleDeclaration_RefersTo(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot) {
+        if (visitCrossEdgeTree || (visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef))) {
+          unvisitedNodes[endNodeRef.getId()] = true;
+        }
+      }
+      if (traversaldCrossEdges[edkModuleDeclaration_RefersTo]) {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndModuleDeclaration_RefersTo(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+}
+
+void AlgorithmPreorder::visit(const struc::ModuleDeclaration& node, bool callFirst /*= true*/){
+#ifdef DEBUG_PREORDER
+  std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
+#endif
+  if (safeMode || visitCrossEdgeTree || visitSpecialNodes) {
+    if (safeMode) {
+      if (visitedNodes[node.getId()]) { // for safemode
+        common::WriteMsg::write(CMSG_THE_PRE_ORDER_HAS_TOUCHED_A_NODE_TWICE,node.getId(),Common::toString(node.getNodeKind()).c_str() );
+        return;
+      }
+    }
+    visitedNodes[node.getId()] = true;
+  }
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    (*itVisitors)->visit(node);
+    incVisitorDepth((**itVisitors));
+  }
+
+  clearStoppedVisitors();
+  if(needPreorderStop)
+    return;
+
+  visitAllEdges(node,true);
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    decVisitorDepth(**itVisitors);
+    (*itVisitors)->visitEnd(node);
+  }
+
+  clearStoppedVisitors();
+}
+
 void AlgorithmPreorder::visitAllEdges(const struc::NamedDeclaration& node, bool callFirst /*= true*/){
   if (callFirst)
     visitAllEdges(dynamic_cast<const base::Base&>(node),false);
@@ -5958,6 +7146,36 @@ void AlgorithmPreorder::visitAllEdges(const struc::Package& node, bool callFirst
     }
     for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
       (*itVisitors)->visitEndPackage_HasCompilationUnits(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+
+  // edge: isInModule
+  for (ListIterator<struc::Module> it = node.getIsInModuleListIteratorBegin(); it != node.getIsInModuleListIteratorEnd(); ++it) {
+    const struc::Module& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitPackage_IsInModule(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot) {
+        if (visitCrossEdgeTree || (visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef))) {
+          unvisitedNodes[endNodeRef.getId()] = true;
+        }
+      }
+      if (traversaldCrossEdges[edkPackage_IsInModule]) {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndPackage_IsInModule(node, endNodeRef);
     }
 
     clearStoppedVisitors();
@@ -6239,37 +7457,6 @@ void AlgorithmPreorder::visitAllEdges(const struc::TypeDeclaration& node, bool c
   std::list<Visitor*>::iterator itVisitors;
 
   const base::Base* genNodePtr;
-  // edge: isInCompilationUnit
-  genNodePtr = node.getIsInCompilationUnit() ;
-  if (genNodePtr) {
-    const struc::CompilationUnit& endNodeRef = dynamic_cast<const struc::CompilationUnit&>(*genNodePtr);
-    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
-      (*itVisitors)->visitTypeDeclaration_IsInCompilationUnit(node, endNodeRef);
-    }
-
-    clearStoppedVisitors();
-    if(needPreorderStop)
-      return;
-
-    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
-      if (apRoot) {
-        if (visitCrossEdgeTree || (visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef))) {
-          unvisitedNodes[endNodeRef.getId()] = true;
-        }
-      }
-      if (traversaldCrossEdges[edkTypeDeclaration_IsInCompilationUnit]) {
-        endNodeRef.accept(*this);
-      }
-    }
-    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
-      (*itVisitors)->visitEndTypeDeclaration_IsInCompilationUnit(node, endNodeRef);
-    }
-
-    clearStoppedVisitors();
-    if(needPreorderStop)
-      return;
-  }
-
   // edge: hasSuperClass
   genNodePtr = node.getSuperClass() ;
   if (genNodePtr) {
@@ -6345,6 +7532,68 @@ void AlgorithmPreorder::visitAllEdges(const struc::TypeDeclaration& node, bool c
     }
     for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
       (*itVisitors)->visitEndTypeDeclaration_HasOthers(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+
+  // edge: isInCompilationUnit
+  genNodePtr = node.getIsInCompilationUnit() ;
+  if (genNodePtr) {
+    const struc::CompilationUnit& endNodeRef = dynamic_cast<const struc::CompilationUnit&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitTypeDeclaration_IsInCompilationUnit(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot) {
+        if (visitCrossEdgeTree || (visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef))) {
+          unvisitedNodes[endNodeRef.getId()] = true;
+        }
+      }
+      if (traversaldCrossEdges[edkTypeDeclaration_IsInCompilationUnit]) {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndTypeDeclaration_IsInCompilationUnit(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+
+  // edge: isInModule
+  genNodePtr = node.getIsInModule() ;
+  if (genNodePtr) {
+    const struc::Module& endNodeRef = dynamic_cast<const struc::Module&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitTypeDeclaration_IsInModule(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot) {
+        if (visitCrossEdgeTree || (visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef))) {
+          unvisitedNodes[endNodeRef.getId()] = true;
+        }
+      }
+      if (traversaldCrossEdges[edkTypeDeclaration_IsInModule]) {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndTypeDeclaration_IsInModule(node, endNodeRef);
     }
 
     clearStoppedVisitors();
@@ -6944,6 +8193,75 @@ void AlgorithmPreorder::visit(const type::IntType& node, bool callFirst /*= true
   clearStoppedVisitors();
 }
 
+void AlgorithmPreorder::visitAllEdges(const type::IntersectionType& node, bool callFirst /*= true*/){
+  visitAllEdges(dynamic_cast<const type::Type&>(node),false);
+
+  std::list<Visitor*>::iterator itVisitors;
+
+  // edge: bounds
+  for (ListIterator<type::Type> it = node.getBoundsListIteratorBegin(); it != node.getBoundsListIteratorEnd(); ++it) {
+    const type::Type& endNodeRef = *it;
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitIntersectionType_Bounds(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot) {
+        if (visitCrossEdgeTree || (visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef))) {
+          unvisitedNodes[endNodeRef.getId()] = true;
+        }
+      }
+      if (traversaldCrossEdges[edkIntersectionType_Bounds]) {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndIntersectionType_Bounds(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+}
+
+void AlgorithmPreorder::visit(const type::IntersectionType& node, bool callFirst /*= true*/){
+#ifdef DEBUG_PREORDER
+  std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
+#endif
+  if (safeMode || visitCrossEdgeTree || visitSpecialNodes) {
+    if (safeMode) {
+      if (visitedNodes[node.getId()]) { // for safemode
+        common::WriteMsg::write(CMSG_THE_PRE_ORDER_HAS_TOUCHED_A_NODE_TWICE,node.getId(),Common::toString(node.getNodeKind()).c_str() );
+        return;
+      }
+    }
+    visitedNodes[node.getId()] = true;
+  }
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    (*itVisitors)->visit(node);
+    incVisitorDepth((**itVisitors));
+  }
+
+  clearStoppedVisitors();
+  if(needPreorderStop)
+    return;
+
+  visitAllEdges(node,true);
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    decVisitorDepth(**itVisitors);
+    (*itVisitors)->visitEnd(node);
+  }
+
+  clearStoppedVisitors();
+}
+
 void AlgorithmPreorder::visitAllEdges(const type::LongType& node, bool callFirst /*= true*/){
   visitAllEdges(dynamic_cast<const type::PrimitiveType&>(node),false);
 }
@@ -7117,6 +8435,77 @@ void AlgorithmPreorder::visitAllEdges(const type::MethodType& node, bool callFir
 }
 
 void AlgorithmPreorder::visit(const type::MethodType& node, bool callFirst /*= true*/){
+#ifdef DEBUG_PREORDER
+  std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
+#endif
+  if (safeMode || visitCrossEdgeTree || visitSpecialNodes) {
+    if (safeMode) {
+      if (visitedNodes[node.getId()]) { // for safemode
+        common::WriteMsg::write(CMSG_THE_PRE_ORDER_HAS_TOUCHED_A_NODE_TWICE,node.getId(),Common::toString(node.getNodeKind()).c_str() );
+        return;
+      }
+    }
+    visitedNodes[node.getId()] = true;
+  }
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    (*itVisitors)->visit(node);
+    incVisitorDepth((**itVisitors));
+  }
+
+  clearStoppedVisitors();
+  if(needPreorderStop)
+    return;
+
+  visitAllEdges(node,true);
+
+  for (std::list<Visitor*>::iterator itVisitors = visitorList.begin();itVisitors != visitorList.end(); ++itVisitors) {
+    decVisitorDepth(**itVisitors);
+    (*itVisitors)->visitEnd(node);
+  }
+
+  clearStoppedVisitors();
+}
+
+void AlgorithmPreorder::visitAllEdges(const type::ModuleType& node, bool callFirst /*= true*/){
+  visitAllEdges(dynamic_cast<const type::Type&>(node),false);
+
+  std::list<Visitor*>::iterator itVisitors;
+
+  const base::Base* genNodePtr;
+  // edge: refersTo
+  genNodePtr = node.getRefersTo() ;
+  if (genNodePtr) {
+    const struc::Module& endNodeRef = dynamic_cast<const struc::Module&>(*genNodePtr);
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitModuleType_RefersTo(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+
+    if ((!fact->getIsFilterTurnedOn() && !visitFilteredEdge) || (fact->getFilterState(endNodeRef.getId()) == Filter::NotFiltered) || (!originalFilterState && visitFilteredEdge)) {
+      if (apRoot) {
+        if (visitCrossEdgeTree || (visitUsedSpecialNodesOnly && Common::getIsAPSpecNode(endNodeRef))) {
+          unvisitedNodes[endNodeRef.getId()] = true;
+        }
+      }
+      if (traversaldCrossEdges[edkModuleType_RefersTo]) {
+        endNodeRef.accept(*this);
+      }
+    }
+    for (itVisitors = visitorList.begin(); itVisitors != visitorList.end(); ++itVisitors) {
+      (*itVisitors)->visitEndModuleType_RefersTo(node, endNodeRef);
+    }
+
+    clearStoppedVisitors();
+    if(needPreorderStop)
+      return;
+  }
+}
+
+void AlgorithmPreorder::visit(const type::ModuleType& node, bool callFirst /*= true*/){
 #ifdef DEBUG_PREORDER
   std::cout << "Rec. run: " << (unsigned int)&node << " " << node.getId() << " " << Common::toString(node.getNodeKind()) << std::endl;
 #endif

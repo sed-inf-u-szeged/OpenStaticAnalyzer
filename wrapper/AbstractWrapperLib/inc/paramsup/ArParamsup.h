@@ -43,20 +43,7 @@ namespace ArWrapperSup {
   */
   bool isArchiveFile(std::string filename);
 
-  /**
-   * @brief Examines the given ar argument by iterator. If it has parameter and this parameter is the next element of the argument list,
-   *        the iterator is moved to the next element (if that is not the end iterator of the argument list).
-   *        If it is a known argument, puts the argument of the CANLib (which is according to actual known argument) into the archiveArgs struct.
-   *        If it is an unknown argument, puts it into the unrec_args list of arWarnings struct. 
-   *        If there is some problem with this argument, then puts it into the can_warning list of arWarnings struct.
-   *
-   * @param it             [in] Iterator pointed to the actual element of the argument list.
-   * @param archiveArgs    [out] The argument of the CANLib (which is according to actual known argument) is put into this struct.
-   * @param arWarnings     [out] The unknown or problematic argument is put into this struct.
-   */
-  void examineArgument(const std::list<std::string>::iterator& it, ArchiveArgs& archiveArgs, Warnings& arWarnings);
-
-  /**
+   /**
    * @brief Processes the given argument list. It calls the examineArgument method. The arguments of CANLib (which are according to known arguments) are put into the archiveArgs struct.
    *        The unknown or problematic arguments are put into the arWarnings struct.
    *

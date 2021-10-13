@@ -1335,7 +1335,7 @@ namespace columbus { namespace javascript { namespace asg {
 
       Factory* fact;
 
-      bool traversaldCrossEdges[93];
+      bool traversaldCrossEdges[95];
 
   }; // AlgorithmPreorder
 

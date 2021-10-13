@@ -163,7 +163,7 @@ namespace module {
     if (&(_node->getFactory()) != this->factory)
       throw PythonException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
 
-    if (!((_node->getNodeKind() == ndkClassDef)  || (_node->getNodeKind() == ndkFunctionDef)  || (_node->getNodeKind() == ndkModule)  || (_node->getNodeKind() == ndkIdentifier)  || (_node->getNodeKind() == ndkParameter) ))
+    if (!((_node->getNodeKind() == ndkModule)  || (_node->getNodeKind() == ndkIdentifier)  || (_node->getNodeKind() == ndkParameter)  || (_node->getNodeKind() == ndkClassDef)  || (_node->getNodeKind() == ndkFunctionDef) ))
       throw PythonException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
 
     refersToContainer.push_back(_node->getId());

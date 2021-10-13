@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class InfixExpressionImpl extends BaseImpl implements InfixExpression {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(InfixExpressionImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

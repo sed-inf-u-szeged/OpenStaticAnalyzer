@@ -811,6 +811,7 @@ void VisitorGraphml::addAttributeToContent(const statement::ForOfStatement& node
   {
     return;
   }
+  content += "async : " + std::string(node.getAsync() ? "true" : "false") + "\n";
 }
 
 void VisitorGraphml::addAttributeToContent(const statement::ForStatement& node, std::string& content, bool callVirtualBase) {
@@ -6284,6 +6285,32 @@ void  VisitorGraphml::visitCallExpression_HasArguments(const expression::CallExp
   idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
 }
 
+void  VisitorGraphml::visitCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end) {
+  if (!visitCrossEdge)
+    return;
+  if ( (this->getDepth() >= maxDrawingDepth) && ( maxDrawingDepth > 0))
+    return;
+  if ( !((edgeFilter.empty()) || ( edgeFilter.find("CallExpression_Calls") != edgeFilter.end())))
+  {
+    return;
+  }
+  if ( maxDrawingDepth > 0)
+  {
+    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( begin.getId());
+    if ( foundDrawedNode == idsToDrawedNodes.end())
+      return;
+  }
+  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("expression::CallExpression") == nodeTypeFilter.end() && nodeTypeFilter.find("statement::Function") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if(isGroupingTreeNodes)
+    io.writeEdgeBuffer(Common::toString(begin.getId()), Common::toString(end.getId()), "CallExpression_Calls", 1, GraphmlIO::ls_line, GraphmlIO::at_none, GraphmlIO::at_standard);
+  else
+    io.writeEdge(Common::toString(begin.getId()), Common::toString(end.getId()), "CallExpression_Calls", 1, GraphmlIO::ls_line, GraphmlIO::at_none, GraphmlIO::at_standard);
+  idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
+}
+
 void  VisitorGraphml::visitConditionalExpression_HasAlternate(const expression::ConditionalExpression& begin, const expression::Expression& end) {
   if(isGroupingTreeNodes)
     return;
@@ -6596,7 +6623,33 @@ void  VisitorGraphml::visitNewExpression_HasArguments(const expression::NewExpre
   idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
 }
 
-void  VisitorGraphml::visitObjectExpression_HasProperties(const expression::ObjectExpression& begin, const expression::Property& end) {
+void  VisitorGraphml::visitNewExpression_Calls(const expression::NewExpression& begin, const statement::Function& end) {
+  if (!visitCrossEdge)
+    return;
+  if ( (this->getDepth() >= maxDrawingDepth) && ( maxDrawingDepth > 0))
+    return;
+  if ( !((edgeFilter.empty()) || ( edgeFilter.find("NewExpression_Calls") != edgeFilter.end())))
+  {
+    return;
+  }
+  if ( maxDrawingDepth > 0)
+  {
+    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( begin.getId());
+    if ( foundDrawedNode == idsToDrawedNodes.end())
+      return;
+  }
+  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("expression::NewExpression") == nodeTypeFilter.end() && nodeTypeFilter.find("statement::Function") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if(isGroupingTreeNodes)
+    io.writeEdgeBuffer(Common::toString(begin.getId()), Common::toString(end.getId()), "NewExpression_Calls", 1, GraphmlIO::ls_line, GraphmlIO::at_none, GraphmlIO::at_standard);
+  else
+    io.writeEdge(Common::toString(begin.getId()), Common::toString(end.getId()), "NewExpression_Calls", 1, GraphmlIO::ls_line, GraphmlIO::at_none, GraphmlIO::at_standard);
+  idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
+}
+
+void  VisitorGraphml::visitObjectExpression_HasProperties(const expression::ObjectExpression& begin, const base::Positioned& end) {
   if(isGroupingTreeNodes)
     return;
   if ( (this->getDepth() >= maxDrawingDepth) && ( maxDrawingDepth > 0))
@@ -6611,7 +6664,7 @@ void  VisitorGraphml::visitObjectExpression_HasProperties(const expression::Obje
     if ( foundDrawedNode == idsToDrawedNodes.end())
       return;
   }
-  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("expression::ObjectExpression") == nodeTypeFilter.end() && nodeTypeFilter.find("expression::Property") == nodeTypeFilter.end())))
+  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("expression::ObjectExpression") == nodeTypeFilter.end() && nodeTypeFilter.find("base::Positioned") == nodeTypeFilter.end())))
   {
     return;
   }
@@ -7532,7 +7585,7 @@ void  VisitorGraphml::visitLabeledStatement_HasBody(const statement::LabeledStat
   idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
 }
 
-void  VisitorGraphml::visitObjectPattern_HasProperties(const statement::ObjectPattern& begin, const expression::Property& end) {
+void  VisitorGraphml::visitObjectPattern_HasProperties(const statement::ObjectPattern& begin, const base::Positioned& end) {
   if(isGroupingTreeNodes)
     return;
   if ( (this->getDepth() >= maxDrawingDepth) && ( maxDrawingDepth > 0))
@@ -7547,7 +7600,7 @@ void  VisitorGraphml::visitObjectPattern_HasProperties(const statement::ObjectPa
     if ( foundDrawedNode == idsToDrawedNodes.end())
       return;
   }
-  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("statement::ObjectPattern") == nodeTypeFilter.end() && nodeTypeFilter.find("expression::Property") == nodeTypeFilter.end())))
+  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("statement::ObjectPattern") == nodeTypeFilter.end() && nodeTypeFilter.find("base::Positioned") == nodeTypeFilter.end())))
   {
     return;
   }

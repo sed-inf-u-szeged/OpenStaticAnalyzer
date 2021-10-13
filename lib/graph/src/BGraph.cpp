@@ -28,6 +28,9 @@
 #include "boost/algorithm/string/classification.hpp"
 #include "../privinc/messages.h"
 
+
+#include <fstream>
+
 using namespace boost;
 using namespace std;
 using namespace columbus::io;
@@ -769,8 +772,7 @@ namespace columbus {  namespace graph {
     edge_iter it,edge_begin,edge_end;
     boost::tie(edge_begin, edge_end) = edges(*g);
     for(it = edge_begin; it != edge_end;) {
-      edge_iter del_it = it;
-      ++it;
+      edge_iter del_it = it++;
       if( (typeKey == edgeTypes[*del_it]) && (static_cast<int>(type.getDirectionType()) == edgeDirections[*del_it]) ) {
 
         // get edge pair
@@ -2573,6 +2575,152 @@ namespace columbus {  namespace graph {
     in.close();
   }
 
+  void Graph::addAttributeToJsonNode(Attribute& attribute, Json::Value& node) const
+  {
+    switch(attribute.getType()) {
+      case Attribute::atInt:
+        {
+          node[XML_GRAPH_TYPE] = "int";
+          node[XML_GRAPH_NAME] = ((AttributeInt&)attribute).getName();
+          node[XML_GRAPH_CONTEXT] =  ((AttributeInt&)attribute).getContext();
+          node[XML_GRAPH_VALUE] = ((AttributeInt&)attribute).getValue();
+          break;
+        }
+      case Attribute::atFloat:
+        {
+          node[XML_GRAPH_TYPE] = "float";
+          node[XML_GRAPH_NAME] = ((AttributeFloat&)attribute).getName();
+          node[XML_GRAPH_CONTEXT] = ((AttributeFloat&)attribute).getContext();
+          node[XML_GRAPH_VALUE] = ((AttributeFloat&)attribute).getValue();
+          break;
+        }
+      case Attribute::atString:
+        {
+          node[XML_GRAPH_TYPE] = "string";
+          node[XML_GRAPH_NAME] = ((AttributeString&)attribute).getName();
+          node[XML_GRAPH_CONTEXT] = ((AttributeString&)attribute).getContext();
+          node[XML_GRAPH_VALUE] = ((AttributeString&)attribute).getValue();
+          break;
+        }
+      case Attribute::atComposite:
+        {
+          node[XML_GRAPH_TYPE] = "composite";
+
+          AttributeComposite& attrComp = (AttributeComposite&)attribute;
+          node[XML_GRAPH_NAME] = attrComp.getName();
+          node[XML_GRAPH_CONTEXT] = attrComp.getContext();
+          Json::Value& attributesValue = node["attributes"] = Json::Value(Json::arrayValue);
+
+          int attributeIndex = 0;
+          for(AttributeList::iterator it = attrComp.values->begin(); it != attrComp.values->end(); it++)
+            addAttributeToJsonNode(**it, attributesValue[attributeIndex++]);
+
+        }
+      default:
+        break;
+    }
+
+  }
+
+
+  void Graph::saveJSON(const string& filename) const
+  {
+    Json::Value root(Json::objectValue);
+    Json::Value& header = root["header"];
+    for (const auto& headerInfo : headerInformations)
+      header[strTable->get(headerInfo.first)] = strTable->get(headerInfo.second);
+
+    list<Node> nodeList;
+
+    vertex_iter vi, vi_end;
+    for (boost::tie(vi, vi_end) = vertices(*g); vi != vi_end; ++vi)
+      nodeList.push_back( Node( const_cast<Graph*>(this), *vi) );
+
+    nodeList.sort(compareNodeByUID);
+
+    int nodeIndex = 0;
+    Json::Value& nodes = root["nodes"] = Json::Value(Json::arrayValue);
+
+    for(const auto& node : nodeList )
+    {
+      Json::Value& nodeValue = nodes[nodeIndex++];
+
+      GraphVertex vertex = node.vertex;
+
+      // node
+      nodeValue[XML_GRAPH_NAME] = strTable->get(get(vertex_UID,*g,vertex));
+      nodeValue[XML_GRAPH_TYPE] = strTable->get(get(vertex_type,*g,vertex));
+
+
+      AttributeList *vertex_attr = get(vertex_attributes,*g,vertex);
+      // attributes
+      if (vertex_attr->begin() != vertex_attr->end())
+      {
+        Json::Value& nodeAttributes = nodeValue["attributes"] = Json::Value(Json::arrayValue);
+        int attributeIndex = 0;
+
+        for(AttributeList::iterator it = vertex_attr->begin(); it != vertex_attr->end(); it++)
+          addAttributeToJsonNode(**it, nodeAttributes[attributeIndex++]);
+      }
+
+      // edges
+      int edgeIndex = 0;
+      bool edgesCreated = false;
+      Json::Value* nodeEdges = nullptr;
+
+      out_edge_iter edge_end, edge_it;
+      for(boost::tie(edge_it, edge_end) = out_edges(vertex,*g); edge_it != edge_end; edge_it++)
+      {
+        if ((get(edge_direction,*g,*edge_it) != Edge::edtReverse))
+        {
+          if (!edgesCreated)
+          {
+            nodeEdges = &(nodeValue["edges"] = Json::Value(Json::arrayValue));
+            edgesCreated = true;
+          }
+
+          Json::Value& nodeEdge = (*nodeEdges)[edgeIndex++];
+
+          nodeEdge[XML_GRAPH_TYPE] = strTable->get(get(edge_type,*g,*edge_it));
+
+          switch(get(edge_direction,*g,*edge_it))
+          {
+            case Edge::edtBidirectional:
+              nodeEdge[XML_GRAPH_DIRECTION] = "bidirectional";
+              break;
+            case Edge::edtDirectional:
+              nodeEdge[XML_GRAPH_DIRECTION] = "directional";
+              break;
+            default:
+              break;
+          }
+
+          nodeEdge[XML_GRAPH_EDGE_TO] = strTable->get(get(vertex_UID,*g,target(*edge_it,*g)));
+          AttributeList *edge_attr = get(edge_attributes,*g,*edge_it);
+
+          if (edge_attr->begin() != edge_attr->end())
+          {
+            Json::Value& edgeAttributes = nodeEdge["attributes"] = Json::Value(Json::arrayValue);
+            int attributeIndex = 0;
+
+            for(AttributeList::iterator it = edge_attr->begin(); it != edge_attr->end(); it++)
+              addAttributeToJsonNode(**it, edgeAttributes[attributeIndex++]);
+          }
+        }
+      }
+    }
+ 
+    ofstream output(filename);
+    if (output)
+    {
+      Json::StreamWriterBuilder builder;
+      std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
+      writer->write(root, &output);
+      output.close();
+    }
+  }
+
+
   void Graph::clear() {
 
     clearAttributes();
@@ -2612,6 +2760,14 @@ namespace columbus {  namespace graph {
     return strTable->get(it->second);
   }
 
+  vector<string> Graph::getHeaderKeys() const
+  {
+    vector<string> keys;
+    for (const auto& headerElement : headerInformations)
+      keys.push_back(strTable->get(headerElement.first));
+    return keys;
+  }
+
   bool Graph::deleteHeaderInfo(const string& key) {
     size_t deletedElementsCount = headerInformations.erase(strTable->get(key));
     if(deletedElementsCount == 0)
@@ -2637,13 +2793,15 @@ namespace columbus {  namespace graph {
   template<class NodeEdge>
   void Graph::convertSummarizeAttribute(NodeEdge& oldNode, NodeEdge& newNode, Graph::CompsiteAndStringMergeMode attributeStringAndCompositeMode, Graph::NumericMergeMode attributeNumericMode) {
     Attribute::AttributeIterator attributeIt = newNode.getAttributes();
+    list<Attribute*> needToCopy;
     while(attributeIt.hasNext()) {
       Attribute& attr = attributeIt.next();
       switch(attr.getType()) {
         case Attribute::atComposite:
         case Attribute::atString:
-          if (attributeStringAndCompositeMode == Graph::csmmAddNewAttributes) {
-            oldNode.addAttribute(attr);
+          if (attributeStringAndCompositeMode == Graph::csmmAddNewAttributes)
+          {
+            needToCopy.push_back(&attr);
           } else {
             Attribute::AttributeIterator attrItForAttr = oldNode.findAttribute(attr.getType(), attr.getName(), attr.getContext());
             bool foundEqualAttribute = false;
@@ -2658,17 +2816,18 @@ namespace columbus {  namespace graph {
             }
             if( (foundEqualAttribute && attributeStringAndCompositeMode == Graph::csmmDropOldAttributes ) || // if we found attribute and drop mode is on
               (!foundEqualAttribute && attributeStringAndCompositeMode == Graph::csmmUnionNewAttributes)     // id we not found attribute and unio mode is on
-              ) {
-              oldNode.addAttribute(attr);
+              )
+            {
+              needToCopy.push_back(&attr);
             }
           }
           break;
         case Attribute::atInt:
         case Attribute::atFloat:
           {
-            if (attributeNumericMode == Graph::nmmAddNewAttributes) {
-              // if add new mode is on
-              oldNode.addAttribute(attr);
+            if (attributeNumericMode == Graph::nmmAddNewAttributes)
+            {
+              needToCopy.push_back(&attr);
             } else {
               Attribute::AttributeIterator attrItForAttr = oldNode.findAttribute(attr.getType(), attr.getName(), attr.getContext());
               bool foundEqualAttribute = false;
@@ -2690,8 +2849,9 @@ namespace columbus {  namespace graph {
               
               if( (foundEqualAttribute && attributeNumericMode == Graph::nmmDropOldAttributes ) || // if we found attribute and drop mode is on
                 (!foundEqualAttribute && attributeNumericMode == Graph::nmmSummarizeAttributes)     // id we not found attribute and sum mode is on
-                ) {
-                oldNode.addAttribute(attr);
+                )
+              {
+                needToCopy.push_back(&attr);
               } 
             }
           }
@@ -2700,6 +2860,9 @@ namespace columbus {  namespace graph {
           break;
       }
     }
+
+    for (const auto& attr : needToCopy)
+      oldNode.addAttribute(*attr);
   }
 
   void Graph::convertNodeMerge(Node& newNode, Graph& oldGraph, Graph::MergeMode mode, Graph::CompsiteAndStringMergeMode attributeStringAndCompositeMode, Graph::NumericMergeMode attributeNumericMode) {
@@ -2880,6 +3043,7 @@ namespace columbus {  namespace graph {
     Node::NodeIterator nodeIt = graph.getNodes();
     while(nodeIt.hasNext()) {
       Node newNode = nodeIt.next();
+
       // convert node
       if(visitedNodes.find(newNode) == visitedNodes.end() ) {
         visitedNodes.insert(newNode);

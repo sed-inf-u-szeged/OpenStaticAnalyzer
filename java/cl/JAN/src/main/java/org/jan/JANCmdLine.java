@@ -52,6 +52,9 @@ public interface JANCmdLine {
 	String getOutputxml();
 	boolean isOutputxml();
 
+	@Option(shortName = "y", description = "Dump minimal xml file")
+	boolean isMinXml();
+
 	@Option(shortName = "j", description = "The extra arguments for javac.")
 	String getJavacoptions();
 	boolean isJavacoptions();

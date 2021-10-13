@@ -29,7 +29,7 @@
 //AbstractArchive messages
 #define CMSG_ARCHIVE_HAS_NO_INPUT                                  "Archive has no input files!"
 #define CMSG_ARCHIVE_NO_NEED_TO_RUN                                "Don't have to run archive by configuration!"
-#define CMSG_DEBUG_ARCHIVE_EXECUTION                               common::WriteMsg::mlDDDebug, "Executing archive tool %s in %s archive mode."
+#define CMSG_DEBUG_ARCHIVE_EXECUTION                               common::WriteMsg::mlDDDebug, "Executing archive tool %s."
 #define CMSG_DEBUG_ARCHIVE_MODIFIER                                common::WriteMsg::mlDDDebug, "Archive modifier: %s"
 #define CMSG_DEBUG_ARCHIVE_OPERATION                               common::WriteMsg::mlDDDebug, "Archive operation: %s"
 #define CMSG_DEBUG_ARCHIVE_OUTPUT                                  common::WriteMsg::mlDDDebug, "Archive output file: %s"
@@ -69,10 +69,11 @@
 #define CMSG_LINKER_NO_INPUT_FILES_CREATED                         "No input files were created!"
 #define CMSG_LINKER_FILTER_FILE                                    common::WriteMsg::mlDDDebug, "Linker filter file: %s"
 #define CMSG_INFO_STATIC_LIB_IS_NOT_LINKED_IN                      "Archive (%s) is not used due to the current linking mode (%d)."
+#define CMSG_DEBUG_LINKER_UNKNOWN_INPUT                            "Unknown linker input file: %s"
 
 //AbstractWrapper messages
-#define CMSG_ABSTRACT_WRAPPER_ORIGINAL_WRAPPED_TOOL                common::WriteMsg::mlDebug, "Original wrapped tool: %s"
-#define CMSG_ABSTRACT_WRAPPER_ORIGINAL_ARGUMENT_CL                 common::WriteMsg::mlDebug, "Original argument %d from commandline: %s"
+#define CMSG_ABSTRACT_WRAPPER_ORIGINAL_WRAPPED_TOOL                common::WriteMsg::mlDDDebug, "Original wrapped tool: %s"
+#define CMSG_ABSTRACT_WRAPPER_ORIGINAL_ARGUMENT_CL                 common::WriteMsg::mlDDDebug, "Original argument %d from commandline: %s"
 #define CMSG_ABSTRACT_WRAPPER_ARGUMENT_QUOTES_REMOVED              common::WriteMsg::mlDDDDebug, "Argument %d from commandline after removing quotes: %s"
 #define CMSG_ABSTRACT_WRAPPER_SKIP_ARGUMENT                        common::WriteMsg::mlDDDDebug, "Skip argument %s with its %d parameters."
 #define CMSG_ABSTRACT_WRAPPER_INPUT_COMMAND_FILE                   common::WriteMsg::mlDebug, "Input line from command file %s : \n %s"
@@ -91,7 +92,7 @@
 #define CMSG_LIB_PARAMSUP_WRONG_LIB_ARGUMENT                        "Lib argument %s is wrong!"
 
 //ParamsupCommon messages
-#define CMSG_PATH_CANONICALIZE_WRONG                                common::WriteMsg::mlDDDebug, "There is a problem with common::pathCanonicalize!"
+#define CMSG_PATH_CANONICALIZE_WRONG                                common::WriteMsg::mlDDDebug, "Unable to cannonicalize path `%s`: %s"
 #define CMSG_ERROR_OPEN_FILE                                        "Cannot open file for appending: %s"
 
 //Wrapper tools messages

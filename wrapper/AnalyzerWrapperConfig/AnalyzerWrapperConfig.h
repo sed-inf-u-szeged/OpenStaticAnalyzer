@@ -63,6 +63,8 @@
 
 #define RUN_CPPCHECK                      "RUN_CPPCHECK"                ///< -runCppcheck
 
+#define NO_DELAYED_TEMPLATE_PARSING       "NO_DELAYED_TEMPLATE_PARSING" ///< -fno-delayed-template-parsing
+
 #define ANALYZER_WRAPPER_CONFIG           "analyzer_wrapper_config.ini" ///< the name of the analyzer wrapper config file
 
 #endif

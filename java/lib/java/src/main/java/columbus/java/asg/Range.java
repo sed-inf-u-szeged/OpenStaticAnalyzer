@@ -28,6 +28,7 @@ import columbus.logger.LoggerHandler;
  */
 public class Range {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(Range.class, Constant.LoggerPropertyFile);
 	private StrTable strTable;
 
@@ -38,11 +39,8 @@ public class Range {
 	private int wideLine;
 	private int wideEndLine;
 	private int col;
-
 	private int endCol;
-
 	private int wideCol;
-
 	private int wideEndCol;
 
 	public Range(StrTable st) {

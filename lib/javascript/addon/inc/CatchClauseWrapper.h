@@ -22,46 +22,31 @@
 #define _JAVASCRIPT_CatchClauseWrapper_H_
 
 #include "javascript/inc/javascript.h"
-#include <node.h>
-#include <node_object_wrap.h>
+#include <node_api.h>
+#include "BaseWrapper.h"
 #include "../Factory.h"
-
-using namespace v8;
 
 namespace columbus { namespace javascript { namespace asg { namespace addon {
   class Factory;
 
-  class CatchClauseWrapper : public node::ObjectWrap {
+  class CatchClauseWrapper : BaseWrapper{
     public:
-      columbus::javascript::asg::statement::CatchClause* CatchClause;
-      static void Init(v8::Handle<v8::Object> exports);
-      CatchClauseWrapper(const CatchClauseWrapper&);
-      CatchClauseWrapper(Factory* fact);
-      virtual ~CatchClauseWrapper();
-      static void NewInstance(const v8::FunctionCallbackInfo<v8::Value>& args);
-      void wrap(const v8::FunctionCallbackInfo<v8::Value>& args){ this->Wrap(args.Holder()); }
-      static v8::Persistent<v8::Function> constructor;
+      static napi_value Init(napi_env env, napi_value& exports);
+      static void Destructor(napi_env env, void* nativeObject, void* finalize_hint);
+      static napi_status NewInstance(napi_env env, statement::CatchClause* arg, napi_value* instance);
     private:
-      static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-
-      static void setParamIdentifier(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setParamMemberExpression(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setParamArrayPattern(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setParamAssignmentPattern(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setParamObjectPattern(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setParamRestElement(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setBodyBlockStatement(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void addCommentsComment(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPath(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setEndLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setEndCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideEndLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideEndCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-}; //end of CatchClauseWrapper
+      explicit CatchClauseWrapper(); // Constructor
+      ~CatchClauseWrapper();
+      static napi_ref constructor;
+      static napi_value New(napi_env env, napi_callback_info info);
+      napi_env env_;
+      napi_ref wrapper_;
+      static napi_value setParam(napi_env env, napi_callback_info info);
+      static napi_value setBody(napi_env env, napi_callback_info info);
+      static napi_value addComments(napi_env env, napi_callback_info info);
+      static napi_value setPath(napi_env env, napi_callback_info info);
+      static napi_value setPosition(napi_env env, napi_callback_info info);
+  }; //end of CatchClauseWrapper
 
 }}}}//end of namespaces
 #endif

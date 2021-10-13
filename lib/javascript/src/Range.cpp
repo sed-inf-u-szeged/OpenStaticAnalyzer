@@ -63,7 +63,7 @@ namespace columbus { namespace javascript { namespace asg {
 
   void Range::setPath(const std::string& s) {
     if (!strTable)
-      throw JavaScriptException(COLUMBUS_LOCATION,CMSG_EX_UNTIL_NO_STRTABLE_IS_SET_THE_SETPATH );
+      throw JavascriptException(COLUMBUS_LOCATION,CMSG_EX_UNTIL_NO_STRTABLE_IS_SET_THE_SETPATH );
     positionInfo.path = strTable->set(s);
   }
 
@@ -172,7 +172,7 @@ namespace columbus { namespace javascript { namespace asg {
         ++it;
         break;
       case op_Invalidated:
-        throw JavaScriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
+        throw JavascriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
       case op_Previous:
       case op_Remove:
         break;
@@ -188,13 +188,13 @@ namespace columbus { namespace javascript { namespace asg {
       case op_None:
       case op_Add:
       case op_Remove:
-        throw JavaScriptIllegalStateException(COLUMBUS_LOCATION, CMSG_EX_NEITHER_NEXT_NOR_PREVIOUS_HAVE_BEEN_CALLED);
+        throw JavascriptIllegalStateException(COLUMBUS_LOCATION, CMSG_EX_NEITHER_NEXT_NOR_PREVIOUS_HAVE_BEEN_CALLED);
       case op_Next:
       case op_Previous:
         it = safeRemove(it);
         break;
       case op_Invalidated:
-        throw JavaScriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
+        throw JavascriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
     }
 
     lastOp = op_Remove;
@@ -234,7 +234,7 @@ namespace columbus { namespace javascript { namespace asg {
       return *this;
 
     if (otherIt.lastOp == op_Invalidated)
-      throw JavaScriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
+      throw JavascriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
 
     bool insertIntoIterators = true;
     if (lastOp != op_Invalidated && iterators) {
@@ -270,7 +270,7 @@ namespace columbus { namespace javascript { namespace asg {
     lastOp = op_Next;
 
     if (it == container->end())
-        throw JavaScriptNoSuchElementException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATION_HAS_NOT_NEXT_ELEMENT);
+        throw JavascriptNoSuchElementException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATION_HAS_NOT_NEXT_ELEMENT);
 
     return *it;
   }
@@ -284,14 +284,14 @@ namespace columbus { namespace javascript { namespace asg {
     lastOp = op_Previous;
 
     if (it == container->end())
-        throw JavaScriptNoSuchElementException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATION_HAS_NOT_PREVIOUS_ELEMENT);
+        throw JavascriptNoSuchElementException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATION_HAS_NOT_PREVIOUS_ELEMENT);
 
     return *it;
   }
 
   bool RangeListIterator::equals(const RangeListIterator& otherIt) const {
     if (lastOp == op_Invalidated)
-      throw JavaScriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
+      throw JavascriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
 
     return (it == otherIt.it) && (lastOp == otherIt.lastOp);
   }
@@ -304,7 +304,7 @@ namespace columbus { namespace javascript { namespace asg {
       case op_Remove:
       case op_Previous:   return it;
       case op_Invalidated:
-        throw JavaScriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
+        throw JavascriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
     }
     return container->end();
   }
@@ -317,7 +317,7 @@ namespace columbus { namespace javascript { namespace asg {
       case op_Remove:
       case op_Previous:   return it == container->begin() ? container->end() : --Container::iterator(it);
       case op_Invalidated:
-        throw JavaScriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
+        throw JavascriptInvalidIteratorException(COLUMBUS_LOCATION, CMSG_EX_THE_ITERATOR_IS_INVALID);
     }
     return container->end();
   }

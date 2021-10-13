@@ -1,0 +1,9 @@
+name : shotgun
+kind : ndkMethod
+role : shotgunMethod
+category : AntiPattern
+priority : Minor
+displayName : Shotgun Surgery
+description : "We talk about a Shotgun Surgery when in case of a general modification, we have to make a lot of small changes in a lot of different classes. If we have at least 'Min' references to a function, the function is considered a Shotgun Surgery."
+conditions:
+  - NII >= 10

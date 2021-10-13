@@ -1,6 +1,6 @@
-## Reference of Pylint coding rule violations
+## Reference of Pylint 1.x coding rule violations
 
-OpenStaticAnalyzer executes the [Pylint] tool for coding rule violation checking and imports its results. OpenStaticAnalyzer also associates the issued rule violations with source code elements (i.e. methods, functions, classes, packages, and modules), and calculates metrics for the source code elements, which represent the amount of violations of each ruleset, rule, and priority groups, respectively.
+OpenStaticAnalyzer incorporates the [Pylint] tool for coding rule violation checking and imports its results. OpenStaticAnalyzer also associates the issued rule violations with source code elements (i.e. methods, functions, classes, packages, and modules), and calculates metrics for the source code elements, which represent the amount of violations of each ruleset, rule, and priority groups, respectively.
 
 OpenStaticAnalyzer uses Pylint "as is", without any guaranties that the results of Pylint are correct. All statements of the Pylint license apply here as well. All texts describing the rulesets and the individual rules are copied from Pylint with some minor grammatical fixes.
 The list of rulesets and rules contained in each ruleset are the following:
@@ -201,11 +201,15 @@ The following table contains the enabled rules and their priorities:
                          Cmp Method                           PYLINT_CM     Major    
                          Coerce Builtin                       PYLINT_CoB    Major    
                          Coerce Method                        PYLINT_CoM    Major    
+                         Comprehension Escape                 PYLINT_CE     Major    
                          Delslice Method                      PYLINT_DM     Major    
                          Deprecated Itertools Function        PYLINT_DIF    Major    
+                         Deprecated Operator Function         PYLINT_DOF    Major    
                          Deprecated Str Translate Call        PYLINT_DSTC   Major    
                          Deprecated String Function           PYLINT_DSF    Major    
+                         Deprecated Sys Function              PYLINT_DeSF   Major    
                          Deprecated Types Field               PYLINT_DTF    Major    
+                         Deprecated Urllib Function           PYLINT_DUF    Major    
                          Dict Items Not Iterating             PYLINT_DINI   Major    
                          Dict Iter Method                     PYLINT_DIM    Major    
                          Dict Keys Not Iterating              PYLINT_DKNI   Major    
@@ -213,6 +217,7 @@ The following table contains the enabled rules and their priorities:
                          Dict View Method                     PYLINT_DVM    Major    
                          Div Method                           PYLINT_DiM    Major    
                          Eq Without Hash                      PYLINT_EWH    Major    
+                         Exception Escape                     PYLINT_EE     Major    
                          Exception Message Attribute          PYLINT_EMA    Major    
                          Execfile Builtin                     PYLINT_EB     Major    
                          File Builtin                         PYLINT_FB     Major    
@@ -225,6 +230,7 @@ The following table contains the enabled rules and their priorities:
                          Input Builtin                        PYLINT_IB     Major    
                          Intern Builtin                       PYLINT_InB    Major    
                          Invalid Str Codec                    PYLINT_ISC    Major    
+                         Invalid Unicode Literal              PYLINT_IUL    Critical 
                          Long Builtin                         PYLINT_LB     Major    
                          Long Suffix                          PYLINT_LS     Critical 
                          Map Builtin Not Iterating            PYLINT_MBNI   Major    
@@ -256,6 +262,7 @@ The following table contains the enabled rules and their priorities:
                          Unpacking In Except                  PYLINT_UIE    Critical 
                          Using Cmp Argument                   PYLINT_UCA    Major    
                          Xrange Builtin                       PYLINT_XB     Major    
+                         Xreadlines Attribute                 PYLINT_XA     Major    
                          Zip Builtin Not Iterating            PYLINT_ZBNI   Major    
   Refactoring Rules      Consider Iterating Dictionary        PYLINT_CID    Minor    
                          Consider Merging Isinstance          PYLINT_CMI    Minor    
@@ -389,7 +396,7 @@ Used when a module, function, class or method has an empty docstring (it would b
 Used when you use the "eval" function, to discourage its usage. Consider using `ast.literal_eval` for safely evaluating strings containing Python expressions from untrusted sources.
 
 #### Exec Used {#PYLINT_ExU}
-Used when you use the "exec" statement (function for Python 3), to discourage its usage. That doesn't mean you can not use it!
+Used when you use the "exec" statement (function for Python 3), to discourage its usage. That doesn't mean you cannot use it!
 
 #### Expression Not Assigned {#PYLINT_ENA}
 Used when an expression that is not a function call is assigned to nothing. Probably something else was intended.
@@ -401,7 +408,7 @@ Used when a function / class / method is redefined.
 Used when the special class method \_\_init\_\_ is turned into a generator by a yield in its body.
 
 #### Invalid Name {#PYLINT_IN}
-Used when the name doesn't match the regular expression associated to its type (constant, variable, class...).
+Used when the name doesn't conform to naming rules associated to its type (constant, variable, class...).
 
 #### Invalid Star Assignment Target {#PYLINT_ISAT}
 Emitted when a star expression is used as a starred assignment target. This message can't be emitted when using Python \< 3.0.
@@ -413,7 +420,7 @@ Used when comparing an object to a literal, which is usually what you do not wan
 Used when a break or a return statement is found inside the finally clause of a try...finally block: the exceptions raised in the try clause will be silently swallowed instead of being re-raised.
 
 #### Misplaced Comparison Constant {#PYLINT_MCC}
-Used when the constant is placed on the left sideof a comparison. It is usually clearer in intent to place it in the right hand side of the comparison.
+Used when the constant is placed on the left side of a comparison. It is usually clearer in intent to place it in the right hand side of the comparison.
 
 #### Missing Docstring {#PYLINT_MD}
 Used when a module, function, class or method has no docstring.Some special methods like \_\_init\_\_ doesn't necessary require a docstring.
@@ -505,7 +512,7 @@ Used when a class method has a first argument named differently than the value s
 Used when a metaclass class method has a first argument named differently than the value specified in valid-metaclass-classmethod-first-arg option (default to "mcs"), recommended to easily differentiate them from regular instance methods.
 
 #### Bad Mcs Method Argument {#PYLINT_BMMA}
-Used when a metaclass method has a first agument named differently than the value specified in valid-classmethod-first-arg option (default to "cls"), recommended to easily differentiate them from regular instance methods.
+Used when a metaclass method has a first argument named differently than the value specified in valid-classmethod-first-arg option (default to "cls"), recommended to easily differentiate them from regular instance methods.
 
 #### Bad Staticmethod Argument {#PYLINT_BSA}
 Used when a static method has "self" or a value specified in valid-classmethod-first-arg option or valid-metaclass-classmethod-first-arg option as first argument.
@@ -514,7 +521,7 @@ Used when a static method has "self" or a value specified in valid-classmethod-f
 Used when a class has duplicate bases.
 
 #### Inconsistent Mro {#PYLINT_IM}
-Used when a class has an inconsistent method resolutin order.
+Used when a class has an inconsistent method resolution order.
 
 #### Inherit Non Class {#PYLINT_INC}
 Used when a class inherits from something which is not a class.
@@ -550,7 +557,7 @@ Used when a method doesn't use its bound instance, and so could be written as a 
 Used when a static method is defined without using the decorator syntax.
 
 #### Non Iterator Returned {#PYLINT_NIR}
-Used when an \_\_iter\_\_ method returns something which is not an iterable (i.e. has no `next` method).
+Used when an \_\_iter\_\_ method returns something which is not an iterable (i.e. has no `__next__` method).
 
 #### Non Parent Init Called {#PYLINT_NPIC}
 Used when an \_\_init\_\_ method is called on a class which is not in the direct ancestors for the analysed class.
@@ -608,7 +615,7 @@ Used when a function or method has too many statements. You should then split it
 ### Exception Rules
 
 #### Bad Except Order {#PYLINT_BEO}
-Used when except clauses are not in the correct order (from the more specific to the more generic). If you don't fix the order, some exceptions may not be catched by the most specific handler.
+Used when except clauses are not in the correct order (from the more specific to the more generic). If you don't fix the order, some exceptions may not be caught by the most specific handler.
 
 #### Bad Exception Context {#PYLINT_BEC}
 Used when using the syntax "raise ... from ...", where the exception context is not an exception, nor None. This message can't be emitted when using Python \< 3.0.
@@ -623,7 +630,7 @@ Used when the exception to catch is of the form "except A or B:". If intending t
 Used when an except catches a too general exception, possibly burying unrelated errors.
 
 #### Catching Non Exception {#PYLINT_CNE}
-Used when a class which doesn't inherit from BaseException is used as an exception in an except clause.
+Used when a class which doesn't inherit from Exception is used as an exception in an except clause.
 
 #### Duplicate Except {#PYLINT_DE}
 Used when an except catches a type that was already caught by a previous handler.
@@ -734,15 +741,15 @@ Used when code and imports are mixed.
 ### Iterable Check Rules
 
 #### Not A Mapping {#PYLINT_NAM}
-Used when a non-mapping value is used in place wheremapping is expected.
+Used when a non-mapping value is used in place where mapping is expected.
 
 #### Not An Iterable {#PYLINT_NoAI}
-Used when a non-iterable value is used in place whereiterable is expected.
+Used when a non-iterable value is used in place where iterable is expected.
 
 ### Len Rules
 
 #### Len As Condition {#PYLINT_LAC}
-Used when Pylint detects incorrect use of len(sequence) inside conditions.
+Used when Pylint detects that len(sequence) is being used inside a condition to determine if a sequence is empty. Instead of comparing the length to 0, rely on the fact that empty sequences are false.
 
 ### Logging Rules
 
@@ -756,10 +763,10 @@ Used when a logging statement format string terminates before the end of a conve
 Used when a logging statement has a call form of "logging.\<logging method>(format\_string % (format\_args...))". Such calls should leave string interpolation to the logging method itself and be written "logging.\<logging method>(format\_string, format\_args...)" so that the program may avoid incurring the cost of the interpolation in those cases in which no message will be logged. For more, see <http://www.python.org/dev/peps/pep-0282/>.
 
 #### Logging Too Few Args {#PYLINT_LTFA}
-Used when a logging format string is given too many arguments.
+Used when a logging format string is given too few arguments.
 
 #### Logging Too Many Args {#PYLINT_LTMA}
-Used when a logging format string is given too few arguments.
+Used when a logging format string is given too many arguments.
 
 #### Logging Unsupported Format {#PYLINT_LUF}
 Used when an unsupported format character is used in a logging statement format string.
@@ -781,7 +788,7 @@ Used when another argument than the current class is given as first argument of 
 Used when the super builtin didn't receive an argument. This message can't be emitted when using Python >= 3.0.
 
 #### Old Style Class {#PYLINT_OSC}
-Used when a class is defined that does not inherit from anotherclass and does not inherit explicitly from "object". This message can't be emitted when using Python >= 3.0.
+Used when a class is defined that does not inherit from another class and does not inherit explicitly from "object". This message can't be emitted when using Python >= 3.0.
 
 #### Property On Old Class {#PYLINT_POOC}
 Used when Pylint detect the use of the builtin "property" on an old style class while this is relying on new style classes features. This message can't be emitted when using Python >= 3.0.
@@ -795,199 +802,220 @@ Used when an old style class uses the super builtin. This message can't be emitt
 ### Python3 Rules
 
 #### Apply Builtin {#PYLINT_AB}
-Used when the apply built-in function is referenced (missing from Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the apply built-in function is referenced (missing from Python 3).
 
 #### Backtick {#PYLINT_B}
-Used when the deprecated "``" (backtick) operator is used instead of the str() function. This message can't be emitted when using Python >= 3.0.
+Used when the deprecated "``" (backtick) operator is used instead of the str() function.
 
 #### Bad Python3 Import {#PYLINT_BP3I}
-Used when importing a module that no longer exists in Python 3. This message can't be emitted when using Python >= 3.0.
+Used when importing a module that no longer exists in Python 3.
 
 #### Basestring Builtin {#PYLINT_BaB}
-Used when the basestring built-in function is referenced (missing from Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the basestring built-in function is referenced (missing from Python 3).
 
 #### Buffer Builtin {#PYLINT_BuB}
-Used when the buffer built-in function is referenced (missing from Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the buffer built-in function is referenced (missing from Python 3).
 
 #### Cmp Builtin {#PYLINT_CB}
-Used when the cmp built-in function is referenced (missing from Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the cmp built-in function is referenced (missing from Python 3).
 
 #### Cmp Method {#PYLINT_CM}
-Used when a \_\_cmp\_\_ method is defined (method is not used by Python 3). This message can't be emitted when using Python >= 3.0.
+Used when a \_\_cmp\_\_ method is defined (method is not used by Python 3).
 
 #### Coerce Builtin {#PYLINT_CoB}
-Used when the coerce built-in function is referenced (missing from Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the coerce built-in function is referenced (missing from Python 3).
 
 #### Coerce Method {#PYLINT_CoM}
-Used when a \_\_coerce\_\_ method is defined (method is not used by Python 3). This message can't be emitted when using Python >= 3.0.
+Used when a \_\_coerce\_\_ method is defined (method is not used by Python 3).
+
+#### Comprehension Escape {#PYLINT_CE}
+Emitted when using a variable, that was bound in a comprehension handler, outside of the comprehension itself. On Python 3 these variables will be deleted outside of the comprehension.
 
 #### Delslice Method {#PYLINT_DM}
-Used when a \_\_delslice\_\_ method is defined (method is not used by Python 3). This message can't be emitted when using Python >= 3.0.
+Used when a \_\_delslice\_\_ method is defined (method is not used by Python 3).
 
 #### Deprecated Itertools Function {#PYLINT_DIF}
-Used when accessing a function on itertools that has been removed in Python 3. This message can't be emitted when using Python >= 3.0.
+Used when accessing a function on itertools that has been removed in Python 3.
+
+#### Deprecated Operator Function {#PYLINT_DOF}
+Used when accessing a field on operator module that has been removed in Python 3.
 
 #### Deprecated Str Translate Call {#PYLINT_DSTC}
-Used when using the deprecated deletechars parameters from str.translate. Usere.sub to remove the desired characters. This message can't be emitted when using Python >= 3.0.
+Used when using the deprecated deletechars parameters from str.translate. Use re.sub to remove the desired characters.
 
 #### Deprecated String Function {#PYLINT_DSF}
-Used when accessing a string function that has been deprecated in Python 3. This message can't be emitted when using Python >= 3.0.
+Used when accessing a string function that has been deprecated in Python 3.
+
+#### Deprecated Sys Function {#PYLINT_DeSF}
+Used when accessing a field on sys module that has been removed in Python 3.
 
 #### Deprecated Types Field {#PYLINT_DTF}
-Used when accessing a field on types that has been removed in Python 3. This message can't be emitted when using Python >= 3.0.
+Used when accessing a field on types that has been removed in Python 3.
+
+#### Deprecated Urllib Function {#PYLINT_DUF}
+Used when accessing a field on urllib module that has been removed or moved in Python 3.
 
 #### Dict Items Not Iterating {#PYLINT_DINI}
-Used when dict.items is referenced in a non-iterating context (returns an iterator in Python 3). This message can't be emitted when using Python >= 3.0.
+Used when dict.items is referenced in a non-iterating context (returns an iterator in Python 3).
 
 #### Dict Iter Method {#PYLINT_DIM}
-Used for calls to dict.iterkeys(), itervalues() or iteritems() (Python 3 lacks these methods). This message can't be emitted when using Python >= 3.0.
+Used for calls to dict.iterkeys(), itervalues() or iteritems() (Python 3 lacks these methods).
 
 #### Dict Keys Not Iterating {#PYLINT_DKNI}
-Used when dict.keys is referenced in a non-iterating context (returns an iterator in Python 3). This message can't be emitted when using Python >= 3.0.
+Used when dict.keys is referenced in a non-iterating context (returns an iterator in Python 3).
 
 #### Dict Values Not Iterating {#PYLINT_DVNI}
-Used when dict.values is referenced in a non-iterating context (returns an iterator in Python 3). This message can't be emitted when using Python >= 3.0.
+Used when dict.values is referenced in a non-iterating context (returns an iterator in Python 3).
 
 #### Dict View Method {#PYLINT_DVM}
-Used for calls to dict.viewkeys(), viewvalues() or viewitems() (Python 3 lacks these methods). This message can't be emitted when using Python >= 3.0.
+Used for calls to dict.viewkeys(), viewvalues() or viewitems() (Python 3 lacks these methods).
 
 #### Div Method {#PYLINT_DiM}
-Used when a \_\_div\_\_ method is defined. Using `__truediv__` and setting\_\_div\_\_ = \_\_truediv\_\_ should be preferred.(method is not used by Python 3). This message can't be emitted when using Python >= 3.0.
+Used when a \_\_div\_\_ method is defined. Using `__truediv__` and setting\_\_div\_\_ = \_\_truediv\_\_ should be preferred.(method is not used by Python 3).
 
 #### Eq Without Hash {#PYLINT_EWH}
-Used when a class implements \_\_eq\_\_ but not \_\_hash\_\_. In Python 2, objects get object.\_\_hash\_\_ as the default implementation, in Python 3 objects get None as their default \_\_hash\_\_ implementation if they also implement \_\_eq\_\_. This message can't be emitted when using Python >= 3.0.
+Used when a class implements \_\_eq\_\_ but not \_\_hash\_\_. In Python 2, objects get object.\_\_hash\_\_ as the default implementation, in Python 3 objects get None as their default \_\_hash\_\_ implementation if they also implement \_\_eq\_\_.
+
+#### Exception Escape {#PYLINT_EE}
+Emitted when using an exception, that was bound in an except handler, outside of the except handler. On Python 3 these exceptions will be deleted once they get out of the except handler.
 
 #### Exception Message Attribute {#PYLINT_EMA}
-Used when the message attribute is accessed on an Exception. Use str(exception) instead. This message can't be emitted when using Python >= 3.0.
+Used when the message attribute is accessed on an Exception. Use str(exception) instead.
 
 #### Execfile Builtin {#PYLINT_EB}
-Used when the execfile built-in function is referenced (missing from Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the execfile built-in function is referenced (missing from Python 3).
 
 #### File Builtin {#PYLINT_FB}
-Used when the file built-in function is referenced (missing from Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the file built-in function is referenced (missing from Python 3).
 
 #### Filter Builtin Not Iterating {#PYLINT_FBNI}
-Used when the filter built-in is referenced in a non-iterating context (returns an iterator in Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the filter built-in is referenced in a non-iterating context (returns an iterator in Python 3).
 
 #### Getslice Method {#PYLINT_GM}
-Used when a \_\_getslice\_\_ method is defined (method is not used by Python 3). This message can't be emitted when using Python >= 3.0.
+Used when a \_\_getslice\_\_ method is defined (method is not used by Python 3).
 
 #### Hex Method {#PYLINT_HM}
-Used when a \_\_hex\_\_ method is defined (method is not used by Python 3). This message can't be emitted when using Python >= 3.0.
+Used when a \_\_hex\_\_ method is defined (method is not used by Python 3).
 
 #### Idiv Method {#PYLINT_IdM}
-Used when a \_\_idiv\_\_ method is defined. Using `__itruediv__` and setting\_\_idiv\_\_ = \_\_itruediv\_\_ should be preferred.(method is not used by Python 3). This message can't be emitted when using Python >= 3.0.
+Used when an \_\_idiv\_\_ method is defined. Using `__itruediv__` and setting\_\_idiv\_\_ = \_\_itruediv\_\_ should be preferred.(method is not used by Python 3).
 
 #### Import Star Module Level {#PYLINT_ISML}
 Used when the import star syntax is used somewhere else than the module level. This message can't be emitted when using Python >= 3.0.
 
 #### Indexing Exception {#PYLINT_InE}
-Indexing exceptions will not work on Python 3. Use `exception.args[index]` instead. This message can't be emitted when using Python >= 3.0.
+Indexing exceptions will not work on Python 3. Use `exception.args[index]` instead.
 
 #### Input Builtin {#PYLINT_IB}
-Used when the input built-in is referenced (backwards-incompatible semantics in Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the input built-in is referenced (backwards-incompatible semantics in Python 3).
 
 #### Intern Builtin {#PYLINT_InB}
-Used when the intern built-in is referenced (Moved to sys.intern in Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the intern built-in is referenced (Moved to sys.intern in Python 3).
 
 #### Invalid Str Codec {#PYLINT_ISC}
-Used when using str.encode or str.decode with a non-text encoding. Use codecs module to handle arbitrary codecs. This message can't be emitted when using Python >= 3.0.
+Used when using str.encode or str.decode with a non-text encoding. Use codecs module to handle arbitrary codecs.
+
+#### Invalid Unicode Literal {#PYLINT_IUL}
+Used when raw unicode literals are found in a program. They are no longer supported in Python 3. This message can't be emitted when using Python >= 3.0.
 
 #### Long Builtin {#PYLINT_LB}
-Used when the long built-in function is referenced (missing from Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the long built-in function is referenced (missing from Python 3).
 
 #### Long Suffix {#PYLINT_LS}
 Used when "l" or "L" is used to mark a long integer. This will not work in Python 3, since `int` and `long` types have merged. This message can't be emitted when using Python >= 3.0.
 
 #### Map Builtin Not Iterating {#PYLINT_MBNI}
-Used when the map built-in is referenced in a non-iterating context (returns an iterator in Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the map built-in is referenced in a non-iterating context (returns an iterator in Python 3).
 
 #### Metaclass Assignment {#PYLINT_MA}
-Used when a metaclass is specified by assigning to \_\_metaclass\_\_ (Python 3 specifies the metaclass as a class statement argument). This message can't be emitted when using Python >= 3.0.
+Used when a metaclass is specified by assigning to \_\_metaclass\_\_ (Python 3 specifies the metaclass as a class statement argument).
 
 #### Next Method Called {#PYLINT_NMC}
-Used when an object's next() method is called (Python 3 uses the next() built-in function). This message can't be emitted when using Python >= 3.0.
+Used when an object's next() method is called (Python 3 uses the next() built-in function).
 
 #### Next Method Defined {#PYLINT_NMD}
-Used when a next method is defined that would be an iterator in Python 2 but is treated as a normal function in Python 3. This message can't be emitted when using Python >= 3.0.
+Used when a next method is defined that would be an iterator in Python 2 but is treated as a normal function in Python 3.
 
 #### No Absolute Import {#PYLINT_NAI}
-Used when an import is not accompanied by ``from __future__ import absolute_import`` (default behaviour in Python 3). This message can't be emitted when using Python >= 3.0.
+Used when an import is not accompanied by ``from __future__ import absolute_import`` (default behaviour in Python 3).
 
 #### Non Ascii Bytes Literal {#PYLINT_NABL}
 Used when non-ascii bytes literals are found in a program. They are no longer supported in Python 3. This message can't be emitted when using Python >= 3.0.
 
 #### Nonzero Method {#PYLINT_NoM}
-Used when a \_\_nonzero\_\_ method is defined (method is not used by Python 3). This message can't be emitted when using Python >= 3.0.
+Used when a \_\_nonzero\_\_ method is defined (method is not used by Python 3).
 
 #### Oct Method {#PYLINT_OM}
-Used when a \_\_oct\_\_ method is defined (method is not used by Python 3). This message can't be emitted when using Python >= 3.0.
+Used when an \_\_oct\_\_ method is defined (method is not used by Python 3).
 
 #### Old Division {#PYLINT_OD}
-Used for non-floor division w/o a float literal or ``from __future__ import division`` (Python 3 returns a float for int division unconditionally). This message can't be emitted when using Python >= 3.0.
+Used for non-floor division w/o a float literal or ``from __future__ import division`` (Python 3 returns a float for int division unconditionally).
 
 #### Old Ne Operator {#PYLINT_ONO}
 Used when the deprecated "\<>" operator is used instead of "!=". This is removed in Python 3. This message can't be emitted when using Python >= 3.0.
 
 #### Old Octal Literal {#PYLINT_OOL}
-Usen when encountering the old octal syntax, removed in Python 3. To use the new syntax, prepend 0o on the number. This message can't be emitted when using Python >= 3.0.
+Used when encountering the old octal syntax, removed in Python 3. To use the new syntax, prepend 0o on the number. This message can't be emitted when using Python >= 3.0.
 
 #### Old Raise Syntax {#PYLINT_ORS}
-Used when the alternate raise syntax 'raise foo, bar' is used instead of 'raise foo(bar)'. This message can't be emitted when using Python >= 3.0.
+Used when the alternate raise syntax 'raise foo, bar' is used instead of 'raise foo(bar)'.
 
 #### Parameter Unpacking {#PYLINT_PU}
-Used when parameter unpacking is specified for a function(Python 3 doesn't allow it). This message can't be emitted when using Python >= 3.0.
+Used when parameter unpacking is specified for a function(Python 3 doesn't allow it).
 
 #### Print Statement {#PYLINT_PrS}
-Used when a print statement is used (`print` is a function in Python 3). This message can't be emitted when using Python >= 3.0.
+Used when a print statement is used (`print` is a function in Python 3).
 
 #### Raising String {#PYLINT_RS}
-Used when a string exception is raised. This will not work on Python 3. This message can't be emitted when using Python >= 3.0.
+Used when a string exception is raised. This will not work on Python 3.
 
 #### Range Builtin Not Iterating {#PYLINT_RBNI}
-Used when the range built-in is referenced in a non-iterating context (returns an iterator in Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the range built-in is referenced in a non-iterating context (returns an iterator in Python 3).
 
 #### Raw_input Builtin {#PYLINT_RB}
-Used when the raw\_input built-in function is referenced (missing from Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the raw\_input built-in function is referenced (missing from Python 3).
 
 #### Rdiv Method {#PYLINT_RM}
-Used when a \_\_rdiv\_\_ method is defined. Using `__rtruediv__` and setting\_\_rdiv\_\_ = \_\_rtruediv\_\_ should be preferred.(method is not used by Python 3). This message can't be emitted when using Python >= 3.0.
+Used when a \_\_rdiv\_\_ method is defined. Using `__rtruediv__` and setting\_\_rdiv\_\_ = \_\_rtruediv\_\_ should be preferred.(method is not used by Python 3).
 
 #### Reduce Builtin {#PYLINT_RedB}
-Used when the reduce built-in function is referenced (missing from Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the reduce built-in function is referenced (missing from Python 3).
 
 #### Reload Builtin {#PYLINT_RelB}
-Used when the reload built-in function is referenced (missing from Python 3). You can use instead imp.reload or importlib.reload. This message can't be emitted when using Python >= 3.0.
+Used when the reload built-in function is referenced (missing from Python 3). You can use instead imp.reload or importlib.reload.
 
 #### Round Builtin {#PYLINT_RoB}
-Used when the round built-in is referenced (backwards-incompatible semantics in Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the round built-in is referenced (backwards-incompatible semantics in Python 3).
 
 #### Setslice Method {#PYLINT_SM}
-Used when a \_\_setslice\_\_ method is defined (method is not used by Python 3). This message can't be emitted when using Python >= 3.0.
+Used when a \_\_setslice\_\_ method is defined (method is not used by Python 3).
 
 #### Standarderror Builtin {#PYLINT_SB}
-Used when the StandardError built-in function is referenced (missing from Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the StandardError built-in function is referenced (missing from Python 3).
 
 #### Sys Max Int {#PYLINT_SMI}
-Used when accessing sys.maxint. Use sys.maxsize instead. This message can't be emitted when using Python >= 3.0.
+Used when accessing sys.maxint. Use sys.maxsize instead.
 
 #### Unichr Builtin {#PYLINT_UnB}
-Used when the unichr built-in is referenced (Use chr in Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the unichr built-in is referenced (Use chr in Python 3).
 
 #### Unicode Builtin {#PYLINT_UB}
-Used when the unicode built-in function is referenced (missing from Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the unicode built-in function is referenced (missing from Python 3).
 
 #### Unpacking In Except {#PYLINT_UIE}
-Python3 will not allow implicit unpacking of exceptions in except clauses. See <http://www.python.org/dev/peps/pep-3110/>. This message can't be emitted when using Python >= 3.0.
+Python3 will not allow implicit unpacking of exceptions in except clauses. See <http://www.python.org/dev/peps/pep-3110/>.
 
 #### Using Cmp Argument {#PYLINT_UCA}
-Using the cmp argument for list.sort or the sorted builtin should be avoided, since it was removed in Python 3. Using either `key` or `functools.cmp_to_key` should be preferred. This message can't be emitted when using Python >= 3.0.
+Using the cmp argument for list.sort or the sorted builtin should be avoided, since it was removed in Python 3. Using either `key` or `functools.cmp_to_key` should be preferred.
 
 #### Xrange Builtin {#PYLINT_XB}
-Used when the xrange built-in function is referenced (missing from Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the xrange built-in function is referenced (missing from Python 3).
+
+#### Xreadlines Attribute {#PYLINT_XA}
+Used when accessing the xreadlines() function on a file stream, removed in Python 3.
 
 #### Zip Builtin Not Iterating {#PYLINT_ZBNI}
-Used when the zip built-in is referenced in a non-iterating context (returns an iterator in Python 3). This message can't be emitted when using Python >= 3.0.
+Used when the zip built-in is referenced in a non-iterating context (returns an iterator in Python 3).
 
 ### Refactoring Rules
 
@@ -1081,7 +1109,7 @@ Used when a format string that uses named conversion specifiers is used with a d
 The argument to a str.\{l,r,\}strip call contains a duplicate character.
 
 #### Format Combined Specification {#PYLINT_FCS}
-Usen when a PEP 3101 format string contains both automatic field numbering (e.g. '\{\}') and manual field specification (e.g. '\{0\}'). This message can't be emitted when using Python \< 2.7.
+Used when a PEP 3101 format string contains both automatic field numbering (e.g. '\{\}') and manual field specification (e.g. '\{0\}'). This message can't be emitted when using Python \< 2.7.
 
 #### Format Needs Mapping {#PYLINT_FNM}
 Used when a format string that uses named conversion specifiers is used with an argument that is not a mapping.
@@ -1137,7 +1165,7 @@ Used when a sequence type is indexed with an invalid type. Valid types are ints,
 Used when a slice index is not an integer, None, or an object with an \_\_index\_\_ method.
 
 #### Invalid Unary Operand Type {#PYLINT_IUOT}
-Emitted when an unary operand is used on an object which does not support this type of operation.
+Emitted when a unary operand is used on an object which does not support this type of operation.
 
 #### Keyword Arg Before Vararg {#PYLINT_KABV}
 When defining a keyword argument before variable positional arguments, one can end up in having multiple values passed for the aforementioned parameter in case the method is called with keyword arguments.
@@ -1182,7 +1210,7 @@ Emitted when a binary arithmetic operation between two operands is not supported
 Emitted when an object does not support item deletion (i.e. doesn't define \_\_delitem\_\_ method).
 
 #### Unsupported Membership Test {#PYLINT_UMT}
-Emitted when an instance in membership test expression doesn'timplement membership protocol (\_\_contains\_\_/\_\_iter\_\_/\_\_getitem\_\_).
+Emitted when an instance in membership test expression doesn't implement membership protocol (\_\_contains\_\_/\_\_iter\_\_/\_\_getitem\_\_).
 
 ### Variable Rules
 
@@ -1193,7 +1221,7 @@ A variable used in a closure is defined in a loop. This will result in all closu
 Used when you use the "global" statement at the module level since it has no effect.
 
 #### Global Statement {#PYLINT_GS}
-Used when you use the "global" statement to update a global variable. Pylint just try to discourage this usage. That doesn't mean you can not use it!
+Used when you use the "global" statement to update a global variable. Pylint just try to discourage this usage. That doesn't mean you cannot use it!
 
 #### Global Variable Not Assigned {#PYLINT_GVNA}
 Used when a variable is defined through the "global" statement but no assignment to this variable is done.
@@ -1214,7 +1242,7 @@ Used when an exception handler assigns the exception to an existing name.
 Used when a variable or function override a built-in.
 
 #### Redefined Outer Name {#PYLINT_RON}
-Used when a variable's name hide a name defined in the outer scope.
+Used when a variable's name hides a name defined in the outer scope.
 
 #### Unbalanced Tuple Unpacking {#PYLINT_UTU}
 Used when there is an unbalanced tuple unpacking in assignment.
@@ -1245,3 +1273,4 @@ Used when an imported module or variable is not used from a `'from X import *'` 
 
 #### Used Before Assignment {#PYLINT_UBA}
 Used when a local variable is accessed before it's assignment.
+

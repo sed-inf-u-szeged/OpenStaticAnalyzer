@@ -22,42 +22,32 @@
 #define _JAVASCRIPT_RegExpLiteralWrapper_H_
 
 #include "javascript/inc/javascript.h"
-#include <node.h>
-#include <node_object_wrap.h>
+#include <node_api.h>
+#include "BaseWrapper.h"
 #include "../Factory.h"
-
-using namespace v8;
 
 namespace columbus { namespace javascript { namespace asg { namespace addon {
   class Factory;
 
-  class RegExpLiteralWrapper : public node::ObjectWrap {
+  class RegExpLiteralWrapper : BaseWrapper{
     public:
-      columbus::javascript::asg::expression::RegExpLiteral* RegExpLiteral;
-      static void Init(v8::Handle<v8::Object> exports);
-      RegExpLiteralWrapper(const RegExpLiteralWrapper&);
-      RegExpLiteralWrapper(Factory* fact);
-      virtual ~RegExpLiteralWrapper();
-      static void NewInstance(const v8::FunctionCallbackInfo<v8::Value>& args);
-      void wrap(const v8::FunctionCallbackInfo<v8::Value>& args){ this->Wrap(args.Holder()); }
-      static v8::Persistent<v8::Function> constructor;
+      static napi_value Init(napi_env env, napi_value& exports);
+      static void Destructor(napi_env env, void* nativeObject, void* finalize_hint);
+      static napi_status NewInstance(napi_env env, expression::RegExpLiteral* arg, napi_value* instance);
     private:
-      static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
-
-      static void addCommentsComment(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPattern(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setFlags(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setPath(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setEndLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setEndCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideEndLine(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setWideEndCol(const v8::FunctionCallbackInfo<v8::Value>& args);
-      static void setRaw(const v8::FunctionCallbackInfo<v8::Value>& args);
-}; //end of RegExpLiteralWrapper
+      explicit RegExpLiteralWrapper(); // Constructor
+      ~RegExpLiteralWrapper();
+      static napi_ref constructor;
+      static napi_value New(napi_env env, napi_callback_info info);
+      napi_env env_;
+      napi_ref wrapper_;
+      static napi_value addComments(napi_env env, napi_callback_info info);
+      static napi_value setPattern(napi_env env, napi_callback_info info);
+      static napi_value setFlags(napi_env env, napi_callback_info info);
+      static napi_value setPath(napi_env env, napi_callback_info info);
+      static napi_value setPosition(napi_env env, napi_callback_info info);
+      static napi_value setRaw(napi_env env, napi_callback_info info);
+  }; //end of RegExpLiteralWrapper
 
 }}}}//end of namespaces
 #endif

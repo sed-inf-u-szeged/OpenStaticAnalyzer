@@ -283,6 +283,7 @@ Task::ExecutionResult GraphMergeTask::execute()
     }
     sort(sv.begin(), sv.end());
     sv.push_back("-out:" + (props.projectTimedResultDir / (props.projectName + ".graph")).string());
+    sv.push_back("-summary");
 
     checkedExec(props.toolsDir / "GraphMerge", sv, logger);
   
@@ -297,6 +298,7 @@ GraphMergeTask::GraphMergeTask(const Properties& properties) : Task(properties)
   addDependsOn(LIM2MetricsTask::name);
   addDependsOn(DcfTask::name);
   addDependsOn(Pylint2GraphTask::name);
+  addDependsOn(Sonar2GraphTask::name);
 }
 
 
@@ -338,16 +340,32 @@ Task::ExecutionResult GraphDumpTask::execute()
   ExecutionLogger logger(this, result);
 
   try {
-    vector<string> sv;
-    addMessageLevel(sv);
 
-    sv.push_back((props.projectTimedResultDir / (props.projectName + ".graph")).string());
-    sv.push_back("-csv");
-    sv.push_back("-xml");
-    sv.push_back("-csvseparator:" + string(1, props.csvSeparator));
-    sv.push_back("-csvdecimalmark:" + string(1, props.csvDecimalmark));
+    {
+      vector<string> sv;
+      addMessageLevel(sv);
 
-    checkedExec(props.toolsDir / "GraphDump", sv, logger);
+      sv.push_back((props.projectTimedResultDir / (props.projectName + ".graph")).string());
+      sv.push_back("-csv");
+      sv.push_back("-xml");
+      sv.push_back("-csvseparator:" + string(1, props.csvSeparator));
+      sv.push_back("-csvdecimalmark:" + string(1, props.csvDecimalmark));
+      sv.push_back("-sarif");
+      sv.push_back("-sarifseverity:" + props.sarifSeverityLevel);
+
+      checkedExec(props.toolsDir / "GraphDump", sv, logger);
+    }
+
+    {
+      vector<string> sv;
+      addMessageLevel(sv);
+
+      sv.push_back((props.projectTimedResultDir / (props.projectName + "-summary.graph")).string());
+      sv.push_back("-xml");
+      sv.push_back("-json");
+
+      checkedExec(props.toolsDir / "GraphDump", sv, logger);
+    }
 
   } HANDLE_TASK_EXCEPTIONS
 
@@ -358,6 +376,8 @@ GraphDumpTask::GraphDumpTask(const Properties& properties) : Task(properties)
 {
   addDependsOn(GraphMergeTask::name);
   addDependsOn(MetricHunterTask::name);
+  addDependsOn(UserDefinedMetricsTask::name);
+  addDependsOn(LIM2PatternsTask::name);
 }
 
 
@@ -414,12 +434,11 @@ Task::ExecutionResult ProfileTask::execute()
   try {
 
     // original rul files
-    path PylintRulFileOrig = props.toolsDir / "Pylint.rul";
+    path PylintRulFileOrig = props.toolsDir / (props.pythonVersion == "2" ? "Pylint_1.rul" : "Pylint_2.rul");
 
     // temp rul files
     path PylintRulFile = props.tempDir / "Pylint.rul";
     
-    // copy original rul files into temp
     if (exists(PylintRulFileOrig))
       copy_file(PylintRulFileOrig, PylintRulFile);
     
@@ -443,11 +462,39 @@ Task::ExecutionResult ProfileTask::execute()
     //process rules csv
     profileProcessRulesCSV(profile, rulHandlers, runTool, props.rulesCSV.string());
 
+
     path MetricHunterThresholdsFileOrig = props.toolsDir / "MetricHunter.threshold";
     path MetricHunterThresholdsFile = props.tempDir / "MetricHunter.threshold";
 
     //process thresholds
     profileProcessToolThresholds(profile, "MetricHunter", MetricHunterThresholdsFileOrig.string(), MetricHunterThresholdsFile.string());
+
+    //process udm metrics
+    bool UDM_result = profileProcessUDM(profile, (props.tempDir / "UDM.rul").string(), "python");
+    if (!props.runUDMExplicit) {
+      // if runUDM wasn't explicitly set, we decide by the presence of UDM metrics in the profile
+      props.runUDM = UDM_result;
+    }
+    else if (props.runUDMExplicit && props.runUDM && !UDM_result) {
+      // if, however, runUDM was explicitly set to true, but there are no valid UDM metrics, we abort
+      throw Exception(COLUMBUS_LOCATION, "UDM explicitly set to run without corresponding setup in the profile XML");
+    }
+
+    //process lim2patterns parameters
+    if (props.runLIM2Patterns) {
+      map<string, string> parameters;
+      if (profileProcessLIM2Patterns(profile, "LIM2Patterns", parameters)) {
+        if (parameters.find("whitelist") != parameters.end()) {
+          props.whitelist = parameters["whitelist"];
+        }
+        if (parameters.find("blacklist") != parameters.end()) {
+          props.blacklist = parameters["blacklist"];
+        }
+        if (parameters.find("pattern_directories") != parameters.end()) {
+          props.patternFile = parameters["pattern_directories"];
+        }
+      }
+    }
 
   } HANDLE_TASK_EXCEPTIONS
   return result;
@@ -456,4 +503,78 @@ Task::ExecutionResult ProfileTask::execute()
 ProfileTask::ProfileTask(const Properties& properties) : Task(properties)
 {
   addDependsOn(PAN2LimTask::name);
+}
+
+TASK_NAME_DEF(UserDefinedMetricsTask);
+
+Task::ExecutionResult UserDefinedMetricsTask::execute()
+{
+  ExecutionResult result;
+  if (!props.runUDM) {
+    inactives.push_back("UserDefinedMetrics");
+    return result;
+  }
+
+  ExecutionLogger logger(this, result);
+
+  try {
+    vector<string> sv;
+    sv.push_back((props.projectTimedResultDir / (props.projectName + ".graph")).string());
+    sv.push_back("-rul:" + (props.tempDir / "UDM.rul").string());
+    sv.push_back("-rulconfig:python");
+    sv.push_back("-graph:" + (props.projectTimedResultDir / (props.projectName + ".graph")).string());
+
+    checkedExec(props.toolsDir / "UserDefinedMetrics", sv, logger);
+
+  } HANDLE_TASK_EXCEPTIONS
+
+    return result;
+}
+
+UserDefinedMetricsTask::UserDefinedMetricsTask(list<string>& inactives, const Properties& properties) : Task(properties), inactives(inactives)
+{
+  addDependsOn(GraphMergeTask::name);
+  addDependsOn(MetricHunterTask::name);
+}
+
+SONAR2GRAPH_TASK(py)
+
+Sonar2GraphTask::Sonar2GraphTask(const Properties& properties) : Task(properties)
+{
+  addDependsOn(PAN2LimTask::name);
+}
+
+TASK_NAME_DEF(LIM2PatternsTask);
+
+Task::ExecutionResult LIM2PatternsTask::execute()
+{
+  ExecutionResult result;
+  ExecutionLogger logger(this, result);
+  try {
+    vector<string> sv;
+
+    sv.push_back("-graph:" + (props.projectTimedResultDir / (props.projectName + ".graph")).string());
+    sv.push_back("-lim:" + (props.asgDir / (props.projectName + ".lim")).string());
+    sv.push_back("-pattern:" + props.patternFile + (!props.patternFile.empty() ? "," : "") + (props.toolsDir / "Patterns" / "AntiPatterns").string());
+    sv.push_back("-metrics:" + (props.toolsDir / "MET.rul").string());
+    sv.push_back("-out:" + (props.projectTimedResultDir / (props.projectName + ".txt")).string());
+
+    if (!props.whitelist.empty()) {
+        sv.push_back("-whitelist:" + props.whitelist);
+    }
+    if (!props.blacklist.empty()) {
+        sv.push_back("-blacklist:" + props.blacklist);
+    }
+
+    checkedExec(props.toolsDir / "LIM2Patterns", sv, logger);
+
+  } HANDLE_TASK_EXCEPTIONS
+
+    return result;
+}
+
+LIM2PatternsTask::LIM2PatternsTask(const Properties& properties) : Task(properties) {
+  addDependsOn(GraphMergeTask::name);
+  addDependsOn(MetricHunterTask::name);
+  addDependsOn(UserDefinedMetricsTask::name);
 }

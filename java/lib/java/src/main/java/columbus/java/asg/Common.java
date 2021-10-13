@@ -111,6 +111,15 @@ public class Common {
 	}
 
 	/**
+	 * Decides whether the node is {@link columbus.java.asg.expr.AnnotatedTypeExpression AnnotatedTypeExpression} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.expr.AnnotatedTypeExpression AnnotatedTypeExpression}.
+	 */
+	public static boolean getIsAnnotatedTypeExpression(Base node) {
+		return node instanceof columbus.java.asg.expr.AnnotatedTypeExpression;
+	}
+
+	/**
 	 * Decides whether the node is {@link columbus.java.asg.expr.Annotation Annotation} or not.
 	 * @param node The node whose kind is examined.
 	 * @return Returns true if the node is {@link columbus.java.asg.expr.Annotation Annotation}.
@@ -255,6 +264,15 @@ public class Common {
 	}
 
 	/**
+	 * Decides whether the node is {@link columbus.java.asg.expr.FunctionalExpression FunctionalExpression} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.expr.FunctionalExpression FunctionalExpression}.
+	 */
+	public static boolean getIsFunctionalExpression(Base node) {
+		return node instanceof columbus.java.asg.expr.FunctionalExpression;
+	}
+
+	/**
 	 * Decides whether the node is {@link columbus.java.asg.expr.Identifier Identifier} or not.
 	 * @param node The node whose kind is examined.
 	 * @return Returns true if the node is {@link columbus.java.asg.expr.Identifier Identifier}.
@@ -291,6 +309,15 @@ public class Common {
 	}
 
 	/**
+	 * Decides whether the node is {@link columbus.java.asg.expr.Lambda Lambda} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.expr.Lambda Lambda}.
+	 */
+	public static boolean getIsLambda(Base node) {
+		return node instanceof columbus.java.asg.expr.Lambda;
+	}
+
+	/**
 	 * Decides whether the node is {@link columbus.java.asg.expr.Literal Literal} or not.
 	 * @param node The node whose kind is examined.
 	 * @return Returns true if the node is {@link columbus.java.asg.expr.Literal Literal}.
@@ -315,6 +342,15 @@ public class Common {
 	 */
 	public static boolean getIsMarkerAnnotation(Base node) {
 		return node instanceof columbus.java.asg.expr.MarkerAnnotation;
+	}
+
+	/**
+	 * Decides whether the node is {@link columbus.java.asg.expr.MemberReference MemberReference} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.expr.MemberReference MemberReference}.
+	 */
+	public static boolean getIsMemberReference(Base node) {
+		return node instanceof columbus.java.asg.expr.MemberReference;
 	}
 
 	/**
@@ -378,6 +414,15 @@ public class Common {
 	 */
 	public static boolean getIsParenthesizedExpression(Base node) {
 		return node instanceof columbus.java.asg.expr.ParenthesizedExpression;
+	}
+
+	/**
+	 * Decides whether the node is {@link columbus.java.asg.expr.PolyExpression PolyExpression} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.expr.PolyExpression PolyExpression}.
+	 */
+	public static boolean getIsPolyExpression(Base node) {
+		return node instanceof columbus.java.asg.expr.PolyExpression;
 	}
 
 	/**
@@ -489,6 +534,15 @@ public class Common {
 	}
 
 	/**
+	 * Decides whether the node is {@link columbus.java.asg.expr.TypeIntersectionExpression TypeIntersectionExpression} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.expr.TypeIntersectionExpression TypeIntersectionExpression}.
+	 */
+	public static boolean getIsTypeIntersectionExpression(Base node) {
+		return node instanceof columbus.java.asg.expr.TypeIntersectionExpression;
+	}
+
+	/**
 	 * Decides whether the node is {@link columbus.java.asg.expr.TypeUnionExpression TypeUnionExpression} or not.
 	 * @param node The node whose kind is examined.
 	 * @return Returns true if the node is {@link columbus.java.asg.expr.TypeUnionExpression TypeUnionExpression}.
@@ -513,6 +567,60 @@ public class Common {
 	 */
 	public static boolean getIsWildcardExpression(Base node) {
 		return node instanceof columbus.java.asg.expr.WildcardExpression;
+	}
+
+	/**
+	 * Decides whether the node is {@link columbus.java.asg.module.Exports Exports} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.module.Exports Exports}.
+	 */
+	public static boolean getIsExports(Base node) {
+		return node instanceof columbus.java.asg.module.Exports;
+	}
+
+	/**
+	 * Decides whether the node is {@link columbus.java.asg.module.ModuleDirective ModuleDirective} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.module.ModuleDirective ModuleDirective}.
+	 */
+	public static boolean getIsModuleDirective(Base node) {
+		return node instanceof columbus.java.asg.module.ModuleDirective;
+	}
+
+	/**
+	 * Decides whether the node is {@link columbus.java.asg.module.Opens Opens} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.module.Opens Opens}.
+	 */
+	public static boolean getIsOpens(Base node) {
+		return node instanceof columbus.java.asg.module.Opens;
+	}
+
+	/**
+	 * Decides whether the node is {@link columbus.java.asg.module.Provides Provides} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.module.Provides Provides}.
+	 */
+	public static boolean getIsProvides(Base node) {
+		return node instanceof columbus.java.asg.module.Provides;
+	}
+
+	/**
+	 * Decides whether the node is {@link columbus.java.asg.module.Requires Requires} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.module.Requires Requires}.
+	 */
+	public static boolean getIsRequires(Base node) {
+		return node instanceof columbus.java.asg.module.Requires;
+	}
+
+	/**
+	 * Decides whether the node is {@link columbus.java.asg.module.Uses Uses} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.module.Uses Uses}.
+	 */
+	public static boolean getIsUses(Base node) {
+		return node instanceof columbus.java.asg.module.Uses;
 	}
 
 	/**
@@ -948,6 +1056,24 @@ public class Common {
 	}
 
 	/**
+	 * Decides whether the node is {@link columbus.java.asg.struc.Module Module} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.struc.Module Module}.
+	 */
+	public static boolean getIsModule(Base node) {
+		return node instanceof columbus.java.asg.struc.Module;
+	}
+
+	/**
+	 * Decides whether the node is {@link columbus.java.asg.struc.ModuleDeclaration ModuleDeclaration} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.struc.ModuleDeclaration ModuleDeclaration}.
+	 */
+	public static boolean getIsModuleDeclaration(Base node) {
+		return node instanceof columbus.java.asg.struc.ModuleDeclaration;
+	}
+
+	/**
 	 * Decides whether the node is {@link columbus.java.asg.struc.NamedDeclaration NamedDeclaration} or not.
 	 * @param node The node whose kind is examined.
 	 * @return Returns true if the node is {@link columbus.java.asg.struc.NamedDeclaration NamedDeclaration}.
@@ -1137,6 +1263,15 @@ public class Common {
 	}
 
 	/**
+	 * Decides whether the node is {@link columbus.java.asg.type.IntersectionType IntersectionType} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.type.IntersectionType IntersectionType}.
+	 */
+	public static boolean getIsIntersectionType(Base node) {
+		return node instanceof columbus.java.asg.type.IntersectionType;
+	}
+
+	/**
 	 * Decides whether the node is {@link columbus.java.asg.type.LongType LongType} or not.
 	 * @param node The node whose kind is examined.
 	 * @return Returns true if the node is {@link columbus.java.asg.type.LongType LongType}.
@@ -1161,6 +1296,15 @@ public class Common {
 	 */
 	public static boolean getIsMethodType(Base node) {
 		return node instanceof columbus.java.asg.type.MethodType;
+	}
+
+	/**
+	 * Decides whether the node is {@link columbus.java.asg.type.ModuleType ModuleType} or not.
+	 * @param node The node whose kind is examined.
+	 * @return Returns true if the node is {@link columbus.java.asg.type.ModuleType ModuleType}.
+	 */
+	public static boolean getIsModuleType(Base node) {
+		return node instanceof columbus.java.asg.type.ModuleType;
 	}
 
 	/**
@@ -1358,12 +1502,15 @@ public class Common {
 			ndk == ndkEmpty ||
 			ndk == ndkBreak ||
 			ndk == ndkContinue ||
+			ndk == ndkModule ||
 			ndk == ndkJavadocComment ||
 			ndk == ndkBlockComment ||
 			ndk == ndkLineComment ||
 			ndk == ndkArrayType ||
 			ndk == ndkErrorType ||
+			ndk == ndkIntersectionType ||
 			ndk == ndkMethodType ||
+			ndk == ndkModuleType ||
 			ndk == ndkNoType ||
 			ndk == ndkNullType ||
 			ndk == ndkPackageType ||
@@ -1423,6 +1570,9 @@ public class Common {
 				case ndkPositionedWithoutComment:
 					type = ndkBase;
 					break;
+				case ndkAnnotatedTypeExpression:
+					type = ndkTypeExpression;
+					break;
 				case ndkAnnotation:
 					type = ndkExpression;
 					break;
@@ -1471,6 +1621,9 @@ public class Common {
 				case ndkFloatLiteral:
 					type = ndkNumberLiteral;
 					break;
+				case ndkFunctionalExpression:
+					type = ndkPolyExpression;
+					break;
 				case ndkIdentifier:
 					type = ndkExpression;
 					break;
@@ -1483,6 +1636,9 @@ public class Common {
 				case ndkIntegerLiteral:
 					type = ndkNumberLiteral;
 					break;
+				case ndkLambda:
+					type = ndkFunctionalExpression;
+					break;
 				case ndkLiteral:
 					type = ndkExpression;
 					break;
@@ -1491,6 +1647,9 @@ public class Common {
 					break;
 				case ndkMarkerAnnotation:
 					type = ndkAnnotation;
+					break;
+				case ndkMemberReference:
+					type = ndkFunctionalExpression;
 					break;
 				case ndkMethodInvocation:
 					type = ndkUnary;
@@ -1512,6 +1671,9 @@ public class Common {
 					break;
 				case ndkParenthesizedExpression:
 					type = ndkUnary;
+					break;
+				case ndkPolyExpression:
+					type = ndkExpression;
 					break;
 				case ndkPostfixExpression:
 					type = ndkUnary;
@@ -1549,6 +1711,9 @@ public class Common {
 				case ndkTypeExpression:
 					type = ndkExpression;
 					break;
+				case ndkTypeIntersectionExpression:
+					type = ndkTypeExpression;
+					break;
 				case ndkTypeUnionExpression:
 					type = ndkTypeExpression;
 					break;
@@ -1557,6 +1722,24 @@ public class Common {
 					break;
 				case ndkWildcardExpression:
 					type = ndkTypeExpression;
+					break;
+				case ndkExports:
+					type = ndkModuleDirective;
+					break;
+				case ndkModuleDirective:
+					type = ndkPositioned;
+					break;
+				case ndkOpens:
+					type = ndkModuleDirective;
+					break;
+				case ndkProvides:
+					type = ndkModuleDirective;
+					break;
+				case ndkRequires:
+					type = ndkModuleDirective;
+					break;
+				case ndkUses:
+					type = ndkModuleDirective;
 					break;
 				case ndkAssert:
 					type = ndkStatement;
@@ -1696,6 +1879,12 @@ public class Common {
 					break;
 				case ndkMethodGeneric:
 					return getIsBaseClassKind(ndkNormalMethod, base) || getIsBaseClassKind(ndkGenericDeclaration, base);
+				case ndkModule:
+					type = ndkNamed;
+					break;
+				case ndkModuleDeclaration:
+					type = ndkPositioned;
+					break;
 				case ndkNamedDeclaration:
 					return getIsBaseClassKind(ndkDeclaration, base) || getIsBaseClassKind(ndkNamed, base);
 				case ndkNormalMethod:
@@ -1755,6 +1944,9 @@ public class Common {
 				case ndkIntType:
 					type = ndkPrimitiveType;
 					break;
+				case ndkIntersectionType:
+					type = ndkType;
+					break;
 				case ndkLongType:
 					type = ndkPrimitiveType;
 					break;
@@ -1762,6 +1954,9 @@ public class Common {
 					type = ndkBoundedWildcardType;
 					break;
 				case ndkMethodType:
+					type = ndkType;
+					break;
+				case ndkModuleType:
 					type = ndkType;
 					break;
 				case ndkNoType:

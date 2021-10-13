@@ -74,12 +74,59 @@ namespace columbus { namespace java { namespace asg {
     iokLAST
   };
 
+  enum LambdaBodyKind {
+    lbkExpression,
+    lbkStatement,
+    lbkLAST
+  };
+
+  enum LambdaParameterKind {
+    lpkImplicit,
+    lpkExplicit,
+    lpkLAST
+  };
+
+  enum MemberReferenceKind {
+    mrkSuper,
+    mrkUnbound,
+    mrkStatic,
+    mrkBound,
+    mrkImplicitInner,
+    mrkToplevel,
+    mrkArrayCtor,
+    mrkLAST
+  };
+
+  enum MemberReferenceModeKind {
+    mrmkInvoke,
+    mrmkNew,
+    mrmkLAST
+  };
+
+  enum MemberReferenceOverloadKind {
+    mrokOverloaded,
+    mrokUnoverloaded,
+    mrokLAST
+  };
+
   enum MethodKind {
     mekNormal,
     mekConstructor,
     mekGeneratedDefaultConstructor,
     mekGeneratedAnonymousClassConstructor,
     mekLAST
+  };
+
+  enum ModuleKind {
+    mkOpen,
+    mkStrong,
+    mkLAST
+  };
+
+  enum PolyExpressionKind {
+    pekStandalone,
+    pekPoly,
+    pekLAST
   };
 
   enum PostfixOperatorKind {
@@ -129,6 +176,7 @@ namespace columbus { namespace java { namespace asg {
     ndkNonJavadocComment,
     ndkPositioned,
     ndkPositionedWithoutComment,
+    ndkAnnotatedTypeExpression,
     ndkAnnotation,
     ndkArrayAccess,
     ndkArrayTypeExpression,
@@ -145,13 +193,16 @@ namespace columbus { namespace java { namespace asg {
     ndkExternalTypeExpression,
     ndkFieldAccess,
     ndkFloatLiteral,
+    ndkFunctionalExpression,
     ndkIdentifier,
     ndkInfixExpression,
     ndkInstanceOf,
     ndkIntegerLiteral,
+    ndkLambda,
     ndkLiteral,
     ndkLongLiteral,
     ndkMarkerAnnotation,
+    ndkMemberReference,
     ndkMethodInvocation,
     ndkNewArray,
     ndkNewClass,
@@ -159,6 +210,7 @@ namespace columbus { namespace java { namespace asg {
     ndkNullLiteral,
     ndkNumberLiteral,
     ndkParenthesizedExpression,
+    ndkPolyExpression,
     ndkPostfixExpression,
     ndkPrefixExpression,
     ndkPrimitiveTypeExpression,
@@ -171,9 +223,16 @@ namespace columbus { namespace java { namespace asg {
     ndkTypeApplyExpression,
     ndkTypeCast,
     ndkTypeExpression,
+    ndkTypeIntersectionExpression,
     ndkTypeUnionExpression,
     ndkUnary,
     ndkWildcardExpression,
+    ndkExports,
+    ndkModuleDirective,
+    ndkOpens,
+    ndkProvides,
+    ndkRequires,
+    ndkUses,
     ndkAssert,
     ndkBasicFor,
     ndkBlock,
@@ -222,6 +281,8 @@ namespace columbus { namespace java { namespace asg {
     ndkMethod,
     ndkMethodDeclaration,
     ndkMethodGeneric,
+    ndkModule,
+    ndkModuleDeclaration,
     ndkNamedDeclaration,
     ndkNormalMethod,
     ndkPackage,
@@ -243,9 +304,11 @@ namespace columbus { namespace java { namespace asg {
     ndkErrorType,
     ndkFloatType,
     ndkIntType,
+    ndkIntersectionType,
     ndkLongType,
     ndkLowerBoundedWildcardType,
     ndkMethodType,
+    ndkModuleType,
     ndkNoType,
     ndkNullType,
     ndkPackageType,
@@ -265,6 +328,8 @@ namespace columbus { namespace java { namespace asg {
 
   enum EdgeKind {
     edkCommentable_Comments,
+    edkAnnotatedTypeExpression_HasAnnotations,
+    edkAnnotatedTypeExpression_HasUnderlyingType,
     edkAnnotation_HasAnnotationName,
     edkArrayTypeExpression_HasComponentType,
     edkBinary_HasLeftOperand,
@@ -276,8 +341,14 @@ namespace columbus { namespace java { namespace asg {
     edkErroneous_HasErrors,
     edkErroneousTypeExpression_HasErrors,
     edkExpression_Type,
+    edkFunctionalExpression_Target,
     edkIdentifier_RefersTo,
     edkInstanceOf_HasTypeOperand,
+    edkLambda_HasParameters,
+    edkLambda_HasBody,
+    edkMemberReference_HasQualifierExpression,
+    edkMemberReference_HasTypeArguments,
+    edkMemberReference_ReferredMethod,
     edkMethodInvocation_HasTypeArguments,
     edkMethodInvocation_HasArguments,
     edkMethodInvocation_Invokes,
@@ -297,9 +368,18 @@ namespace columbus { namespace java { namespace asg {
     edkTypeApplyExpression_HasRawType,
     edkTypeApplyExpression_HasTypeArguments,
     edkTypeCast_HasTypeOperand,
+    edkTypeIntersectionExpression_HasBounds,
     edkTypeUnionExpression_HasAlternatives,
     edkUnary_HasOperand,
     edkWildcardExpression_HasBound,
+    edkExports_HasPackageName,
+    edkExports_HasModuleNames,
+    edkOpens_HasPackageName,
+    edkOpens_HasModuleNames,
+    edkProvides_HasServiceName,
+    edkProvides_HasImplementationNames,
+    edkRequires_HasModuleName,
+    edkUses_HasServiceName,
     edkAssert_HasCondition,
     edkAssert_HasDetail,
     edkBasicFor_HasInitializers,
@@ -334,8 +414,10 @@ namespace columbus { namespace java { namespace asg {
     edkAnnotationTypeElement_HasDefaultValue,
     edkCompilationUnit_HasPackageDeclaration,
     edkCompilationUnit_HasImports,
-    edkCompilationUnit_TypeDeclarations,
     edkCompilationUnit_HasOthers,
+    edkCompilationUnit_HasModuleDeclaration,
+    edkCompilationUnit_TypeDeclarations,
+    edkCompilationUnit_IsInModule,
     edkEnumConstant_HasNewClass,
     edkGenericDeclaration_HasTypeParameters,
     edkImport_HasTarget,
@@ -343,25 +425,34 @@ namespace columbus { namespace java { namespace asg {
     edkMethodDeclaration_HasReturnType,
     edkMethodDeclaration_MethodType,
     edkMethodDeclaration_Overrides,
+    edkModule_Packages,
+    edkModuleDeclaration_HasName,
+    edkModuleDeclaration_HasDirectives,
+    edkModuleDeclaration_ModuleType,
+    edkModuleDeclaration_RefersTo,
     edkNormalMethod_HasParameters,
     edkNormalMethod_HasBody,
     edkNormalMethod_HasThrownExceptions,
     edkPackage_HasCompilationUnits,
+    edkPackage_IsInModule,
     edkPackageDeclaration_HasPackageName,
     edkPackageDeclaration_RefersTo,
     edkScope_HasMembers,
-    edkTypeDeclaration_IsInCompilationUnit,
     edkTypeDeclaration_HasSuperClass,
     edkTypeDeclaration_HasSuperInterfaces,
     edkTypeDeclaration_HasOthers,
+    edkTypeDeclaration_IsInCompilationUnit,
+    edkTypeDeclaration_IsInModule,
     edkTypeParameter_HasBounds,
     edkVariable_HasInitialValue,
     edkVariableDeclaration_HasType,
     edkArrayType_ComponentType,
     edkClassType_RefersTo,
+    edkIntersectionType_Bounds,
     edkMethodType_ReturnType,
     edkMethodType_ParameterTypes,
     edkMethodType_ThrownTypes,
+    edkModuleType_RefersTo,
     edkPackageType_RefersTo,
     edkParameterizedType_RawType,
     edkParameterizedType_ArgumentTypes,

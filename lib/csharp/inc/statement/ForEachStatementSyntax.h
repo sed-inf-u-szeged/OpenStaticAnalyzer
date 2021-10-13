@@ -40,11 +40,9 @@ namespace statement {
   *   - identifier (String) : (missing)
   * 
   * Edges:
-  *   - Expression (expression::ExpressionSyntax, single) : (missing)
-  *   - Statement (statement::StatementSyntax, single) : (missing)
   *   - Type (expression::TypeSyntax, single) : (missing)
   */
-  class ForEachStatementSyntax : public StatementSyntax {
+  class ForEachStatementSyntax : public CommonForEachStatementSyntax {
     protected:
       /**
       * \internal
@@ -147,18 +145,6 @@ namespace statement {
       // ---------- Edge getter function(s) ----------
 
       /**
-      * \brief Gives back the pointer of the node the Expression edge points to.
-      * \return Returns the end point of the Expression edge.
-      */
-      expression::ExpressionSyntax* getExpression() const;
-
-      /**
-      * \brief Gives back the pointer of the node the Statement edge points to.
-      * \return Returns the end point of the Statement edge.
-      */
-      statement::StatementSyntax* getStatement() const;
-
-      /**
       * \brief Gives back the pointer of the node the Type edge points to.
       * \return Returns the end point of the Type edge.
       */
@@ -166,40 +152,6 @@ namespace statement {
 
 
       // ---------- Edge setter function(s) ----------
-
-      /**
-      * \brief Sets the Expression edge.
-      * \param id [in] The new end point of the Expression edge.
-      */
-      void setExpression(NodeId id);
-
-      /**
-      * \brief Sets the Expression edge.
-      * \param node [in] The new end point of the Expression edge.
-      */
-      void setExpression(expression::ExpressionSyntax *node);
-
-      /**
-      * \brief remove the Expression edge.
-      */
-      void removeExpression();
-
-      /**
-      * \brief Sets the Statement edge.
-      * \param id [in] The new end point of the Statement edge.
-      */
-      void setStatement(NodeId id);
-
-      /**
-      * \brief Sets the Statement edge.
-      * \param node [in] The new end point of the Statement edge.
-      */
-      void setStatement(StatementSyntax *node);
-
-      /**
-      * \brief remove the Statement edge.
-      */
-      void removeStatement();
 
       /**
       * \brief Sets the Type edge.
@@ -221,12 +173,6 @@ namespace statement {
     protected:
 
       // ---------- Edges ----------
-
-      /** \internal \brief The id of the node the Expression edge points to. */
-      NodeId m_Expression;
-
-      /** \internal \brief The id of the node the Statement edge points to. */
-      NodeId m_Statement;
 
       /** \internal \brief The id of the node the Type edge points to. */
       NodeId m_Type;

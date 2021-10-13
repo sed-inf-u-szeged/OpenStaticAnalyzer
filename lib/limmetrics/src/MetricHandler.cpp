@@ -259,6 +259,14 @@ namespace columbus { namespace lim { namespace metrics {
     }
   }
 
+  void MetricHandler::setInvalid( NodeWrapper& node ) {
+    if ( enabled && isCalculatedFor(node) ) {
+      node.setInvalid( name );
+    } else {
+      WriteMsg::write( CMSG_LIMMETRICS_DISABLED_METRIC, name.c_str() );
+    }
+  }
+
   void MetricHandler::propagateScopeInt( DispatchPhases phase, const string& level, Language lang ) {
     this->registerHandler( phase, level, lang, false, [this]( NodeWrapper& node ) {
       const base::Base* ptr = &node.getLimNode<base::Base>();

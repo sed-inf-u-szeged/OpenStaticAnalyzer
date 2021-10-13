@@ -176,7 +176,7 @@ int main(int argc, char **argv) {
   casesensitive = false;
 #endif
 
-#ifdef __unix__
+#ifdef __linux__
   casesensitive = true;
 #endif
 

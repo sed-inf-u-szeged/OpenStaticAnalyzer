@@ -49,9 +49,9 @@ namespace ColumbusWrappers {
     void readConfig();
 
     /**
-     * @brief calculate the name of the acsi.
+     * @brief calculate the name of the aast.
      */
-    std::string objectNameToCsiName(const std::string& objectName) const ;
+    std::string objectNameToAstName(const std::string& objectName) const ;
 
     int archive_needtorun;                                                 ///< archiving needed or not from config
     int archive_needstat;                                                  ///< CANLib needed to create stat file or not

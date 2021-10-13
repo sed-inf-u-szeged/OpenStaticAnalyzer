@@ -36,8 +36,11 @@ namespace expression {
   * \brief YieldExpression class, which represents the expression::YieldExpression node.
   * (missing)
   * 
+  * Attributes:
+  *   - isFrom (boolean) : (missing)
+  * 
   * Edges:
-  *   - hasYieldExpression (expression::ExpressionList, single) : (missing)
+  *   - hasExpression (expression::Expression, single) : (missing)
   */
   class YieldExpression : public Expression {
     protected:
@@ -78,6 +81,32 @@ namespace expression {
       */
       virtual void prepareDelete(bool tryOnVirtualParent);
 
+
+      // ---------- Attribute getter function(s) ----------
+
+      /**
+      * \brief Gives back the isFrom of the node.
+      * \return Returns with the isFrom.
+      */
+      bool getIsFrom() const;
+
+
+      // ---------- Attribute setter function(s) ----------
+
+      /**
+      * \internal
+      * \brief Sets the isFrom of the node.
+      * \param isFrom [in] The new value of the isFrom.
+      */
+      void setIsFrom(bool _isFrom);
+
+    protected:
+
+      // ---------- Attribute(s) ----------
+
+      /** \internal \brief Stores whether the node is `From` or not. */
+      bool m_isFrom : 1;
+
     protected:
       /**
       * \brief Set or add the edge by edge kind
@@ -103,37 +132,37 @@ namespace expression {
       // ---------- Edge getter function(s) ----------
 
       /**
-      * \brief Gives back the pointer of the node the hasYieldExpression edge points to.
-      * \return Returns the end point of the hasYieldExpression edge.
+      * \brief Gives back the pointer of the node the hasExpression edge points to.
+      * \return Returns the end point of the hasExpression edge.
       */
-      expression::ExpressionList* getYieldExpression() const;
+      expression::Expression* getExpression() const;
 
 
       // ---------- Edge setter function(s) ----------
 
       /**
-      * \brief Sets the hasYieldExpression edge.
-      * \param id [in] The new end point of the hasYieldExpression edge.
+      * \brief Sets the hasExpression edge.
+      * \param id [in] The new end point of the hasExpression edge.
       */
-      void setYieldExpression(NodeId id);
+      void setExpression(NodeId id);
 
       /**
-      * \brief Sets the hasYieldExpression edge.
-      * \param node [in] The new end point of the hasYieldExpression edge.
+      * \brief Sets the hasExpression edge.
+      * \param node [in] The new end point of the hasExpression edge.
       */
-      void setYieldExpression(ExpressionList *node);
+      void setExpression(Expression *node);
 
       /**
-      * \brief remove the hasYieldExpression edge.
+      * \brief remove the hasExpression edge.
       */
-      void removeYieldExpression();
+      void removeExpression();
 
     protected:
 
       // ---------- Edges ----------
 
-      /** \internal \brief The id of the node the hasYieldExpression edge points to. */
-      NodeId m_hasYieldExpression;
+      /** \internal \brief The id of the node the hasExpression edge points to. */
+      NodeId m_hasExpression;
 
     public:
 

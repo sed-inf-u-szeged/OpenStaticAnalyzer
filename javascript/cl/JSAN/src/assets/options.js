@@ -26,15 +26,14 @@ const toolDescription = require('./toolDescription');   //Tool description
 
 //List of command line options
 const definitions = [
-  { name: 'input', alias: 'i', type: String, multiple: true, defaultOption: true, description: 'Input file(s) or directory to be analyzed.' },
-  { name: 'out', alias: 'o', type: String, defaultValue: 'out', description: 'The output filename for the results to be saved in. It will contain the results in binary.' },
-  { name: 'dumpjsml', alias: 'd', type: Boolean, defaultValue: false, description: 'An XML style file is also created not just a binary if this option is used.' },
-  { name: 'externalHardFilter', alias: 'e', type: String, description: 'A file that specifies the list of files/directories to be ignored during the analysis.' },
+  { name: 'input', alias: 'i', type: String, multiple: true, defaultOption: true, description: 'Input file(s) or directory to be analyzed. Note: simply giving the input file(s) or directory after the last command line parameter will have the same effect too.' },
+  { name: 'out', alias: 'o', type: String, defaultValue: 'out', description: 'The output filename for the results to be saved in. It will contain the results in binary format.' },
+  { name: 'dumpjsml', alias: 'd', type: Boolean, defaultValue: false, description: 'Dump the output into an XML-style file.' },
+  { name: 'externalHardFilter', alias: 'e', type: String, description: 'Filter file specified with relative or absolute path, to filter out certain files from the analysis based on their path names. Filtered files will not appear in the results. The filter file is a simple text file containing lines starting with '+' or '-' characters followed by a regular expression. During the analysis, each input file will be checked for these expressions. If the first character of the last matching expression is '-', then the given file will be excluded from the analysis. If the first character of the last matching expression is '+', or there is no matching expression, then the file will be analyzed. A line starting with a different character than "-" or "+" will be ignored.' },
   { name: 'help', type: Boolean, defaultValue: false, description: 'Prints out the help of JSAN.' },
   { name: 'useRelativePath', alias: 'r', type: Boolean, defaultValue: false, description: 'Relative paths are used in the output if this option is given.' },
-  { name: 'saveEspreeAst', alias: 's', type: Boolean, description: 'Use this option to save the AST constructed by Espree.' },
   { name: 'html', alias: 'h', type: Boolean, description: 'Analyze not only JavaScript files but extracts JavaScript code snippets from HTML files too if this option is given.' },
-  { name: 'stat', type: String, description: 'Create stats', defaultValue: false}
+  { name: 'stat', type: String, defaultValue: false, description: 'Write memory and runtime stats to the given file.'}
 ];
 
 //sections of usage
@@ -172,22 +171,21 @@ function externalHardFiltering(inputFile, hardFilterArray) {
 function getHardFilterFiles(hardFilterFile) {
     var hardFilterArray = [];
     if(!fs.existsSync(hardFilterFile)){
-        console.warn("Hard filter file: " + hardFilterFile + " does not exist. Filtering step is left out.");
+        console.warn("Hard filter file: " + hardFilterFile + " does not exist. Filtering step is being skipped.");
         return hardFilterArray;
     }
 
     if (fs.lstatSync(hardFilterFile).isFile() && path.extname(hardFilterFile) === ".txt") {
         fs.readFileSync(hardFilterFile).toString().split('\n').forEach(function (line) {
-            if(line.trim().length == 0){
+            //if empty line then continue
+            if (line.trim().length == 0){
                 return;
             }
-
-            var firstChar = line.substring(0, 1);
-            var regex = line.substring(1, line.length);
-            if(regex.endsWith("\r")){
+            let firstChar = line.substring(0, 1);
+            let regex = line.substring(1, line.length);
+            if (regex.endsWith("\r")){
                 regex = regex.substring(0, regex.length-1);
             }
-
             regex = ".*" + regex + ".*";
 
             if (firstChar === "-") {

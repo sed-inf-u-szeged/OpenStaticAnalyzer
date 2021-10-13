@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class CompilationUnitImpl extends BaseImpl implements CompilationUnit {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(CompilationUnitImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected Object position;
 
@@ -47,9 +48,13 @@ public class CompilationUnitImpl extends BaseImpl implements CompilationUnit {
 
 	protected EdgeList<Import> _hasImports;
 
+	protected EdgeList<Positioned> _hasOthers;
+
+	protected int _hasModuleDeclaration;
+
 	protected EdgeList<TypeDeclaration> _typeDeclarations;
 
-	protected EdgeList<Positioned> _hasOthers;
+	protected int _isInModule;
 
 	public CompilationUnitImpl(int id, Factory factory) {
 		super(id, factory);
@@ -169,6 +174,39 @@ public class CompilationUnitImpl extends BaseImpl implements CompilationUnit {
 	}
 
 	@Override
+	public EdgeIterator<Positioned> getOthersIterator() {
+		if (_hasOthers == null)
+			return EdgeList.<Positioned>emptyList().iterator();
+		else
+			return _hasOthers.iterator();
+	}
+
+	@Override
+	public boolean getOthersIsEmpty() {
+		if (_hasOthers == null)
+			return true;
+		else
+			return _hasOthers.isEmpty();
+	}
+
+	@Override
+	public int getOthersSize() {
+		if (_hasOthers == null)
+			return 0;
+		else
+			return _hasOthers.size();
+	}
+
+	@Override
+	public ModuleDeclaration getModuleDeclaration() {
+		if (_hasModuleDeclaration == 0)
+			return null;
+		if (factory.getIsFiltered(_hasModuleDeclaration))
+			return null;
+		return (ModuleDeclaration)factory.getRef(_hasModuleDeclaration);
+	}
+
+	@Override
 	public EdgeIterator<TypeDeclaration> getTypeDeclarationsIterator() {
 		if (_typeDeclarations == null)
 			return EdgeList.<TypeDeclaration>emptyList().iterator();
@@ -193,27 +231,12 @@ public class CompilationUnitImpl extends BaseImpl implements CompilationUnit {
 	}
 
 	@Override
-	public EdgeIterator<Positioned> getOthersIterator() {
-		if (_hasOthers == null)
-			return EdgeList.<Positioned>emptyList().iterator();
-		else
-			return _hasOthers.iterator();
-	}
-
-	@Override
-	public boolean getOthersIsEmpty() {
-		if (_hasOthers == null)
-			return true;
-		else
-			return _hasOthers.isEmpty();
-	}
-
-	@Override
-	public int getOthersSize() {
-		if (_hasOthers == null)
-			return 0;
-		else
-			return _hasOthers.size();
+	public Module getIsInModule() {
+		if (_isInModule == 0)
+			return null;
+		if (factory.getIsFiltered(_isInModule))
+			return null;
+		return (Module)factory.getRef(_isInModule);
 	}
 
 	@Override
@@ -267,6 +290,56 @@ public class CompilationUnitImpl extends BaseImpl implements CompilationUnit {
 	}
 
 	@Override
+	public void addOthers(int _id) {
+		if (!factory.getExist(_id))
+			throw new JavaException(logger.formatMessage("ex.java.Node.No_end_point"));
+
+		Base _node = factory.getRef(_id);
+		if (Common.getIsBaseClassKind(_node.getNodeKind(), NodeKind.ndkPositioned)) {
+			if (_hasOthers == null)
+				_hasOthers = new EdgeList<Positioned>(factory);
+			_hasOthers.add(_id);
+		} else {
+			throw new JavaException(logger.formatMessage("ex.java.Node.Invalid","NodeKind", _node.getNodeKind() ));
+		}
+		setParentEdge(_id);
+	}
+
+	@Override
+	public void addOthers(Positioned _node) {
+		if (_hasOthers == null)
+			_hasOthers = new EdgeList<Positioned>(factory);
+		_hasOthers.add(_node);
+		setParentEdge(_node);
+	}
+
+	@Override
+	public void setModuleDeclaration(int _id) {
+		if (_hasModuleDeclaration != 0)
+			throw new JavaException(logger.formatMessage("ex.java.Node.The_previous_end_point","hasModuleDeclaration" ));
+
+		if (!factory.getExist(_id))
+			throw new JavaException(logger.formatMessage("ex.java.Node.No_end_point"));
+
+		Base _node = factory.getRef(_id);
+		if (_node.getNodeKind() == NodeKind.ndkModuleDeclaration) {
+			_hasModuleDeclaration = _id;
+			setParentEdge(_hasModuleDeclaration);
+		} else {
+			throw new JavaException(logger.formatMessage("ex.java.Node.Invalid","NodeKind", _node.getNodeKind() ));
+		}
+	}
+
+	@Override
+	public void setModuleDeclaration(ModuleDeclaration _node) {
+		if (_hasModuleDeclaration != 0)
+			throw new JavaException(logger.formatMessage("ex.java.Node.The_previous_end_point","hasModuleDeclaration" ));
+
+		_hasModuleDeclaration = _node.getId();
+		setParentEdge(_hasModuleDeclaration);
+	}
+
+	@Override
 	public void addTypeDeclarations(int _id) {
 		if (!factory.getExist(_id))
 			throw new JavaException(logger.formatMessage("ex.java.Node.No_end_point"));
@@ -289,27 +362,27 @@ public class CompilationUnitImpl extends BaseImpl implements CompilationUnit {
 	}
 
 	@Override
-	public void addOthers(int _id) {
+	public void setIsInModule(int _id) {
+		if (_isInModule != 0)
+			throw new JavaException(logger.formatMessage("ex.java.Node.The_previous_end_point","isInModule" ));
+
 		if (!factory.getExist(_id))
 			throw new JavaException(logger.formatMessage("ex.java.Node.No_end_point"));
 
 		Base _node = factory.getRef(_id);
-		if (Common.getIsBaseClassKind(_node.getNodeKind(), NodeKind.ndkPositioned)) {
-			if (_hasOthers == null)
-				_hasOthers = new EdgeList<Positioned>(factory);
-			_hasOthers.add(_id);
+		if (_node.getNodeKind() == NodeKind.ndkModule) {
+			_isInModule = _id;
 		} else {
 			throw new JavaException(logger.formatMessage("ex.java.Node.Invalid","NodeKind", _node.getNodeKind() ));
 		}
-		setParentEdge(_id);
 	}
 
 	@Override
-	public void addOthers(Positioned _node) {
-		if (_hasOthers == null)
-			_hasOthers = new EdgeList<Positioned>(factory);
-		_hasOthers.add(_node);
-		setParentEdge(_node);
+	public void setIsInModule(Module _node) {
+		if (_isInModule != 0)
+			throw new JavaException(logger.formatMessage("ex.java.Node.The_previous_end_point","isInModule" ));
+
+		_isInModule = _node.getId();
 	}
 
 
@@ -357,6 +430,10 @@ public class CompilationUnitImpl extends BaseImpl implements CompilationUnit {
 
 		io.writeInt4(!factory.getIsFiltered(_hasPackageDeclaration) ? _hasPackageDeclaration : 0);
 
+		io.writeInt4(!factory.getIsFiltered(_hasModuleDeclaration) ? _hasModuleDeclaration : 0);
+
+		io.writeInt4(!factory.getIsFiltered(_isInModule) ? _isInModule : 0);
+
 		if (_hasImports != null) {
 			EdgeIterator<Import> it = getImportsIterator();
 			while (it.hasNext()) {
@@ -365,16 +442,16 @@ public class CompilationUnitImpl extends BaseImpl implements CompilationUnit {
 		}
 		io.writeInt4(0);
 
-		if (_typeDeclarations != null) {
-			EdgeIterator<TypeDeclaration> it = getTypeDeclarationsIterator();
+		if (_hasOthers != null) {
+			EdgeIterator<Positioned> it = getOthersIterator();
 			while (it.hasNext()) {
 				io.writeInt4(it.next().getId());
 			}
 		}
 		io.writeInt4(0);
 
-		if (_hasOthers != null) {
-			EdgeIterator<Positioned> it = getOthersIterator();
+		if (_typeDeclarations != null) {
+			EdgeIterator<TypeDeclaration> it = getTypeDeclarationsIterator();
 			while (it.hasNext()) {
 				io.writeInt4(it.next().getId());
 			}
@@ -416,6 +493,12 @@ public class CompilationUnitImpl extends BaseImpl implements CompilationUnit {
 		if (_hasPackageDeclaration != 0)
 			setParentEdge(_hasPackageDeclaration);
 
+		_hasModuleDeclaration = io.readInt4();
+		if (_hasModuleDeclaration != 0)
+			setParentEdge(_hasModuleDeclaration);
+
+		_isInModule = io.readInt4();
+
 
 		_id = io.readInt4();
 		if (_id != 0) {
@@ -429,19 +512,19 @@ public class CompilationUnitImpl extends BaseImpl implements CompilationUnit {
 
 		_id = io.readInt4();
 		if (_id != 0) {
-			_typeDeclarations = new EdgeList<TypeDeclaration>(factory);
+			_hasOthers = new EdgeList<Positioned>(factory);
 			while (_id != 0) {
-				_typeDeclarations.add(_id);
+				_hasOthers.add(_id);
+				setParentEdge(_id);
 				_id = io.readInt4();
 			}
 		}
 
 		_id = io.readInt4();
 		if (_id != 0) {
-			_hasOthers = new EdgeList<Positioned>(factory);
+			_typeDeclarations = new EdgeList<TypeDeclaration>(factory);
 			while (_id != 0) {
-				_hasOthers.add(_id);
-				setParentEdge(_id);
+				_typeDeclarations.add(_id);
 				_id = io.readInt4();
 			}
 		}

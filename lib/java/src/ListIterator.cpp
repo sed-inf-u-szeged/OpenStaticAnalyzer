@@ -196,20 +196,22 @@ namespace columbus { namespace java { namespace asg {
 
   template class ListIterator<base::Base>;
   template class ListIterator<base::Comment>;
+  template class ListIterator<expr::Annotation>;
   template class ListIterator<base::Positioned>;
+  template class ListIterator<struc::Parameter>;
   template class ListIterator<expr::TypeExpression>;
   template class ListIterator<expr::Expression>;
   template class ListIterator<statm::Statement>;
   template class ListIterator<statm::SwitchLabel>;
-  template class ListIterator<struc::Variable>;
   template class ListIterator<statm::Handler>;
-  template class ListIterator<expr::Annotation>;
   template class ListIterator<struc::Import>;
   template class ListIterator<struc::TypeDeclaration>;
   template class ListIterator<struc::TypeParameter>;
   template class ListIterator<struc::MethodDeclaration>;
-  template class ListIterator<struc::Parameter>;
+  template class ListIterator<struc::Package>;
+  template class ListIterator<module::ModuleDirective>;
   template class ListIterator<struc::CompilationUnit>;
+  template class ListIterator<struc::Module>;
   template class ListIterator<struc::Member>;
   template class ListIterator<type::Type>;
 

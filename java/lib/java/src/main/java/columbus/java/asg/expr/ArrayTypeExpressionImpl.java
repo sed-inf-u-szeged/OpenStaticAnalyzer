@@ -36,6 +36,7 @@ import columbus.logger.LoggerHandler;
  */
 public class ArrayTypeExpressionImpl extends BaseImpl implements ArrayTypeExpression {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(ArrayTypeExpressionImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

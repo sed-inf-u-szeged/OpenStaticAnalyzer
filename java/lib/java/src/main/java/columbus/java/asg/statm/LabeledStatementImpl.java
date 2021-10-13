@@ -35,6 +35,7 @@ import columbus.logger.LoggerHandler;
  */
 public class LabeledStatementImpl extends BaseImpl implements LabeledStatement {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(LabeledStatementImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected EdgeList<Comment> _comments;
 

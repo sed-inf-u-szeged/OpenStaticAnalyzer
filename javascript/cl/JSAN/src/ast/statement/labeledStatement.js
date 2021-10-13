@@ -26,7 +26,7 @@ module.exports = function (node, parent, firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var labeledStatement = factory.createLabeledStatementWrapper(factory);
+        var labeledStatement = factory.createLabeledStatementWrapper();
         globals.setPositionInfo(node, labeledStatement);
         return labeledStatement;
     } else {
@@ -35,29 +35,19 @@ module.exports = function (node, parent, firstVisit) {
 
         if (node.label != null) {
             var labelWrapper = globals.getWrapperOfNode(node.label);
-            if (node.label.type !== "Literal") {
-                var labelWrapperFunctionString = "setLabel" + node.label.type;
-            } else {
-                var labelWrapperFunctionString = "setLabel" + globals.getLiteralType(node.label) + node.label.type;
-            }
             try {
-                labeledStatementWrapper[labelWrapperFunctionString](labelWrapper);
+                labeledStatementWrapper.setLabel(labelWrapper);
             } catch (e) {
-                console.error("LABELEDSTATEMENT - Function not exist: labeledStatementWrapper." + labelWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("LABELEDSTATEMENT - Could not set label! Reason of the error: " + e + "\n");
             }
         }
 
         if (node.body != null) {
             var bodyWrapper = globals.getWrapperOfNode(node.body);
-            if (node.body.type !== "Literal") {
-                var bodyWrapperFunctionString = "setBody" + node.body.type;
-            } else {
-                var bodyWrapperFunctionString = "setBody" + globals.getLiteralType(node.body) + node.body.type;
-            }
             try {
-                labeledStatementWrapper[bodyWrapperFunctionString](bodyWrapper);
+                labeledStatementWrapper.setBody(bodyWrapper);
             } catch (e) {
-                console.error("LABELEDSTATEMENT - Function not exist: labeledStatementWrapper." + bodyWrapperFunctionString + "! Reason of the error: " + e + "\n");
+                console.error("LABELEDSTATEMENT - Could not set body! Reason of the error: " + e + "\n");
             }
         }
 

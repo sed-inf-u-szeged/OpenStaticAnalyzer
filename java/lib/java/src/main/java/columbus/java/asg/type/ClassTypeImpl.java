@@ -35,6 +35,7 @@ import columbus.logger.LoggerHandler;
  */
 public class ClassTypeImpl extends BaseImpl implements ClassType {
 
+	@SuppressWarnings("unused")
 	private static final LoggerHandler logger = new LoggerHandler(ClassTypeImpl.class, columbus.java.asg.Constant.LoggerPropertyFile);
 	protected int _owner;
 

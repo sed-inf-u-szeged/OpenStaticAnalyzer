@@ -59,7 +59,6 @@ struct UniqueNameWithPath {
 };
 
 
-
 /**
  * \brief CoverageVisitorBase
  * This class is corresponding for calculate the all member node (lim) clone coverage, and McCabe complexity. 
@@ -72,7 +71,6 @@ private:
   CoverageVisitorBase& operator=(const CoverageVisitorBase&);
 protected :
   NodeId limNodeId;
-
   columbus::lim::asg::Factory* fact;
   typedef std::map<UniqueNameWithPath, int> CCCounterMap;
   typedef std::vector<int*> CounterContainer;
@@ -89,12 +87,10 @@ protected :
   bool lowerPath;
   
   int* getCounter(CCCounterMap& container, const UniqueNameWithPath& uname);
-
   
 
   void visitStart(const columbus::lim::asg::logical::Member&  node);
   void insertLines(std::set<LineIdentifier>* lineSet, const Base& n) const;
-
   const std::set<NodeId>* coveredNodes;
   std::string asg;
 
@@ -112,22 +108,20 @@ public:
   CoverageVisitorBase();
   virtual ~CoverageVisitorBase();
 
-  void setFactory(columbus::lim::asg::Factory * _fact, const std::string& _asg, const std::map<std::string, std::set<NodeId> >& _coveredNodes);
-
   void visitBase   (const Base& n);
-  void fillCoverage(CCMap& cov);
   virtual void acceptNode(Base& b);
   virtual void acceptEndNode(Base& b);
 
   virtual bool isIncTheComplexity (const Base& node) {return isIncTheComplexity(node.getNodeKind());}
   virtual bool isIncTheComplexity (int nodeKind) = 0;
 
-  void setLimNodeId(NodeId val);
-
   void visitStartComponent( const columbus::lim::asg::base::Component &componenet );
-
+  void setFactory(columbus::lim::asg::Factory * _fact, const std::string& _asg, const std::map<std::string, std::set<NodeId> >& _coveredNodes);
+  void setLimNodeId(NodeId val);
+  void fillCoverage(CCMap& cov);
 
 };
+
 
 
 
