@@ -25,6 +25,7 @@
 #include <io/inc/messages.h>
 #include "Exception.h"
 #include <algorithm>
+#include <string_view>
 
 using namespace std;
 
@@ -136,6 +137,10 @@ namespace columbus {  namespace io {
     }
   }
 
+  void CsvIO::writeColumn(const string_view& value) {
+    writeColumnByTemplate(value);
+  }
+
   void CsvIO::writeColumn(const string& value) {
     writeColumnByTemplate(value);
   }
@@ -224,4 +229,3 @@ namespace columbus {  namespace io {
   }
 
 }}
-

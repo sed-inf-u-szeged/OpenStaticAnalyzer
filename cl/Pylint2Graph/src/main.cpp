@@ -44,7 +44,7 @@ static string outTxt;
 static string changepathfrom;
 static string changepathto;
 static string limFile;
-static string rulFile = "Pylint.rul";
+static string rulFile = "Pylint.rul.md";
 static string rulConfig = "Default";
 static bool exportRul;
 static bool runPylint = false;
@@ -153,7 +153,7 @@ const common::Option OPTIONS_OBJ [] = {
   { false,  "-out",             1, "filename",              0,  OT_WC,      ppOut,                NULL,     "If it is specified then the list of rule violations will be written into this file."
                                                                                                             " Otherwise they will be dumped to the standard output."},
   CL_LIM
-  CL_RUL_AND_RULCONFIG("Pylint.rul")
+  CL_RUL_AND_RULCONFIG("Pylint.rul.md")
   CL_EXPORTRUL
   COMMON_CL_ARGS
 };

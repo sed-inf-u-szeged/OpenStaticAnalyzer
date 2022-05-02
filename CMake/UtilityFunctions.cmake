@@ -192,6 +192,24 @@ function (add_custom_extract_target TARGET_NAME SOURCE DESTINATION_DIR EXTRACTED
   set_target_properties (${CUSTOM_TARGET_NAME} PROPERTIES FOLDER ${CMAKE_SUPPORT_FOLDER_NAME})
 endfunction ()
 
+function (create_tools_ref_from_ruls TARGET_NAME CONF METRIC_RULS ANALYZER_RULS 3RD_PARTY_RULS METADATA OUTPUT_PATH)
+  list(TRANSFORM METRIC_RULS PREPEND ${EXECUTABLE_OUTPUT_PATH}/)
+  list(TRANSFORM ANALYZER_RULS PREPEND ${EXECUTABLE_OUTPUT_PATH}/)
+  list(TRANSFORM 3RD_PARTY_RULS PREPEND ${EXECUTABLE_OUTPUT_PATH}/)
+  list(TRANSFORM METADATA PREPEND ${EXECUTABLE_OUTPUT_PATH}/)
+
+  add_custom_command (
+    COMMENT "Creating: ${OUTPUT_PATH}"
+    DEPENDS RuleManager${EXE} ${METRIC_RULS} ${ANALYZER_RULS} ${3RD_PARTY_RULS} ${METADATA}
+    WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
+    COMMAND RuleManager${EXE} -ml:1 ${OUTPUT_PATH} -conf:${CONF} -metricRuls:"${METRIC_RULS}" -osaRuls:"${ANALYZER_RULS}" -3rdPartyRuls:"${3RD_PARTY_RULS}"
+    OUTPUT ${OUTPUT_PATH}
+  )
+
+  add_custom_target (${TARGET_NAME} DEPENDS ${OUTPUT_PATH})
+  set_visual_studio_project_folder(${TARGET_NAME} FALSE)
+endfunction()
+
 # Add custom target for generate html usersguide from the given markdown inputs by the given css
 function (add_usersguide_generator TARGET_NAME CSS INPUTS_VARIABLE)
   set (OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/UsersGuide.html)

@@ -22,8 +22,7 @@ import * as eslint from 'eslint';
 import * as clOptions from './src/assets/options.js';
 import * as fs from 'fs';
 import * as path from 'path';
-import {formatter} from "./outputFormatter.js";
-import {parseString} from 'xml2js';
+import {formatter, textFormatter} from "./outputFormatter.js";
 import * as globals from './src/globals.js';
 import * as constants from './src/assets/constants.js';
 import * as JSON5 from "json5";
@@ -33,6 +32,12 @@ import * as JSON5 from "json5";
  */
 const options = clOptions.parse();
 globals.setOptions(options);
+
+/**
+ * Whether we created the temporary dir
+ * @type {boolean}
+ */
+let tempDirExistedBefore = true;
 
 /**
  * Path for the default Typescript-ESLint configuration
@@ -85,43 +90,72 @@ function externalRul(file) {
     const rulContent = fs.readFileSync(file, 'utf-8');
     Memory.check();
 
-    let currentPointer;
+    const pattern = {
+        metrics: new RegExp(/^# +Metrics/),
+        metric: new RegExp(/^## +/),
+        defaultConfig: new RegExp(/^### +Default/),
+        originalID: new RegExp(/^#### +OriginalId *=/),
+        enabled: new RegExp(/^#### +Enabled *=/),
+        esLintParam: new RegExp(/^- +__eslint_param__ *=/),
+    };
+
+    const state = { lineNumber: 0 };
+
     try {
-        parseString(rulContent, {trim: true}, function (err, result) {
-            if (err) {
-                console.log(err);
+        rulContent.split(/\r?\n/).forEach(line => {
+            ++state.lineNumber;
+            if (line.length === 0) { return; }
+
+            if (line.startsWith("# ")) {
+                state.metrics = line.search(pattern.metrics) !== -1 ? {} : null;
+                return;
+            }
+            if (state.metrics == null) { return; }
+
+            if (line.search(pattern.metric) !== -1) { state.metrics.metric = {}; }
+            if (state.metrics.metric == null) { return; }
+
+            if (line.startsWith("### ")) {
+                state.metrics.metric.defaultConfig = line.search(pattern.defaultConfig) !== -1 ? {} : null;
+            }
+            if (state.metrics.metric.defaultConfig == null) { return; }
+
+            const originalIDMatch = line.match(pattern.originalID);
+            if (originalIDMatch != null) {
+                const originalIDBegin = originalIDMatch[0].length + originalIDMatch.index;
+                state.metrics.metric.defaultConfig.originalId = line.substring(originalIDBegin).trim();
+                return;
+            }
+            const currentOriginalId = state.metrics.metric.defaultConfig.originalId;
+            if (currentOriginalId == null) { return; }
+
+            const enabledMatch = line.match(pattern.enabled);
+            if (enabledMatch != null) {
+                const enabledBegin = enabledMatch[0].length + enabledMatch.index;
+                const enabled = line.substring(enabledBegin).trim() === "true" ? 1 : 0;
+                if (Array.isArray(metrics[currentOriginalId])) {
+                    metrics[currentOriginalId][0] = enabled;
+                } else {
+                    metrics[currentOriginalId] = enabled;
+                }
             }
 
-            result.Rul.Metric.forEach(function (elem) {
-                Memory.check();
-                if (elem.Configuration[0].Group[0] === "false") {
-                    const originalID = elem.Configuration[0].OriginalId;
-                    const enabled = (elem.Configuration[0].Enabled[0] === "true" ? 1 : 0);
-                    const settings = elem.Configuration[0].Settings[0].Setting;
-
-                    let param = null;
-                    currentPointer = originalID;
-                    settings.forEach(function (setting) {
-                        if (setting.$.name === "__eslint_param__") {
-                            param = setting._;
-                        }
-                    });
-
-                    if (param) {
-                        const ruleOptions = [];
-                        ruleOptions.push(enabled);
-                        ruleOptions.push(JSON.parse(param));
-                        metrics[originalID] = ruleOptions;
-                    } else {
-                        metrics[originalID] = enabled;
-                    }
+            const esParamMatch = line.match(pattern.esLintParam);
+            if (esParamMatch != null) {
+                const esParamBegin = esParamMatch[0].length + esParamMatch.index;
+                const param = line.substring(esParamBegin);
+                if (param.length === 0) { return; }
+                const esParam = JSON.parse(param);
+                if (Array.isArray(metrics[currentOriginalId])) {
+                    metrics[currentOriginalId][1] = esParam;
+                } else {
+                    metrics[currentOriginalId] = [metrics[currentOriginalId], esParam];
                 }
-                Memory.check();
-            });
-            Memory.check();
+                return;
+            }
         });
     } catch (err) {
-        console.error(`Syntax error around '${currentPointer}' metric. Please check the metric and neighbours.`);
+        console.error(`Syntax error around line '${state.lineNumber}'. Please check the metric and neighbours.`);
         console.error("A possible error: Maybe not valid JSAN format at __eslint_param__ setting.");
         console.log("The analyze will use the default typescript-eslint.json config file. Loading..");
         return readDefaultRules();
@@ -145,18 +179,30 @@ function readPackageJSON(path) {
 }
 
 function saveToFile(outputFileShadow, resultSet, finishEvent) {
-    if (!outputFileShadow.endsWith(".xml")) {
-        outputFileShadow += ".xml";
+    let formatters = [];
+    formatters.push({'ext': '.xml', 'formatter': formatter});
+
+    if (globals.getOption(constants.TEXT_OUTPUT)) {
+        formatters.push({'ext': '.txt', 'formatter': textFormatter});
     }
-    console.log(`Saving results into ${outputFileShadow}.`);
-    const writeStream = fs.createWriteStream(outputFileShadow);
-    writeStream.write(formatter(resultSet));
-    Memory.check();
-    writeStream.end();
+
+    for (const formatterObj of formatters) {
+        let outputFileNameShadow = outputFileShadow;
+        if (!outputFileNameShadow.endsWith(formatterObj.ext)) {
+            outputFileNameShadow += formatterObj.ext;
+        }
+        console.log(`Saving results into ${outputFileNameShadow}.`);
+        const writeStream = fs.createWriteStream(outputFileNameShadow);
+        writeStream.write(formatterObj.formatter(resultSet));
+        Memory.check();
+        writeStream.end();
+    }
     if (typeof finishEvent === 'function') {
         finishEvent();
     }
-    console.log("Done.");
+
+    Memory.check();
+    console.log("Finished saving results.");
 }
 
 /**
@@ -185,6 +231,19 @@ function searchFoldersForConfig(input, returnableArray) {
 }
 
 /**
+ * Resolve path for .tsconfig file.
+ *
+ * Placed into in its own method as the reading is so fragile, it might break any time,
+ * and we will be able to fix the issue here.
+ *
+ * @param filePath
+ * @returns {string}
+ */
+function resolvePathForTSConfig(filePath) {
+    return path.resolve(filePath);
+}
+
+/**
  * This function detects if the analyzed project has a tsconfig.json file, and if not,
  * creates a temporary .json file in the dist directory.
  * This is necessary, as some rules cannot be used without the "include" field in said file.
@@ -195,6 +254,7 @@ function searchFoldersForConfig(input, returnableArray) {
 function readProjectTsconfig(typeScriptOptions, tsConfigContent) {
     let configPathsArray = [];
     searchFoldersForConfig(globals.getOption("inputList")[0], configPathsArray);
+
     if (configPathsArray.length > 0) { //in case at least 1 tsconfig exists within the analyzed project
         //using JSON5 due to comments.
         for (let index in configPathsArray) {
@@ -214,7 +274,7 @@ function readProjectTsconfig(typeScriptOptions, tsConfigContent) {
                         filesToBeDeleted.push(extendedFile);
                     }
                 }
-                typeScriptOptions["baseConfig"]["parserOptions"]["project"].push((configPathsArray[index].replace(/\\/g, '/')));
+                typeScriptOptions["baseConfig"]["parserOptions"]["project"].push(configPathsArray[index].replace(/\\/g, '/'));
             } catch (e) {
                 console.log(e);
             }
@@ -222,37 +282,56 @@ function readProjectTsconfig(typeScriptOptions, tsConfigContent) {
         return;
     }
     //in case project has no tsconfig / a single file is being linted and might need type information
-    console.log("Creating temporary config...");
-    typeScriptOptions["baseConfig"]["parserOptions"]["project"] = __dirname + '/tsconfig.json';
+    console.log("Creating temporary tsconfig.json...");
+    let tempDir = path.resolve(import.meta.url); //TODO: This is buggy as webpack resolved import.meta on transpile time.
+    tempDir = path.resolve(tempDir.substring(0, tempDir.indexOf("file:")), "tmp-eslintrunner"); // TODO: FIX THIS
+
+    if (globals.getOption(constants.TEMP_DIR_PATH)) {
+        tempDir = globals.getOption(constants.TEMP_DIR_PATH);
+        if (!fs.existsSync(tempDir)) {
+            tempDirExistedBefore = false;
+            fs.mkdirSync(tempDir, {recursive: true});
+        }
+    }
+
+    const tempTsConfigPath = path.resolve(tempDir, "tsconfig.json");
+    globals.setTempTSConfigPath(tempTsConfigPath);
+
+    typeScriptOptions["baseConfig"]["parserOptions"]["project"] = tempTsConfigPath;
+
     if (globals.getOption(constants.MODULE_BASED_ANALYSIS)
         && globals.getOption('inputList').length === 1
         && fs.existsSync(globals.getOption('inputList')[0])) {
         if (path.extname(globals.getOption("inputList")[0]) === '.ts' || path.extname(globals.getOption("inputList")[0]) === '.js' || path.extname(globals.getOption("inputList")[0]) === '.tsx') { //in case a single file is being analyzed
-            tsConfigContent["include"].push(path.resolve(globals.getOption("inputList")[0]));
+            tsConfigContent["include"].push(resolvePathForTSConfig(globals.getOption("inputList")[0]));
         } else { //directory
-            tsConfigContent["include"].push(path.resolve(globals.getOption("inputList")[0]) + '/**/**.ts');
-            tsConfigContent["include"].push(path.resolve(globals.getOption("inputList")[0]) + '/**/**.tsx');
-            tsConfigContent["include"].push(path.resolve(globals.getOption("inputList")[0]) + '/**/**.jsx');
-            tsConfigContent["include"].push(path.resolve(globals.getOption("inputList")[0]) + '/**/**.js');
+            tsConfigContent["include"].push(resolvePathForTSConfig(globals.getOption("inputList")[0]) + '/**/**.ts');
+            tsConfigContent["include"].push(resolvePathForTSConfig(globals.getOption("inputList")[0]) + '/**/**.tsx');
+            tsConfigContent["include"].push(resolvePathForTSConfig(globals.getOption("inputList")[0]) + '/**/**.jsx');
+            tsConfigContent["include"].push(resolvePathForTSConfig(globals.getOption("inputList")[0]) + '/**/**.js');
         }
     } else {
         for (let index in globals.getOption("inputList")) { //mba is not enabled, analyzing lots of files
-            tsConfigContent["include"].push(path.resolve(globals.getOption("inputList")[index]));
+            tsConfigContent["include"].push(resolvePathForTSConfig(globals.getOption("inputList")[index]));
         }
     }
-    //creates a temporary directory which contains the now created tsconfig
-    const tmpDir = path.resolve(path.basename(globals.getOption("inputList")[0]).replace(path.extname(globals.getOption("inputList")[0]), ''));
-    if (!fs.existsSync(tmpDir)) {
-        fs.mkdirSync((tmpDir), (err) => {
+
+    // Create a temporary directory which contains the newly created .tsconfig
+    // const tmpDir = path.resolve(path.basename(globals.getOption("inputList")[0]).replace(path.extname(globals.getOption("inputList")[0]), ''));
+    if (!fs.existsSync(tempDir)) {
+        fs.mkdirSync((tempDir), (err) => {
             if (err) {
-                console.log(err)
+                console.error(err);
             }
         });
-    } else {
-        fs.unlinkSync(tmpDir + '/tsconfig.json'); // in case project has already been analysed, and in just in case the tsconfig.json file has changed
+    } else { // in case project has already been analysed, and in just in case the tsconfig.json file has changed
+        fs.rmSync(tempTsConfigPath, {
+            force: true
+        });
     }
-    fs.writeFileSync((tmpDir + '/tsconfig.json').replace(/\\/g, '/'), JSON.stringify(tsConfigContent));
-    typeScriptOptions["baseConfig"]["parserOptions"]["project"] = tmpDir + '/tsconfig.json';
+
+    fs.writeFileSync(tempTsConfigPath, JSON.stringify(tsConfigContent));
+    typeScriptOptions["baseConfig"]["parserOptions"]["project"] = tempTsConfigPath;
 }
 
 /**
@@ -299,7 +378,6 @@ function readRulesFromPackageJson(packageJsonPath) {
 function runESLint(finishEvent) {
     "use strict";
     //default options for the parser
-
     const typeScriptOptions = { // options in case package.json has no eslintConfig & typescript files are analyzed
         baseConfig: {
             root: true,
@@ -310,19 +388,19 @@ function runESLint(finishEvent) {
                 ecmaFeatures: {
                     jsx: false
                 },
-                tsconfigRootDir: globals.getOption("inputList")[0],
+                tsconfigRootDir: path.dirname(globals.getOption("inputList")[0]),
                 project: [],
                 rules: ""
             },
             overrides: [
                 {
-                    files: ["*.ts", "*.tsx"],
+                    files: ["*.ts", "*.tsx", "*.js", "*.jsx"],
                     excludedFiles: [],
                     extends: [],
                     settings: {
                         import: {
                             parsers: {
-                                "@typescript-eslint/parser": ["*.ts", "*.tsx"],
+                                "@typescript-eslint/parser": ["*.ts", "*.tsx", "*.js", "*.jsx"],
                             }
                         }
                     }
@@ -349,7 +427,6 @@ function runESLint(finishEvent) {
         typeScriptOptions["baseConfig"]["parserOptions"]["sourceType"] = "module";
     } else {
         typeScriptOptions["baseConfig"]["parserOptions"]["sourceType"] = "script";
-        typeScriptOptions["baseConfig"]["parserOptions"]["tsconfigRootDir"] = path.basename(globals.getOption("inputList")[0]);
     }
     //default configuration for analyzed projects
     let defaultTSConfig = {
@@ -362,6 +439,7 @@ function runESLint(finishEvent) {
             lib: [
                 "es2020"
             ],
+            allowJs: true,
             strict: true,
             esModuleInterop: false,
             outDir: "dist"
@@ -373,6 +451,11 @@ function runESLint(finishEvent) {
         ]
     };
     readProjectTsconfig(typeScriptOptions, defaultTSConfig);
+
+    if (globals.getTempTSConfigPath() !== undefined) {
+        typeScriptOptions["baseConfig"]["parserOptions"]["tsconfigRootDir"] = path.dirname(globals.getTempTSConfigPath());
+    }
+
     const packageJsonPath = path.join(globals.getOption("inputList")[0], "package.json");
     let packageJsonContents;
     if (fs.existsSync(packageJsonPath)) {
@@ -414,6 +497,7 @@ function runESLint(finishEvent) {
             typeScriptOptions["baseConfig"]["ignorePatterns"].push(globals.getOption('filteredFiles')[i]);
         }
     }
+
     let eslintProgram = new eslint.ESLint(typeScriptOptions);
     Memory.check();
     //console.debug(`Analyzing input ${globals.getOption('inputList')}`);
@@ -423,15 +507,13 @@ function runESLint(finishEvent) {
         if (globals.getOption(constants.RAW_OUTPUT)) {
             fs.writeFile("eslint-raw-results.json", JSON.stringify(results), 'utf8', function (err) {
                 if (err) {
-                    console.log("An error occurred while writing raw results to JSON file.");
-                    return console.log(err);
+                    console.error("An error occurred while writing raw results to JSON file.");
                 }
                 console.log("Raw results have been saved.");
             });
         }
         saveToFile(options.out, results, finishEvent);
         for (let dfile in filesToBeDeleted) {
-            console.log("anyád");
             fs.unlinkSync(filesToBeDeleted[dfile]);
         }
         Memory.check();
@@ -499,10 +581,32 @@ function analyzeMain() {
     } catch (e) {
         console.log(e);
     }
+
+    if (!globals.tempTSConfigPath) {
+        return;
+    }
+
+    if (fs.existsSync(globals.getTempTSConfigPath())) {
+        fs.unlinkSync(globals.getTempTSConfigPath());
+        if (!tempDirExistedBefore) {
+            fs.unlinkSync(globals.getOption(constants.TEMP_DIR_PATH));
+        }
+    }
 }
 
 try {
+    const cwd = process.cwd();
+    globals.setOriginalCwd(cwd);
+
+    if (globals.getOption(constants.EXECUTION_DIR)) {
+        process.chdir(globals.getOption(constants.EXECUTION_DIR));
+    }
+
     analyzeMain();
+
+    if (globals.getOption(constants.EXECUTION_DIR)) {
+        process.chdir(cwd);
+    }
 } catch (e) {
     console.log(e);
 }

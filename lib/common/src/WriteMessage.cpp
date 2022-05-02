@@ -197,7 +197,7 @@ namespace common {
         canBeChanged = false;
         return;
       }
-
+        
     // searching for "-ml:NUM" or "-ml NUM" paramater
     for (int i = 0; i < argc; i++) {
       if (!strncmp(argv[i], "-ml", 3)) {
@@ -249,11 +249,16 @@ namespace common {
     WriteMsg::needToFlush = needToFlush;
   }
 
-  void WriteMsg::setSetTimestampPrefixes(bool enable)
+  void WriteMsg::setTimestampPrefixes(bool enable)
   {
     WriteMsg::enableTimestamps = enable;
   }
-  
+
+  bool WriteMsg::getTimestampPrefixes()
+  {
+    return WriteMsg::enableTimestamps;
+  }
+
   bool WriteMsg::getWasWarning()
   {
     return wasWarning;

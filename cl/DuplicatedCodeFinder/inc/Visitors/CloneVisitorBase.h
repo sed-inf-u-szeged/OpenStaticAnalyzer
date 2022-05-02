@@ -91,7 +91,7 @@ public:
     , std::vector<int>&             _resultSequence
     , std::vector<ClonePositioned*>& _nodeIdSequence
     , CloneKind _ck = schemaOnly
-    , bool _analizeNode = false
+    , bool _addNodeSeparators = false
     , bool _lowMemUsage = false
     , columbus::lim::asg::Factory* limFactory = NULL
   );
@@ -134,7 +134,7 @@ protected:
   columbus::LimOrigin&                   limOrigin;
   std::vector<int>&                      resultSequence;
   std::vector<ClonePositioned* >&        nodeIdSequence;
-  bool analizeNode;
+  bool addNodeSeparators;
   std::set<std::string> block_paths;
   std::ostream* out;
   int decDepthSign;
@@ -155,7 +155,7 @@ protected:
 
 ////////////Protected functions////////////
   
-  bool isAnalizeNode(const Base& node);
+  bool isNodeSeparatorNeeded(const Base& node);
 
   int  getSeparator();
 

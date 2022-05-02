@@ -22,6 +22,7 @@
 #include "../inc/Metric.h"
 #include "../inc/GraphConstants.h"
 #include <rul/inc/RulHandler.h>
+#include "../inc/Metadata.h"
 
 using namespace std;
 using namespace columbus::graph;
@@ -46,8 +47,6 @@ void buildRulToGraph(Graph& graph, rul::RulHandler& rulHandler) {
     graph.createDirectedEdge(root, groups, graphconstants::ETYPE_RUL_TREE, true);
   }
   
-  
-  
   set<string> rulIdList;
   rulHandler.getRuleIdList(rulIdList);
   for(set<string>::const_iterator rulIdIt = rulIdList.begin(); rulIdIt != rulIdList.end(); ++rulIdIt) {
@@ -65,7 +64,7 @@ void buildRulToGraph(Graph& graph, rul::RulHandler& rulHandler) {
       metric.addAttribute(graph.createAttributeString(graphconstants::ATTR_RUL_DISPLAYNAME, graphconstants::CONTEXT_RUL, rulHandler.getDisplayName(*rulIdIt)));
       metric.addAttribute(graph.createAttributeString(graphconstants::ATTR_RUL_ENABLED, graphconstants::CONTEXT_RUL, rulHandler.getIsEnabled(*rulIdIt)?"true":"false"));
       metric.addAttribute(graph.createAttributeString(graphconstants::ATTR_RUL_GROUPTYPE, graphconstants::CONTEXT_RUL, rulHandler.getGroupType(*rulIdIt)));
-      metric.addAttribute(graph.createAttributeString(graphconstants::ATTR_RUL_HELPTEXT, graphconstants::CONTEXT_RUL, rulHandler.getHelpText(*rulIdIt)));
+      metric.addAttribute(graph.createAttributeString(graphconstants::ATTR_RUL_HELPTEXT, graphconstants::CONTEXT_RUL, rulHandler.getHelpText(*rulIdIt, rul::RulMDString::html_format_tag)));
       metric.addAttribute(graph.createAttributeString(graphconstants::ATTR_RUL_WARNING, graphconstants::CONTEXT_RUL, rulHandler.getHasWarningText(*rulIdIt)?"true":"false"));
 
       AttributeComposite& settingsAttr = dynamic_cast<AttributeComposite&>(metric.addAttribute(graph.createAttributeComposite(graphconstants::ATTR_RUL_SETTINGS, graphconstants::CONTEXT_RUL)));
@@ -80,22 +79,22 @@ void buildRulToGraph(Graph& graph, rul::RulHandler& rulHandler) {
       for (set<string>::const_iterator calcForIt = calculated.begin(); calcForIt != calculated.end(); ++calcForIt) {
         calculatedAttr.addAttribute(graph.createAttributeString(graphconstants::ATTR_RUL_CALCULATEDFOR, graphconstants::CONTEXT_RUL, *calcForIt));
       }
-    }
-  }
-  rulIdList.clear();
 
-  rulHandler.getGroupIdList(rulIdList);
-  for(set<string>::const_iterator rulIdIt = rulIdList.begin(); rulIdIt != rulIdList.end(); ++rulIdIt) {
-    set<string> members;
-    rulHandler.getGroupMembers(*rulIdIt, members);
-    for(set<string>::const_iterator memberIt = members.begin(); memberIt != members.end(); ++memberIt) {
-      addEdgeOnce(graph, graph.findNode(*rulIdIt), graph.findNode(*memberIt), Edge::EdgeType(graphconstants::ETYPE_RUL_GROUPCONTAINS, Edge::edtDirectional), true);
+      AttributeComposite& tagsAttr = dynamic_cast<AttributeComposite&>(metric.addAttribute(graph.createAttributeComposite(graphconstants::ATTR_RUL_TAGS, graphconstants::CONTEXT_RUL)));
+      for (const auto &tag : rulHandler.getTags(*rulIdIt)) {
+        tagsAttr.addAttribute(graph.createAttributeString(graphconstants::ATTR_RUL_TAG, graphconstants::CONTEXT_RUL, tag->get_full_name()));
+      }
     }
   }
+
+  rulHandler.getTagMetadataStore().remove_unused();
+  addTagMetadataToGraph(graph, rulHandler.getTagMetadataStore());
 }
 
-
-void buildRuleItemToGraph(Graph& graph, const string& metricID, const string& toolID, const string& description, const string& displayName, bool isEnabled, const string& groupType, const string& helpText, bool isWarning, const map<string, string>& settings, const set<string>& calculated) {
+void buildRuleItemToGraph(Graph &graph, const string &metricID, const string &toolID, const string &description,
+                          const string &displayName, bool isEnabled, const string &groupType, const string &helpText,
+                          bool isWarning, const map<string, string> &settings, const set<string> &calculated,
+                          const set<rul::Tag> &tags) {
 
   Node root = graph.findNode(graphconstants::UID_RUL_ROOT);
   if(root == Graph::invalidNode) {
@@ -133,14 +132,20 @@ void buildRuleItemToGraph(Graph& graph, const string& metricID, const string& to
   for (set<string>::const_iterator calcForIt = calculated.begin(); calcForIt != calculated.end(); ++calcForIt) {
     calculatedAttr.addAttribute(graph.createAttributeString(graphconstants::ATTR_RUL_CALCULATEDFOR, graphconstants::CONTEXT_RUL, *calcForIt));
   }
+
+  AttributeComposite& tagsAttr = dynamic_cast<AttributeComposite&>(metric.addAttribute(graph.createAttributeComposite(graphconstants::ATTR_RUL_TAGS, graphconstants::CONTEXT_RUL)));
+  for (const auto &tag : tags) {
+    tagsAttr.addAttribute(graph.createAttributeString(graphconstants::ATTR_RUL_TAG, graphconstants::CONTEXT_RUL, tag.get_full_name()));
+  }
 }
 
-
-bool readRuleItemFromGraph(Graph& graph, const string& metricID, string& description, string& displayName, bool& isEnabled, string& groupType, string& helpText, bool& isWarning, map<string, string>& settings, set<string>& calculated) {
+bool readRuleItemFromGraph(Graph &graph, const string &metricID, string &description, string &displayName,
+                           bool &isEnabled, string &groupType, string &helpText, bool &isWarning,
+                           map<string, string> &settings, set<string> &calculated, set<rul::Tag> &tags) {
   Node metric = graph.findNode(metricID);
   if (metric == Graph::invalidNode)
     return false;
-    
+
   Attribute::AttributeIterator attributeIt = metric.getAttributes();
   while (attributeIt.hasNext()) {
     Attribute& attr = attributeIt.next();
@@ -173,10 +178,17 @@ bool readRuleItemFromGraph(Graph& graph, const string& metricID, string& descrip
       while (calculatedIt.hasNext())
         calculated.insert(calculatedIt.next().getStringValue());
       
+    } else if (name == graphconstants::ATTR_RUL_TAGS) {
+      if (attr.getType() != Attribute::atComposite) { continue; }
+
+      Attribute::AttributeIterator tagIt = static_cast<AttributeComposite &>(attr).getAttributes();
+      while (tagIt.hasNext()) {
+        auto &tagAttr = dynamic_cast<AttributeString &>(tagIt.next());
+        auto [kind, value, detail] = rul::split_tag_string(tagAttr.getValue());
+        tags.emplace(kind, value, detail);
+      }
     }
   }
   return true;
 }
-
-
 } }

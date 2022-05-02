@@ -24,8 +24,10 @@
 #include "../inc/GraphConstants.h"
 #include <common/inc/FileSup.h>
 #include <io/inc/IO.h>
+#include "rul/inc/RulTagString.h"
 #include "../inc/messages.h"
 #include <iostream>
+#include <string_view>
 
 using namespace columbus::io;
 using namespace columbus::graph;
@@ -79,56 +81,50 @@ namespace columbus { namespace graphsupport {
     exportImpactSetAll(graph, filename, edgeTypes, NULL);
   }
 
-
-  typedef set<string> StringSet;
-  typedef map<string, string> StringMap;
-  typedef vector<string> StringVector;
-  typedef map<string, StringSet> StringStringSetMap;
-  typedef map<string, StringVector> StringStringVectorMap;
-  typedef map<string, StringStringSetMap> StringStringStringSetMap;
-
   static string csvName(const string& fname, const string& fext, const string& nodeType) {
     return fname + "-" + nodeType + fext;
   }
 
+  struct ColumnNameComparator {
+    bool operator()(const std::string &lhs, const std::string &rhs) const noexcept {
+      const auto lhs_tag = lhs.front() == '/';
+      const auto rhs_tag = rhs.front() == '/';
 
-  static void writeMetricsHeader(const StringVector& metrics, const StringMap& idMap, io::CsvIO& csvHeader) {
-    for (StringVector::const_iterator metricsIterator = metrics.begin(); metricsIterator != metrics.end(); ++metricsIterator)
-    {
-      const auto displayNameIt = idMap.find(*metricsIterator);
-      if (displayNameIt != idMap.end())
-        csvHeader.writeColumn(displayNameIt->second);
-      else
-        csvHeader.writeColumn(*metricsIterator);
+      if (lhs_tag) {
+        if (!rhs_tag) { return false; }
+      } else {
+        if (rhs_tag) { return true; }
+      }
+
+      return lhs < rhs;
+    }
+  };
+
+  static void writeTagMetricsHeader(const std::set<std::string, ColumnNameComparator> &tags, io::CsvIO &csvHeader) {
+    for (const auto &tag_name : tags) {
+      auto after_last_slash_pos = tag_name.rend() - std::find(tag_name.rbegin(), tag_name.rend(), '/');
+      const std::string_view last_part(tag_name.data() + after_last_slash_pos, tag_name.size() - after_last_slash_pos);
+      csvHeader.writeColumn(last_part);
     }
   }
 
-  static void writeMetrics(const StringVector& nodeTypeMetricsVector, const Node& node, io::CsvIO& csvOut) {
-    for (StringVector::const_iterator metricsIterator = nodeTypeMetricsVector.begin(); metricsIterator != nodeTypeMetricsVector.end(); ++metricsIterator) {
-      Attribute::AttributeIterator attributesIt = node.findAttributeByName(*metricsIterator);
-      if (!attributesIt.hasNext()) {
-        csvOut.writeColumn("0");
-        continue;
-      }
-
-      bool found = false;
-      while (attributesIt.hasNext() && !found) {
-        const Attribute& at = attributesIt.next();
-        if (at.getContext() == graphconstants::CONTEXT_METRIC || at.getContext() == graphconstants::CONTEXT_METRICGROUP) {
-          if (isINVALID(at)) 
-            csvOut.writeColumn("");
-          else {
-            if (at.getType() == Attribute::atFloat) 
-              csvOut.writeColumn(((AttributeFloat&)at).getValue());
-            else
-              csvOut.writeColumn(at.getStringValue());
-          }
-          found = true;
+  static void writeTagMetrics(const std::set<std::string, ColumnNameComparator> &tags, const Node &node,
+                              io::CsvIO &csvOut) {
+    for (const auto &tag_name : tags) {
+      auto tag_metric_attr_it = node.findAttributeByName(tag_name);
+      if (tag_metric_attr_it.hasNext()) {
+        if (auto &tag_metric_attr = tag_metric_attr_it.next(); isINVALID(tag_metric_attr)) {
+          csvOut.writeColumn("");
+        } else if (tag_metric_attr.getType() == Attribute::atInt) {
+          csvOut.writeColumn(static_cast<AttributeInt &>(tag_metric_attr).getValue());
+        } else if (tag_metric_attr.getType() == Attribute::atFloat) {
+          csvOut.writeColumn(static_cast<AttributeFloat &>(tag_metric_attr).getValue());
+        } else {
+          csvOut.writeColumn(tag_metric_attr.getStringValue());
         }
+      } else {
+        csvOut.writeColumn(0);
       }
-
-      if (!found)
-        csvOut.writeColumn("0");
     }
   }
 
@@ -189,235 +185,184 @@ namespace columbus { namespace graphsupport {
     csv.setQuotationMode(true);
   }
 
-  static const string IDColumn = "ID";
-  static const string ParentColumn = "Parent";
-
   void exportReadableMetricsCSV(graph::Graph& graph, const string& filename, char separator, char dmark) {
     string fname, fext;
     common::splitExt(filename, fname, fext);
 
-    // In the first round we collect all the metric attributes for all kind of nodes.
-    StringStringSetMap nodeTypeMetricsMap;
-    StringSet grouppedMetrics;
-    StringSet warningMetricsWithoutCalculatedFor;
-    StringStringStringSetMap orderMap; // tool = > group => metrics set    
-    StringSet warningMetricGroupsWithCollectedCalculatedFor;  // These are those warning groups which calculatedFor properties are collected from their group members
-    StringMap groupIDDisplayNameMap; // group ID => display name
-    
-    Node::NodeIterator allNodes = graph.findNodes(graphconstants::NTYPE_RUL_METRIC);
-    while (allNodes.hasNext()) {
-      Node node = allNodes.next();
-
-      // Collect all the group member metrics
-      const Attribute& groupTypeAttr = getNodeAttribute(node, Attribute::atString, graphconstants::ATTR_RUL_GROUPTYPE, graphconstants::CONTEXT_RUL);
-      if (groupTypeAttr != Graph::invalidAttribute) {
-        if (groupTypeAttr.getStringValue().compare("summarized") == 0) {
-          Edge::EdgeIterator groupMembersIt = node.findOutEdges(Edge::EdgeType(graphconstants::ETYPE_RUL_GROUPCONTAINS, Edge::edtDirectional));
-          while (groupMembersIt.hasNext()) {
-            Edge edge = groupMembersIt.next();
-            grouppedMetrics.insert(edge.getToNode().getUID());
-          }
-
-          auto displayNameIt = node.findAttributeByName(graphconstants::ATTR_RUL_DISPLAYNAME);
-          if (displayNameIt.hasNext())
-            groupIDDisplayNameMap[node.getUID()] = displayNameIt.next().getStringValue();
-        } 
-
-        // store the group state and the tool for reordering
-        Edge::EdgeIterator toolIt = node.findOutEdges(Edge::EdgeType(graphconstants::ETYPE_RUL_TREE, Edge::edtReverse));
-        if (toolIt.hasNext()) {
-          const string& toolID = toolIt.next().getToNode().getUID();
-          Edge::EdgeIterator groupIt = node.findOutEdges(Edge::EdgeType(graphconstants::ETYPE_RUL_GROUPCONTAINS, Edge::edtReverse));
-          if (groupIt.hasNext()) {
-            orderMap[toolID][groupIt.next().getToNode().getUID()].insert(node.getUID());
-          } else {   // Not group member. Add to the "Nongroupped" group.
-            orderMap[toolID]["-"].insert(node.getUID());
-          }
-        } else {
-          // The metric does not belong to any tool!!!! RUL error.
-          // TODO Write warning
+    std::unordered_set<std::string> tag_should_summarize;
+    if (auto metadata_node = graph.findNode(graphconstants::UID_RUL_TAG_METADATA);
+        metadata_node != Graph::invalidNode) {
+      auto metadata_attr_it = metadata_node.getAttributes();
+      while (metadata_attr_it.hasNext()) {
+        auto &metadata_attr = metadata_attr_it.next();
+        if (metadata_attr.getType() != Attribute::atComposite) { continue; }
+        if (auto summarized_it = static_cast<AttributeComposite &>(metadata_attr)
+                              .findAttribute(Attribute::atString, graphconstants::ATTR_RUL_TAG_METADATA_SUMMARIZED,
+                                             graphconstants::CONTEXT_RUL);
+            summarized_it.hasNext() && static_cast<AttributeString &>(summarized_it.next()).getValue() ==
+                                    graphconstants::ATTR_RUL_TAG_METADATA_SUMMARIZED_TRUE) {
+          tag_should_summarize.insert(metadata_attr.getName());
         }
-
       }
+    }
 
-      // Check if it is enabled
-      const AttributeString& enabledAttr = (const AttributeString&)getNodeAttribute(node, Attribute::atString, graphconstants::ATTR_RUL_ENABLED, graphconstants::CONTEXT_RUL);
-      if (enabledAttr != Graph::invalidAttribute && enabledAttr.getStringValue() == "true") {
+    const auto &asg = graph.getHeaderInfo(graphconstants::HEADER_ASG_KEY);
 
-        
-        // collect the calculatedFor entries for the groups from the warning items
-        Edge::EdgeIterator groupIt = node.findOutEdges(Edge::EdgeType(graphconstants::ETYPE_RUL_GROUPCONTAINS, Edge::edtReverse));
-        while (groupIt.hasNext()) {
-          Node groupNode = groupIt.next().getToNode();
-          const string& groupID = groupNode.getUID();
-          const Attribute& groupTypeAttr = getNodeAttribute(groupNode, Attribute::atString, graphconstants::ATTR_RUL_GROUPTYPE, graphconstants::CONTEXT_RUL);
-          if (groupTypeAttr.getStringValue() != "summarized")
-            continue;
+    // put metrics before tags
+    std::map<std::string, std::set<std::string, ColumnNameComparator>> calc_of_columns;
+    auto metric_nodes = graph.findNodes(graphconstants::NTYPE_RUL_METRIC);
+    while (metric_nodes.hasNext()) {
+      auto metric_node = metric_nodes.next();
+      if (auto enabled_it = metric_node.findAttribute(Attribute::atString, graphconstants::ATTR_RUL_ENABLED,
+                                                      graphconstants::CONTEXT_RUL);
+          !enabled_it.hasNext() || static_cast<AttributeString &>(enabled_it.next()).getValue() != "true") {
+        continue;
+      }
+      
+      std::vector<std::string> tag_names;
+      if (auto tags_it = metric_node.findAttribute(Attribute::atComposite, graphconstants::ATTR_RUL_TAGS,
+                                                   graphconstants::CONTEXT_RUL);
+          tags_it.hasNext()) {
 
-          AttributeComposite& calculatedAttr = (AttributeComposite&)getNodeAttribute(node, Attribute::atComposite, graphconstants::ATTR_RUL_CALCULATED, graphconstants::CONTEXT_RUL);
-          if (calculatedAttr!= Graph::invalidAttribute) {
-            Attribute::AttributeIterator calculatedForAttrIt = calculatedAttr.findAttributeByName(graphconstants::ATTR_RUL_CALCULATEDFOR);
-            while (calculatedForAttrIt.hasNext()) {
-              nodeTypeMetricsMap[calculatedForAttrIt.next().getStringValue()].insert(groupID);
-              warningMetricGroupsWithCollectedCalculatedFor.insert(groupID);
+        auto tag_it = static_cast<AttributeComposite &>(tags_it.next()).getAttributes();
+        while (tag_it.hasNext()) {
+          auto &tag = dynamic_cast<AttributeString &>(tag_it.next());
+          auto [kind, value, detail] = rul::split_tag_string(tag.getValue());
+          if (!kind.empty() && !value.empty()) {
+            if (auto value_tag = rul::create_tag_string({kind, value});
+                tag_should_summarize.find(value_tag) != tag_should_summarize.end()) {
+              tag_names.push_back(std::move(value_tag));
             }
+
+            if (!detail.empty()) {
+              if (auto detail_tag = rul::create_tag_string({kind, value, detail});
+                  tag_should_summarize.find(detail_tag) != tag_should_summarize.end()) {
+                tag_names.push_back(std::move(detail_tag));
+              }
+            }
+
+            if (kind == "internal" && value == "csv_column") { tag_names.push_back(metric_node.getUID()); }
           }
         }
-        
-        bool hasCalculatedFor = false;
-        // Collect the node types for which it is calculated
-        AttributeComposite& calculatedAttr = (AttributeComposite&)getNodeAttribute(node, Attribute::atComposite, graphconstants::ATTR_RUL_CALCULATED, graphconstants::CONTEXT_RUL);
-        if (calculatedAttr!= Graph::invalidAttribute) {
-          Attribute::AttributeIterator calculatedForAttrIt = calculatedAttr.findAttributeByName(graphconstants::ATTR_RUL_CALCULATEDFOR);
-          while (calculatedForAttrIt.hasNext()) {
-            nodeTypeMetricsMap[calculatedForAttrIt.next().getStringValue()].insert(node.getUID());
-            hasCalculatedFor = true;
+      }
+
+      if (auto calc_it = metric_node.findAttribute(Attribute::atComposite, graphconstants::ATTR_RUL_CALCULATED,
+                                                   graphconstants::CONTEXT_RUL);
+          calc_it.hasNext()) {
+        auto &calc = static_cast<AttributeComposite &>(calc_it.next());
+        auto calc_for_it = calc.findAttribute(Attribute::atString, graphconstants::ATTR_RUL_CALCULATEDFOR,
+                                              graphconstants::CONTEXT_RUL);
+
+        if (calc_for_it.hasNext()) {
+          do {
+            const auto &calc_for_name = static_cast<AttributeString &>(calc_for_it.next()).getValue();
+            calc_of_columns[calc_for_name].insert(tag_names.begin(), tag_names.end());
+          } while(calc_for_it.hasNext());
+        } else {
+          if (asg == graphconstants::HEADER_ASG_VALUE_JAVA) {
+            // inserting empty sets if these types are not exists
+            calc_of_columns[graphconstants::NTYPE_LIM_CLASS].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_ENUM].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_INTERFACE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_ANNOTATION].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_METHOD].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_ATTRIBUTE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_COMPONENT].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_PACKAGE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_FILE];
+            calc_of_columns[graphconstants::NTYPE_LIM_FOLDER];
+            calc_of_columns[graphconstants::NTYPE_DCF_CLONECLASS];
+            calc_of_columns[graphconstants::NTYPE_DCF_CLONEINSTANCE];
+
+          } else if (asg == graphconstants::HEADER_ASG_VALUE_CPP) {
+            calc_of_columns[graphconstants::NTYPE_LIM_CLASS].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_ENUM].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_INTERFACE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_UNION].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_STRUCTURE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_METHOD].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_FUNCTION].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_ATTRIBUTE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_COMPONENT].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_NAMESPACE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_FILE];
+            calc_of_columns[graphconstants::NTYPE_LIM_FOLDER];
+            calc_of_columns[graphconstants::NTYPE_DCF_CLONECLASS];
+            calc_of_columns[graphconstants::NTYPE_DCF_CLONEINSTANCE];
+
+          } else if (asg == graphconstants::HEADER_ASG_VALUE_C) {
+            calc_of_columns[graphconstants::NTYPE_LIM_ENUM].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_STRUCTURE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_FUNCTION].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_ATTRIBUTE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_COMPONENT].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_NAMESPACE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_FILE];
+            calc_of_columns[graphconstants::NTYPE_LIM_FOLDER];
+            calc_of_columns[graphconstants::NTYPE_DCF_CLONECLASS];
+            calc_of_columns[graphconstants::NTYPE_DCF_CLONEINSTANCE];
+
+          } else if (asg == graphconstants::HEADER_ASG_VALUE_RPG) {
+            calc_of_columns[graphconstants::NTYPE_RPG_SYSTEM].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_RPG_PROGRAM].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_RPG_PROCEDURE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_RPG_SUBROUTINE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_COMPONENT].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_DCF_CLONECLASS];
+            calc_of_columns[graphconstants::NTYPE_DCF_CLONEINSTANCE];
+
+          } else if (asg == graphconstants::HEADER_ASG_VALUE_PYTHON) {
+            calc_of_columns[graphconstants::NTYPE_LIM_CLASS].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_METHOD].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_FUNCTION].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_ATTRIBUTE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_COMPONENT].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_PACKAGE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_MODULE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_FILE];
+            calc_of_columns[graphconstants::NTYPE_LIM_FOLDER];
+            calc_of_columns[graphconstants::NTYPE_DCF_CLONECLASS];
+            calc_of_columns[graphconstants::NTYPE_DCF_CLONEINSTANCE];
+
+          } else if (asg == graphconstants::HEADER_ASG_VALUE_CSHARP) {
+            calc_of_columns[graphconstants::NTYPE_LIM_CLASS].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_ENUM].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_INTERFACE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_STRUCTURE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_DELEGATE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_METHOD].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_ATTRIBUTE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_COMPONENT].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_NAMESPACE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_FILE];
+            calc_of_columns[graphconstants::NTYPE_LIM_FOLDER];
+            calc_of_columns[graphconstants::NTYPE_DCF_CLONECLASS];
+            calc_of_columns[graphconstants::NTYPE_DCF_CLONEINSTANCE];
+
+          } else if (asg == graphconstants::HEADER_ASG_VALUE_JAVASCRIPT) {
+            calc_of_columns[graphconstants::NTYPE_LIM_CLASS].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_METHOD].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_FUNCTION].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_ATTRIBUTE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_COMPONENT].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_PACKAGE].insert(tag_names.begin(), tag_names.end());
+            calc_of_columns[graphconstants::NTYPE_LIM_FILE];
+            calc_of_columns[graphconstants::NTYPE_LIM_FOLDER];
+            calc_of_columns[graphconstants::NTYPE_DCF_CLONECLASS];
+            calc_of_columns[graphconstants::NTYPE_DCF_CLONEINSTANCE];
+          } else [[unlikely]] {
+            throw Exception(COLUMBUS_LOCATION, CMSG_EX_UNHANDLED_ASG_TYPE(asg));
           }
-        }
-        
-        // Collect all the warning metrics without calculatedFor 
-        const AttributeString& warningAttr = (const AttributeString&)getNodeAttribute(node, Attribute::atString, graphconstants::ATTR_RUL_WARNING, graphconstants::CONTEXT_RUL);
-        if (warningAttr != Graph::invalidAttribute && warningAttr.getStringValue() == "true") {
-          if (!hasCalculatedFor)
-            warningMetricsWithoutCalculatedFor.insert(node.getUID());
         }
       }
     }
 
-    // Remove those metrics from the warningMetricsWithoutCalculatedFor container which has collected calculatedFor entries
-    for (StringSet::const_iterator groupIt = warningMetricGroupsWithCollectedCalculatedFor.begin(); groupIt != warningMetricGroupsWithCollectedCalculatedFor.end(); ++groupIt) {
-      warningMetricsWithoutCalculatedFor.erase(*groupIt);
-    }
 
-    // Create node types for the missing ones and add all the warning metrics to all but the clone class and clone instance types
-    string asg = graph.getHeaderInfo(graphconstants::HEADER_ASG_KEY);
-    if (asg == graphconstants::HEADER_ASG_VALUE_JAVA) {
-      // inserting empty sets if these types are not exists
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_CLASS].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ENUM].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_INTERFACE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ANNOTATION].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_METHOD].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ATTRIBUTE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_COMPONENT].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_PACKAGE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FILE];
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FOLDER];
-      nodeTypeMetricsMap[graphconstants::NTYPE_DCF_CLONECLASS];
-      nodeTypeMetricsMap[graphconstants::NTYPE_DCF_CLONEINSTANCE];
-
-    } else if (asg == graphconstants::HEADER_ASG_VALUE_CPP) {
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_CLASS].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ENUM].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_INTERFACE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_UNION].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_STRUCTURE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_METHOD].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FUNCTION].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ATTRIBUTE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_COMPONENT].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_NAMESPACE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FILE];
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FOLDER];
-      nodeTypeMetricsMap[graphconstants::NTYPE_DCF_CLONECLASS];
-      nodeTypeMetricsMap[graphconstants::NTYPE_DCF_CLONEINSTANCE];
-
-    } else if (asg == graphconstants::HEADER_ASG_VALUE_C) { 
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ENUM].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_STRUCTURE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_UNION].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FUNCTION].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ATTRIBUTE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_COMPONENT].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_NAMESPACE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FILE];
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FOLDER];
-      nodeTypeMetricsMap[graphconstants::NTYPE_DCF_CLONECLASS];
-      nodeTypeMetricsMap[graphconstants::NTYPE_DCF_CLONEINSTANCE];
-
-    } else if (asg == graphconstants::HEADER_ASG_VALUE_RPG) {
-      nodeTypeMetricsMap[graphconstants::NTYPE_RPG_SYSTEM].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_RPG_PROGRAM].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_RPG_PROCEDURE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_RPG_SUBROUTINE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_COMPONENT].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_DCF_CLONECLASS];
-      nodeTypeMetricsMap[graphconstants::NTYPE_DCF_CLONEINSTANCE];
-
-    } else if (asg == graphconstants::HEADER_ASG_VALUE_PYTHON) {
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_CLASS].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_METHOD].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FUNCTION].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ATTRIBUTE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_COMPONENT].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_PACKAGE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_MODULE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FILE];
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FOLDER];
-      nodeTypeMetricsMap[graphconstants::NTYPE_DCF_CLONECLASS];
-      nodeTypeMetricsMap[graphconstants::NTYPE_DCF_CLONEINSTANCE];
-    
-    } else if (asg == graphconstants::HEADER_ASG_VALUE_CSHARP) {
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_CLASS].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ENUM].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_INTERFACE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_STRUCTURE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_DELEGATE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_METHOD].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ATTRIBUTE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_COMPONENT].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_NAMESPACE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FILE];
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FOLDER];
-      nodeTypeMetricsMap[graphconstants::NTYPE_DCF_CLONECLASS];
-      nodeTypeMetricsMap[graphconstants::NTYPE_DCF_CLONEINSTANCE];
-
-    } else if (asg == graphconstants::HEADER_ASG_VALUE_JAVASCRIPT){
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_CLASS].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_METHOD].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FUNCTION].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ATTRIBUTE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_COMPONENT].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_PACKAGE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
-
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FILE];
-      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FOLDER];
-      nodeTypeMetricsMap[graphconstants::NTYPE_DCF_CLONECLASS];
-      nodeTypeMetricsMap[graphconstants::NTYPE_DCF_CLONEINSTANCE];
-    }
-    else {
-      throw Exception(COLUMBUS_LOCATION, CMSG_EX_UNHANDLED_ASG_TYPE(asg));
-    }
-    
-    // Remove all warning metrics, which belongs to a group.
-    for (StringStringSetMap::iterator nodeTypeIterator = nodeTypeMetricsMap.begin(); nodeTypeIterator != nodeTypeMetricsMap.end(); ++nodeTypeIterator) {
-      StringSet notGrouppedMetrics;
-      // Calculate the difference between the collected and groupped metrics.
-      set_difference(nodeTypeIterator->second.begin(), nodeTypeIterator->second.end(), 
-        grouppedMetrics.begin(), grouppedMetrics.end(), 
-        inserter(notGrouppedMetrics, notGrouppedMetrics.end()));
-
-      nodeTypeIterator->second = notGrouppedMetrics;  // replace the collected with the difference
-    }
-
-
-    StringStringVectorMap reorderedMetricsMap;
-
-    // Reorder the metrics by the tools and groups.  Not the most effective but due to the small number of elements the simplier code is better.
-    for (StringStringSetMap::iterator nodeTypeIterator = nodeTypeMetricsMap.begin(); nodeTypeIterator != nodeTypeMetricsMap.end(); ++nodeTypeIterator) {
-      reorderedMetricsMap[nodeTypeIterator->first];
-      for (StringStringStringSetMap::const_iterator toolIt = orderMap.begin(); toolIt != orderMap.end(); ++toolIt) {
-        for (StringStringSetMap::const_iterator groupIt = toolIt->second.begin(); groupIt != toolIt->second.end(); ++groupIt) {
-          for (StringSet::const_iterator metricIt = groupIt->second.begin(); metricIt != groupIt->second.end(); ++metricIt) {
-            if (nodeTypeIterator->second.find(*metricIt) != nodeTypeIterator->second.end())
-              reorderedMetricsMap[nodeTypeIterator->first].push_back(*metricIt);
-          }
-        }
-      }
-    } 
 
     // Create the csv file headers
-    for (StringStringVectorMap::iterator nodeTypeIterator = reorderedMetricsMap.begin(); nodeTypeIterator != reorderedMetricsMap.end(); ++nodeTypeIterator) {
+    const char *const IDColumn = "ID";
+    const char *const ParentColumn = "Parent";
+    for (auto nodeTypeIterator = calc_of_columns.begin(); nodeTypeIterator != calc_of_columns.end(); ++nodeTypeIterator) {
       if (nodeTypeIterator->first == graphconstants::NTYPE_LIM_CLASS ||
         nodeTypeIterator->first == graphconstants::NTYPE_LIM_STRUCTURE ||
         nodeTypeIterator->first == graphconstants::NTYPE_LIM_DELEGATE ||
@@ -452,7 +397,7 @@ namespace columbus { namespace graphsupport {
         csvHeader.writeColumn(graphconstants::ATTR_ENDLINE);
         csvHeader.writeColumn(graphconstants::ATTR_ENDCOLUMN);
        
-        writeMetricsHeader(nodeTypeIterator->second, groupIDDisplayNameMap, csvHeader);
+        writeTagMetricsHeader(nodeTypeIterator->second, csvHeader);
         csvHeader.writeNewLine();
         csvHeader.close();
 
@@ -462,7 +407,7 @@ namespace columbus { namespace graphsupport {
         csvHeader.writeColumn(IDColumn);
         csvHeader.writeColumn(graphconstants::ATTR_NAME);
         csvHeader.writeColumn(graphconstants::NTYPE_LIM_COMPONENT);
-        writeMetricsHeader(nodeTypeIterator->second, groupIDDisplayNameMap, csvHeader);
+        writeTagMetricsHeader(nodeTypeIterator->second, csvHeader);
         csvHeader.writeNewLine();
         csvHeader.close();
 
@@ -480,7 +425,7 @@ namespace columbus { namespace graphsupport {
         csvHeader.writeColumn(graphconstants::ATTR_ENDLINE);
         csvHeader.writeColumn(graphconstants::ATTR_ENDCOLUMN);
 
-        writeMetricsHeader(nodeTypeIterator->second, groupIDDisplayNameMap, csvHeader);
+        writeTagMetricsHeader(nodeTypeIterator->second, csvHeader);
         csvHeader.writeNewLine();
         csvHeader.close();
 
@@ -490,7 +435,7 @@ namespace columbus { namespace graphsupport {
         csvHeader.writeColumn(IDColumn);
         csvHeader.writeColumn(graphconstants::ATTR_NAME);
         csvHeader.writeColumn(graphconstants::ATTR_LONGNAME);
-        writeMetricsHeader(nodeTypeIterator->second, groupIDDisplayNameMap, csvHeader);
+        writeTagMetricsHeader(nodeTypeIterator->second, csvHeader);
         csvHeader.writeNewLine();
         csvHeader.close();
 
@@ -505,7 +450,7 @@ namespace columbus { namespace graphsupport {
         csvHeader.writeColumn(graphconstants::ATTR_LONGNAME);
         csvHeader.writeColumn(ParentColumn);
         csvHeader.writeColumn(graphconstants::NTYPE_LIM_COMPONENT);
-        writeMetricsHeader(nodeTypeIterator->second, groupIDDisplayNameMap, csvHeader);
+        writeTagMetricsHeader(nodeTypeIterator->second, csvHeader);
         csvHeader.writeNewLine();
         csvHeader.close();
       } else if (nodeTypeIterator->first == graphconstants::NTYPE_LIM_FILE ||
@@ -517,16 +462,16 @@ namespace columbus { namespace graphsupport {
         csvHeader.writeColumn(graphconstants::ATTR_NAME);
         csvHeader.writeColumn(graphconstants::ATTR_LONGNAME);
         csvHeader.writeColumn(ParentColumn);
-        writeMetricsHeader(nodeTypeIterator->second, groupIDDisplayNameMap, csvHeader);
+        writeTagMetricsHeader(nodeTypeIterator->second, csvHeader);
         csvHeader.writeNewLine();
         csvHeader.close();
       }
     }
 
     // Write out the metric values
-    allNodes = graph.getNodes();
-    while (allNodes.hasNext()) {
-      Node node = allNodes.next();
+    auto all_nodes = graph.getNodes();
+    while (all_nodes.hasNext()) {
+      Node node = all_nodes.next();
       string nodeType = node.getType().getType();
       if (nodeType == graphconstants::NTYPE_LIM_CLASS ||
         nodeType == graphconstants::NTYPE_LIM_STRUCTURE ||
@@ -556,12 +501,11 @@ namespace columbus { namespace graphsupport {
 
         writeParent(node, csvOut, Edge::EdgeType(graphconstants::ETYPE_LIM_LOGICALTREE, Edge::edtReverse));
 
-        string asg = graph.getHeaderInfo(graphconstants::HEADER_ASG_KEY);
         
         writeComponents(node, csvOut);
 
         writePositionColumns(node, csvOut, asg == graphconstants::HEADER_ASG_VALUE_CPP);
-        writeMetrics(reorderedMetricsMap[nodeType], node, csvOut);
+        writeTagMetrics(calc_of_columns[nodeType], node, csvOut);
         csvOut.writeNewLine();
         csvOut.close();
 
@@ -575,7 +519,7 @@ namespace columbus { namespace graphsupport {
           getNodeNameAttribute(node, name);
           csvOut.writeColumn(name);
           writeComponents(node, csvOut);
-          writeMetrics(reorderedMetricsMap[nodeType], node, csvOut);
+          writeTagMetrics(calc_of_columns[nodeType], node, csvOut);
           csvOut.writeNewLine();
           csvOut.close();
         }
@@ -597,7 +541,7 @@ namespace columbus { namespace graphsupport {
           writeParent(node, csvOut, Edge::EdgeType(graphconstants::ETYPE_DCF_CLONETREE, Edge::edtReverse));
           writeComponents(node, csvOut);
           writePositionColumns(node, csvOut);
-          writeMetrics(reorderedMetricsMap[nodeType], node, csvOut);
+          writeTagMetrics(calc_of_columns[nodeType], node, csvOut);
           csvOut.writeNewLine();
           csvOut.close();
         }
@@ -612,7 +556,7 @@ namespace columbus { namespace graphsupport {
         getNodeLongNameAttribute(node, name);
         csvOut.writeColumn(name);
 
-        writeMetrics(reorderedMetricsMap[nodeType], node, csvOut);
+        writeTagMetrics(calc_of_columns[nodeType], node, csvOut);
         csvOut.writeNewLine();
         csvOut.close();
 
@@ -632,7 +576,7 @@ namespace columbus { namespace graphsupport {
 
         writeParent(node, csvOut, Edge::EdgeType(graphconstants::ETYPE_LIM_LOGICALTREE, Edge::edtReverse));
         writeComponents(node, csvOut);
-        writeMetrics(reorderedMetricsMap[nodeType], node, csvOut);
+        writeTagMetrics(calc_of_columns[nodeType], node, csvOut);
         csvOut.writeNewLine();
         csvOut.close();
 
@@ -650,7 +594,7 @@ namespace columbus { namespace graphsupport {
         csvOut.writeColumn(name);
 
         writeParent(node, csvOut, Edge::EdgeType(graphconstants::ETYPE_LIM_PHYSICALTREE, Edge::edtReverse));
-        writeMetrics(reorderedMetricsMap[nodeType], node, csvOut);
+        writeTagMetrics(calc_of_columns[nodeType], node, csvOut);
         csvOut.writeNewLine();
         csvOut.close();
 

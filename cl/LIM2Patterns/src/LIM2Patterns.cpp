@@ -154,9 +154,7 @@ namespace columbus {
                 {
                     // creating the rules
                     getPatternRulHander().createConfigurationForToolDescription("Default");
-                    getPatternRulHander().setToolDescription("ID", getMAIN_GROUP().id);
-                    addRulToRulHander(getSUB_GROUP1());
-                    addRulToRulHander(getSUB_GROUP2());
+                    getPatternRulHander().setToolDescription("ID", "PatternGroup");
 
                     // processing the pattern file(s)
                     vector<boost::any> patternNodes;
@@ -299,7 +297,7 @@ namespace columbus {
                     if (dumpXML)
                         graph.saveXML(outputFileName + ".xml");
                     if (!rulDumpDir.empty())
-                        getPatternRulHander().saveRul((boost::filesystem::path(rulDumpDir) / "Patterns.rul").string());
+                        getPatternRulHander().saveRul((boost::filesystem::path(rulDumpDir) / "Patterns.rul.md").string());
 
 
                     //graph.saveCSV(newName + ".csv");

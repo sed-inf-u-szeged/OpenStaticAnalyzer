@@ -34,7 +34,7 @@ using namespace columbus;
 #define _PROFILE_TRUE               "true"
 #define _PROFILE_FALSE              "false"
 
-#define _PROFILE                    "openstaticanalyzer-profile"
+#define _PROFILE                    "analyzer-profile"
 #define _TOOL_SETTINGS              "tool-options"
 #define _TOOL                       "tool"
 #define _TOOL_NAME                  "name"
@@ -272,19 +272,6 @@ namespace columbus { namespace controller {
     }
     else
       throw ProfileHandlerException(COLUMBUS_LOCATION, CMSG_EX_UDM_TOOL_MISSING);
-  }
-
-  set<string> ProfileHandler::getUDMGroupMembers(const string& configuration) const {
-    set<string> groups;
-    list<string> ids = getUDMIDs();
-    for (list<string>::const_iterator it = ids.begin(); it != ids.end(); ++it) {
-      string group = getUDMAttributes(*it, configuration).groupMember;
-      if(group.empty())
-        group = getUDMAttributes(*it, "Default").groupMember;
-      if (!group.empty())
-        groups.insert(group);
-    }
-    return groups;
   }
 
   std::map<std::string, std::string> ProfileHandler::getLIM2PatternsAttributes(const std::string &toolName) const
@@ -563,11 +550,7 @@ namespace columbus { namespace controller {
             else if (top == _UDM_DISP)
               lastUDM->second.displayName = content;
             else if (top == _UDM_GROUP) {
-              if (ProfileHandler::standardGroupNames.find(content) != ProfileHandler::standardGroupNames.end()) {
-                lastUDM->second.groupMember = content;
-              }
-              else
-                throw ProfileHandlerException(COLUMBUS_LOCATION, CMSG_EX_UDM_WRONG_GROUP_NAME);
+              WriteMsg::write(WriteMsg::mlWarning, CMSG_WARNING_GROUP_NOT_SUPPORTED);
             }
             else if (top == _UDM_HELPTXT)
               lastUDM->second.helptext = content;

@@ -50,11 +50,14 @@ set (SOURCES
     inc/Visitors/PNodeEmbeddednessVisitor.h
 )
 
-add_copy_custom_target(DCFRulCopy ${CMAKE_CURRENT_SOURCE_DIR}/DCF.rul ${EXECUTABLE_OUTPUT_PATH}/DCF.rul)
+add_custom_target(${PROGRAM_NAME})
+add_copy_next_to_the_binary_dependency(${PROGRAM_NAME} DCF.rul.md)
+set_target_properties (${PROGRAM_NAME} PROPERTIES FOLDER ${CMAKE_SUPPORT_FOLDER_NAME})
+
 
 function (add_language_config LANG)
   add_executable(${PROGRAM_NAME}_${LANG} ${SOURCES})
-  add_dependencies(${PROGRAM_NAME}_${LANG} DCFRulCopy ${COLUMBUS_GLOBAL_DEPENDENCY})
+  add_dependencies(${PROGRAM_NAME}_${LANG} ${PROGRAM_NAME} ${COLUMBUS_GLOBAL_DEPENDENCY})
   target_link_libraries(${PROGRAM_NAME}_${LANG} genealogy graphsupport lim2graph graph lim strtable common csi rul io ${COMMON_EXTERNAL_LIBRARIES})
   set_schema_language_compiler_settings(${PROGRAM_NAME}_${LANG} ${LANG})
   set_visual_studio_project_folder(${PROGRAM_NAME}_${LANG} FALSE)

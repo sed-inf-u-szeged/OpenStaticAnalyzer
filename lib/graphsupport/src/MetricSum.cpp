@@ -201,55 +201,73 @@ namespace columbus { namespace graphsupport {
   }
 
   void createGroupMetrics(graph::Graph& graph, rul::RulHandler& rulHandler, const std::set<std::string>& metrics) {
-    map<string, set<string> > groupMembers;
-    vector<string> tempGroupIds;
-    vector<string> groupIds;
-    rulHandler.getGroupIdList(tempGroupIds);
-    
-    for(vector<string>::iterator it = tempGroupIds.begin(); it != tempGroupIds.end(); ++it)
-      if(rulHandler.getIsEnabled(*it) && rulHandler.getGroupType(*it) == "summarized")
-        groupIds.push_back(*it);
-    
-    for(vector<string>::iterator it = groupIds.begin(); it != groupIds.end(); ++it) {
-      set<string> members;
-      rulHandler.getGroupMembers(*it, members);
-      for(set<string>::iterator membersIt = members.begin(); membersIt != members.end(); ++membersIt) {
-        groupMembers[*membersIt].insert(*it);
+    std::unordered_map<std::string, std::set<std::shared_ptr<rul::Tag>>> enabled_metrics_with_tags;
+    const auto enabled_metrics_with_tags_emplacer = [&](const auto &rule_list) {
+      for (const auto &rule_name : rule_list) {
+        if (!rulHandler.getIsEnabled(rule_name)) { continue; }
+        const auto &tags = rulHandler.getTags(rule_name);
+        if (tags.empty()) { continue; }
+        enabled_metrics_with_tags.try_emplace(rule_name, tags);
       }
+    };
+
+    if (metrics.empty()) {
+      std::set<std::string> rule_list;
+      rulHandler.getRuleIdList(rule_list);
+      enabled_metrics_with_tags_emplacer(rule_list);
+    } else {
+      enabled_metrics_with_tags_emplacer(metrics);
     }
-    Node::NodeIterator nodeIt = graph.getNodes();
-    while(nodeIt.hasNext()) {
-      Node node = nodeIt.next();
-      Attribute::AttributeIterator attrIt = node.getAttributes();
-      while(attrIt.hasNext()) {
-        
-        Attribute& attr = attrIt.next();
-        // find metric attributes
-        if( (attr.getType() == Attribute::atInt) && (attr.getContext() == graphconstants::CONTEXT_METRIC)) {
-          AttributeInt& attrInt = static_cast<AttributeInt&>(attr);
-          // find summarize group
-          
-          if (!metrics.empty() && metrics.find(attr.getName()) == metrics.end())
-            continue;
-            
-          //find groups witch contains the metric
-          map<string, set<string> >::iterator groupNames = groupMembers.find(attrInt.getName());
-          if(groupNames == groupMembers.end())
-            continue;
-          // add attribute value to groups
-          for(set<string>::iterator groupNamesIt = groupNames->second.begin(); groupNamesIt != groupNames->second.end(); ++groupNamesIt) {
-            Attribute::AttributeIterator groupIt = node.findAttribute(Attribute::atInt, *groupNamesIt, graphconstants::CONTEXT_METRICGROUP);
-            if (groupIt.hasNext()) {
-              static_cast<AttributeInt&>(groupIt.next()).incValue(attrInt.getValue());
+
+    auto node_it = graph.getNodes();
+    while (node_it.hasNext()) {
+      auto node = node_it.next();
+      auto attr_it = node.getAttributes();
+
+      while (attr_it.hasNext()) {
+        const auto &attr = attr_it.next();
+        if ((attr.getType() != Attribute::atInt && attr.getType() != Attribute::atFloat) ||
+            attr.getContext() != graphconstants::CONTEXT_METRIC) {
+          continue;
+        }
+
+        const auto &metric_tag_it = enabled_metrics_with_tags.find(attr.getName());
+        if (metric_tag_it == enabled_metrics_with_tags.end()) { continue; }
+
+        for (const auto &tag : metric_tag_it->second) {
+          const auto summarize_tag = [&](const auto &tag_name) {
+            const auto metric_value = [&]() -> float {
+              if (attr.getType() == Attribute::atInt) {
+                return static_cast<float>(dynamic_cast<const AttributeInt &>(attr).getValue());
+              }
+              return dynamic_cast<const AttributeFloat &>(attr).getValue();
+            }();
+
+            if (auto tag_metric_group_attr_it =
+                    node.findAttribute(Attribute::atFloat, tag_name, graphconstants::CONTEXT_METRICGROUP);
+                tag_metric_group_attr_it.hasNext()) {
+              auto &metric_group_attr = dynamic_cast<AttributeFloat &>(tag_metric_group_attr_it.next());
+              metric_group_attr.incValue(metric_value);
             } else {
-              node.addAttribute(graph.createAttributeInt(*groupNamesIt, graphconstants::CONTEXT_METRICGROUP, attrInt.getValue()));
+              node.addAttribute(
+                  graph.createAttributeFloat(tag_name, graphconstants::CONTEXT_METRICGROUP, metric_value));
+            }
+          };
+
+          if (const auto &value = tag->get_value(); !value.empty()) {
+            std::string tag_name = '/' + tag->get_kind();
+            (tag_name += '/') += value;
+            if (tag->get_value_summarized()) { summarize_tag(tag_name); }
+            if (const auto &detail = tag->get_detail(); !detail.empty()) {
+              (tag_name += '/') += detail;
+              if (tag->get_detail_summarized()) { summarize_tag(tag_name); }
             }
           }
         }
       }
     }
-
   }
+
   static const int getPriorityNumberByName(const string& priority) {
     if(priority == "Blocker")
       return 0;
@@ -359,7 +377,13 @@ namespace columbus { namespace graphsupport {
       }
     }
 
-    if (buildRul)
+    if (buildRul) {
+      static const auto tags = [](){
+        std::set<rul::Tag> tags_;
+        tags_.insert(rul::Tag("internal", "csv_column"));
+        return tags_;
+      }();
+
       for(int i=0; i<=4; ++i) {
           string priorityName = getPriorityNameByNumber(i);
           buildRuleItemToGraph(graph, getPriorityWarningName(i), "__AUTOMATIC__",
@@ -370,8 +394,10 @@ namespace columbus { namespace graphsupport {
                               "Number of warnings with " + priorityName + " priority", 
                               true,
                               map<string, string>(),
-                              set<string>());
+                              set<string>(),
+                              tags);
       }
+    }
   }
 
    

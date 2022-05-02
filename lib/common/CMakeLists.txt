@@ -22,6 +22,7 @@ set (SOURCES
     inc/Stat.h
     inc/StringSup.h
     inc/WriteMessage.h     
+    inc/XercesSup.h
 )
 
 add_library (${LIBNAME} STATIC ${SOURCES})

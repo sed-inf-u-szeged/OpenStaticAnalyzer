@@ -25,11 +25,14 @@
 #include <xercesc/sax2/Attributes.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <rul/inc/RulHandler.h>
+#include <rul/inc/RulTags.h>
 #include <common/inc/FileSup.h>
 #include <common/inc/StringSup.h>
 #include <common/inc/WriteMessage.h>
+#include <common/inc/XercesSup.h>
 #include <algorithm>
 #include <iostream>
+#include <filesystem>
 #include <fstream>
 #include <regex>
 #include <boost/bimap.hpp>
@@ -194,7 +197,7 @@ void convertDesc(string& str) {
   sv.push_back("-f");
   sv.push_back("html");
   sv.push_back("-t");
-  sv.push_back("markdown");
+  sv.push_back("markdown_github");
   sv.push_back("-o");
   sv.push_back(dst);
   sv.push_back(src);
@@ -213,18 +216,22 @@ void convertDesc(string& str) {
 
 class CategoriesHandler : public DefaultHandler {
   private:
-    rul::RulHandler* rul;
     string id;
     string content;
-    bool bugCategory;
+    rul::TagKindMetadataContainer *general_tag_metadata_;
+    bool bugCategory = false;
   
   public:
-    CategoriesHandler(rul::RulHandler* rul) : DefaultHandler(), rul(rul), bugCategory(false) { }
+    explicit CategoriesHandler(rul::TagMetadataStore &tag_metadata_store) {
+      tag_metadata_store.try_add_kind("tool").try_add_value("FindBugs");
+      general_tag_metadata_ =
+          &tag_metadata_store.try_add_kind("general");
+    }
 
     virtual void startElement (const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname, const Attributes &attrs) {
       content.clear();
       
-      string name = XMLString::transcode(localname);
+      string name(common::Xerces::ScopedTranscode<char *>{localname});
       
       if(name == "BugCategory") {
         bugCategory = true;
@@ -237,34 +244,22 @@ class CategoriesHandler : public DefaultHandler {
         }
 
         formatCategoryName(id);
-        
-        rul->defineMetric(id);
-       
-        rul->createConfiguration(id, rul->getConfig());
-
-        rul->setIsEnabled(id,true);
-        rul->setIsVisible(id,true);
-        rul->setGroupType(id,"summarized");
-        rul->createLanguage(id,"eng");
-        rul->setHasWarningText(id,true);
-        rul->setSettingValue(id,"Priority","Critical",true);
-        rul->setDescription(id, "");
-        rul->setDisplayName(id, id);
-        rul->setOriginalId(id,originalCatName);
       } 
     }
 
     virtual void  characters (const XMLCh *const chars, const XMLSize_t length) {
-      content += XMLString::transcode(chars);
+      content += common::Xerces::ScopedTranscode<char *>(chars);
     }
 
     virtual void endElement(const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname) {
-      string name = XMLString::transcode(localname);
+      string name(common::Xerces::ScopedTranscode<char *>{localname});
       if (name == "BugCategory") {
         bugCategory = false;
       } else if (bugCategory && name == "Details") {
         collapseWS(content);
-        rul->setHelpText(id, content);
+        auto &value_tag_metadata = general_tag_metadata_->try_add_value(std::move(id)).value_metadata_ref();
+        value_tag_metadata.summarized = true;
+        value_tag_metadata.description = std::move(content);
       }
     }
 };
@@ -282,7 +277,7 @@ class BugPatternsHandler : public DefaultHandler {
 
     virtual void startElement (const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname, const Attributes &attrs) {
       content.clear();
-      string name = XMLString::transcode(localname);
+      string name(common::Xerces::ScopedTranscode<char *>{localname});
       
       if(name == "BugPattern") {
         bugPattern = true;
@@ -317,11 +312,11 @@ class BugPatternsHandler : public DefaultHandler {
     }
 
     virtual void  characters (const XMLCh *const chars, const XMLSize_t length) {
-      content += XMLString::transcode(chars);
+      content += common::Xerces::ScopedTranscode<char *>(chars);
     }
 
     virtual void endElement(const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname){
-      string name = XMLString::transcode(localname);
+      string name(common::Xerces::ScopedTranscode<char *>{localname});
      
       if (name == "BugPattern") {
         bugPattern = false;
@@ -344,7 +339,7 @@ class SetGroupsHandler : public DefaultHandler {
     SetGroupsHandler(rul::RulHandler* rul) : DefaultHandler(), rul(rul) { }
 
     virtual void startElement (const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname, const Attributes &attrs) {
-      string name = XMLString::transcode(localname);
+      string name(common::Xerces::ScopedTranscode<char *>{localname});
       if(name == "BugPattern") {
         string id;
         getAttr(attrs,"type",id);
@@ -365,7 +360,6 @@ class SetGroupsHandler : public DefaultHandler {
         string category;
         getAttr(attrs,"category",category);
         formatCategoryName(category);
-        rul->addMetricGroupMembers(id, category);
 
         if(category == "Experimental Rules")
           rul->setIsEnabled(id,false);
@@ -373,6 +367,9 @@ class SetGroupsHandler : public DefaultHandler {
         string experimental;
         if (getAttr(attrs, "experimental", experimental) && experimental == "true")
           rul->setIsEnabled(id,false);
+
+        rul->addTag(id, rul::SplitTagStringView{"tool", "FindBugs"});
+        rul->addTag(id, rul::SplitTagStringView{"general", category});
       }
     }
 };
@@ -388,7 +385,7 @@ class SetPriorityHandler : public DefaultHandler {
 
     virtual void startElement (const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname, const Attributes &attrs) {
       content.clear();
-      string name = XMLString::transcode(localname);
+      string name(common::Xerces::ScopedTranscode<char *>{localname});
       if(name == "rule") {
         getAttr(attrs,"key", key);
         RuleConverter::formatMetricId(key);
@@ -399,11 +396,11 @@ class SetPriorityHandler : public DefaultHandler {
     }
 
     virtual void  characters (const XMLCh *const chars, const XMLSize_t length) {
-      content += XMLString::transcode(chars);
+      content += common::Xerces::ScopedTranscode<char *>(chars);
     }
 
     virtual void endElement(const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname) {
-      string name = XMLString::transcode(localname);
+      string name(common::Xerces::ScopedTranscode<char *>{localname});
       if (name == "priority")
         setPriority();
     }
@@ -481,7 +478,7 @@ static void checkPriorities(rul::RulHandler* rul) {
   }
 }
 
-void RuleConverter::convertRuleFile(const string& messagesXML, const string& findbugsXML, const string& rulesXML, const string& rulName, const string& rulConfig, const string& idsFileName) {
+void RuleConverter::convertRuleFile(const string& messagesXML, const string& findbugsXML, const vector<string>& rulesXMLs, const string& rulName, const string& rulConfig, const string& idsFileName) {
   rul::RulHandler rul(rulConfig,"eng");
   rul.setToolDescription("ID", "FindBugs");
 
@@ -489,7 +486,7 @@ void RuleConverter::convertRuleFile(const string& messagesXML, const string& fin
   loadRuleOptions(idsFileName);
 
   //Processing messages.xml
-  CategoriesHandler categoriesHandler(&rul);
+  CategoriesHandler categoriesHandler(rul.getTagMetadataStore());
   parseXML(messagesXML, &categoriesHandler);
 
   BugPatternsHandler bugPatternsHandler(&rul);
@@ -500,8 +497,10 @@ void RuleConverter::convertRuleFile(const string& messagesXML, const string& fin
   parseXML(findbugsXML, &setGroupsHandler);
 
   //Processing rules.xml
-  SetPriorityHandler setPriorityHandler(&rul);
-  parseXML(rulesXML, &setPriorityHandler);
+  for (const auto &rulesXML : rulesXMLs){
+    SetPriorityHandler setPriorityHandler(&rul);
+    parseXML(rulesXML, &setPriorityHandler);
+  }
 
   //Save rule ids
   saveRuleOptions(idsFileName, &rul);

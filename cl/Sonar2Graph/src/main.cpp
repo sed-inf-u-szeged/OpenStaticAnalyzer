@@ -50,6 +50,7 @@
 #include <lim2graph/inc/Lim2GraphConverter.h>
 #include <common/inc/WriteMessage.h>
 #include <rul/inc/RulHandler.h>
+#include <rul/inc/RulMD.h>
 #include <MainCommon.h>
 
 #define MAX_NUMBER_OF_DATA_ON_ONE_PAGE 500
@@ -252,7 +253,7 @@ int main(int argc, char** argv) {
 
   string graph_name = project_key + ".graph";
 
-  rul::RulHandler* rulHandler = new rul::RulHandler("Default", "eng");
+  rul::RulHandler* rulHandler = new rul::RulHandler("sonar_tag_metadata.md", "Default", "eng");
   rulHandler->setToolDescription("ID", "Sonar2Graph");
 
   list<HeaderData*> header;
@@ -302,21 +303,21 @@ int main(int argc, char** argv) {
     }
   }
 
-  string groupID = "Sonar";
-
-  rulHandler->defineMetric(groupID);
-  rulHandler->createConfiguration(groupID, "Default");
-  rulHandler->setIsEnabled(groupID, true);
-  rulHandler->setIsVisible(groupID, true);
-  rulHandler->setGroupType(groupID, "summarized");
-  rulHandler->createLanguage(groupID, "eng");
-  rulHandler->setHasWarningText(groupID, true);
-  rulHandler->setDisplayName(groupID, "Sonar");
-  rulHandler->setHelpText(groupID, "Sonar Rulset contains a collection of rules exported from SonarQube(TM) server.");
-  rulHandler->setDescription(groupID, "");
+  auto sonar_tag = rulHandler->getTagStore().create_or_get(rul::SplitTagStringView{"tool", "Sonar"});
 
   // Get rule from the API
   for (string warningID : setOfAddedRules) {
+    rulHandler->defineMetric(warningID);
+    rulHandler->createConfiguration(warningID, "Default");
+    rulHandler->setIsEnabled(warningID, true);
+    rulHandler->setIsVisible(warningID, true);
+    rulHandler->setGroupType(warningID, "false");
+    rulHandler->addTag(warningID, sonar_tag);
+    rulHandler->createLanguage(warningID, "eng");
+    rulHandler->setHasWarningText(warningID, true);
+    rulHandler->setDescription(warningID, "");
+    rulHandler->setOriginalId(warningID, warningID);
+
     string ruleApiCallResult = doApiCall((boost::format("/api/rules/search?rule_key=%1%")
                                                         % warningID ).str());
 
@@ -340,23 +341,17 @@ int main(int argc, char** argv) {
         } else if (rule_property.first == "severity") {
           severity = rule_property.second.data();
           makeCapitalCase(severity);
+        } else if (rule_property.first == "sysTags") {
+          for (auto &tag : rule_property.second) {
+            rulHandler->addTag(warningID, rul::SplitTagStringView{"collection", "Sonar", tag.second.data()});
+          }
         }
       }
     }
 
-    rulHandler->defineMetric(warningID);
-    rulHandler->createConfiguration(warningID, "Default");
-    rulHandler->setIsEnabled(warningID, true);
-    rulHandler->setIsVisible(warningID, true);
-    rulHandler->setGroupType(warningID, "false");
-    rulHandler->addMetricGroupMembers(warningID, groupID);
-    rulHandler->createLanguage(warningID, "eng");
-    rulHandler->setHasWarningText(warningID, true);
     rulHandler->setSettingValue(warningID, "Priority", severity, true);
     rulHandler->setDisplayName(warningID, name);
     rulHandler->setHelpText(warningID, htmlDesc);
-    rulHandler->setDescription(warningID, "");
-    rulHandler->setOriginalId(warningID, warningID);
   }
 
   columbus::graphsupport::buildRulToGraph(graph, *rulHandler);
@@ -629,6 +624,12 @@ bool addIssues(string commonApiCall, string key, string severity,
           warningID = issue_property.second.data();
         } else if (issue_property.first == "message") {
           warningText = issue_property.second.data();
+        } else if (issue_property.first == "tags") {
+          std::cout << "issue tags\n";
+          for (auto &tag : issue_property.second) {
+            std::cout << tag.second.get_value<std::string>() << ", ";
+          }
+          std::cout << '\n';
         }
       }
 

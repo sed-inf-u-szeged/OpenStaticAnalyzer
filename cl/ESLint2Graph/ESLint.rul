@@ -4948,7 +4948,7 @@
             <Calculated />
         </Configuration>
     </Metric>
-    <Metric id="ESLINT_NUCO">
+    <Metric id="ESLINT_NUREN">
         <Configuration name="Default">
             <Enabled>false</Enabled>
             <Group>false</Group>

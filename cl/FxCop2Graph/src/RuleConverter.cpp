@@ -20,6 +20,8 @@
 
 #include "../inc/RuleConverter.h"
 
+#include <filesystem>
+
 using namespace std;
 using namespace common;
 using namespace columbus;
@@ -44,11 +46,13 @@ private:
     string CategoryFriendlyName;
     string TypeName;
 
+
     std::vector<std::string> metricIds;
+    columbus::rul::TagKindMetadataContainer *generalTagMetadataContainer;
 
 public:
-    FxCopHandler(rul::RulHandler* rul) : rul(rul), metricIds() {
-    }
+    FxCopHandler(rul::RulHandler* rul): rul(rul), metricIds(),
+        generalTagMetadataContainer(&rul->getTagMetadataStore().try_add_kind("general")) {}
 
 
     virtual void startElement(const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname, const Attributes &attrs) {
@@ -56,6 +60,8 @@ public:
         content.clear();
         if (name == "Rules"){
             getAttr(attrs, "FriendlyName", CategoryFriendlyName);
+            auto &valueTagMetadata = generalTagMetadataContainer->try_add_value(CategoryFriendlyName).value_metadata_ref();
+            valueTagMetadata.summarized = true;
         }
         if (name == "Rule") {
             getAttr(attrs, "CheckId", CheckId);
@@ -146,23 +152,11 @@ public:
                 rul->setDisplayName(MetricId, content);
                 rul->setHasWarningText(MetricId, true);
 
-                rul->addMetricGroupMembers(MetricId, Category);
+                rul->addTag(MetricId, rul::SplitTagStringView{"tool", "FxCop"});
+                rul->addTag(MetricId, rul::SplitTagStringView{"general", CategoryFriendlyName});
             } else if (name == "Description") {
                 rul->setHelpText(MetricId, content);
-            } else if (name == "Rules"){
-
-                rul->defineMetric(Category);
-                rul->createConfiguration(Category, "Default");
-                rul->setIsEnabled(Category, true);
-                rul->setIsVisible(Category, true);
-                rul->setGroupType(Category, "summarized");
-                rul->createLanguage(Category, "eng");
-                rul->setHasWarningText(Category, true);
-                rul->setDisplayName(Category, CategoryFriendlyName);
-                rul->setDescription(Category, "");
-
             }
-
         } catch (const rul::RulHandlerException& ex) {
             WriteMsg::write(CMSG_FXCOP2GRAPH_RULE_EXCEPTION, ex.getMessage().c_str());
         }
@@ -182,7 +176,6 @@ void RuleConverter::convertRuleFile(const vector<string>& file_names, const Conf
     {
       parseXML(filename, fxCopHandler);
     }
-
 
     rul.saveRul(config.rulFile);
 }

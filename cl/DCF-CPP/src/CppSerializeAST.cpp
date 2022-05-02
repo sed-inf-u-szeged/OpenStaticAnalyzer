@@ -337,7 +337,7 @@ void ASTSerializerConsumer::HandleTranslationUnit(ASTContext &context)
 //      auto nodeKind = serializationData.nodeKindSequence[i];
 //      auto nodeInfo = serializationData.nodeInfoSequence[i];
 //      if (nodeInfo)
-//        WriteMsg::write(WriteMsg::mlDebug, "0x%08X  File:%s Line:%d Col:%d\n", nodeKind, nodeInfo->getStringPath().c_str(), nodeInfo->getLine(), nodeInfo->getCol());
+//        WriteMsg::write(WriteMsg::mlDebug, "0x%08X  File:%s Line:%d Col:%d LIM:%d\n", nodeKind, nodeInfo->getStringPath().c_str(), nodeInfo->getLine(), nodeInfo->getCol(), nodeInfo->getLimNodeId());
 //      else
 //        WriteMsg::write(WriteMsg::mlDebug, "0x%08X\n", nodeKind);
 //
@@ -573,7 +573,9 @@ ASTSerializerVisitor::NodeList ASTSerializerVisitor::merge(const NodeList& pre, 
 
 void ASTSerializerVisitor::dumpNodeInfo(const NodeInfo& nodeInfo, ASTContext *context)
 {
+  bool tsg = WriteMsg::getTimestampPrefixes();
   WriteMsg::write(WriteMsg::mlDebug, "%p (0x%08X):", nodeInfo.nodePtr, nodeInfo.nodeKind);
+  WriteMsg::setTimestampPrefixes(false);
   switch (nodeInfo.nodeKind & NodeMask::NodeTypeMask)
   {
     case NodeType::Statement:
@@ -593,6 +595,7 @@ void ASTSerializerVisitor::dumpNodeInfo(const NodeInfo& nodeInfo, ASTContext *co
     }
   }
   WriteMsg::write(WriteMsg::mlDebug, "\n");
+  WriteMsg::setTimestampPrefixes(tsg);
 }
 
 void ASTSerializerVisitor::dumpNodeList(const ASTSerializerVisitor::NodeList& nodes, ASTContext *context)

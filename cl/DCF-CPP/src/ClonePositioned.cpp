@@ -23,7 +23,7 @@
 columbus::StrTable ASTNodeInfo::paths;
 
 
-void ASTNodeInfo::dump()
+void ASTNodeInfo::dump() const
 {
   printf("Key:%u, Line: (%u %u %u %u), NodeId: %u, LIM NodeId: %u, TUid: %u, ComponentId: %u, TUPathKey: %u\n",
          path, line, col, endLine, endCol, nodeId, limNodeId, translationUnitId, limComponentId, TUPathKey);

@@ -289,7 +289,12 @@ void VisitorGraphConverter::visit(const lim::asg::logical::Class& node, bool b) 
       if (attributes) {
         graphsupport::addNodeNameAttribute(g, gnode, node.getName());
         graphsupport::addNodeLongNameAttribute(g, gnode, node.getDemangledName());
-        if (factory.getLanguage() == lim::asg::limLangJava || factory.getLanguage() == lim::asg::limLangCpp || factory.getLanguage() == lim::asg::limLangC || factory.getLanguage() == lim::asg::limLangCsharp || factory.getLanguage() == lim::asg::limLangJavaScript) {
+        if (factory.getLanguage() == lim::asg::limLangJava ||
+            factory.getLanguage() == lim::asg::limLangCpp ||
+            factory.getLanguage() == lim::asg::limLangC ||
+            factory.getLanguage() == lim::asg::limLangCsharp ||
+            factory.getLanguage() == lim::asg::limLangJavaScript)
+        {
           graphsupport::setAnonymousAttribute(g, gnode, node.getIsAnonymous());
         }
       }
@@ -364,7 +369,13 @@ void VisitorGraphConverter::visit(const lim::asg::logical::Method& node, bool b)
       if (attributes) {
         graphsupport::addNodeNameAttribute(g, gnode, node.getName());
         graphsupport::addNodeLongNameAttribute(g, gnode, node.getDemangledName());
-        if (factory.getLanguage() == lim::asg::limLangCsharp || factory.getLanguage() == lim::asg::limLangJavaScript) {
+
+        if (factory.getLanguage() == lim::asg::limLangJava ||
+            factory.getLanguage() == lim::asg::limLangCpp ||
+            factory.getLanguage() == lim::asg::limLangC ||
+            factory.getLanguage() == lim::asg::limLangCsharp ||
+            factory.getLanguage() == lim::asg::limLangJavaScript)
+        {
           graphsupport::setAnonymousAttribute(g, gnode, node.getIsAnonymous());
         }
       }

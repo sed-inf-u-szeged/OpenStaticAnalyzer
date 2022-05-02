@@ -32,7 +32,7 @@
 #define CMSG_UDM_EX_WRONG_FORMULA_CALCFOR_ATTR            "Error: The '"+metricName+"' formula is not calculable for its 'CalculatedFor' attribute, because its '"+variable+"' dependency has different 'CalculatedFor' attributes!\n"
 #define CMSG_UDM_EX_VARIABLE_COULDNT_BE_FOUND             "Error: The variable '"+*varIter+"' in the formula of the '"+metricName+"' metric couldn't be found either in the graph or in other formulas!\n"
 #define CMSG_UDM_EX_LOOP_FOUND                            "Error: A loop is found within the metric dependencies: "
-#define CMSG_UDM_EX_OCCUPIED_FORMULA_NAME                 "Error: The '"+*metricIdIter+"' metric name is already in the graph!\n"
+#define CMSG_UDM_EX_OCCUPIED_FORMULA_NAME                 "Error: The '"+ruleId+"' metric name is already in the graph!\n"
 #define CMSG_UDM_STATISTICS                               WriteMsg::mlNormal, "\nStatistics:\n"
 #define CMSG_UDM_READING_TIME                             WriteMsg::mlNormal, "\tReading the inputs          : %10.2fs\n"
 #define CMSG_UDM_BUILDING_TIME                            WriteMsg::mlNormal, "\tBuilding dependency         : %10.2fs\n"

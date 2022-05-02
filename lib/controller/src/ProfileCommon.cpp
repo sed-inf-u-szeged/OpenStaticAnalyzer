@@ -23,6 +23,8 @@
 #include <algorithm>
 #include <io/inc/SimpleXmlIO.h>
 #include <common/inc/StringSup.h>
+#include <rul/inc/RulTagString.h>
+
 
 using namespace std;
 using namespace columbus;
@@ -312,24 +314,6 @@ namespace controller
       rulH.setConfigParent("python", "Default");
 
       //
-      //  CREATING THE GROUP METRICS
-      //
-      
-      set<string> groups = profHand.getUDMGroupMembers(rulconfig);    // getting the used GROUPs
-      for (set<string>::const_iterator gro = groups.begin(); gro != groups.end(); ++gro) {
-        rulH.defineMetric(*gro);
-        baseUDMSetup(rulH, *gro, "Default");
-        rulH.setGroupType(*gro, "visual");
-        rulH.setIsVisible(*gro, true);
-        if (*gro == "UserDefinedMetrics"){   // extra setup for the UDM group 
-          rulH.setDisplayName(*gro, "User Defined Metrics");
-          rulH.setDescription(*gro, "Custom metrics defined by the user through the profile XML");
-          rulH.setHelpText(*gro, "Custom metrics defined by the user through the profile XML");
-        }
-        baseUDMSetup(rulH, *gro, rulconfig);
-      }
-
-      //
       //  CREATING THE USER-DEFINED METRICS
       //
 
@@ -378,13 +362,8 @@ namespace controller
             rulH.setHelpText(*itID, config.helptext);
           }
 
-          if (!config.groupMember.empty()) {
-            rulH.addMetricGroupMembers(*itID, config.groupMember);
-          }
-          else {
-            // non-empty default value
-            rulH.addMetricGroupMembers(*itID, "UserDefinedMetrics");
-          }
+          rulH.addTag(*itID, rul::SplitTagStringView{"tool", "SourceMeter", "UserDefinedMetrics"});
+          rulH.addTag(*itID, rul::SplitTagStringView{"internal", "csv_column"});
 
           if (!config.calculatedFor.empty()) {
             rulH.setCalculatedForSet(*itID, config.calculatedFor);

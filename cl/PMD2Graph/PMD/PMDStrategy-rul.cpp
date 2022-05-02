@@ -19,6 +19,7 @@
  */
 
 #include <string>
+#include <filesystem>
 #include <fstream>
 #include <set>
 
@@ -34,9 +35,11 @@
 #endif
 #include "PMDStrategy.h"
 #include <rul/inc/RulHandler.h>
+#include <rul/inc/RulTags.h>
 #include <common/inc/StringSup.h>
 #include <common/inc/WriteMessage.h>
 #include <common/inc/PlatformDependentDefines.h>
+#include <common/inc/XercesSup.h>
 #include "../messages.h"
 #include <map>
 #include <boost/regex.hpp>
@@ -78,6 +81,8 @@ void PMDStrategy::makeRul(File_Names& file_names, std::string& rul, std::string&
 
   ruleIdMap.clear();
   pmdRules.clear();
+  rh.getTagMetadataStore().try_add_kind("tool").try_add_value("PMD");
+  general_tag_metadata_container_ = &rh.getTagMetadataStore().try_add_kind("general");
 
   // load config file
   if (!rul_option_filename.empty()) {
@@ -204,42 +209,46 @@ void PMDStrategy::makeRulByFile(const char* xmlFile, columbus::rul::RulHandler& 
   loaddom(xmlFile);
   if (doc && doc->getDocumentElement()) {
     DOMElement* root = doc->getDocumentElement();
+    common::Xerces::ScopedTranscode<XMLCh *> rule_node_name_{"rule"};
+    common::Xerces::ScopedTranscode<XMLCh *> name_attr_name_{"name"};
+    common::Xerces::ScopedTranscode<XMLCh *> message_attr_name_{"message"};
+    common::Xerces::ScopedTranscode<XMLCh *> priority_node_name_{"priority"};
 
     string groupname, groupshortname;
-    string pmdgroup = XMLString::transcode(root->getAttribute(XMLString::transcode("name")));
+    string pmdgroup(common::Xerces::ScopedTranscode<char *>(root->getAttribute(name_attr_name_)));
     groupname = groupshortname = pmd2InternalGroupName(pmdgroup);
 
-    rh.defineMetric(groupshortname);
-
-    // Default config
-    rh.createConfiguration(groupshortname, "Default");
-    rh.createLanguage(groupshortname, "Default", "eng");
-    string desc = "";
-    getDescription(desc, root);
-    rh.setDescription(groupshortname, desc);
-    rh.setHasWarningText(groupshortname, true);
-    rh.setDisplayName(groupshortname, groupname);
-    rh.setOriginalId(groupshortname, pmdgroup);
-    rh.setGroupType(groupshortname, "summarized");
-    rh.setHelpText(groupshortname, desc);
-    rh.setIsEnabled(groupshortname, true);
-    rh.setIsVisible(groupshortname, true);
-    rh.setSettingValue(groupshortname, "Priority", "Minor", true);
+    auto &value_tag_metadata = general_tag_metadata_container_->try_add_value(groupname).value_metadata_ref();
+    value_tag_metadata.summarized = true;
+    std::string description;
+    getDescription(description, root);
+    value_tag_metadata.description = std::move(description);
 
     DOMNodeList* childs = root->getChildNodes();
     XMLSize_t length = childs->getLength();
     for(unsigned int i = 0; i < length; i++){
       DOMNode * node = childs->item(i);
       
-      if( strcmp(XMLString::transcode(node->getNodeName()),"rule") == 0) {
-        if(node->getAttributes()->getNamedItem(XMLString::transcode("name"))) {
+      if(XMLString::compareString(node->getNodeName(), rule_node_name_) == 0) {
+        if(node->getAttributes()->getNamedItem(name_attr_name_)) {
           DOMNamedNodeMap * mymap = node->getAttributes();
-          string rulename, shortname, desc;
+          string shortname, desc;
           // default values
           string enabled = "1";
-          string priority = "Minor";
+          auto priority = [&]() -> std::string {
+            for (auto *child_node = node->getFirstChild(); child_node != nullptr;
+                 child_node = child_node->getNextSibling()) {
+              if (XMLString::compareString(child_node->getNodeName(), priority_node_name_) == 0) {
+                common::Xerces::ScopedTranscode<char *> priority_value(child_node->getTextContent());
+                if (strcmp(priority_value, "2") == 0 || strcmp(priority_value, "3") == 0) { return "Major"; }
+                if (strcmp(priority_value, "1") == 0) { return "Critical"; }
+                return "Minor";
+              }
+            }
+            return "Minor";
+          }();
 
-          rulename = XMLString::transcode(mymap->getNamedItem(XMLString::transcode("name"))->getNodeValue());
+          string rulename(common::Xerces::ScopedTranscode<char *>(mymap->getNamedItem(name_attr_name_)->getNodeValue()));
 
           map<string, PMDRule>::const_iterator nameIt = pmdRules.find(rulename);
           if (nameIt != pmdRules.end()) {
@@ -267,8 +276,8 @@ void PMDStrategy::makeRulByFile(const char* xmlFile, columbus::rul::RulHandler& 
           rh.setSettingValue(shortname, "Priority", priority, true);
           rh.addMetricGroupMembers(shortname, groupshortname);
           rh.setIsEnabled(shortname, enabled == "1");
-          if(mymap->getNamedItem(XMLString::transcode("message"))){
-            desc = XMLString::transcode(mymap->getNamedItem(XMLString::transcode("message"))->getNodeValue());
+          if(mymap->getNamedItem(message_attr_name_)){
+            desc = common::Xerces::ScopedTranscode<char *>(mymap->getNamedItem(message_attr_name_)->getNodeValue());
             rh.setDescription(shortname, desc);
           }
           string helptext = "";
@@ -285,6 +294,9 @@ void PMDStrategy::makeRulByFile(const char* xmlFile, columbus::rul::RulHandler& 
             rh.setHelpText(shortname, rulename);
             rh.setDescription(shortname, rulename);
           }
+
+          rh.addTag(shortname, rul::SplitTagStringView{"tool", "PMD"});
+          rh.addTag(shortname, rul::SplitTagStringView{"general", groupname});
         }
       }
     }
@@ -300,18 +312,21 @@ bool PMDStrategy::getIsOnlySpaces(std::string& in){
 }
 
 void PMDStrategy::getDescription(string& desc, DOMNode* node){
+  common::Xerces::ScopedTranscode<XMLCh *> description_node_name_{"description"};
+  common::Xerces::ScopedTranscode<XMLCh *> example_node_name_{"example"};
+
   DOMNodeList* childs = node->getChildNodes();
   XMLSize_t length = childs->getLength();
   string examples;
 
   for(unsigned int i = 0; i < length; i++){
     DOMNode * node = childs->item(i);
-    if(strcmp(XMLString::transcode(node->getNodeName()),"description") == 0){
+    if(XMLString::compareString(node->getNodeName(), description_node_name_) == 0){
       XMLCh* descx = (XMLCh*)node->getTextContent();
       desc = toUTF8String(descx);
       common::trim(desc);
     }
-    if(strcmp(XMLString::transcode(node->getNodeName()),"example") == 0){
+    if(XMLString::compareString(node->getNodeName(), example_node_name_)  == 0){
       XMLCh* descx = (XMLCh*)node->getTextContent();
       string ex = toUTF8String(descx);
       common::trim(ex);

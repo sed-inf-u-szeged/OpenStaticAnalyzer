@@ -20,9 +20,11 @@
 
 #include "../inc/PylintRulMaker.h"
 #include "../inc/messages.h"
+#include "rul/inc/RulTags.h"
 
 #include <common/inc/StringSup.h>
 #include <common/inc/WriteMessage.h>
+#include <filesystem>
 #include <rul/inc/RulHandler.h>
 
 #include <fstream>
@@ -328,23 +330,18 @@ void PylintRulMaker::makeRul(const string& messagesFileName, const string& idsFi
     }
   }
 
+  auto pylint_tag = rulHandler.getTagStore().create_or_get(rul::SplitTagStringView{"tool", "Pylint"});
+  rulHandler.getTagMetadataStore().try_add_kind("tool").try_add_value("Pylint");
+  auto &general_tag_metadata_container = rulHandler.getTagMetadataStore().try_add_kind("general");
+
   // create groups
   for (map<string, set<string> >::const_iterator git = groupMembers.begin(), gitEnd = groupMembers.end(); git != gitEnd; ++git) {
     string pylintGroupName = git->first;
     string groupName = convertGroupName(pylintGroupName);
 
-    rulHandler.defineMetric(groupName);
-    rulHandler.createConfiguration(groupName, "Default");
-    rulHandler.createLanguage(groupName, "Default", "eng");
-    rulHandler.setIsEnabled(groupName, true);
-    rulHandler.setIsVisible(groupName, true);
-    rulHandler.setGroupType(groupName, "summarized");
-    rulHandler.setHasWarningText(groupName, true);
-    rulHandler.setSettingValue(groupName, "Priority", "Minor", true);
-    rulHandler.setDisplayName(groupName, groupName);
-    rulHandler.setDescription(groupName, groupName);
-    rulHandler.setHelpText(groupName, groupName);
-    rulHandler.setOriginalId(groupName, pylintGroupName);
+    auto &value_tag_metadata = general_tag_metadata_container.try_add_value(groupName).value_metadata_ref();
+    value_tag_metadata.description = groupName;
+    value_tag_metadata.summarized = true;
 
     // disable these groups and their rules by default
     //   similarities - copy-paste detector, similar to DCF
@@ -352,11 +349,11 @@ void PylintRulMaker::makeRul(const string& messagesFileName, const string& idsFi
     bool isDisabledByDefault = false;
     if (pylintGroupName == "similarities" || pylintGroupName == "master") {
       isDisabledByDefault = true;
-      rulHandler.setIsEnabled(groupName, false);
     }
 
     for (set<string>::const_iterator rit = git->second.begin(), ritEnd = git->second.end(); rit != ritEnd; ++rit) {
-      rulHandler.addMetricGroupMembers(*rit, groupName);
+      rulHandler.addTag(*rit, rul::SplitTagStringView{"general", groupName});
+      rulHandler.addTag(*rit, pylint_tag);
       if (isDisabledByDefault) {
         rulHandler.setIsEnabled(*rit, false);
       }

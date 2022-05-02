@@ -122,7 +122,7 @@ namespace common
 
   public:
       static PerformanceLogger& getPerformanceLogger(const char* logFilename = "PerfStats.txt");
-
+      PerformanceLogger(const PerformanceLogger&) = delete;
       void enable();
       void disable();
       void setSectionLimit(size_t sectionLimit);
@@ -134,7 +134,7 @@ namespace common
       PerformanceLogger(const char* logFilename);
       void endSection(Section* name);
       void addTimeStamp(const char* name);
-      void dumpSection(FILE* logFile, const Section& section, int level, timestat relativeTime) const;
+      void dumpSection(FILE* logFile, const Section& section, int level, timestat relativeTime, timestat previousTime) const;
       void recalculateAlignedSectionNameMaxLength(const Section& section, int level);
 
   private:

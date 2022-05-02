@@ -153,7 +153,7 @@ static void ppFile(char *filename);
 
 
 //Defining the try-catch blocks of the main() method
-#ifdef NDEBUG
+#if 1
 
 #define TRY_BEGIN       try {
 #define TRY_END         }
@@ -201,7 +201,7 @@ static void ppFile(char *filename);
   CATCH_STD_EXCEPTION\
   CATCH_ALL_OTHER
 
-//Forward declaration of the Option object which contains the existing cl options 
+//Forward declaration of the Option object which contains the existing cl options
 extern const common::Option OPTIONS_OBJ [];
 
 /**
@@ -266,13 +266,13 @@ static void tokenizeString(const std::string& str, std::list<std::string>& token
 }
 
 void writeOptionWithParams(const char* optionName, const char* token, const char* paramName, const unsigned int otMode) {
-  if (otMode == common::OT_OPTION_FILE) 
+  if (otMode == common::OT_OPTION_FILE)
     common::WriteMsg::write(common::WriteMsg::mlNormal, "  %s %s\n", optionName, paramName);
   else if (otMode == common::OT_DEFAULT)
     common::WriteMsg::write(common::WriteMsg::mlNormal, "  %s\n", optionName);
   else if (otMode == common::OT_PREFIX)
     common::WriteMsg::write(common::WriteMsg::mlNormal, "  %s %s (unambiguous prefix is enough)\n", optionName, paramName);
-  else 
+  else
     common::WriteMsg::write(common::WriteMsg::mlNormal, "  %s%s%s\n", optionName, token, paramName);
 }
 
@@ -281,21 +281,21 @@ void formatAndWriteString(const std::string& description, std::list<std::string>
   if (description.length() > 70 || description.find("\n") != std::string::npos) {
     tokenizeString(description, tokens);
     for (std::list<std::string>::const_iterator it = tokens.begin(); it != tokens.end(); ++it) {
-      if (it == tokens.begin()) 
+      if (it == tokens.begin())
         common::WriteMsg::write(common::WriteMsg::mlNormal, "    %s\n", it->c_str());
-      else 
-        common::WriteMsg::write(common::WriteMsg::mlNormal, "   %s %s\n", "", it->c_str());    
+      else
+        common::WriteMsg::write(common::WriteMsg::mlNormal, "   %s %s\n", "", it->c_str());
     }
   }
-  else 
-    common::WriteMsg::write(common::WriteMsg::mlNormal, "    %s\n", description.c_str());  
+  else
+    common::WriteMsg::write(common::WriteMsg::mlNormal, "    %s\n", description.c_str());
 }
 /**
 * \brief Writes the help of cl options to std::out
 */
 static void Help(bool isInternalEnabled = false) {
   const common::Option *option = OPTIONS_OBJ;
-  
+
   std::map<int,std::list<std::string> >::iterator it;
   std::map<int,std::list<std::string> > optionMap; //<< map to storage the needed option name
   std::string optionsString;  //<< string to storage the option usage description
@@ -317,9 +317,9 @@ static void Help(bool isInternalEnabled = false) {
     option++;
   }
 
-  
+
   optionsString.append(EXECUTABLE_NAME);  //<< append programName to the usage description
-  optionsString.append(" [options] "); 
+  optionsString.append(" [options] ");
   for (it=optionMap.begin(); it!=optionMap.end(); it++) {
     std::list<std::string>::iterator iter;
     if (it->second.size()>1) { //<<if possible to choose beetween needed options
@@ -348,9 +348,9 @@ static void Help(bool isInternalEnabled = false) {
   tokens.clear();
 
   option = OPTIONS_OBJ;
-  std::string description = "";  
+  std::string description = "";
   bool skipped=false, prevInternal=false;
-  // find and write the possible given mode for the options and write their description 
+  // find and write the possible given mode for the options and write their description
   while (option->name[0]) {
     if (description != option->descr && (skipped || !prevInternal || isInternalEnabled)) {
       formatAndWriteString(description, tokens);
@@ -362,7 +362,7 @@ static void Help(bool isInternalEnabled = false) {
         skipped = true;
     }
     if (!option->internal || isInternalEnabled) {
-       
+
       if (option->param_num == 0) {
         common::WriteMsg::write(common::WriteMsg::mlNormal, "  %s\n", option->name);
       }
@@ -372,7 +372,7 @@ static void Help(bool isInternalEnabled = false) {
         if ((option->type & common::OT_WS) == common::OT_WS) {
           writeOptionWithParams(option->name, " ", option->param_name, common::OT_WS);
 
-        } 
+        }
         if ((option->type & common::OT_WOS) == common::OT_WOS) {
           writeOptionWithParams(option->name, "", option->param_name, common::OT_WOS);
         }
@@ -450,7 +450,7 @@ static void MainInit(int argc, char* argv[], const char* optionPrefixes) {
   common::WriteMsg::setMessageLevel(argc, argv);
 
   srand((unsigned)time(NULL));
-  
+
   //Writes out the copyright message
   copyright();
 

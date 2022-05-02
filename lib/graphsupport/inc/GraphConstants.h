@@ -64,6 +64,13 @@ namespace columbus {
       extern const std::string ATTR_RUL_WARNING;
       extern const std::string ATTR_RUL_CALCULATED;
       extern const std::string ATTR_RUL_CALCULATEDFOR;
+      extern const std::string ATTR_RUL_TAGS;
+      extern const std::string ATTR_RUL_TAG;
+      extern const std::string ATTR_RUL_TAG_METADATA_URL;
+      extern const std::string ATTR_RUL_TAG_METADATA_DESCRIPTION;
+      extern const std::string ATTR_RUL_TAG_METADATA_SUMMARIZED;
+      extern const std::string ATTR_RUL_TAG_METADATA_SUMMARIZED_TRUE;
+      extern const std::string ATTR_RUL_TAG_METADATA_SUMMARIZED_FALSE;
       
       extern const std::string ATTR_DCF_CLONESMELLTYPE;
       
@@ -81,6 +88,7 @@ namespace columbus {
       extern const std::string NTYPE_RUL_METRIC;
       extern const std::string NTYPE_RUL_TOOL;
       extern const std::string NTYPE_RUL_TREE_NODE;
+      extern const std::string NTYPE_RUL_METADATA;
 
       extern const std::string NTYPE_LIM_COMPONENT;
       extern const std::string NTYPE_LIM_MODULE;
@@ -148,6 +156,7 @@ namespace columbus {
       extern const std::string UID_LOGICAL_ROOT;
       extern const std::string UID_PHYSICAL_ROOT;
       extern const std::string UID_RUL_GROUPS;
+      extern const std::string UID_RUL_TAG_METADATA;
 
       // Header Attributes
       extern const std::string HEADER_ASG_KEY;

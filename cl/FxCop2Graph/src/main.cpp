@@ -100,7 +100,7 @@ const Option OPTIONS_OBJ[] = {
         { false, "-graph", 1, "file", 1, OT_WC, ppGraph, NULL, "Save binary graph output." },
         { false, "-out", 1, "file", 0, OT_WC, ppOut, NULL, "Specify the name of the output file. The list of rule violations will be dumped in it.\n" },
         CL_LIM
-        CL_RUL_AND_RULCONFIG("FxCop.rul")
+        CL_RUL_AND_RULCONFIG("FxCop.rul.md")
         CL_EXPORTRUL
         COMMON_CL_ARGS
 };

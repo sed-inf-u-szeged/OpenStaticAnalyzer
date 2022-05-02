@@ -26,6 +26,31 @@ const ESLINTRUNNNER_VERSION = 4.3;
 
 let options = undefined;
 
+/**
+ * Path of temporary directory (from where tsconfig will be removed)
+ * @type {string}
+ */
+let tempTSConfigPath = undefined;
+
+let originalCwd = undefined;
+
+function getOriginalCwd() {
+    return originalCwd;
+}
+
+function setOriginalCwd(newCwd) {
+    originalCwd = newCwd;
+}
+
+
+function getTempTSConfigPath() {
+    return tempTSConfigPath;
+}
+
+function setTempTSConfigPath(tempDirP) {
+    tempTSConfigPath = tempDirP;
+}
+
 function setOptions(opt) {
     options = opt;
 }
@@ -45,5 +70,10 @@ export {
     setOptions,
     getOptions,
     getOption,
+    tempTSConfigPath,
+    getTempTSConfigPath,
+    setTempTSConfigPath,
+    getOriginalCwd,
+    setOriginalCwd,
     ESLINTRUNNNER_VERSION
 }

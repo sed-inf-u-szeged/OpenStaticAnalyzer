@@ -118,7 +118,7 @@ namespace {
     const string customCloneClassId = "All_CloneClasses";
     const string customCloneClassName = "All CloneClasses";
 
-    // because OpenStaticAnalyzer-Linux generates a path starting with /, on the other hand windows generates a path starting with the drive name, e.g. C:
+    // because the linux Analyzer generates a path starting with /, on the other hand windows generates a path starting with the drive name, e.g. C:
     const string uriFile =
 #ifdef __linux__
         "file://";
@@ -318,7 +318,7 @@ namespace {
             {"\\n", "\n"},
             {"&#39;", "'"},
             {"&amp;", "&"},
-            {"\u2013", "-"}
+            {"–" /*"\u2013"*/, "-"},
         };
 
         // Html links to Markdown links
@@ -730,7 +730,7 @@ namespace columbus {
                 }
 
             }
-
+            
             sio.writeData({
                 "\n",
                 "      ]\n",

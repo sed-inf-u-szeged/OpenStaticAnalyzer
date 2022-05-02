@@ -23,24 +23,40 @@
 #include "../inc/dcm.h"
 #include "../inc/StatementFilter.h"
 #include "../inc/CppSerializeAST.h"
-
+#include <clang/AST/Stmt.h>
 
 
 bool StatementFilter::isFiltered( const columbus::genealogy::CloneClass& cc )
 {
-  for(columbus::genealogy::ListIterator<columbus::genealogy::CloneInstance> cloneInstanceIt = cc.getItemsListIteratorBegin();cloneInstanceIt != cc.getItemsListIteratorEnd();++cloneInstanceIt) {
+  for(columbus::genealogy::ListIterator<columbus::genealogy::CloneInstance> cloneInstanceIt = cc.getItemsListIteratorBegin();cloneInstanceIt != cc.getItemsListIteratorEnd();++cloneInstanceIt)
+  {
     const columbus::genealogy::CloneInstance& ci = *cloneInstanceIt;
     unsigned ci_position = dcm.getPosition(ci.getId());
     unsigned length = dcm.getLength(cc.getId());
+    unsigned counter = 0;
+    bool switch_found = false;
     for(unsigned int positionIndex = ci_position; positionIndex < ci_position + length; ++positionIndex)
     {
       int nodeKind = dcm.getNodeKindAt(positionIndex);
-
-      if((nodeKind & NodeMask::NodeTypeMask) == NodeType::Statement)
+      const ASTNodeInfo* nodeInfo = dcm.getNode(positionIndex);
+      if (nodeInfo == nullptr)
       {
-        return false;
+        continue;
       }
+
+      if ((nodeKind & NodeMask::NodeTypeMask) == NodeType::Statement)
+      {
+        if ((nodeKind & NodeMask::NodeKindMask) == clang::Stmt::SwitchStmtClass)
+          switch_found = true;
+        else if (((nodeKind & NodeMask::NodeKindMask) == clang::Stmt::CaseStmtClass) && !switch_found)
+          return true;
+
+        ++counter;
+      }
+
     }
+    if (counter >= config.minStatements)
+      return false;
   } // iterating over all the clone instances in this class
   return true;
 }

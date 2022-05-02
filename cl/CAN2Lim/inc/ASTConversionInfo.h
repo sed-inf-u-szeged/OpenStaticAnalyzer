@@ -209,6 +209,8 @@ public:
 
   std::shared_ptr<columbus::NodeIDMaps> originMap;
 
+  std::map<const clang::Decl*,const clang::LambdaExpr*> lambdaCallOpExprMap;
+
   GlobalASTConversionInfo_ThreadSafe& globalInfo;
 
   // The Mangle context.

@@ -29,6 +29,7 @@ namespace columbus {
 
   namespace rul {
     class RulHandler;
+    class Tag;
   }
 
   namespace graphsupport {
@@ -44,7 +45,8 @@ namespace columbus {
                               const std::string& helpText, 
                               bool isWarning, 
                               const std::map<std::string, std::string>& settings, 
-                              const std::set<std::string>& calculated);
+                              const std::set<std::string>& calculated,
+                              const std::set<rul::Tag>& tags);
                               
     bool readRuleItemFromGraph(graph::Graph& graph,
                               const std::string& metricID, 
@@ -55,7 +57,8 @@ namespace columbus {
                               std::string& helpText, 
                               bool& isWarning, 
                               std::map<std::string, std::string>& settings, 
-                              std::set<std::string>& calculated);
+                              std::set<std::string>& calculated,
+                              std::set<rul::Tag>& tags);
   }
 }
 

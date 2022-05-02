@@ -44,7 +44,7 @@ using namespace std;
 using namespace common;
 
 #define EXIT if (doWrapp) \
-              common::unsetEnvironmentVariable(OSA_INEXEWRAPPER_ENV_VAR); \
+              common::unsetEnvironmentVariable(ANALYZER_INEXEWRAPPER_ENV_VAR); \
              return -1
 
 #define BUFFERSIZE 8192
@@ -254,7 +254,7 @@ int main(int argc, char **argv) {
     bin_dir = common::removeQuotes(bindir);
   }
 
-  char *configfile = getenv(OSA_WRAPPER_CONFIG_FILE_ENV_VAR);
+  char *configfile = getenv(ANALYZER_WRAPPER_CONFIG_FILE_ENV_VAR);
   if (!configfile) {
     config_file = "";
   } else {
@@ -263,14 +263,14 @@ int main(int argc, char **argv) {
   }
 
   bool doWrapp = true;
-  if (getenv(OSA_INEXEWRAPPER_ENV_VAR)) {
+  if (getenv(ANALYZER_INEXEWRAPPER_ENV_VAR)) {
     doWrapp = false;
   } else {
-    common::setEnvironmentVariable(OSA_INEXEWRAPPER_ENV_VAR,"1");
+    common::setEnvironmentVariable(ANALYZER_INEXEWRAPPER_ENV_VAR,"1");
   }
 
 
-  if (getenv("OSA_DISABLE_ANALYSIS")) {
+  if (getenv("ANALYZER_DISABLE_ANALYSIS")) {
     doWrapp = false;
   }
 
@@ -634,7 +634,7 @@ int main(int argc, char **argv) {
   }
 
   if (doWrapp) {
-    common::unsetEnvironmentVariable(OSA_INEXEWRAPPER_ENV_VAR);
+    common::unsetEnvironmentVariable(ANALYZER_INEXEWRAPPER_ENV_VAR);
   }
 
   if (wr_ret != 0) {

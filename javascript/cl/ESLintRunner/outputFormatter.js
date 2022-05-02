@@ -22,6 +22,7 @@ import * as os from "os";
 import {ESLINTRUNNNER_VERSION, getOption} from "./src/globals.js";
 import * as path from 'path';
 import {USE_RELATIVE_PATH} from './src/assets/constants.js';
+import * as globals from './src/globals.js';
 
 
 function getMessageType(message) {
@@ -64,7 +65,8 @@ function formatter(resultset) {
     if (output)
         resultset.forEach(function (result) {
             if (getOption(USE_RELATIVE_PATH) === true) {
-                output += `    <file name="${xmlEscape(path.relative("", result.filePath))}">${os.EOL}`;
+                const relativeToThisCwd = globals.getOriginalCwd() === undefined ? "" : globals.getOriginalCwd();
+                output += `    <file name="${xmlEscape(path.relative(relativeToThisCwd, result.filePath))}">${os.EOL}`;
             } else {
                 output += `    <file name="${xmlEscape(result.filePath)}">${os.EOL}`;
             }
@@ -84,6 +86,40 @@ function formatter(resultset) {
     return output;
 }
 
+/**
+ * Transforms results into plain text format
+ * @param resultset the results of ESLint analysis
+ * @returns {string}
+ */
+function textFormatter(resultset) {
+    let output = "";
+    output += `ESLintRunner version: ${ESLINTRUNNNER_VERSION}${os.EOL}`;
+    output += `Number of files: ${resultset.length}${os.EOL}`
+    if (output) {
+        resultset.forEach(function (result) {
+            result.messages.forEach(function (message) {
+                if (getOption(USE_RELATIVE_PATH) === true) {
+                    const relativeToThisCwd = globals.getOriginalCwd() === undefined ? "" : globals.getOriginalCwd();
+                    output += `${xmlEscape(path.relative(relativeToThisCwd, result.filePath))}`;
+                } else {
+                    output += `${xmlEscape(result.filePath)}`;
+                }
+                output += `:${xmlEscape(message.line)}:${xmlEscape(message.column)} ` +
+                    `${xmlEscape(getMessageType(message))} ` +
+                    `${(message.ruleId ? message.ruleId : "NotAvailable")} ` +
+                    `${xmlEscape(message.nodeType)} ` +
+                    `${message.message}${os.EOL}`;
+            });
+            output += `${os.EOL}`;
+        });
+    } else {
+        output += `No warnings found.${os.EOL}`;
+    }
+    output += `${os.EOL}`;
+    return output;
+}
+
 export {
-    formatter
+    formatter,
+    textFormatter
 }

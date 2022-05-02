@@ -47,63 +47,59 @@ void loadGraphcCalcFor(graph::Graph& graph, map<string, set<string>>& graph_calc
 
 // Loading user's metrics basics setting (id, formula, formulatype, calcFors) -- which have XML tag
 void loadUdmNodeRulSettings(map<string, UdmNode>& udm_nodes, rul::RulHandler& rulHand, map<string, set<string>>& graph_calculatedFors) {
-    
-    set<string> groupIdSet;
-    rulHand.getGroupIdList(groupIdSet);
-    set<string>::iterator groupIdIter = groupIdSet.begin();
-    for (; groupIdIter != groupIdSet.end(); ++groupIdIter) {
-        set<string> metricIdSet;
-        rulHand.getGroupMembers(*groupIdIter, metricIdSet);
-        set<string>::iterator metricIdIter = metricIdSet.begin();
-        for (; metricIdIter != metricIdSet.end(); ++metricIdIter) {
+    std::vector<std::string> ruleIds;
+    rulHand.getRuleIdList(ruleIds);
+    for (const auto &ruleId : ruleIds) {
+      if (const auto &group = rulHand.getGroupType(ruleId); group != "false" && group != "~~@RUL_EMPTY_STRING@~~") {
+        continue;
+      }
 
-            if (*metricIdIter == "") {
-                throw Exception(COLUMBUS_LOCATION, CMSG_UDM_EX_NO_FORMULA_NAME);
-            }
-
-            if (graph_calculatedFors.find(*metricIdIter) != graph_calculatedFors.end()) {
-                throw Exception(COLUMBUS_LOCATION, CMSG_UDM_EX_OCCUPIED_FORMULA_NAME);
-            }
-
-            string formula, formulaType;
-
-            // Loading user's formula's expression
-            try {
-                formula = rulHand.getSettingValue(*metricIdIter, "Formula");
-            }
-            catch (rul::RulHandlerException&) {
-                // Loading the default (0) expression
-                formula = "0";
-                WriteMsg::write(CMSG_UDM_NO_FORMULA_EXPRESSION, metricIdIter->c_str());
-                warning = true;
-            }
-
-            // Loading user's formula's type
-            try {
-                if (rulHand.getSettingValue(*metricIdIter, "Type") == "Float" || rulHand.getSettingValue(*metricIdIter, "Type") == "Integer") {
-                    formulaType = rulHand.getSettingValue(*metricIdIter, "Type");
-                }
-                else {
-                    //Loading the default (Float) formula's result type in case of wrong formula type
-                    formulaType = "Float";
-                    WriteMsg::write(CMSG_UDM_WRONG_FORMULA_TYPE, metricIdIter->c_str());
-                }
-            }
-            catch (rul::RulHandlerException&) {
-                // Loading the default (Float) formula's result type in case of no formula type
-                formulaType = "Float";
-            }
-
-            set<string> formulaCalculatedFors = rulHand.getCalculatedForSet(*metricIdIter);
-            if (rulHand.getCalculatedForSet(*metricIdIter).empty()) {
-                WriteMsg::write(CMSG_UDM_NO_CALCULATED_FOR_SETTINGS, metricIdIter->c_str());
-            }
-
-            UdmNode udm_node(*metricIdIter, formula, formulaType, formulaCalculatedFors);
-            udm_nodes.insert(pair<string, UdmNode>(*metricIdIter, udm_node));
-
+        if (ruleId == "") {
+            throw Exception(COLUMBUS_LOCATION, CMSG_UDM_EX_NO_FORMULA_NAME);
         }
+
+        if (graph_calculatedFors.find(ruleId) != graph_calculatedFors.end()) {
+            throw Exception(COLUMBUS_LOCATION, CMSG_UDM_EX_OCCUPIED_FORMULA_NAME);
+        }
+
+        string formula, formulaType;
+
+        // Loading user's formula's expression
+        try {
+            formula = rulHand.getSettingValue(ruleId, "Formula");
+        }
+        catch (rul::RulHandlerException&) {
+            // Loading the default (0) expression
+            formula = "0";
+            WriteMsg::write(CMSG_UDM_NO_FORMULA_EXPRESSION, ruleId.c_str());
+            warning = true;
+        }
+
+        // Loading user's formula's type
+        try {
+            if (rulHand.getSettingValue(ruleId, "Type") == "Float" || rulHand.getSettingValue(ruleId, "Type") == "Integer") {
+                formulaType = rulHand.getSettingValue(ruleId, "Type");
+            }
+            else {
+                //Loading the default (Float) formula's result type in case of wrong formula type
+                formulaType = "Float";
+                WriteMsg::write(CMSG_UDM_WRONG_FORMULA_TYPE, ruleId.c_str());
+            }
+        }
+        catch (rul::RulHandlerException&) {
+            // Loading the default (Float) formula's result type in case of no formula type
+            formulaType = "Float";
+        }
+
+        set<string> formulaCalculatedFors = rulHand.getCalculatedForSet(ruleId);
+        if (rulHand.getCalculatedForSet(ruleId).empty()) {
+            WriteMsg::write(CMSG_UDM_NO_CALCULATED_FOR_SETTINGS, ruleId.c_str());
+        }
+
+        udm_nodes.try_emplace(ruleId, ruleId, formula, formulaType, formulaCalculatedFors);
+
     }
+    //}
 }
 
 // Just a helperfunction for loadFormulaAttributes, for better transparency, hiding try catch, etc..

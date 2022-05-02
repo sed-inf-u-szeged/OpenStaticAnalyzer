@@ -43,7 +43,7 @@ static string errorListFileName;
 static string graphFileName;
 static string outputFileName;
 static string limFileName;
-static string rul_s = "ESLint.rul";
+static string rul_s = "ESLint.rul.md";
 static string rulConfig = "Default";
 static bool exportRul = false;
 static string fList;
@@ -99,7 +99,7 @@ const common::Option OPTIONS_OBJ [] = {
   { false,  "-out",             1, "filename",          0,  OT_WC,  ppOut,        NULL,   "Specify the name of the output file. The list of rule violations will be dumped in it.\n"},
   CL_INPUT_LIST
   CL_LIM
-  CL_RUL_AND_RULCONFIG("ESLint.rul")
+  CL_RUL_AND_RULCONFIG("ESLint.rul.md")
   CL_EXPORTRUL
   COMMON_CL_ARGS
 };

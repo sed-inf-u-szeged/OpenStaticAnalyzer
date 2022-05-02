@@ -138,6 +138,14 @@ namespace columbus {  namespace io {
       * \throw IOException if the writing is failed.
       * \throw IOException if the open mode isn't write
       */
+      void writeColumn(const std::string_view& value);
+
+      /**
+      * \param write a column value in to a line
+      * \param value [in] column value
+      * \throw IOException if the writing is failed.
+      * \throw IOException if the open mode isn't write
+      */
       void writeColumn(const char* value);
 
       /**
@@ -218,4 +226,3 @@ namespace columbus {  namespace io {
 }}
 
 #endif
-

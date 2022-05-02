@@ -23,21 +23,9 @@
 namespace columbus { namespace lim { namespace patterns {
 
     columbus::rul::RulHandler& getPatternRulHander() {
-        static columbus::rul::RulHandler temp("Default", "eng");
-        return temp;
-    }
-
-    const RulContainer& getMAIN_GROUP() {
-        static RulContainer temp("PatternGroup", "Pattern Name", true );
-        return temp;
-    };
-    const RulContainer& getSUB_GROUP1() {
-        static RulContainer temp("AntiPattern", "Anti Pattern", true, "summarized", "", true, "An AntiPattern is a literary form that describes a commonly occurring solution to a problem that generates decidedly negative consequences. The AntiPattern may be the result of a manager or developer not knowing any better, not having sufficient knowledge or experience in solving a particular type of problem, or having applied a perfectly good pattern in the wrong context.");
-        return temp;
-    }
-    const RulContainer& getSUB_GROUP2() {
-        static RulContainer temp("DesignPattern", "Design Pattern", true, "summarized", "", true, "In software engineering, a design pattern is a general repeatable solution to a commonly occurring problem in software design. A design pattern isn't a finished design that can be transformed directly into code. It is a description or template for how to solve a problem that can be used in many different situations.");
-        return temp;
+      static columbus::rul::RulHandler temp(
+          common::getExecutableProgramDir() + "Patterns/pattern_tag_metadata.md", "Default", "eng");
+      return temp;
     }
 
     std::set<NodeId> getSingleTypes(const lim::asg::type::Type &_type, int depth) {
@@ -1046,9 +1034,22 @@ namespace columbus { namespace lim { namespace patterns {
             patternRulHander.createLanguage(metricID, "eng");
             patternRulHander.setIsEnabled(metricID, true);
             patternRulHander.setIsVisible(metricID, true);
-            patternRulHander.setGroupType(metricID, configName, _rul.group);
-            if (!_rul.groupMember.empty())
-                patternRulHander.addMetricGroupMembers(metricID, _rul.groupMember);
+            // patternRulHander.setGroupType(metricID, configName, _rul.group);
+            if (!_rul.groupMember.empty()) {
+                patternRulHander.addTag(metricID, rul::SplitTagStringView{"tool", "Patterns"});
+                if (_rul.groupMember == "AntiPattern") {
+                  patternRulHander.addTag(metricID, rul::SplitTagStringView{"general", "Anti Pattern"});
+                } else if (_rul.groupMember == "DesignPattern") {
+                  patternRulHander.addTag(metricID, rul::SplitTagStringView{"tool", "Design Pattern"});
+                } else {
+                  auto &custom_tag_metadata = patternRulHander.getTagMetadataStore()
+                                                  .try_add_kind("general")
+                                                  .try_add_value(_rul.groupMember)
+                                                  .value_metadata_ref();
+                  custom_tag_metadata.description = "Custom Patterns";
+                  patternRulHander.addTag(metricID, rul::SplitTagStringView{"general", _rul.groupMember});
+                }
+            }
             patternRulHander.setHasWarningText(metricID, true);
             patternRulHander.setDisplayName(metricID, _rul.name);
             patternRulHander.setWarningText(metricID, _rul.helpText);
@@ -1244,17 +1245,9 @@ namespace columbus { namespace lim { namespace patterns {
                 }}
             };
 
-            RulContainer _rul(metricID, displayName.empty() ? patternName : displayName, true, "false", category, true, description);
+            RulContainer _rul(metricID, displayName.empty() ? patternName : displayName, true, category, true, description);
            
             auto calculatedFor = calculatedFors.find(asg);
-
-            if (inGraph.findNode(category) == graph::Graph::invalidNode) {
-                if (category != getSUB_GROUP1().id && category != getSUB_GROUP2().id) {
-                    const RulContainer SUB_GROUP(category, category, true, "summarized", "", true, "Custom Patterns");
-                    addRulToRulHander(SUB_GROUP);
-                }
-            }
-
             addRulToRulHander(_rul, metricID, priority, calculatedFor->second);
         }
         // append CALCULATEDFOR to an existing pattern_warning

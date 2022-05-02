@@ -722,7 +722,7 @@ bool ASTConverterVisitor::VisitMemberExpr(const clang::MemberExpr* stmt)
 
 bool ASTConverterVisitor::TraverseLambdaExpr(clang::LambdaExpr* stmt)
 {
-  // TODO: Lambdas get filtered! Fix that!
+  conversionInfo.lambdaCallOpExprMap[stmt->getCallOperator()] = stmt;
   TraverseCXXMethodDecl(stmt->getCallOperator());
   RecursiveASTVisitor<ASTConverterVisitor>::TraverseLambdaExpr(stmt);
   return true;
@@ -1929,6 +1929,18 @@ template<class T, class U> bool ASTConverterVisitor::createNode(std::shared_ptr<
       {
         assert(pMyCurrentTU && "TU should already be set at this point.");
         globalInfo.limOrigin.addCompIdCppIdLimIdToMap(conversionInfo.pCurrentASTFile->getId(), it->second, out->getId());
+      }
+      else
+      {
+        auto lambdaIt = conversionInfo.lambdaCallOpExprMap.find(decl);
+        if (lambdaIt != conversionInfo.lambdaCallOpExprMap.end())
+        {
+            auto lambdaExprIt = conversionInfo.originMap->node2id.find((void*)lambdaIt->second);
+            if (lambdaExprIt != conversionInfo.originMap->node2id.end())
+            {
+              globalInfo.limOrigin.addCompIdCppIdLimIdToMap(conversionInfo.pCurrentASTFile->getId(), lambdaExprIt->second, out->getId());
+            }
+        }
       }
       
       if (const NamedDecl* nd = dyn_cast<NamedDecl>(decl))

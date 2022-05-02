@@ -62,6 +62,13 @@ namespace columbus {
       const string ATTR_RUL_WARNING      = "Warning";
       const string ATTR_RUL_CALCULATED   = "Calculated";
       const string ATTR_RUL_CALCULATEDFOR= "CalculatedFor";
+      const string ATTR_RUL_TAGS         = "Tags";
+      const string ATTR_RUL_TAG          = "Tag";
+      const string ATTR_RUL_TAG_METADATA_URL              = "url";
+      const string ATTR_RUL_TAG_METADATA_DESCRIPTION      = "description";
+      const string ATTR_RUL_TAG_METADATA_SUMMARIZED       = "summarized";
+      const string ATTR_RUL_TAG_METADATA_SUMMARIZED_TRUE  = "true";
+      const string ATTR_RUL_TAG_METADATA_SUMMARIZED_FALSE = "false";
       
       const string ATTR_DCF_CLONESMELLTYPE = "CloneSmellType";
       
@@ -79,6 +86,7 @@ namespace columbus {
       const string NTYPE_RUL_METRIC      = "RulMetric";
       const string NTYPE_RUL_TOOL        = "RulTool";
       const string NTYPE_RUL_TREE_NODE   = "RulTreeNode";
+      const string NTYPE_RUL_METADATA    = "RulMetadata";
       
       const string NTYPE_LIM_COMPONENT   = "Component";
       const string NTYPE_LIM_MODULE      = "Module";
@@ -146,6 +154,7 @@ namespace columbus {
       const string UID_LOGICAL_ROOT         = "__LogicalRoot__";
       const string UID_PHYSICAL_ROOT        = "__PhysicalRoot__";
       const string UID_RUL_GROUPS           = "__RulGroups__";
+      const string UID_RUL_TAG_METADATA     = "__RulTagMetadata__";
       
       // Header Attributes
       const string HEADER_ASG_KEY               = "asg";

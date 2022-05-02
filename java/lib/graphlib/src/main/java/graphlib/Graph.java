@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import columbus.ColumbusException;
 import columbus.IO;
@@ -551,9 +552,15 @@ public class Graph extends AttributeOwner {
 	 */
 	public void traverseBreadthFirst(Node startNode, EdgeTypeSet edgetypeset, Visitor visitor) throws VisitorException {
 		List<Node> nodes = new ArrayList<Node>();
+		Set<String> visitedNode = new TreeSet<String>();
 		nodes.add(startNode);
 		while (!nodes.isEmpty()) {
 			Node node = nodes.remove(0);
+			if (visitedNode.contains(node.getUID()))
+			{
+				continue;
+			}
+			visitedNode.add(node.getUID());
 			visitor.preNodeVisitorFunc(node);
 			for (Edge edge : node.getOutEdges()) {
 				if (!edgetypeset.contains(edge.getType())) {
@@ -575,14 +582,8 @@ public class Graph extends AttributeOwner {
 	 * @throws VisitorException Throws exception if something went wrong in the visitor.
 	 */
 	public void traverseDepthFirstPostorder(Node startNode, Edge.EdgeTypeSet edgetypeset, Visitor visitor) throws VisitorException  {
-		for (Edge edge : startNode.getOutEdges()) {
-			if (!edgetypeset.contains(edge.getType())) {
-				continue;
-			}
-			visitor.edgeVisitorFunc(edge);
-			traverseDepthFirstPostorder(edge.getToNode(), edgetypeset, visitor);
-		}
-		visitor.postNodeVisitorFunc(startNode);
+		Set<String> visitedNodes = new TreeSet<String>();
+		traverseDepthFirst(startNode, edgetypeset, visitor, visitedNodes, false, true, false);
 	}
 
 	/**
@@ -595,14 +596,8 @@ public class Graph extends AttributeOwner {
 	 * @throws VisitorException Throws exception if something went wrong in the visitor.
 	 */
 	public void traverseDepthFirstPreorder(Node startNode, Edge.EdgeTypeSet edgetypeset, Visitor visitor) throws VisitorException {
-		visitor.preNodeVisitorFunc(startNode);
-		for (Edge edge : startNode.getOutEdges()) {
-			if (!edgetypeset.contains(edge.getType())) {
-				continue;
-			}
-			visitor.edgeVisitorFunc(edge);
-			traverseDepthFirstPreorder(edge.getToNode(), edgetypeset, visitor);
-		}
+		Set<String> visitedNodes = new TreeSet<String>();
+		traverseDepthFirst(startNode, edgetypeset, visitor, visitedNodes, true, false, true);
 	}
 
 	/**
@@ -615,15 +610,59 @@ public class Graph extends AttributeOwner {
 	 * @throws VisitorException Throws exception if something went wrong in the visitor.
 	 */
 	public void traverseDepthFirst(Node startNode, Edge.EdgeTypeSet edgetypeset, Visitor visitor) throws VisitorException {
-		visitor.preNodeVisitorFunc(startNode);
-		for (Edge edge : startNode.getOutEdges()) {
-			if (!edgetypeset.contains(edge.getType())) {
-				continue;
-			}
-			visitor.edgeVisitorFunc(edge);
-			traverseDepthFirst(edge.getToNode(), edgetypeset, visitor);
+		Set<String> visitedNodes = new TreeSet<String>();
+		traverseDepthFirst(startNode, edgetypeset, visitor, visitedNodes, true, true, true);
+	}
+
+	protected void traverseDepthFirst(Node startNode, Edge.EdgeTypeSet edgetypeset, Visitor visitor, Set<String> visitedNodes, boolean preNode, boolean postNode, boolean preEdge) throws VisitorException {
+		if (visitedNodes.contains(startNode.getUID()))
+			return;
+
+		visitedNodes.add(startNode.getUID());
+		if (preNode)
+		{
+			visitor.preNodeVisitorFunc(startNode);
 		}
-		visitor.postNodeVisitorFunc(startNode);
+		Map<String, List<Edge>> orderedEdges = new TreeMap<String, List<Edge>>();
+		for (Edge edge : startNode.getOutEdges()) {
+			List<Edge> edges = null;
+			String toNode = edge.getToNode().getUID();
+			if (!orderedEdges.containsKey(toNode))
+			{
+				edges = new ArrayList<Edge>();
+				orderedEdges.put(toNode, edges);
+			}
+			else
+			{
+				edges = orderedEdges.get(toNode);
+			}
+			edges.add(edge);
+		}
+
+		for (List<Edge> edgeList : orderedEdges.values()) {
+			if (!preEdge)
+			{
+				traverseDepthFirst(edgeList.get(0).getToNode(), edgetypeset, visitor, visitedNodes, preNode, postNode, preEdge);
+			}
+
+			for (Edge edge : edgeList)
+			{
+				if (!edgetypeset.contains(edge.getType()))
+				{
+					continue;
+				}
+				visitor.edgeVisitorFunc(edge);
+			}
+
+			if (preEdge)
+			{
+				traverseDepthFirst(edgeList.get(0).getToNode(), edgetypeset, visitor, visitedNodes, preNode, postNode, preEdge);
+			}
+		}
+		if (postNode)
+		{
+			visitor.postNodeVisitorFunc(startNode);
+		}
 	}
 
 	

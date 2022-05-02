@@ -149,8 +149,6 @@ class ResultConverter: public XERCES_CPP_NAMESPACE::DefaultHandler {
 
     // Set containing the id of rules added to the graph
     std::unordered_set<std::string> dynamicRules;
-    // Set containing the name of rule groups added to the graph
-    std::unordered_set<std::string> dynamicRuleGroups;
 
     /**
      * \brief Add current warning into the graph.

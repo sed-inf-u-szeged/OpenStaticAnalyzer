@@ -26,8 +26,11 @@
 #include <map>
 #include <set>
 #include <list>
-#include <Exception.h>
 #include <iterator>
+
+#include "RulHandlerException.h"
+#include "RulTagStore.h"
+#include "RulMDString.h"
 
 namespace columbus {
 
@@ -36,17 +39,6 @@ namespace io {
 }
 
 namespace rul {
-
-class RulHandlerException : public columbus::Exception {
-public:
-  RulHandlerException(const std::string &location, const std::string &message) : Exception(location, message) {}
-
-  virtual const std::string getClassName() const
-  {
-    return "columbus::rul::RulHandlerException";
-  }
-};
-
 
 class RulHandler {
 
@@ -62,7 +54,7 @@ private:
     RulBoolean warning;
     std::string displayName;
     std::string description;
-    std::string helpText;
+    RulMDString helpText;
     std::string warningText;
     RulLang()
       : warning (rulUndefined)
@@ -99,6 +91,7 @@ private:
     std::map<std::string, std::string> baselines;
     std::map<std::string, RulSetting> settings;
     std::set<std::string> calculated;
+    std::set<std::shared_ptr<Tag>> tags;
     RulLang* actualLang;
     RulConfiguration* parentConfig;
     RulConfiguration()
@@ -128,6 +121,7 @@ private:
       , baselines(rc.baselines)
       , settings(rc.settings)
       , calculated(rc.calculated)
+      , tags(rc.tags)
       , actualLang(rc.actualLang)
       , parentConfig(rc.parentConfig)
     {}
@@ -144,6 +138,7 @@ private:
       baselines = rc.baselines;
       settings = rc.settings;
       calculated = rc.calculated;
+      tags = rc.tags;
       actualLang = rc.actualLang;
       parentConfig = rc.parentConfig;
       originalId = rc.originalId;
@@ -169,12 +164,13 @@ private:
   };
 
   struct RulData {
-    std::map<std::string, std::map<std::string, std::string> > toolDescription;
+    std::map<std::string, std::map<std::string, RulMDString> > toolDescription;
     std::map<std::string, RulMetric> metrics;
     std::map<std::string, std::string> redefines;
     std::map<std::string, std::string> originalIdRuleId;
     std::map<std::string, std::string> edges;
     std::map<std::string, std::set<std::string> > viewEdges;
+    TagStore tagStore;
   };
 
   RulData rulData;
@@ -209,7 +205,10 @@ public:
   void setWarningText(const std::string& ruleId, const std::string& warningText);
   void setWarningText(const std::string& ruleId, const std::string& configuration, const std::string& warningText, const std::string& lang);
   std::string getLineBreakWarningText(const std::string& ruleID, const std::list<std::string>& arg) const;
+  std::string getToolDescription(const std::string& field, RulMDString::EscapedHTMLFormatTag) const;
+  std::string getToolDescription(const std::string& field, RulMDString::HtmlFormatTag) const;
   std::string getToolDescription(const std::string& field) const;
+  const RulMDString &getToolDescriptionValue(const std::string& field) const;
   void setToolDescription(const std::string& field, const std::string& description) ;
   void setToolDescription(const std::string& field, const std::string& description, const std::string& configuration) ;
   bool getIsDefined(const std::string& ruleId) const;
@@ -225,6 +224,8 @@ public:
   std::string getOriginalIdByRuleId(const std::string& ruleId) const;
   void setOriginalId(const std::string& ruleId,const std::string& originalId);
   std::string getHelpText(const std::string& ruleId) const;
+  std::string getHelpText(const std::string& ruleId, RulMDString::HtmlFormatTag) const;
+  std::string getHelpText(const std::string& ruleId, RulMDString::RawFormatTag) const;
   void setHelpText(const std::string& ruleId, const std::string& helpText) ;
   void setHelpText(const std::string& ruleId, const std::string& configuration , const std::string& helpText, const std::string& lang) ;
   bool getHasWarningText(const std::string& ruleId) const;
@@ -295,9 +296,98 @@ public:
   void setCalculatedForSet(const std::string& ruleId, const std::string& configuration, const std::set<std::string>& calculatedFor);
   void setCalculatedForSet(const std::string& ruleId, const std::set<std::string>& calculatedFor);
   const std::set<std::string>& getCalculatedForSet(const std::string& ruleId);
+  void setTags(const std::string& ruleId, const std::string& configuration, const std::set<std::shared_ptr<Tag>>& tags);
+  void setTags(const std::string& ruleId, const std::set<std::shared_ptr<Tag>>& tags);
+  void addTag(const std::string& ruleId, const std::string& configuration, std::shared_ptr<Tag> tag);
+  void addTag(const std::string& ruleId, std::shared_ptr<Tag> tag);
+  void addTag(const std::string& ruleId, const std::string& configuration, std::string&& tag_string);
+  void addTag(const std::string& ruleId, std::string&& tag_string);
+  void addTag(const std::string& ruleId, const std::string& configuration, SplitTagStringView tag_string_view);
+  void addTag(const std::string& ruleId, SplitTagStringView tag_string_view);
+  [[nodiscard]] const std::set<std::shared_ptr<Tag>>& getTags(const std::string& ruleId);
+  [[nodiscard]] rul::TagStore &getTagStore();
+  [[nodiscard]] const rul::TagStore &getTagStore() const;
+  [[nodiscard]] rul::TagMetadataStore &getTagMetadataStore();
+  [[nodiscard]] const rul::TagMetadataStore &getTagMetadataStore() const;
+  [[nodiscard]] static bool isEmptyString(std::string_view rul_string);
   const std::string& getFileName() const;
 
   virtual ~RulHandler();
+
+  class RulConfigInheritanceView {
+  public:
+    RulConfigInheritanceView() noexcept;
+    explicit RulConfigInheritanceView(const RulConfiguration &rul_config) noexcept;
+
+    struct Iterator {
+    public:
+      using difference_type = std::ptrdiff_t;
+      using value_type = RulConfiguration;
+      using pointer = const RulConfiguration *;
+      using reference = const RulConfiguration &;
+      using iterator_category = std::forward_iterator_tag;
+
+      Iterator() noexcept;
+      explicit Iterator(const RulConfiguration *rul_config) noexcept;
+
+      [[nodiscard]] reference operator*() const noexcept;
+      [[nodiscard]] pointer operator->() const noexcept;
+      [[nodiscard]] bool operator==(const Iterator &that) const noexcept;
+      [[nodiscard]] bool operator!=(const Iterator &that) const noexcept;
+      Iterator &operator++() noexcept;
+      [[nodiscard]] Iterator operator++(int) noexcept;
+
+    private:
+      const RulConfiguration *rul_config_ = nullptr;
+    };
+
+    [[nodiscard]] Iterator begin() const noexcept;
+    [[nodiscard]] Iterator end() const noexcept;
+
+  private:
+    const RulConfiguration *rul_config_ = nullptr;
+  };
+
+  class RulConfigTagsView {
+  public:
+    explicit RulConfigTagsView(const RulConfiguration &rul_config) noexcept;
+
+    struct Iterator {
+    public:
+      using value_type = std::shared_ptr<Tag>;
+      using difference_type = std::ptrdiff_t;
+      using pointer = const std::shared_ptr<Tag> *;
+      using reference = const std::shared_ptr<Tag> &;
+      using iterator_category = std::forward_iterator_tag;
+
+      Iterator() noexcept;
+      explicit Iterator(const RulConfigInheritanceView &config_view) noexcept;
+
+      [[nodiscard]] reference operator*() const noexcept;
+      [[nodiscard]] pointer operator->() const noexcept;
+
+      [[nodiscard]] bool operator==(const Iterator &that) const noexcept;
+      [[nodiscard]] bool operator!=(const Iterator &that) const noexcept;
+
+      Iterator &operator++() noexcept;
+      [[nodiscard]] Iterator operator++(int) noexcept;
+
+    private:
+      RulConfigInheritanceView::Iterator config_it_;
+      RulConfigInheritanceView::Iterator config_end_;
+      std::set<std::shared_ptr<Tag>>::const_iterator tags_it_;
+
+      void skip_empty_tags() noexcept;
+    };
+
+    [[nodiscard]] Iterator begin() const noexcept;
+    [[nodiscard]] Iterator end() const noexcept;
+
+  private:
+    RulConfigInheritanceView config_view_;
+  };
+
+  [[nodiscard]] RulConfigTagsView getAllTags(const std::string &ruleId);
 
 protected:
 
@@ -311,6 +401,12 @@ protected:
   RulConfiguration* findConfiguration(const std::string& metricID, const std::string& configuration);
   RulLang* findLanguage(const std::string& metricID, const std::string& configuration, const std::string& language);
   const RulConfiguration* getParentConfig(const RulConfiguration* rulConfig) const;
+
+  static void tryAddTagForConfig(RulConfiguration &rul_config, std::shared_ptr<Tag> tag);
+
+  static void setParentForConfig(const std::string &config_name, RulConfiguration &rul_config,
+                                 const std::map<std::string, std::string> &redefines,
+                                 std::map<std::string, RulConfiguration> &configs);
 
   template<typename T, typename R>
   const R& getLangSpecData (const std::string& ruleId, T key, const R& wrongValue) const;
@@ -360,6 +456,8 @@ protected:
   void writeRulLang(io::SimpleXmlIO& xml, const RulConfiguration& rulConfig )const ;
 
   friend class RulXmlHandler;
+  friend class RulMDParser;
+  friend class RulMDWriter;
 };
 
 } // namespace rul

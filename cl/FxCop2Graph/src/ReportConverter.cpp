@@ -103,7 +103,7 @@ void ReportConverter::writeWarningLine(const string& id, const string& warningTe
 	}
 }
 
-void ReportConverter::addWarningToNode(const string& mangleName, const string& id, const string& group, const string& warningText) {
+void ReportConverter::addWarningToNode(const string& mangleName, const string& id, const string& /* group */, const string& warningText) {
     FindLimNode fln(mangleName, limFact);
     const lim::asg::logical::Member* member = fln.getLimNode();
     if (member != nullptr) {
@@ -132,7 +132,7 @@ void ReportConverter::addWarningToNode(const string& mangleName, const string& i
     }
 }
 
-void ReportConverter::addWarningToNode(const string& path, const string& id, const string& group, const string& warningText, int line, int endline, int col, int endcol) {
+void ReportConverter::addWarningToNode(const string& path, const string& id, const string& /* group */, const string& warningText, int line, int endline, int col, int endcol) {
 	
 	if (!xRulhandler->getIsEnabled(id)) {
 		return; // rule is not enabled

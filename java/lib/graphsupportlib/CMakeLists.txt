@@ -7,8 +7,8 @@ set (TARGET_NAME java_graphsupportlib)
 
 add_custom_command (
     OUTPUT ${GENERATED_FILES}
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/build_sm.xml java_graphlib
-    COMMAND ant -f build_sm.xml -Dbuild=${CMAKE_CURRENT_BINARY_DIR}/build -Dbin=${CMAKE_CURRENT_BINARY_DIR}/../bin > ${CMAKE_CURRENT_BINARY_DIR}/ant.log
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/build_osa.xml java_graphlib
+    COMMAND ant -f build_osa.xml -Dbuild=${CMAKE_CURRENT_BINARY_DIR}/build -Dbin=${CMAKE_CURRENT_BINARY_DIR}/../bin > ${CMAKE_CURRENT_BINARY_DIR}/ant.log
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 

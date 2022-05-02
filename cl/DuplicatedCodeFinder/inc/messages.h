@@ -78,8 +78,9 @@
 
 #define CMSG_LINE_INFO_CASE_LOWERED             "lower case" 
 #define CMSG_LINE_INFO_CASE_DEFAULT             "default case"
-#define CMSG_MINIMUM_NUMBER_OF_LINES            common::WriteMsg::mlDebug, "Debug: The minimum lines of clones: %d\n"
-#define CMSG_MINIMUM_NUMBER_OF_ASG_NODES        common::WriteMsg::mlDebug, "Debug: The minimum ASG nodes of clones: %d\n"
+#define CMSG_MINIMUM_NUMBER_OF_LINES            common::WriteMsg::mlDebug, "Debug: The minimum number of lines of clones: %d\n"
+#define CMSG_MINIMUM_NUMBER_OF_STATEMENTS       common::WriteMsg::mlDebug, "Debug: The minimum number of statements of clones: %d\n"
+#define CMSG_MINIMUM_NUMBER_OF_ASG_NODES        common::WriteMsg::mlDebug, "Debug: The minimum number of ASG nodes of clones: %d\n"
 #define CMSG_MAXIMUM_PATTERN_SIZE               common::WriteMsg::mlDebug, "Debug: Maximum of the single pattern size: %d\n"
 #define CMSG_MINIMUM_PATTERN_FULL_LENGTH        common::WriteMsg::mlDebug, "Debug: Minimum of the full length of the repeating pattern: %d\n"
 #define CMSG_DETECTING_CODE_DUPLICATIONS        common::WriteMsg::mlDebug, "Debug: Detecting code duplications\n"

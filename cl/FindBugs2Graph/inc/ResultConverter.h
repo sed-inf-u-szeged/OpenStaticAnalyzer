@@ -38,7 +38,7 @@ public:
   void buildtree(const bool exportRul);
   void saveGraph(const std::string& fileName);
 
-  void addWarningToNode(const std::string& path, const std::string& id, const std::string& group, const std::string& warningText, std::list<columbus::graph::AttributeComposite>& sourceLinks, int line, int endline, int col = 0,  int endcol = INT_MAX);
+  void addWarningToNode(const std::string& path, const std::string& id, /*const std::string& group,*/ const std::string& warningText, std::list<columbus::graph::AttributeComposite>& sourceLinks, int line, int endline, int col = 0,  int endcol = INT_MAX);
   void collectData(const std::string& fbOutFile);
 
   bool getFullPath(const std::string& path, std::string& fullPath);

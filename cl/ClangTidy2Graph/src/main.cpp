@@ -22,11 +22,20 @@
 #define EXECUTABLE_NAME "ClangTidy2Graph"
 
 #include <cstdlib>
+#include <filesystem>
+#include <fstream>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+
 #include <MainCommon.h>
 #include <common/inc/Stat.h>
 #include <common/inc/FileSup.h>
 #include <io/inc/CsvIO.h>
 #include <rul/inc/RulHandler.h>
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+
 
 #include "../inc/ResultConverter.h"
 #include "../inc/messages.h"
@@ -37,10 +46,11 @@ using namespace columbus;
 using namespace columbus::clangtidy2graph;
 
 static string rulesListFileName;
+static string mdFileName;
 static string outputFileName;
 static string limFileName;
 static string graphFileName;
-static string rul_s = "ClangTidy.rul";
+static string rul_s = "ClangTidy.rul.md";
 static string rulConfig = "Default";
 static bool exportRul = false;
 static string fList;
@@ -49,6 +59,7 @@ static size_t peakMemory = 0;
 
 static bool ppMakeRul(const Option *o, char *argv[]) {
   rulesListFileName = argv[0];
+  mdFileName = argv[1];
   return true;
 }
 
@@ -92,12 +103,12 @@ static void ppFile(char *filename) {
 }
 
 const common::Option OPTIONS_OBJ [] = {
-  { false,  "-makerul",         1, "rules.csv",         0,  OT_WS,  ppMakeRul,    NULL,   "Making rul file from the rules.csv file."},
+  { false,  "-makerul",         2, "rules.csv ClangTidyChecks.md",      0,  OT_WS,  ppMakeRul,    NULL,   "Making rul file from the rules.csv and ClangTidyChecks.md"},
   { false,  "-graph",           1, "filename",          0,  OT_WC,  ppGraph,      NULL,   "Save binary graph output."},
   { false,  "-out",             1, "filename",          0,  OT_WC,  ppOut,        NULL,   "Specify the name of the output file. The list of rule violations will be dumped in it.\n"},
   CL_INPUT_LIST
   CL_LIM
-  CL_RUL_AND_RULCONFIG("ClangTidy.rul")
+  CL_RUL_AND_RULCONFIG("ClangTidy.rul.md")
   CL_EXPORTRUL
   COMMON_CL_ARGS
 };
@@ -107,6 +118,55 @@ static inline void updateMemStat(size_t *max_mem) {
   if (*max_mem < ms.size) {
     *max_mem = ms.size;
   }
+}
+
+std::unordered_map<std::string, std::string> parseCheckDescriptionMD(const std::string &mdFilePath) {
+  const auto tryGetId = [](const std::string &line) -> std::optional<std::string_view> {
+    if (!boost::starts_with(line, "#### ")) { return {}; }
+
+    constexpr std::string_view idSuffix = "}";
+    const auto idEndPos = line.rfind(idSuffix);
+    if (idEndPos == std::string::npos) { return {}; }
+
+    constexpr std::string_view idPrefix = "{#";
+    const auto idStartPos = line.rfind(idPrefix, idEndPos);
+    if (idStartPos == std::string::npos) { return {}; }
+
+    const auto idTextStartPos = idStartPos + idPrefix.size();
+    std::string_view id(line.data() + idTextStartPos, idEndPos - idTextStartPos);
+
+    if (!boost::starts_with(id, "CT_")) {
+      WriteMsg::write(WriteMsg::mlWarning, "Skipped possible rule id in '%s' since it does not start with CT_\n",
+                      line.c_str());
+      return {};
+    }
+    return id;
+  };
+
+  std::ifstream mdFile(mdFilePath);
+  if (!mdFile) {
+    throw std::runtime_error("error opening file [" + mdFilePath + "]");
+  }
+
+  std::string line;
+
+  std::getline(mdFile, line);
+  auto first_id = tryGetId(line);
+  if (!first_id) { throw std::runtime_error("First line is not rule id header"); }
+
+  std::unordered_map<std::string, std::string> map;
+  std::string *currentHelpText = &map.try_emplace(std::string(*first_id)).first->second;
+
+  while (std::getline(mdFile, line)) {
+    if (auto maybe_id = tryGetId(line)) {
+      boost::algorithm::trim_right(*currentHelpText);
+      currentHelpText = &map.try_emplace(std::string(*maybe_id)).first->second;
+    } else {
+      currentHelpText->append(line).push_back('\n');
+    }
+  }
+
+  return map;
 }
 
 int main(int argc, char* argv[]) {
@@ -119,43 +179,31 @@ int main(int argc, char* argv[]) {
     // Process the rules.csv and generate the rul.
     io::CsvIO csv(rulesListFileName, io::IOBase::omRead); //Open CSV
     csv.setSeparator(';');
+
+    auto helptextMap = parseCheckDescriptionMD(mdFileName);
     
     rul::RulHandler rulHandler(rulConfig, "eng");
     rulHandler.setToolDescription("ID", "ClangTidy");
-    
+    auto &generalTagMetadata =
+        rulHandler.getTagMetadataStore().try_add_kind("general");
+
     list<string> line;
-    int num_of_lines = 0;
+    csv.readLine(line);
+    line.clear();
 
     while(csv.readLine(line)){
-      num_of_lines++;
-      if(num_of_lines > 1){
-        //Reading csv
-        string priority = line.back();
-        line.pop_back(); //Priority
-        string check_id = line.back();
-        line.pop_back(); //ID
-        string display_name = line.back();
-        line.pop_back(); //New name
-        line.pop_back(); //Old name
-        string group = line.back();
-        line.pop_back(); //Group
-        string full_name = line.back();
+      //Reading csv
+      string priority = std::move(line.back());
+      line.pop_back(); //Priority
+      string check_id = std::move(line.back());
+      line.pop_back(); //ID
+      string display_name = std::move(line.back());
+      line.pop_back(); //New name
+      line.pop_back(); //Old name
+      string group = std::move(line.back());
+      line.pop_back(); //Group
+      string full_name = std::move(line.back());
       
-      
-      // Check does group exist
-      if(!rulHandler.getIsDefined(group)){
-        // insert new group metric
-        rulHandler.defineMetric(group);
-        rulHandler.createConfiguration(group, rulHandler.getConfig());
-        rulHandler.createLanguage(group, "eng");
-        rulHandler.setGroupType(group, "summarized");
-        rulHandler.setDisplayName(group, group);        
-        rulHandler.setHasWarningText(group, true);
-        rulHandler.setIsEnabled(group, true);
-        rulHandler.setIsVisible(group, true);
-        rulHandler.setHelpText(group,"");
-        
-      }
       
       //insert new check metric
       rulHandler.defineMetric(check_id);
@@ -164,17 +212,23 @@ int main(int argc, char* argv[]) {
       rulHandler.createLanguage(check_id, "eng");
       rulHandler.setHasWarningText(check_id, true);
       rulHandler.setGroupType(check_id, "false");
-      rulHandler.addMetricGroupMembers(check_id, group);
+      rulHandler.addTag(check_id, rul::SplitTagStringView{"tool", "ClangTidy"});
+      rulHandler.addTag(check_id, rul::SplitTagStringView{"general", group});
       rulHandler.setSettingValue(check_id, "Priority", priority, true);
       rulHandler.setDisplayName(check_id, display_name);
       rulHandler.setOriginalId(check_id, full_name);
-        
+      if (auto helpTextNodeIt = helptextMap.find(check_id); helpTextNodeIt != helptextMap.end()) {
+        rulHandler.setHelpText(check_id, helpTextNodeIt->second);
       }
-      line.erase(line.begin(), line.end());
+
+      generalTagMetadata.try_add_value(group).value_metadata_ref().summarized = true;
+
+      line.clear();
       
     }
     
     csv.close();
+
     rulHandler.saveRul(rul_s);
     
   }else {

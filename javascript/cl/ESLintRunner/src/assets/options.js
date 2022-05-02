@@ -84,6 +84,12 @@ const definitions = [
         defaultValue: false
     },
     {
+        name: constants.TEXT_OUTPUT,
+        type: Boolean,
+        description: "Save results into simple text-based format.",
+        defaultValue: false
+    },
+    {
         name: constants.MODULE_BASED_ANALYSIS,
         type: Boolean,
         description: 'Use module-based analysis instead of file-based analysis',
@@ -95,7 +101,20 @@ const definitions = [
         defaultValue: false,
         type: String,
         description: 'Filter file specified with relative or absolute path, to filter out certain files from the analysis based on their path names. Filtered files will not appear in the results.'
-    }
+    },
+    {
+        name: constants.TEMP_DIR_PATH,
+        defaultValue: false,
+        type: String,
+        description: 'Directory where temporary files will be stored.'
+    },
+    {
+        name: constants.EXECUTION_DIR,
+        type: String,
+        multiple: false,
+        defaultValue: false,
+        description: 'Execution dir'
+    },
 ];
 
 //sections of usage

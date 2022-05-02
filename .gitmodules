@@ -1,12 +1,15 @@
 [submodule "3rdparty/boost"]
 	path = 3rdparty/boost
 	url = https://github.com/boostorg/boost.git
+	ignore = dirty
 [submodule "3rdparty/zlib"]
 	path = 3rdparty/zlib
 	url = https://github.com/madler/zlib.git
+	ignore = dirty
 [submodule "3rdparty/PMD"]
 	path = 3rdparty/PMD
 	url = https://github.com/sed-inf-u-szeged/pmd.git
+	ignore = dirty
 [submodule "3rdparty/python2"]
 	path = 3rdparty/python2
 	url = ../cpython.git
@@ -15,13 +18,13 @@
 	path = 3rdparty/python3
 	url = ../cpython.git
 	ignore = dirty
-[submodule "cl/LIM2Patterns/pybind11"]
-	path = cl/LIM2Patterns/pybind11
-	url = https://github.com/pybind/pybind11
 [submodule "java/lib/openjdk"]
 	path = java/lib/openjdk
 	url = ../openjdk
 	ignore = dirty
+[submodule "cl/LIM2Patterns/pybind11"]
+	path = 3rdparty/pybind11
+	url = https://github.com/pybind/pybind11
 [submodule "3rdparty/clang"]
 	path = 3rdparty/clang
 	url = ../llvm-project

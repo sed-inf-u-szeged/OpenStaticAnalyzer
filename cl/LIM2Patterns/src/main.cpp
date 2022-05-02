@@ -26,9 +26,12 @@
 #include <MainCommon.h>
 #include <pybind11/pybind11.h>
 #include <rul/inc/RulHandler.h>
+#include <rul/inc/RulMD.h>
 #include <common/inc/WriteMessage.h>
+#include <common/inc/FileSup.h>
+#include <filesystem>
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
+#include <common/inc/PlatformDependentDefines.h>
 
 namespace py = pybind11;
 
@@ -160,11 +163,12 @@ int main(int argc, char** argv) {
     Py_IgnoreEnvironmentFlag = 1;
     Py_IsolatedFlag = 1;
 
-    auto _exec_string = boost::filesystem::system_complete(argv[0]);
-    std::wstring libs = (_exec_string.parent_path() / "Lib").wstring();
+    string path_separator = PATH_SEPARATOR;
+    wstring wpath_separator { path_separator.begin(), path_separator.end() };
+    filesystem::path _exec_path = getExecutableProgramDir();
+    std::wstring libs = (_exec_path / "python-modules").wstring() + wpath_separator + (_exec_path / "python-modules" / "lib-dynload").wstring();
     const wchar_t *_exec1 = Py_DecodeLocale(argv[0], NULL);
 
-    Py_SetPath(L"");
     Py_SetPath(libs.c_str());
     Py_SetProgramName(_exec1);
     PySys_AddWarnOption(L"ignore::DeprecationWarning");
@@ -191,7 +195,7 @@ int main(int argc, char** argv) {
     }
 
     if (!patternFile.empty()) {
-        using namespace boost::filesystem;
+        using namespace std::filesystem;
 
         const auto &getPatterns = [&](const string &pattern) {
             path _pattern(pattern);
@@ -253,15 +257,15 @@ int main(int argc, char** argv) {
     }
 
     if (!outFile.empty()) {
-        boost::filesystem::path _out(outFile);
-        auto temp = _out.leaf();
+        filesystem::path _out(outFile);
+        auto temp = _out.filename();
         if (!temp.has_extension() && !common::pathIsDirectory(_out.string())) {
             WriteMsg::write(CMSG_INVALID_OUTPUT_FILE);
             clError();
         }
         else {
             if (common::pathIsDirectory(outFile)) {
-                boost::filesystem::path _out(outFile);
+                filesystem::path _out(outFile);
                 _out /= (common::pathRemoveExtension(common::pathFindFileName(limFile)));
                 outFile = _out.string();
             }
@@ -273,7 +277,7 @@ int main(int argc, char** argv) {
     else {
         outFile = common::pathRemoveExtension(limFile);
     }
-    
+
     std::set<std::string> _whitelist, _blacklist;
     const auto &vecToString = [](const vector<string> &s) {
         string r = "[";
@@ -302,7 +306,7 @@ int main(int argc, char** argv) {
         _blacklist.insert(res.begin(), res.end());
         WriteMsg::write(common::WriteMsg::mlNormal, log);
     }
-    
+
     columbus::lim::patterns::lim2Patterns(limFile, patternFiles, _whitelist, _blacklist, outFile, patternsFolder, metricFile, graphFile, dumpXML, rulDumpDir);
 
     MAIN_END

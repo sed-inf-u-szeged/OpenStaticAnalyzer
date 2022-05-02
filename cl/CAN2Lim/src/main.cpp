@@ -274,7 +274,7 @@ int main(int argc, char *argv[]) {
 
     MainInit(argc, argv, "-");
 
-    WriteMsg::setSetTimestampPrefixes(true);
+    WriteMsg::setTimestampPrefixes(true);
 
     setStartTime(&totaltime);
     checkInputFiles();

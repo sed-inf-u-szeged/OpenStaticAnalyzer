@@ -57,14 +57,18 @@ static bool exportRul;
 static string inputFile;
 static string messagesXML;
 static string findbugsXML;
-static string rulesXML;
+static vector<string> rulesXMLs;
 static string idsTxt;
 
 static bool ppMakeRul (const Option *o, char *argv[]) {
   makerul = true;
   messagesXML = argv[0];
   findbugsXML = argv[1];
-  rulesXML = argv[2];
+  std::ifstream list_file(argv[2]);
+  std::string line;
+  while(std::getline(list_file, line)) {
+    rulesXMLs.push_back(std::move(line));
+  }
   return true;
 }
 
@@ -174,7 +178,7 @@ int main(int argc, char* argv[]) {
         WriteMsg::write(CMSG_FINDBUGS2GRAPH_MISSING_ASG);
         clError();
       }
-
+      
       if (limFile.empty()) {
         WriteMsg::write(CMSG_FINDBUGS2GRAPH_MISSING_LIM);
         clError();
@@ -193,11 +197,11 @@ int main(int argc, char* argv[]) {
       throw Exception("initxerces()", exceptionMessage);
     }
 
-
+    
     //make rule
     if (makerul) {
       RuleConverter ruleConverter;
-      ruleConverter.convertRuleFile(messagesXML, findbugsXML, rulesXML, rulFile, rulConfig, idsTxt);
+      ruleConverter.convertRuleFile(messagesXML, findbugsXML, rulesXMLs, rulFile, rulConfig, idsTxt);
     } else {
 
       //process findbugs output
@@ -215,7 +219,7 @@ int main(int argc, char* argv[]) {
 
     // terminate xerces
     XMLPlatformUtils::Terminate();
-    
+
   MAIN_END
 
   return 0;

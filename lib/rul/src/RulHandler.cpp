@@ -20,6 +20,8 @@
 
 
 #include "rul/inc/RulHandler.h"
+#include "rul/inc/RulMD.h"
+#include "rul/inc/RulMDString.h"
 #include "rul/inc/messages.h"
 #include <common/inc/WriteMessage.h>
 
@@ -31,11 +33,12 @@
 #include <xercesc/util/XMLUTF8Transcoder.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
 
-#include <iostream>
+#include <boost/algorithm/string.hpp>
+
+#include <array>
 #include <stack>
 #include <set>
 #include <algorithm>
-#include <memory>
 #include <io/inc/SimpleXmlIO.h>
 #include <common/inc/StringSup.h>
 
@@ -92,7 +95,12 @@ XERCES_CPP_NAMESPACE_USE
 #define _VISUAL                 "visual"
 #define _RUL_EMPTY_STRING       "~~@RUL_EMPTY_STRING@~~"
 #define _CALCULATED             "Calculated"
-#define _ELEMENT                "CalculatedFor"
+#define _CALCULATED_ELEMENT     "CalculatedFor"
+#define _TAGS                   "Tags"
+#define _TAG                    "Tag"
+#define _INCLUDES               "Includes"
+#define _INCLUDE                "Include"
+#define _INCLUDE_FILE           "file"
 
 namespace columbus {
 
@@ -106,10 +114,15 @@ RulHandler::RulHandler(const string& rulFileName,  const string& conf, const str
   , _language(lang)
   , _filename(rulFileName)
   , _strictMode(false)
-  , _xerces_inited(true)
+  , _xerces_inited(false)
 {
-  xercesInit();
-  parseXML(rulFileName, encoding);
+  if (boost::ends_with(rulFileName, ".md")) {
+    RulMDParser(rulFileName).parse_into(rulData);
+  } else {
+    _xerces_inited = true;
+    xercesInit();
+    parseXML(rulFileName, encoding);
+  }
   createIndex();
 }
 
@@ -186,28 +199,41 @@ void RulHandler::xercesTerminate()
 
 void RulHandler::createIndex()
 {
+  static constexpr std::array autoDefaultConfigs = {"cpp", "csharp", "java", "javascript", "python", "rpg"};
+  for (const auto &config : autoDefaultConfigs) {
+    rulData.redefines.try_emplace(config, "Default");
+  }
+  const auto canFallbackToDefault = std::any_of(autoDefaultConfigs.begin(), autoDefaultConfigs.end(),
+                                        [&](const auto &config) { return config == _configuration; });
+
   for(map<string, RulMetric>::iterator metricIt = rulData.metrics.begin(); metricIt != rulData.metrics.end(); ++metricIt) {
+    // find actual configuration in metric
+    map<string, RulConfiguration>::iterator actualConfigIt = metricIt->second.configs.find(_configuration);
+    if(actualConfigIt != metricIt->second.configs.end()) {
+      metricIt->second.actualConfig = &(actualConfigIt->second);
+    } else if (canFallbackToDefault) {
+      auto defaultConfigIt = metricIt->second.configs.find("Default");
+      if (defaultConfigIt != metricIt->second.configs.end()) {
+        metricIt->second.actualConfig = &(defaultConfigIt->second);
+      }
+    }
+
     // set configuration paret and actual lang
     for(map<string, RulConfiguration>::iterator configurationIt = metricIt->second.configs.begin(); configurationIt != metricIt->second.configs.end(); ++configurationIt ) {
       // set parent
-      map<string,string>::iterator parentNameIt = rulData.redefines.find(configurationIt->first);
-      if(parentNameIt != rulData.redefines.end()) {
-        map<string, RulConfiguration>::iterator paretConfigIt = metricIt->second.configs.find(parentNameIt->second);
-        if(paretConfigIt != metricIt->second.configs.end()) {
-          configurationIt->second.parentConfig = &(paretConfigIt->second);
+      if (auto parentNameIt = rulData.redefines.find(configurationIt->first); parentNameIt != rulData.redefines.end()) {
+        if (auto parentConfigIt = metricIt->second.configs.find(parentNameIt->second);
+            parentConfigIt != metricIt->second.configs.end()) {
+          configurationIt->second.parentConfig = &(parentConfigIt->second);
         }
       }
+
       // find actual language in actual configuration
       map<string, RulLang>::iterator actualLangIt = configurationIt->second.langs.find(_language);
       if(actualLangIt != configurationIt->second.langs.end()) {
         configurationIt->second.actualLang = &(actualLangIt->second);
       }
 
-    }
-    // find actual configuration in metric
-    map<string, RulConfiguration>::iterator actualConfigIt = metricIt->second.configs.find(_configuration);
-    if(actualConfigIt != metricIt->second.configs.end()) {
-      metricIt->second.actualConfig = &(actualConfigIt->second);
     }
   }
 }
@@ -264,7 +290,7 @@ void RulHandler::createConfiguration(const string& ruleId, const string& configN
 
 void RulHandler::createConfigurationForToolDescription(const string& configName)
 {
-  bool inserted = rulData.toolDescription.insert(make_pair(configName, map<string,string>()) ).second;
+  bool inserted = rulData.toolDescription.try_emplace(configName).second;
   if(!inserted) {
     throw RulHandlerException( COLUMBUS_LOCATION, CMSG_EX_CONFIGURATION_ALREADY_EXIST + configName);
   }
@@ -401,13 +427,25 @@ string RulHandler::getLineBreakWarningText(const string& ruleID, const list<stri
   return ret;
 }
 
-string RulHandler::getToolDescription(const string& field) const
+string RulHandler::getToolDescription(const string& field, RulMDString::EscapedHTMLFormatTag /*tag*/) const {
+  return getToolDescriptionValue(field).get_escaped_html_format();
+}
+
+string RulHandler::getToolDescription(const string& field, RulMDString::HtmlFormatTag /*tag*/) const {
+  return getToolDescriptionValue(field).get_html_format();
+}
+
+string RulHandler::getToolDescription(const string& field) const {
+  return getToolDescriptionValue(field).get_raw_format();
+}
+
+const RulMDString &RulHandler::getToolDescriptionValue(const string& field) const
 {
   string config = _configuration;
-  map<string, map<string, string> >::const_iterator configIt = rulData.toolDescription.find(config);
+  auto configIt = rulData.toolDescription.find(config);
   while(true) {
     if(configIt != rulData.toolDescription.end()) {
-      map<string, string>::const_iterator valueIt = configIt->second.find(field);
+      const auto valueIt = configIt->second.find(field);
       if(valueIt != configIt->second.end()) {
         if(valueIt->first != _empty_string) {
           return valueIt->second;
@@ -416,7 +454,7 @@ string RulHandler::getToolDescription(const string& field) const
     }
     
     // find parent of configuration
-    map<string, string>::const_iterator redefIt = rulData.redefines.find(config);
+    const auto redefIt = rulData.redefines.find(config);
     if(redefIt != rulData.redefines.end()) {
       config = redefIt->second;
       configIt = rulData.toolDescription.find(redefIt->second);
@@ -487,19 +525,28 @@ void RulHandler::setIsVisible(const string& ruleId, const string& configuration,
   setConfSpecData(ruleId, configuration, &RulConfiguration::visiable, visible ? rulTrue : rulFalse);
 }
 
-string RulHandler::getHelpText(const string& ruleId) const
+string RulHandler::getHelpText(const string &ruleId) const {
+  return getLangSpecData(ruleId, &RulLang::helpText, RulMDString(_empty_string)).get_escaped_html_format();
+}
+
+string RulHandler::getHelpText(const string& ruleId, RulMDString::HtmlFormatTag /*tag*/) const
 {
-  return getLangSpecData(ruleId, &RulLang::helpText, _empty_string);
+  return getLangSpecData(ruleId, &RulLang::helpText, RulMDString(_empty_string)).get_html_format();
+}
+
+string RulHandler::getHelpText(const string& ruleId, RulMDString::RawFormatTag /*tag*/) const
+{
+  return getLangSpecData(ruleId, &RulLang::helpText, RulMDString(_empty_string)).get_raw_format();
 }
 
 void RulHandler::setHelpText(const string& ruleId, const string& helpText)
 {
-  setLangSpecData(ruleId, &RulLang::helpText, helpText);
+  setLangSpecData(ruleId, &RulLang::helpText, RulMDString(helpText));
 }
 
 void RulHandler::setHelpText(const string& ruleId, const string& configuration , const string& helpText, const string& lang)
 {
-  setLangSpecData(ruleId, configuration, lang, &RulLang::helpText, helpText);
+  setLangSpecData(ruleId, configuration, lang, &RulLang::helpText, RulMDString(helpText));
 }
 
 bool RulHandler::getHasWarningText(const string& ruleId) const
@@ -807,13 +854,14 @@ void RulHandler::getMetricSettingsName(const string& ruleId, set<string>& list)
 
 void RulHandler::writeRulToolDescription(io::SimpleXmlIO& xml) const
 {
-  for(map<string, map<string, string> >::const_iterator configIt = rulData.toolDescription.begin(); configIt != rulData.toolDescription.end(); ++configIt) {
+  for(auto configIt = rulData.toolDescription.begin(); configIt != rulData.toolDescription.end(); ++configIt) {
     xml.writeBeginElement(_CONFIG);
     xml.writeAttribute(_CONFIG_NAME, configIt->first);
-    for(map<string, string>::const_iterator tooldId = configIt->second.begin(); tooldId != configIt->second.end(); ++tooldId) {
+    for(auto tooldId = configIt->second.begin(); tooldId != configIt->second.end(); ++tooldId) {
       xml.writeBeginElement(_TOOL_DESCRIPTION_ITEM);
       xml.writeAttribute(_TOOL_DESCRIPTION_NAME, tooldId->first);
-      xml.writeElementContent(tooldId->second);
+      xml.writeElementContent(tooldId->first == "Description" ? tooldId->second.get_html_format()
+                                                              : tooldId->second.get_raw_format());
       xml.writeEndElement();
     }
     xml.writeEndElement();
@@ -925,8 +973,16 @@ void RulHandler::writeRulMetric(io::SimpleXmlIO& xml ) const
 
       xml.writeBeginElement(_CALCULATED);
       for(set<string>::const_iterator calcElementsIt = configIt->second.calculated.begin(); calcElementsIt != configIt->second.calculated.end(); ++calcElementsIt) {
-        xml.writeBeginElement(_ELEMENT);
+        xml.writeBeginElement(_CALCULATED_ELEMENT);
         xml.writeElementContent(*calcElementsIt);
+        xml.writeEndElement();
+      }
+      xml.writeEndElement();
+
+      xml.writeBeginElement(_TAGS);
+      for (const auto &tag : configIt->second.tags) {
+        xml.writeBeginElement(_TAG);
+        xml.writeElementContent(tag->get_full_name());
         xml.writeEndElement();
       }
       xml.writeEndElement();
@@ -945,7 +1001,7 @@ void RulHandler::writeRulLang(io::SimpleXmlIO& xml, const RulConfiguration& rulC
     writeRulAttribute(xml,_WARNING, langIt->second.warning);
     writeRulAttribute(xml, _DISPLAY_NAME, langIt->second.displayName);
     writeRulAttribute(xml, _DESCRIPTION, langIt->second.description);
-    writeRulAttribute(xml, _HELP_TEXT, langIt->second.helpText);
+    writeRulAttribute(xml, _HELP_TEXT, langIt->second.helpText.get_html_format());
     writeRulAttribute(xml, _WARNING_TEXT, langIt->second.warningText);
     xml.writeEndElement();
   }
@@ -953,6 +1009,11 @@ void RulHandler::writeRulLang(io::SimpleXmlIO& xml, const RulConfiguration& rulC
 
 void RulHandler::saveRul(const string& filename) const
 {
+  if (boost::ends_with(filename, ".md")) {
+    RulMDWriter().write(filename, rulData);
+    return;
+  }
+  
   io::SimpleXmlIO xml(filename, io::IOBase::omWrite);
   xml.writeXMLDeclaration("1.0", "UTF-8");
   xml.writeBeginElement(_RULE_NAME);
@@ -1029,7 +1090,7 @@ void RulHandler::getExistingAttributes(const string& ruleId, set<string>& attrib
     if(metric->actualConfig->actualLang->displayName != _empty_string) {
       attributeSet.insert(_DISPLAY_NAME);
     }
-    if(metric->actualConfig->actualLang->helpText != _empty_string) {
+    if(metric->actualConfig->actualLang->helpText.get_raw_format() != _empty_string) {
       attributeSet.insert(_HELP_TEXT);
     }
     if(metric->actualConfig->actualLang->warning != rulUndefined) {
@@ -1081,8 +1142,8 @@ string RulHandler::getAttribute(const string& ruleId, const string& configuratio
               return config->actualLang->displayName;
             }
           } else if (attributeName == _HELP_TEXT) {
-            if(config->actualLang->helpText != _empty_string) {
-              return config->actualLang->helpText;
+            if(config->actualLang->helpText.get_raw_format() != _empty_string) {
+              return config->actualLang->helpText.get_escaped_html_format();
             }
           } else if (attributeName == _WARNING) {
             if(config->actualLang->warning != rulUndefined) {
@@ -1309,6 +1370,62 @@ const set<string>& RulHandler::getCalculatedForSet(const string& ruleId) {
   return getConfSpecData(ruleId, &RulConfiguration::calculated, set<string>());
 }
 
+void RulHandler::setTags(const string& ruleId, const set<std::shared_ptr<Tag>>& tags)
+{
+  setConfSpecData(ruleId, &RulConfiguration::tags, tags);
+}
+
+void RulHandler::setTags(const string& ruleId, const string& configuration, const set<std::shared_ptr<Tag>>& tags)
+{
+  setConfSpecData(ruleId, configuration, &RulConfiguration::tags, tags);
+}
+
+void RulHandler::addTag(const std::string& ruleId, const std::string& configuration, std::shared_ptr<Tag> tag) {
+  auto *config = findConfiguration(ruleId, configuration);
+  tryAddTagForConfig(*config, std::move(tag));
+}
+
+void RulHandler::addTag(const std::string& ruleId, std::shared_ptr<Tag> tag) {
+  if (auto *config = findMetric(ruleId)->actualConfig) {
+    tryAddTagForConfig(*config, std::move(tag));
+  } else {
+    throw RulHandlerException(COLUMBUS_LOCATION, CMSG_EX_CONFIGURATION_DOESNOT_EXIT_TWO_MESSAGE(ruleId, _configuration));
+  }
+}
+
+void RulHandler::addTag(const std::string& ruleId, const std::string& configuration, std::string&& tag_string) {
+  addTag(ruleId, configuration, getTagStore().create_or_get(std::move(tag_string)));
+}
+
+void RulHandler::addTag(const std::string& ruleId, std::string&& tag_string) {
+  addTag(ruleId, getTagStore().create_or_get(std::move(tag_string)));
+}
+
+void RulHandler::addTag(const std::string& ruleId, const std::string& configuration,
+                        SplitTagStringView tag_string_view) {
+  addTag(ruleId, configuration, getTagStore().create_or_get(tag_string_view));
+}
+
+void RulHandler::addTag(const std::string& ruleId, SplitTagStringView tag_string_view) {
+  addTag(ruleId, getTagStore().create_or_get(tag_string_view));
+}
+
+const set<std::shared_ptr<Tag>>& RulHandler::getTags(const string& ruleId) {
+  return getConfSpecData(ruleId, &RulConfiguration::tags, set<std::shared_ptr<Tag>>());
+}
+
+rul::TagStore &RulHandler::getTagStore() { return rulData.tagStore; }
+
+const rul::TagStore &RulHandler::getTagStore() const { return rulData.tagStore; }
+
+rul::TagMetadataStore &RulHandler::getTagMetadataStore() { return rulData.tagStore.metadata_store(); }
+
+const rul::TagMetadataStore &RulHandler::getTagMetadataStore() const { return rulData.tagStore.metadata_store(); }
+
+bool RulHandler::isEmptyString(std::string_view rul_string) {
+  return rul_string.empty() || rul_string == _empty_string;
+}
+
 const string& RulHandler::getFileName() const {
   return _filename;
 }
@@ -1438,6 +1555,29 @@ RulHandler::RulLang* RulHandler::findLanguage(const string& metricID, const stri
   }
 }
 
+void RulHandler::tryAddTagForConfig(RulConfiguration &rul_config, std::shared_ptr<Tag> tag) {
+  RulConfigInheritanceView config_view(rul_config);
+  const auto unique_tag = std::none_of(config_view.begin(), config_view.end(),
+                                               [&](const auto &config) { return config.tags.find(tag) != config.tags.end(); });
+  if (unique_tag) {
+    rul_config.tags.insert(std::move(tag));
+  } else {
+    WriteMsg::writeWarningMessage("Did not add duplicated or already inherited tag \"%s\".\n",
+                                  tag->get_full_name().c_str());
+  }
+}
+
+void RulHandler::setParentForConfig(const std::string &config_name, RulConfiguration &rul_config,
+                                 const std::map<std::string, std::string> &redefines,
+                                 std::map<std::string, RulConfiguration> &configs) {
+  if (auto parentNameIt = redefines.find(config_name); parentNameIt != redefines.end()) {
+    if (auto parentConfigIt = configs.find(parentNameIt->second); parentConfigIt != configs.end()) {
+      rul_config.parentConfig = &(parentConfigIt->second);
+    } else {
+      throw RulHandlerException(COLUMBUS_LOCATION, "Redefine to non-existent config.");
+    }
+  }
+}
 
 const RulHandler::RulConfiguration* RulHandler::getParentConfig(const RulConfiguration* rulConfig) const
 {
@@ -1545,6 +1685,107 @@ void RulHandler::getConfSpecDataFromMap (const string& ruleId, const N& name, T 
   }
 }
 
+RulHandler::RulConfigInheritanceView::RulConfigInheritanceView() noexcept = default;
+RulHandler::RulConfigInheritanceView::RulConfigInheritanceView(const RulConfiguration &rul_config) noexcept
+    : rul_config_(&rul_config) {}
+
+auto RulHandler::RulConfigInheritanceView::begin() const noexcept -> Iterator { return Iterator(rul_config_); }
+auto RulHandler::RulConfigInheritanceView::end() const noexcept -> Iterator { return {}; }
+
+RulHandler::RulConfigInheritanceView::Iterator::Iterator() noexcept = default;
+RulHandler::RulConfigInheritanceView::Iterator::Iterator(const RulConfiguration *rul_config) noexcept
+    : rul_config_(rul_config) {}
+
+auto RulHandler::RulConfigInheritanceView::Iterator::operator*() const noexcept -> reference { 
+  assert(rul_config_ != nullptr);
+  return *rul_config_;
+}
+
+auto RulHandler::RulConfigInheritanceView::Iterator::operator->() const noexcept -> pointer {
+  assert(rul_config_ != nullptr);
+  return rul_config_;
+}
+
+auto RulHandler::RulConfigInheritanceView::Iterator::operator==(const Iterator &that) const noexcept -> bool {
+  return rul_config_ == that.rul_config_;
+}
+
+auto RulHandler::RulConfigInheritanceView::Iterator::operator!=(const Iterator &that) const noexcept -> bool {
+  return !(*this == that);
+}
+
+auto RulHandler::RulConfigInheritanceView::Iterator::operator++() noexcept -> Iterator & {
+  assert(rul_config_ != nullptr);
+  assert(rul_config_ != rul_config_->parentConfig);
+  rul_config_ = rul_config_->parentConfig;
+  return *this;
+}
+
+auto RulHandler::RulConfigInheritanceView::Iterator::operator++(int) noexcept -> Iterator {
+  Iterator tmp = *this;
+  ++*this;
+  return tmp;
+}
+
+RulHandler::RulConfigTagsView::RulConfigTagsView(const RulConfiguration &rul_config) noexcept
+    : config_view_(rul_config) {}
+
+RulHandler::RulConfigTagsView::Iterator::Iterator() noexcept
+#if defined(_MSC_VER) && _MSC_VER < 1924
+{}
+#else
+= default;
+#endif
+
+RulHandler::RulConfigTagsView::Iterator::Iterator(const RulConfigInheritanceView &config_view) noexcept
+    : config_it_(config_view.begin()), config_end_(config_view.end()) {
+  if (config_it_ != config_end_) {
+    tags_it_ = config_it_->tags.begin();
+    skip_empty_tags();
+  }
+}
+
+auto RulHandler::RulConfigTagsView::Iterator::operator*() const noexcept -> reference { return *tags_it_; }
+
+auto RulHandler::RulConfigTagsView::Iterator::operator->() const noexcept -> pointer { return &*tags_it_; }
+
+auto RulHandler::RulConfigTagsView::Iterator::operator==(const Iterator &that) const noexcept -> bool {
+  return config_it_ == that.config_it_ && ((config_it_ == config_end_ && that.config_it_ == that.config_end_) || tags_it_ == that.tags_it_);
+}
+
+auto RulHandler::RulConfigTagsView::Iterator::operator!=(const Iterator &that) const noexcept -> bool {
+  return !(*this == that);
+}
+
+auto RulHandler::RulConfigTagsView::Iterator::operator++() noexcept -> Iterator & {
+  ++tags_it_;
+  skip_empty_tags();
+  return *this;
+}
+
+auto RulHandler::RulConfigTagsView::Iterator::operator++(int) noexcept -> Iterator {
+  Iterator tmp = *this;
+  ++*this;
+  return tmp;
+}
+
+auto RulHandler::RulConfigTagsView::Iterator::skip_empty_tags() noexcept -> void {
+  while (config_it_ != config_end_ && tags_it_ == config_it_->tags.end()) {
+    ++config_it_;
+    if (config_it_ != config_end_) { tags_it_ = config_it_->tags.begin(); }
+  }
+}
+
+auto RulHandler::RulConfigTagsView::begin() const noexcept -> Iterator { return Iterator(config_view_); }
+
+auto RulHandler::RulConfigTagsView::end() const noexcept -> Iterator { return {}; }
+
+auto RulHandler::getAllTags(const std::string &ruleId) -> RulConfigTagsView {
+  if (auto *config = findMetric(ruleId)->actualConfig) [[likely]] { return RulConfigTagsView(*config); }
+  [[unlikely]] throw RulHandlerException(COLUMBUS_LOCATION,
+                                         CMSG_EX_CONFIGURATION_DOESNOT_EXIT_TWO_MESSAGE(ruleId, _configuration));
+}
+
 class RulXmlHandler : public DefaultHandler
 {
 private:
@@ -1567,7 +1808,8 @@ private:
     rsBaseline,
     rsEdge,
     rsAggregatedFormula,
-    rsCalculatedElement
+    rsCalculatedElement,
+    rsTagsElement
   };
 
 private:
@@ -1577,7 +1819,7 @@ private:
   bool _inViews;
   string _actualConfig;
   RulHandler::RulConfiguration* _actualConfigInMetric;
-  string* _actualToolDescription;
+  RulMDString* _actualToolDescription;
   RulHandler::RulMetric* _actualMetric;
   RulHandler::RulLang* _actualLang;
   RulHandler::RulSetting* _actualSetting;
@@ -1586,6 +1828,7 @@ private:
   string _actualViewName;
   string _actualMetricId;
   string _actualContent;
+  TagMetadataStore _rulMetadata;
   ReaderState _readerState;
   XMLCh* configNameXMLCh; // _CONFIG_NAME
   XMLCh* toolDescriptionNameCh; //_TOOL_DESCRIPTION_NAME
@@ -1611,7 +1854,7 @@ protected:
 
 public:
 
-  RulXmlHandler(RulHandler::RulData& rulData)
+  RulXmlHandler(RulHandler::RulData& rulData, const string& rulFilepath)
     : _tagStack()
     , _rulData(rulData)
     , _inToolDescription(false)
@@ -1653,7 +1896,6 @@ public:
       } else {
         if(_actualMetric != NULL) {
           _actualConfigInMetric = &(_actualMetric->configs[actualConfigChar]);
-          
         } else {
           throw RulHandlerException( COLUMBUS_LOCATION, CMSG_EX_CONFIG_METRIC_OR_TOOLDESCRIPTOR);
         }
@@ -1804,6 +2046,10 @@ public:
     processNamedItem(attrs, _VIEW_NAME, _actualViewName, rsNone);
   }
 
+  void processInclude(const Attributes &attrs) {
+    throw RulHandlerException(COLUMBUS_LOCATION, "Include is not supported in XML Rul files.");
+  }
+
   virtual void  startElement (const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname, const Attributes &attrs)
   {
     char* localnameChar = xmlTranscode(localname);
@@ -1855,14 +2101,21 @@ public:
       processView(attrs);
     } else if (strcmp(localnameChar, _AGREGATED_FORMULA) == 0) {
       _readerState = rsAggregatedFormula;
-    } else if (strcmp(localnameChar,_ELEMENT) == 0) {
+    } else if (strcmp(localnameChar,_CALCULATED_ELEMENT) == 0) {
       _readerState = rsCalculatedElement;
+    } else if (strcmp(localnameChar, _TAGS) == 0) {
+      _readerState = rsTagsElement;
+    } else if (strcmp(localnameChar, _INCLUDE) == 0) {
+      processInclude(attrs);
     }
     xmlRelease(&localnameChar);
   }
 
   virtual void  endElement (const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname)
   {
+    char* localnameChar = xmlTranscode(localname);
+    _tagStack.pop();
+
     switch(_readerState) {
       case rsToolDescriptionItem:
         if(_actualToolDescription != NULL) {
@@ -1950,12 +2203,16 @@ public:
           _actualConfigInMetric->calculated.insert(_actualContent);
         }
         break;
+      case rsTagsElement: {
+        if (_actualConfigInMetric != nullptr) {
+          auto tag = _rulData.tagStore.create_or_get(std::string(_actualContent));
+          RulHandler::tryAddTagForConfig(*_actualConfigInMetric, std::move(tag));
+        }
+        break;
+      }
       default:
         break;
     };
-
-    char* localnameChar = xmlTranscode(localname);
-    _tagStack.pop();
 
     if(strcmp(localnameChar, _TOOL_DESCRIPTION) == 0) {
       _inToolDescription = false;
@@ -2001,7 +2258,7 @@ void RulHandler::parseXML(const string& filename, const string& encoding)
   parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
   parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);   // optional
   parser->setFeature(XMLUni::fgXercesDynamic, true);
-  unique_ptr<DefaultHandler> rulXmlHandler(new RulXmlHandler(rulData));
+  unique_ptr<DefaultHandler> rulXmlHandler(new RulXmlHandler(rulData, filename));
   parser->setContentHandler(rulXmlHandler.get());
   parser->setErrorHandler(rulXmlHandler.get());
 
@@ -2015,12 +2272,12 @@ void RulHandler::parseXML(const string& filename, const string& encoding)
     char* message = XMLString::transcode(toCatch.getMessage());
     string stringMessage = message;
     XMLString::release(&message);
-    throw RulHandlerException("RulHandler::parseXML",stringMessage);
+    throw RulHandlerException("RulHandler::parseXML",stringMessage + " FILE: " + filename);
   } catch (const SAXParseException& toCatch) {
     char* message = XMLString::transcode(toCatch.getMessage());
     string stringMessage = message;
     XMLString::release(&message);
-    throw RulHandlerException("RulHandler::parseXML",stringMessage);
+    throw RulHandlerException("RulHandler::parseXML",stringMessage + " FILE: " + filename);
   }
 }
 

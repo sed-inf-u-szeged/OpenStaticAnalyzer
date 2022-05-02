@@ -111,6 +111,12 @@ int main(int argc, char *argv[]) {
 
   MAIN_BEGIN
 
+  std::cout << "----\n";
+  for (int i = 0; i < argc; ++i) {
+    std::cout << argv[i] << '\n';
+  }
+  std::cout << "----\n";
+
     //
     //  INIT
     //

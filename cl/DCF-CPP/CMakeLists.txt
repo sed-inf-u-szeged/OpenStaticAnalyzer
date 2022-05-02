@@ -31,10 +31,8 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL Linux)
 endif ()
 
 
-add_copy_custom_target(DCFRulCopyCPP ${CMAKE_CURRENT_SOURCE_DIR}/../DuplicatedCodeFinder/DCF.rul ${EXECUTABLE_OUTPUT_PATH}/DCF.rul)
-
 add_executable(${PROGRAM_NAME} ${SOURCES})
-add_dependencies(${PROGRAM_NAME} DCFRulCopyCPP clang ${COLUMBUS_GLOBAL_DEPENDENCY})
+add_dependencies(${PROGRAM_NAME} DuplicatedCodeFinder clang ${COLUMBUS_GLOBAL_DEPENDENCY})
 target_link_libraries(${PROGRAM_NAME}  clangsupport ${CLANG_COMMON_LIBRARIES} ${CLANG_PLATFORM_LIBRARIES} genealogy graphsupport lim2graph graph lim strtable common csi rul io ${COMMON_EXTERNAL_LIBRARIES})
-set_visual_studio_project_folder(${PROGRAM_NAME} FALSE)
+set_visual_studio_project_folder(${PROGRAM_NAME} TRUE)
 

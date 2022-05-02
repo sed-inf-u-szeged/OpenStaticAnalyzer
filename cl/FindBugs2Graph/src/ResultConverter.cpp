@@ -25,6 +25,7 @@
 #include <common/inc/FileSup.h>
 #include <common/inc/WriteMessage.h>
 #include <common/inc/PlatformDependentDefines.h>
+#include <common/inc/XercesSup.h>
 #include <lim2graph/inc/Lim2GraphConverter.h>
 #include <graphsupport/inc/Metric.h>
 #include <graphsupport/inc/MetricSum.h>
@@ -114,7 +115,7 @@ void ResultConverter::writeWarningLine(const std::string& id, const std::string&
   }
 }
 
-void ResultConverter::addWarningToNode(const std::string& path, const std::string& id, const std::string& group, const std::string& warningText, list<AttributeComposite>& sourceLinks, int line, int endline, int col,  int endcol) {
+void ResultConverter::addWarningToNode(const std::string& path, const std::string& id, /*const std::string& group,*/ const std::string& warningText, list<AttributeComposite>& sourceLinks, int line, int endline, int col,  int endcol) {
   if (!xRulhandler->getIsEnabled(id)) {
     return; // rule is not enabled
   }
@@ -281,7 +282,6 @@ class WarningHandler : public DefaultHandler {
     int endLine;
     string path;
     string id;
-    string group;
     string warningText;
     list<AttributeComposite> sourceLinks;
     string content;
@@ -298,7 +298,7 @@ class WarningHandler : public DefaultHandler {
 
     virtual void startElement (const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname, const Attributes &attrs) {
       content.clear();
-      string name = XMLString::transcode(localname);
+      string name(common::Xerces::ScopedTranscode<char *>{localname});
 
       if (tag2Int.find(name) != tag2Int.end()) {
         // get value of primary attribute
@@ -346,7 +346,6 @@ class WarningHandler : public DefaultHandler {
           // BugInstance
           getAttr(attrs,"type", id);
           id = rul->getRuleIdByOriginalId(id);
-          getAttr(attrs,"category", group);
           actualTagLvl.push(tag2Int[name]);
           break;
         default:
@@ -365,11 +364,11 @@ class WarningHandler : public DefaultHandler {
     }
 
     virtual void  characters (const XMLCh *const chars, const XMLSize_t length) {
-      content += XMLString::transcode(chars);
+      content += common::Xerces::ScopedTranscode<char *>(chars);
     }
 
     virtual void endElement(const XMLCh *const uri, const XMLCh *const localname, const XMLCh *const qname){
-      string element = XMLString::transcode(localname);
+      string element(common::Xerces::ScopedTranscode<char *>{localname});
       if (element == "Message")
         message = content;
         
@@ -382,7 +381,7 @@ class WarningHandler : public DefaultHandler {
       } else if(actualTagLvl.top() == slBugInstance){
         //End of BugInstance
         if (actualSourceLvl) {
-          rc->addWarningToNode(path, id, group, warningText, sourceLinks, line, endLine);
+          rc->addWarningToNode(path, id, /*group,*/ warningText, sourceLinks, line, endLine);
           actualSourceLvl = slNone;
           sourceLinks.clear();
         } else {

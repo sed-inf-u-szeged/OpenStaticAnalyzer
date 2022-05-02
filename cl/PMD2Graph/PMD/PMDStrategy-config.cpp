@@ -59,29 +59,24 @@ void PMDStrategy::makeConfig(File_Names& file_names, string& rul, string& rulCon
       ruleset2xmlfile[groupname] = xmlfile;
     }
   }
+  
+  std::set<std::string> ruleIds;
+  xRulHandler->getRuleIdList(ruleIds);
 
-  set<string> groupIds;
-  set<string>::iterator it, it2;
-  xRulHandler->getGroupIdList(groupIds);
-  for(it = groupIds.begin(); it != groupIds.end(); it++)
-  {
-    if (xRulHandler->getIsEnabled(*it)) {
-      set<string> excludes;
-      set<string> groupMembers;
-      xRulHandler->getGroupMembers(*it, groupMembers);
-      for(it2 = groupMembers.begin(); it2 != groupMembers.end(); it2++)
-      {
-        if (!xRulHandler->getIsEnabled(*it2)) {
-          string name = xRulHandler->getDisplayName(*it2);
-          name.erase( std::remove_if( name.begin(), name.end(), ::isspace ), name.end() );
-          excludes.insert(name);
+  for (const auto &ruleId : ruleIds) {
+    for (const auto &tag : xRulHandler->getTags(ruleId)) {
+      if (auto xmlFileIt = ruleset2xmlfile.find(tag->get_last_name()); xmlFileIt != ruleset2xmlfile.end()) {
+        auto &excludedRuleSet = rulesets.try_emplace(xmlFileIt->second).first->second;
+        if (!xRulHandler->getIsEnabled(ruleId)) {
+          auto excludedRuleName = xRulHandler->getDisplayName(ruleId);
+          excludedRuleName.erase(std::remove_if(excludedRuleName.begin(), excludedRuleName.end(), ::isspace),
+                                 excludedRuleName.end());
+          excludedRuleSet.insert(std::move(excludedRuleName));
         }
-      }
-      if (excludes.size()!=groupMembers.size() && ruleset2xmlfile.find(xRulHandler->getDisplayName(*it)) != ruleset2xmlfile.end()) {
-        rulesets[ruleset2xmlfile[xRulHandler->getDisplayName(*it)]]=excludes;
       }
     }
   }
+
   delete xRulHandler;
 
   builddom(rulesets, configFile);

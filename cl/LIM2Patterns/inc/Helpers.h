@@ -452,23 +452,20 @@ namespace columbus { namespace lim {namespace patterns {
         std::string id;
         std::string name;
         bool enabled;
-        std::string group;
         std::string groupMember;
         bool warning;
         std::string helpText;
         std::string &description = helpText;
-        RulContainer(const std::string &_id, const std::string &_name, bool _enabled, const std::string &_group = "", const std::string &_groupMember = "", bool _warning = false, const std::string &_helpText = "") :
-            id(_id), name(_name), enabled(_enabled), group(_group), groupMember(_groupMember), warning(_warning), helpText(_helpText) {}
+        RulContainer(const std::string &_id, const std::string &_name, bool _enabled, const std::string &_groupMember = "", bool _warning = false, const std::string &_helpText = "") :
+            id(_id), name(_name), enabled(_enabled), groupMember(_groupMember), warning(_warning), helpText(_helpText) {}
     };
 
     columbus::rul::RulHandler& getPatternRulHander();
 
-    // PatternGroup
-    const RulContainer& getMAIN_GROUP(); 
-    // AntiPattern
-    const RulContainer& getSUB_GROUP1(); 
-    // DesignPattern
-    const RulContainer& getSUB_GROUP2(); 
+    // // AntiPattern
+    rul::Tag& getANTI_PATTERN_TAG();
+    // // DesignPattern
+    rul::Tag& getDESIGN_PATTERN_TAG();
 
     graph::Node limToGraph(graph::Graph &inGraph, const columbus::lim::asg::base::Base& limNode);
 

@@ -23,6 +23,10 @@
 #include "../inc/defines.h"
 
 #include <io/inc/CsvIO.h>
+#include <rul/inc/RulMD.h>
+#include <rul/inc/RulTags.h>
+
+#include <filesystem>
 
 using namespace std;
 using namespace common;
@@ -181,12 +185,14 @@ private:
   std::string id;
   
   map<string, string>& nameMap;
+  rul::TagKindMetadataContainer &generalTagMetadataContainer;
 
 public:
-  GroupHandler(rul::RulHandler& _rulHandler, map<string, string>& _nameMap):
+  GroupHandler(rul::RulHandler& _rulHandler, map<string, string>& _nameMap, rul::TagKindMetadataContainer &_generalTagMetadataContainer):
       DefaultHandler(),
       rulHandler(_rulHandler),
-      nameMap(_nameMap)
+      nameMap(_nameMap),
+      generalTagMetadataContainer(_generalTagMetadataContainer)
   {
     // Xml attribute names
     groupIdXMLCh = XMLString::transcode(_GROUP_ID);
@@ -210,37 +216,20 @@ public:
     if(strcmp(localnameChar, _GROUP) == 0) {
       const XMLCh* groupId = attrs.getValue(groupIdXMLCh);
       const XMLCh* groupName= attrs.getValue(groupNameXMLCh);
-      const XMLCh* groupDescription = attrs.getValue(groupDescriptionXMLCh);
       const XMLCh* groupHelp= attrs.getValue(groupHelpXMLCh);
 
       char* groupIdChar = XMLString::transcode(groupId);
       char* groupNameChar = XMLString::transcode(groupName);
-      char* groupDescriptionChar = XMLString::transcode(groupDescription);
       char* groupHelpChar = XMLString::transcode(groupHelp);
 
       id = groupIdChar;
-      string name = groupNameChar;
-      string description = groupDescriptionChar;
-      string help = groupHelpChar;
 
-
-      rulHandler.defineMetric(id);
-      rulHandler.createConfiguration(id, rulHandler.getConfig());
-      rulHandler.setIsEnabled(id, true);
-      rulHandler.createLanguage(id, "eng");
-      rulHandler.setHasWarningText(id, true);
-      rulHandler.setIsVisible(id, true);
-      rulHandler.setGroupType(id, "summarized");
-      
-      
-      rulHandler.setDisplayName(id, name);
-      rulHandler.setDescription(id, description);
-      rulHandler.setHelpText(id, help);
-      
+      auto &tagValueMetadata = generalTagMetadataContainer.try_add_value(groupNameChar).value_metadata_ref();
+      tagValueMetadata.description = groupHelpChar;
+      tagValueMetadata.summarized = true;
 
       XMLString::release(&groupIdChar);
       XMLString::release(&groupNameChar);
-      XMLString::release(&groupDescriptionChar);
       XMLString::release(&groupHelpChar);
 
     }else if(strcmp(localnameChar, _GROUP_RULE) == 0) {
@@ -252,7 +241,8 @@ public:
       ruleIdStr = _RULE_PREFIX + nameMap[ruleIdStr]; 
 
       try{
-        rulHandler.addMetricGroupMembers(ruleIdStr, id);
+        rulHandler.addTag(ruleIdStr, rul::SplitTagStringView{"tool", "Cppcheck"});
+        rulHandler.addTag(ruleIdStr, rul::SplitTagStringView{"general", id});
       }catch(rul::RulHandlerException &e){
         WriteMsg::write(WriteMsg::mlWarning, "%s\n", e.getMessage().c_str());
       }
@@ -266,7 +256,8 @@ public:
 
 RuleConverter::RuleConverter(const std::string& rulConfig):
     parser(),
-    rulHandler(rulConfig, "eng")
+    rulHandler(rulConfig, "eng"),
+    generalTagMetadataMapContainer(&rulHandler.getTagMetadataStore().try_add_kind("general"))
 {
   rulHandler.setToolDescription("ID", "Cppcheck");
 }
@@ -298,7 +289,7 @@ void RuleConverter::process(const std::string& configFileName, const std::string
   RuleHandler ruleHandler(rulHandler, ruleIdMap, ruleNameMap, ruleEnabled);
   parser.parseXML(errorListFileName, &ruleHandler);
 
-  GroupHandler groupHandler(rulHandler, ruleIdMap);
+  GroupHandler groupHandler(rulHandler, ruleIdMap, *generalTagMetadataMapContainer);
   parser.parseXML(errorGroupsFileName, &groupHandler);
 }
 

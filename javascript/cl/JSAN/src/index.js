@@ -252,11 +252,13 @@ function analysis() {
             });
             jcg.setConsoleOutput(false);
             resultOfACG = jcg.build();
-            console.timeEnd("ACG");
-            Memory.check();
+
         } catch (err) {
             console.log("Something bad happened while running JSCG");
             console.log(err)
+        } finally {
+            console.timeEnd("ACG");
+            Memory.check();
         }
         try {
             // Transform raw results

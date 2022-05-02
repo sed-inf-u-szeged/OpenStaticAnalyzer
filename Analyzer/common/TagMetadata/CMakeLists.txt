@@ -1,0 +1,6 @@
+add_custom_target(CommonTagMetadata)
+
+add_copy_next_to_the_binary_dependency(CommonTagMetadata cwe_metadata.md)
+add_copy_next_to_the_binary_dependency(CommonTagMetadata general_metadata.md)
+add_copy_next_to_the_binary_dependency(CommonTagMetadata owasp_metadata.md)
+add_copy_next_to_the_binary_dependency(CommonTagMetadata sei_cert_metadata.md)

@@ -207,6 +207,14 @@ protected:
   // instead of MD% sum using the sequence positions only
   std::map<std::string, genealogy::CloneClass*> cloneClassMap;
 
+  // The potential clone classes are not added to the current system node before filtering because
+  // deleting of a filtered node can be very slow in case there are enormous amount of potential clone classes.
+  // Clone classes, which are not filtered will be added to the current system node after the filtering.
+  std::set<columbus::NodeId> potentialCloneClassesOfTheCurrentSystem;
+
+  // The component of the clone instances is also just collected and set after filtering.
+  std::map<columbus::NodeId, columbus::NodeId> cloneInstanceComponentMap;
+
   // clone visitor
   CloneVisitorBase* theCloneVisitor;
   ostream* filterOut;

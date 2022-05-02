@@ -155,7 +155,13 @@ namespace common {
     * \brief Controls the generation of the timestamp prefixes.
     * \param enable [in] If it is true, than the automatic timestamp prefixes are added to the messages. Otherwise no these prefixes are added.
     */
-    static void setSetTimestampPrefixes(bool enable);
+    static void setTimestampPrefixes(bool enable);
+
+    /**
+    * \brief Returns the state of the automatic timestamp prefix generation
+    * \return The state
+    */
+    static bool getTimestampPrefixes();
 
     /**
     * \brief Give back the write functin has been get warring or error messges.

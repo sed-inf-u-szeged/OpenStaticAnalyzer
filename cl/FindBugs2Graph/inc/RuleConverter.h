@@ -22,10 +22,11 @@
 #define _FB2G_RLC_H_
 
 #include <string>
+#include <vector>
 
 class RuleConverter{
   public:
-    void convertRuleFile(const std::string& messagesXML, const std::string& findbugsXML, const std::string& rulesXML, const std::string& rulName, const std::string& rulConfig, const std::string& idsFileName);
+    void convertRuleFile(const std::string& messagesXML, const std::string& findbugsXML, const std::vector<std::string>& rulesXMLs, const std::string& rulName, const std::string& rulConfig, const std::string& idsFileName);
     static void formatMetricId(std::string& id);
 };
 

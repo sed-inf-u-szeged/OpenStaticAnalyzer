@@ -116,7 +116,7 @@ public:
   }
 
 
-  void dump();
+  void dump() const;
 };
 
 #endif

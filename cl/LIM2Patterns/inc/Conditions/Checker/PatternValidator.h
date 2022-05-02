@@ -22,7 +22,7 @@
 #define CONDITION_VALIDATOR_H
 
 #include "../Conditions.h"
-#include "../../inc/Helpers.h"
+#include "../../Helpers.h"
 
 namespace columbus { namespace lim { namespace patterns { namespace conditions { 
     namespace validator {

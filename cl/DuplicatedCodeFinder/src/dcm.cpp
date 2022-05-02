@@ -778,8 +778,6 @@ namespace columbus {
       CloneOccuranceFilter cof(config.minOccur);
       CloneLengthFilter clf(config.minLines);
       RepeatingLinesFilter rlf(*this);
-
-
       StatementFilter      stf(*this);
 
       applyFilter(&cof);
@@ -791,6 +789,19 @@ namespace columbus {
       }
 
 
+      for (const auto& ccId : potentialCloneClassesOfTheCurrentSystem)
+      {
+        currentSystem->addCloneClasses(ccId);
+        genealogy::CloneClass& cc = static_cast<genealogy::CloneClass&>(genealogyFact->getRef(ccId));
+        for (auto ciIt = cc.getItemsListIteratorBegin(); ciIt != cc.getItemsListIteratorEnd(); ++ciIt)
+        {
+          (const_cast<genealogy::CloneInstance&>(*ciIt)).setComponent(cloneInstanceComponentMap[ciIt->getId()]);
+        }
+
+      }
+      updateMemoryStat();
+      potentialCloneClassesOfTheCurrentSystem.clear();
+      cloneInstanceComponentMap.clear();
       config.stat.cloneClassFilterTime = common::getProcessUsedTime().user - time.user;
       time = common::getProcessUsedTime();
 
@@ -1391,8 +1402,7 @@ namespace columbus {
                 allParentsList.insert(theItem);
 
                 std::list<columbus::graph::Edge::EdgeType> list(1,
-                  columbus::graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_LOGICALTREE,columbus::graph::Edge::edtReverse)) ;
-                list.push_back(columbus::graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_VARIANT,columbus::graph::Edge::edtReverse));
+                  columbus::graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_LOGICALTREE,columbus::graph::Edge::edtReverse));
                 getParentTransitve(theItem,list,allParentsList);
 
                 std::list<columbus::graph::Edge::EdgeType> list2(1, columbus::graph::Edge::EdgeType(graphsupport::graphconstants::ETYPE_LIM_COMPONENT,columbus::graph::Edge::edtDirectional)) ;
@@ -2610,8 +2620,12 @@ namespace columbus {
         cloneClass->setFingerprint(code);
         cloneClass->setHeadNodeKind(getNodeKindAt(position));
         cloneClass->setType(genealogy::ctkType2);
+        cloneClass->setLength(UINT_MAX);
         lengths[cloneClass->getId()] = length;
-        currentSystem->addCloneClasses(cloneClass->getId());
+
+        // The potential clone class is not added to the current system node here due to
+        // deleting a filtered clone class can be very slow.
+        potentialCloneClassesOfTheCurrentSystem.insert(cloneClass->getId());
         cloneClassMap.insert(make_pair(code, cloneClass));
       }
       return cloneClass;
@@ -2700,20 +2714,21 @@ namespace columbus {
       positions[ci.getId()] = position;
 
       // set component
-
-
-      //ci.setComponent(firstNode->getLimComponentId());
       std::string asg= getAsgNameByLimId ( firstNode->getLimComponentId(),*limFact);
       for (columbus::genealogy::ListIterator<genealogy::Component> componentIt = currentSystem->getComponentsListIteratorBegin();componentIt != currentSystem->getComponentsListIteratorEnd();++componentIt) {
         const columbus::genealogy::Component& cmp = *componentIt;
         if (cmp.getName() == asg) {
-          ci.setComponent(cmp.getId());
+          cloneInstanceComponentMap[ci.getId()] = cmp.getId();
           break;
         }
       }
       
       parent.setInstances(parent.getInstances()+1);
       parent.addItems(ci.getId());
+      unsigned lines = ci.getEndLine() - ci.getLine() + 1;
+      if (parent.getLength() > lines)
+        parent.setLength(lines);
+
       ci.setCloneClass(&parent);
 
       common::WriteMsg::write(CMSG_CLONE_INSTANCE, ci.getId());
@@ -2807,6 +2822,8 @@ namespace columbus {
         static map<columbus::graph::Edge::EdgeType, map<graph::Node, graph::Node> > parents;
         map<graph::Node, graph::Node>::iterator node_parent_it = parents[*itRelType].find(node);
         if(node_parent_it != parents[*itRelType].end()) {
+          if (node_parent_it->second == graph::Graph::invalidNode)  // invalid node is set if the node does not have this type of edge
+            continue;
           nodes.push_back(node_parent_it->second);
           continue;
         }
@@ -2822,7 +2839,12 @@ namespace columbus {
             nodes.push_back(parent);
         }
 
-        if(parentCounter == 1) {
+        if(parentCounter == 0)
+        {
+          parents[*itRelType].insert(make_pair(node, graph::Graph::invalidNode));
+        }
+        else if(parentCounter == 1)
+        {
           parents[*itRelType].insert(make_pair(node, nodes.back()));
         }
 
@@ -2831,19 +2853,24 @@ namespace columbus {
 
     void DuplicatedCodeMiner::applyFilter(AbstractFilter* filter) {
       set<NodeId> markedCloneClasses;
-      for(genealogy::ListIterator<genealogy::CloneClass> groupsIt = currentSystem->getCloneClassesListIteratorBegin(); groupsIt != currentSystem->getCloneClassesListIteratorEnd(); ++groupsIt) {
-        const genealogy::CloneClass& cc = *groupsIt;
+
+      for(const auto& ccId : potentialCloneClassesOfTheCurrentSystem)
+      {
+        const genealogy::CloneClass& cc = static_cast<genealogy::CloneClass&>(genealogyFact->getRef(ccId));
         if (cc.getIsVirtual())
           continue;
         
-        if(filter->checkCloneClass(cc)) {
+        if(filter->checkCloneClass(cc))
+        {
           cloneClassMap.erase(cc.getFingerprint());
           markedCloneClasses.insert(cc.getId());
         }
       }
 
-      for(set<NodeId>::iterator it = markedCloneClasses.begin(); it != markedCloneClasses.end(); ++it) {
-        genealogyFact->destroyNode(*it);
+      for(const auto& ccId : markedCloneClasses)
+      {
+        genealogyFact->destroyNode(ccId);
+        potentialCloneClassesOfTheCurrentSystem.erase(ccId);
       }
     }
 
@@ -2863,7 +2890,10 @@ namespace columbus {
     }
 
     unsigned int DuplicatedCodeMiner::getLength(const genealogy::CloneClass& cc) {
-      unsigned int length = INT_MAX;
+      if (cc.getLength() != UINT_MAX)
+        return cc.getLength();
+
+      unsigned int length = UINT_MAX;
       for (genealogy::ListIterator<genealogy::CloneInstance> cloneInstanceIt = cc.getItemsListIteratorBegin();cloneInstanceIt != cc.getItemsListIteratorEnd(); ++cloneInstanceIt) {
         const genealogy::CloneInstance& ci = dynamic_cast<const genealogy::CloneInstance&>(*cloneInstanceIt);
         unsigned int instanceLength = (ci.getEndLine() - ci.getLine() + 1);
@@ -2871,8 +2901,6 @@ namespace columbus {
           length = instanceLength;
         }
       }
-      if(length == INT_MAX)
-        length = 0;
       const_cast<genealogy::CloneClass&>(cc).setLength(length);
       return length;
     }

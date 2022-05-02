@@ -24,6 +24,7 @@
 #include <graphsupport/inc/MetricSum.h>
 #include <common/inc/StringSup.h>
 #include <boost/filesystem.hpp>
+#include <rul/inc/RulTags.h>
 #include "../inc/ResultConverter.h"
 #include "../inc/messages.h"
 #include "../inc/defines.h"
@@ -269,21 +270,6 @@ void ResultConverter::endElement(const XMLCh *const uri, const XMLCh *const loca
 
 void ResultConverter::defineMetric() {
   string fullGroupId = _RULE_GROUP_PREFIX + category;
-
-  if (dynamicRuleGroups.find(category) == dynamicRuleGroups.end()) {
-    rulHandler.defineMetric(fullGroupId);
-    rulHandler.createConfiguration(fullGroupId, "Default");
-    rulHandler.setIsEnabled(fullGroupId, true);
-    rulHandler.setIsVisible(fullGroupId, true);
-    rulHandler.setGroupType(fullGroupId, "summarized");
-    rulHandler.createLanguage(fullGroupId, "eng");
-    rulHandler.setHasWarningText(fullGroupId, true); // TODO does it?
-    rulHandler.setDisplayName(fullGroupId, fullGroupId);
-    rulHandler.setHelpText(fullGroupId, fullGroupId + " rules"); // TODO get better?
-    rulHandler.setDescription(fullGroupId, ""); // TODO should it be empty or duplicate help text?
-    dynamicRuleGroups.insert(category);
-  }
-
   string fullId = _RULE_PREFIX + id;
   string fullDescription = description + '\n' + helpLinkUri;
   rulHandler.defineMetric(fullId);
@@ -291,7 +277,13 @@ void ResultConverter::defineMetric() {
   rulHandler.setIsEnabled(fullId, true);
   rulHandler.setIsVisible(fullId, true);
   rulHandler.setGroupType(fullId, "false");
-  rulHandler.addMetricGroupMembers(fullId, fullGroupId);
+  {
+    auto &tag_metadata =
+        rulHandler.getTagMetadataStore().try_add_kind("general").try_add_value(fullGroupId).value_metadata_ref();
+    tag_metadata.summarized = true;
+    rulHandler.addTag(fullId, rul::SplitTagStringView{"tool", "Roslyn"});
+    rulHandler.addTag(fullId, rul::SplitTagStringView{"general", fullGroupId});
+  }
   rulHandler.createLanguage(fullId, "eng");
   rulHandler.setHasWarningText(fullId, true);
   rulHandler.setSettingValue(fullId, "Priority", priorityMap[severity], true);

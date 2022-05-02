@@ -24,8 +24,8 @@
 #include <memory>
 #include <string>
 #include <list>
-#include <miniz.h>
-#include <miniz_zip.h>
+#include <miniz/miniz.h>
+#include <miniz/miniz_zip.h>
 
 class ZipArchiveEntry : public mz_zip_archive_file_stat
 {

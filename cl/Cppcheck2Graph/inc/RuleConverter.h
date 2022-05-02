@@ -67,6 +67,7 @@ namespace columbus {  namespace cppcheck2graph {
     std::map<std::string, std::string> ruleNameMap;
     std::map<std::string, bool> ruleEnabled;
 
+    rul::TagKindMetadataContainer *generalTagMetadataMapContainer;
   };
 
 }}

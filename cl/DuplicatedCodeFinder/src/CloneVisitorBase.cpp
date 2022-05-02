@@ -31,7 +31,7 @@ CloneVisitorBase::CloneVisitorBase(
   , std::vector<int>& _resultSequence
   , std::vector<ClonePositioned*>& _nodeIdSequence
   , CloneKind _ck /*= schemaOnly*/
-  , bool _analizeNode/* = false*/
+  , bool _addNodeSeparators /* = false*/
   , bool _lowMemUsage /*= false*/
   , columbus::lim::asg::Factory* limFactory/*= NULL*/
   )
@@ -49,7 +49,7 @@ CloneVisitorBase::CloneVisitorBase(
   , limOrigin(limOrigin)
   , resultSequence(_resultSequence)
   , nodeIdSequence(_nodeIdSequence)
-  , analizeNode(_analizeNode)
+  , addNodeSeparators (_addNodeSeparators)
   , block_paths()
   , out(NULL)
   , decDepthSign(-2)
@@ -68,8 +68,7 @@ CloneVisitorBase::CloneVisitorBase(
 
 CloneVisitorBase::~CloneVisitorBase() {}
 
-bool CloneVisitorBase::isAnalizeNode(const Base& node) {
-  if(analizeNode) {
+bool CloneVisitorBase::isNodeSeparatorNeeded(const Base& node) {
 #ifdef SCHEMA_JAVA
     return AlgorithmCommon::getIsMethodDeclaration(node);
 #elif defined SCHEMA_JAVASCRIPT
@@ -81,7 +80,6 @@ bool CloneVisitorBase::isAnalizeNode(const Base& node) {
 #elif defined SCHEMA_PYTHON
     return AlgorithmCommon::getIsFunctionDef(node);
 #endif
-  }
   return false;
 }
 
@@ -133,7 +131,7 @@ void CloneVisitorBase::addToNodeIdSequence(const Positioned* p) {
 void CloneVisitorBase::addPattern(const  Base& n) {
   int kind = n.getNodeKind();
 
-  if (analizeNode && isAnalizeNode(n))
+  if (addNodeSeparators && isNodeSeparatorNeeded(n))
   {
     addBeginEndSeparator();
   }

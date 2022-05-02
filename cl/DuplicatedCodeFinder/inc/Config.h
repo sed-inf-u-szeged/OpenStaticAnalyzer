@@ -41,7 +41,8 @@
 struct Config {
 
   Config() 
-    : minLines    (10)
+    : minLines    (20)
+    , minStatements (3)
     , minAsgNodes (35)
     , minOccur    (2)
     , graphml     (false)
@@ -60,6 +61,7 @@ struct Config {
   { memset(&stat,0,sizeof(stat)); }
 
   unsigned int           minLines;              ///< minimum lines in clone
+  unsigned int           minStatements;         ///< minimum number of statements in the clone instance
   unsigned int           minAsgNodes;           ///< minimum asg nodes at clone
   unsigned int           minOccur;              ///< minimum clone occurrence
   std::string            genealogyFilename;     ///< name of the genealogy instance file

@@ -18,4 +18,5 @@ set (SOURCES
 
 add_library (${LIBNAME} STATIC ${SOURCES})
 add_dependencies (${LIBNAME} boost)
+target_link_libraries(${LIBNAME} rul)
 set_visual_studio_project_folder(${LIBNAME} TRUE)

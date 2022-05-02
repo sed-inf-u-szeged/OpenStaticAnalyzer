@@ -74,28 +74,16 @@ namespace columbus { namespace lim { namespace metrics {
   void RulParser::parse() {
 
     deque<string> queue;
-    set<string> groupIds;
-    rul.getGroupIdList( groupIds );
-
-    // loading all metrics
-    set<string>::iterator groupIt = groupIds.begin(), groupEnd = groupIds.end();
-    for ( ; groupIt != groupEnd; ++groupIt )
     {
-      string groupId = *groupIt;
+      std::set<std::string> ids;
+      rul.getRuleIdList(ids);
 
-      set<string> ids;
-      rul.getGroupMembers( groupId, ids );
-
-      set<string>::iterator metricsIt = ids.begin(), metricsEnd = ids.end();
-      for ( ; metricsIt != metricsEnd; ++metricsIt )
-      {
-        string id = *metricsIt;
-        bool enabled = rul.getIsEnabled( id );
-        handlerMap[id] = matchHandler( id, enabled );
-        handlerMap[id]->setCalculatedFor( rul.getCalculatedForSet(id) );
-        if ( enabled ) {
-          queue.push_back( id );
-        }
+      for (const auto &id : ids) {
+        if (rul.getTags(id).empty()) { continue; }
+        const auto enabled = rul.getIsEnabled(id);
+        handlerMap[id] = matchHandler(id, enabled);
+        handlerMap[id]->setCalculatedFor(rul.getCalculatedForSet(id));
+        if (enabled) { queue.push_back(id); }
       }
     }
 

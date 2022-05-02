@@ -29,6 +29,7 @@
 #include <LanguageCommon.h>
 #include <common/inc/FileSup.h>
 #include <common/inc/WriteMessage.h>
+#include "Exception.h"
 
 #include <common/inc/Stat.h>
 #include <common/inc/messages.h>
@@ -106,8 +107,9 @@ bool checkRuleFromGraph(Graph& graph, const Threshold& threshold) {
   bool isWarning;
   map<string, string> settings;
   set<string> calculated;
+  set<rul::Tag> tags;
   
-  if (!graphsupport::readRuleItemFromGraph(graph, threshold.getMid(), description, displayName, isEnabled, groupType, helpText, isWarning, settings, calculated)) {
+  if (!graphsupport::readRuleItemFromGraph(graph, threshold.getMid(), description, displayName, isEnabled, groupType, helpText, isWarning, settings, calculated, tags)) {
     WriteMsg::write(CMSG_NO_RULE_FOUND, threshold.getMid().c_str());
     return false;
   }
@@ -133,52 +135,54 @@ void buildWarningMetricRules(Graph& graph, RulHandler& rlh) {
    
   Node::NodeIterator rulNodesIt = graph.findNodes(graphconstants::NTYPE_RUL_METRIC);
   while (rulNodesIt.hasNext()) {
-    Node node = rulNodesIt.next();
-    const Attribute& groupTypeAttr = getNodeAttribute(node, Attribute::atString, graphconstants::ATTR_RUL_GROUPTYPE, graphconstants::CONTEXT_RUL);
-    if (groupTypeAttr != Graph::invalidAttribute) {
-      if (groupTypeAttr.getStringValue() == "visual") {
-        string gMid = getWarningGroupName(node.getUID());
-        const string& displayName = node.findAttributeByName(graphsupport::graphconstants::ATTR_RUL_DISPLAYNAME).next().getStringValue();
-        rlh.defineMetric(gMid);
-        rlh.createConfiguration(gMid, "Default");
-        rlh.createLanguage(gMid, "en");
-        rlh.setDescription(gMid, "");
-        rlh.setDisplayName(gMid, gMid);
-        rlh.setHelpText(gMid, "These rules deal with '" + displayName + "' threshod violations.");
-        rlh.setGroupType(gMid, "summarized");
-        rlh.setIsEnabled(gMid, true);
-        rlh.setHasWarningText(gMid, true);
+    Node metricNode = rulNodesIt.next();
         
-        Edge::EdgeIterator metricIt = node.findOutEdges(Edge::EdgeType(graphconstants::ETYPE_RUL_GROUPCONTAINS, Edge::edtDirectional));
-        while (metricIt.hasNext()) {
-          Node metricNode = metricIt.next().getToNode();
-          AttributeComposite& calculatedAttr = (AttributeComposite&)getNodeAttribute(metricNode, Attribute::atComposite, graphconstants::ATTR_RUL_CALCULATED, graphconstants::CONTEXT_RUL);
-          if (calculatedAttr!= Graph::invalidAttribute) {
-            Attribute::AttributeIterator calculatedForAttrIt = calculatedAttr.findAttributeByName(graphconstants::ATTR_RUL_CALCULATEDFOR);
-            while (calculatedForAttrIt.hasNext()) {
-              const string& entity = calculatedForAttrIt.next().getStringValue();
-              
-              string newMid = getWarningName(metricNode.getUID(), entity);
-              rlh.defineMetric(newMid);
-              rlh.createConfiguration(newMid, "Default");
-              rlh.createLanguage(newMid, "en");
-              rlh.setIsEnabled(newMid, false);
-              rlh.setDisplayName(newMid, metricNode.getUID() + " warning");
-              rlh.setDescription(newMid, "");
-              rlh.setGroupType(newMid, "false");
-              rlh.setHasWarningText(newMid, true);              
-              rlh.setHelpText(newMid, "Threshold warning for '" + metricNode.getUID() + "' metrics of the '" + entity + "' entities.");
-              rlh.setSettingValue(newMid, graphsupport::graphconstants::ATTR_RUL_PRIORITY, "Info", false);
-
-              set<string> calculatedForSet;
-              calculatedForSet.insert(entity);
-              rlh.setCalculatedForSet(newMid, calculatedForSet);
-              
-              rlh.addMetricGroupMembers(newMid, gMid);
-
-            }
-          }
+    std::set<std::shared_ptr<rul::Tag>> metricGroupTag;
+    AttributeComposite& tagsAttr = (AttributeComposite&)getNodeAttribute(metricNode, Attribute::atComposite, graphconstants::ATTR_RUL_TAGS, graphconstants::CONTEXT_RUL);
+    if (tagsAttr != Graph::invalidAttribute) {
+      Attribute::AttributeIterator tagIt = dynamic_cast<AttributeComposite &>(tagsAttr).getAttributes();
+      while (tagIt.hasNext()) {
+        auto &tagAttr = dynamic_cast<AttributeString &>(tagIt.next());
+        auto [kind, value, detail] = rul::split_tag_string(tagAttr.getValue());
+        if (kind == "internal" && value == "metric_group") {
+          auto &detail_metadata = rlh.getTagMetadataStore()
+                                     .try_add_kind("internal")
+                                     .try_add_value("metric_group")
+                                     .try_add_detail(std::string(detail) + " Metric Rules")
+                                     .detail_metadata_ref();
+          detail_metadata.summarized = true;
+          auto tag = rlh.getTagStore().create_or_get(tagAttr.getValue() + " Metric Rules");
+          metricGroupTag.insert(std::move(tag));
+          break;
         }
+      }
+    }
+
+    if (metricGroupTag.empty()) { continue; }
+
+    AttributeComposite& calculatedAttr = (AttributeComposite&)getNodeAttribute(metricNode, Attribute::atComposite, graphconstants::ATTR_RUL_CALCULATED, graphconstants::CONTEXT_RUL);
+    if (calculatedAttr!= Graph::invalidAttribute) {
+      Attribute::AttributeIterator calculatedForAttrIt = calculatedAttr.findAttributeByName(graphconstants::ATTR_RUL_CALCULATEDFOR);
+      while (calculatedForAttrIt.hasNext()) {
+        const string& entity = calculatedForAttrIt.next().getStringValue();
+        
+        string newMid = getWarningName(metricNode.getUID(), entity);
+        rlh.defineMetric(newMid);
+        rlh.createConfiguration(newMid, "Default");
+        rlh.createLanguage(newMid, "en");
+        rlh.setIsEnabled(newMid, false);
+        rlh.setDisplayName(newMid, metricNode.getUID() + " warning");
+        rlh.setDescription(newMid, "");
+        rlh.setGroupType(newMid, "false");
+        rlh.setHasWarningText(newMid, true);
+        rlh.setHelpText(newMid, "Threshold warning for '" + metricNode.getUID() + "' metrics of the '" + entity + "' entities.");
+        rlh.setSettingValue(newMid, graphsupport::graphconstants::ATTR_RUL_PRIORITY, "Info", false);
+
+        set<string> calculatedForSet;
+        calculatedForSet.insert(entity);
+        rlh.setCalculatedForSet(newMid, calculatedForSet);
+
+        rlh.setTags(newMid, metricGroupTag);
       }
     }
   }
@@ -260,7 +264,7 @@ int main(int argc, char* argv[]) {
   graphsupport::createGroupMetrics(graph, rlh, metrics);
 
   WriteMsg::write(CMSG_ADDED_WARNINGS, mc.count);
-    
+  
   mc.save(graphOutputFileName, false, "");
 
   MAIN_END

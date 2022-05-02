@@ -57,6 +57,8 @@ private:
   void collectdata(std::string& fileName,columbus::rul::RulHandler& rul, std::string& checkerbasedir, std::string& pathfrom, std::string& pathto, FILE *f);
 
   std::string separateName(const std::string &name);
+
+  columbus::rul::TagKindMetadataContainer *general_tag_metadata_container_;
 };
 
 #endif

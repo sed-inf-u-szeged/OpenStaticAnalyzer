@@ -78,6 +78,11 @@ static bool ppLines (const Option *o, char *argv[]) {
   return true;
 }
 
+static bool ppStatements (const Option *o, char *argv[]) {
+  config.minStatements = boost::lexical_cast<unsigned int>(argv[0]);
+  return true;
+}
+
 static bool ppNodes (const Option *o, char *argv[]) {
   config.minAsgNodes = boost::lexical_cast<unsigned int>(argv[0]);
   return true;
@@ -161,8 +166,9 @@ const common::Option OPTIONS_OBJ [] = {
   { false,  "-metrics",       0, "",                      0, OT_WC,    ppMetrics,      NULL,   "Calculate clone metrics."},
   { false,  "-out",           1, "filename",              0, OT_WC,    ppOut,          NULL,   "File into which the list of the clones is written. If it is not specified then the list will be written to the standard output."},
   { false,  "-lowerpath",     0, "",                      0, OT_NONE,  ppPathLower,    NULL,   "Convert all the paths to lower case."},
-  { false,  "-minlines",      1, "number",                0, OT_WC,    ppLines,        NULL,   "The minimum number of lines of each duplication. Default value is 10."},
-  { false,  "-minnodes",      1, "number",                0, OT_WC,    ppNodes,        NULL,   "The minimum number of ASG nodes of each duplication. Default value is 20."},
+  { false,  "-minlines",      1, "number",                0, OT_WC,    ppLines,        NULL,   "The minimum number of lines of each duplication. Default value is 20."},
+  { false,  "-minstatements", 1, "number",                0, OT_WC,    ppStatements,   NULL,   "The minimum number of statements of each duplication. Default value is 3."},
+  { false,  "-minnodes",      1, "number",                0, OT_WC,    ppNodes,        NULL,   "The minimum number of ASG nodes of each duplication. Default value is 35."},
   { false,  "-minoccur",      1, "number",                0, OT_WC,    ppOccur,        NULL,   "The minimum number of occurences of each kind of duplication. Default value is 2."},
 
 #ifdef GENEALOGY
@@ -252,6 +258,7 @@ void initValues() {
   common::WriteMsg::write(CMSG_THE_LIM_INPUT_FILE,config.limFileName.c_str());
   common::WriteMsg::write(CMSG_LINE_INFO_CASE , (config.lp ? CMSG_LINE_INFO_CASE_LOWERED : CMSG_LINE_INFO_CASE_DEFAULT));
   common::WriteMsg::write(CMSG_MINIMUM_NUMBER_OF_LINES,config.minLines);
+  common::WriteMsg::write(CMSG_MINIMUM_NUMBER_OF_STATEMENTS,config.minStatements);
   common::WriteMsg::write(CMSG_MINIMUM_NUMBER_OF_ASG_NODES, config.minAsgNodes);
   common::WriteMsg::write(CMSG_MAXIMUM_PATTERN_SIZE,config.patternMaxSingleLength);
   common::WriteMsg::write(CMSG_MINIMUM_PATTERN_FULL_LENGTH, config.patternMinFullLength);
@@ -280,7 +287,9 @@ int main(int argc, char* argv[]){
     Help();
     exit(common::retBadArgError);
   }
-   
+
+  WriteMsg::setTimestampPrefixes(true);
+
   setStartTime(&time);
   initValues();
   
@@ -360,7 +369,7 @@ int main(int argc, char* argv[]){
   WriteMsg::write(CMSG_DETECTING_TIME, time);
   WriteMsg::write(CMSG_PEAK_MEMORY_USAGE, config.stat.memory_peak / (1024 * 1024));
 
-
+ 
   MAIN_END
   return exit_code; 
 }

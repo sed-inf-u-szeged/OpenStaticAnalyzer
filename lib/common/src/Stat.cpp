@@ -203,7 +203,6 @@ PerformanceLogger::PerformanceLogger(const char* logFilename)
   rootSection.name = "RootSection";
   rootSection.startTime = getProcessUsedTime();
   rootSection.endTime = { uint64_t(0), uint64_t(0) };
-
   sectionStack.push(&rootSection);
 }
 
@@ -216,12 +215,12 @@ PerformanceLogger& PerformanceLogger::getPerformanceLogger(const char* logFilena
 }
 
 
-void PerformanceLogger::dumpSection(FILE* logFile, const PerformanceLogger::Section& section, int level, const timestat relativeTime) const
+void PerformanceLogger::dumpSection(FILE* logFile, const PerformanceLogger::Section& section, int level, const timestat relativeTime, const timestat previousTime) const
 {
   std::string tab(level * 2, ' ');
-  const char* format = "%-*s GLB: user:%8lu, sys:%8lu  REL(%s): user:%8lu, sys:%8lu\n";
   if (section.endTime.user != UINT64_MAX)
   {
+    const char* format = "%-*s GLB: user:%8lu, sys:%8lu  REL(%s): user:%8lu, sys:%8lu\n";
     fprintf(logFile, format,
       alignedSectionNameMaxLength,
       (tab + '+' + section.name).c_str(),
@@ -232,8 +231,15 @@ void PerformanceLogger::dumpSection(FILE* logFile, const PerformanceLogger::Sect
       section.startTime.system - relativeTime.system
     );
 
+    timestat prevTime = section.startTime;
     for (const auto& subSection : section.subSections)
-      dumpSection(logFile, subSection, level + 1, section.startTime);
+    {
+      dumpSection(logFile, subSection, level + 1, section.startTime, prevTime);
+      if (subSection.endTime.user != UINT64_MAX)
+        prevTime = subSection.endTime;
+      else
+        prevTime = subSection.startTime;
+    }
 
     fprintf(logFile, format,
       alignedSectionNameMaxLength,
@@ -246,6 +252,8 @@ void PerformanceLogger::dumpSection(FILE* logFile, const PerformanceLogger::Sect
     );
   }
   else
+  {
+    const char* format = "%-*s GLB: user:%8lu, sys:%8lu  REL(%s): user:%8lu, sys:%8lu THIS: user:%8lu, sys:%8lu\n";
     fprintf(logFile, format,
       alignedSectionNameMaxLength,
       (tab + '*' + section.name).c_str(),
@@ -253,9 +261,11 @@ void PerformanceLogger::dumpSection(FILE* logFile, const PerformanceLogger::Sect
       section.startTime.system - rootSection.startTime.system,
       "SectionStart",
       section.startTime.user - relativeTime.user,
-      section.startTime.system - relativeTime.system
+      section.startTime.system - relativeTime.system,
+      section.startTime.user - previousTime.user,
+      section.startTime.system - previousTime.system
     );
-
+  }
 }
 
 void PerformanceLogger::recalculateAlignedSectionNameMaxLength(const PerformanceLogger::Section& section, int level)
@@ -293,7 +303,7 @@ PerformanceLogger::~PerformanceLogger()
     FILE* perfLogFile = fopen(logFilename.c_str(), "wt");
     if (perfLogFile)
     {
-      dumpSection(perfLogFile, rootSection, 0, rootSection.startTime);
+      dumpSection(perfLogFile, rootSection, 0, rootSection.startTime, rootSection.startTime);
       fclose(perfLogFile);
     }
   }

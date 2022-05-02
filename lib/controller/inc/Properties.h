@@ -33,6 +33,7 @@ struct BaseProperties {
     , verbose (false)
   {}
   boost::filesystem::path logDir;       // Absolute path of the directory of the log files
+  boost::filesystem::path commonDir;    // Absolute path of the directory of the language independent common tools
   int maxThreads;                       // The maximum number of concurent threads the controller can start
   bool verbose;                         // Verbose mode
 };

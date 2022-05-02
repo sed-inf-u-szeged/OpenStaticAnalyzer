@@ -8,7 +8,13 @@ include_directories (${CMAKE_SOURCE_DIR}/lib)
 include_directories (${CMAKE_SOURCE_DIR}/wrapper)
 
 # Compiler standard options
-set (CMAKE_CXX_STANDARD 20)
+# Source: https://github.com/microsoft/STL/issues/1814#issuecomment-914784312
+if (MSVC AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 19.29.30129 AND CMAKE_VERSION VERSION_GREATER 3.20.3)
+    # this change happened in CMake 3.20.4
+    set(CMAKE_CXX_STANDARD 23) # /std:c++latest - unlocks the non stable cpp20 features. For new 16.11 versions
+else ()
+    set(CMAKE_CXX_STANDARD 20) # /std:c++latest for msvc and -std=c++20 for everyone else.
+endif ()
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set (CMAKE_CXX_EXTENSIONS OFF)
 
@@ -71,6 +77,3 @@ if (CMAKE_SYSTEM_NAME STREQUAL Windows)
   set (MVN_POSTFIX .bat)
   set (GRADLE_POSTFIX .bat)
 endif ()
-
-
-
