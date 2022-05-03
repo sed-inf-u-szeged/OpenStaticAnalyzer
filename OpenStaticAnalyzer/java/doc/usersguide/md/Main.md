@@ -194,7 +194,7 @@ Source code elements in the files marked with darker background will not be cons
 **-runMetricHunter**
 
   : This parameter turns on or off the MetricHunter module. With this feature, OpenStaticAnalyzer lists metric threshold violations. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is "true".
-  
+
 **-runDCF**
 
   : This parameter turns on or off the DuplicatedCodeFinder module. With this feature, OpenStaticAnalyzer identifies copy-pasted code fragments. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is "true".
@@ -274,7 +274,7 @@ Source code elements in the files marked with darker background will not be cons
   : The name of the directory with date inside the result directory of the project. If it is not set, then the current date is used.
 
 **-cleanResults**
-  
+
   : Cleans all but the last n number of timestamped result directory of the current project.
 
 **-cleanProject**
@@ -344,7 +344,7 @@ Source code elements in the files marked with darker background will not be cons
 **-SQLanguageKey**
 
   : The key of the language in SonarQube.
-
+  
 **-runLIM2Patterns**
 
   : This parameter can be used to enable or disable the LIM2Patterns module during analysis (default = on). 

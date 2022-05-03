@@ -66,10 +66,10 @@ namespace expression {
     m_operator = _operator;
   }
 
-  expression::Expression* BinaryExpression::getLeft() const {
-    expression::Expression *_node = NULL;
+  base::Positioned* BinaryExpression::getLeft() const {
+    base::Positioned *_node = NULL;
     if (m_hasLeft != 0)
-      _node = dynamic_cast<expression::Expression*>(factory->getPointer(m_hasLeft));
+      _node = dynamic_cast<base::Positioned*>(factory->getPointer(m_hasLeft));
     if ( (_node == NULL) || factory->getIsFiltered(_node))
       return NULL;
 
@@ -131,28 +131,32 @@ namespace expression {
   }
 
   void BinaryExpression::setLeft(NodeId _id) {
-    expression::Expression *_node = NULL;
+    base::Positioned *_node = NULL;
     if (_id) {
       if (!factory->getExist(_id))
         throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
-      _node = dynamic_cast<expression::Expression*> (factory->getPointer(_id));
+      _node = dynamic_cast<base::Positioned*> (factory->getPointer(_id));
       if ( _node == NULL) {
         throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
       if (&(_node->getFactory()) != this->factory)
         throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
 
-      if (m_hasLeft) {
-        removeParentEdge(m_hasLeft);
+      if (Common::getIsBaseClassKind(_node->getNodeKind(), ndkExpression) || _node->getNodeKind() == ndkPrivateIdentifier) {
+        if (m_hasLeft) {
+          removeParentEdge(m_hasLeft);
+          if (factory->getExistsReverseEdges())
+            factory->reverseEdges->removeEdge(m_hasLeft, m_id, edkBinaryExpression_HasLeft);
+        }
+        m_hasLeft = _node->getId();
+        if (m_hasLeft != 0)
+          setParentEdge(factory->getPointer(m_hasLeft), edkBinaryExpression_HasLeft);
         if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_hasLeft, m_id, edkBinaryExpression_HasLeft);
+          factory->reverseEdges->insertEdge(m_hasLeft, this->getId(), edkBinaryExpression_HasLeft);
+      } else {
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
-      m_hasLeft = _node->getId();
-      if (m_hasLeft != 0)
-        setParentEdge(factory->getPointer(m_hasLeft), edkBinaryExpression_HasLeft);
-      if (factory->getExistsReverseEdges())
-        factory->reverseEdges->insertEdge(m_hasLeft, this->getId(), edkBinaryExpression_HasLeft);
     } else {
       if (m_hasLeft) {
         throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
@@ -160,7 +164,7 @@ namespace expression {
     }
   }
 
-  void BinaryExpression::setLeft(expression::Expression *_node) {
+  void BinaryExpression::setLeft(base::Positioned *_node) {
     if (_node == NULL)
       throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
 

@@ -49,6 +49,10 @@ void VisitorReverseEdges::visitExportAllDeclaration_HasSource(const declaration:
   revEdges->insertEdge(&end, &begin, edkExportAllDeclaration_HasSource);
 }
 
+void VisitorReverseEdges::visitExportAllDeclaration_HasExported(const declaration::ExportAllDeclaration& begin, const expression::Identifier& end) {
+  revEdges->insertEdge(&end, &begin, edkExportAllDeclaration_HasExported);
+}
+
 void VisitorReverseEdges::visitExportDefaultDeclaration_HasDeclaration(const declaration::ExportDefaultDeclaration& begin, const base::Positioned& end) {
   revEdges->insertEdge(&end, &begin, edkExportDefaultDeclaration_HasDeclaration);
 }
@@ -101,7 +105,7 @@ void VisitorReverseEdges::visitAwaitExpression_HasArgument(const expression::Awa
   revEdges->insertEdge(&end, &begin, edkAwaitExpression_HasArgument);
 }
 
-void VisitorReverseEdges::visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const expression::Expression& end) {
+void VisitorReverseEdges::visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const base::Positioned& end) {
   revEdges->insertEdge(&end, &begin, edkBinaryExpression_HasLeft);
 }
 
@@ -121,6 +125,10 @@ void VisitorReverseEdges::visitCallExpression_Calls(const expression::CallExpres
   revEdges->insertEdge(&end, &begin, edkCallExpression_Calls);
 }
 
+void VisitorReverseEdges::visitChainExpression_HasExpression(const expression::ChainExpression& begin, const expression::ChainElement& end) {
+  revEdges->insertEdge(&end, &begin, edkChainExpression_HasExpression);
+}
+
 void VisitorReverseEdges::visitConditionalExpression_HasAlternate(const expression::ConditionalExpression& begin, const expression::Expression& end) {
   revEdges->insertEdge(&end, &begin, edkConditionalExpression_HasAlternate);
 }
@@ -137,6 +145,10 @@ void VisitorReverseEdges::visitIdentifier_RefersTo(const expression::Identifier&
   revEdges->insertEdge(&end, &begin, edkIdentifier_RefersTo);
 }
 
+void VisitorReverseEdges::visitImportExpression_HasSource(const expression::ImportExpression& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkImportExpression_HasSource);
+}
+
 void VisitorReverseEdges::visitLogicalExpression_HasLeft(const expression::LogicalExpression& begin, const expression::Expression& end) {
   revEdges->insertEdge(&end, &begin, edkLogicalExpression_HasLeft);
 }
@@ -145,7 +157,7 @@ void VisitorReverseEdges::visitLogicalExpression_HasRight(const expression::Logi
   revEdges->insertEdge(&end, &begin, edkLogicalExpression_HasRight);
 }
 
-void VisitorReverseEdges::visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const expression::Expression& end) {
+void VisitorReverseEdges::visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const base::Positioned& end) {
   revEdges->insertEdge(&end, &begin, edkMemberExpression_HasProperty);
 }
 
@@ -389,7 +401,7 @@ void VisitorReverseEdges::visitClass_HasIdentifier(const structure::Class& begin
   revEdges->insertEdge(&end, &begin, edkClass_HasIdentifier);
 }
 
-void VisitorReverseEdges::visitClassBody_HasBody(const structure::ClassBody& begin, const structure::MethodDefinition& end) {
+void VisitorReverseEdges::visitClassBody_HasBody(const structure::ClassBody& begin, const base::Positioned& end) {
   revEdges->insertEdge(&end, &begin, edkClassBody_HasBody);
 }
 
@@ -401,7 +413,7 @@ void VisitorReverseEdges::visitImportSpecifier_HasImported(const structure::Impo
   revEdges->insertEdge(&end, &begin, edkImportSpecifier_HasImported);
 }
 
-void VisitorReverseEdges::visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const expression::Expression& end) {
+void VisitorReverseEdges::visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const base::Positioned& end) {
   revEdges->insertEdge(&end, &begin, edkMethodDefinition_HasKey);
 }
 
@@ -411,6 +423,14 @@ void VisitorReverseEdges::visitMethodDefinition_HasValue(const structure::Method
 
 void VisitorReverseEdges::visitModuleSpecifier_HasLocal(const structure::ModuleSpecifier& begin, const expression::Identifier& end) {
   revEdges->insertEdge(&end, &begin, edkModuleSpecifier_HasLocal);
+}
+
+void VisitorReverseEdges::visitPropertyDefinition_HasKey(const structure::PropertyDefinition& begin, const base::Positioned& end) {
+  revEdges->insertEdge(&end, &begin, edkPropertyDefinition_HasKey);
+}
+
+void VisitorReverseEdges::visitPropertyDefinition_HasValue(const structure::PropertyDefinition& begin, const expression::Expression& end) {
+  revEdges->insertEdge(&end, &begin, edkPropertyDefinition_HasValue);
 }
 
 

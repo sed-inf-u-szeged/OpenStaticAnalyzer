@@ -36,6 +36,7 @@ namespace expression {
   CallExpression::CallExpression(NodeId _id, Factory *_factory) :
          Positioned(_id, _factory),
     Expression(_id, _factory),
+    ChainElement(_id, _factory),
     m_hasCallee(0),
     hasArgumentsContainer(),
     callsContainer()
@@ -64,6 +65,7 @@ namespace expression {
       base::Positioned::prepareDelete(false);
     }
     expression::Expression::prepareDelete(false);
+    expression::ChainElement::prepareDelete(false);
   }
 
   NodeKind CallExpression::getNodeKind() const {
@@ -144,6 +146,9 @@ namespace expression {
     if (expression::Expression::setEdge(edgeKind, edgeEnd, false)) {
       return true;
     }
+    if (expression::ChainElement::setEdge(edgeKind, edgeEnd, false)) {
+      return true;
+    }
     return false;
   }
 
@@ -167,6 +172,9 @@ namespace expression {
       }
     }
     if (expression::Expression::removeEdge(edgeKind, edgeEnd, false)) {
+      return true;
+    }
+    if (expression::ChainElement::removeEdge(edgeKind, edgeEnd, false)) {
       return true;
     }
     return false;
@@ -324,7 +332,10 @@ namespace expression {
 
   double CallExpression::getSimilarity(const base::Base& base){
     if(base.getNodeKind() == getNodeKind()) {
-      return 1.0;
+      const CallExpression& node = dynamic_cast<const CallExpression&>(base);
+      double matchAttrs = 0;
+      if(node.getOptional() == getOptional()) ++matchAttrs;
+      return matchAttrs / (1 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
     }
@@ -357,6 +368,8 @@ namespace expression {
 
     Expression::save(binIo,false);
 
+    ChainElement::save(binIo,false);
+
     binIo.writeUInt4(m_hasCallee);
 
 
@@ -376,6 +389,8 @@ namespace expression {
       Positioned::load(binIo, false);
 
     Expression::load(binIo,false);
+
+    ChainElement::load(binIo,false);
 
     m_hasCallee =  binIo.readUInt4();
     if (m_hasCallee != 0)

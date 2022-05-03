@@ -21,7 +21,7 @@
 #include "../inc/common.h"
 
 
-AbstractFilter::AbstractFilter() :maxValue(0), currentValue(0){
+AbstractFilter::AbstractFilter() : currentValue(0){
 }
 
 int AbstractFilter::getMaxValue() {

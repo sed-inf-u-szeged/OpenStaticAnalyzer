@@ -446,7 +446,7 @@ namespace columbus {
 
         void HalsteadVisitor::visit(const javascript::asg::statement::Function& node, bool callVirtualBase) {
             VISIT_BEGIN(node, callVirtualBase, "Function");
-            if (javascript::asg::Common::getIsFunctionExpression(node) && javascript::asg::Common::getIsMethodDefinition(*node.getParent())) {
+            if (javascript::asg::Common::getIsFunctionExpression(node) && node.getParent() && javascript::asg::Common::getIsMethodDefinition(*node.getParent())) {
                 return;
             }
             enterMethod(node);
@@ -458,7 +458,7 @@ namespace columbus {
 
         void HalsteadVisitor::visitEnd(const javascript::asg::statement::Function& node, bool callVirtualBase) {
             VISIT_END_FIRST(node, "Function");
-            if (javascript::asg::Common::getIsFunctionExpression(node) && javascript::asg::Common::getIsMethodDefinition(*node.getParent())) {
+            if (javascript::asg::Common::getIsFunctionExpression(node) && node.getParent() && javascript::asg::Common::getIsMethodDefinition(*node.getParent())) {
                 return;
             }
             leaveMethod(node);
@@ -483,7 +483,7 @@ namespace columbus {
         void HalsteadVisitor::visit(const javascript::asg::expression::FunctionExpression& node, bool callVirtualBase) {
             VISIT_BEGIN(node, callVirtualBase, "FunctionExpression");
 
-            if (javascript::asg::Common::getIsMethodDefinition(*node.getParent())) {
+            if (node.getParent() && javascript::asg::Common::getIsMethodDefinition(*node.getParent())) {
                 return;
             }
             incOperators(getEnumText(opkFunctionDeclaration));

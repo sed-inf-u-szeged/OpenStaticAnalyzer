@@ -1959,7 +1959,7 @@ namespace columbus { namespace JAN2Lim
     }
 
     if ( calledMethodId ) {
-      if ( !usesStack.empty() ) {
+      if ( !usesStack.empty() && invokes->getMethodType() ) {
         usesStack.top().insert( getLimType(*invokes->getMethodType()).getId() );
       }
     }

@@ -18,56 +18,35 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var forStatement = factory.createForStatementWrapper();
+        const forStatement = factory.createForStatementWrapper();
         globals.setPositionInfo(node, forStatement);
         return forStatement;
     } else {
-        var forStatementWrapper = globals.getWrapperOfNode(node);
+        const forStatementWrapper = globals.getWrapperOfNode(node);
 
         if (node.init != null) {
-            var initWrapper = globals.getWrapperOfNode(node.init);
-            try {
-                forStatementWrapper.setInit(initWrapper);
-            } catch (e) {
-                console.error("FORSTATEMENT - Could not set init! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(forStatementWrapper, "setInit", node.init, "FORSTATEMENT - Could not set init!");
         }
 
         if (node.test != null) {
-            var testWrapper = globals.getWrapperOfNode(node.test);
-            try {
-                forStatementWrapper.setTest(testWrapper);
-            } catch (e) {
-                console.error("FORSTATEMENT - Could not set test! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(forStatementWrapper, "setTest", node.test, "FORSTATEMENT - Could not set test!");
         }
 
         if (node.update != null) {
-            var updateWrapper = globals.getWrapperOfNode(node.update);
-            try {
-                forStatementWrapper.setUpdate(updateWrapper);
-            } catch (e) {
-                console.error("FORSTATEMENT - Could not set update! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(forStatementWrapper, "setUpdate", node.update, "FORSTATEMENT - Could not set update!");
         }
 
         if (node.body != null) {
-            var bodyWrapper = globals.getWrapperOfNode(node.body);
-            try {
-                forStatementWrapper.setBody(bodyWrapper);
-            } catch (e) {
-                console.error("FORSTATEMENT - Could not set body! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(forStatementWrapper, "setBody", node.body, "FORSTATEMENT - Could not set body!");
         }
-
-
     }
 }

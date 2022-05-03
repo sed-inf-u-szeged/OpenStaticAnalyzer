@@ -88,13 +88,13 @@ napi_value BinaryExpressionWrapper::setLeft(napi_env env, napi_callback_info inf
   assert(status == napi_ok);
 
   columbus::javascript::asg::expression::BinaryExpression* source = dynamic_cast<columbus::javascript::asg::expression::BinaryExpression*>(obj->_nativeObj);
-  columbus::javascript::asg::expression::Expression* target = dynamic_cast<columbus::javascript::asg::expression::Expression*>(param->_nativeObj);
+  columbus::javascript::asg::base::Positioned* target = dynamic_cast<columbus::javascript::asg::base::Positioned*>(param->_nativeObj);
 
   if(source == nullptr){
     status = napi_throw_error(env, nullptr, "Cannot cast expression::BinaryExpression" );
   }
   if(target == nullptr){
-    status = napi_throw_error(env, nullptr, "Cannot cast expression::Expression" );
+    status = napi_throw_error(env, nullptr, "Cannot cast base::Positioned" );
   }
 
   source->setLeft(target);

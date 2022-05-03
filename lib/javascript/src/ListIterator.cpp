@@ -207,6 +207,5 @@ namespace columbus { namespace javascript { namespace asg {
   template class ListIterator<statement::Pattern>;
   template class ListIterator<statement::Statement>;
   template class ListIterator<statement::SwitchCase>;
-  template class ListIterator<structure::MethodDefinition>;
 
 }}}

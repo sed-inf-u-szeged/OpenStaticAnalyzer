@@ -18,46 +18,31 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var tryStatement = factory.createTryStatementWrapper();
+        const tryStatement = factory.createTryStatementWrapper();
         globals.setPositionInfo(node, tryStatement);
         return tryStatement;
     } else {
-        var tryStatementWrapper = globals.getWrapperOfNode(node);
+        const tryStatementWrapper = globals.getWrapperOfNode(node);
 
         if (node.handler != null) {
-            var handlerWrapper = globals.getWrapperOfNode(node.handler);
-            try {
-                tryStatementWrapper.setHandler(handlerWrapper);
-            } catch (e) {
-                console.error("TRYSTATEMENT - Could not set handler! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(tryStatementWrapper, "setHandler", node.handler, "TRYSTATEMENT - Could not set handler!");
         }
 
         if (node.block != null) {
-            var blockWrapper = globals.getWrapperOfNode(node.block);
-            try {
-                tryStatementWrapper.setBlock(blockWrapper);
-            } catch (e) {
-                console.error("TRYSTATEMENT - Could not set block! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(tryStatementWrapper, "setBlock", node.block, "TRYSTATEMENT - Could not set block!");
         }
 
         if (node.finalizer != null) {
-            var finalizerWrapper = globals.getWrapperOfNode(node.finalizer);
-            try {
-                tryStatementWrapper.setFinalizer(finalizerWrapper);
-            } catch (e) {
-                console.error("TRYSTATEMENT - Could not set finalizer! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(tryStatementWrapper, "setFinalizer", node.finalizer, "TRYSTATEMENT - Could not set finalizer!");
         }
-
     }
 }

@@ -39,7 +39,7 @@
 #include "common/inc/Stat.h"
 #include "csi/inc/csi.h"
 #include "lim2graph/inc/Lim2GraphConverter.h"
-#include "limmetrics/inc/LimMetrics.h"
+#include <limmetrics/inc/LimMetrics.h>
 #include "graphsupport/inc/CsvExporter.h"
 #include "graphsupport/inc/RulBuilder.h"
 
@@ -203,7 +203,6 @@ int main(int argc, char *argv[]) {
     limFact.load( inputFiles.begin()->c_str(), header );
 
     updateMemStat( &mem );
-
 
     //
     // LOAD FILTER

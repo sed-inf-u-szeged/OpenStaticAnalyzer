@@ -30,20 +30,16 @@ namespace columbus { namespace lim { namespace metrics {
       CBOBase( const std::string& name, MetricDataTypes type, bool enabled, SharedContainers* shared = NULL );
     protected:
       const std::string& translateLevel( asg::Language language, const std::string& level ) const override;
-  };
-
-  class CBO : public CBOBase {
-    public:
-      CBO( bool enabled, SharedContainers* shared );
+      std::set<const asg::logical::Class*> collectUsedClasses(const asg::logical::Class& clazz) const;
     private:
       void collectUsedClasses( const asg::base::Base& to, const asg::logical::Class& node, std::set<const asg::logical::Class*>& usedClasses) const;
       void getClassOfType( const asg::type::Type& type, const asg::logical::Class& node, std::set<const asg::logical::Class*>& usedClasses ) const;
       const asg::logical::Class* getClassOfReferencedMember( const asg::logical::Class& fromClass, const asg::logical::Member& referedMember ) const;
   };
 
-  class CBOI : public CBOBase {
+  class CBO : public CBOBase {
     public:
-      CBOI( bool enabled, SharedContainers* shared );
+      CBO( bool enabled, SharedContainers* shared );
   };
 
   class TCBO : public MetricHandler {

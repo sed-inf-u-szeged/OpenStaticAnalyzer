@@ -41,10 +41,10 @@ namespace expression {
   *   - computed (boolean) : (missing)
   * 
   * Edges:
-  *   - hasProperty (expression::Expression, single) : (missing)
+  *   - hasProperty (base::Positioned, single) : (missing)
   *   - hasObject (base::Positioned, single) : (missing)
   */
-  class MemberExpression : public Expression, public statement::Pattern {
+  class MemberExpression : public Expression, public statement::Pattern, public ChainElement {
     protected:
       /**
       * \internal
@@ -137,7 +137,7 @@ namespace expression {
       * \brief Gives back the pointer of the node the hasProperty edge points to.
       * \return Returns the end point of the hasProperty edge.
       */
-      expression::Expression* getProperty() const;
+      base::Positioned* getProperty() const;
 
       /**
       * \brief Gives back the pointer of the node the hasObject edge points to.
@@ -158,7 +158,7 @@ namespace expression {
       * \brief Sets the hasProperty edge.
       * \param node [in] The new end point of the hasProperty edge.
       */
-      void setProperty(Expression *node);
+      void setProperty(base::Positioned *node);
 
       /**
       * \brief remove the hasProperty edge.

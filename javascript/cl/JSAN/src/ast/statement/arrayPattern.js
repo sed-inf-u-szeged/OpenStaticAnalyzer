@@ -18,28 +18,24 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var arrayPattern = factory.createArrayPatternWrapper();
+        const arrayPattern = factory.createArrayPatternWrapper();
         globals.setPositionInfo(node, arrayPattern);
         return arrayPattern;
     } else {
-        var arrayPatternWrapper = globals.getWrapperOfNode(node);
+        const arrayPatternWrapper = globals.getWrapperOfNode(node);
         if (node.elements != null) {
-            for (var i = 0; i < node.elements.length; i++) {
+            for (let i = 0; i < node.elements.length; i++) {
                 if (node.elements[i] != null) {
-                    var elementsWrapper = globals.getWrapperOfNode(node.elements[i]);
-                    try {
-                        arrayPatternWrapper.addElements(elementsWrapper);
-                    } catch (e) {
-                        console.error("ARRAYPATTERN - Could not add element! Reason of the error: " + e + "\n");
-                    }
+                    globals.safeSet(arrayPatternWrapper, "addElements", node.elements[i], "ARRAYPATTERN - Could not add element!");
                 }
             }
         }

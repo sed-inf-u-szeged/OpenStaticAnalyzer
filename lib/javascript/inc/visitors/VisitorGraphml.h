@@ -76,16 +76,19 @@ namespace columbus { namespace javascript { namespace asg {
         cmpTable.insert( std::make_pair( "ArrayExpression", &Common::getIsArrayExpression));
         cmpTable.insert( std::make_pair( "ArrowFunctionExpression", &Common::getIsArrowFunctionExpression));
         cmpTable.insert( std::make_pair( "AssignmentExpression", &Common::getIsAssignmentExpression));
-        cmpTable.insert( std::make_pair( "AssignmentProperty", &Common::getIsAssignmentProperty));
         cmpTable.insert( std::make_pair( "AwaitExpression", &Common::getIsAwaitExpression));
+        cmpTable.insert( std::make_pair( "BigIntLiteral", &Common::getIsBigIntLiteral));
         cmpTable.insert( std::make_pair( "BinaryExpression", &Common::getIsBinaryExpression));
         cmpTable.insert( std::make_pair( "BooleanLiteral", &Common::getIsBooleanLiteral));
         cmpTable.insert( std::make_pair( "CallExpression", &Common::getIsCallExpression));
+        cmpTable.insert( std::make_pair( "ChainElement", &Common::getIsChainElement));
+        cmpTable.insert( std::make_pair( "ChainExpression", &Common::getIsChainExpression));
         cmpTable.insert( std::make_pair( "ClassExpression", &Common::getIsClassExpression));
         cmpTable.insert( std::make_pair( "ConditionalExpression", &Common::getIsConditionalExpression));
         cmpTable.insert( std::make_pair( "Expression", &Common::getIsExpression));
         cmpTable.insert( std::make_pair( "FunctionExpression", &Common::getIsFunctionExpression));
         cmpTable.insert( std::make_pair( "Identifier", &Common::getIsIdentifier));
+        cmpTable.insert( std::make_pair( "ImportExpression", &Common::getIsImportExpression));
         cmpTable.insert( std::make_pair( "Literal", &Common::getIsLiteral));
         cmpTable.insert( std::make_pair( "LogicalExpression", &Common::getIsLogicalExpression));
         cmpTable.insert( std::make_pair( "MemberExpression", &Common::getIsMemberExpression));
@@ -94,6 +97,7 @@ namespace columbus { namespace javascript { namespace asg {
         cmpTable.insert( std::make_pair( "NullLiteral", &Common::getIsNullLiteral));
         cmpTable.insert( std::make_pair( "NumberLiteral", &Common::getIsNumberLiteral));
         cmpTable.insert( std::make_pair( "ObjectExpression", &Common::getIsObjectExpression));
+        cmpTable.insert( std::make_pair( "PrivateIdentifier", &Common::getIsPrivateIdentifier));
         cmpTable.insert( std::make_pair( "Property", &Common::getIsProperty));
         cmpTable.insert( std::make_pair( "RegExpLiteral", &Common::getIsRegExpLiteral));
         cmpTable.insert( std::make_pair( "SequenceExpression", &Common::getIsSequenceExpression));
@@ -143,6 +147,7 @@ namespace columbus { namespace javascript { namespace asg {
         cmpTable.insert( std::make_pair( "ImportSpecifier", &Common::getIsImportSpecifier));
         cmpTable.insert( std::make_pair( "MethodDefinition", &Common::getIsMethodDefinition));
         cmpTable.insert( std::make_pair( "ModuleSpecifier", &Common::getIsModuleSpecifier));
+        cmpTable.insert( std::make_pair( "PropertyDefinition", &Common::getIsPropertyDefinition));
         return cmpTable;
       }
 
@@ -170,16 +175,19 @@ namespace columbus { namespace javascript { namespace asg {
         types.insert( "expression::ArrayExpression");
         types.insert( "expression::ArrowFunctionExpression");
         types.insert( "expression::AssignmentExpression");
-        types.insert( "expression::AssignmentProperty");
         types.insert( "expression::AwaitExpression");
+        types.insert( "expression::BigIntLiteral");
         types.insert( "expression::BinaryExpression");
         types.insert( "expression::BooleanLiteral");
         types.insert( "expression::CallExpression");
+        types.insert( "expression::ChainElement");
+        types.insert( "expression::ChainExpression");
         types.insert( "expression::ClassExpression");
         types.insert( "expression::ConditionalExpression");
         types.insert( "expression::Expression");
         types.insert( "expression::FunctionExpression");
         types.insert( "expression::Identifier");
+        types.insert( "expression::ImportExpression");
         types.insert( "expression::Literal");
         types.insert( "expression::LogicalExpression");
         types.insert( "expression::MemberExpression");
@@ -188,6 +196,7 @@ namespace columbus { namespace javascript { namespace asg {
         types.insert( "expression::NullLiteral");
         types.insert( "expression::NumberLiteral");
         types.insert( "expression::ObjectExpression");
+        types.insert( "expression::PrivateIdentifier");
         types.insert( "expression::Property");
         types.insert( "expression::RegExpLiteral");
         types.insert( "expression::SequenceExpression");
@@ -237,6 +246,7 @@ namespace columbus { namespace javascript { namespace asg {
         types.insert( "structure::ImportSpecifier");
         types.insert( "structure::MethodDefinition");
         types.insert( "structure::ModuleSpecifier");
+        types.insert( "structure::PropertyDefinition");
         return types;
       }
 
@@ -459,18 +469,6 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitEnd(const expression::AssignmentExpression& node, bool callVirtualBase = true);
 
       /**
-      * \brief Writes the Graphml representation of the expression::AssignmentProperty node into the output file.
-      * \param node [in] The node which is visited.
-      */
-      virtual void visit(const expression::AssignmentProperty& node, bool callVirtualBase = true);
-
-      /**
-      * \brief Converts the expression::AssignmentProperty node.
-      * \param node [in] The node which is visited.
-      */
-      virtual void visitEnd(const expression::AssignmentProperty& node, bool callVirtualBase = true);
-
-      /**
       * \brief Writes the Graphml representation of the expression::AwaitExpression node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -481,6 +479,18 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::AwaitExpression& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the expression::BigIntLiteral node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::BigIntLiteral& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the expression::BigIntLiteral node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::BigIntLiteral& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the Graphml representation of the expression::BinaryExpression node into the output file.
@@ -517,6 +527,30 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::CallExpression& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the expression::ChainElement node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::ChainElement& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the expression::ChainElement node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::ChainElement& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the expression::ChainExpression node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::ChainExpression& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the expression::ChainExpression node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::ChainExpression& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the Graphml representation of the expression::ClassExpression node into the output file.
@@ -565,6 +599,18 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::Identifier& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the expression::ImportExpression node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::ImportExpression& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the expression::ImportExpression node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::ImportExpression& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the Graphml representation of the expression::LogicalExpression node into the output file.
@@ -649,6 +695,18 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::ObjectExpression& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the Graphml representation of the expression::PrivateIdentifier node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::PrivateIdentifier& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the expression::PrivateIdentifier node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::PrivateIdentifier& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the Graphml representation of the expression::Property node into the output file.
@@ -1179,6 +1237,18 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitEnd(const structure::MethodDefinition& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the Graphml representation of the structure::PropertyDefinition node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::PropertyDefinition& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Converts the structure::PropertyDefinition node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::PropertyDefinition& node, bool callVirtualBase = true);
+
+      /**
       * \brief Edge visitor for comments edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1205,6 +1275,13 @@ namespace columbus { namespace javascript { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitExportAllDeclaration_HasSource(const declaration::ExportAllDeclaration& begin, const expression::Literal& end);
+
+      /**
+      * \brief Edge  visitor for hasExported edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitExportAllDeclaration_HasExported(const declaration::ExportAllDeclaration& begin, const expression::Identifier& end);
 
       /**
       * \brief Edge  visitor for hasDeclaration edge which is called when the subtree of this edge is started.
@@ -1302,7 +1379,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const expression::Expression& end);
+      virtual void visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasRight edge which is called when the subtree of this edge is started.
@@ -1333,6 +1410,13 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end);
 
       /**
+      * \brief Edge  visitor for hasExpression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitChainExpression_HasExpression(const expression::ChainExpression& begin, const expression::ChainElement& end);
+
+      /**
       * \brief Edge  visitor for hasAlternate edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1361,6 +1445,13 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitIdentifier_RefersTo(const expression::Identifier& begin, const base::Positioned& end);
 
       /**
+      * \brief Edge  visitor for hasSource edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitImportExpression_HasSource(const expression::ImportExpression& begin, const expression::Expression& end);
+
+      /**
       * \brief Edge  visitor for hasLeft edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1379,7 +1470,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const expression::Expression& end);
+      virtual void visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasObject edge which is called when the subtree of this edge is started.
@@ -1806,7 +1897,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitClassBody_HasBody(const structure::ClassBody& begin, const structure::MethodDefinition& end);
+      virtual void visitClassBody_HasBody(const structure::ClassBody& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasExported edge which is called when the subtree of this edge is started.
@@ -1827,7 +1918,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const expression::Expression& end);
+      virtual void visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasValue edge which is called when the subtree of this edge is started.
@@ -1842,6 +1933,20 @@ namespace columbus { namespace javascript { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitModuleSpecifier_HasLocal(const structure::ModuleSpecifier& begin, const expression::Identifier& end);
+
+      /**
+      * \brief Edge  visitor for hasKey edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitPropertyDefinition_HasKey(const structure::PropertyDefinition& begin, const base::Positioned& end);
+
+      /**
+      * \brief Edge  visitor for hasValue edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitPropertyDefinition_HasValue(const structure::PropertyDefinition& begin, const expression::Expression& end);
 
     protected:
 
@@ -1961,15 +2066,15 @@ namespace columbus { namespace javascript { namespace asg {
 
       /**
       * \internal
-      * \brief Converts the attributes of the expression::AssignmentProperty node.
-      */
-      void addAttributeToContent(const expression::AssignmentProperty& node, std::string& content, bool callVirtualBase);
-
-      /**
-      * \internal
       * \brief Converts the attributes of the expression::AwaitExpression node.
       */
       void addAttributeToContent(const expression::AwaitExpression& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the expression::BigIntLiteral node.
+      */
+      void addAttributeToContent(const expression::BigIntLiteral& node, std::string& content, bool callVirtualBase);
 
       /**
       * \internal
@@ -1988,6 +2093,18 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Converts the attributes of the expression::CallExpression node.
       */
       void addAttributeToContent(const expression::CallExpression& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the expression::ChainElement node.
+      */
+      void addAttributeToContent(const expression::ChainElement& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the expression::ChainExpression node.
+      */
+      void addAttributeToContent(const expression::ChainExpression& node, std::string& content, bool callVirtualBase);
 
       /**
       * \internal
@@ -2018,6 +2135,12 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Converts the attributes of the expression::Identifier node.
       */
       void addAttributeToContent(const expression::Identifier& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the expression::ImportExpression node.
+      */
+      void addAttributeToContent(const expression::ImportExpression& node, std::string& content, bool callVirtualBase);
 
       /**
       * \internal
@@ -2066,6 +2189,12 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Converts the attributes of the expression::ObjectExpression node.
       */
       void addAttributeToContent(const expression::ObjectExpression& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the expression::PrivateIdentifier node.
+      */
+      void addAttributeToContent(const expression::PrivateIdentifier& node, std::string& content, bool callVirtualBase);
 
       /**
       * \internal
@@ -2360,6 +2489,12 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Converts the attributes of the structure::ModuleSpecifier node.
       */
       void addAttributeToContent(const structure::ModuleSpecifier& node, std::string& content, bool callVirtualBase);
+
+      /**
+      * \internal
+      * \brief Converts the attributes of the structure::PropertyDefinition node.
+      */
+      void addAttributeToContent(const structure::PropertyDefinition& node, std::string& content, bool callVirtualBase);
 
       /** \internal \brief The ofstream into the DOT graph will be written. */
       columbus::io::GraphmlIO &io;

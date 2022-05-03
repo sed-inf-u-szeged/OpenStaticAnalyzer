@@ -238,13 +238,13 @@ namespace columbus { namespace javascript { namespace asg {
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
-      virtual void visit(const expression::AssignmentProperty& node , bool callVirtualBase = true);
+      virtual void visit(const expression::AwaitExpression& node , bool callVirtualBase = true);
 
       /**
       * \internal
       * \brief The node call back the this function that achive the preorder
       */
-      virtual void visit(const expression::AwaitExpression& node , bool callVirtualBase = true);
+      virtual void visit(const expression::BigIntLiteral& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -263,6 +263,18 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const expression::CallExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const expression::ChainElement& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const expression::ChainExpression& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -287,6 +299,12 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const expression::Identifier& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const expression::ImportExpression& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -329,6 +347,12 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief The node call back the this function that achive the preorder
       */
       virtual void visit(const expression::ObjectExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const expression::PrivateIdentifier& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -594,6 +618,12 @@ namespace columbus { namespace javascript { namespace asg {
       */
       virtual void visit(const structure::MethodDefinition& node , bool callVirtualBase = true);
 
+      /**
+      * \internal
+      * \brief The node call back the this function that achive the preorder
+      */
+      virtual void visit(const structure::PropertyDefinition& node , bool callVirtualBase = true);
+
       /** \internal \brief End The visitor functions owerloades */
     protected:
       /**
@@ -754,7 +784,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
-      virtual void visitAllEdges(const expression::AssignmentProperty& node , bool callVirtualBase = true);
+      virtual void visitAllEdges(const expression::AwaitExpression& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -762,7 +792,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node            [in] The node with own type
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
-      virtual void visitAllEdges(const expression::AwaitExpression& node , bool callVirtualBase = true);
+      virtual void visitAllEdges(const expression::BigIntLiteral& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -787,6 +817,22 @@ namespace columbus { namespace javascript { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const expression::CallExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const expression::ChainElement& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const expression::ChainExpression& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -827,6 +873,14 @@ namespace columbus { namespace javascript { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const expression::Identifier& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const expression::ImportExpression& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -891,6 +945,14 @@ namespace columbus { namespace javascript { namespace asg {
       * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
       */
       virtual void visitAllEdges(const expression::ObjectExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const expression::PrivateIdentifier& node , bool callVirtualBase = true);
 
       /**
       * \internal
@@ -1286,6 +1348,14 @@ namespace columbus { namespace javascript { namespace asg {
 
       /**
       * \internal
+      * \brief It call the traversal for the edges
+      * \param node            [in] The node with own type
+      * \param callVirtualBase [in] This paramater is don't used just api copatibility used.
+      */
+      virtual void visitAllEdges(const structure::PropertyDefinition& node , bool callVirtualBase = true);
+
+      /**
+      * \internal
       * \brief Starts a preorder traversal.
       */
       void mainRun(const Factory* fact, Visitor* visitor, const base::Base* node);
@@ -1335,7 +1405,7 @@ namespace columbus { namespace javascript { namespace asg {
 
       Factory* fact;
 
-      bool traversaldCrossEdges[95];
+      bool traversaldCrossEdges[100];
 
   }; // AlgorithmPreorder
 

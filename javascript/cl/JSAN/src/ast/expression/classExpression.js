@@ -18,47 +18,31 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var classExpression = factory.createClassExpressionWrapper();
+        const classExpression = factory.createClassExpressionWrapper();
         globals.setPositionInfo(node, classExpression);
         return classExpression;
     } else {
-        var classExpressionWrapper = globals.getWrapperOfNode(node);
-
+        const classExpressionWrapper = globals.getWrapperOfNode(node);
 
         if (node.superClass != null) {
-            var superClassWrapper = globals.getWrapperOfNode(node.superClass);
-            try {
-                classExpressionWrapper.setSuperClass(superClassWrapper);
-            } catch (e) {
-                console.error("CLASSEXPRESSION - Could not set superclass! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(classExpressionWrapper, "setSuperClass", node.superClass, "CLASSEXPRESSION - Could not set superclass!");
         }
 
         if (node.id != null) {
-            var identifierWrapper = globals.getWrapperOfNode(node.id);
-            try {
-                classExpressionWrapper.setIdentifier(identifierWrapper);
-            } catch (e) {
-                console.error("CLASSEXPRESSION - Could not set identifier! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(classExpressionWrapper, "setIdentifier", node.id, "CLASSEXPRESSION - Could not set identifier!");
         }
 
         if (node.body != null) {
-            var bodyWrapper = globals.getWrapperOfNode(node.body);
-            try {
-                classExpressionWrapper.setBody(bodyWrapper);
-            } catch (e) {
-                console.error("CLASSEXPRESSION - Could not set body! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(classExpressionWrapper, "setBody", node.body, "CLASSEXPRESSION - Could not set body!");
         }
-
     }
 }

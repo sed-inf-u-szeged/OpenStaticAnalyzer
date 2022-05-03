@@ -18,36 +18,27 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var metaProperty = factory.createMetaPropertyWrapper();
+        const metaProperty = factory.createMetaPropertyWrapper();
         globals.setPositionInfo(node, metaProperty);
         return metaProperty;
     } else {
-        var metaPropertyWrapper = globals.getWrapperOfNode(node);
+        const metaPropertyWrapper = globals.getWrapperOfNode(node);
 
         if (node.meta != null) {
-            var metaWrapper = globals.getWrapperOfNode(node.meta);
-            try {
-                metaPropertyWrapper.setMeta(metaWrapper);
-            } catch (e) {
-                console.error("METAPROPERTY - Could not set meta! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(metaPropertyWrapper, "setMeta", node.meta, "METAPROPERTY - Could not set meta!");
         }
 
         if (node.property != null) {
-            var propertyWrapper = globals.getWrapperOfNode(node.property);
-            try {
-                metaPropertyWrapper.setProperty(propertyWrapper);
-            } catch (e) {
-                console.error("METAPROPERTY - Could not set property! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(metaPropertyWrapper, "setProperty", node.property, "METAPROPERTY - Could not set property!");
         }
 
     }

@@ -18,38 +18,29 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var importDeclaration = factory.createImportDeclarationWrapper();
+        const importDeclaration = factory.createImportDeclarationWrapper();
         globals.setPositionInfo(node, importDeclaration);
         return importDeclaration;
     } else {
-        var importDeclarationWrapper = globals.getWrapperOfNode(node);
+        const importDeclarationWrapper = globals.getWrapperOfNode(node);
 
         if (node.source != null) {
-            var sourceWrapper = globals.getWrapperOfNode(node.source);
-            try {
-                importDeclarationWrapper.setSource(sourceWrapper);
-            } catch (e) {
-                console.error("IMPORTDECLARATION - Could not set source! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(importDeclarationWrapper, "setSource", node.source, "IMPORTDECLARATION - Could not set source!");
         }
 
         if (node.specifiers != null) {
-            for (var i = 0; i < node.specifiers.length; i++) {
+            for (let i = 0; i < node.specifiers.length; i++) {
                 if (node.specifiers[i] != null) {
-                    var specifiersWrapper = globals.getWrapperOfNode(node.specifiers[i]);
-                    try {
-                        importDeclarationWrapper.addSpecifiers(specifiersWrapper);
-                    } catch (e) {
-                        console.error("IMPORTDECLARATION - Could not add specifiers! Reason of the error: " + e + "\n");
-                    }
+                    globals.safeSet(importDeclarationWrapper, "addSpecifiers", node.specifiers[i], "IMPORTDECLARATION - Could not add specifiers!");
                 }
             }
         }

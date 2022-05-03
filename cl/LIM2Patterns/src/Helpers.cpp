@@ -1021,7 +1021,7 @@ namespace columbus { namespace lim { namespace patterns {
 
     graph::Node limToGraph(graph::Graph &inGraph, const columbus::lim::asg::base::Base& limNode) {
         graph::Node gNode = inGraph.findNode(lim2graph::VisitorGraphConverter::determineNodeName(limNode));
-        if (gNode == graph::Graph::invalidNode) throw columbus::Exception("LIM2AntiPatternsVisitor::limToGraph", CMSG_EX_INVALD_GRAPH_NODE(limNode.getId()));
+        if (gNode == graph::Graph::invalidNode) throw columbus::Exception("LIM2AntiPatternsVisitor::limToGraph", CMSG_EX_INVALD_GRAPH_NODE(std::to_string(limNode.getId())));
         return gNode;
     }
 

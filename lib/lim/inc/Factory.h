@@ -258,8 +258,8 @@ namespace columbus { namespace lim { namespace asg {
           const_iterator(const const_iterator& otherit) :containerIt (otherit.containerIt),fact(otherit.fact){}
           const_iterator& operator++() {containerIt++;  while (containerIt != fact->container.end()  &&  ((*containerIt == NULL)   ||  fact->getIsFiltered(*containerIt))) containerIt++; return *this;}
           const_iterator operator++(int) {const_iterator tmp(*this); operator++(); return tmp;}
-          bool operator==(const const_iterator& rhs) {return containerIt==rhs.containerIt;}
-          bool operator!=(const const_iterator& rhs) {return containerIt!=rhs.containerIt;}
+          bool operator==(const const_iterator& rhs) const {return containerIt==rhs.containerIt;}
+          bool operator!=(const const_iterator& rhs) const {return containerIt!=rhs.containerIt;}
           const base::Base* operator*() {return *containerIt;}
           friend class Factory;
       };

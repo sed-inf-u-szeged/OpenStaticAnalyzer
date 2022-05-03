@@ -95,6 +95,13 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitExportAllDeclaration_HasSource(const declaration::ExportAllDeclaration& begin, const expression::Literal& end);
 
       /**
+      * \brief Edge  visitor for hasExported edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitExportAllDeclaration_HasExported(const declaration::ExportAllDeclaration& begin, const expression::Identifier& end);
+
+      /**
       * \brief Edge  visitor for hasDeclaration edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -190,7 +197,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const expression::Expression& end);
+      virtual void visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasRight edge which is called when the subtree of this edge is started.
@@ -221,6 +228,13 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end);
 
       /**
+      * \brief Edge  visitor for hasExpression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitChainExpression_HasExpression(const expression::ChainExpression& begin, const expression::ChainElement& end);
+
+      /**
       * \brief Edge  visitor for hasAlternate edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -249,6 +263,13 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitIdentifier_RefersTo(const expression::Identifier& begin, const base::Positioned& end);
 
       /**
+      * \brief Edge  visitor for hasSource edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitImportExpression_HasSource(const expression::ImportExpression& begin, const expression::Expression& end);
+
+      /**
       * \brief Edge  visitor for hasLeft edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -267,7 +288,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const expression::Expression& end);
+      virtual void visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasObject edge which is called when the subtree of this edge is started.
@@ -694,7 +715,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitClassBody_HasBody(const structure::ClassBody& begin, const structure::MethodDefinition& end);
+      virtual void visitClassBody_HasBody(const structure::ClassBody& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasExported edge which is called when the subtree of this edge is started.
@@ -715,7 +736,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const expression::Expression& end);
+      virtual void visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasValue edge which is called when the subtree of this edge is started.
@@ -730,6 +751,20 @@ namespace columbus { namespace javascript { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitModuleSpecifier_HasLocal(const structure::ModuleSpecifier& begin, const expression::Identifier& end);
+
+      /**
+      * \brief Edge  visitor for hasKey edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitPropertyDefinition_HasKey(const structure::PropertyDefinition& begin, const base::Positioned& end);
+
+      /**
+      * \brief Edge  visitor for hasValue edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitPropertyDefinition_HasValue(const structure::PropertyDefinition& begin, const expression::Expression& end);
 
     protected:
 

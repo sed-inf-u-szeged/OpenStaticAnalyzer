@@ -321,7 +321,6 @@ namespace columbus { namespace controller {
     stack<string> _tagStack;
     ProfileHandler::ToolSettings* _actualTool = nullptr;
     ProfileHandler::ProfileData& _profileData;
-    ReaderState _readerState;
     string _actualUDM;
     string _actualL2P;
     string _actualUDMConfig;
@@ -332,7 +331,6 @@ namespace columbus { namespace controller {
       : XmlHandler()
       , _tagStack()
       , _profileData(profileData)
-      , _readerState(rsNone)
       , _actualUDM()
       , _actualUDMConfig()
     {

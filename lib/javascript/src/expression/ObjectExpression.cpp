@@ -127,7 +127,7 @@ namespace expression {
     if (&(_node->getFactory()) != this->factory)
       throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
 
-    if (!(Common::getIsProperty(*_node) || (_node->getNodeKind() == ndkSpreadElement) ))
+    if (!((_node->getNodeKind() == ndkProperty)  || (_node->getNodeKind() == ndkSpreadElement) ))
       throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
 
     hasPropertiesContainer.push_back(_node->getId());

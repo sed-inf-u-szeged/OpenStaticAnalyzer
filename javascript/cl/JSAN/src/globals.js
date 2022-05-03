@@ -18,88 +18,83 @@
  *  limitations under the Licence.
  */
 
-const hashmap = require('hashmap');
-const addon = require('../javascriptAddon');
-const path = require('path');
+import {default as hashmap} from 'hashmap';
+import * as path from 'path';
+import * as addon from '../javascriptAddon.node';
+
+let nodeAndWrapperMap = new hashmap();
+let actualFile = undefined;
+let factory = new addon.Factory();
+let options = undefined;
+let actualProgramNode = null;
+
+/**
+ * Supported extensions by JSAN
+ * @type {string[]}
+ */
+const supportedExts = [
+    ".js",
+    ".ts",
+    ".html",
+]
 
 
-var nodeAndWrapperMap = new hashmap();
-var actualFile = undefined;
-var factory = new addon.Factory();
-var options = undefined;
-var actualProgramNode = null;
-var commentMap = new hashmap();
-
-module.exports.addComment = function(comment){
-    commentMap.set(comment.loc, comment);
-};
-
-module.exports.isCommentExists = function(comment){
-    return  commentMap.has(comment.loc);
-};
-
-module.exports.clearCommentMap = function(){
-    commentMap.clear();
-};
-
-module.exports.getActualProgramNode = function () {
+let getActualProgramNode = function () {
     return actualProgramNode;
 };
 
-module.exports.setActualProgramNode = function (node) {
+let setActualProgramNode = function (node) {
     actualProgramNode = node;
 };
 
-module.exports.setActualFile = function (filename) {
+let setActualFile = function (filename) {
     actualFile = filename;
 };
 
-module.exports.getActualFile = function () {
+let getActualFile = function () {
     return actualFile;
 };
 
-module.exports.getFactory = function () {
+let getFactory = function () {
     return factory;
 };
 
-module.exports.putNodeWrapperPair = function (node, wrapper) {
+let putNodeWrapperPair = function (node, wrapper) {
     nodeAndWrapperMap.set(node, wrapper);
 };
 
-module.exports.getWrapperOfNode = function (node) {
-    return nodeAndWrapperMap.get(node);//returns the wrapper
+let getWrapperOfNode = function (node) {
+    return nodeAndWrapperMap.get(node); //returns the wrapper
 };
 
-module.exports.setOptions = function (opt) {
+let setOptions = function (opt) {
     options = opt;
 };
 
-module.exports.getOptions = function () {
+let getOptions = function () {
     return options;
 };
 
-module.exports.getOption = function (obj) {
+let getOption = function (obj) {
     if (options !== undefined)
-        if (obj in options)
+        if (obj in options) {
             return options[obj];
+        }
     return false;
 };
 
-
-module.exports.setPositionInfo = function (node, wrapper) {
+let setPositionInfo = function (node, wrapper) {
     try {
         if (options.useRelativePath) {
             wrapper.setPath(path.relative(process.cwd(), actualFile));
-        }
-        else {
+        } else {
             wrapper.setPath(actualFile);
         }
 
         //A JS file always starts from 1,1 (line, column)
         if (node.type === "Program") {
-            wrapper.setPosition(1,0, node.loc.end.line, node.loc.end.column, 1, 0, node.loc.end.line, node.loc.end.column);
-        }
-        else {
+            wrapper.setPosition(1, 0, node.loc.end.line, node.loc.end.column, 1, 0, node.loc.end.line, node.loc.end.column);
+        } else {
             wrapper.setPosition(
                 node.loc.start.line,
                 node.loc.start.column,
@@ -117,10 +112,9 @@ module.exports.setPositionInfo = function (node, wrapper) {
     }
 };
 
-
-module.exports.getLiteralType = function (node) {
+let getLiteralType = function (node) {
     if (typeof (node.value) !== "object") {
-        var type = typeof (node.value);
+        const type = typeof (node.value);
         return type.charAt(0).toLocaleUpperCase() + type.substring(1, type.length);
     } else {
         if (node.raw === "null") {
@@ -131,3 +125,44 @@ module.exports.getLiteralType = function (node) {
     }
 
 };
+
+const safeSet = function (setFunctionContext, functionName, nodeToWrap, errorMessage) {
+    const wrappedNode = getWrapperOfNode(nodeToWrap);
+    if (wrappedNode !== undefined) {
+        try {
+            // setFunction(wrappedNode);
+            setFunctionContext[functionName](wrappedNode);
+        } catch (e) {
+            console.error(`${errorMessage}. Reason of the error: ${e}\n`);
+        }
+    }
+}
+//
+// const safeSet = function (setFunction, nodeToWrap, errorMessage) {
+//     const wrappedNode = getWrapperOfNode(nodeToWrap);
+//     if (wrappedNode !== undefined) {
+//         try {
+//             setFunction(wrappedNode);
+//         } catch (e) {
+//             console.error(`${errorMessage}. Reason of the error: ${e}\n`);
+//         }
+//     }
+// }
+
+
+export {
+    getActualProgramNode,
+    setActualProgramNode,
+    setActualFile,
+    getActualFile,
+    getFactory,
+    putNodeWrapperPair,
+    getWrapperOfNode,
+    setOptions,
+    getOptions,
+    getOption,
+    setPositionInfo,
+    getLiteralType,
+    safeSet,
+    supportedExts
+}

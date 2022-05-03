@@ -28,10 +28,7 @@
 #include "../inc/metrics/LCOM5.h"
 #include "../inc/metrics/LOC.h"
 #include "../inc/metrics/McCC.h"
-#include "../inc/metrics/NA.h"
 #include "../inc/metrics/NCL.h"
-#include "../inc/metrics/NII.h"
-#include "../inc/metrics/NL.h"
 #include "../inc/metrics/NM.h"
 #include "../inc/metrics/NOI.h"
 #include "../inc/metrics/NOS.h"
@@ -40,7 +37,6 @@
 #include "../inc/metrics/RFC.h"
 #include "../inc/metrics/TNFI.h"
 #include "../inc/metrics/WMC.h"
-#include "../inc/metrics/Halstead.h"
 
 #include "../inc/metrics/Aggregates.h"
 
@@ -54,9 +50,17 @@ using namespace columbus::lim::asg;
 
 namespace columbus { namespace lim { namespace metrics {
 
-  RulParser::RulParser( RulHandler& rul, SharedContainers& shared) : rul( rul ), shared( shared ) {
-    parse();
-    sort();
+  RulParser::RulParser( RulHandler& rul, SharedContainers& shared) : rul( rul ), processed(false), shared( shared ) {
+  }
+
+  void RulParser::run()
+  {
+    if (!processed)
+    {
+      parse();
+      sort();
+      processed = true;
+    }
   }
 
   RulParser::~RulParser() {
@@ -70,19 +74,19 @@ namespace columbus { namespace lim { namespace metrics {
   void RulParser::parse() {
 
     deque<string> queue;
-   set<string> groupIds;
+    set<string> groupIds;
     rul.getGroupIdList( groupIds );
 
     // loading all metrics
-   set<string>::iterator groupIt = groupIds.begin(), groupEnd = groupIds.end();
+    set<string>::iterator groupIt = groupIds.begin(), groupEnd = groupIds.end();
     for ( ; groupIt != groupEnd; ++groupIt )
     {
       string groupId = *groupIt;
 
-     set<string> ids;
+      set<string> ids;
       rul.getGroupMembers( groupId, ids );
 
-     set<string>::iterator metricsIt = ids.begin(), metricsEnd = ids.end();
+      set<string>::iterator metricsIt = ids.begin(), metricsEnd = ids.end();
       for ( ; metricsIt != metricsEnd; ++metricsIt )
       {
         string id = *metricsIt;
@@ -116,103 +120,65 @@ namespace columbus { namespace lim { namespace metrics {
 
   MetricHandler* RulParser::matchHandler( const string& id, bool enabled ) {
 
+    // Documentation.h
+    MATCH_SHARED( DLOC )
+    MATCH_SHARED( PDA )
+    MATCH_SHARED( TPDA )
+    MATCH_SHARED( PUA )
+    MATCH_SHARED( TPUA )
+    MATCH_SHARED( AD )
+    MATCH_SHARED( TAD )
 
-      // CBO.h
-      MATCH_SHARED( CBOI )
+    // Inheritance.h
+    MATCH_SHARED( NOP )
+    MATCH_SHARED( NOA )
+    MATCH_SHARED( NOD )
 
-      // Documentation.h
-      MATCH_SHARED( DLOC )
-      MATCH_SHARED( PDA )
-      MATCH_SHARED( TPDA )
-      MATCH_SHARED( PUA )
-      MATCH_SHARED( TPUA )
-      MATCH_SHARED( AD )
-      MATCH_SHARED( TAD )
-      MATCH_SHARED( CD )
-      MATCH_SHARED( TCD )
+    // NCL.h
+    MATCH_SHARED( NIN )
+    MATCH_SHARED( NST )
+    MATCH_SHARED( NUN )
+    MATCH_SHARED( TNIN )
+    MATCH_SHARED( TNST )
+    MATCH_SHARED( TNUN )
+    MATCH_SHARED( TNPCL )
+    MATCH_SHARED( TNPIN )
+    MATCH_SHARED( TNPEN )
+    MATCH_SHARED( TNPST )
+    MATCH_SHARED( TNPUN )
+
+    // NM.h
+    MATCH_SHARED( NM )
+    MATCH_SHARED( NLM )
+    MATCH_SHARED( NG )
+    MATCH_SHARED( NLG )
+    MATCH_SHARED( NS )
+    MATCH_SHARED( NLS )
+    MATCH_SHARED( NPM )
+    MATCH_SHARED( NLPM )
+    MATCH_SHARED( TNM )
+    MATCH_SHARED( TNLM )
+    MATCH_SHARED( TNLG )
+    MATCH_SHARED( TNLS )
+    MATCH_SHARED( TNPM )
+    MATCH_SHARED( TNLPM )
+
+
+    // NOS.h
+    MATCH_SHARED( NOS )
+    MATCH_SHARED( TNOS )
     
-      // Halstead.h
-      MATCH_SHARED( HCPL )
-      MATCH_SHARED( HVOL )
-      MATCH_SHARED( HDIF )
-      MATCH_SHARED( HEFF )
-      MATCH_SHARED( HTRP )
-      MATCH_SHARED( HNDB )
+    // NPKG.h
+    MATCH_SHARED( NPKG )
+    MATCH_SHARED( TNPKG )
 
-      // Inheritance.h
-      MATCH_SHARED( NOP )
-      MATCH_SHARED( NOA )
-      MATCH_SHARED( NOD )        
-
-      // NA.h
-      MATCH_SHARED( NA );
-      MATCH_SHARED( NLA );
-      MATCH_SHARED( NPA );
-      MATCH_SHARED( NLPA );
-      MATCH_SHARED( TNA );
-      MATCH_SHARED( TNLA );
-      MATCH_SHARED( TNPA );
-      MATCH_SHARED( TNLPA );
-    
-      // NCL.h
-      MATCH_SHARED( NIN )
-      MATCH_SHARED( NST )
-      MATCH_SHARED( NUN )
-      MATCH_SHARED( TNIN )
-      MATCH_SHARED( TNST )
-      MATCH_SHARED( TNUN )
-      MATCH_SHARED( TNPCL )
-      MATCH_SHARED( TNPIN )
-      MATCH_SHARED( TNPEN )
-      MATCH_SHARED( TNPST )
-      MATCH_SHARED( TNPUN )
-
-      // NII.h
-      MATCH_SHARED( NII )
-
-      // NL.h
-      MATCH( NL )
-      MATCH( NLE )
-
-      // NM.h
-      MATCH_SHARED( NM )
-      MATCH_SHARED( NLM )
-      MATCH_SHARED( NG )
-      MATCH_SHARED( NLG )
-      MATCH_SHARED( NS )
-      MATCH_SHARED( NLS )
-      MATCH_SHARED( NPM )
-      MATCH_SHARED( NLPM )
-      MATCH_SHARED( TNM )
-      MATCH_SHARED( TNLM )
-      MATCH_SHARED( TNLG )
-      MATCH_SHARED( TNLS )
-      MATCH_SHARED( TNPM )
-      MATCH_SHARED( TNLPM )
+    // NUMPAR.h
+    MATCH( NUMPAR )
 
 
-      // NOS.h
-      MATCH_SHARED( NOS )
-      MATCH_SHARED( TNOS )
-
-      // NPKG.h
-      MATCH_SHARED( NPKG )
-      MATCH_SHARED( TNPKG )
-
-      // NUMPAR.h
-      MATCH( NUMPAR )
-
-
-      // TNFI.h
-      MATCH_SHARED( TNFI )
-      MATCH_SHARED( TNDI )
-
-      // Aggregates.h
-      MATCH_SHARED( MI )
-      MATCH_SHARED( MISEI )
-      MATCH_SHARED( MIMS )
-      MATCH_SHARED( MISM )
-
+    // TNFI.h
+    MATCH_SHARED( TNFI )
+    MATCH_SHARED( TNDI )
 
     // WMC.h
     MATCH_SHARED( WMC )
@@ -222,9 +188,6 @@ namespace columbus { namespace lim { namespace metrics {
     MATCH_SHARED( TLCOM5 )
     // McCC.h
     MATCH_SHARED( McCC )
-    // Halstead.h
-    MATCH_SHARED( HPV )
-    MATCH_SHARED( HPL )
     // CBO.h
     MATCH_SHARED( CBO )
     MATCH_SHARED( TCBO )

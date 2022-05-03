@@ -41,6 +41,9 @@ namespace columbus { namespace javascript { namespace asg {
     asoBitwiseXor,
     asoBitwiseAnd,
     asoExponentiation,
+    asoAnd,
+    asoOr,
+    asoNullishCoalescing,
     asoLAST
   };
 
@@ -92,6 +95,7 @@ namespace columbus { namespace javascript { namespace asg {
   enum LogicalOperator {
     looAnd,
     looOr,
+    looNullishCoalescing,
     looLAST
   };
 
@@ -153,16 +157,19 @@ namespace columbus { namespace javascript { namespace asg {
     ndkArrayExpression,
     ndkArrowFunctionExpression,
     ndkAssignmentExpression,
-    ndkAssignmentProperty,
     ndkAwaitExpression,
+    ndkBigIntLiteral,
     ndkBinaryExpression,
     ndkBooleanLiteral,
     ndkCallExpression,
+    ndkChainElement,
+    ndkChainExpression,
     ndkClassExpression,
     ndkConditionalExpression,
     ndkExpression,
     ndkFunctionExpression,
     ndkIdentifier,
+    ndkImportExpression,
     ndkLiteral,
     ndkLogicalExpression,
     ndkMemberExpression,
@@ -171,6 +178,7 @@ namespace columbus { namespace javascript { namespace asg {
     ndkNullLiteral,
     ndkNumberLiteral,
     ndkObjectExpression,
+    ndkPrivateIdentifier,
     ndkProperty,
     ndkRegExpLiteral,
     ndkSequenceExpression,
@@ -220,6 +228,7 @@ namespace columbus { namespace javascript { namespace asg {
     ndkImportSpecifier,
     ndkMethodDefinition,
     ndkModuleSpecifier,
+    ndkPropertyDefinition,
     ndkLAST
   };
 
@@ -228,6 +237,7 @@ namespace columbus { namespace javascript { namespace asg {
     edkProgram_HasBody,
     edkSystem_HasPrograms,
     edkExportAllDeclaration_HasSource,
+    edkExportAllDeclaration_HasExported,
     edkExportDefaultDeclaration_HasDeclaration,
     edkExportNamedDeclaration_HasDeclaration,
     edkExportNamedDeclaration_HasSpecifiers,
@@ -246,10 +256,12 @@ namespace columbus { namespace javascript { namespace asg {
     edkCallExpression_HasCallee,
     edkCallExpression_HasArguments,
     edkCallExpression_Calls,
+    edkChainExpression_HasExpression,
     edkConditionalExpression_HasAlternate,
     edkConditionalExpression_HasConsequent,
     edkConditionalExpression_HasTest,
     edkIdentifier_RefersTo,
+    edkImportExpression_HasSource,
     edkLogicalExpression_HasLeft,
     edkLogicalExpression_HasRight,
     edkMemberExpression_HasProperty,
@@ -319,6 +331,8 @@ namespace columbus { namespace javascript { namespace asg {
     edkMethodDefinition_HasKey,
     edkMethodDefinition_HasValue,
     edkModuleSpecifier_HasLocal,
+    edkPropertyDefinition_HasKey,
+    edkPropertyDefinition_HasValue,
     edkLAST
   };
 

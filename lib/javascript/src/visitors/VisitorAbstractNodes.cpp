@@ -219,14 +219,6 @@ void VisitorAbstractNodes::visitEnd(const expression::AssignmentExpression& node
     visitEnd   ((base::Positioned&)node,false); 
 }
 
-void VisitorAbstractNodes::visit(const expression::AssignmentProperty& node , bool callVirtualBase) {
-  visit   ((expression::Property&)node,false); 
-}
-
-void VisitorAbstractNodes::visitEnd(const expression::AssignmentProperty& node , bool callVirtualBase) {
-  visitEnd   ((expression::Property&)node,false); 
-}
-
 void VisitorAbstractNodes::visit(const expression::AwaitExpression& node , bool callVirtualBase) {
   if (callVirtualBase)
     visit   ((base::Positioned&)node,false); 
@@ -235,6 +227,18 @@ void VisitorAbstractNodes::visit(const expression::AwaitExpression& node , bool 
 
 void VisitorAbstractNodes::visitEnd(const expression::AwaitExpression& node , bool callVirtualBase) {
   visitEnd   ((expression::Expression&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const expression::BigIntLiteral& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Positioned&)node,false); 
+  visit   ((expression::Literal&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::BigIntLiteral& node , bool callVirtualBase) {
+  visitEnd   ((expression::Literal&)node,false); 
   if (callVirtualBase)
     visitEnd   ((base::Positioned&)node,false); 
 }
@@ -267,9 +271,33 @@ void VisitorAbstractNodes::visit(const expression::CallExpression& node , bool c
   if (callVirtualBase)
     visit   ((base::Positioned&)node,false); 
   visit   ((expression::Expression&)node,false); 
+  visit   ((expression::ChainElement&)node,false); 
 }
 
 void VisitorAbstractNodes::visitEnd(const expression::CallExpression& node , bool callVirtualBase) {
+  visitEnd   ((expression::Expression&)node,false); 
+  visitEnd   ((expression::ChainElement&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const expression::ChainElement& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::ChainElement& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visitEnd((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const expression::ChainExpression& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Positioned&)node,false); 
+  visit   ((expression::Expression&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::ChainExpression& node , bool callVirtualBase) {
   visitEnd   ((expression::Expression&)node,false); 
   if (callVirtualBase)
     visitEnd   ((base::Positioned&)node,false); 
@@ -341,6 +369,18 @@ void VisitorAbstractNodes::visitEnd(const expression::Identifier& node , bool ca
     visitEnd   ((base::Positioned&)node,false); 
 }
 
+void VisitorAbstractNodes::visit(const expression::ImportExpression& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit   ((base::Positioned&)node,false); 
+  visit   ((expression::Expression&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::ImportExpression& node , bool callVirtualBase) {
+  visitEnd   ((expression::Expression&)node,false); 
+  if (callVirtualBase)
+    visitEnd   ((base::Positioned&)node,false); 
+}
+
 void VisitorAbstractNodes::visit(const expression::Literal& node , bool callVirtualBase) {
   if (callVirtualBase)
     visit((base::Positioned&)node,false); 
@@ -370,11 +410,13 @@ void VisitorAbstractNodes::visit(const expression::MemberExpression& node , bool
     visit   ((base::Positioned&)node,false); 
   visit   ((expression::Expression&)node,false); 
   visit   ((statement::Pattern&)node,false); 
+  visit   ((expression::ChainElement&)node,false); 
 }
 
 void VisitorAbstractNodes::visitEnd(const expression::MemberExpression& node , bool callVirtualBase) {
   visitEnd   ((expression::Expression&)node,false); 
   visitEnd   ((statement::Pattern&)node,false); 
+  visitEnd   ((expression::ChainElement&)node,false); 
   if (callVirtualBase)
     visitEnd   ((base::Positioned&)node,false); 
 }
@@ -437,6 +479,18 @@ void VisitorAbstractNodes::visitEnd(const expression::ObjectExpression& node , b
   visitEnd   ((expression::Expression&)node,false); 
   if (callVirtualBase)
     visitEnd   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const expression::PrivateIdentifier& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visit((base::Positioned&)node,false); 
+  visit   ((base::Named&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const expression::PrivateIdentifier& node , bool callVirtualBase) {
+  if (callVirtualBase)
+    visitEnd((base::Positioned&)node,false); 
+  visitEnd   ((base::Named&)node,false); 
 }
 
 void VisitorAbstractNodes::visit(const expression::Property& node , bool callVirtualBase) {
@@ -960,6 +1014,14 @@ void VisitorAbstractNodes::visit(const structure::ModuleSpecifier& node , bool c
 }
 
 void VisitorAbstractNodes::visitEnd(const structure::ModuleSpecifier& node , bool callVirtualBase) {
+  visitEnd   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visit(const structure::PropertyDefinition& node , bool callVirtualBase) {
+  visit   ((base::Positioned&)node,false); 
+}
+
+void VisitorAbstractNodes::visitEnd(const structure::PropertyDefinition& node , bool callVirtualBase) {
   visitEnd   ((base::Positioned&)node,false); 
 }
 

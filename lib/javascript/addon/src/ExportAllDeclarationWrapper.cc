@@ -17,6 +17,7 @@ napi_value ExportAllDeclarationWrapper::Init(napi_env env, napi_value& exports) 
   napi_status status;
   napi_property_descriptor props [] = {
   DECLARE_NAPI_METHOD( "setSource", setSource),
+  DECLARE_NAPI_METHOD( "setExported", setExported),
   DECLARE_NAPI_METHOD( "addComments", addComments),
     DECLARE_NAPI_METHOD("setPath", setPath),
     DECLARE_NAPI_METHOD("setPosition", setPosition),
@@ -96,6 +97,40 @@ napi_value ExportAllDeclarationWrapper::setSource(napi_env env, napi_callback_in
   }
 
   source->setSource(target);
+  return nullptr;
+}
+napi_value ExportAllDeclarationWrapper::setExported(napi_env env, napi_callback_info info){
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
+
+  ExportAllDeclarationWrapper* obj;
+  BaseWrapper* param;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  status = napi_unwrap(env, args[0], reinterpret_cast<void**>(&param));
+  assert(status == napi_ok);
+
+  columbus::javascript::asg::declaration::ExportAllDeclaration* source = dynamic_cast<columbus::javascript::asg::declaration::ExportAllDeclaration*>(obj->_nativeObj);
+  columbus::javascript::asg::expression::Identifier* target = dynamic_cast<columbus::javascript::asg::expression::Identifier*>(param->_nativeObj);
+
+  if(source == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast declaration::ExportAllDeclaration" );
+  }
+  if(target == nullptr){
+    status = napi_throw_error(env, nullptr, "Cannot cast expression::Identifier" );
+  }
+
+  source->setExported(target);
   return nullptr;
 }
 napi_value ExportAllDeclarationWrapper::addComments(napi_env env, napi_callback_info info){

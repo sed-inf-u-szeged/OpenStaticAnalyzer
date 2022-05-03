@@ -52,6 +52,7 @@ public:
      stream instead.) \throw std::exception possibly, depending on configuration
    */
   virtual int write(Value const& root, OStream* sout) = 0;
+  virtual int write(Value const& root, OStream* sout, const char *leftMargin) = 0;
 
   /** \brief A simple abstract factory.
    */

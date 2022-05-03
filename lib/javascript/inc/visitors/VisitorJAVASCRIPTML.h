@@ -244,18 +244,6 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitEnd(const expression::AssignmentExpression& node, bool callVirtualBase = true);
 
       /**
-      * \brief Writes the XML representation of the expression::AssignmentProperty node into the output file.
-      * \param node [in] The node which is visited.
-      */
-      virtual void visit(const expression::AssignmentProperty& node, bool callVirtualBase = true);
-
-      /**
-      * \brief Writes the end part of XML representation of the expression::AssignmentProperty node into the output file.
-      * \param node [in] The node which is visited.
-      */
-      virtual void visitEnd(const expression::AssignmentProperty& node, bool callVirtualBase = true);
-
-      /**
       * \brief Writes the XML representation of the expression::AwaitExpression node into the output file.
       * \param node [in] The node which is visited.
       */
@@ -266,6 +254,18 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::AwaitExpression& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the XML representation of the expression::BigIntLiteral node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::BigIntLiteral& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the end part of XML representation of the expression::BigIntLiteral node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::BigIntLiteral& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the XML representation of the expression::BinaryExpression node into the output file.
@@ -302,6 +302,30 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::CallExpression& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the XML representation of the expression::ChainElement node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::ChainElement& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the end part of XML representation of the expression::ChainElement node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::ChainElement& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the XML representation of the expression::ChainExpression node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::ChainExpression& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the end part of XML representation of the expression::ChainExpression node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::ChainExpression& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the XML representation of the expression::ClassExpression node into the output file.
@@ -350,6 +374,18 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::Identifier& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the XML representation of the expression::ImportExpression node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::ImportExpression& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the end part of XML representation of the expression::ImportExpression node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::ImportExpression& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the XML representation of the expression::LogicalExpression node into the output file.
@@ -434,6 +470,18 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::ObjectExpression& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the XML representation of the expression::PrivateIdentifier node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::PrivateIdentifier& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the end part of XML representation of the expression::PrivateIdentifier node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::PrivateIdentifier& node, bool callVirtualBase = true);
 
       /**
       * \brief Writes the XML representation of the expression::Property node into the output file.
@@ -964,6 +1012,18 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitEnd(const structure::MethodDefinition& node, bool callVirtualBase = true);
 
       /**
+      * \brief Writes the XML representation of the structure::PropertyDefinition node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::PropertyDefinition& node, bool callVirtualBase = true);
+
+      /**
+      * \brief Writes the end part of XML representation of the structure::PropertyDefinition node into the output file.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::PropertyDefinition& node, bool callVirtualBase = true);
+
+      /**
       * \brief Edge visitor for comments edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1018,6 +1078,20 @@ namespace columbus { namespace javascript { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitEndExportAllDeclaration_HasSource(const declaration::ExportAllDeclaration& begin, const expression::Literal& end);
+
+      /**
+      * \brief Edge  visitor for hasExported edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitExportAllDeclaration_HasExported(const declaration::ExportAllDeclaration& begin, const expression::Identifier& end);
+
+      /**
+      * \brief Edge end visitor for hasExported edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndExportAllDeclaration_HasExported(const declaration::ExportAllDeclaration& begin, const expression::Identifier& end);
 
       /**
       * \brief Edge  visitor for hasDeclaration edge which is called when the subtree of this edge is started.
@@ -1206,14 +1280,14 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const expression::Expression& end);
+      virtual void visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const base::Positioned& end);
 
       /**
       * \brief Edge end visitor for hasLeft edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitEndBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const expression::Expression& end);
+      virtual void visitEndBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasRight edge which is called when the subtree of this edge is started.
@@ -1272,6 +1346,20 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitEndCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end);
 
       /**
+      * \brief Edge  visitor for hasExpression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitChainExpression_HasExpression(const expression::ChainExpression& begin, const expression::ChainElement& end);
+
+      /**
+      * \brief Edge end visitor for hasExpression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndChainExpression_HasExpression(const expression::ChainExpression& begin, const expression::ChainElement& end);
+
+      /**
       * \brief Edge  visitor for hasAlternate edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1328,6 +1416,20 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitEndIdentifier_RefersTo(const expression::Identifier& begin, const base::Positioned& end);
 
       /**
+      * \brief Edge  visitor for hasSource edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitImportExpression_HasSource(const expression::ImportExpression& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasSource edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndImportExpression_HasSource(const expression::ImportExpression& begin, const expression::Expression& end);
+
+      /**
       * \brief Edge  visitor for hasLeft edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -1360,14 +1462,14 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const expression::Expression& end);
+      virtual void visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const base::Positioned& end);
 
       /**
       * \brief Edge end visitor for hasProperty edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitEndMemberExpression_HasProperty(const expression::MemberExpression& begin, const expression::Expression& end);
+      virtual void visitEndMemberExpression_HasProperty(const expression::MemberExpression& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasObject edge which is called when the subtree of this edge is started.
@@ -2214,14 +2316,14 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitClassBody_HasBody(const structure::ClassBody& begin, const structure::MethodDefinition& end);
+      virtual void visitClassBody_HasBody(const structure::ClassBody& begin, const base::Positioned& end);
 
       /**
       * \brief Edge end visitor for hasBody edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitEndClassBody_HasBody(const structure::ClassBody& begin, const structure::MethodDefinition& end);
+      virtual void visitEndClassBody_HasBody(const structure::ClassBody& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasExported edge which is called when the subtree of this edge is started.
@@ -2256,14 +2358,14 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const expression::Expression& end);
+      virtual void visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const base::Positioned& end);
 
       /**
       * \brief Edge end visitor for hasKey edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitEndMethodDefinition_HasKey(const structure::MethodDefinition& begin, const expression::Expression& end);
+      virtual void visitEndMethodDefinition_HasKey(const structure::MethodDefinition& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasValue edge which is called when the subtree of this edge is started.
@@ -2292,6 +2394,34 @@ namespace columbus { namespace javascript { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitEndModuleSpecifier_HasLocal(const structure::ModuleSpecifier& begin, const expression::Identifier& end);
+
+      /**
+      * \brief Edge  visitor for hasKey edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitPropertyDefinition_HasKey(const structure::PropertyDefinition& begin, const base::Positioned& end);
+
+      /**
+      * \brief Edge end visitor for hasKey edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndPropertyDefinition_HasKey(const structure::PropertyDefinition& begin, const base::Positioned& end);
+
+      /**
+      * \brief Edge  visitor for hasValue edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitPropertyDefinition_HasValue(const structure::PropertyDefinition& begin, const expression::Expression& end);
+
+      /**
+      * \brief Edge end visitor for hasValue edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitEndPropertyDefinition_HasValue(const structure::PropertyDefinition& begin, const expression::Expression& end);
 
     protected:
 
@@ -2429,15 +2559,15 @@ namespace columbus { namespace javascript { namespace asg {
 
       /**
       * \internal
-      * \brief Writes out the attributes of the expression::AssignmentProperty node.
-      */
-      virtual void writeAttributes(const expression::AssignmentProperty& node, bool composite, bool bWithParent = true);
-
-      /**
-      * \internal
       * \brief Writes out the attributes of the expression::AwaitExpression node.
       */
       virtual void writeAttributes(const expression::AwaitExpression& node, bool composite, bool bWithParent = true);
+
+      /**
+      * \internal
+      * \brief Writes out the attributes of the expression::BigIntLiteral node.
+      */
+      virtual void writeAttributes(const expression::BigIntLiteral& node, bool composite, bool bWithParent = true);
 
       /**
       * \internal
@@ -2456,6 +2586,18 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Writes out the attributes of the expression::CallExpression node.
       */
       virtual void writeAttributes(const expression::CallExpression& node, bool composite, bool bWithParent = true);
+
+      /**
+      * \internal
+      * \brief Writes out the attributes of the expression::ChainElement node.
+      */
+      virtual void writeAttributes(const expression::ChainElement& node, bool composite, bool bWithParent = true);
+
+      /**
+      * \internal
+      * \brief Writes out the attributes of the expression::ChainExpression node.
+      */
+      virtual void writeAttributes(const expression::ChainExpression& node, bool composite, bool bWithParent = true);
 
       /**
       * \internal
@@ -2486,6 +2628,12 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Writes out the attributes of the expression::Identifier node.
       */
       virtual void writeAttributes(const expression::Identifier& node, bool composite, bool bWithParent = true);
+
+      /**
+      * \internal
+      * \brief Writes out the attributes of the expression::ImportExpression node.
+      */
+      virtual void writeAttributes(const expression::ImportExpression& node, bool composite, bool bWithParent = true);
 
       /**
       * \internal
@@ -2534,6 +2682,12 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Writes out the attributes of the expression::ObjectExpression node.
       */
       virtual void writeAttributes(const expression::ObjectExpression& node, bool composite, bool bWithParent = true);
+
+      /**
+      * \internal
+      * \brief Writes out the attributes of the expression::PrivateIdentifier node.
+      */
+      virtual void writeAttributes(const expression::PrivateIdentifier& node, bool composite, bool bWithParent = true);
 
       /**
       * \internal
@@ -2828,6 +2982,12 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Writes out the attributes of the structure::ModuleSpecifier node.
       */
       virtual void writeAttributes(const structure::ModuleSpecifier& node, bool composite, bool bWithParent = true);
+
+      /**
+      * \internal
+      * \brief Writes out the attributes of the structure::PropertyDefinition node.
+      */
+      virtual void writeAttributes(const structure::PropertyDefinition& node, bool composite, bool bWithParent = true);
 
       /** \internal \brief The ofstrem into the xml will be written. */
       std::ofstream &ofs;

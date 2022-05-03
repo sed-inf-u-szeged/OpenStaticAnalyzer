@@ -26,8 +26,7 @@
 
 #include "RulParser.h"
 
-//#include <set>
-//#include <string>
+#include <memory>
 
 namespace columbus { namespace lim { namespace metrics {
 
@@ -40,6 +39,7 @@ namespace columbus { namespace lim { namespace metrics {
       //
 
       LimMetricsVisitor( asg::Factory& factory, graph::Graph& graph, rul::RulHandler& rul, SharedContainers& shared);
+      LimMetricsVisitor( asg::Factory& factory, graph::Graph& graph, std::unique_ptr<RulParser> rulParser);
       virtual ~LimMetricsVisitor();
 
       //
@@ -77,7 +77,7 @@ namespace columbus { namespace lim { namespace metrics {
 
       asg::Factory& factory;                  ///> The lim factory
       graph::Graph& graph;                    ///> The graph converted from the above lim factory
-      RulParser rul;                          ///> The corresponding (parsed) rul file
+      std::unique_ptr<RulParser> rul;         ///> The corresponding (parsed) rul file
       const asg::ReverseEdges& reverseEdges;  ///> Reverse edges
 
       /**

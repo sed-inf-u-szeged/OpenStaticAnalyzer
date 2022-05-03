@@ -42,7 +42,7 @@ namespace structure {
   *   - static (boolean) : (missing)
   * 
   * Edges:
-  *   - hasKey (expression::Expression, single) : (missing)
+  *   - hasKey (base::Positioned, single) : (missing)
   *   - hasValue (expression::FunctionExpression, single) : (missing)
   */
   class MethodDefinition : public base::Positioned {
@@ -170,7 +170,7 @@ namespace structure {
       * \brief Gives back the pointer of the node the hasKey edge points to.
       * \return Returns the end point of the hasKey edge.
       */
-      expression::Expression* getKey() const;
+      base::Positioned* getKey() const;
 
       /**
       * \brief Gives back the pointer of the node the hasValue edge points to.
@@ -191,7 +191,7 @@ namespace structure {
       * \brief Sets the hasKey edge.
       * \param node [in] The new end point of the hasKey edge.
       */
-      void setKey(expression::Expression *node);
+      void setKey(base::Positioned *node);
 
       /**
       * \brief remove the hasKey edge.

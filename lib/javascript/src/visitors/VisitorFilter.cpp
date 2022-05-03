@@ -88,11 +88,11 @@ void VisitorFilter::visitEnd(const expression::AssignmentExpression& node , bool
   (node.getFactory().*selector)(node.getId());
 }
 
-void VisitorFilter::visitEnd(const expression::AssignmentProperty& node , bool callVirtualBase /*= true*/) {
+void VisitorFilter::visitEnd(const expression::AwaitExpression& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
-void VisitorFilter::visitEnd(const expression::AwaitExpression& node , bool callVirtualBase /*= true*/) {
+void VisitorFilter::visitEnd(const expression::BigIntLiteral& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
@@ -105,6 +105,14 @@ void VisitorFilter::visitEnd(const expression::BooleanLiteral& node , bool callV
 }
 
 void VisitorFilter::visitEnd(const expression::CallExpression& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const expression::ChainElement& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const expression::ChainExpression& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
@@ -121,6 +129,10 @@ void VisitorFilter::visitEnd(const expression::FunctionExpression& node , bool c
 }
 
 void VisitorFilter::visitEnd(const expression::Identifier& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const expression::ImportExpression& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
@@ -149,6 +161,10 @@ void VisitorFilter::visitEnd(const expression::NumberLiteral& node , bool callVi
 }
 
 void VisitorFilter::visitEnd(const expression::ObjectExpression& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const expression::PrivateIdentifier& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 
@@ -325,6 +341,10 @@ void VisitorFilter::visitEnd(const structure::ImportSpecifier& node , bool callV
 }
 
 void VisitorFilter::visitEnd(const structure::MethodDefinition& node , bool callVirtualBase /*= true*/) {
+  (node.getFactory().*selector)(node.getId());
+}
+
+void VisitorFilter::visitEnd(const structure::PropertyDefinition& node , bool callVirtualBase /*= true*/) {
   (node.getFactory().*selector)(node.getId());
 }
 

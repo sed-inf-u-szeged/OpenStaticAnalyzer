@@ -143,13 +143,13 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Deselects the actual node (and only this).
       * \param node [in] The node which is visited.
       */
-      virtual void visitEnd(const expression::AssignmentProperty& node , bool callVirtualBase = true);
+      virtual void visitEnd(const expression::AwaitExpression& node , bool callVirtualBase = true);
 
       /**
       * \brief Deselects the actual node (and only this).
       * \param node [in] The node which is visited.
       */
-      virtual void visitEnd(const expression::AwaitExpression& node , bool callVirtualBase = true);
+      virtual void visitEnd(const expression::BigIntLiteral& node , bool callVirtualBase = true);
 
       /**
       * \brief Deselects the actual node (and only this).
@@ -168,6 +168,18 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::CallExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::ChainElement& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::ChainExpression& node , bool callVirtualBase = true);
 
       /**
       * \brief Deselects the actual node (and only this).
@@ -192,6 +204,12 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::Identifier& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::ImportExpression& node , bool callVirtualBase = true);
 
       /**
       * \brief Deselects the actual node (and only this).
@@ -234,6 +252,12 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const expression::ObjectExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const expression::PrivateIdentifier& node , bool callVirtualBase = true);
 
       /**
       * \brief Deselects the actual node (and only this).
@@ -498,6 +522,12 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visitEnd(const structure::MethodDefinition& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Deselects the actual node (and only this).
+      * \param node [in] The node which is visited.
+      */
+      virtual void visitEnd(const structure::PropertyDefinition& node , bool callVirtualBase = true);
 
   }; // VisitorFilter
 

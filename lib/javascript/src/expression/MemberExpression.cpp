@@ -37,6 +37,7 @@ namespace expression {
          Positioned(_id, _factory),
     Expression(_id, _factory),
     Pattern(_id, _factory),
+    ChainElement(_id, _factory),
     m_computed(false),
     m_hasProperty(0),
     m_hasObject(0)
@@ -54,6 +55,7 @@ namespace expression {
     }
     expression::Expression::prepareDelete(false);
     statement::Pattern::prepareDelete(false);
+    expression::ChainElement::prepareDelete(false);
   }
 
   NodeKind MemberExpression::getNodeKind() const {
@@ -68,10 +70,10 @@ namespace expression {
     m_computed = _computed;
   }
 
-  expression::Expression* MemberExpression::getProperty() const {
-    expression::Expression *_node = NULL;
+  base::Positioned* MemberExpression::getProperty() const {
+    base::Positioned *_node = NULL;
     if (m_hasProperty != 0)
-      _node = dynamic_cast<expression::Expression*>(factory->getPointer(m_hasProperty));
+      _node = dynamic_cast<base::Positioned*>(factory->getPointer(m_hasProperty));
     if ( (_node == NULL) || factory->getIsFiltered(_node))
       return NULL;
 
@@ -110,6 +112,9 @@ namespace expression {
     if (statement::Pattern::setEdge(edgeKind, edgeEnd, false)) {
       return true;
     }
+    if (expression::ChainElement::setEdge(edgeKind, edgeEnd, false)) {
+      return true;
+    }
     return false;
   }
 
@@ -135,32 +140,39 @@ namespace expression {
     if (statement::Pattern::removeEdge(edgeKind, edgeEnd, false)) {
       return true;
     }
+    if (expression::ChainElement::removeEdge(edgeKind, edgeEnd, false)) {
+      return true;
+    }
     return false;
   }
 
   void MemberExpression::setProperty(NodeId _id) {
-    expression::Expression *_node = NULL;
+    base::Positioned *_node = NULL;
     if (_id) {
       if (!factory->getExist(_id))
         throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
-      _node = dynamic_cast<expression::Expression*> (factory->getPointer(_id));
+      _node = dynamic_cast<base::Positioned*> (factory->getPointer(_id));
       if ( _node == NULL) {
         throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
       if (&(_node->getFactory()) != this->factory)
         throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
 
-      if (m_hasProperty) {
-        removeParentEdge(m_hasProperty);
+      if (Common::getIsBaseClassKind(_node->getNodeKind(), ndkExpression) || _node->getNodeKind() == ndkPrivateIdentifier) {
+        if (m_hasProperty) {
+          removeParentEdge(m_hasProperty);
+          if (factory->getExistsReverseEdges())
+            factory->reverseEdges->removeEdge(m_hasProperty, m_id, edkMemberExpression_HasProperty);
+        }
+        m_hasProperty = _node->getId();
+        if (m_hasProperty != 0)
+          setParentEdge(factory->getPointer(m_hasProperty), edkMemberExpression_HasProperty);
         if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_hasProperty, m_id, edkMemberExpression_HasProperty);
+          factory->reverseEdges->insertEdge(m_hasProperty, this->getId(), edkMemberExpression_HasProperty);
+      } else {
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
-      m_hasProperty = _node->getId();
-      if (m_hasProperty != 0)
-        setParentEdge(factory->getPointer(m_hasProperty), edkMemberExpression_HasProperty);
-      if (factory->getExistsReverseEdges())
-        factory->reverseEdges->insertEdge(m_hasProperty, this->getId(), edkMemberExpression_HasProperty);
     } else {
       if (m_hasProperty) {
         throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
@@ -168,7 +180,7 @@ namespace expression {
     }
   }
 
-  void MemberExpression::setProperty(expression::Expression *_node) {
+  void MemberExpression::setProperty(base::Positioned *_node) {
     if (_node == NULL)
       throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
 
@@ -246,8 +258,9 @@ namespace expression {
     if(base.getNodeKind() == getNodeKind()) {
       const MemberExpression& node = dynamic_cast<const MemberExpression&>(base);
       double matchAttrs = 0;
+      if(node.getOptional() == getOptional()) ++matchAttrs;
       if(node.getComputed() == getComputed()) ++matchAttrs;
-      return matchAttrs / (1 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
+      return matchAttrs / (2 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
     }
@@ -282,6 +295,8 @@ namespace expression {
 
     Pattern::save(binIo,false);
 
+    ChainElement::save(binIo,false);
+
     unsigned char boolValues = 0;
     boolValues <<= 1;
     if (m_computed) 
@@ -300,6 +315,8 @@ namespace expression {
     Expression::load(binIo,false);
 
     Pattern::load(binIo,false);
+
+    ChainElement::load(binIo,false);
 
     unsigned char boolValues = binIo.readUByte1();
     m_computed = boolValues & 1;

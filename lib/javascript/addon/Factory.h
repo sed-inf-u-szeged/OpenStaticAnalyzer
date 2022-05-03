@@ -29,6 +29,8 @@
 #include "inc/CommentWrapper.h"
 #include "inc/ModuleDeclarationWrapper.h"
 #include "inc/VariableDeclaratorWrapper.h"
+#include "inc/ChainElementWrapper.h"
+#include "inc/PrivateIdentifierWrapper.h"
 #include "inc/PropertyWrapper.h"
 #include "inc/SpreadElementWrapper.h"
 #include "inc/SuperWrapper.h"
@@ -38,21 +40,24 @@
 #include "inc/SwitchCaseWrapper.h"
 #include "inc/ClassBodyWrapper.h"
 #include "inc/MethodDefinitionWrapper.h"
+#include "inc/PropertyDefinitionWrapper.h"
 #include "inc/ProgramWrapper.h"
 #include "inc/IdentifierWrapper.h"
 #include "inc/ExportNamedDeclarationWrapper.h"
 #include "inc/ImportDeclarationWrapper.h"
+#include "inc/CallExpressionWrapper.h"
+#include "inc/MemberExpressionWrapper.h"
 #include "inc/ArrayExpressionWrapper.h"
 #include "inc/ArrowFunctionExpressionWrapper.h"
 #include "inc/AssignmentExpressionWrapper.h"
 #include "inc/AwaitExpressionWrapper.h"
 #include "inc/BinaryExpressionWrapper.h"
-#include "inc/CallExpressionWrapper.h"
+#include "inc/ChainExpressionWrapper.h"
 #include "inc/ClassExpressionWrapper.h"
 #include "inc/ConditionalExpressionWrapper.h"
 #include "inc/FunctionExpressionWrapper.h"
+#include "inc/ImportExpressionWrapper.h"
 #include "inc/LogicalExpressionWrapper.h"
-#include "inc/MemberExpressionWrapper.h"
 #include "inc/MetaPropertyWrapper.h"
 #include "inc/NewExpressionWrapper.h"
 #include "inc/ObjectExpressionWrapper.h"
@@ -63,12 +68,12 @@
 #include "inc/UnaryExpressionWrapper.h"
 #include "inc/UpdateExpressionWrapper.h"
 #include "inc/YieldExpressionWrapper.h"
+#include "inc/BigIntLiteralWrapper.h"
 #include "inc/BooleanLiteralWrapper.h"
 #include "inc/NullLiteralWrapper.h"
 #include "inc/NumberLiteralWrapper.h"
 #include "inc/RegExpLiteralWrapper.h"
 #include "inc/StringLiteralWrapper.h"
-#include "inc/AssignmentPropertyWrapper.h"
 #include "inc/ArrayPatternWrapper.h"
 #include "inc/AssignmentPatternWrapper.h"
 #include "inc/ObjectPatternWrapper.h"
@@ -122,6 +127,8 @@ class Factory {
     static napi_value createCommentWrapper(napi_env env, napi_callback_info info);
     static napi_value createModuleDeclarationWrapper(napi_env env, napi_callback_info info);
     static napi_value createVariableDeclaratorWrapper(napi_env env, napi_callback_info info);
+    static napi_value createChainElementWrapper(napi_env env, napi_callback_info info);
+    static napi_value createPrivateIdentifierWrapper(napi_env env, napi_callback_info info);
     static napi_value createPropertyWrapper(napi_env env, napi_callback_info info);
     static napi_value createSpreadElementWrapper(napi_env env, napi_callback_info info);
     static napi_value createSuperWrapper(napi_env env, napi_callback_info info);
@@ -131,21 +138,24 @@ class Factory {
     static napi_value createSwitchCaseWrapper(napi_env env, napi_callback_info info);
     static napi_value createClassBodyWrapper(napi_env env, napi_callback_info info);
     static napi_value createMethodDefinitionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createPropertyDefinitionWrapper(napi_env env, napi_callback_info info);
     static napi_value createProgramWrapper(napi_env env, napi_callback_info info);
     static napi_value createIdentifierWrapper(napi_env env, napi_callback_info info);
     static napi_value createExportNamedDeclarationWrapper(napi_env env, napi_callback_info info);
     static napi_value createImportDeclarationWrapper(napi_env env, napi_callback_info info);
+    static napi_value createCallExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createMemberExpressionWrapper(napi_env env, napi_callback_info info);
     static napi_value createArrayExpressionWrapper(napi_env env, napi_callback_info info);
     static napi_value createArrowFunctionExpressionWrapper(napi_env env, napi_callback_info info);
     static napi_value createAssignmentExpressionWrapper(napi_env env, napi_callback_info info);
     static napi_value createAwaitExpressionWrapper(napi_env env, napi_callback_info info);
     static napi_value createBinaryExpressionWrapper(napi_env env, napi_callback_info info);
-    static napi_value createCallExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createChainExpressionWrapper(napi_env env, napi_callback_info info);
     static napi_value createClassExpressionWrapper(napi_env env, napi_callback_info info);
     static napi_value createConditionalExpressionWrapper(napi_env env, napi_callback_info info);
     static napi_value createFunctionExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createImportExpressionWrapper(napi_env env, napi_callback_info info);
     static napi_value createLogicalExpressionWrapper(napi_env env, napi_callback_info info);
-    static napi_value createMemberExpressionWrapper(napi_env env, napi_callback_info info);
     static napi_value createMetaPropertyWrapper(napi_env env, napi_callback_info info);
     static napi_value createNewExpressionWrapper(napi_env env, napi_callback_info info);
     static napi_value createObjectExpressionWrapper(napi_env env, napi_callback_info info);
@@ -156,12 +166,12 @@ class Factory {
     static napi_value createUnaryExpressionWrapper(napi_env env, napi_callback_info info);
     static napi_value createUpdateExpressionWrapper(napi_env env, napi_callback_info info);
     static napi_value createYieldExpressionWrapper(napi_env env, napi_callback_info info);
+    static napi_value createBigIntLiteralWrapper(napi_env env, napi_callback_info info);
     static napi_value createBooleanLiteralWrapper(napi_env env, napi_callback_info info);
     static napi_value createNullLiteralWrapper(napi_env env, napi_callback_info info);
     static napi_value createNumberLiteralWrapper(napi_env env, napi_callback_info info);
     static napi_value createRegExpLiteralWrapper(napi_env env, napi_callback_info info);
     static napi_value createStringLiteralWrapper(napi_env env, napi_callback_info info);
-    static napi_value createAssignmentPropertyWrapper(napi_env env, napi_callback_info info);
     static napi_value createArrayPatternWrapper(napi_env env, napi_callback_info info);
     static napi_value createAssignmentPatternWrapper(napi_env env, napi_callback_info info);
     static napi_value createObjectPatternWrapper(napi_env env, napi_callback_info info);

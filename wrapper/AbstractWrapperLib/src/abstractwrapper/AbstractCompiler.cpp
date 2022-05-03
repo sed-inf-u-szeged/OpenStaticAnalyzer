@@ -139,10 +139,12 @@ namespace ColumbusWrappers {
       else if (dialect == "c++14" || dialect == "c++1y" || dialect == "gnu++14" || dialect == "gnu++1y")
         return "c++14";
       else if (dialect == "c++17" || dialect == "c++1z" || dialect == "gnu++17" || dialect == "gnu++1z")
-        //return "c++17";
-        return "c++14"; // the cppcheck does not know the c++17
+        return "c++17";
+      else if (dialect == "c++20" || dialect == "c++2a" || dialect == "gnu++20" || dialect == "gnu++2a")
+        return "c++20";
 
-      return "c++11";
+
+      return "c++20";
     }
 
     string getCANIniNameForCompiler(const string& compilerPath)

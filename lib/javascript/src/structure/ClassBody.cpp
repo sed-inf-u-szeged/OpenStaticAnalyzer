@@ -57,12 +57,12 @@ namespace structure {
     return ndkClassBody;
   }
 
-  ListIterator<structure::MethodDefinition> ClassBody::getBodyListIteratorBegin() const {
-    return ListIterator<structure::MethodDefinition>(&hasBodyContainer, factory, true);
+  ListIterator<base::Positioned> ClassBody::getBodyListIteratorBegin() const {
+    return ListIterator<base::Positioned>(&hasBodyContainer, factory, true);
   }
 
-  ListIterator<structure::MethodDefinition> ClassBody::getBodyListIteratorEnd() const {
-    return ListIterator<structure::MethodDefinition>(&hasBodyContainer, factory, false);
+  ListIterator<base::Positioned> ClassBody::getBodyListIteratorEnd() const {
+    return ListIterator<base::Positioned>(&hasBodyContainer, factory, false);
   }
 
   bool ClassBody::getBodyIsEmpty() const {
@@ -71,8 +71,8 @@ namespace structure {
 
   unsigned int ClassBody::getBodySize() const {
     unsigned int size = 0;
-    ListIterator<structure::MethodDefinition> endIt = getBodyListIteratorEnd();
-    for (ListIterator<structure::MethodDefinition> it = getBodyListIteratorBegin(); it != endIt; ++it) {
+    ListIterator<base::Positioned> endIt = getBodyListIteratorEnd();
+    for (ListIterator<base::Positioned> it = getBodyListIteratorBegin(); it != endIt; ++it) {
       ++size;
     }
     return size;
@@ -106,14 +106,14 @@ namespace structure {
     return false;
   }
 
-  void ClassBody::addBody(const structure::MethodDefinition *_node) {
+  void ClassBody::addBody(const base::Positioned *_node) {
     if (_node == NULL)
       throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_NODE_IS_NULL);
 
     if (&(_node->getFactory()) != this->factory)
       throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH);
 
-    if (!((_node->getNodeKind() == ndkMethodDefinition) ))
+    if (!((_node->getNodeKind() == ndkMethodDefinition)  || (_node->getNodeKind() == ndkPropertyDefinition) ))
       throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
 
     hasBodyContainer.push_back(_node->getId());
@@ -124,7 +124,7 @@ namespace structure {
   }
 
   void ClassBody::addBody(NodeId _id) {
-    const structure::MethodDefinition *node = dynamic_cast<structure::MethodDefinition*>(factory->getPointer(_id));
+    const base::Positioned *node = dynamic_cast<base::Positioned*>(factory->getPointer(_id));
     if (node == NULL)
       throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
     addBody( node );
@@ -134,7 +134,7 @@ namespace structure {
     if (!factory->getExist(id))
       throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
-    ListIterator<structure::MethodDefinition>::Container::iterator it = find(hasBodyContainer.begin(), hasBodyContainer.end(), id);
+    ListIterator<base::Positioned>::Container::iterator it = find(hasBodyContainer.begin(), hasBodyContainer.end(), id);
 
     if (it == hasBodyContainer.end())
       throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
@@ -147,7 +147,7 @@ namespace structure {
       factory->reverseEdges->removeEdge(id, this->getId(), edkClassBody_HasBody);
   }
 
-  void ClassBody::removeBody(structure::MethodDefinition *_node) {
+  void ClassBody::removeBody(base::Positioned *_node) {
     if (_node == NULL)
       throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_EDGE_IS_NULL);
 
@@ -195,7 +195,7 @@ namespace structure {
     Positioned::save(binIo,false);
 
 
-    for (ListIterator<structure::MethodDefinition>::Container::const_iterator it = hasBodyContainer.begin(); it != hasBodyContainer.end(); ++it) {
+    for (ListIterator<base::Positioned>::Container::const_iterator it = hasBodyContainer.begin(); it != hasBodyContainer.end(); ++it) {
       binIo.writeUInt4(*it);
     }
     binIo.writeUInt4(0); // This is the end sign

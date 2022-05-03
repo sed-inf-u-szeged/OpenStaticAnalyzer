@@ -24,18 +24,12 @@ The following table summarizes the metrics, their abbreviations and their corres
   ---------------------- ---------------------------------------- -------- ------------------ ------- -------- --------- ------ ------- 
   Cohesion metrics       Lack of Cohesion in Methods 5            LCOM5                       X                                         
   Complexity metrics     McCabe's Cyclomatic Complexity           McCC     X                                             X              
-                         Nesting Level                            NL       X                  X                                         
-                         Nesting Level Else-If                    NLE      X                  X                                         
                          Weighted Methods per Class               WMC                         X                                         
   Coupling metrics       Coupling Between Object classes          CBO                         X                                         
-                         Coupling Between Object classes Inverse  CBOI                        X                                         
-                         Number of Incoming Invocations           NII      X                  X                                         
                          Number of Outgoing Invocations           NOI      X                  X                                         
                          Response set For Class                   RFC                         X                                         
-  Documentation metrics  Comment Density                          CD       X                  X       X        X                        
-                         Comment Lines of Code                    CLOC     X                  X       X        X         X              
+  Documentation metrics  Comment Lines of Code                    CLOC     X                  X       X        X         X              
                          Documentation Lines of Code              DLOC     X                  X                                         
-                         Total Comment Density                    TCD      X                  X       X        X                X       
                          Total Comment Lines of Code              TCLOC    X                  X       X        X                X       
   Inheritance metrics    Depth of Inheritance Tree                DIT                         X                                         
                          Number of Ancestors                      NOA                         X                                         
@@ -44,9 +38,7 @@ The following table summarizes the metrics, their abbreviations and their corres
                          Number of Parents                        NOP                         X                                         
   Size metrics           Lines of Code                            LOC      X                  X       X        X         X              
                          Logical Lines of Code                    LLOC     X                  X       X        X         X              
-                         Number of Attributes                     NA                          X       X        X                        
                          Number of Classes                        NCL                                 X        X                        
-                         Number of Local Attributes               NLA                         X                                         
                          Number of Local Methods                  NLM                         X                                         
                          Number of Methods                        NM                          X       X        X                        
                          Number of Packages                       NPKG                                         X                        
@@ -54,11 +46,9 @@ The following table summarizes the metrics, their abbreviations and their corres
                          Number of Statements                     NOS      X                  X                          X              
                          Total Lines of Code                      TLOC     X                  X       X        X                X       
                          Total Logical Lines of Code              TLLOC    X                  X       X        X                X       
-                         Total Number of Attributes               TNA                         X       X        X                X       
                          Total Number of Classes                  TNCL                                X        X                X       
                          Total Number of Directories              TNDI                                         X                X       
                          Total Number of Files                    TNFI                                         X                X       
-                         Total Number of Local Attributes         TNLA                        X                                         
                          Total Number of Local Methods            TNLM                        X                                         
                          Total Number of Methods                  TNM                         X       X        X                X       
                          Total Number of Packages                 TNPKG                                        X                X       
@@ -78,18 +68,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 
 **File:** complexity of the file expressed as the number of independent control flow paths in it. It represents a lower bound for the number of possible execution paths in the source code and at the same time it is an upper bound for the minimum number of test cases needed for achieving full branch test coverage. The value of the metric is calculated as the number of the following instructions plus 1: if, for, while, except and conditional expression. Moreover, logical “and” and logical “or” expressions also add 1 to the value because their short-circuit evaluation can cause branching depending on the first operand. The following instructions are not included: else, try, finally.
 
-#### Nesting Level (NL) {#NL}
-
-**Method / Function:** complexity of the method/function expressed as the depth of the maximum embeddedness of its conditional, iteration and exception handling block scopes. The following instructions are taken into account: if, else-if, else, for, while, with, try, except, finally.
-
-**Class:** complexity of the class expressed as the depth of the maximum embeddedness of its conditional, iteration and exception handling block scopes. It is calculated as the maximum nesting level (NL) of its local methods.
-
-#### Nesting Level Else-If (NLE) {#NLE}
-
-**Method / Function:** complexity of the method/function expressed as the depth of the maximum embeddedness of its conditional, iteration and exception handling block scopes, where in the if-else-if construct only the first if instruction is considered. The following instructions are taken into account: if, else, for, while, with, try, except, finally. The following instructions do not increase the value by themselves; however, if additional embeddedness can be found in their blocks, they are considered: else-if (i.e. in the if-else-if construct the use of else-if does not increase the value of the metric).
-
-**Class:** complexity of the class expressed as the depth of the maximum embeddedness of its conditional, iteration and exception handling block scopes, where in the if-else-if construct only the first if instruction is considered. It is calculated as the maximum nesting level (NLE) of its local methods.
-
 #### Weighted Methods per Class (WMC) {#WMC}
 
 **Class:** complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe's Cyclomatic Complexity (McCC) values of its local methods.
@@ -99,16 +77,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 #### Coupling Between Object classes (CBO) {#CBO}
 
 **Class:** number of directly used other classes (e.g. by inheritance, function call, type reference, attribute reference). Classes using many other classes highly depend on their environment, so it is difficult to test or reuse them; furthermore, they are very sensitive to the changes in the system.
-
-#### Coupling Between Object classes Inverse (CBOI) {#CBOI}
-
-**Class:** number of other classes, which directly use the class. Classes which are used by many other classes have a high impact on the behavior of the system, and should be modified very carefully and tested intensively.
-
-#### Number of Incoming Invocations (NII) {#NII}
-
-**Method / Function:** number of other methods/functions and attribute initializations which directly call the method/function. If the method/function is invoked several times from the same method/function or attribute initialization, it is counted only once.
-
-**Class:** number of other methods and attribute initializations which directly call the local methods of the class. If a method is invoked several times from the same method or attribute initialization, it is counted only once.
 
 #### Number of Outgoing Invocations (NOI) {#NOI}
 
@@ -121,14 +89,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 **Class:** number of local (i.e. not inherited) methods in the class (NLM) plus the number of directly invoked other methods by its methods or attribute initializations (NOI).
 
 ### Documentation metrics
-
-#### Comment Density (CD) {#CD}
-
-**Method/Function:** ratio of the comment lines of the method/function (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).
-
-**Class:** ratio of the comment lines of the class (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).
-
-**Module:** ratio of the comment lines of the module (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).
 
 #### Comment Lines of Code (CLOC) {#CLOC}
 
@@ -147,18 +107,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 **Class:** number of documentation code lines of the class, including its local methods and attributes; however, its nested and local classes are not included.
 
 **Module:** number of documentation code lines of the modul.
-
-#### Total Comment Density (TCD) {#TCD}
-
-**Method/Function:** ratio of the total comment lines of the method/function (TCLOC) to the sum of its total comment (TCLOC) and total logical lines of code (TLLOC).
-
-**Class:** ratio of the total comment lines of the class (TCLOC) to the sum of its total comment (TCLOC) and total logical lines of code (TLLOC).
-
-**Module:** ratio of the total comment lines of the module (TCLOC) to the sum of its total comment (TCLOC) and total logical lines of code (TLLOC).
-
-**Package:** ratio of the total comment lines of the package (TCLOC) to the sum of its total comment (TCLOC) and total logical lines of code (TLLOC).
-
-**Component:** ratio of the total comment lines of the component (TCLOC) to the sum of its total comment (TCLOC) and total logical lines of code (TLLOC).
 
 #### Total Comment Lines of Code (TCLOC) {#TCLOC}
 
@@ -220,23 +168,11 @@ The following table summarizes the metrics, their abbreviations and their corres
 
 **File:** number of non-empty and non-comment code lines in the file.
 
-#### Number of Attributes (NA) {#NA}
-
-**Class:** number of attributes in the class, including the inherited ones; however, the attributes of its nested and local classes are not included.
-
-**Module:** number of attributes in the module.
-
-**Package:** number of attributes in the package; however, attributes of its subpackages are not included.
-
 #### Number of Classes (NCL) {#NCL}
 
 **Module:** number of classes in the module.
 
 **Package:** number of classes in the package; however, the classes of its subpackages are not included.
-
-#### Number of Local Attributes (NLA) {#NLA}
-
-**Class:** number of local (i.e. not inherited) attributes in the class; however, the attributes of nested and local classes are not included.
 
 #### Number of Local Methods (NLM) {#NLM}
 
@@ -290,16 +226,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 
 **Component:** number of non-empty and non-comment code lines of the component, including its subcomponents.
 
-#### Total Number of Attributes (TNA) {#TNA}
-
-**Class:** number of attributes in the class, including the inherited ones, as well as the inherited and local attributes of its nested and local classes.
-
-**Module:** number of attributes in the module.
-
-**Package:** number of attributes in the package, including the attributes of its subpackages.
-
-**Component:** number of attributes in the component, including the attributes of its subcomponents.
-
 #### Total Number of Classes (TNCL) {#TNCL}
 
 **Module:** number of classes in the module.
@@ -319,10 +245,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 **Package:** number of files that belong to the package, including the files of its subpackages.
 
 **Component:** number of files that belong to the component, including its subcomponents.
-
-#### Total Number of Local Attributes (TNLA) {#TNLA}
-
-**Class:** number of local (i.e. not inherited) attributes in the class, including the attributes of its nested and local classes.
 
 #### Total Number of Local Methods (TNLM) {#TNLM}
 

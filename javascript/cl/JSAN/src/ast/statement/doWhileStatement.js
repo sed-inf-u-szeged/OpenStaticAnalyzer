@@ -18,37 +18,27 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var doWhileStatement = factory.createDoWhileStatementWrapper();
+        const doWhileStatement = factory.createDoWhileStatementWrapper();
         globals.setPositionInfo(node, doWhileStatement);
         return doWhileStatement;
     } else {
-        var doWhileStatementWrapper = globals.getWrapperOfNode(node);
+        const doWhileStatementWrapper = globals.getWrapperOfNode(node);
 
         if (node.test != null) {
-            var testWrapper = globals.getWrapperOfNode(node.test);
-            try {
-                doWhileStatementWrapper.setTest(testWrapper);
-            } catch (e) {
-                console.error("DOWHILESTATEMENT - Could not set test! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(doWhileStatementWrapper, "setTest", node.test, "CONTINUESTATEMENT - Could not set test!");
         }
 
         if (node.body != null) {
-            var bodyWrapper = globals.getWrapperOfNode(node.body);
-            try {
-                doWhileStatementWrapper.setBody(bodyWrapper);
-            } catch (e) {
-                console.error("DOWHILESTATEMENT - Could not set body! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(doWhileStatementWrapper, "setBody", node.body, "CONTINUESTATEMENT - Could not set body!");
         }
-
     }
 }

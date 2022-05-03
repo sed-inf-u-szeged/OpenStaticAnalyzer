@@ -106,13 +106,13 @@ void Visitor::visit(const expression::AssignmentExpression& node , bool callVirt
 
 void Visitor::visitEnd(const expression::AssignmentExpression& node , bool callVirtualBase) { }
 
-void Visitor::visit(const expression::AssignmentProperty& node , bool callVirtualBase) {}
-
-void Visitor::visitEnd(const expression::AssignmentProperty& node , bool callVirtualBase) { }
-
 void Visitor::visit(const expression::AwaitExpression& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expression::AwaitExpression& node , bool callVirtualBase) { }
+
+void Visitor::visit(const expression::BigIntLiteral& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::BigIntLiteral& node , bool callVirtualBase) { }
 
 void Visitor::visit(const expression::BinaryExpression& node , bool callVirtualBase) {}
 
@@ -125,6 +125,14 @@ void Visitor::visitEnd(const expression::BooleanLiteral& node , bool callVirtual
 void Visitor::visit(const expression::CallExpression& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expression::CallExpression& node , bool callVirtualBase) { }
+
+void Visitor::visit(const expression::ChainElement& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::ChainElement& node , bool callVirtualBase) { }
+
+void Visitor::visit(const expression::ChainExpression& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::ChainExpression& node , bool callVirtualBase) { }
 
 void Visitor::visit(const expression::ClassExpression& node , bool callVirtualBase) {}
 
@@ -141,6 +149,10 @@ void Visitor::visitEnd(const expression::FunctionExpression& node , bool callVir
 void Visitor::visit(const expression::Identifier& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expression::Identifier& node , bool callVirtualBase) { }
+
+void Visitor::visit(const expression::ImportExpression& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::ImportExpression& node , bool callVirtualBase) { }
 
 void Visitor::visit(const expression::LogicalExpression& node , bool callVirtualBase) {}
 
@@ -169,6 +181,10 @@ void Visitor::visitEnd(const expression::NumberLiteral& node , bool callVirtualB
 void Visitor::visit(const expression::ObjectExpression& node , bool callVirtualBase) {}
 
 void Visitor::visitEnd(const expression::ObjectExpression& node , bool callVirtualBase) { }
+
+void Visitor::visit(const expression::PrivateIdentifier& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const expression::PrivateIdentifier& node , bool callVirtualBase) { }
 
 void Visitor::visit(const expression::Property& node , bool callVirtualBase) {}
 
@@ -346,6 +362,10 @@ void Visitor::visit(const structure::MethodDefinition& node , bool callVirtualBa
 
 void Visitor::visitEnd(const structure::MethodDefinition& node , bool callVirtualBase) { }
 
+void Visitor::visit(const structure::PropertyDefinition& node , bool callVirtualBase) {}
+
+void Visitor::visitEnd(const structure::PropertyDefinition& node , bool callVirtualBase) { }
+
 void Visitor::visitPositioned_Comments(const base::Positioned& begin, const base::Comment& end) { }
 
 void Visitor::visitEndPositioned_Comments(const base::Positioned& begin, const base::Comment& end) { }
@@ -361,6 +381,10 @@ void Visitor::visitEndSystem_HasPrograms(const base::System& begin, const base::
 void Visitor::visitExportAllDeclaration_HasSource(const declaration::ExportAllDeclaration& begin, const expression::Literal& end) { }
 
 void Visitor::visitEndExportAllDeclaration_HasSource(const declaration::ExportAllDeclaration& begin, const expression::Literal& end) { }
+
+void Visitor::visitExportAllDeclaration_HasExported(const declaration::ExportAllDeclaration& begin, const expression::Identifier& end) { }
+
+void Visitor::visitEndExportAllDeclaration_HasExported(const declaration::ExportAllDeclaration& begin, const expression::Identifier& end) { }
 
 void Visitor::visitExportDefaultDeclaration_HasDeclaration(const declaration::ExportDefaultDeclaration& begin, const base::Positioned& end) { }
 
@@ -414,9 +438,9 @@ void Visitor::visitAwaitExpression_HasArgument(const expression::AwaitExpression
 
 void Visitor::visitEndAwaitExpression_HasArgument(const expression::AwaitExpression& begin, const expression::Expression& end) { }
 
-void Visitor::visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const expression::Expression& end) { }
+void Visitor::visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const base::Positioned& end) { }
 
-void Visitor::visitEndBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const expression::Expression& end) { }
+void Visitor::visitEndBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const base::Positioned& end) { }
 
 void Visitor::visitBinaryExpression_HasRight(const expression::BinaryExpression& begin, const expression::Expression& end) { }
 
@@ -434,6 +458,10 @@ void Visitor::visitCallExpression_Calls(const expression::CallExpression& begin,
 
 void Visitor::visitEndCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end) { }
 
+void Visitor::visitChainExpression_HasExpression(const expression::ChainExpression& begin, const expression::ChainElement& end) { }
+
+void Visitor::visitEndChainExpression_HasExpression(const expression::ChainExpression& begin, const expression::ChainElement& end) { }
+
 void Visitor::visitConditionalExpression_HasAlternate(const expression::ConditionalExpression& begin, const expression::Expression& end) { }
 
 void Visitor::visitEndConditionalExpression_HasAlternate(const expression::ConditionalExpression& begin, const expression::Expression& end) { }
@@ -450,6 +478,10 @@ void Visitor::visitIdentifier_RefersTo(const expression::Identifier& begin, cons
 
 void Visitor::visitEndIdentifier_RefersTo(const expression::Identifier& begin, const base::Positioned& end) { }
 
+void Visitor::visitImportExpression_HasSource(const expression::ImportExpression& begin, const expression::Expression& end) { }
+
+void Visitor::visitEndImportExpression_HasSource(const expression::ImportExpression& begin, const expression::Expression& end) { }
+
 void Visitor::visitLogicalExpression_HasLeft(const expression::LogicalExpression& begin, const expression::Expression& end) { }
 
 void Visitor::visitEndLogicalExpression_HasLeft(const expression::LogicalExpression& begin, const expression::Expression& end) { }
@@ -458,9 +490,9 @@ void Visitor::visitLogicalExpression_HasRight(const expression::LogicalExpressio
 
 void Visitor::visitEndLogicalExpression_HasRight(const expression::LogicalExpression& begin, const expression::Expression& end) { }
 
-void Visitor::visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const expression::Expression& end) { }
+void Visitor::visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const base::Positioned& end) { }
 
-void Visitor::visitEndMemberExpression_HasProperty(const expression::MemberExpression& begin, const expression::Expression& end) { }
+void Visitor::visitEndMemberExpression_HasProperty(const expression::MemberExpression& begin, const base::Positioned& end) { }
 
 void Visitor::visitMemberExpression_HasObject(const expression::MemberExpression& begin, const base::Positioned& end) { }
 
@@ -702,9 +734,9 @@ void Visitor::visitClass_HasIdentifier(const structure::Class& begin, const expr
 
 void Visitor::visitEndClass_HasIdentifier(const structure::Class& begin, const expression::Identifier& end) { }
 
-void Visitor::visitClassBody_HasBody(const structure::ClassBody& begin, const structure::MethodDefinition& end) { }
+void Visitor::visitClassBody_HasBody(const structure::ClassBody& begin, const base::Positioned& end) { }
 
-void Visitor::visitEndClassBody_HasBody(const structure::ClassBody& begin, const structure::MethodDefinition& end) { }
+void Visitor::visitEndClassBody_HasBody(const structure::ClassBody& begin, const base::Positioned& end) { }
 
 void Visitor::visitExportSpecifier_HasExported(const structure::ExportSpecifier& begin, const expression::Identifier& end) { }
 
@@ -714,9 +746,9 @@ void Visitor::visitImportSpecifier_HasImported(const structure::ImportSpecifier&
 
 void Visitor::visitEndImportSpecifier_HasImported(const structure::ImportSpecifier& begin, const expression::Identifier& end) { }
 
-void Visitor::visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const expression::Expression& end) { }
+void Visitor::visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const base::Positioned& end) { }
 
-void Visitor::visitEndMethodDefinition_HasKey(const structure::MethodDefinition& begin, const expression::Expression& end) { }
+void Visitor::visitEndMethodDefinition_HasKey(const structure::MethodDefinition& begin, const base::Positioned& end) { }
 
 void Visitor::visitMethodDefinition_HasValue(const structure::MethodDefinition& begin, const expression::FunctionExpression& end) { }
 
@@ -725,6 +757,14 @@ void Visitor::visitEndMethodDefinition_HasValue(const structure::MethodDefinitio
 void Visitor::visitModuleSpecifier_HasLocal(const structure::ModuleSpecifier& begin, const expression::Identifier& end) { }
 
 void Visitor::visitEndModuleSpecifier_HasLocal(const structure::ModuleSpecifier& begin, const expression::Identifier& end) { }
+
+void Visitor::visitPropertyDefinition_HasKey(const structure::PropertyDefinition& begin, const base::Positioned& end) { }
+
+void Visitor::visitEndPropertyDefinition_HasKey(const structure::PropertyDefinition& begin, const base::Positioned& end) { }
+
+void Visitor::visitPropertyDefinition_HasValue(const structure::PropertyDefinition& begin, const expression::Expression& end) { }
+
+void Visitor::visitEndPropertyDefinition_HasValue(const structure::PropertyDefinition& begin, const expression::Expression& end) { }
 
 
 }}}

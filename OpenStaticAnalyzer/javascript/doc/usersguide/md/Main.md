@@ -26,6 +26,8 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
 
     - [ESLint] coding rule violations
 
+    - [TypeScript-ESLint] coding rule violations in TypeScript (Experimental)
+
     - [SONARQUBE™] platform 8.0 (“SonarQube” in the following) coding rule violations
 
 - Clone detection (copy-pasted source code fragments) extended with clone tracking and "clone smells"
@@ -41,6 +43,7 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
     - Coding rule violation metrics
 
 [ESLint]:http://eslint.org/
+[TypeScript-ESLint]:https://typescript-eslint.io/
 [SONARQUBE™]:https://www.sonarqube.org
 
 By continuous static analysis, the software developers can:
@@ -51,7 +54,7 @@ By continuous static analysis, the software developers can:
 
 - the number of errors in delivered software can be reduced, so the operational risks can be decreased, increasing the company's reputation.
 
-OpenStaticAnalyzer can analyze source code conforming to ECMAScript 2015 (ECMAScript 6).
+OpenStaticAnalyzer can analyze source code conforming to ECMAScript 2022.
 
 With the help of the filtering mechanism it is possible to specify a certain part of the ASG to be used (or not to be used) during the analysis, hence the results can be made more focused and the usage of memory and CPU can be reduced (e.g. generated source files or test code can be filtered out).
 
@@ -77,7 +80,7 @@ OpenStaticAnalyzer supports the following x86 and x86-64 platforms:
 
 ## Requirements {#requirements-section}
 
-In order to use OpenStaticAnalyzer for JavaScript, it is necessary to have Node.js 8.x.x installed on the computer and the necessary environment variable (PATH) must be set correctly.
+In order to use OpenStaticAnalyzer for JavaScript, it is necessary to have Node.js 12.x.x installed on the computer and the necessary environment variable (PATH) must be set correctly.
 
 In case of Windows, the Microsoft Visual C++ 2017 Redistributable Package must be installed. It can be downloaded from the following URL:
 
@@ -98,7 +101,7 @@ set "PATH=C:\Program Files\nodejs\;%PATH%"
 E.g.: for the Linux package:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ {.bash}
-export "PATH=/opt/node-v8.11.2-linux-x64/bin:$PATH"
+export "PATH=/opt/node-v10.24.1-linux-x64/bin:$PATH"
 export "GCONV_PATH=/usr/lib/x86_64-linux-gnu/gconv"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -161,11 +164,11 @@ OpenStaticAnalyzer can be executed with the following parameters:
         # Finally, test1742_b.js is not needed:
         -test1742_b.js
 
-        
+
 **-nodeOptions**
-  
+
   : Extra parameters can be added for the NodeJS used by OpenStaticAnalyzer. For instance the maximum heap memory of the v8 (used by Node) can be set manually if the default value is not enough.
-        
+
 **-runMetricHunter**
 
   : This parameter turns on or off the MetricHunter module. With this feature, OpenStaticAnalyzer lists metric threshold violations. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is "true".
@@ -199,7 +202,7 @@ OpenStaticAnalyzer can be executed with the following parameters:
   : The name of the directory with date inside the result directory of the project. If it is not set, then the current date is used.
 
 **-cleanResults**
-  
+
   : Cleans all but the last n number of timestamped result directory of the current project.
 
 **-cleanProject**
@@ -217,11 +220,11 @@ OpenStaticAnalyzer can be executed with the following parameters:
 **-runDCF**
 
   : This parameter turns on or off the DuplicatedCodeFinder module. With this feature, OpenStaticAnalyzer identifies copy-pasted code fragments. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is "true".
-  
+
 **-runMET**
 
   : This parameter turns on or off the Metric module. With this feature, OpenStaticAnalyzer computes source code metrics. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is "true".
-  
+
 **-profileXML**
 
   : Global configuration file for OpenStaticAnalyzer. Its *tool-options* tag can be used to override the default metric thresholds for the MetricHunter tool or define custom metric formulas for the UserDefinedMetrics tool. Furthermore, its *rule-options* tag can enable/disable or modify the priorities of multiple rules. An example profile xml file is shown below:
@@ -286,7 +289,7 @@ OpenStaticAnalyzer can be executed with the following parameters:
 **-pattern**
 
   : The pattern file or pattern directory for LIM2Patterns. By default it searches for the predefined Anti Patterns found in Tools/Patterns/AntiPatterns.
-  
+
 # Usage
 
 Execute the following command to analyze the source code of a software system:
@@ -432,6 +435,7 @@ Known bugs and deficiencies of OpenStaticAnalyzer for JavaScript.
 
 - OpenStaticAnalyzer places the results into the directory specified by the projectName parameter. If special characters (like '\<', '\>', etc.) are used in the parameter, the analysis will probably fail.
 - Variable usage edges are in experimental version. There are cases which are not handled perfectly.
+- The experimental typescript parser currently used for detecting coding rule violations will return errors when it's trying to lint files in typescript projects which aren't part of the analyzed project (not included in either "include" or "exclude" fields in tsconfig.json). This will usually not halt the linting process, but might produce inaccurate results.
 
 # FAQ
 

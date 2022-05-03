@@ -18,37 +18,27 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var assignmentPattern = factory.createAssignmentPatternWrapper();
+        const assignmentPattern = factory.createAssignmentPatternWrapper();
         globals.setPositionInfo(node, assignmentPattern);
         return assignmentPattern;
     } else {
-        var assignmentPatternWrapper = globals.getWrapperOfNode(node);
+        const assignmentPatternWrapper = globals.getWrapperOfNode(node);
 
         if (node.left != null) {
-            var leftWrapper = globals.getWrapperOfNode(node.left);
-            try {
-                assignmentPatternWrapper.setLeft(leftWrapper);
-            } catch (e) {
-                console.error("ASSIGNMENTPATTERN - Could not set left! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(assignmentPatternWrapper, "setLeft", node.left, "ASSIGNMENTPATTERN - Could not set left!");
         }
 
         if (node.right != null) {
-            var rightWrapper = globals.getWrapperOfNode(node.right);
-            try {
-                assignmentPatternWrapper.setRight(rightWrapper);
-            } catch (e) {
-                console.error("ASSIGNMENTPATTERN - Could not set right! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(assignmentPatternWrapper, "setRight", node.right, "ASSIGNMENTPATTERN - Could not set right!");
         }
-
     }
 }

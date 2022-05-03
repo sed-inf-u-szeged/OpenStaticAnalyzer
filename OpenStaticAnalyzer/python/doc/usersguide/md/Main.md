@@ -228,7 +228,7 @@ Filtered files will not appear in the results. The filter file is a simple text 
   : The name of the directory with date inside the result directory of the project. If it is not set, then the current date is used.
 
 **-cleanResults**
-  
+
   : Cleans all but the last n number of timestamped result directory of the current project.
 
 **-projectBaseDir**

@@ -37,7 +37,7 @@
 
 #define PROGRAM_NAME "OpenStaticAnalyzer for JavaScript"
 #define EXECUTABLE_NAME "OpenStaticAnalyzerJavaScript"
-#define REQUIRED_NODE_VER 8
+#define REQUIRED_NODE_VER 12
 
 #include "MainCommon.h"
 
@@ -112,9 +112,9 @@ bool ppCsvDecimalMark (const common::Option *o, char *argv[]) {
 bool ppCsvSeparator (const common::Option *o, char *argv[]) {
   if (strcmp(argv[0], "\\t") == 0)
     props.csvSeparator = '\t';
-  else if (argv[0] != 0) 
+  else if (argv[0] != 0)
     props.csvSeparator = argv[0][0];
-  
+
   return true;
 }
 
@@ -137,6 +137,14 @@ bool ppRunMET(const common::Option *o, char *argv[]) {
     props.runLimMetrics = true;
   else
     props.runLimMetrics = false;
+  return true;
+}
+
+bool ppModuleBasedAnalysis(const common::Option *o, char *argv[]) {
+  props.moduleBasedAnalysis = false;
+  if (strcmp(argv[0], "true") == 0) {
+    props.moduleBasedAnalysis = true;
+  }
   return true;
 }
 
@@ -286,7 +294,7 @@ static bool ppGetPattern(const Option *o, char *argv[]) {
 }
 // LIM2Patterns end::
 
-const Option OPTIONS_OBJ [] = {  
+const Option OPTIONS_OBJ [] = {
   { false,  "-resultsDir",            1, CL_KIND_DIR,     0, OT_WE | OT_WC,     ppResultsDir,             NULL, "Relative or absolute path name of the directory where the results of the analysis will be stored. The directory will be created automatically if it does not exist."},
   { false,  "-projectName",           1, CL_KIND_STRING,  0, OT_WE | OT_WC,     ppProjectName,            NULL, "The name of the analyzed software system. The name specified here will be used for storing the results."},
   { false,  "-externalHardFilter",    1, CL_KIND_FILE,    0, OT_WE | OT_WC,     ppExternalHardFilter,     NULL, "Filter file specified with relative or absolute path, to filter out certain files from the analysis based on their path names. Filtered files will not appear in the results. The filter file is a simple text file containing lines starting with '+' or '-' characters followed by a regular expression. During the analysis, each input file will be checked for these expressions. If the first character of the last matching expression is '-', then the given file will be excluded from the analysis. If the first character of the last matching expression is '+', or there is no matching expression, then the file will be analyzed. A line starting with a different character than '-' or '+' will be ignored."},
@@ -297,24 +305,25 @@ const Option OPTIONS_OBJ [] = {
   { false,  "-cleanResults",          1, CL_KIND_NUMBER,  0, OT_WE | OT_WC,     ppCleanResults,           NULL, "Cleans all but the last n number of timestamped result directory of the current project."},
   { false,  "-cleanProject",          1, CL_KIND_BOOL,    0, OT_WE | OT_WC,     ppCleanProject,           NULL, "Removes all files (from the directory set by the projectBaseDir parameter) created during the analysis, but does not remove anything from the results directory (resultsDir). Its value can be \"true\" (turn this feature on, setting projectBaseDir is mandatory in this case) or \"false\" (turn this feature off). The default value is \"false\"."},
   { false,  "-projectBaseDir",        1, CL_KIND_DIR,     0, OT_WE | OT_WC,     ppBaseDir,                NULL, "Directory of the source code to be analyzed specified with relative or absolute path. Using this option the directory analysis mode will be activated. Setting projectBaseDir is mandatory."},
- 
-  { false,  "-JSANOptions",           1, CL_KIND_STRING,  0, OT_WE | OT_WC,     ppJSANOptions,            NULL, ""}, 
+
+  { false,  "-JSANOptions",           1, CL_KIND_STRING,  0, OT_WE | OT_WC,     ppJSANOptions,            NULL, ""},
 
   { false,  "-cloneGenealogy",        1, CL_KIND_BOOL,    0, OT_WE | OT_WC,     ppCloneGenealogy,         NULL, "This parameter turns on or off the tracking of code clones (copy-pasted source code fragments) through the consecutive revisions of the software system. It is required that during the analysis of the different revisions, the values set to projectName and resultsDir remain the same, so OpenStaticAnalyzer will handle them as different revisions of the same system. Its value can be \"true\" (turn this feature on) or \"false\" (turn this feature off). The default value is \"false\"."},
   { false,  "-csvSeparator",          1, CL_KIND_CHAR,    0, OT_WE | OT_WC,     ppCsvSeparator,           NULL, "This parameter sets the separator character in the CSV outputs. The default value is the comma (\",\"). The character set here must be placed in quotation marks (e.g. -csvSeparator=\";\"). Tabulator character can be set by the special \"\\t\" value."},
   { false,  "-csvDecimalMark",        1, CL_KIND_CHAR,    0, OT_WE | OT_WC,     ppCsvDecimalMark,         NULL, "This parameter sets the decimal mark character in the CSV outputs. The default is value is the dot (\".\"). The character set here must be placed in quotation marks (e.g. -csvDecimalMark=\",\")."},
   { false,  "-cloneMinLines",         1, CL_KIND_NUMBER,  0, OT_WE | OT_WC,     ppCloneMinLines,          NULL, "This parameter sets the minimum required size of each duplication in lines of code. The default value is 10."},
   { false,  "-runESLint",             1, CL_KIND_BOOL,    0, OT_WE | OT_WC,     ppRunESLint,              NULL, "This parameter turns on or off the ESLint coding rule violation checking. With this feature, OpenStaticAnalyzer lists coding rule violations detected by ESLint, such as unused variables, empty catch blocks, etc. Its value can be \"true\" (turn this feature on) or \"false\" (turn this feature off). The default value is \"true\"."},
-  
+
   { false,  "-runDCF",                1, CL_KIND_BOOL,    0, OT_WE | OT_WC,     ppRunDCF,                 NULL, "This parameter turns on or off the DulpicatedCodeFinder module. With this feature, OpenStaticAnalyzer lists metric threshold violations. Its value can be \"true\" (turn this feature on) or \"false\" (turn this feature off). The default value is \"true\""},
   { false,  "-runMET",                1, CL_KIND_BOOL,    0, OT_WE | OT_WC,     ppRunMET,                 NULL, "This parameter turns on or off the MetricsCalculator module. With this feature, OpenStaticAnalyzer lists metric threshold violations. Its value can be \"true\" (turn this feature on) or \"false\" (turn this feature off). The default value is \"true\""},
   { false,  "-runMetricHunter",       1, CL_KIND_BOOL,    0, OT_WE | OT_WC,     ppRunMetricHunter,        NULL, "This parameter turns on or off the MetricHunter module. With this feature, OpenStaticAnalyzer lists metric threshold violations. Its value can be \"true\" (turn this feature on) or \"false\" (turn this feature off). The default value is \"true\"" },
+  { false,  "-moduleBasedAnalysis",   1, CL_KIND_BOOL,    0, OT_WE | OT_WC,     ppModuleBasedAnalysis,    NULL, "This parameter turns on or off the module-based analysis. Module-based analysis takes package.json and its content into account while analyzing the project. The default value is \"false\"." },
 
   { false,  "-profileXML",            1, CL_KIND_FILE,    0, OT_WE | OT_WC,     ppProfileXML,             NULL, "Global configuration file for OpenStaticAnalyzer. Its tool-options tag can be used to override the default metric thresholds for the MetricHunter tool or define custom metric formulas for the UserDefinedMetrics tool. Furthermore, its rule-options tag can enable/disable or modify the priorities of multiple rules." },
   { true,   "-rulesCSV",              1, CL_KIND_FILE,    0, OT_WE | OT_WC,     ppRulesCSV,               NULL, "Set the rules csv." },
 
   { false,  "-runLIM2Patterns",      1, CL_KIND_BOOL,     0, OT_WE | OT_WC,     ppRunLIM2Patterns,       NULL, "Run LIM2Patterns." },
-  
+
   CL_SONAR2GRAPH_RUN
   CL_SONAR2GRAPH_ARGS
   CL_UDM_OPTIONS
@@ -358,6 +367,7 @@ void dumpProperties() {
   DUMP_PROPERTY_INT(runESLint);
   DUMP_PROPERTY_INT(runUDM);
   DUMP_PROPERTY_INT(runUDMExplicit);
+  DUMP_PROPERTY_INT(moduleBasedAnalysis);
   DUMP_PROPERTY_PATH(rulesCSV);
   DUMP_PROPERTY_INT(runLIM2Patterns);
 }
@@ -395,12 +405,12 @@ void checkUserProperties()
 
   if (props.currentDate.empty())
     props.currentDate = common::getCurrentTimeAndDate("%Y-%m-%d-%H-%M-%S"); // pattern="yyyy-MM-dd-HH-mm-ss"
-  
+
   props.projectResultDir = props.resultsDir / props.projectName / "javascript";
   props.projectTimedResultDir =  props.projectResultDir / props.currentDate;
 
   const path osaDir = "openstaticanalyzer";
-  
+
   props.logDir =  props.projectTimedResultDir / osaDir / "log";
   props.tempDir = props.projectTimedResultDir / osaDir / "temp";
   props.asgDir = props.projectTimedResultDir / osaDir / "asg";
@@ -408,13 +418,13 @@ void checkUserProperties()
 
   if ( !props.externalHardFilter.empty() )
     props.externalHardFilter = system_complete(props.externalHardFilter);
-  
+
   if (props.maxThreads == 0)
     props.maxThreads = columbus::thread::ThreadPool::getNumberOfCores();
-  
+
   if (props.cleanResults < -1)
     props.cleanResults = -1;
-  
+
   if (props.rulesCSV.empty())
       props.rulesCSV = props.toolsDir / "rules_javascript.csv";
 
@@ -430,11 +440,11 @@ void checkUserProperties()
 
 void initializeProperties() {
   props.startCurrentDir = current_path();
-  
+
   char* baseDir = std::getenv("CODE_ANALIZER_BASE_DIR");
   if ( baseDir ) {
     props.toolchainDir = path(baseDir);
-    
+
   } else {
     props.toolchainDir = path(common::getExecutableProgramDir());
   }
@@ -444,13 +454,13 @@ void initializeProperties() {
 #else
   string platform = "Linux";
 #endif
-  
+
   props.toolsDir = props.toolchainDir / "Tools";
 
   stringstream outStream;
   string tmpStr;
   std::smatch result;
-  
+
   outStream.str(string());
   outStream.clear();
   tmpStr.clear();
@@ -508,11 +518,11 @@ void makedirs()
   }
 }
 
-int runAnalyzeMode() 
+int runAnalyzeMode()
 {
   columbus::thread::ThreadPool threadPool(props.maxThreads);
   Controller ctrl(props, threadPool);
-  
+
   if (props.cleanResults != -1)
     ctrl.addTask(new CleanResultsTask(props));
 
@@ -581,10 +591,10 @@ int main(int argc, char* argv[])
 
     MainInit(argc, argv, "-");
     initializeProperties();
-    
+
     checkUserProperties();
     dumpProperties();
-    
+
     makedirs();
     logEnvironment(props);
     logCommandLineArguments(props, argc, argv);

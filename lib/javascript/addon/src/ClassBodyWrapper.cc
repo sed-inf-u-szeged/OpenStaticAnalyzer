@@ -86,13 +86,13 @@ napi_value ClassBodyWrapper::addBody(napi_env env, napi_callback_info info){
   assert(status == napi_ok);
 
   columbus::javascript::asg::structure::ClassBody* source = dynamic_cast<columbus::javascript::asg::structure::ClassBody*>(obj->_nativeObj);
-  columbus::javascript::asg::structure::MethodDefinition* target = dynamic_cast<columbus::javascript::asg::structure::MethodDefinition*>(param->_nativeObj);
+  columbus::javascript::asg::base::Positioned* target = dynamic_cast<columbus::javascript::asg::base::Positioned*>(param->_nativeObj);
 
   if(source == nullptr){
     status = napi_throw_error(env, nullptr, "Cannot cast structure::ClassBody" );
   }
   if(target == nullptr){
-    status = napi_throw_error(env, nullptr, "Cannot cast structure::MethodDefinition" );
+    status = napi_throw_error(env, nullptr, "Cannot cast base::Positioned" );
   }
 
   source->addBody(target);

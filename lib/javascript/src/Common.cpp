@@ -36,7 +36,8 @@ bool getIsNamed(const base::Base& node) {
   return
     ndk == ndkNamed ||
     ndk == ndkProgram ||
-    ndk == ndkIdentifier;
+    ndk == ndkIdentifier ||
+    ndk == ndkPrivateIdentifier;
 }
 
 bool getIsPositioned(const base::Base& node) {
@@ -46,26 +47,31 @@ bool getIsPositioned(const base::Base& node) {
     ndk == ndkComment ||
     ndk == ndkProgram ||
     ndk == ndkIdentifier ||
+    ndk == ndkPrivateIdentifier ||
     ndk == ndkModuleDeclaration ||
     ndk == ndkExportNamedDeclaration ||
     ndk == ndkImportDeclaration ||
     ndk == ndkVariableDeclarator ||
+    ndk == ndkChainElement ||
+    ndk == ndkCallExpression ||
+    ndk == ndkMemberExpression ||
     ndk == ndkArrayExpression ||
     ndk == ndkArrowFunctionExpression ||
     ndk == ndkAssignmentExpression ||
     ndk == ndkAwaitExpression ||
     ndk == ndkBinaryExpression ||
-    ndk == ndkCallExpression ||
+    ndk == ndkChainExpression ||
     ndk == ndkClassExpression ||
     ndk == ndkConditionalExpression ||
     ndk == ndkFunctionExpression ||
+    ndk == ndkImportExpression ||
+    ndk == ndkBigIntLiteral ||
     ndk == ndkBooleanLiteral ||
     ndk == ndkNullLiteral ||
     ndk == ndkNumberLiteral ||
     ndk == ndkRegExpLiteral ||
     ndk == ndkStringLiteral ||
     ndk == ndkLogicalExpression ||
-    ndk == ndkMemberExpression ||
     ndk == ndkMetaProperty ||
     ndk == ndkNewExpression ||
     ndk == ndkObjectExpression ||
@@ -77,7 +83,6 @@ bool getIsPositioned(const base::Base& node) {
     ndk == ndkUpdateExpression ||
     ndk == ndkYieldExpression ||
     ndk == ndkProperty ||
-    ndk == ndkAssignmentProperty ||
     ndk == ndkSpreadElement ||
     ndk == ndkSuper ||
     ndk == ndkTemplateElement ||
@@ -116,7 +121,8 @@ bool getIsPositioned(const base::Base& node) {
     ndk == ndkExportSpecifier ||
     ndk == ndkImportDefaultSpecifier ||
     ndk == ndkImportNamespaceSpecifier ||
-    ndk == ndkImportSpecifier;
+    ndk == ndkImportSpecifier ||
+    ndk == ndkPropertyDefinition;
 }
 
 bool getIsProgram(const base::Base& node) {
@@ -216,16 +222,16 @@ bool getIsAssignmentExpression(const base::Base& node) {
     ndk == ndkAssignmentExpression;
 }
 
-bool getIsAssignmentProperty(const base::Base& node) {
-  NodeKind ndk = node.getNodeKind();
-  return
-    ndk == ndkAssignmentProperty;
-}
-
 bool getIsAwaitExpression(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkAwaitExpression;
+}
+
+bool getIsBigIntLiteral(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkBigIntLiteral;
 }
 
 bool getIsBinaryExpression(const base::Base& node) {
@@ -244,6 +250,20 @@ bool getIsCallExpression(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkCallExpression;
+}
+
+bool getIsChainElement(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkChainElement ||
+    ndk == ndkCallExpression ||
+    ndk == ndkMemberExpression;
+}
+
+bool getIsChainExpression(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkChainExpression;
 }
 
 bool getIsClassExpression(const base::Base& node) {
@@ -268,10 +288,13 @@ bool getIsExpression(const base::Base& node) {
     ndk == ndkAwaitExpression ||
     ndk == ndkBinaryExpression ||
     ndk == ndkCallExpression ||
+    ndk == ndkChainExpression ||
     ndk == ndkClassExpression ||
     ndk == ndkConditionalExpression ||
     ndk == ndkFunctionExpression ||
     ndk == ndkIdentifier ||
+    ndk == ndkImportExpression ||
+    ndk == ndkBigIntLiteral ||
     ndk == ndkBooleanLiteral ||
     ndk == ndkNullLiteral ||
     ndk == ndkNumberLiteral ||
@@ -303,10 +326,17 @@ bool getIsIdentifier(const base::Base& node) {
     ndk == ndkIdentifier;
 }
 
+bool getIsImportExpression(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkImportExpression;
+}
+
 bool getIsLiteral(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
     ndk == ndkLiteral ||
+    ndk == ndkBigIntLiteral ||
     ndk == ndkBooleanLiteral ||
     ndk == ndkNullLiteral ||
     ndk == ndkNumberLiteral ||
@@ -356,11 +386,16 @@ bool getIsObjectExpression(const base::Base& node) {
     ndk == ndkObjectExpression;
 }
 
+bool getIsPrivateIdentifier(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkPrivateIdentifier;
+}
+
 bool getIsProperty(const base::Base& node) {
   NodeKind ndk = node.getNodeKind();
   return
-    ndk == ndkProperty ||
-    ndk == ndkAssignmentProperty;
+    ndk == ndkProperty;
 }
 
 bool getIsRegExpLiteral(const base::Base& node) {
@@ -694,6 +729,12 @@ bool getIsModuleSpecifier(const base::Base& node) {
     ndk == ndkImportSpecifier;
 }
 
+bool getIsPropertyDefinition(const base::Base& node) {
+  NodeKind ndk = node.getNodeKind();
+  return
+    ndk == ndkPropertyDefinition;
+}
+
 bool getIsComposite(const base::Base& node) {
   return !getIsNotComposite(node);
 }
@@ -703,7 +744,10 @@ bool getIsNotComposite(const base::Base& node) {
   return
     ndk == ndkComment ||
     ndk == ndkIdentifier ||
+    ndk == ndkPrivateIdentifier ||
     ndk == ndkModuleDeclaration ||
+    ndk == ndkChainElement ||
+    ndk == ndkBigIntLiteral ||
     ndk == ndkBooleanLiteral ||
     ndk == ndkNullLiteral ||
     ndk == ndkNumberLiteral ||
@@ -768,15 +812,20 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
           getIsBaseClassKind(ndkFunction, base);
       case ndkAssignmentExpression:
         return getIsBaseClassKind(ndkExpression, base);
-      case ndkAssignmentProperty:
-        return getIsBaseClassKind(ndkProperty, base);
       case ndkAwaitExpression:
         return getIsBaseClassKind(ndkExpression, base);
+      case ndkBigIntLiteral:
+        return getIsBaseClassKind(ndkLiteral, base);
       case ndkBinaryExpression:
         return getIsBaseClassKind(ndkExpression, base);
       case ndkBooleanLiteral:
         return getIsBaseClassKind(ndkLiteral, base);
       case ndkCallExpression:
+        return getIsBaseClassKind(ndkExpression, base) ||
+          getIsBaseClassKind(ndkChainElement, base);
+      case ndkChainElement:
+        return getIsBaseClassKind(ndkPositioned, base);
+      case ndkChainExpression:
         return getIsBaseClassKind(ndkExpression, base);
       case ndkClassExpression:
         return getIsBaseClassKind(ndkExpression, base) ||
@@ -792,6 +841,8 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkExpression, base) ||
           getIsBaseClassKind(ndkPattern, base) ||
           getIsBaseClassKind(ndkNamed, base);
+      case ndkImportExpression:
+        return getIsBaseClassKind(ndkExpression, base);
       case ndkLiteral:
         return getIsBaseClassKind(ndkPositioned, base) ||
           getIsBaseClassKind(ndkExpression, base);
@@ -799,7 +850,8 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkExpression, base);
       case ndkMemberExpression:
         return getIsBaseClassKind(ndkExpression, base) ||
-          getIsBaseClassKind(ndkPattern, base);
+          getIsBaseClassKind(ndkPattern, base) ||
+          getIsBaseClassKind(ndkChainElement, base);
       case ndkMetaProperty:
         return getIsBaseClassKind(ndkExpression, base);
       case ndkNewExpression:
@@ -810,6 +862,9 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkLiteral, base);
       case ndkObjectExpression:
         return getIsBaseClassKind(ndkExpression, base);
+      case ndkPrivateIdentifier:
+        return getIsBaseClassKind(ndkPositioned, base) ||
+          getIsBaseClassKind(ndkNamed, base);
       case ndkProperty:
         return getIsBaseClassKind(ndkPositioned, base);
       case ndkRegExpLiteral:
@@ -908,6 +963,8 @@ bool getIsBaseClassKind(NodeKind what, NodeKind base) {
         return getIsBaseClassKind(ndkPositioned, base);
       case ndkModuleSpecifier:
         return getIsBaseClassKind(ndkPositioned, base);
+      case ndkPropertyDefinition:
+        return getIsBaseClassKind(ndkPositioned, base);
       default:
         return false;
   }
@@ -929,6 +986,9 @@ const std::string toString(AssignmentOperator kind) {
     case asoBitwiseXor: return "asoBitwiseXor";
     case asoBitwiseAnd: return "asoBitwiseAnd";
     case asoExponentiation: return "asoExponentiation";
+    case asoAnd: return "asoAnd";
+    case asoOr: return "asoOr";
+    case asoNullishCoalescing: return "asoNullishCoalescing";
     default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
@@ -990,6 +1050,7 @@ const std::string toString(LogicalOperator kind) {
   switch (kind) {
     case looAnd: return "looAnd";
     case looOr: return "looOr";
+    case looNullishCoalescing: return "looNullishCoalescing";
     default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
@@ -1063,16 +1124,19 @@ const std::string toString(NodeKind kind) {
     case ndkArrayExpression: return "ndkArrayExpression";
     case ndkArrowFunctionExpression: return "ndkArrowFunctionExpression";
     case ndkAssignmentExpression: return "ndkAssignmentExpression";
-    case ndkAssignmentProperty: return "ndkAssignmentProperty";
     case ndkAwaitExpression: return "ndkAwaitExpression";
+    case ndkBigIntLiteral: return "ndkBigIntLiteral";
     case ndkBinaryExpression: return "ndkBinaryExpression";
     case ndkBooleanLiteral: return "ndkBooleanLiteral";
     case ndkCallExpression: return "ndkCallExpression";
+    case ndkChainElement: return "ndkChainElement";
+    case ndkChainExpression: return "ndkChainExpression";
     case ndkClassExpression: return "ndkClassExpression";
     case ndkConditionalExpression: return "ndkConditionalExpression";
     case ndkExpression: return "ndkExpression";
     case ndkFunctionExpression: return "ndkFunctionExpression";
     case ndkIdentifier: return "ndkIdentifier";
+    case ndkImportExpression: return "ndkImportExpression";
     case ndkLiteral: return "ndkLiteral";
     case ndkLogicalExpression: return "ndkLogicalExpression";
     case ndkMemberExpression: return "ndkMemberExpression";
@@ -1081,6 +1145,7 @@ const std::string toString(NodeKind kind) {
     case ndkNullLiteral: return "ndkNullLiteral";
     case ndkNumberLiteral: return "ndkNumberLiteral";
     case ndkObjectExpression: return "ndkObjectExpression";
+    case ndkPrivateIdentifier: return "ndkPrivateIdentifier";
     case ndkProperty: return "ndkProperty";
     case ndkRegExpLiteral: return "ndkRegExpLiteral";
     case ndkSequenceExpression: return "ndkSequenceExpression";
@@ -1130,6 +1195,7 @@ const std::string toString(NodeKind kind) {
     case ndkImportSpecifier: return "ndkImportSpecifier";
     case ndkMethodDefinition: return "ndkMethodDefinition";
     case ndkModuleSpecifier: return "ndkModuleSpecifier";
+    case ndkPropertyDefinition: return "ndkPropertyDefinition";
     default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }
@@ -1140,6 +1206,7 @@ const std::string toString(EdgeKind kind) {
     case edkProgram_HasBody: return "edkProgram_HasBody";
     case edkSystem_HasPrograms: return "edkSystem_HasPrograms";
     case edkExportAllDeclaration_HasSource: return "edkExportAllDeclaration_HasSource";
+    case edkExportAllDeclaration_HasExported: return "edkExportAllDeclaration_HasExported";
     case edkExportDefaultDeclaration_HasDeclaration: return "edkExportDefaultDeclaration_HasDeclaration";
     case edkExportNamedDeclaration_HasDeclaration: return "edkExportNamedDeclaration_HasDeclaration";
     case edkExportNamedDeclaration_HasSpecifiers: return "edkExportNamedDeclaration_HasSpecifiers";
@@ -1158,10 +1225,12 @@ const std::string toString(EdgeKind kind) {
     case edkCallExpression_HasCallee: return "edkCallExpression_HasCallee";
     case edkCallExpression_HasArguments: return "edkCallExpression_HasArguments";
     case edkCallExpression_Calls: return "edkCallExpression_Calls";
+    case edkChainExpression_HasExpression: return "edkChainExpression_HasExpression";
     case edkConditionalExpression_HasAlternate: return "edkConditionalExpression_HasAlternate";
     case edkConditionalExpression_HasConsequent: return "edkConditionalExpression_HasConsequent";
     case edkConditionalExpression_HasTest: return "edkConditionalExpression_HasTest";
     case edkIdentifier_RefersTo: return "edkIdentifier_RefersTo";
+    case edkImportExpression_HasSource: return "edkImportExpression_HasSource";
     case edkLogicalExpression_HasLeft: return "edkLogicalExpression_HasLeft";
     case edkLogicalExpression_HasRight: return "edkLogicalExpression_HasRight";
     case edkMemberExpression_HasProperty: return "edkMemberExpression_HasProperty";
@@ -1231,6 +1300,8 @@ const std::string toString(EdgeKind kind) {
     case edkMethodDefinition_HasKey: return "edkMethodDefinition_HasKey";
     case edkMethodDefinition_HasValue: return "edkMethodDefinition_HasValue";
     case edkModuleSpecifier_HasLocal: return "edkModuleSpecifier_HasLocal";
+    case edkPropertyDefinition_HasKey: return "edkPropertyDefinition_HasKey";
+    case edkPropertyDefinition_HasValue: return "edkPropertyDefinition_HasValue";
     default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 }

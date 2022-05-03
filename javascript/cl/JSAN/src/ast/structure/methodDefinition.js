@@ -18,40 +18,31 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
-const conversions = require('../conversions');
+import * as globals from '../../globals.js';
+import * as conversions from '../conversions.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var methodDefinition = factory.createMethodDefinitionWrapper();
+        const methodDefinition = factory.createMethodDefinitionWrapper();
         globals.setPositionInfo(node, methodDefinition);
         methodDefinition.setKind(conversions.convertMethodDefinitionKind(node.kind));
         methodDefinition.setComputed(node.computed);
         methodDefinition.setStatic(node.static);
         return methodDefinition;
     } else {
-        var methodDefinitionWrapper = globals.getWrapperOfNode(node);
+        const methodDefinitionWrapper = globals.getWrapperOfNode(node);
 
         if (node.key != null) {
-            var keyWrapper = globals.getWrapperOfNode(node.key);
-            try {
-                methodDefinitionWrapper.setKey(keyWrapper);
-            } catch (e) {
-                console.error("METHODDEFINITION - Could not set key! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(methodDefinitionWrapper, "setKey", node.key, "METHODDEFINITION - Could not set key!");
         }
 
         if (node.value != null) {
-            var valueWrapper = globals.getWrapperOfNode(node.value);
-            try {
-                methodDefinitionWrapper.setValue(valueWrapper);
-            } catch (e) {
-                console.error("METHODDEFINITION - Could not set value! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(methodDefinitionWrapper, "setValue", node.value, "METHODDEFINITION - Could not set value!");
         }
 
     }

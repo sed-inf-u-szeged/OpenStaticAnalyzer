@@ -188,7 +188,7 @@ namespace columbus { namespace javascript { namespace asg {
       RevEdgesContainer reContainer;
 
       /** \internal \brief The possible edges by nodes. */
-      static bool possibleEdges[86][95];
+      static bool possibleEdges[91][100];
 
       friend class Factory;
       friend class VisitorReverseEdges;
@@ -212,16 +212,19 @@ namespace columbus { namespace javascript { namespace asg {
       friend class expression::ArrayExpression;
       friend class expression::ArrowFunctionExpression;
       friend class expression::AssignmentExpression;
-      friend class expression::AssignmentProperty;
       friend class expression::AwaitExpression;
+      friend class expression::BigIntLiteral;
       friend class expression::BinaryExpression;
       friend class expression::BooleanLiteral;
       friend class expression::CallExpression;
+      friend class expression::ChainElement;
+      friend class expression::ChainExpression;
       friend class expression::ClassExpression;
       friend class expression::ConditionalExpression;
       friend class expression::Expression;
       friend class expression::FunctionExpression;
       friend class expression::Identifier;
+      friend class expression::ImportExpression;
       friend class expression::Literal;
       friend class expression::LogicalExpression;
       friend class expression::MemberExpression;
@@ -230,6 +233,7 @@ namespace columbus { namespace javascript { namespace asg {
       friend class expression::NullLiteral;
       friend class expression::NumberLiteral;
       friend class expression::ObjectExpression;
+      friend class expression::PrivateIdentifier;
       friend class expression::Property;
       friend class expression::RegExpLiteral;
       friend class expression::SequenceExpression;
@@ -279,6 +283,7 @@ namespace columbus { namespace javascript { namespace asg {
       friend class structure::ImportSpecifier;
       friend class structure::MethodDefinition;
       friend class structure::ModuleSpecifier;
+      friend class structure::PropertyDefinition;
   }; // ReverseEdges
 
 

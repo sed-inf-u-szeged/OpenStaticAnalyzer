@@ -18,37 +18,28 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var memberExpression = factory.createMemberExpressionWrapper();
+        const memberExpression = factory.createMemberExpressionWrapper();
         globals.setPositionInfo(node, memberExpression);
         memberExpression.setComputed(node.computed);
         return memberExpression;
     } else {
-        var memberExpressionWrapper = globals.getWrapperOfNode(node);
+        const memberExpressionWrapper = globals.getWrapperOfNode(node);
 
         if (node.property != null) {
-            var propertyWrapper = globals.getWrapperOfNode(node.property);
-            try {
-                memberExpressionWrapper.setProperty(propertyWrapper);
-            } catch (e) {
-                console.error("MEMBEREXPRESSION - Could not set property! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(memberExpressionWrapper, "setProperty", node.property, "MEMBEREXPRESSION - Could not set property!");
         }
 
         if (node.object != null) {
-            var objectWrapper = globals.getWrapperOfNode(node.object);
-            try {
-                memberExpressionWrapper.setObject(objectWrapper);
-            } catch (e) {
-                console.error("MEMBEREXPRESSION - Could not set object! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(memberExpressionWrapper, "setObject", node.object, "MEMBEREXPRESSION - Could not set object!");
         }
 
     }

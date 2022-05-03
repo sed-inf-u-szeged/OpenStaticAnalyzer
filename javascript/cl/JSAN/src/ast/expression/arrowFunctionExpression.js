@@ -18,53 +18,38 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var arrowFunctionExpression = factory.createArrowFunctionExpressionWrapper(factory);
+        const arrowFunctionExpression = factory.createArrowFunctionExpressionWrapper();
         globals.setPositionInfo(node, arrowFunctionExpression);
         arrowFunctionExpression.setExpression(node.expression);
         arrowFunctionExpression.setGenerator(node.generator);
         arrowFunctionExpression.setAsync(node.async);
         return arrowFunctionExpression;
     } else {
-        var arrowFunctionExpressionWrapper = globals.getWrapperOfNode(node);
+        const arrowFunctionExpressionWrapper = globals.getWrapperOfNode(node);
 
         if (node.params != null) {
-            for (var i = 0; i < node.params.length; i++) {
+            for (let i = 0; i < node.params.length; i++) {
                 if (node.params[i] != null) {
-                    var paramsWrapper = globals.getWrapperOfNode(node.params[i]);
-                    try {
-                        arrowFunctionExpressionWrapper.addParams(paramsWrapper);
-                    } catch (e) {
-                        console.error("ARROWFUNCTIONEXPRESSION - Could not add param! Reason of the error: " + e + "\n");
-                    }
+                    globals.safeSet(arrowFunctionExpressionWrapper, "addParams", node.params[i], "ARROWFUNCTIONEXPRESSION - Could not add param!");
                 }
             }
         }
 
         if (node.body != null) {
-            var bodyWrapper = globals.getWrapperOfNode(node.body);
-            try {
-                arrowFunctionExpressionWrapper.setBody(bodyWrapper);
-            } catch (e) {
-                console.error("ARROWFUNCTIONEXPRESSION - Could not set body! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(arrowFunctionExpressionWrapper, "setBody", node.body, "ARROWFUNCTIONEXPRESSION - Could not set body!");
         }
 
         if (node.id != null) {
-            var identifierWrapper = globals.getWrapperOfNode(node.id);
-            try {
-                arrowFunctionExpressionWrapper.setIdentifier(identifierWrapper);
-            } catch (e) {
-                console.error("ARROWFUNCTIONEXPRESSION - Could not set identifier! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(arrowFunctionExpressionWrapper, "setIdentifier", node.id, "ARROWFUNCTIONEXPRESSION - Could not set identifier!");
         }
-
     }
 }

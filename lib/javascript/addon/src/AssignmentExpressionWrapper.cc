@@ -240,6 +240,15 @@ napi_value AssignmentExpressionWrapper::setOperator(napi_env env, napi_callback_
   if( param == "asoExponentiation" ){
     dynamic_cast<columbus::javascript::asg::expression::AssignmentExpression*>(obj->_nativeObj)->setOperator( asoExponentiation );
   }
+  if( param == "asoAnd" ){
+    dynamic_cast<columbus::javascript::asg::expression::AssignmentExpression*>(obj->_nativeObj)->setOperator( asoAnd );
+  }
+  if( param == "asoOr" ){
+    dynamic_cast<columbus::javascript::asg::expression::AssignmentExpression*>(obj->_nativeObj)->setOperator( asoOr );
+  }
+  if( param == "asoNullishCoalescing" ){
+    dynamic_cast<columbus::javascript::asg::expression::AssignmentExpression*>(obj->_nativeObj)->setOperator( asoNullishCoalescing );
+  }
   return nullptr;
 }
 napi_value AssignmentExpressionWrapper::setPath(napi_env env, napi_callback_info info) {

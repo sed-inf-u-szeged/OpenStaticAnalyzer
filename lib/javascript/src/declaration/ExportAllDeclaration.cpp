@@ -36,7 +36,8 @@ namespace declaration {
   ExportAllDeclaration::ExportAllDeclaration(NodeId _id, Factory *_factory) :
          Positioned(_id, _factory),
     Declaration(_id, _factory),
-    m_hasSource(0)
+    m_hasSource(0),
+    m_hasExported(0)
   {
   }
 
@@ -45,6 +46,7 @@ namespace declaration {
 
   void ExportAllDeclaration::prepareDelete(bool tryOnVirtualParent){
     removeSource();
+    removeExported();
     if (tryOnVirtualParent) {
       base::Positioned::prepareDelete(false);
     }
@@ -65,10 +67,23 @@ namespace declaration {
     return _node;
   }
 
+  expression::Identifier* ExportAllDeclaration::getExported() const {
+    expression::Identifier *_node = NULL;
+    if (m_hasExported != 0)
+      _node = dynamic_cast<expression::Identifier*>(factory->getPointer(m_hasExported));
+    if ( (_node == NULL) || factory->getIsFiltered(_node))
+      return NULL;
+
+    return _node;
+  }
+
   bool ExportAllDeclaration::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
     switch (edgeKind) {
       case edkExportAllDeclaration_HasSource:
         setSource(edgeEnd);
+        return true;
+      case edkExportAllDeclaration_HasExported:
+        setExported(edgeEnd);
         return true;
       default:
         break;
@@ -88,6 +103,9 @@ namespace declaration {
     switch (edgeKind) {
       case edkExportAllDeclaration_HasSource:
         removeSource();
+        return true;
+      case edkExportAllDeclaration_HasExported:
+        removeExported();
         return true;
       default:
         break;
@@ -149,6 +167,52 @@ namespace declaration {
       m_hasSource = 0;
   }
 
+  void ExportAllDeclaration::setExported(NodeId _id) {
+    expression::Identifier *_node = NULL;
+    if (_id) {
+      if (!factory->getExist(_id))
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
+
+      _node = dynamic_cast<expression::Identifier*> (factory->getPointer(_id));
+      if ( _node == NULL) {
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
+      }
+      if (&(_node->getFactory()) != this->factory)
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
+
+      if (m_hasExported) {
+        removeParentEdge(m_hasExported);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_hasExported, m_id, edkExportAllDeclaration_HasExported);
+      }
+      m_hasExported = _node->getId();
+      if (m_hasExported != 0)
+        setParentEdge(factory->getPointer(m_hasExported), edkExportAllDeclaration_HasExported);
+      if (factory->getExistsReverseEdges())
+        factory->reverseEdges->insertEdge(m_hasExported, this->getId(), edkExportAllDeclaration_HasExported);
+    } else {
+      if (m_hasExported) {
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+      }
+    }
+  }
+
+  void ExportAllDeclaration::setExported(expression::Identifier *_node) {
+    if (_node == NULL)
+      throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
+
+    setExported(_node->getId());
+  }
+
+  void ExportAllDeclaration::removeExported() {
+      if (m_hasExported) {
+        removeParentEdge(m_hasExported);
+        if (factory->getExistsReverseEdges())
+          factory->reverseEdges->removeEdge(m_hasExported, m_id, edkExportAllDeclaration_HasExported);
+      }
+      m_hasExported = 0;
+  }
+
   void ExportAllDeclaration::accept(Visitor &visitor) const {
     visitor.visit(*this);
   }
@@ -193,6 +257,7 @@ namespace declaration {
     Declaration::save(binIo,false);
 
     binIo.writeUInt4(m_hasSource);
+    binIo.writeUInt4(m_hasExported);
 
   }
 
@@ -205,6 +270,10 @@ namespace declaration {
     m_hasSource =  binIo.readUInt4();
     if (m_hasSource != 0)
       setParentEdge(factory->getPointer(m_hasSource),edkExportAllDeclaration_HasSource);
+
+    m_hasExported =  binIo.readUInt4();
+    if (m_hasExported != 0)
+      setParentEdge(factory->getPointer(m_hasExported),edkExportAllDeclaration_HasExported);
 
   }
 

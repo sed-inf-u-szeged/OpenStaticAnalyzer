@@ -18,38 +18,28 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var variableDeclarator = factory.createVariableDeclaratorWrapper();
+        const variableDeclarator = factory.createVariableDeclaratorWrapper();
         globals.setPositionInfo(node, variableDeclarator);
-
 
         return variableDeclarator;
     } else {
-        var variableDeclaratorWrapper = globals.getWrapperOfNode(node);
+        const variableDeclaratorWrapper = globals.getWrapperOfNode(node);
 
         if (node.init != null) {
-            var initWrapper = globals.getWrapperOfNode(node.init);
-            try {
-                variableDeclaratorWrapper.setInit(initWrapper);
-            } catch (e) {
-                console.error("VARIABLEDECLARATOR - Could not set init! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(variableDeclaratorWrapper, "setInit", node.init, "VARIABLEDECLARATOR - Could not set init!");
         }
 
         if (node.id != null) {
-            var identifierWrapper = globals.getWrapperOfNode(node.id);
-            try {
-                variableDeclaratorWrapper.setIdentifier(identifierWrapper);
-            } catch (e) {
-                console.error("VARIABLEDECLARATOR - Could not set identifier! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(variableDeclaratorWrapper, "setIdentifier", node.id, "VARIABLEDECLARATOR - Could not set identifier!");
         }
 
     }

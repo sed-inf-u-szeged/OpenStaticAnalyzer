@@ -126,7 +126,7 @@ public class TypeBuilder {
 						}
 						break;
 					case METHOD_TYPE:
-						if (b instanceof MethodDeclaration) {
+						if (b instanceof MethodDeclaration && Common.getIsMethodType(fact.getRef(typeId))) {
 							MethodDeclaration m = (MethodDeclaration) b;
 							m.setMethodType(typeId);
 						} else {

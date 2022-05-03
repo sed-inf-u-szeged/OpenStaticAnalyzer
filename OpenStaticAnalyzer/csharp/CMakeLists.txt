@@ -42,9 +42,9 @@ add_custom_generated_copy_dependency_to_tools_dir (MetricHunter_csharp${EXE} Met
 add_custom_generated_copy_dependency_to_tools_dir (MetricHunter_CSHARP.threshold MetricHunter_csharp_copy_MetricHunter_CSHARP.threshold MetricHunter.threshold)
 add_custom_generated_copy_dependency_to_tools_dir (UserDefinedMetrics${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (Sonar2Graph${EXE})
-add_custom_generated_copy_dependency_to_tools_dir (LIM2Patterns_csharp${EXE} LIM2Patterns_csharp LIM2Patterns${EXE})
-add_custom_generated_copy_dependency_to_tools_dir (Patterns LIM2Patterns_csharp Patterns DIRECTORY)
-add_custom_generated_copy_dependency_to_tools_dir (Lib LIM2Patterns_csharp Lib DIRECTORY)
+add_custom_generated_copy_dependency_to_tools_dir (LIM2Patterns${EXE})
+add_custom_generated_copy_dependency_to_tools_dir (Patterns LIM2Patterns Patterns DIRECTORY)
+add_custom_generated_copy_dependency_to_tools_dir (Lib LIM2Patterns Lib DIRECTORY)
 add_custom_generated_copy_dependency_to_tools_dir (Roslyn2Graph${EXE})
 
 foreach (BINARY ${CSAN_BINARIES})

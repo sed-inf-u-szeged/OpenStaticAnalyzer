@@ -185,10 +185,10 @@ UdmFunction::Inserter::Inserter(exprtk::symbol_table<long double>& symbolTable, 
     min = new MIN(node, aggrCalcFors);
     max = new MAX(node, aggrCalcFors);
 
-    if (!symbolTable.add_function(sum->getName(), *sum)) { WriteMsg::write(CMSG_UDM_CANT_ADD_FUNCTION, sum->getName()); }
-    if (!symbolTable.add_function(avg->getName(), *avg)) { WriteMsg::write(CMSG_UDM_CANT_ADD_FUNCTION, avg->getName()); }
-    if (!symbolTable.add_function(min->getName(), *min)) { WriteMsg::write(CMSG_UDM_CANT_ADD_FUNCTION, min->getName()); }
-    if (!symbolTable.add_function(max->getName(), *max)) { WriteMsg::write(CMSG_UDM_CANT_ADD_FUNCTION, max->getName()); }
+    if (!symbolTable.add_function(sum->getName(), *sum)) { WriteMsg::write(CMSG_UDM_CANT_ADD_FUNCTION, sum->getName().c_str()); }
+    if (!symbolTable.add_function(avg->getName(), *avg)) { WriteMsg::write(CMSG_UDM_CANT_ADD_FUNCTION, avg->getName().c_str()); }
+    if (!symbolTable.add_function(min->getName(), *min)) { WriteMsg::write(CMSG_UDM_CANT_ADD_FUNCTION, min->getName().c_str()); }
+    if (!symbolTable.add_function(max->getName(), *max)) { WriteMsg::write(CMSG_UDM_CANT_ADD_FUNCTION, max->getName().c_str()); }
 
 }
 

@@ -18,37 +18,27 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var whileStatement = factory.createWhileStatementWrapper();
+        const whileStatement = factory.createWhileStatementWrapper();
         globals.setPositionInfo(node, whileStatement);
         return whileStatement;
     } else {
-        var whileStatementWrapper = globals.getWrapperOfNode(node);
+        const whileStatementWrapper = globals.getWrapperOfNode(node);
 
         if (node.test != null) {
-            var testWrapper = globals.getWrapperOfNode(node.test);
-            try {
-                whileStatementWrapper.setTest(testWrapper);
-            } catch (e) {
-                console.error("WHILESTATEMENT - Could not set test! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(whileStatementWrapper, "setTest", node.test, "WHILESTATEMENT - Could not set test!");
         }
 
         if (node.body != null) {
-            var bodyWrapper = globals.getWrapperOfNode(node.body);
-            try {
-                whileStatementWrapper.setBody(bodyWrapper);
-            } catch (e) {
-                console.error("WHILESTATEMENT - Could not set body! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(whileStatementWrapper, "setBody", node.body, "WHILESTATEMENT - Could not set body!");
         }
-
     }
 }

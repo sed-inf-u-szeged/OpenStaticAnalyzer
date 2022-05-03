@@ -324,7 +324,7 @@ namespace columbus { namespace lim { namespace metrics {
     if ( shared ) {
       
       const base::Base& base = node.getLimNode<base::Base>();
-      Info* info;
+      Info* info = nullptr;
 
       if ( Common::getIsScope( base ) ) {
         info = & shared->scopes.map[&base];

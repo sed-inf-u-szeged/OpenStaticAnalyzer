@@ -28,7 +28,6 @@ namespace columbus { namespace dcf {
 
 class AbstractFilter {
 private:
-  int maxValue;
   int currentValue;
 
 public:

@@ -18,28 +18,23 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var awaitExpr = factory.createAwaitExpressionWrapper();
+        const awaitExpr = factory.createAwaitExpressionWrapper();
         globals.setPositionInfo(node, awaitExpr);
         return awaitExpr;
     } else {
-        var awaitExprWrapper = globals.getWrapperOfNode(node);
+        const awaitExprWrapper = globals.getWrapperOfNode(node);
 
         if (node.argument != null) {
-            var argumentWrapper = globals.getWrapperOfNode(node.argument);
-            try {
-                awaitExprWrapper.setArgument(argumentWrapper);
-            } catch (e) {
-                console.error("SPREADELEMENT - Could not set argument! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(awaitExprWrapper, "setArgument", node.argument, "AWAITEXPRESSION - Could not set argument!");
         }
-
     }
 }

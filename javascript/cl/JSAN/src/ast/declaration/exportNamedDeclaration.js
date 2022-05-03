@@ -18,47 +18,33 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var exportNamedDeclaration = factory.createExportNamedDeclarationWrapper();
+        const exportNamedDeclaration = factory.createExportNamedDeclarationWrapper();
         globals.setPositionInfo(node, exportNamedDeclaration);
         return exportNamedDeclaration;
     } else {
-        var exportNamedDeclarationWrapper = globals.getWrapperOfNode(node);
+        const exportNamedDeclarationWrapper = globals.getWrapperOfNode(node);
 
         if (node.source != null) {
-            var sourceWrapper = globals.getWrapperOfNode(node.source);
-            try {
-                exportNamedDeclarationWrapper.setSource(sourceWrapper);
-            } catch (e) {
-                console.error("EXPORTNAMEDDECLARATION - Could not set source! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(exportNamedDeclarationWrapper, "setSource", node.source, "EXPORTNAMEDDECLARATION - Could not set source!");
         }
 
         if (node.declaration != null) {
-            var declarationWrapper = globals.getWrapperOfNode(node.declaration);
-            try {
-                exportNamedDeclarationWrapper.setDeclaration(declarationWrapper);
-            } catch (e) {
-                console.error("EXPORTNAMEDDECLARATION - Could not set declaration! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(exportNamedDeclarationWrapper, "setDeclaration", node.declaration, "EXPORTNAMEDDECLARATION - Could not set declaration!")
         }
 
         if (node.specifiers != null) {
-            for (var i = 0; i < node.specifiers.length; i++) {
+            for (let i = 0; i < node.specifiers.length; i++) {
                 if (node.specifiers[i] != null) {
-                    var specifiersWrapper = globals.getWrapperOfNode(node.specifiers[i]);
-                    try {
-                        exportNamedDeclarationWrapper.addSpecifiers(specifiersWrapper);
-                    } catch (e) {
-                        console.error("EXPORTNAMEDDECLARATION - Could nout add specifier! Reason of the error: " + e + "\n");
-                    }
+                    globals.safeSet(exportNamedDeclarationWrapper, "addSpecifiers", node.specifiers[i], "EXPORTNAMEDDECLARATION - Could not add specifier!")
                 }
             }
         }

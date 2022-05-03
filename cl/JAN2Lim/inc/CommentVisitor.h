@@ -29,7 +29,7 @@ namespace columbus { namespace JAN2Lim
   class CommentVisitor : public lim::asg::VisitorAbstractNodes
   {
     public:
-      CommentVisitor( lim::asg::Factory& f ) : factory( f ), revEdges( f.getReverseEdges() ), pass( 1 ) {}
+      CommentVisitor( lim::asg::Factory& f ) : revEdges( f.getReverseEdges() ), pass( 1 ) {}
 
       virtual void visit( const lim::asg::logical::Package& node, bool );
       virtual void visit( const lim::asg::logical::Method& node, bool );
@@ -38,7 +38,6 @@ namespace columbus { namespace JAN2Lim
       void setPass( int pass );
 
     private:
-      lim::asg::Factory& factory;
       const lim::asg::ReverseEdges& revEdges;
 
       /**

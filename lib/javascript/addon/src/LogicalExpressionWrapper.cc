@@ -207,6 +207,9 @@ napi_value LogicalExpressionWrapper::setOperator(napi_env env, napi_callback_inf
   if( param == "looOr" ){
     dynamic_cast<columbus::javascript::asg::expression::LogicalExpression*>(obj->_nativeObj)->setOperator( looOr );
   }
+  if( param == "looNullishCoalescing" ){
+    dynamic_cast<columbus::javascript::asg::expression::LogicalExpression*>(obj->_nativeObj)->setOperator( looNullishCoalescing );
+  }
   return nullptr;
 }
 napi_value LogicalExpressionWrapper::setPath(napi_env env, napi_callback_info info) {

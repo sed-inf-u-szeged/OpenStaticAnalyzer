@@ -18,28 +18,23 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var spreadElement = factory.createSpreadElementWrapper();
+        const spreadElement = factory.createSpreadElementWrapper();
         globals.setPositionInfo(node, spreadElement);
         return spreadElement;
     } else {
-        var spreadElementWrapper = globals.getWrapperOfNode(node);
+        const spreadElementWrapper = globals.getWrapperOfNode(node);
 
         if (node.argument != null) {
-            var argumentWrapper = globals.getWrapperOfNode(node.argument);
-            try {
-                spreadElementWrapper.setArgument(argumentWrapper);
-            } catch (e) {
-                console.error("SPREADELEMENT - Could not add argument! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(spreadElementWrapper, "setArgument", node.argument, "SPREADELEMENT - Could not add argument!");
         }
-
     }
 }

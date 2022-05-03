@@ -18,27 +18,22 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var expressionStatement = factory.createExpressionStatementWrapper();
+        const expressionStatement = factory.createExpressionStatementWrapper();
         globals.setPositionInfo(node, expressionStatement);
         return expressionStatement;
     } else {
-        var expressionStatementWrapper = globals.getWrapperOfNode(node);
+        const expressionStatementWrapper = globals.getWrapperOfNode(node);
         if (node.expression != null) {
-            var expressionWrapper = globals.getWrapperOfNode(node.expression);
-            try {
-                expressionStatementWrapper.setExpression(expressionWrapper);
-            } catch (e) {
-                console.error("EXPRESSIONSTATEMENT - Could not set expression! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(expressionStatementWrapper, "setExpression", node.expression, "EXPRESSIONSTATEMENT - Could not set expression!");
         }
-
     }
 }

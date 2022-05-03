@@ -36,7 +36,7 @@ namespace statement {
   ForOfStatement::ForOfStatement(NodeId _id, Factory *_factory) :
          Positioned(_id, _factory),
     ForInStatement(_id, _factory),
-    m_async(false)
+    m_await(false)
   {
   }
 
@@ -54,12 +54,12 @@ namespace statement {
     return ndkForOfStatement;
   }
 
-  bool ForOfStatement::getAsync() const {
-    return m_async;
+  bool ForOfStatement::getAwait() const {
+    return m_await;
   }
 
-  void ForOfStatement::setAsync(bool _async) {
-    m_async = _async;
+  void ForOfStatement::setAwait(bool _await) {
+    m_await = _await;
   }
 
   bool ForOfStatement::setEdge(EdgeKind edgeKind, NodeId edgeEnd, bool tryOnVirtualParent) {
@@ -98,7 +98,7 @@ namespace statement {
     if(base.getNodeKind() == getNodeKind()) {
       const ForOfStatement& node = dynamic_cast<const ForOfStatement&>(base);
       double matchAttrs = 0;
-      if(node.getAsync() == getAsync()) ++matchAttrs;
+      if(node.getAwait() == getAwait()) ++matchAttrs;
       return matchAttrs / (1 / (1 - Common::SimilarityMinimum)) + Common::SimilarityMinimum;
     } else {
       return 0.0;
@@ -134,7 +134,7 @@ namespace statement {
 
     unsigned char boolValues = 0;
     boolValues <<= 1;
-    if (m_async) 
+    if (m_await) 
       boolValues |= 1;
     binIo.writeUByte1(boolValues);
 
@@ -147,7 +147,7 @@ namespace statement {
     ForInStatement::load(binIo,false);
 
     unsigned char boolValues = binIo.readUByte1();
-    m_async = boolValues & 1;
+    m_await = boolValues & 1;
     boolValues >>= 1;
 
   }

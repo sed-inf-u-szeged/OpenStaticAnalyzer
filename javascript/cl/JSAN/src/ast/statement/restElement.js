@@ -18,28 +18,23 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var restElement = factory.createRestElementWrapper();
+        const restElement = factory.createRestElementWrapper();
         globals.setPositionInfo(node, restElement);
         return restElement;
     } else {
-        var restElementWrapper = globals.getWrapperOfNode(node);
+        const restElementWrapper = globals.getWrapperOfNode(node);
 
         if (node.argument != null) {
-            var argumentWrapper = globals.getWrapperOfNode(node.argument);
-            try {
-                restElementWrapper.setArgument(argumentWrapper);
-            } catch (e) {
-                console.error("RESTELEMENT - Could not set argument! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(restElementWrapper, "setArgument", node.argument, "RESTELEMENT - Could not set argument!");
         }
-
     }
 }

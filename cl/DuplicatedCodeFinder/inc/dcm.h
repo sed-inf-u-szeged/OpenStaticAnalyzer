@@ -112,13 +112,13 @@ public:
    * \brief destructor
    */
   virtual ~DuplicatedCodeMiner();
-  
+
   int getCloneClassNum()   const;
   int getCloneInstanceNum()const;
   void saveGenealogy();
 
   void setStatementFilter(bool val);
-
+  
   int getNodeKindSequenceSize(); 
   
 protected:
@@ -140,7 +140,7 @@ protected:
   
   std::map<std::string, unsigned long long >  serializedAsgNodeNumberByComponenet;
   LimOrigin                                   limOrigin;
-  
+
   std::map<NodeId, std::set<NodeId> >          limNodeClineInstanceMap;
   std::map<NodeId, std::set<NodeId> >          limComponentClineInstanceMap;
 
@@ -169,7 +169,7 @@ protected:
 
   //v2 vector which contains the sequence of nodeIds together with the depth information
   std::vector<ClonePositioned*> nodeIdSequence;
-
+  
   // map for the node and its connected nodes with NDCs
   NodeEmbeddednessVisitorBase::ConectedEdgesMap conectedEdgesMap;
 
@@ -184,21 +184,21 @@ protected:
     unsigned startPosition;
     Interval I;
     PotentialCloneInstance(unsigned startPosition, Interval I) : startPosition(startPosition), I(I) { }
-    
+
     bool operator<(const PotentialCloneInstance& pci) const {
       return startPosition + I.a < pci.startPosition + pci.I.a;
     }
-    
+
     PotentialCloneInstance(const PotentialCloneInstance& pci) : startPosition(pci.startPosition), I(pci.I) { }
 
     private:
       const PotentialCloneInstance& operator=(const PotentialCloneInstance& pci); // Intentionally not implemented!
 
   };
-  
+
   // maps a clone class to the set of its potential clone instances
   typedef std::map<columbus::NodeId, std::set<PotentialCloneInstance> > CloneClassPotentialCloneInstanceMap;
-  
+
   // the map of genealogy CloneInstance location for asg
   std::map<std::string, SerializedAsg> serializedAsgMap;
   
@@ -478,26 +478,13 @@ protected:
 
   /**
    * \internal
-   * \brief serialize the given asg.
-   *        (This is used by the getInstanceIds to find the old instance of clones.)
-   * \param factory the asg factory which needs to be serialized
-   * \param componentLimId the id of the component.
-   * \param nodeKindSequence the vectors to fill
-   * \param nodeIdSequence the vectors to fill
-   * \param decDepthSign 
-   * \param limFact
-   */
-  void serializeAsg(Factory& factory, NodeId componentLimId, std::vector<int>& nodeKindSequence, std::vector<ClonePositioned*>& nodeIdSequence, int& decDepthSign, columbus::lim::asg::Factory*  limFact);
-
-  /**
-   * \internal
    */
   void traversalPosiotionedNodes(LANGUAGE_NAMESPACE::Factory& rCurFact, LANGUAGE_NAMESPACE::VisitorAbstractNodes* cloneVisitor, const std::string& componentID, const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned* inner = NULL);
 
   void fillPositionnodesVektor(LANGUAGE_NAMESPACE::Factory &rCurFact, std::vector<CorrectedPos> &sortedPostitionNodes, const std::string& componenetId);
 
   bool isNodeAfter(const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned &reference, const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned &questionNode);
-
+  
   bool PutBeginSignToNode( std::stack<const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned*> &nodeStack, const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned* node, LANGUAGE_NAMESPACE::VisitorAbstractNodes*  cloneVisitor);
 
   void PutEndSignToNode( std::stack<const LANGUAGE_NAMESPACE::BASE_NAMESPACE::Positioned*> &nodeStack,LANGUAGE_NAMESPACE::VisitorAbstractNodes*  cloneVisitor );
@@ -539,19 +526,19 @@ protected:
    * \internal
    * \brief compute the F1, ..., F6 atrtibutes on which the similarity is rested.
    */
-    
+
   void computeSimilarityAttributes(columbus::genealogy::CloneInstance& ci);
 
   enum F_attributes { F1 = 1, F2, F3, F4, F5, F6 };
-  const std::string& getFString(F_attributes F, const columbus::genealogy::CloneInstance& ci) {
+  const std::string* getFString(F_attributes F, const columbus::genealogy::CloneInstance& ci) {
     switch (F) {
-    case F1: return ci.getPath();
-    case F2: return NULL;
-    case F3: return ci.getF3_HeadNodeUniqueName();
-    case F4: return ci.getF4_AncestorUniqueName();
-    case F5: return ci.getF4_AncestorUniqueName();
-    case F6: return ci.getF6_LexicalStructure();
-    default: return NULL;
+    case F1: return &ci.getPath();
+    case F2: return nullptr;
+    case F3: return &ci.getF3_HeadNodeUniqueName();
+    case F4: return &ci.getF4_AncestorUniqueName();
+    case F5: return &ci.getF4_AncestorUniqueName();
+    case F6: return &ci.getF6_LexicalStructure();
+    default: return nullptr;
     }
   }
   double getStringSimilarity(std::string& s1, std::string& s2, double& dist, double* alpha, unsigned int limit);
@@ -586,7 +573,7 @@ protected:
   NodeId getLimComponenetIdByName(const std::string& name, const columbus::lim::asg::Factory& factory);
 
   const std::string& getAsgNameByLimId(columbus::NodeId limId, const columbus::lim::asg::Factory& factory) const;
-  
+
   /**
    * \internal
    * \brief get clone instances of 'system'
@@ -596,7 +583,7 @@ protected:
   
 #endif
 
-  
+
 public:
   /**
    * \brief start duplicate code mining

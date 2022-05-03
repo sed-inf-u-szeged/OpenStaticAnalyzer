@@ -60,7 +60,7 @@ namespace Columbus.CSAN.RoslynVisitors
                     var pair = new KeyValuePair<uint, bool>( id, false );
                     if ( !fileContext.MethodStack.Peek( ).CanThrow.Contains( pair ) )
                         fileContext.MethodStack.Peek( ).Instantiates.Add( pair );
-                    if ( symbol.Kind == SymbolKind.NamedType && synNode.Kind( ) != SyntaxKind.DelegateDeclaration )
+                    if ( symbol.Kind == SymbolKind.NamedType && synNode?.Kind( ) != SyntaxKind.DelegateDeclaration )
                     {
                         fileContext.CrossEdgeFiller.OriginalDefinitionFiller( synNode as MemberDeclarationSyntax, node.Type );
                     }

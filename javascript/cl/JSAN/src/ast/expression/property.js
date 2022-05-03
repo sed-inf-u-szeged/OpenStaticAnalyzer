@@ -18,16 +18,17 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
-const conversions = require('../conversions');
+import * as globals from '../../globals.js';
+import * as conversions from '../conversions.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var property = factory.createPropertyWrapper();
+        const property = factory.createPropertyWrapper();
         globals.setPositionInfo(node, property);
         property.setKind(conversions.convertPropertyKind(node.kind));
         property.setMethod(node.method);
@@ -35,24 +36,14 @@ module.exports = function (node, parent, firstVisit) {
         property.setComputed(node.computed);
         return property;
     } else {
-        var propertyWrapper = globals.getWrapperOfNode(node);
+        const propertyWrapper = globals.getWrapperOfNode(node);
 
         if (node.key != null) {
-            var keyWrapper = globals.getWrapperOfNode(node.key);
-            try {
-                propertyWrapper.setKey(keyWrapper);
-            } catch (e) {
-                console.error("PROPERTY - Could not set key! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(propertyWrapper, "setKey", node.key, "PROPERTY - Could not set key!");
         }
 
         if (node.value != null) {
-            var valueWrapper = globals.getWrapperOfNode(node.value);
-            try {
-                propertyWrapper.setValue(valueWrapper);
-            } catch (e) {
-                console.error("PROPERTY - Could not set value! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(propertyWrapper, "setValue", node.value, "PROPERTY - Could not set value!");
         }
 
     }

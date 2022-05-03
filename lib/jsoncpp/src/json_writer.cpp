@@ -873,6 +873,7 @@ struct BuiltStyledStreamWriter : public StreamWriter {
                           unsigned int precision,
                           PrecisionType precisionType);
   int write(Value const& root, OStream* sout) override;
+  int write(Value const& root, OStream* sout, const char *leftMargin) override;
 
 private:
   void writeValue(Value const& value);
@@ -931,6 +932,22 @@ int BuiltStyledStreamWriter::write(Value const& root, OStream* sout) {
   *sout_ << endingLineFeedSymbol_;
   sout_ = nullptr;
   return 0;
+}
+int BuiltStyledStreamWriter::write(Value const& root, OStream* sout, const char *leftMargin) {
+    sout_ = sout;
+    addChildValues_ = false;
+    indented_ = false;
+    indentString_.clear();
+    indentString_ = leftMargin;
+    writeCommentBeforeValue(root);
+    if (!indented_)
+        writeIndent();
+    indented_ = true;
+    writeValue(root);
+    writeCommentAfterValueOnSameLine(root);
+    *sout_ << endingLineFeedSymbol_;
+    sout_ = nullptr;
+    return 0;
 }
 void BuiltStyledStreamWriter::writeValue(Value const& value) {
   switch (value.type()) {

@@ -18,38 +18,27 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var switchCase = factory.createSwitchCaseWrapper();
+        const switchCase = factory.createSwitchCaseWrapper();
         globals.setPositionInfo(node, switchCase);
         return switchCase;
     } else {
-        var switchCaseWrapper = globals.getWrapperOfNode(node);
-
+        const switchCaseWrapper = globals.getWrapperOfNode(node);
         if (node.test != null) {
-            var testWrapper = globals.getWrapperOfNode(node.test);
-            try {
-                switchCaseWrapper.setTest(testWrapper);
-            } catch (e) {
-                console.error("SWITCHCASE - Could not set test! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(switchCaseWrapper, "setTest", node.test, "SWITCHCASE - Could not set test!");
         }
-
         if (node.consequent != null) {
-            for (var i = 0; i < node.consequent.length; i++) {
+            for (let i = 0; i < node.consequent.length; i++) {
                 if (node.consequent[i] != null) {
-                    var consequentWrapper = globals.getWrapperOfNode(node.consequent[i]);
-                    try {
-                        switchCaseWrapper.addConsequent(consequentWrapper);
-                    } catch (e) {
-                        console.error("SWITCHCASE - Could not add consequent! Reason of the error: " + e + "\n");
-                    }
+                    globals.safeSet(switchCaseWrapper, "addConsequent", node.consequent[i], "SWITCHCASE - Could not add consequent!");
                 }
             }
         }

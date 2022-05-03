@@ -18,50 +18,37 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var templateLiteral = factory.createTemplateLiteralWrapper();
+        const templateLiteral = factory.createTemplateLiteralWrapper();
         globals.setPositionInfo(node, templateLiteral);
         return templateLiteral;
     } else {
-        var templateLiteralWrapper = globals.getWrapperOfNode(node);
+        const templateLiteralWrapper = globals.getWrapperOfNode(node);
 
         if (node.quasi != null) {
-            var quasiWrapper = globals.getWrapperOfNode(node.quasi);
-            try {
-                templateLiteralWrapper.setQuasi(quasiWrapper);
-            } catch (e) {
-                console.error("TEMPLATELITERAL - Could not set quasi! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(templateLiteralWrapper, "setQuasi", node.quasi, "TEMPLATELITERAL - Could not set quasi!");
         }
 
         if (node.expressions != null) {
-            for (var i = 0; i < node.expressions.length; i++) {
+            for (let i = 0; i < node.expressions.length; i++) {
                 if (node.expressions[i] != null) {
-                    var expressionsWrapper = globals.getWrapperOfNode(node.expressions[i]);
-                    try {
-                        templateLiteralWrapper.addExpressions(expressionsWrapper);
-                    } catch (e) {
-                        console.error("TEMPLATELITERAL - Could not add expression! Reason of the error: " + e + "\n");
-                    }
+                    globals.safeSet(templateLiteralWrapper, "addExpressions", node.expressions[i], "TEMPLATELITERAL - Could not add expression!");
                 }
             }
         }
+
         if (node.quasis != null) {
-            for (var i = 0; i < node.quasis.length; i++) {
+            for (let i = 0; i < node.quasis.length; i++) {
                 if (node.quasis[i] != null) {
-                    var quasisWrapper = globals.getWrapperOfNode(node.quasis[i]);
-                    try {
-                        templateLiteralWrapper.addQuasis(quasisWrapper);
-                    } catch (e) {
-                        console.error("TEMPLATELITERAL - Could not add quasi! Reason of the error: " + e + "\n");
-                    }
+                    globals.safeSet(templateLiteralWrapper, "addQuasis", node.quasis[i], "TEMPLATELITERAL - Could not add quasis!");
                 }
             }
         }

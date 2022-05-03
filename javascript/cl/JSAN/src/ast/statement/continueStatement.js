@@ -18,27 +18,22 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var continueStatement = factory.createContinueStatementWrapper();
+        const continueStatement = factory.createContinueStatementWrapper();
         globals.setPositionInfo(node, continueStatement);
         return continueStatement;
     } else {
-        var continueStatementWrapper = globals.getWrapperOfNode(node);
+        const continueStatementWrapper = globals.getWrapperOfNode(node);
         if (node.label != null) {
-            var labelWrapper = globals.getWrapperOfNode(node.label);
-            try {
-                continueStatementWrapper.setLabel(labelWrapper);
-            } catch (e) {
-                console.error("CONTINUESTATEMENT - Could not set label! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(continueStatementWrapper, "setLabel", node.label, "CONTINUESTATEMENT - Could not set label!");
         }
-
     }
 }

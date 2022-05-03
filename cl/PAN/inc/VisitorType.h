@@ -42,7 +42,6 @@ private:
   std::list< NodeId > module_scope;
   std::list< NodeId > scope;
   std::string attribute;
-  NodeId currentObject;
   VisitedType filter;
   std::set< NodeId > import_resolved;
 

@@ -18,28 +18,27 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
+import {createASGNode} from '../astTransformer';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var exportAllDeclaration = factory.createExportAllDeclarationWrapper();
+        const exportAllDeclaration = factory.createExportAllDeclarationWrapper();
         globals.setPositionInfo(node, exportAllDeclaration);
         return exportAllDeclaration;
     } else {
-        var exportAllDeclarationWrapper = globals.getWrapperOfNode(node);
-
-        if (node.source != null) {
-            var sourceWrapper = globals.getWrapperOfNode(node.source);
-            try {
-                exportAllDeclarationWrapper.setSource(sourceWrapper);
-            } catch (e) {
-                console.error("EXPORTALLDECLARATION - Could not set source! Reason of the error: " + e + "\n");
-            }
+        const exportAllDeclarationWrapper = globals.getWrapperOfNode(node);
+        if (node.source !== null) {
+            globals.safeSet(exportAllDeclarationWrapper, "setSource", node.source, "EXPORTALLDECLARATION - Could not set source node!");
         }
 
+        if (node.exported !== null) {
+            globals.safeSet(exportAllDeclarationWrapper, "setExported", node.exported, "EXPORTALLDECLARATION - Could not set exported node!")
+        }
     }
 }

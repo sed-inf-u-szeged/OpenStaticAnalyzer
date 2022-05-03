@@ -18,36 +18,27 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var exportSpecifier = factory.createExportSpecifierWrapper();
+        const exportSpecifier = factory.createExportSpecifierWrapper();
         globals.setPositionInfo(node, exportSpecifier);
         return exportSpecifier;
     } else {
-        var exportSpecifierWrapper = globals.getWrapperOfNode(node);
+        const exportSpecifierWrapper = globals.getWrapperOfNode(node);
 
         if (node.exported != null) {
-            var exportedWrapper = globals.getWrapperOfNode(node.exported);
-            try {
-                exportSpecifierWrapper.setExported(exportedWrapper);
-            } catch (e) {
-                console.error("EXPORTSPECIFIER - Could not set exported! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(exportSpecifierWrapper, "setExported", node.exported, "EXPORTSPECIFIER - Could not set exported!");
         }
 
         if (node.local != null) {
-            var localWrapper = globals.getWrapperOfNode(node.local);
-            try {
-                exportSpecifierWrapper.setLocal(localWrapper);
-            } catch (e) {
-                console.error("EXPORTSPECIFIER - Could not set local! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(exportSpecifierWrapper, "setLocal", node.local, "EXPORTSPECIFIER - Could not set local!");
         }
 
     }

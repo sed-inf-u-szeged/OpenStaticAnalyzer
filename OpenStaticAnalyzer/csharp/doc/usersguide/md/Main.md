@@ -21,7 +21,7 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
 - Coding issue detection:
 
     - Metric threshold violations (MetricHunter module)
-    
+
     - FxCop coding rule violations
 
     - SONARQUBE™ platform 8.0 (“SonarQube” in the following) coding rule violations
@@ -159,9 +159,9 @@ OpenStaticAnalyzer can be executed with the following parameters:
 **-projectName**
 
   : The name of the analyzed software system. The name specified here will be used for storing the results.
-  
+
 **-input**
-  
+
   : The solution (.sln), project (.csproj) or C# source (.cs) file to analyse.
 
 **-externalHardFilter**
@@ -273,15 +273,15 @@ Source code elements in the files marked with darker background will not be cons
 **-runFxCop**
 
   : This parameter turns on or off the FxCop coding rule violation checking. With this feature, OpenStaticAnalyzer lists coding rule violations detected by FxCop. Its value can be "true" (turn this feature on) or "false" (turn this feature off). The default value is "true". FxCop is only able to run if there was a successful build of the given project with pdb files generated.
-  
+
 **-FxCopPath**
-  
+
   : Specifies the the directory which contains the FxCop binaries. If not provided, the program will search through the installed Visual Studio directories and use the latest one if found.
 
 **-configuration**
 
   : The name of the project configuration.
-  
+
 **-platform**
 
   : The name of the target platform.
@@ -325,7 +325,7 @@ Source code elements in the files marked with darker background will not be cons
 **-pattern**
 
   : The pattern file or pattern directory for LIM2Patterns. By default it searches for the predefined Anti Patterns found in Tools/Patterns/AntiPatterns.
-  
+
 # Usage
 
 Execute the following command to analyse the source code of a software system:

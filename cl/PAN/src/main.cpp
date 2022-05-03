@@ -493,7 +493,7 @@ int main(int argc, char** argv)
     if (!ofs.is_open()) {
       WriteMsg::write(CMSG_CANNOT_OPEN_FILE, pmlFile.c_str());
     } else {
-      VisitorPYTHONML* visitor = new VisitorPYTHONML(ofs, "", NULL, false);
+      VisitorPYTHONML* visitor = new VisitorPYTHONML(ofs, "", false, false);
       AlgorithmPreorder ap;
       ap.run(*factory, *visitor);
       delete visitor;

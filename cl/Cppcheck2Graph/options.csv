@@ -1,0 +1,298 @@
+OriginalID;ID;NewName;Enabled
+accessForwarded;AF;Access Forwarded;1
+accessMoved;AM;Access Moved;1
+arithOperationsOnVoidPointer;AOOVP;Arithmetic Operations On Void Pointer;1
+arrayIndexOutOfBounds;AIOOB;Array Index Out Of Bounds;1
+arrayIndexOutOfBoundsCond;AIOOBC;Array Index Out Of Bounds Cond;1
+arrayIndexThenCheck;AITC;Array Index Then Check;1
+assertWithSideEffect;AWSE;Assert With Side Effect;1
+assignBoolToFloat;ABTF;Assign Bool To Float;1
+assignBoolToPointer;ABTP;Assign Bool To Pointer;1
+assignIfError;AIE;Assign If Error;1
+AssignmentAddressToInteger;AATI;Assignment Address To Integer;1
+assignmentInAssert;AIA;Assignment In Assert;1
+assignmentInCondition;AIC;Assignment In Condition;1
+AssignmentIntegerToAddress;AITA;Assignment Integer To Address;1
+autoVariables;AV;Auto Variables;1
+autovarInvalidDeallocation;AID;Autovar Invalid Deallocation;1
+badBitmaskCheck;BBC;Bad Bitmask Check;1
+bitwiseOnBoolean;BOB;Bitwise On Boolean;1
+boostForeachError;BFE;Boost Foreach Error;1
+bufferAccessOutOfBounds;BAOOB;Buffer Access Out Of Bounds;1
+CastAddressToIntegerAtReturn;CATIAR;Cast Address To Integer At Return;1
+CastIntegerToAddressAtReturn;CITAAR;Cast Integer To Address At Return;1
+catchExceptionByValue;CEBV;Catch Exception By Value;1
+charBitOp;CBO;Char Bit Op;1
+charLiteralWithCharPtrCompare;CLWCPC;Char Literal With Char Ptr Compare;1
+checkCastIntToCharAndBack;CCITCAB;Check Cast Int To Char And Back;1
+clarifyCalculation;CCALC;Clarify Calculation;1
+clarifyCondition;CCOND;Clarify Condition;1
+clarifyStatement;CSTAT;Clarify Statement;1
+commaSeparatedReturn;CSR;Comma Separated Return;1
+compareBoolExpressionWithInt;CBEWI;Compare Bool Expression With Int;1
+comparePointers;CP;Compare Pointers;1
+comparisonError;CE;Comparison Error;1
+comparisonFunctionIsAlwaysTrueOrFalse;CFIATOF;Comparison Function Is Always True Or False;1
+comparisonOfBoolWithBoolError;COBWBE;Comparison Of Bool With Bool Error;1
+comparisonOfBoolWithInvalidComparator;COBWIC;Comparison Of Bool With Invalid Comparator;1
+comparisonOfFuncReturningBoolError;COFRBE;Comparison Of Func Returning Bool Error;1
+comparisonOfTwoFuncsReturningBoolError;COTFRBE;Comparison Of Two Funcs Returning Bool Error;1
+constStatement;CS;Const Statement;1
+constVariable;CV;Const Variable;1
+containerOutOfBounds;COOB;Container Out Of Bounds;1
+copyCtorAndEqOperator;CCAEO;Copy Constructor And Eq Operator;1
+copyCtorPointerCopying;CCPC;Copy Ctor Pointer Copying;1
+coutCerrMisusage;CCM;Cout Cerr Misusage;1
+cstyleCast;CSC;Cstyle Cast;1
+danglingLifetime;DL;Dangling Lifetime;1
+danglingReference;DR;Dangling Reference;1
+danglingTemporaryLifetime;DTL;Dangling Temporary Lifetime;1
+danglingTempReference;DTR;Dangling Temporary Reference;1
+deallocDealloc;DD;Dealloc Dealloc;1
+deallocret;DAR;Deallocret;1
+deallocuse;DU;Deallocuse;1
+derefInvalidIterator;DII;Deref Invalid Iterator;1
+divideSizeof;DSO;Divide Sizeof;1
+doubleFree;DF;Double Free;1
+duplicateAssignExpression;DAE;Duplicate Assign Expression;1
+duplicateBranch;DBRANCH;Duplicate Branch;1
+duplicateBreak;DBREAK;Duplicate Break;1
+duplicateCondition;DCOND;Duplicate Condition;1
+duplicateConditionalAssign;DCONDA;Duplicate Condition and Assignement;1
+duplicateExpression;DEXPR;Duplicate Expression;1
+duplicateExpressionTernary;DET;Duplicate Expression Ternary;1
+duplicateValueTernary;DVT;Duplicate Value Ternary;1
+duplInheritedMember;DIM;Dupl Inherited Member;1
+eraseDereference;ED;Erase Dereference;1
+exceptDeallocThrow;EDT;Except Dealloc Throw;1
+exceptRethrowCopy;ERC;Except Rethrow Copy;1
+exceptThrowInDestructor;ETID;Except Throw In Destructor;1
+fflushOnInputStream;FOIS;Fflush On Input Stream;1
+floatConversionOverflow;FCO;Float Conversion Overflow;1
+funcArgNamesDifferent;FAND;Function Argument Names Different;1
+funcArgOrderDifferent;FAOD;Function Argument Order Different;1
+functionConst;FC;Function Const;1
+functionStatic;FS;Function Static;1
+globalLockGuard;GLG;Global Lock Guard;1
+identicalConditionAfterEarlyExit;ICAEE;Identical Condition After Early Exit;1
+identicalInnerCondition;IIC;Identical Inner Condition;1
+ignoredReturnValue;IRV;Ignored Return Value;1
+incompleteArrayFill;IAF;Incomplete Array Fill;1
+incorrectCharBooleanError;ICBE;Incorrect Char Boolean Error;1
+incorrectLogicOperator;ILO;Incorrect Logic Operator;1
+incorrectStringBooleanError;ISBE;Incorrect String Boolean Error;1
+incorrectStringCompare;ISC;Incorrect String Compare;1
+incrementboolean;IB;Increment Boolean;1
+initializerList;IL;Initializer List;1
+integerOverflow;IO;Integer Overflow;1
+invalidContainer;IC;Invalid Container;1
+invalidContainerLoop;ICL;Invalid Container Loop;1
+invalidFree;IF;Invalid Free;1
+invalidFunctionArg;IFA;Invalid Function Arguments;1
+invalidFunctionArgBool;IFAB;Invalid Function Argument Boolean;1
+invalidFunctionArgStr;IFAS;Invalid Function Argument String;1
+invalidIterator1;IIT;Invalid Iterator1;1
+invalidLengthModifierError;ILME;Invalid Length Modifier Error;1
+invalidLifetime;ILT;Invalid Lifetime;1
+invalidPointerCast;IPC;Invalid Pointer Cast;1
+invalidPrintfArgType_float;IPATF;Invalid Printf Arg Type_float;1
+invalidPrintfArgType_n;IPATN;Invalid Printf Arg Type_n;1
+invalidPrintfArgType_p;IPATP;Invalid Printf Arg Type_p;1
+invalidPrintfArgType_s;IPATS;Invalid Printf Arg Type_s;1
+invalidPrintfArgType_sint;IPATSI;Invalid Printf Arg Type_sint;1
+invalidPrintfArgType_uint;IPATUI;Invalid Printf Arg Type_uint;1
+invalidscanf;IS;Invalid Scanf;1
+invalidScanfArgType_float;ISATF;Invalid Scanf Arg Type_float;1
+invalidScanfArgType_int;ISATI;Invalid Scanf Arg Type_int;1
+invalidScanfArgType_s;ISATS;Invalid Scanf Arg Type_s;1
+invalidScanfFormatWidth;ISFW;Invalid Scanf Format Width;1
+invalidScanfFormatWidth_smaller;ISFWS;Invalid Smaller Scanf Format Width;1
+invalidTestForOverflow;ITFO;Invalid Test For Overflow;1
+IOWithoutPositioning;IOWP;IO Without Positioning;1
+iterators1;SIWDC1;Same Iterator With Different Containers1;1
+iterators2;SIWDC2;Same Iterator With Different Containers2;1
+iterators3;SIWDC3;Same Iterator With Different Containers3;1
+knownArgument;KA;Known Argument;1
+knownArgumentHiddenVariableExpression;KAHVE;Known Argument Hidden Variable Expression;1
+knownConditionTrueFalse;CAF;Condition is Always False;1
+knownEmptyContainer;KEC;Known Empty Container;1
+leakNoVarFunctionCall;LNVFC;Leak No Var Function Call;1
+leakReturnValNotUsed;LRVNU;Leak Return Val Not Used;1
+leakUnsafeArgAlloc;UA;Unsafe allocation;1
+literalWithCharPtrCompare;VCWSL;Variable Comparison With String Literal;1
+localMutex;LM;Local Mutex;1
+mallocOnClassError;MOCE;Malloc On Class Error;1
+mallocOnClassWarning;MOCW;Malloc On Class Warning;1
+memleak;ML;Memleak;1
+memleakOnRealloc;MOR;Memleak On Realloc;1
+memsetClass;MC;Memset Class;1
+memsetClassFloat;MCF;Memset Class Float;1
+memsetClassReference;MCR;Memset Class Reference;1
+memsetFloat;MF;Memset Float;1
+memsetValueOutOfRange;MVOOR;Memset Value Out Of Range;1
+memsetZeroBytes;MZB;Memset Zero Bytes;1
+mismatchAllocDealloc;MAD;Mismatch Alloc Dealloc;1
+mismatchingBitAnd;MBA;Mismatching Bit And;1
+mismatchingContainerExpression;MCE;Mismatching Container Expression;1
+mismatchingContainerIterator;MCI;Mismatching Container Iterator;1
+mismatchingContainers;MMC;Mismatching Containers;1
+mismatchSize;MS;Mismatch Size;1
+missingOverride;MO;Missing Override;1
+moduloAlwaysTrueFalse;MATF;Modulo Always True False;1
+moduloofone;MOO;Modulo Of One;1
+multiCondition;MCOND;Multi Condition;1
+multiplySizeof;MSO;Multiply Sizeof;1
+nanInArithmeticExpression;NIAE;Nan In Arithmetic Expression;1
+negativeContainerIndex;NCI;Negative Container Index;1
+negativeIndex;NI;Negative Index;1
+noConstructor;NC;No Constructor;1
+noCopyConstructor;NCC;No Copy Constructor;1
+noDestructor;ND;No Destructor;1
+noExplicitConstructor;NEC;No Explicit Constructor;1
+noOperatorEq;NAO;No Assignment Operator;1
+nullPointer;NP;Null Pointer;1
+nullPointerArithmetic;PAWN;Pointer Arithmetic With NULL;1
+nullPointerArithmeticRedundantCheck;PAORCWN;Pointer Arithmetic Or Redundant Check With NULL;1
+nullPointerDefaultArg;NPDWDA;NULL Pointer Dereference With Default Argument;1
+nullPointerRedundantCheck;RNPC;Redundant NULL Pointer Check;1
+objectIndex;OI;Object Index;1
+operatorEqMissingReturnStatement;MRFAO;Missing Return From Assignement Operator;1
+operatorEqRetRefThis;OERRT;Operator Eq Ret Ref This;1
+operatorEqShouldBeLeftUnimplemented;AOSBLU;Assignment Operator Should Be Left Unimplemented;1
+operatorEqToSelf;OETS;Operator Eq To Self;1
+operatorEqVarError;OEVE;Operator Eq Var Error;1
+oppositeExpression;OPE;Opposite Expression;1
+oppositeInnerCondition;OIC;Opposite Inner Condition;1
+overlappingStrcmp;OS;Overlapping Strcmp;1
+passedByValue;PBV;Passed By Value;1
+pointerAdditionResultNotNull;PANC;Pointer Addition Null Check;1
+pointerArithBool;PAB;Pointer Arith Bool;1
+pointerLessThanZero;PLTZ;Pointer Less Than Zero;1
+pointerOutOfBounds;POOB;Pointer Out Of Bounds;1
+pointerPositive;PP;Pointer Positive;1
+pointerSize;PS;Pointer Size;1
+postfixOperator;PO;Postfix Operator;1
+preprocessorErrorDirective;PED;Preprocessor Error Directive;0
+publicAllocationError;PAE;Public Allocation Error;1
+pureVirtualCall;PVC;Pure Virtual Call;1
+raceAfterInterlockedDecrement;RAID;Race After Interlocked Decrement;1
+reademptycontainer;REC;Read Empty Container;1
+readWriteOnlyFile;RWOF;Read Write Only File;1
+redundantAssignInSwitch;RAIS;Redundant Assign In Switch;1
+redundantAssignment;RA;Redundant Assignment;1
+redundantBitwiseOperationInSwitch;RBOIS;Redundant Bitwise Operation In Switch;1
+redundantCondition;RCOND;Redundant Condition;1
+redundantCopy;RCPY;Redundant Copy;1
+redundantCopyInSwitch;RCIS;Redundant Copy In Switch;1
+redundantCopyLocalConst;RCLC;Redundant Copy Local Const;1
+redundantIfRemove;RIR;Redundant If Remove;1
+redundantInitialization;RI;Redundant Initialization;1
+redundantPointerOp;RPO;Redundant Pointer Operation;1
+resourceLeak;RL;Resource Leak;1
+rethrowNoCurrentException;NCETR;No Current Exception To Rethrow ;1
+returnAddressOfAutoVariable;RAOAV;Return Address Of Auto Variable;1
+returnAddressOfFunctionParameter;RAOFP;Return Address Of Function Parameter;1
+returnDanglingLifetime;RDL;Return Dangling Lifetime;1
+returnLocalVariable;RLV;Return Local Variable;1
+returnNonBoolInBooleanFunction;RNBIBF;Return Address Of Auto Variable;1
+returnReference;RF;Return Reference;1
+returnTempReference;RTF;Return Temp Reference;1
+sameIteratorExpression;SIE;Same Iterator Expression;1
+seekOnAppendedFile;SOAF;Seek On Appended File;1
+selfAssignment;SA;Self Assignment;1
+selfInitialization;SI;Self Initialization;1
+shadowArgument;SAR;Shadow Argument;1
+shadowFunction;SF;Shadow Function;1
+shadowVariable;SV;Shadow Variable;1
+shiftNegative;SBN;Shift By Negative;1
+shiftNegativeLHS;SN;Shift Negative;1
+shiftTooManyBits;STMB;Shift Too Many Bits;1
+shiftTooManyBitsSigned;STMBS;Shift Too Many Bits Signed;1
+signConversion;SC;Sign Conversion;1
+signedCharArrayIndex;SCAI;Signed Char Array Index;1
+sizeofCalculation;SOC;Sizeof Calculation;1
+sizeofDereferencedVoidPointer;SODVP;Sizeof Dereferenced Void Pointer;1
+sizeofDivisionMemfunc;SODMF;Sizeof Division Memfunc;1
+sizeofFunctionCall;SOFC;Sizeof Function Call;1
+sizeofsizeof;SOSO;Sizeof Sizeof;1
+sizeofVoid;SOV;Sizeof Void;1
+sizeofwithnumericparameter;SOWNP;Sizeof With Numeric Parameter;1
+sizeofwithsilentarraypointer;SOWSAP;Sizeof With Silent Array Pointer;1
+sprintfOverlappingData;SOD;Sprintf Overlapping Data;1
+staticStringCompare;SSC;Static String Compare;1
+stlBoundaries;STLB;Stl Boundaries;1
+stlcstr;STLC;Stlcstr;1
+stlcstrParam;SCP;Stlcstr Param;1
+stlcstrReturn;SCR;Stlcstr Return;1
+stlcstrthrow;SCT;Stlcstr Throw;1
+stlFindInsert;STLFBI;Stl Find Before Insert;1
+stlIfFind;STLIF;Stl If Find;1
+stlIfStrFind;STLISF;Stl If Str Find;1
+StlMissingComparison;STLMC;Stl Missing Comparison;1
+stlOutOfBounds;STLOOB;Stl Out Of Bounds;1
+stlSize;STLS;Stl Size;1
+stringCompare;STRCMP;String Compare;1
+stringLiteralWrite;SLW;String Literal Write;1
+strPlusChar;SPC;Str Plus Char;1
+suspiciousCase;SUSPC;Suspicious Case;1
+suspiciousSemicolon;SS;Suspicious Semicolon;1
+thisSubtraction;TS;This Subtraction;1
+thisUseAfterFree;TUAF;This Is Used After Free;1
+throwInNoexceptFunction;TINF;Throw In Noexcept Function;1
+truncLongCastAssignment;TLCA;Trunc Long Cast Assignment;1
+truncLongCastReturn;TLCR;Trunc Long Cast Return;1
+unassignedVariable;UAV;Unassigned Variable;1
+unhandledExceptionSpecification;UES;Unhandled Exception Specification;1
+uninitdata;UID;Uninitialized Data;1
+uninitDerivedMemberVar;UDMV;Uninitialized Derived Member Variable;1
+uninitDerivedMemberVarPrivate;UDPMV;Uninitialized Derived Private Member Variable;1
+uninitMemberVar;UMV;Uninitialized Member Variable;1
+uninitMemberVarPrivate;UPMV;Uninitialized Private Member Variable;1
+uninitstring;DUOS;Dangerous Use Of Strncpy;1
+uninitStructMember;UISM;Uninit Struct Member;1
+uninitvar;UIV;Uninitialized Variable;1
+unknownEvaluationOrder;UEO;Unknown Evaluation Order;1
+unknownSignCharArrayIndex;CAI;Character Array Index;1
+unpreciseMathCall;UPMC;Unprecise Math Call;1
+unreachableCode;URC;Unreachable Code;1
+unreadVariable;URV;Unread Variable;1
+unsafeClassCanLeak;UCCL;Unsafe Class Can Leak;1
+unsafeClassRefMember;UCRM;Unsafe Class Reference Member;1
+unsignedLessThanZero;ULTZ;Unsigned Less Than Zero;1
+unsignedPositive;UP;Unsigned Positive;1
+unusedAllocatedMemory;UUAM;Unused Allocated Memory;1
+unusedFunction;UUF;Unused Function;1
+unusedLabel;UL;Unused Label;1
+unusedLabelConfiguration;ULITC;Unused Label In This Configuration;1
+unusedLabelSwitch;USL;Unused Switch Label;1
+unusedLabelSwitchConfiguration;USLITC;Unused Switch Label in This Configuration;1
+unusedPrivateFunction;UPF;Unused Private Function;1
+unusedScopedObject;UUSO;Unused Scoped Object;1
+unusedStructMember;UUSM;Unused Struct Member;1
+unusedVariable;UUV;Unused Variable;1
+useClosedFile;UCF;Use Closed File;1
+useInitializationList;UIL;Use Initialization List;1
+uselessAssignmentArg;UAA;Useless Assignment Arg;1
+uselessAssignmentPtrArg;UAPARG;Useless Assignment Ptr Arg;1
+uselessCallsCompare;UCC;Useless Calls Compare;1
+uselessCallsEmpty;UCE;Useless Calls Empty;1
+uselessCallsRemove;UCR;Useless Calls Remove;1
+uselessCallsSubstr;UCSS;Useless Calls Substr;1
+uselessCallsSwap;UCS;Useless Calls Swap;1
+useStlAlgorithm;USA;Use STL Algorithm;1
+va_end_missing;VAEM;Va_end Missing;1
+va_list_usedBeforeStarted;VALUBS;Va_list Used Before Started;1
+va_start_referencePassed;VASRP;Va_start Reference Passed;1
+va_start_subsequentCalls;VASSC;Va_start Subsequent Calls;1
+va_start_wrongParameter;VASWP;Va_start Wrong Parameter;1
+varFuncNullUB;VFNUB;Var Func Null UB;1
+variableScope;VS;Variable Scope;1
+virtualCallInConstructor;VCIC;Virtual Call In Constructor;1
+virtualDestructor;VD;Virtual Destructor;1
+writeReadOnlyFile;WROF;Write Read Only File;1
+wrongmathcall;WMC;Wrong Math Call;1
+wrongPipeParameterSize;WPPS;Wrong Pipe Parameter Size;1
+wrongPrintfScanfArgNum;WPSAN;Wrong Printf Scanf Arg Num;1
+wrongPrintfScanfParameterPositionError;WPSPPE;Wrong Printf Scanf Parameter Position Error;1
+zerodiv;ZD;Zerodiv;1
+zerodivcond;ZDC;Zerodivcond;1

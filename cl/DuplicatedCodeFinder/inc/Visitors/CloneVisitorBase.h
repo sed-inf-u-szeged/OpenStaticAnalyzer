@@ -134,7 +134,6 @@ protected:
   columbus::LimOrigin&                   limOrigin;
   std::vector<int>&                      resultSequence;
   std::vector<ClonePositioned* >&        nodeIdSequence;
-  int inside;
   bool analizeNode;
   std::set<std::string> block_paths;
   std::ostream* out;

@@ -18,30 +18,26 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
-const conversions = require('../conversions');
+import * as globals from '../../globals.js';
+import * as conversions from '../conversions.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var updateExpression = factory.createUpdateExpressionWrapper();
+        const updateExpression = factory.createUpdateExpressionWrapper();
         globals.setPositionInfo(node, updateExpression);
         updateExpression.setOperator(conversions.convertOperatorToString(node.operator));
         updateExpression.setPrefix(node.prefix);
 
         return updateExpression;
     } else {
-        var updateExpressionWrapper = globals.getWrapperOfNode(node);
+        const updateExpressionWrapper = globals.getWrapperOfNode(node);
         if (node.argument != null) {
-            var argumentWrapper = globals.getWrapperOfNode(node.argument);
-            try {
-                updateExpressionWrapper.setArgument(argumentWrapper);
-            } catch (e) {
-                console.error("UPDATEEXPRESSION - Could not st argument! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(updateExpressionWrapper, "setArgument", node.argument, "UPDATEEXPRESSION - Could not set argument!");
         }
 
     }

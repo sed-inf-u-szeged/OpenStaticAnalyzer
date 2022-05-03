@@ -44,9 +44,9 @@ add_custom_generated_copy_dependency_to_tools_dir (Pylint_2.rul Pylint2Graph)
 add_custom_generated_copy_dependency_to_tools_dir (Pylint.conf Pylint2Graph)
 add_custom_generated_copy_dependency_to_tools_dir (UserDefinedMetrics${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (Sonar2Graph${EXE})
-add_custom_generated_copy_dependency_to_tools_dir (LIM2Patterns_python${EXE} LIM2Patterns_python LIM2Patterns${EXE})
-add_custom_generated_copy_dependency_to_tools_dir (Patterns LIM2Patterns_python Patterns DIRECTORY)
-add_custom_generated_copy_dependency_to_tools_dir (Lib LIM2Patterns_python Lib DIRECTORY)
+add_custom_generated_copy_dependency_to_tools_dir (LIM2Patterns${EXE})
+add_custom_generated_copy_dependency_to_tools_dir (Patterns LIM2Patterns Patterns DIRECTORY)
+add_custom_generated_copy_dependency_to_tools_dir (Lib LIM2Patterns Lib DIRECTORY)
 
 add_custom_generated_copy_dependency(
     ${OSA_TARGET_NAME}

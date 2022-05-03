@@ -18,45 +18,31 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var classDeclaration = factory.createClassDeclarationWrapper();
+        const classDeclaration = factory.createClassDeclarationWrapper();
         globals.setPositionInfo(node, classDeclaration);
         return classDeclaration;
     } else {
-        var classDeclarationWrapper = globals.getWrapperOfNode(node);
+        const classDeclarationWrapper = globals.getWrapperOfNode(node);
 
         if (node.superClass != null) {
-            var superClassWrapper = globals.getWrapperOfNode(node.superClass);
-            try {
-                classDeclarationWrapper.setSuperClass(superClassWrapper);
-            } catch (e) {
-                console.error("CLASSDECLARATION - Could not add superClass! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(classDeclarationWrapper, "setSuperClass", node.superClass, "CLASSDECLARATION - Could not add superClass!");
         }
 
         if (node.body != null) {
-            var bodyWrapper = globals.getWrapperOfNode(node.body);
-            try {
-                classDeclarationWrapper.setBody(bodyWrapper);
-            } catch (e) {
-                console.error("CLASSDECLARATION - Could not set body! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(classDeclarationWrapper, "setBody", node.body, "CLASSDECLARATION - Could not set body");
         }
 
         if (node.id != null) {
-            var identifierWrapper = globals.getWrapperOfNode(node.id);
-            try {
-                classDeclarationWrapper.setIdentifier(identifierWrapper);
-            } catch (e) {
-                console.error("CLASSDECLARATION - Could not set Identifier! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(classDeclarationWrapper, "setIdentifier", node.id, "CLASSDECLARATION - Could not set Identifier");
         }
 
     }

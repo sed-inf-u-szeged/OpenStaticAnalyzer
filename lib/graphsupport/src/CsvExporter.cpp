@@ -310,6 +310,7 @@ namespace columbus { namespace graphsupport {
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_CLASS].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ENUM].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_INTERFACE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
+      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_UNION].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_STRUCTURE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_METHOD].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FUNCTION].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
@@ -324,6 +325,7 @@ namespace columbus { namespace graphsupport {
     } else if (asg == graphconstants::HEADER_ASG_VALUE_C) { 
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ENUM].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_STRUCTURE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
+      nodeTypeMetricsMap[graphconstants::NTYPE_LIM_UNION].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_FUNCTION].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_ATTRIBUTE].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());
       nodeTypeMetricsMap[graphconstants::NTYPE_LIM_COMPONENT].insert(warningMetricsWithoutCalculatedFor.begin(), warningMetricsWithoutCalculatedFor.end());

@@ -61,42 +61,6 @@ namespace columbus {
         AvgWMC(bool enabled, SharedContainers* shared) : AvgBase("AvgWMC", "TWMC", "TNCL", enabled, shared) {}
       };
 
-      // Maintainability indices
-
-      class MIBase : public MetricHandler {
-      public:
-        MIBase(const std::string& name, bool enabled, SharedContainers* shared);
-      protected:
-        virtual double calc(double hvol, int mccc, int lloc, double cd) = 0;
-      };
-
-      class MI : public MIBase {
-      public:
-        MI(bool enabled, SharedContainers* shared) : MIBase("MI", enabled, shared) {}
-      protected:
-        double calc(double hvol, int mccc, int lloc, double cd) override;
-      };
-
-      class MISEI : public MIBase {
-      public:
-        MISEI(bool enabled, SharedContainers* shared) : MIBase("MISEI", enabled, shared) {}
-      protected:
-        double calc(double hvol, int mccc, int lloc, double cd) override;
-      };
-
-      class MIMS : public MIBase {
-      public:
-        MIMS(bool enabled, SharedContainers* shared) : MIBase("MIMS", enabled, shared) {}
-      protected:
-        double calc(double hvol, int mccc, int lloc, double cd) override;
-      };
-
-      class MISM : public MIBase {
-      public:
-        MISM(bool enabled, SharedContainers* shared) : MIBase("MISM", enabled, shared) {}
-      protected:
-        double calc(double hvol, int mccc, int lloc, double cd) override;
-      };
     }
   }
 }

@@ -18,28 +18,24 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var blockStatement = factory.createBlockStatementWrapper();
+        const blockStatement = factory.createBlockStatementWrapper();
         globals.setPositionInfo(node, blockStatement);
         return blockStatement;
     } else {
-        var blockStatementWrapper = globals.getWrapperOfNode(node);
+        const blockStatementWrapper = globals.getWrapperOfNode(node);
         if (node.body != null) {
-            for (var i = 0; i < node.body.length; i++) {
+            for (let i = 0; i < node.body.length; i++) {
                 if (node.body[i] != null) {
-                    var bodyWrapper = globals.getWrapperOfNode(node.body[i]);
-                    try {
-                        blockStatementWrapper.addBody(bodyWrapper);
-                    } catch (e) {
-                        console.error("BLOCKSTATEMENT - Could not add body! Reason of the error: " + e + "\n");
-                    }
+                    globals.safeSet(blockStatementWrapper, "addBody", node.body[i], "BLOCKSTATEMENT - Could not add body!");
                 }
             }
         }

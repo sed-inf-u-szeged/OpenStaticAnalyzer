@@ -9,10 +9,12 @@
 	url = https://github.com/sed-inf-u-szeged/pmd.git
 [submodule "3rdparty/python2"]
 	path = 3rdparty/python2
-	url = ../cpython
+	url = ../cpython.git
+	ignore = dirty
 [submodule "3rdparty/python3"]
 	path = 3rdparty/python3
-	url = ../cpython
+	url = ../cpython.git
+	ignore = dirty
 [submodule "cl/LIM2Patterns/pybind11"]
 	path = cl/LIM2Patterns/pybind11
 	url = https://github.com/pybind/pybind11
@@ -20,3 +22,12 @@
 	path = java/lib/openjdk
 	url = ../openjdk
 	ignore = dirty
+[submodule "3rdparty/clang"]
+	path = 3rdparty/clang
+	url = ../llvm-project
+[submodule "3rdparty/cppheck"]
+	path = 3rdparty/cppcheck
+	url = https://github.com/danmar/cppcheck.git
+[submodule "3rdparty/miniz"]
+	path = 3rdparty/miniz
+	url = https://github.com/richgel999/miniz.git

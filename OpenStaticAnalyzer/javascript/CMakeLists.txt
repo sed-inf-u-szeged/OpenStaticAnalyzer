@@ -31,11 +31,12 @@ add_custom_generated_copy_dependency_to_tools_dir (GraphMerge${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (JSAN2Lim${EXE})
 
 #copy JSAN and ESlintRunner
-add_custom_generated_copy_dependency (${OSA_TARGET_NAME} ${EXECUTABLE_OUTPUT_PATH}/node_modules ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/Tools/node_modules jsan JSAN jsan DIRECTORY)
-add_custom_generated_copy_dependency (${OSA_TARGET_NAME} ${EXECUTABLE_OUTPUT_PATH}/node_modules ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/Tools/node_modules eslintrunner ESLintRunner eslintrunner DIRECTORY)
+add_custom_generated_copy_dependency (${OSA_TARGET_NAME} ${EXECUTABLE_OUTPUT_PATH}/node_modules ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/Tools/node_modules jsan JSAN_virtual_target jsan DIRECTORY)
+add_custom_generated_copy_dependency (${OSA_TARGET_NAME} ${EXECUTABLE_OUTPUT_PATH}/node_modules ${OSA_PACKAGE_DIR}/${PACKAGE_LANG}/Tools/node_modules eslintrunner eslintrunner_virtual_target eslintrunner DIRECTORY)
 
 add_custom_generated_copy_dependency_to_tools_dir (rules_javascript.csv OpenStaticAnalyzerJavaScript)
 add_custom_generated_copy_dependency_to_tools_dir (ESLint.rul ESLint2Graph_copy_ESLint.rul)
+add_custom_generated_copy_dependency_to_tools_dir (TSLint.rul ESLint2Graph_copy_ESLint.rul TSLint.rul)
 add_custom_generated_copy_dependency_to_tools_dir (JSAN2ChangePath${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (ESLint2Graph${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (LIM2Metrics${EXE})
@@ -46,9 +47,9 @@ add_custom_generated_copy_dependency_to_tools_dir (MetricHunter_javascript${EXE}
 add_custom_generated_copy_dependency_to_tools_dir (MetricHunter_JAVASCRIPT.threshold MetricHunter_javascript_copy_MetricHunter_JAVASCRIPT.threshold MetricHunter.threshold)
 add_custom_generated_copy_dependency_to_tools_dir (UserDefinedMetrics${EXE})
 add_custom_generated_copy_dependency_to_tools_dir (Sonar2Graph${EXE})
-add_custom_generated_copy_dependency_to_tools_dir (LIM2Patterns_javascript${EXE} LIM2Patterns_javascript LIM2Patterns${EXE})
-add_custom_generated_copy_dependency_to_tools_dir (Patterns LIM2Patterns_javascript Patterns DIRECTORY)
-add_custom_generated_copy_dependency_to_tools_dir (Lib LIM2Patterns_javascript Lib DIRECTORY)
+add_custom_generated_copy_dependency_to_tools_dir (LIM2Patterns${EXE})
+add_custom_generated_copy_dependency_to_tools_dir (Patterns LIM2Patterns Patterns DIRECTORY)
+add_custom_generated_copy_dependency_to_tools_dir (Lib LIM2Patterns Lib DIRECTORY)
 
 #user's guide
 add_custom_generated_copy_dependency(

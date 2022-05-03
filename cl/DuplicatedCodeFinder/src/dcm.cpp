@@ -178,7 +178,7 @@ namespace columbus {
       columbus::genealogy::Component* component  = ci.getComponent();
       if (component == NULL)
         throw Exception(COLUMBUS_LOCATION, CMSG_EX_MISSING_COMPONENT_FOR_CI);
-      
+
       Factory* factory = currentFactory.operator ()(component->getLocation());
 
       // For computing F1, F2, F3, F4, F5 only the first subtree is used!
@@ -193,7 +193,7 @@ namespace columbus {
       F5: The relative position of the code segment inside its first named ancestor.
       F6: Lexical structure of the clone instance.
       */
-      
+
       // ============================ Computing F1 Attribute =========================================
       // The path (F1) is always stored 
       // ============================ Computing F2 Attribute =========================================
@@ -295,7 +295,7 @@ namespace columbus {
       }
 
     }
-    
+
     double DuplicatedCodeMiner::similarity(const columbus::genealogy::CloneInstance& from, const columbus::genealogy::CloneInstance& to) {
       static unsigned long counter = 0;
       double inf=std::numeric_limits<double>::infinity();
@@ -559,7 +559,6 @@ namespace columbus {
       ProcessPatternFilter()
         : sequence(NULL)
         , min_inst_length(0)
-        , filteredNodes(NULL)
         , dcm(NULL)
       {
 
@@ -571,7 +570,7 @@ namespace columbus {
       unsigned min_inst_length;
 
 
-      std::map<std::string, std::set<columbus::NodeId> >* filteredNodes;
+      std::set<unsigned> filteredNodeIndexes;
       DuplicatedCodeMiner *dcm;
 
     public:
@@ -595,12 +594,9 @@ namespace columbus {
           } else {
             if(drop_end !=0 && ( (drop_end - drop_begin) >= min_inst_length ) ) {
               // drop node at x position
-              for(unsigned i = drop_begin; i < drop_end; i++) {
-                ClonePositioned* clonePos = dcm->nodeIdSequence[i];
-                if(clonePos != NULL) {
-                  (*filteredNodes)[dcm->getAsgNameByLimId(clonePos->getLimComponentId(), *dcm->limFact)].insert(clonePos->getId());
-                }
-              }
+              for(unsigned i = drop_begin; i < drop_end; i++)
+                filteredNodeIndexes.insert(i);
+
             }
             drop_begin = 0;
             drop_end = 0;
@@ -610,12 +606,8 @@ namespace columbus {
 
         if(drop_end !=0 && ( (drop_end - drop_begin) >= min_inst_length ) ) {
           // drop node at x position
-          for(unsigned i = drop_begin; i < drop_end; i++) {
-            ClonePositioned* clonePos = dcm->nodeIdSequence[i];
-            if(clonePos != NULL) {
-              (*filteredNodes)[dcm->getAsgNameByLimId(clonePos->getLimComponentId(), *dcm->limFact)].insert(clonePos->getId());
-            }
-          }
+          for(unsigned i = drop_begin; i < drop_end; i++)
+            filteredNodeIndexes.insert(i);
         }
       }
     };
@@ -633,30 +625,35 @@ namespace columbus {
       ppf.sequence = &sequence;
       ppf.min_inst_length = config.patternMinFullLength;
       ppf.dcm = this;
-      ppf.filteredNodes = &filteredNodes;
 
       LinearSuffixArray<int> suffixArray(sequence);
       LinearSuffixArray<int>::Duplicateiterator lduplicateIterator = suffixArray.iterator(1, config.patternMaxSingleLength, config.patternMinFullLength, false);
 
 
       lduplicateIterator.run(ppf);
-      size_t count = 0;
-      for(std::map<string, std::set<columbus::NodeId> >::iterator it = filteredNodes.begin(); it != filteredNodes.end(); ++it) {
-        count+=it->second.size();
-      }
+      size_t count = ppf.filteredNodeIndexes.size();
 
       auto filterTime = common::getProcessUsedTime().user - time.user;
       common::WriteMsg::write(CMSG_NODE_FILTERED_OUT, count, filterTime);
 
       config.stat.filterTime += filterTime;
-
-
-      perfSectionHandler.addTimeStamp("reserialize");
-      // re serialize the asg/ast with filter
       if(count > 0)
-        serializeAsg(false);
+      {
+        // use unused nodekinds for pattern filtered nodes
+        int lastSeparator = *std::max_element(nodeKindSequence.begin(), nodeKindSequence.end());
+        if (lastSeparator < 1000)
+          lastSeparator = 1000;
 
-
+        for (size_t i = 0; i < nodeKindSequence.size(); ++i)
+        {
+          if (ppf.filteredNodeIndexes.find(i) != ppf.filteredNodeIndexes.end())
+          {
+            if (nodeKindSequence[i] > 0)
+              nodeKindSequence[i] = ++lastSeparator;
+          }
+        }
+      }
+      updateMemoryStat();
     }
 
     
@@ -665,19 +662,19 @@ namespace columbus {
       ofstream out;
       out.open(filename, ios::out | ios::trunc);
       
-      unsigned indent_size = 0;
+      int indent_size = 0;
       if(out.is_open())
       {
         for(auto node : nodeIdSequence)
         {
           if(node)
           {
-            for(unsigned i = 0; i < indent_size; ++i){
+            for(int i = 0; i < indent_size; ++i){
               out << " ";
             }
-            out <<  node->getStringPath() << " : " << node->getLine() << ":" << node->getCol() << " | " << node->getEndLine() << ":" << node->getEndCol() << endl;
+            out <<  node->getId() << " " << LANGUAGE_NAMESPACE::Common::toString((LANGUAGE_NAMESPACE::NodeKind)node->getNodeKind()) << " " << node->getStringPath() << " : " << node->getLine() << ":" << node->getCol() << " | " << node->getEndLine() << ":" << node->getEndCol() << endl;
             indent_size += 2;
-          }else{
+          } else {
             out << endl;
             indent_size -= 2;
           }
@@ -692,17 +689,23 @@ namespace columbus {
       int indent_size = 0;
       if(out.is_open())
       {
-        for(auto kind : nodeKindSequence)
+        for(size_t i = 0; i < nodeKindSequence.size(); ++i)
         {
-          if(kind == -2){
+          int kind = nodeKindSequence[i];
+
+          if(kind == -2 && indent_size > 0 ){
             indent_size -= 2;
           }
           for(int i = 0; i < indent_size; ++i){
             out << " ";
           }
-          out << kind << endl;
+          auto nodeInfo = nodeIdSequence[i];
+          if (!nodeInfo)
+            out << kind << endl;
+          else
+            out << kind << " " << nodeInfo->getId() << " " << LANGUAGE_NAMESPACE::Common::toString((LANGUAGE_NAMESPACE::NodeKind)nodeInfo->getNodeKind()) << " " << nodeInfo->getStringPath() << " : " << nodeInfo->getLine() << ":" << nodeInfo->getCol() << " | " << nodeInfo->getEndLine() << ":" << nodeInfo->getEndCol() << endl;
           
-          if(kind != -2)
+          if(kind > 0)
             indent_size += 2;
           
         }
@@ -724,9 +727,8 @@ namespace columbus {
       common::WriteMsg::write(CMSG_DETECTING_CLONES);
       nodeKindSequence.push_back(theCloneVisitor->getUniqueValue());
 
-      /**
-      * suffix array patch
-      */
+      // Debug
+      // dumpNodeKindSequence("NodeKindSequence.txt");
 
       time = common::getProcessUsedTime();
 
@@ -973,7 +975,7 @@ namespace columbus {
           graph.createDirectedEdge(classItem, theComponent, graphsupport::graphconstants::ETYPE_LIM_COMPONENT, true);
         }
         // set clone class metrics
-        if (!cc.getIsVirtual()){
+        if (!cc.getIsVirtual()) {
 
           if (getIsNeeded("CLLOC")) {
             columbus::graphsupport::setMetricFloat(graph, classItem, "CLLOC", (float)cc.getClloc());
@@ -998,7 +1000,7 @@ namespace columbus {
           if (getIsNeeded("NCR")) {
             columbus::graphsupport::incMetricFloat(graph, classItem, "NCR", (float)cc.getNcrad());
           }
-          
+
           //CLLOC * CI * CCO * NCR * CS
           if (getIsNeeded("CR")) {
             columbus::graphsupport::setMetricFloat(graph, classItem, "CR", (float)cc.getRisk());
@@ -1221,7 +1223,7 @@ namespace columbus {
                       columbus::graphsupport::setMetricFloat(graph, gNode, "CLLC", (float)numCoveredLogicalLines/numLogicalLines);
                     }
 
-                  
+
                     if (getIsNeeded("LLDC")){
                       columbus::graphsupport::setMetricInt(graph, gNode, "LLDC", numCoveredLogicalLines);
                     }
@@ -1314,7 +1316,7 @@ namespace columbus {
                           numLogicalLines++;
                         }
                       }
-
+                      
                       std::vector<LineIdentifier> itersection(max(coveredLines.size(),logicalLines.size()));
                       std::vector<LineIdentifier>::iterator retIterator;
                       retIterator = std::set_intersection(coveredLines.begin(),coveredLines.end(),logicalLines.begin(),logicalLines.end(),itersection.begin());
@@ -1326,7 +1328,7 @@ namespace columbus {
                           numCoveredLogicalLines++;
                         }
                       }
-
+                      
                       if (getIsNeeded("CLLC")){
                         columbus::graphsupport::removeMetric(graph, gNode, "CLLC");
                         columbus::graphsupport::setMetricFloat(graph, gNode, "CLLC", (float)numCoveredLogicalLines/numLogicalLines);
@@ -1348,12 +1350,11 @@ namespace columbus {
               time_lineMetrics += common::getProcessUsedTime().user - time_calculateLineMetrics.user;
               
             }
-          } 
+          }
         }
       }
 
       //calculate CC and CCO metrics for clone instances and classes and set it on the genealogy.
-
       for(genealogy::ListIterator<genealogy::CloneClass> cloneClassIt = currentSystem->getCloneClassesListIteratorBegin();cloneClassIt != currentSystem->getCloneClassesListIteratorEnd();++cloneClassIt) {
         columbus::genealogy::CloneClass& cc= (columbus::genealogy::CloneClass&) cloneClassIt->getFactory().getRef(  cloneClassIt->getId());
         if (cc.getIsVirtual())
@@ -1501,7 +1502,7 @@ namespace columbus {
 
 
         if (getIsNeeded("CLLOC")) {
-          cc.setClloc(((float)avgLocSum) / instances.size());
+          cc.setClloc(((float)avgLocSum) / instances.size()/*avgLocNum*/);
         }
         // NCR, CE, CV, CR, CEE, CEG
         if (getIsNeeded("NCR")) {
@@ -1661,23 +1662,6 @@ namespace columbus {
       return instanceRootIds;
     }
 
-    void DuplicatedCodeMiner::serializeAsg(Factory& factory, NodeId componentLimId, std::vector<int>& nodeKindSequence, std::vector<ClonePositioned*>& nodeIdSequence, int& decDepthSign, columbus::lim::asg::Factory*  _limFact) {
-
-      CloneVisitorBase* cloneVisitor = new CloneVisitorBase(visitedLines, visitedLimNodes,limOrigin ,nodeKindSequence, nodeIdSequence, CloneVisitorBase::schemaOnly, config.ofc, false, _limFact);
-
-      cloneVisitor->setFactory(&factory, componentLimId);
-      //  factory.turnFilterOff(); // the lim filter is the valid. 
-      WriteMsg::write(CMSG_LOAD_ASG_DONE);
-      updateMemoryStat();
-      nodeKindSequence.clear();
-      clearNodeIdSequence(nodeIdSequence);
-
-      traversalPosiotionedNodes(factory, cloneVisitor,"");
-
-      decDepthSign = cloneVisitor->getDecDepthSign();
-      delete cloneVisitor;
-    }
-
     int DuplicatedCodeMiner::serializeAsg(bool createComponent)
     {
       auto perfSectionHandler = common::PerformanceLogger::getPerformanceLogger().startSection("serializeAsg()");
@@ -1769,7 +1753,6 @@ namespace columbus {
       }
 
       config.stat.asgSerializationTime += common::getProcessUsedTime().user - serializeTime.user;
-
       return exit_code;
     }
 
@@ -1793,7 +1776,7 @@ namespace columbus {
         return EXIT_FAILURE;
       }
       updateMemoryStat();
-      
+
       do {
         // first we need to reset the state of the objects below (in case that DCF is being executed for the second time)
         first=!first;
@@ -1832,7 +1815,7 @@ namespace columbus {
       } while (maxCCSize && needToSkip.size()>0 && first);
 
       common::timestat time = common::getProcessUsedTime();
-     
+
       updateMemoryStat();
       WriteMsg::write(CMSG_CONVERTING_TO_GRAPH);
       TOGRAPH::convertBaseGraph(*limFact, graph, true, true, /*components=*/ true, /*variants=*/ true);
@@ -1871,7 +1854,7 @@ namespace columbus {
 
         updateMemoryStat();
         WriteMsg::write(CMSG_BUILD_CE);
-        
+
         for  (std::list<std::string>::iterator fileIter=config.files.begin();fileIter!=config.files.end();++fileIter) {
           std::string componenetID;
           currentFactory.loadComponent(*fileIter,false,NULL,&componenetID);
@@ -2295,7 +2278,7 @@ namespace columbus {
               cloneInstanceNext->setEndCol(itm.getEndCol());
 
               itm.addNext(cloneInstanceNext);
-            } 
+            }
           }
         }
 
@@ -2746,7 +2729,7 @@ namespace columbus {
             limNodeClineInstanceMap[ci.getId()].insert(nodePos->getLimNodeId());
             limComponentClineInstanceMap[ci.getId()].insert(nodePos->getLimComponentId());
             lastLimNodeID = nodePos->getLimNodeId();
-          } 
+          }
         }
       }
 
@@ -3521,7 +3504,7 @@ namespace columbus {
           if (cp->getLimComponentId() == componenetId){
             int cco = 0;
             COVERAGE_VISITOR coverageVisitor;
-           
+
             for (int i = 0; i < length; ++i) {
               const ClonePositioned* position = getNode(sequencePos + i);
               if (position) {
@@ -3532,7 +3515,7 @@ namespace columbus {
               }
             }
             ci.setCco(cco+1);
-          } 
+          }
         }
       }
     }

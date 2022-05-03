@@ -17,17 +17,13 @@ The following table summarizes the metrics, their abbreviations and their corres
   Category               Metric name                     Abbreviation   Class   Component   File   Function   Method 
   ---------------------- ------------------------------- ------------- ------- ----------- ------ ---------- --------
   Complexity metrics     McCabe's Cyclomatic Complexity  McCC                              X      X          X       
-                         Nesting Level                   NL            X                          X          X       
-                         Nesting Level Else-If           NLE           X                          X          X       
                          Weighted Methods per Class      WMC           X                                             
   Documentation metrics  API Documentation               AD            X                                             
-                         Comment Density                 CD            X                          X          X       
                          Comment Lines of Code           CLOC          X                   X      X          X       
                          Documentation Lines of Code     DLOC          X                          X          X       
                          Public Documented API           PDA           X                                             
                          Public Undocumented API         PUA           X                                             
                          Total API Documentation         TAD                   X                                     
-                         Total Comment Density           TCD           X       X                  X          X       
                          Total Comment Lines of Code     TCLOC         X       X                  X          X       
                          Total Public Documented API     TPDA                  X                                     
                          Total Public Undocumented API   TPUA                  X                                     
@@ -67,19 +63,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 **File:** complexity of the file expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity values of the methods can be found in the file.
 
 
-#### Nesting Level (NL) {#NL}
-
-**Method, Function:** complexity of the method/function expressed as the depth of the maximum embeddedness of its conditional, iteration  and exception handling block scopes. The following instructions are taken into account: if, else-if, else, for, for-in, for-of, while, do-while, switch, try, catch, finally and block statements that are directly inside another block statement. The following instructions do not increase the value by themselves; however, if additional embeddedness can be found in their blocks, they are considered: case and default label (which belong to a switch instruction).
-
-**Class:** complexity of the class expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes. It is calculated as the maximum nesting level (NL) of its local methods.
-
-
-#### Nesting Level Else-If (NLE) {#NLE}
-**Method, Function:** complexity of the method/function expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes, where in the if-else-if construct only the first if instruction is considered. The following instructions are taken into account: if, for, while, conditional expression. The following instructions do not increase the value by themselves; however, if additional embeddedness can be found in their blocks, they are considered: else, else if (i.e. in the if-else-if construct the use of else-if does not increase the value of the metric), try, except, finally.
-
-**Class:** complexity of the class expressed as the depth of the maximum embeddedness of its conditional and iteration block scopes, where in the if-else-if construct only the first if instruction is considered. It is calculated as the maximum nesting level (NLE) of its local methods.
-
-
 #### Weighted Methods per Class (WMC) {#WMC}
 
 **Class:** complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe’s Cyclomatic Complexity (McCC) values of its local methods.
@@ -89,12 +72,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 
 #### API Documentation (AD) {#AD}
 **Class:** ratio of the number of documented methods in the class +1 if the class itself is documented to the number of all methods in the class + 1 (the class itself).
-
-#### Comment Density (CD) {#CD}
-**Method, Function:** ratio of the comment lines of the method/function (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).
-
-**Class:** ratio of the comment lines of the class (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).
-
 
 #### Comment Lines of Code (CLOC) {#CLOC}
 **Method, Function:** number of comment and documentation code lines of the method/function; however, its anonymous and local classes are not included.
@@ -123,15 +100,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 #### Total API Documentation (TAD) {#TAD}
  
 **Component:** ratio of the number of documented classes and methods in the component to the number of all of its classes and methods, including its subcomponents.
-
-
-#### Total Comment Density (TCD) {#TCD}
-
-**Method/Function:** ratio of the total comment lines of the method/function (TCLOC) to the sum of its total comment (TCLOC) and total logical lines of code (TLLOC).
-
-**Class:** ratio of the total comment lines of the class (TCLOC) to the sum of its total comment (TCLOC) and total logical lines of code (TLLOC).
-
-**Component:** ratio of the total comment lines of the component (TCLOC) to the sum of its total comment (TCLOC) and total logical lines of code (TLLOC).
 
 
 #### Total Comment Lines of Code (TCLOC) {#TCLOC}

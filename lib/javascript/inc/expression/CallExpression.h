@@ -42,7 +42,7 @@ namespace expression {
   *   - hasArguments (base::Positioned, multiple) : (missing)
   *   - calls (statement::Function, multiple) : (missing)
   */
-  class CallExpression : public Expression {
+  class CallExpression : public Expression, public ChainElement {
     protected:
       /**
       * \internal

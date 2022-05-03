@@ -561,7 +561,7 @@ namespace columbus {  namespace io {
   }
 
   void BinaryIO::setEndianState(EndianType endianState) {
-    endianState = endianState;
+    this->endianState = endianState;
   }
 
   BinaryIO::EndianType BinaryIO::getEndianState() {

@@ -162,16 +162,16 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visit(const expression::AssignmentExpression& node,bool callVirtualBase = true);
 
       /**
-      * \brief Visitor to create statistics about expression::AssignmentProperty node.
-      * \param node [in] The node which is visited.
-      */
-      virtual void visit(const expression::AssignmentProperty& node,bool callVirtualBase = true);
-
-      /**
       * \brief Visitor to create statistics about expression::AwaitExpression node.
       * \param node [in] The node which is visited.
       */
       virtual void visit(const expression::AwaitExpression& node,bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor to create statistics about expression::BigIntLiteral node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::BigIntLiteral& node,bool callVirtualBase = true);
 
       /**
       * \brief Visitor to create statistics about expression::BinaryExpression node.
@@ -190,6 +190,18 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visit(const expression::CallExpression& node,bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor to create statistics about expression::ChainElement node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::ChainElement& node,bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor to create statistics about expression::ChainExpression node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::ChainExpression& node,bool callVirtualBase = true);
 
       /**
       * \brief Visitor to create statistics about expression::ClassExpression node.
@@ -220,6 +232,12 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visit(const expression::Identifier& node,bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor to create statistics about expression::ImportExpression node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::ImportExpression& node,bool callVirtualBase = true);
 
       /**
       * \brief Visitor to create statistics about expression::Literal node.
@@ -268,6 +286,12 @@ namespace columbus { namespace javascript { namespace asg {
       * \param node [in] The node which is visited.
       */
       virtual void visit(const expression::ObjectExpression& node,bool callVirtualBase = true);
+
+      /**
+      * \brief Visitor to create statistics about expression::PrivateIdentifier node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const expression::PrivateIdentifier& node,bool callVirtualBase = true);
 
       /**
       * \brief Visitor to create statistics about expression::Property node.
@@ -564,6 +588,12 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visit(const structure::ModuleSpecifier& node,bool callVirtualBase = true);
 
       /**
+      * \brief Visitor to create statistics about structure::PropertyDefinition node.
+      * \param node [in] The node which is visited.
+      */
+      virtual void visit(const structure::PropertyDefinition& node,bool callVirtualBase = true);
+
+      /**
       * \brief Edge visitor for comments edge which.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -590,6 +620,13 @@ namespace columbus { namespace javascript { namespace asg {
       * \param end   [in] The reference of the node the edge points to.
       */
       virtual void visitExportAllDeclaration_HasSource(const declaration::ExportAllDeclaration& begin, const expression::Literal& end);
+
+      /**
+      * \brief Edge  visitor for hasExported edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitExportAllDeclaration_HasExported(const declaration::ExportAllDeclaration& begin, const expression::Identifier& end);
 
       /**
       * \brief Edge  visitor for hasDeclaration edge which is called when the subtree of this edge is started.
@@ -687,7 +724,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const expression::Expression& end);
+      virtual void visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasRight edge which is called when the subtree of this edge is started.
@@ -718,6 +755,13 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end);
 
       /**
+      * \brief Edge  visitor for hasExpression edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitChainExpression_HasExpression(const expression::ChainExpression& begin, const expression::ChainElement& end);
+
+      /**
       * \brief Edge  visitor for hasAlternate edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -746,6 +790,13 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitIdentifier_RefersTo(const expression::Identifier& begin, const base::Positioned& end);
 
       /**
+      * \brief Edge  visitor for hasSource edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitImportExpression_HasSource(const expression::ImportExpression& begin, const expression::Expression& end);
+
+      /**
       * \brief Edge  visitor for hasLeft edge which is called when the subtree of this edge is started.
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
@@ -764,7 +815,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const expression::Expression& end);
+      virtual void visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasObject edge which is called when the subtree of this edge is started.
@@ -1191,7 +1242,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitClassBody_HasBody(const structure::ClassBody& begin, const structure::MethodDefinition& end);
+      virtual void visitClassBody_HasBody(const structure::ClassBody& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasExported edge which is called when the subtree of this edge is started.
@@ -1212,7 +1263,7 @@ namespace columbus { namespace javascript { namespace asg {
       * \param begin [in] The reference of the node the edge starts from.
       * \param end   [in] The reference of the node the edge points to.
       */
-      virtual void visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const expression::Expression& end);
+      virtual void visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const base::Positioned& end);
 
       /**
       * \brief Edge  visitor for hasValue edge which is called when the subtree of this edge is started.
@@ -1228,15 +1279,29 @@ namespace columbus { namespace javascript { namespace asg {
       */
       virtual void visitModuleSpecifier_HasLocal(const structure::ModuleSpecifier& begin, const expression::Identifier& end);
 
+      /**
+      * \brief Edge  visitor for hasKey edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitPropertyDefinition_HasKey(const structure::PropertyDefinition& begin, const base::Positioned& end);
+
+      /**
+      * \brief Edge  visitor for hasValue edge which is called when the subtree of this edge is started.
+      * \param begin [in] The reference of the node the edge starts from.
+      * \param end   [in] The reference of the node the edge points to.
+      */
+      virtual void visitPropertyDefinition_HasValue(const structure::PropertyDefinition& begin, const expression::Expression& end);
+
     protected:
       /** \internal \brief Contains statistics about nodes. */
-      unsigned int nodeStatSimple[86];
+      unsigned int nodeStatSimple[91];
 
       /** \internal \brief Contains statistics about nodes (where the node is counted in all parents statistic). */
-      unsigned int nodeStatParent[86];
+      unsigned int nodeStatParent[91];
 
       /** \internal \brief Contains statistics about edges. */
-      unsigned int edgeStat[95];
+      unsigned int edgeStat[100];
 
       friend class Factory;
 

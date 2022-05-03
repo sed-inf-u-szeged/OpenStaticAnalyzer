@@ -18,29 +18,24 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
+const factory = globals.getFactory();
 
-module.exports = function (node, parent, firstVisit) {
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var sequenceExpression = factory.createSequenceExpressionWrapper();
+        const sequenceExpression = factory.createSequenceExpressionWrapper();
         globals.setPositionInfo(node, sequenceExpression);
         return sequenceExpression;
     } else {
-        var sequenceExpressionWrapper = globals.getWrapperOfNode(node);
+        const sequenceExpressionWrapper = globals.getWrapperOfNode(node);
         if (node.expressions != null) {
-            for (var i = 0; i < node.expressions.length; i++) {
+            for (let i = 0; i < node.expressions.length; i++) {
                 if (node.expressions[i] != null) {
-                    var expressionsWrapper = globals.getWrapperOfNode(node.expressions[i]);
-                    try {
-                        sequenceExpressionWrapper.addExpressions(expressionsWrapper);
-                    } catch (e) {
-                        console.error("SEQUENCEEXPRESSION - Could not add expression! Reason of the error: " + e + "\n");
-                    }
+                    globals.safeSet(sequenceExpressionWrapper, "addExpressions", node.expressions[i], "SEQUENCEEXPRESSION - Could not add expression!");
                 }
             }
         }

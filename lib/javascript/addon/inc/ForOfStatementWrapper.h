@@ -45,7 +45,7 @@ namespace columbus { namespace javascript { namespace asg { namespace addon {
       static napi_value setBody(napi_env env, napi_callback_info info);
       static napi_value setLeft(napi_env env, napi_callback_info info);
       static napi_value addComments(napi_env env, napi_callback_info info);
-      static napi_value setAsync(napi_env env, napi_callback_info info);
+      static napi_value setAwait(napi_env env, napi_callback_info info);
       static napi_value setPath(napi_env env, napi_callback_info info);
       static napi_value setPosition(napi_env env, napi_callback_info info);
   }; //end of ForOfStatementWrapper

@@ -18,38 +18,87 @@
  *  limitations under the Licence.
  */
 
-const fs =              require('fs');
-const path =            require('path');
-const getUsage =        require('command-line-usage');    //for printing the usage
-const commandLineArgs = require('command-line-args');      //for parsing command line args
-const toolDescription = require('./toolDescription');   //Tool description
+import * as fs from 'fs';
+import * as path from 'path';
+import {default as getUsage} from 'command-line-usage';
+import {default as commandLineArgs} from 'command-line-args';
+import * as toolDescription from './toolDescription.js';
+import * as globals from '../globals.js';
+import {isNull} from "../util/util.js";
 
 //List of command line options
 const definitions = [
-  { name: 'input', alias: 'i', type: String, multiple: true, defaultOption: true, description: 'Input file(s) or directory to be analyzed. Note: simply giving the input file(s) or directory after the last command line parameter will have the same effect too.' },
-  { name: 'out', alias: 'o', type: String, defaultValue: 'out', description: 'The output filename for the results to be saved in. It will contain the results in binary format.' },
-  { name: 'dumpjsml', alias: 'd', type: Boolean, defaultValue: false, description: 'Dump the output into an XML-style file.' },
-  { name: 'externalHardFilter', alias: 'e', type: String, description: 'Filter file specified with relative or absolute path, to filter out certain files from the analysis based on their path names. Filtered files will not appear in the results. The filter file is a simple text file containing lines starting with '+' or '-' characters followed by a regular expression. During the analysis, each input file will be checked for these expressions. If the first character of the last matching expression is '-', then the given file will be excluded from the analysis. If the first character of the last matching expression is '+', or there is no matching expression, then the file will be analyzed. A line starting with a different character than "-" or "+" will be ignored.' },
-  { name: 'help', type: Boolean, defaultValue: false, description: 'Prints out the help of JSAN.' },
-  { name: 'useRelativePath', alias: 'r', type: Boolean, defaultValue: false, description: 'Relative paths are used in the output if this option is given.' },
-  { name: 'html', alias: 'h', type: Boolean, description: 'Analyze not only JavaScript files but extracts JavaScript code snippets from HTML files too if this option is given.' },
-  { name: 'stat', type: String, defaultValue: false, description: 'Write memory and runtime stats to the given file.'}
+    {
+        name: 'input',
+        alias: 'i',
+        type: String,
+        multiple: true,
+        defaultOption: true,
+        description: 'Input file(s) or directory to be analyzed. Note: simply giving the input file(s) or directory after the last command line parameter will have the same effect too.'
+    },
+    {
+        name: 'out',
+        alias: 'o',
+        type: String,
+        defaultValue: 'out',
+        description: 'The output filename for the results to be saved in. It will contain the results in binary format.'
+    },
+    {
+        name: 'dumpjsml',
+        alias: 'd',
+        type: Boolean,
+        defaultValue: false,
+        description: 'Dump the output into an XML-style file.'
+    },
+    {
+        name: 'externalHardFilter',
+        alias: 'e',
+        type: String,
+        description: 'Filter file specified with relative or absolute path, to filter out certain files from the analysis based on their path names. Filtered files will not appear in the results. The filter file is a simple text file containing lines starting with " + " or " - " characters followed by a regular expression. During the analysis, each input file will be checked for these expressions. If the first character of the last matching expression is  " - ", then the given file will be excluded from the analysis. If the first character of the last matching expression is " + ", or there is no matching expression, then the file will be analyzed. A line starting with a different character than "-" or "+" will be ignored.'
+    },
+    {
+        name: 'help',
+        type: Boolean,
+        defaultValue: false,
+        description: 'Prints out the help of JSAN.'
+    },
+    {
+        name: 'useRelativePath',
+        alias: 'r',
+        type: Boolean,
+        defaultValue: false,
+        description: 'Relative paths are used in the output if this option is given.'
+    },
+    {
+        name: 'html',
+        alias: 'h',
+        type: Boolean,
+        description: 'Analyze not only JavaScript files but extracts JavaScript code snippets from HTML files too if this option is given.'
+    },
+    {
+        name: 'stat',
+        type: String,
+        defaultValue: false,
+        description: 'Write memory and runtime stats to the given file.'
+    },
+    //{ name: 'saveEspreeAst', alias: 's', type: Boolean, description: 'Save the AST constructed by Espree into a JSON-style file.' },
+
 ];
 
 //sections of usage
 const sections = [
-  {
-      content: toolDescription.banner,
-      raw: true
-  },
-  {
-      header: toolDescription.header,
-      content: toolDescription.description
-  },
-  {
-      header: 'Options',
-      optionList: definitions
-  }
+    {
+        content: toolDescription.banner,
+        raw: true
+    },
+    {
+        header: toolDescription.header,
+        content: toolDescription.description
+    },
+    {
+        header: 'Options',
+        optionList: definitions
+    }
 ];
 
 const usage = getUsage(sections); //construction of usage text
@@ -58,33 +107,26 @@ function printUsage() {
     console.log(usage);
 }
 
-//Exports
-module.exports.printUsage = printUsage;
 
-module.exports.parse = function(){
-    var options;
-    try{
+let parse = function () {
+    let options;
+    try {
         options = commandLineArgs(definitions);
         options = checkOptions(options);
-    }
-    catch(e){
+    } catch (e) {
         console.error("Bad command line!");
         console.log(e);
         printUsage();
     }
 
     return options;
-    
+
 };
 
 
-function isNull(parameter) {
-    return typeof parameter === "undefined" || parameter === null;
-}
-
 //checks whether the parsed command line options are correct
 function checkOptions(parsedOptions) {
-    var i; // used in the for loops
+    let i; // used in the for loops
 
     //help
     if (parsedOptions.help) {
@@ -132,14 +174,13 @@ function checkOptions(parsedOptions) {
 
 //recursive function which fill the input list
 function constructInputList(inputFile, parsedOptions) {
-
     if (fs.lstatSync(inputFile).isDirectory()) {
-        var dirContent = fs.readdirSync(inputFile);
-        for (var i = 0; i < dirContent.length; i++) {
+        const dirContent = fs.readdirSync(inputFile);
+        for (let i = 0; i < dirContent.length; i++) {
             constructInputList(path.join(inputFile, dirContent[i]), parsedOptions);
         }
     } else {
-        if (path.extname(inputFile) !== ".js" && path.extname(inputFile) !== ".html" || externalHardFiltering(inputFile, parsedOptions.hardFilterArray)) {
+        if (!globals.supportedExts.includes(path.extname(inputFile)) || externalHardFiltering(inputFile, parsedOptions.hardFilterArray)) {
             return;
         }
 
@@ -156,8 +197,8 @@ function externalHardFiltering(inputFile, hardFilterArray) {
         return;
     }
 
-    var filterIt = false;
-    for (var i = 0; i < hardFilterArray.length; i++) {
+    let filterIt = false;
+    for (let i = 0; i < hardFilterArray.length; i++) {
         if (inputFile.match(hardFilterArray[i].regex)) {
             filterIt = hardFilterArray[i].filter;
         }
@@ -169,8 +210,8 @@ function externalHardFiltering(inputFile, hardFilterArray) {
 }
 
 function getHardFilterFiles(hardFilterFile) {
-    var hardFilterArray = [];
-    if(!fs.existsSync(hardFilterFile)){
+    let hardFilterArray = [];
+    if (!fs.existsSync(hardFilterFile)) {
         console.warn("Hard filter file: " + hardFilterFile + " does not exist. Filtering step is being skipped.");
         return hardFilterArray;
     }
@@ -178,23 +219,32 @@ function getHardFilterFiles(hardFilterFile) {
     if (fs.lstatSync(hardFilterFile).isFile() && path.extname(hardFilterFile) === ".txt") {
         fs.readFileSync(hardFilterFile).toString().split('\n').forEach(function (line) {
             //if empty line then continue
-            if (line.trim().length == 0){
+            if (line.trim().length === 0) {
                 return;
             }
             let firstChar = line.substring(0, 1);
             let regex = line.substring(1, line.length);
-            if (regex.endsWith("\r")){
-                regex = regex.substring(0, regex.length-1);
+            if (regex.endsWith("\r")) {
+                // regex = regex.substring(0, regex.length - 1);
+                regex = regex.trim();
             }
             regex = ".*" + regex + ".*";
 
-            if (firstChar === "-") {
-                hardFilterArray.push({ regex: regex, filter: true });
-            } else if (firstChar === "+") {
-                hardFilterArray.push({ regex: regex, filter: false });
-            } else if (firstChar !== "#") {
-                console.error("External hard filter contains an invalid line: " + line +"\n");
+            // validate the regex
+            // if the regex is faulty, throw an error here
+            try {
+                new RegExp(regex);
+            } catch (err) {
+                console.error(`The following regex is not valid and is being skipped from filtering: "${regex}"`);
                 return;
+            }
+
+            if (firstChar === "-") {
+                hardFilterArray.push({regex: regex, filter: true});
+            } else if (firstChar === "+") {
+                hardFilterArray.push({regex: regex, filter: false});
+            } else if (firstChar !== "#") {
+                console.error("External hard filter contains an invalid line: " + line + "\n");
             }
         });
     } else {
@@ -203,3 +253,6 @@ function getHardFilterFiles(hardFilterFile) {
 
     return hardFilterArray;
 }
+
+
+export {printUsage, parse}

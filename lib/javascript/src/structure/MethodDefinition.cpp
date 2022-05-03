@@ -80,10 +80,10 @@ namespace structure {
     m_static = _static;
   }
 
-  expression::Expression* MethodDefinition::getKey() const {
-    expression::Expression *_node = NULL;
+  base::Positioned* MethodDefinition::getKey() const {
+    base::Positioned *_node = NULL;
     if (m_hasKey != 0)
-      _node = dynamic_cast<expression::Expression*>(factory->getPointer(m_hasKey));
+      _node = dynamic_cast<base::Positioned*>(factory->getPointer(m_hasKey));
     if ( (_node == NULL) || factory->getIsFiltered(_node))
       return NULL;
 
@@ -135,28 +135,32 @@ namespace structure {
   }
 
   void MethodDefinition::setKey(NodeId _id) {
-    expression::Expression *_node = NULL;
+    base::Positioned *_node = NULL;
     if (_id) {
       if (!factory->getExist(_id))
         throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_END_POINT_OF_THE_EDGE_DOES_NOT_EXIST);
 
-      _node = dynamic_cast<expression::Expression*> (factory->getPointer(_id));
+      _node = dynamic_cast<base::Positioned*> (factory->getPointer(_id));
       if ( _node == NULL) {
         throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
       if (&(_node->getFactory()) != this->factory)
         throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_THE_FACTORY_OF_NODES_DOES_NOT_MATCH );
 
-      if (m_hasKey) {
-        removeParentEdge(m_hasKey);
+      if (Common::getIsBaseClassKind(_node->getNodeKind(), ndkExpression) || _node->getNodeKind() == ndkPrivateIdentifier) {
+        if (m_hasKey) {
+          removeParentEdge(m_hasKey);
+          if (factory->getExistsReverseEdges())
+            factory->reverseEdges->removeEdge(m_hasKey, m_id, edkMethodDefinition_HasKey);
+        }
+        m_hasKey = _node->getId();
+        if (m_hasKey != 0)
+          setParentEdge(factory->getPointer(m_hasKey), edkMethodDefinition_HasKey);
         if (factory->getExistsReverseEdges())
-          factory->reverseEdges->removeEdge(m_hasKey, m_id, edkMethodDefinition_HasKey);
+          factory->reverseEdges->insertEdge(m_hasKey, this->getId(), edkMethodDefinition_HasKey);
+      } else {
+        throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
       }
-      m_hasKey = _node->getId();
-      if (m_hasKey != 0)
-        setParentEdge(factory->getPointer(m_hasKey), edkMethodDefinition_HasKey);
-      if (factory->getExistsReverseEdges())
-        factory->reverseEdges->insertEdge(m_hasKey, this->getId(), edkMethodDefinition_HasKey);
     } else {
       if (m_hasKey) {
         throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
@@ -164,7 +168,7 @@ namespace structure {
     }
   }
 
-  void MethodDefinition::setKey(expression::Expression *_node) {
+  void MethodDefinition::setKey(base::Positioned *_node) {
     if (_node == NULL)
       throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_CAN_T_SET_EDGE_TO_NULL);
 

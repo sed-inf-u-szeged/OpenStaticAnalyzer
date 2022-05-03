@@ -32,12 +32,12 @@ namespace columbus { namespace javascript { namespace asg {
   /**
   * \brief The API version of the schema.
   */
-  const std::string APIVersion = "0.2.3";
+  const std::string APIVersion = "0.2.6";
 
   /**
   * \brief The binary version of the schema.
   */
-  const std::string BinaryVersion = "0.2.3";
+  const std::string BinaryVersion = "0.2.6";
 
 
 }}}

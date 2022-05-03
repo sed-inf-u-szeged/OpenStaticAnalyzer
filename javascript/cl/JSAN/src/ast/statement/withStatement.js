@@ -18,36 +18,27 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var withStatement = factory.createWithStatementWrapper();
+        const withStatement = factory.createWithStatementWrapper();
         globals.setPositionInfo(node, withStatement);
         return withStatement;
     } else {
-        var withStatementWrapper = globals.getWrapperOfNode(node);
+        const withStatementWrapper = globals.getWrapperOfNode(node);
 
         if (node.object != null) {
-            var objectWrapper = globals.getWrapperOfNode(node.object);
-            try {
-                withStatementWrapper.setObject(objectWrapper);
-            } catch (e) {
-                console.error("WITHSTATEMENT - Could not set object! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(withStatementWrapper, "setObject", node.object, "WITHSTATEMENT - Could not set object!");
         }
 
         if (node.body != null) {
-            var bodyWrapper = globals.getWrapperOfNode(node.body);
-            try {
-                withStatementWrapper.setBody(bodyWrapper);
-            } catch (e) {
-                console.error("WITHSTATEMENT - Could not set body! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(withStatementWrapper, "setBody", node.body, "WITHSTATEMENT - Could not set body!");
         }
 
     }

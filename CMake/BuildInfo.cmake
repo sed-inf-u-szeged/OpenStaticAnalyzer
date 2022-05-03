@@ -11,4 +11,9 @@ add_custom_target (
 set_target_properties (generate_build_info PROPERTIES FOLDER ${CMAKE_SUPPORT_FOLDER_NAME})
 
 
+cmake_host_system_information(RESULT HOST_INFO
+                              QUERY TOTAL_PHYSICAL_MEMORY NUMBER_OF_LOGICAL_CORES NUMBER_OF_PHYSICAL_CORES)
 
+list (GET HOST_INFO 0 PHYSYCAL_MEMORY)
+list (GET HOST_INFO 1 LOGICAL_CORES)
+list (GET HOST_INFO 2 PHYSICAL_CORES)

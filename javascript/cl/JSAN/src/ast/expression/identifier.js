@@ -18,15 +18,16 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var identifier = factory.createIdentifierWrapper();
+        const identifier = factory.createIdentifierWrapper();
         globals.setPositionInfo(node, identifier);
         identifier.setName(node.name);
         return identifier;

@@ -20,7 +20,7 @@ napi_value ForOfStatementWrapper::Init(napi_env env, napi_value& exports) {
   DECLARE_NAPI_METHOD( "setBody", setBody),
   DECLARE_NAPI_METHOD( "setLeft", setLeft),
   DECLARE_NAPI_METHOD( "addComments", addComments),
-    DECLARE_NAPI_METHOD("setAsync", setAsync),
+    DECLARE_NAPI_METHOD("setAwait", setAwait),
     DECLARE_NAPI_METHOD("setPath", setPath),
     DECLARE_NAPI_METHOD("setPosition", setPosition),
   };
@@ -203,7 +203,7 @@ napi_value ForOfStatementWrapper::addComments(napi_env env, napi_callback_info i
   source->addComments(target);
   return nullptr;
 }
-napi_value ForOfStatementWrapper::setAsync(napi_env env, napi_callback_info info){ 
+napi_value ForOfStatementWrapper::setAwait(napi_env env, napi_callback_info info){ 
   napi_status status;
   napi_value jsthis;
   size_t argc = 1;
@@ -232,7 +232,7 @@ napi_value ForOfStatementWrapper::setAsync(napi_env env, napi_callback_info info
   bool b;
   status = napi_get_value_bool(env, args[0], &b);
   assert(status == napi_ok);
-  dynamic_cast<columbus::javascript::asg::statement::ForOfStatement*>(obj->_nativeObj)->setAsync( b );
+  dynamic_cast<columbus::javascript::asg::statement::ForOfStatement*>(obj->_nativeObj)->setAwait( b );
   return nullptr;
 }
 napi_value ForOfStatementWrapper::setPath(napi_env env, napi_callback_info info) {

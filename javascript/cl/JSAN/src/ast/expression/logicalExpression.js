@@ -18,39 +18,29 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
-const conversions = require('../conversions');
+import * as globals from '../../globals.js';
+import * as conversions from '../conversions.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var logicalExpression = factory.createLogicalExpressionWrapper(factory);
+        const logicalExpression = factory.createLogicalExpressionWrapper();
         globals.setPositionInfo(node, logicalExpression);
         logicalExpression.setOperator(conversions.convertOperatorToString(node.operator));
         return logicalExpression;
     } else {
-        var logicalExpressionWrapper = globals.getWrapperOfNode(node);
+        const logicalExpressionWrapper = globals.getWrapperOfNode(node);
 
         if (node.left != null) {
-            var leftWrapper = globals.getWrapperOfNode(node.left);
-            try {
-                logicalExpressionWrapper.setLeft(leftWrapper);
-            } catch (e) {
-                console.error("LOGICALEXPRESSION - Could not set left! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(logicalExpressionWrapper, "setLeft", node.left, "LOGICALEXPRESSION - Could not set left!");
         }
 
         if (node.right != null) {
-            var rightWrapper = globals.getWrapperOfNode(node.right);
-            try {
-                logicalExpressionWrapper.setRight(rightWrapper);
-            } catch (e) {
-                console.error("LOGICALEXPRESSION - Could not set right! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(logicalExpressionWrapper, "setRight", node.right, "LOGICALEXPRESSION - Could not set right!");
         }
-
     }
 }

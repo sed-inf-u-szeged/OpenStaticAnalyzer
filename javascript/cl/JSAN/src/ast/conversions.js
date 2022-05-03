@@ -42,6 +42,16 @@ const sourceTypes = {
     'module': 'pstModule'
 };
 
+const commentTypes = {
+    'Line': 'ctLine',
+    'Block': 'ctBlock'
+};
+
+const commentLocations = {
+    'trailing': 'clTrailing',
+    'leading': 'clLeading'
+};
+
 const unaryOperators = {
     '-': "unoMinus",
     '+': "unoPlus",
@@ -79,6 +89,7 @@ const additionalOperators = {
     '--': 'upoDecrement',
     '&&': 'looAnd',
     '||': 'looOr',
+    '??': 'looNullishCoalescing',
     '=': 'asoAssign',
     '+=': 'asoAdd',
     '-=': 'asoSubtract',
@@ -91,33 +102,53 @@ const additionalOperators = {
     '|=': 'asoBitwiseOr',
     '^=': 'asoBitwiseXor',
     '&=': 'asoBitwiseAnd',
-    '**=': 'asoExponentiation'
+    '**=': 'asoExponentiation',
+    // ES2021
+    '||=': 'asoOr',
+    '&&=': 'asoAnd',
+    '??=': 'asoNullishCoalescing'
 };
 
 
-//--------------------------
-//-----Module Exports-------
-//--------------------------
-module.exports.convertPropertyKind = function (kind) {
+const convertPropertyKind = function (kind) {
     return propertyKinds[kind] === undefined ? 'unrecognized' : propertyKinds[kind];
 };
 
-module.exports.convertDeclarationKind = function (kind) {
+const convertDeclarationKind = function (kind) {
     return declarationKinds[kind] === undefined ? 'unrecognized' : declarationKinds[kind];
 };
 
-module.exports.convertMethodDefinitionKind = function (kind) {
+const convertMethodDefinitionKind = function (kind) {
     return methodDefinitionKinds[kind] === undefined ? 'unrecognized' : methodDefinitionKinds[kind];
 };
 
-module.exports.convertSourceType = function (sourcetype) {
+const convertSourceType = function (sourcetype) {
     return sourceTypes[sourcetype] === undefined ? 'unrecognized' : sourceTypes[sourcetype];
 };
 
-module.exports.convertUnaryOperatorToString = function (operator) {
+const convertUnaryOperatorToString = function (operator) {
     return unaryOperators[operator] === undefined ? 'unrecognized' : unaryOperators[operator];
 };
 
-module.exports.convertOperatorToString = function (operator) {
+const convertOperatorToString = function (operator) {
     return additionalOperators[operator] === undefined ? 'unrecognized' : additionalOperators[operator];
 };
+
+const convertCommentType = function (type) {
+    return commentTypes[type] === undefined ? 'unrecognized' : commentTypes[type];
+}
+
+const convertCommentLocation = function convertCommentLocation(comment) {
+    return comment.leading ? commentLocations.leading : commentLocations.trailing;
+};
+
+export {
+    convertPropertyKind,
+    convertDeclarationKind,
+    convertMethodDefinitionKind,
+    convertSourceType,
+    convertOperatorToString,
+    convertUnaryOperatorToString,
+    convertCommentType,
+    convertCommentLocation
+}

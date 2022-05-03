@@ -18,101 +18,32 @@
  *  limitations under the Licence.
  */
 
-const hashmap = require('hashmap');
-const path = require('path');
+/**
+ * Version number that will be in the output XML
+ * @type {number}
+ */
+const ESLINTRUNNNER_VERSION = 4.3;
 
+let options = undefined;
 
-var nodeAndWrapperMap = new hashmap();
-var actualFile = undefined;
-var options = undefined;
-var previousNode = null;
-
-module.exports.prevNode = function () {
-    return previousNode;
-};
-
-module.exports.resetPrevNode = function () {
-    previousNode = null;
-};
-
-module.exports.setPrevNode = function (node) {
-    previousNode = node;
-};
-
-module.exports.setActualFile = function (filename) {
-    actualFile = filename;
-};
-
-module.exports.getActualFile = function () {
-    return actualFile;
-};
-
-module.exports.putNodeWrapperPair = function (node, wrapper) {
-    nodeAndWrapperMap.set(node, wrapper);
-};
-
-module.exports.getWrapperOfNode = function (node) {
-    return nodeAndWrapperMap.get(node);//returns the wrapper
-};
-
-module.exports.setOptions = function (opt) {
+function setOptions(opt) {
     options = opt;
-};
+}
 
-module.exports.getOptions = function () {
+function getOptions() {
     return options;
-};
+}
 
-module.exports.getOption = function (obj) {
-    if (options !== undefined)
-        if (obj in options)
-            return options[obj];
+function getOption(obj) {
+    if (options !== undefined && obj in options) {
+        return options[obj];
+    }
     return false;
-};
+}
 
-module.exports.setPositionInfo = function (node, wrapper) {
-    try {
-        if (options.useRelativePath) {
-            wrapper.setPath(path.relative(process.cwd(), actualFile));
-        }
-        else {
-            wrapper.setPath(actualFile);
-        }
-
-        //A JS file always starts from 1,1 (line, column)
-        if (node.type === "Program") {
-            wrapper.setLine(1);
-            wrapper.setCol(1);
-            wrapper.setWideLine(1);
-            wrapper.setWideCol(1);
-        }
-        else {
-            wrapper.setLine(node.loc.start.line);
-            wrapper.setCol(node.loc.start.column);
-            wrapper.setWideLine(node.loc.start.line);
-            wrapper.setWideCol(node.loc.start.column);
-        }
-
-        wrapper.setEndLine(node.loc.end.line);
-        wrapper.setEndCol(node.loc.end.column);
-        wrapper.setWideEndLine(node.loc.end.line);
-        wrapper.setWideEndCol(node.loc.end.column);
-    } catch (e) {
-        console.error(node.type + " - Position cannot be set! Reason of the error: " + e + "\n");
-    }
-};
-
-
-module.exports.getLiteralType = function (node) {
-    if (typeof (node.value) !== "object") {
-        var type = typeof (node.value);
-        return type.charAt(0).toLocaleUpperCase() + type.substring(1, type.length);
-    } else {
-        if (node.raw === "null") {
-            return "Null";
-        } else if (node.regex != null) {
-            return "RegExp";
-        }
-    }
-
-};
+export {
+    setOptions,
+    getOptions,
+    getOption,
+    ESLINTRUNNNER_VERSION
+}

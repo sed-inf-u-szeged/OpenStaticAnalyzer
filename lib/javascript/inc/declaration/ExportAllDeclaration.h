@@ -39,6 +39,7 @@ namespace declaration {
   * 
   * Edges:
   *   - hasSource (expression::Literal, single) : (missing)
+  *   - hasExported (expression::Identifier, single) : (missing)
   */
   class ExportAllDeclaration : public Declaration {
     protected:
@@ -109,6 +110,12 @@ namespace declaration {
       */
       expression::Literal* getSource() const;
 
+      /**
+      * \brief Gives back the pointer of the node the hasExported edge points to.
+      * \return Returns the end point of the hasExported edge.
+      */
+      expression::Identifier* getExported() const;
+
 
       // ---------- Edge setter function(s) ----------
 
@@ -129,12 +136,32 @@ namespace declaration {
       */
       void removeSource();
 
+      /**
+      * \brief Sets the hasExported edge.
+      * \param id [in] The new end point of the hasExported edge.
+      */
+      void setExported(NodeId id);
+
+      /**
+      * \brief Sets the hasExported edge.
+      * \param node [in] The new end point of the hasExported edge.
+      */
+      void setExported(expression::Identifier *node);
+
+      /**
+      * \brief remove the hasExported edge.
+      */
+      void removeExported();
+
     protected:
 
       // ---------- Edges ----------
 
       /** \internal \brief The id of the node the hasSource edge points to. */
       NodeId m_hasSource;
+
+      /** \internal \brief The id of the node the hasExported edge points to. */
+      NodeId m_hasExported;
 
     public:
 

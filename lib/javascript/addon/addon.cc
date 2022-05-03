@@ -6,6 +6,8 @@
 #include "inc/CommentWrapper.h"
 #include "inc/ModuleDeclarationWrapper.h"
 #include "inc/VariableDeclaratorWrapper.h"
+#include "inc/ChainElementWrapper.h"
+#include "inc/PrivateIdentifierWrapper.h"
 #include "inc/PropertyWrapper.h"
 #include "inc/SpreadElementWrapper.h"
 #include "inc/SuperWrapper.h"
@@ -15,21 +17,24 @@
 #include "inc/SwitchCaseWrapper.h"
 #include "inc/ClassBodyWrapper.h"
 #include "inc/MethodDefinitionWrapper.h"
+#include "inc/PropertyDefinitionWrapper.h"
 #include "inc/ProgramWrapper.h"
 #include "inc/IdentifierWrapper.h"
 #include "inc/ExportNamedDeclarationWrapper.h"
 #include "inc/ImportDeclarationWrapper.h"
+#include "inc/CallExpressionWrapper.h"
+#include "inc/MemberExpressionWrapper.h"
 #include "inc/ArrayExpressionWrapper.h"
 #include "inc/ArrowFunctionExpressionWrapper.h"
 #include "inc/AssignmentExpressionWrapper.h"
 #include "inc/AwaitExpressionWrapper.h"
 #include "inc/BinaryExpressionWrapper.h"
-#include "inc/CallExpressionWrapper.h"
+#include "inc/ChainExpressionWrapper.h"
 #include "inc/ClassExpressionWrapper.h"
 #include "inc/ConditionalExpressionWrapper.h"
 #include "inc/FunctionExpressionWrapper.h"
+#include "inc/ImportExpressionWrapper.h"
 #include "inc/LogicalExpressionWrapper.h"
-#include "inc/MemberExpressionWrapper.h"
 #include "inc/MetaPropertyWrapper.h"
 #include "inc/NewExpressionWrapper.h"
 #include "inc/ObjectExpressionWrapper.h"
@@ -40,12 +45,12 @@
 #include "inc/UnaryExpressionWrapper.h"
 #include "inc/UpdateExpressionWrapper.h"
 #include "inc/YieldExpressionWrapper.h"
+#include "inc/BigIntLiteralWrapper.h"
 #include "inc/BooleanLiteralWrapper.h"
 #include "inc/NullLiteralWrapper.h"
 #include "inc/NumberLiteralWrapper.h"
 #include "inc/RegExpLiteralWrapper.h"
 #include "inc/StringLiteralWrapper.h"
-#include "inc/AssignmentPropertyWrapper.h"
 #include "inc/ArrayPatternWrapper.h"
 #include "inc/AssignmentPatternWrapper.h"
 #include "inc/ObjectPatternWrapper.h"
@@ -86,6 +91,8 @@ napi_value Init(napi_env env, napi_value exports){
   columbus::javascript::asg::addon::CommentWrapper::Init(env, exports);
   columbus::javascript::asg::addon::ModuleDeclarationWrapper::Init(env, exports);
   columbus::javascript::asg::addon::VariableDeclaratorWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ChainElementWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::PrivateIdentifierWrapper::Init(env, exports);
   columbus::javascript::asg::addon::PropertyWrapper::Init(env, exports);
   columbus::javascript::asg::addon::SpreadElementWrapper::Init(env, exports);
   columbus::javascript::asg::addon::SuperWrapper::Init(env, exports);
@@ -95,21 +102,24 @@ napi_value Init(napi_env env, napi_value exports){
   columbus::javascript::asg::addon::SwitchCaseWrapper::Init(env, exports);
   columbus::javascript::asg::addon::ClassBodyWrapper::Init(env, exports);
   columbus::javascript::asg::addon::MethodDefinitionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::PropertyDefinitionWrapper::Init(env, exports);
   columbus::javascript::asg::addon::ProgramWrapper::Init(env, exports);
   columbus::javascript::asg::addon::IdentifierWrapper::Init(env, exports);
   columbus::javascript::asg::addon::ExportNamedDeclarationWrapper::Init(env, exports);
   columbus::javascript::asg::addon::ImportDeclarationWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::CallExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::MemberExpressionWrapper::Init(env, exports);
   columbus::javascript::asg::addon::ArrayExpressionWrapper::Init(env, exports);
   columbus::javascript::asg::addon::ArrowFunctionExpressionWrapper::Init(env, exports);
   columbus::javascript::asg::addon::AssignmentExpressionWrapper::Init(env, exports);
   columbus::javascript::asg::addon::AwaitExpressionWrapper::Init(env, exports);
   columbus::javascript::asg::addon::BinaryExpressionWrapper::Init(env, exports);
-  columbus::javascript::asg::addon::CallExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ChainExpressionWrapper::Init(env, exports);
   columbus::javascript::asg::addon::ClassExpressionWrapper::Init(env, exports);
   columbus::javascript::asg::addon::ConditionalExpressionWrapper::Init(env, exports);
   columbus::javascript::asg::addon::FunctionExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::ImportExpressionWrapper::Init(env, exports);
   columbus::javascript::asg::addon::LogicalExpressionWrapper::Init(env, exports);
-  columbus::javascript::asg::addon::MemberExpressionWrapper::Init(env, exports);
   columbus::javascript::asg::addon::MetaPropertyWrapper::Init(env, exports);
   columbus::javascript::asg::addon::NewExpressionWrapper::Init(env, exports);
   columbus::javascript::asg::addon::ObjectExpressionWrapper::Init(env, exports);
@@ -120,12 +130,12 @@ napi_value Init(napi_env env, napi_value exports){
   columbus::javascript::asg::addon::UnaryExpressionWrapper::Init(env, exports);
   columbus::javascript::asg::addon::UpdateExpressionWrapper::Init(env, exports);
   columbus::javascript::asg::addon::YieldExpressionWrapper::Init(env, exports);
+  columbus::javascript::asg::addon::BigIntLiteralWrapper::Init(env, exports);
   columbus::javascript::asg::addon::BooleanLiteralWrapper::Init(env, exports);
   columbus::javascript::asg::addon::NullLiteralWrapper::Init(env, exports);
   columbus::javascript::asg::addon::NumberLiteralWrapper::Init(env, exports);
   columbus::javascript::asg::addon::RegExpLiteralWrapper::Init(env, exports);
   columbus::javascript::asg::addon::StringLiteralWrapper::Init(env, exports);
-  columbus::javascript::asg::addon::AssignmentPropertyWrapper::Init(env, exports);
   columbus::javascript::asg::addon::ArrayPatternWrapper::Init(env, exports);
   columbus::javascript::asg::addon::AssignmentPatternWrapper::Init(env, exports);
   columbus::javascript::asg::addon::ObjectPatternWrapper::Init(env, exports);

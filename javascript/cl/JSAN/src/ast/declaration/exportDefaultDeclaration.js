@@ -18,28 +18,23 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var exportDefaultDeclaration = factory.createExportDefaultDeclarationWrapper();
+        const exportDefaultDeclaration = factory.createExportDefaultDeclarationWrapper();
         globals.setPositionInfo(node, exportDefaultDeclaration);
         return exportDefaultDeclaration;
     } else {
-        var exportDefaultDeclarationWrapper = globals.getWrapperOfNode(node);
+        const exportDefaultDeclarationWrapper = globals.getWrapperOfNode(node);
 
         if (node.declaration != null) {
-            var declarationWrapper = globals.getWrapperOfNode(node.declaration);
-            try {
-                exportDefaultDeclarationWrapper.setDeclaration(declarationWrapper);
-            } catch (e) {
-                console.error("EXPORTDEFAULTDECLARATION - Could not set declaration! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(exportDefaultDeclarationWrapper, "setDeclaration", node.declaration, "EXPORTDEFAULTDECLARATION - Could not set declaration!");
         }
-
     }
 }

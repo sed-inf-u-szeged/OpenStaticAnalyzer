@@ -1,6 +1,6 @@
 ![](OpenStaticAnalyzer/doc/logo/OSA_small.png)
 # OpenStaticAnalyzer™
-Copyright (c) 2004-2021 Department of Software Engineering, University of Szeged, Hungary.
+Copyright (c) 2004-2022 Department of Software Engineering, University of Szeged, Hungary.
 
 ## About
 
@@ -18,6 +18,8 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
 - Powerful filter management
 - Coding issue detection:
     - Metric threshold violations (MetricHunter module)
+    - Common programming mistakes (clang-tidy)
+    - [Cppcheck] 2.5 coding rule violation
     - Re-prioritized and carefully selected [PMD] 6.32.0 coding rule violations
     - [SpotBugs] 4.2.2 coding rule violations
     - [Pylint] 1.9.4 and 2.3.1 coding rule violations
@@ -31,8 +33,9 @@ The most important product characteristics of OpenStaticAnalyzer are the followi
     - Source code metrics
     - Clone metrics
     - Coding rule violation metrics
-- Supported languages: Java, Python, C#, JavaScript (C/C++ will be available in the near future).
+- Supported languages: Java, Python, C#, JavaScript, C/C++.
 
+[Cppcheck]:http://cppcheck.sourceforge.net/
 [PMD]:https://pmd.github.io
 [SpotBugs]:https://spotbugs.github.io
 [Pylint]:http://www.pylint.org/
@@ -45,7 +48,7 @@ By continuous static analysis, the software developers can:
 - the number of errors in delivered software can be reduced, so the operational risks can be decreased, increasing the company's reputation.
 
 ## License
-OpenStaticAnalyzer 4.1 is licensed under the [European Union Public Licence](https://joinup.ec.europa.eu/software/page/eupl) (EUPL) v1.2.
+OpenStaticAnalyzer 5.0 is licensed under the [European Union Public Licence](https://joinup.ec.europa.eu/software/page/eupl) (EUPL) v1.2.
 
 OpenStaticAnalyzer is free software, distributed in the hope that it will be useful, but on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the LICENSE file for more details.
 
@@ -61,22 +64,25 @@ OpenStaticAnalyzer is free software, distributed in the hope that it will be use
 
 [JavaScript](OpenStaticAnalyzer/javascript/doc/usersguide/md/Main.md)
 
+[C/C++](OpenStaticAnalyzer/cpp/doc/usersguide/md/Main.md)
+
 ### How to compile
 
 In order to build the OpenStaticAnalyzer software package the following tools are required:
 
 
-- CMake 3.16.0
+- CMake 3.19.0
 - Compiler
     - Linux : gcc 10.2
     - Windows : Microsoft Visual Studio 2017, NASM 2.14, Perl 5.30
-        - Install Windows 8.1 SDK and Windows Universal CRT SDK in Visual Studio Installer (if Visual Studio is already installed, then run the installer, Modify > Invidvidual components > Install)
+        - Install Windows 8.1 SDK and Windows Universal CRT SDK in Visual Studio Installer (if Visual Studio is already installed, then run the installer, Modify > Individual components > Install)
 - JDK 11
 - Gradle 5.3
 - Ant 1.10
 - Apache Maven 3.2.5
 - Pandoc 1.16
-- Node 8.x.x
+- Node 12.x.x
+- Ninja (for building the clang on windows)
 
 
 Some of the 3rd party libraries are used as a submodule so either `--recursive` 

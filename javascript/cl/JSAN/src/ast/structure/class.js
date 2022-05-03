@@ -18,46 +18,31 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var classNode = factory.createClassWrapper();
+        const classNode = factory.createClassWrapper();
         globals.setPositionInfo(node, classNode);
         return classNode;
     } else {
-        var classWrapper = globals.getWrapperOfNode(node);
+        const classWrapper = globals.getWrapperOfNode(node);
 
         if (node.superClass != null) {
-            var superClassWrapper = globals.getWrapperOfNode(node.superClass);
-            try {
-                classWrapper.setSuperClass(superClassWrapper);
-            } catch (e) {
-                console.error("CLASS - Could not set superclass! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(classWrapper, "setSuperClass", node.superClass, "CLASS - Could not set superclass!");
         }
 
         if (node.body != null) {
-            var bodyWrapper = globals.getWrapperOfNode(node.body);
-            try {
-                classWrapper.setBody(bodyWrapper);
-            } catch (e) {
-                console.error("CLASS - Could not set body! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(classWrapper, "setBody", node.body, "CLASS - Could not set body!");
         }
 
         if (node.id != null) {
-            var identifierWrapper = globals.getWrapperOfNode(node.id);
-            try {
-                classWrapper.setIdentifier(identifierWrapper);
-            } catch (e) {
-                console.error("CLASS - Could not set identifier! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(classWrapper, "setIdentifier", node.id, "CLASS - Could not set identifier!");
         }
-
     }
 }

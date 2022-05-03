@@ -69,50 +69,6 @@ namespace columbus {
         if (info.maps.find(name) != info.maps.end()) return info.mapCount(name);
         return 0;
       }
-
-      MIBase::MIBase(const std::string& name, bool enabled, SharedContainers* shared) : MetricHandler(name, mdtFloat, enabled, shared)
-      {
-        dependencies.insert("HVOL");
-        dependencies.insert("McCC");
-        dependencies.insert("LLOC");
-        dependencies.insert("CD");
-
-        this->registerHandler(phaseVisitEnd, NTYPE_LIM_METHOD, limLangOther, false, [this](NodeWrapper& node) {
-
-          double hvol = node.getFloatMetric("HVOL");
-          int mccc = node.getIntMetric("McCC");
-          int lloc = node.getIntMetric("LLOC");
-          double cd = node.getFloatMetric("CD");
-
-          double mi = 0;
-          if (hvol > 0 && lloc > 0) {
-            mi = this->calc(hvol, mccc, lloc, cd);
-          }
-
-          addMetric(node, mi);
-
-        });
-      }
-
-      double MI::calc(double hvol, int mccc, int lloc, double cd)
-      {
-        return 171 - 5.2 * log(hvol) - 0.23 * mccc - 16.2 * log(lloc);
-      }
-
-      double MISEI::calc(double hvol, int mccc, int lloc, double cd)
-      {
-        return 171 - 5.2 * log2(hvol) - 0.23 * mccc - 16.2 * log2(lloc) + 50 * sin(sqrt(2.4 * cd));
-      }
-
-      double MIMS::calc(double hvol, int mccc, int lloc, double cd)
-      {
-        return max(.0, (171 - 5.2 * log(hvol) - 0.23 * mccc - 16.2 * log(lloc)) * 100 / 171);
-      }
-
-      double MISM::calc(double hvol, int mccc, int lloc, double cd)
-      {
-        return max(.0, (171 - 5.2 * log2(hvol) - 0.23 * mccc - 16.2 * log2(lloc) + 50 * sin(sqrt(2.4 * cd))) * 100 / 171);
-      }
     }
   }
 }

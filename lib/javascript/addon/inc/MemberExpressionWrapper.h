@@ -47,6 +47,7 @@ namespace columbus { namespace javascript { namespace asg { namespace addon {
       static napi_value setComputed(napi_env env, napi_callback_info info);
       static napi_value setPath(napi_env env, napi_callback_info info);
       static napi_value setPosition(napi_env env, napi_callback_info info);
+      static napi_value setOptional(napi_env env, napi_callback_info info);
   }; //end of MemberExpressionWrapper
 
 }}}}//end of namespaces

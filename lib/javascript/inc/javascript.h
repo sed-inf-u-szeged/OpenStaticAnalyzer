@@ -25,30 +25,6 @@
 * \file JAVASCRIPT.h
 * \brief Header can be used for precompiled header.
 */
-/*********** Options *************************
- *  SchemaGeneratorc9e9f4bd0b
- *  IndentInNamespace = 1
- *  IndentInClass = 1
- *  IndentUnderPubProtPri = 1
- *  UseShortRange = false
- *  ACommonGetIsForLeaf = true
- *  AlgPreorderSafeMode = true
- *  GenerateInOutForComment = true
- *  GenerateFilter = true
- *  GenerateReverseEdges = true
- *  GenerateAsgStat = true
- *  GenerateSpecFilterVisitor = false
- *  GenerateSpecXml = false
- *  GenerateDOT = false
- *  GenerateGraphml = true
- *  GenerateJSON = false
- *  GenerateSerialize = false
- *  GenerateParentEdge = true
- *  FactoryModes = 
- *  APIVersion = 0.2.3
- *  BinaryVersion = 0.2.3
- *  CSIHeaderText = JavaScriptLanguage
- *********************************************/
 #include <list>
 #include <cstring>
 #include <map>
@@ -83,8 +59,10 @@
 #include "base/Named.h"
 #include "declaration/ModuleDeclaration.h"
 #include "declaration/VariableDeclarator.h"
+#include "expression/ChainElement.h"
 #include "expression/Expression.h"
 #include "expression/Literal.h"
+#include "expression/PrivateIdentifier.h"
 #include "expression/Property.h"
 #include "expression/SpreadElement.h"
 #include "expression/Super.h"
@@ -98,21 +76,24 @@
 #include "structure/ClassBody.h"
 #include "structure/MethodDefinition.h"
 #include "structure/ModuleSpecifier.h"
+#include "structure/PropertyDefinition.h"
 #include "base/Program.h"
 #include "expression/Identifier.h"
 #include "declaration/ExportNamedDeclaration.h"
 #include "declaration/ImportDeclaration.h"
+#include "expression/CallExpression.h"
+#include "expression/MemberExpression.h"
 #include "expression/ArrayExpression.h"
 #include "expression/ArrowFunctionExpression.h"
 #include "expression/AssignmentExpression.h"
 #include "expression/AwaitExpression.h"
 #include "expression/BinaryExpression.h"
-#include "expression/CallExpression.h"
+#include "expression/ChainExpression.h"
 #include "expression/ClassExpression.h"
 #include "expression/ConditionalExpression.h"
 #include "expression/FunctionExpression.h"
+#include "expression/ImportExpression.h"
 #include "expression/LogicalExpression.h"
-#include "expression/MemberExpression.h"
 #include "expression/MetaProperty.h"
 #include "expression/NewExpression.h"
 #include "expression/ObjectExpression.h"
@@ -123,12 +104,12 @@
 #include "expression/UnaryExpression.h"
 #include "expression/UpdateExpression.h"
 #include "expression/YieldExpression.h"
+#include "expression/BigIntLiteral.h"
 #include "expression/BooleanLiteral.h"
 #include "expression/NullLiteral.h"
 #include "expression/NumberLiteral.h"
 #include "expression/RegExpLiteral.h"
 #include "expression/StringLiteral.h"
-#include "expression/AssignmentProperty.h"
 #include "statement/ArrayPattern.h"
 #include "statement/AssignmentPattern.h"
 #include "statement/ObjectPattern.h"

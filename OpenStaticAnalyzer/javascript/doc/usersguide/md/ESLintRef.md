@@ -1,76 +1,119 @@
-## Reference of ESLint coding rule violations
-
-OpenStaticAnalyzer incorporates the [ESLint] tool for coding rule violation checking and imports its results. OpenStaticAnalyzer also associates the issued rule violations with source code elements (i.e. methods, classes, functions, and components), and calculates metrics for the source code elements, which represent the amount of violations of each ruleset, rule, and priority groups, respectively. 
-
-OpenStaticAnalyzer uses ESLint "as is", without any guaranties that the results of ESLint are correct. All statements of the ESLint license apply here as well. All texts describing the rulesets and the individual rules are copied from its official home page with some minor grammatical fixes.
+## Reference of TSLINT coding rule violations
 
 The list of rulesets and rules contained in each ruleset are the following:
 
 - **Best Practices:** These are rules designed to prevent you from making mistakes. They either prescribe a better way of doing something or help you avoid footguns.
 
+
 - **ECMAScript 6:** These rules are only relevant to ES6 environments.
+
 
 - **Possible Errors:** These rules relate to possible syntax or logic errors in JavaScript code.
 
+
 - **Stylistic Issues:** These rules are purely matters of style and are quite subjective.
+
+
+- **TS Best Practices:** These are rules designed to prevent you from making mistakes in TypeScript. They either prescribe a better way of doing something or help you avoid footguns.
+
+
+- **TS Possible Errors:** These rules relate to possible syntax or logic errors in TypeScript code.
+
+
+- **TS Variables:** These rules have to do with variable declarations within TypeScript.
+
 
 - **Variables:** These rules have to do with variable declarations.
 
+
 The following table contains the enabled rules and their priorities:
 
-  Category          Name                      Abbreviation  Prio. 
-  ----------------- ------------------------- ------------- ------
-  Best Practices    eqeqeq                    ESLINT_E      Major 
-                    no-case-declarations      ESLINT_NCD    Major 
-                    no-empty-pattern          ESLINT_NEPA   Major 
-                    no-fallthrough            ESLINT_NF     Major 
-                    no-global-assign          ESLINT_NGA    Major 
-                    no-iterator               ESLINT_NI     Major 
-                    no-magic-numbers          ESLINT_NMN    Major 
-                    no-new-wrappers           ESLINT_NNW    Major 
-                    no-octal                  ESLINT_NO     Major 
-                    no-redeclare              ESLINT_NR     Major 
-                    no-self-assign            ESLINT_NSAS   Major 
-                    no-unused-labels          ESLINT_NULA   Major 
-                    no-useless-escape         ESLINT_NUES   Major 
-  ECMAScript 6      constructor-super         ESLINT_CSU    Major 
-                    no-class-assign           ESLINT_NCAS   Major 
-                    no-const-assign           ESLINT_NCONS  Major 
-                    no-dupe-class-members     ESLINT_NDCM   Major 
-                    no-new-symbol             ESLINT_NNSY   Major 
-                    no-this-before-super      ESLINT_NTBS   Major 
-                    require-yield             ESLINT_RY     Major 
-  Possible Errors   no-compare-neg-zero       ESLINT_NCNZ   Major 
-                    no-cond-assign            ESLINT_NCA    Major 
-                    no-console                ESLINT_NC     Major 
-                    no-constant-condition     ESLINT_NCC    Major 
-                    no-control-regex          ESLINT_NCR    Major 
-                    no-debugger               ESLINT_ND     Major 
-                    no-dupe-args              ESLINT_NDA    Major 
-                    no-dupe-keys              ESLINT_NDK    Major 
-                    no-duplicate-case         ESLINT_NDC    Major 
-                    no-empty                  ESLINT_NE     Major 
-                    no-empty-character-class  ESLINT_NECC   Major 
-                    no-ex-assign              ESLINT_NEA    Major 
-                    no-extra-boolean-cast     ESLINT_NEBC   Major 
-                    no-extra-semi             ESLINT_NES    Major 
-                    no-func-assign            ESLINT_NFA    Major 
-                    no-inner-declarations     ESLINT_NID    Major 
-                    no-invalid-regexp         ESLINT_NIR    Major 
-                    no-irregular-whitespace   ESLINT_NIW    Major 
-                    no-obj-calls              ESLINT_NOC    Major 
-                    no-regex-spaces           ESLINT_NRS    Major 
-                    no-sparse-arrays          ESLINT_NSA    Major 
-                    no-unexpected-multiline   ESLINT_NUM    Major 
-                    no-unreachable            ESLINT_NU     Major 
-                    no-unsafe-finally         ESLINT_NUF    Major 
-                    no-unsafe-negation        ESLINT_NUNEG  Major 
-                    use-isnan                 ESLINT_UI     Major 
-                    valid-typeof              ESLINT_VT     Major 
-  Stylistic Issues  no-mixed-spaces-and-tabs  ESLINT_NMSAT  Major 
-  Variables         no-delete-var             ESLINT_NDV    Major 
-                    no-undef                  ESLINT_NUN    Major 
-                    no-unused-vars            ESLINT_NUV    Major 
+  Category            Name                                     Abbreviation   Prio. 
+  ------------------- ---------------------------------------- -------------- ------
+  Best Practices      eqeqeq                                   ESLINT_E       Major 
+                      no-case-declarations                     ESLINT_NCD     Major 
+                      no-empty-pattern                         ESLINT_NEPA    Major 
+                      no-fallthrough                           ESLINT_NF      Major 
+                      no-global-assign                         ESLINT_NGA     Major 
+                      no-iterator                              ESLINT_NI      Major 
+                      no-new-wrappers                          ESLINT_NNW     Major 
+                      no-octal                                 ESLINT_NO      Major 
+                      no-self-assign                           ESLINT_NSAS    Major 
+                      no-unused-labels                         ESLINT_NULA    Major 
+                      no-useless-escape                        ESLINT_NUES    Major 
+  ECMAScript 6        constructor-super                        ESLINT_CSU     Major 
+                      no-class-assign                          ESLINT_NCAS    Major 
+                      no-const-assign                          ESLINT_NCONS   Major 
+                      no-new-symbol                            ESLINT_NNSY    Major 
+                      no-this-before-super                     ESLINT_NTBS    Major 
+                      require-yield                            ESLINT_RY      Major 
+  Possible Errors     no-compare-neg-zero                      ESLINT_NCNZ    Major 
+                      no-cond-assign                           ESLINT_NCA     Major 
+                      no-console                               ESLINT_NC      Major 
+                      no-constant-condition                    ESLINT_NCC     Major 
+                      no-control-regex                         ESLINT_NCR     Major 
+                      no-debugger                              ESLINT_ND      Major 
+                      no-dupe-args                             ESLINT_NDA     Major 
+                      no-dupe-keys                             ESLINT_NDK     Major 
+                      no-duplicate-case                        ESLINT_NDC     Major 
+                      no-empty                                 ESLINT_NE      Major 
+                      no-empty-character-class                 ESLINT_NECC    Major 
+                      no-ex-assign                             ESLINT_NEA     Major 
+                      no-extra-boolean-cast                    ESLINT_NEBC    Major 
+                      no-func-assign                           ESLINT_NFA     Major 
+                      no-inner-declarations                    ESLINT_NID     Major 
+                      no-invalid-regexp                        ESLINT_NIR     Major 
+                      no-irregular-whitespace                  ESLINT_NIW     Major 
+                      no-obj-calls                             ESLINT_NOC     Major 
+                      no-regex-spaces                          ESLINT_NRS     Major 
+                      no-sparse-arrays                         ESLINT_NSA     Major 
+                      no-unexpected-multiline                  ESLINT_NUM     Major 
+                      no-unreachable                           ESLINT_NU      Major 
+                      no-unsafe-finally                        ESLINT_NUF     Major 
+                      no-unsafe-negation                       ESLINT_NUNEG   Major 
+                      use-isnan                                ESLINT_UI      Major 
+                      valid-typeof                             ESLINT_VT      Major 
+  Stylistic Issues    adjacent-overload-signatures             TSLINT_AOS     Major 
+                      array-type                               TSLINT_AT      Major 
+                      no-mixed-spaces-and-tabs                 ESLINT_NMSAT   Major 
+                      no-var-requires                          TSLINT_NVR     Major 
+                      unified-signatures                       TSLINT_US      Major 
+  TS Best Practices   await-thenable                           TSLINT_ATH     Major 
+                      ban-ts-comment                           TSLINT_BTC     Major 
+                      ban-types                                TSLINT_BT      Major 
+                      no-explicit-any                          TSLINT_NEA     Major 
+                      no-extra-non-null-assertion              TSLINT_NENNA   Major 
+                      no-magic-numbers                         TSLINT_NMN     Major 
+                      no-namespace                             TSLINT_NN      Major 
+                      no-non-null-asserted-nullish-coalescing  TSLINT_NNNANC  Major 
+                      no-redeclare                             TSLINT_NR      Major 
+                      prefer-namespace-keyword                 TSLINT_PNK     Major 
+                      triple-slash-reference                   TSLINT_TSR     Major 
+                      unbound-method                           TSLINT_UM      Major 
+  TS Possible Errors  no-dupe-class-members                    TSLINT_NDCM    Major 
+                      no-empty-interface                       TSLINT_NEI     Major 
+                      no-extra-parens                          TSLINT_NEP     Major 
+                      no-extra-semi                            TSLINT_NES     Major 
+                      no-floating-promises                     TSLINT_NFP     Major 
+                      no-for-in-array                          TSLINT_NFIA    Major 
+                      no-implicit-any-catch                    TSLINT_NIAC    Major 
+                      no-misused-promises                      TSLINT_NMP     Major 
+                      no-non-null-asserted-optional-chain      TSLINT_NNNAOC  Major 
+                      no-unsafe-argument                       TSLINT_NUA     Major 
+                      no-unsafe-assignment                     TSLINT_NUAS    Major 
+                      no-unsafe-call                           TSLINT_NUCA    Major 
+                      no-unsafe-member-access                  TSLINT_NUMA    Major 
+                      no-unsafe-return                         TSLINT_NUR     Major 
+                      prefer-as-const                          TSLINT_PAC     Major 
+                      restrict-plus-operands                   TSLINT_RPO     Major 
+  TS Variables        no-misused-new                           TSLINT_NMW     Major 
+                      no-this-alias                            TSLINT_NTA     Major 
+                      no-unnecessary-type-arguments            TSLINT_NUTA    Major 
+                      no-unnecessary-type-assertion            TSLINT_NUTAS   Major 
+                      no-unnecessary-type-constraint           TSLINT_NUTC    Major 
+                      no-unused-vars                           TSLINT_NUV     Major 
+  Variables           no-delete-var                            ESLINT_NDV     Major 
+                      no-undef                                 ESLINT_NUN     Major 
 
 ### Best Practices
 
@@ -95,11 +138,7 @@ JavaScript environments contain a number of built-in global variables, such as w
 
 
 #### no-iterator {#ESLINT_NI}
-The iterator property was a SpiderMonkey extension to JavaScript that could be used to create custom iterators that are compatible with JavaScript’s for in and for each constructs. However, this property is now obsolete, so it should not be used. Here’s an example of how this used to work: You should use ECMAScript 6 iterators and generators instead.
-
-
-#### no-magic-numbers {#ESLINT_NMN}
-‘Magic numbers’ are numbers that occur multiple time in code without an explicit meaning. They should preferably be replaced by named constants.
+The <strong>iterator</strong> property was a SpiderMonkey extension to JavaScript that could be used to create custom iterators that are compatible with JavaScript’s for in and for each constructs. However, this property is now obsolete, so it should not be used. Here’s an example of how this used to work: You should use ECMAScript 6 iterators and generators instead.
 
 
 #### no-new-wrappers {#ESLINT_NNW}
@@ -108,10 +147,6 @@ There are three primitive types in JavaScript that have wrapper objects: string,
 
 #### no-octal {#ESLINT_NO}
 Octal literals are numerals that begin with a leading zero, such as: The leading zero to identify an octal literal has been a source of confusion and error in JavaScript. ECMAScript 5 deprecates the use of octal numeric literals in JavaScript and octal literals cause syntax errors in strict mode. It’s therefore recommended to avoid using octal literals in JavaScript code.
-
-
-#### no-redeclare {#ESLINT_NR}
-In JavaScript, it’s possible to redeclare the same variable name using var. This can lead to confusion as to where the variable is actually declared and initialized.
 
 
 #### no-self-assign {#ESLINT_NSAS}
@@ -131,28 +166,32 @@ Escaping non-special characters in strings, template literals, and regular expre
 #### constructor-super {#ESLINT_CSU}
 Constructors of derived classes must call super(). Constructors of non derived classes must not call super(). If this is not observed, the javascript engine will raise a runtime error. This rule checks whether or not there is a valid super() call.
 
+
 #### no-class-assign {#ESLINT_NCAS}
 ClassDeclaration creates a variable, and we can modify the variable. But the modification is a mistake in most cases.
+
 
 #### no-const-assign {#ESLINT_NCONS}
 We cannot modify variables that are declared using const keyword. It will raise a runtime error. Under non ES2015 environment, it might be ignored merely.
 
-#### no-dupe-class-members {#ESLINT_NDCM}
-If there are declarations of the same name in class members, the last declaration overwrites other declarations silently. It can cause unexpected behaviors.
 
 #### no-new-symbol {#ESLINT_NNSY}
 Using a single import statement per module will make the code clearer because you can see everything being imported from that module on one line. In the following example the module import on line 1 is repeated on line 3. These can be combined to make the list of imports more succinct.
 
+
 #### no-this-before-super {#ESLINT_NTBS}
 In the constructor of derived classes, if this/super are used before super() calls, it raises a reference error. This rule checks this/super keywords in constructors, then reports those that are before super().
 
+
 #### require-yield {#ESLINT_RY}
 This rule generates warnings for generator functions that do not have the yield keyword.
+
 
 ### Possible Errors
 
 #### no-compare-neg-zero {#ESLINT_NCNZ}
 The rule should warn against code that tries to compare against -0, since that will not work as intended. That is, code like x === -0 will pass for both +0 and -0. The author probably intended Object.is(x, -0).
+
 
 #### no-cond-assign {#ESLINT_NCA}
 In conditional statements, it is very easy to mistype a comparison operator (such as ==) as an assignment operator (such as =). For example: There are valid reasons to use assignment operators in conditional statements. However, it can be difficult to tell whether a specific assignment was intentional.
@@ -200,10 +239,6 @@ If a catch clause in a try statement accidentally (or purposely) assigns another
 
 #### no-extra-boolean-cast {#ESLINT_NEBC}
 In contexts such as an if statement’s test where the result of the expression will already be coerced to a Boolean, casting to a Boolean via double negation (!!) is unnecessary. For example, these if statements are equivalent:
-
-
-#### no-extra-semi {#ESLINT_NES}
-Typing mistakes and misunderstandings about where semicolons are required can lead to semicolons that are unnecessary. While not technically an error, extra semicolons can cause confusion when reading code.
 
 
 #### no-func-assign {#ESLINT_NFA}
@@ -260,8 +295,166 @@ For a vast majority of use-cases, the only valid results of the typeof operator 
 
 ### Stylistic Issues
 
+#### adjacent-overload-signatures {#TSLINT_AOS}
+This rule aims to standardize the way overloaded members are organized.
+
+
+#### array-type {#TSLINT_AT}
+This rule aims to standardize usage of array types within your codebase.
+
+
 #### no-mixed-spaces-and-tabs {#ESLINT_NMSAT}
 Most code conventions require either tabs or spaces be used for indentation. As such, it’s usually an error if a single line of code is indented with both tabs and spaces.
+
+
+#### no-var-requires {#TSLINT_NVR}
+Disallows the use of require statements except in import statements. In other words, the use of forms such as var foo = require("foo") are banned. Instead use ES6 style imports or import foo = require("foo") imports.
+
+
+#### unified-signatures {#TSLINT_US}
+This rule aims to keep the source code as maintainable as possible by reducing the amount of overloads.
+
+
+### TS Best Practices
+
+#### await-thenable {#TSLINT_ATH}
+Disallows awaiting a value that is not a Thenable. This rule disallows awaiting a value that is not a "Thenable" (an object which has then method, such as a Promise). While it is valid JavaScript to await a non-Promise-like value (it will resolve immediately), this pattern is often a programmer error, such as forgetting to add parenthesis to call a function that returns a Promise.
+
+
+#### ban-ts-comment {#TSLINT_BTC}
+This rule lets you set which directive comments you want to allow in your codebase. By default, only @ts-check is allowed, as it enables rather than suppresses errors.
+
+
+#### ban-types {#TSLINT_BT}
+This rule bans specific types and can suggest alternatives. Note that it does not ban the corresponding runtime objects from being used.
+
+
+#### no-explicit-any {#TSLINT_NEA}
+This rule doesn't allow any types to be defined. It aims to keep TypeScript maximally useful. TypeScript has a compiler flag for --noImplicitAny that will prevent an any type from being implied by the compiler, but doesn't prevent any from being explicitly used.
+
+
+#### no-extra-non-null-assertion {#TSLINT_NENNA}
+Disallow extra non-null assertion.
+
+
+#### no-magic-numbers {#TSLINT_NMN}
+This rule extends the base eslint/no-magic-numbers rule. It adds support for: numeric literal types, enum members, and readonly class properties.
+
+
+#### no-namespace {#TSLINT_NN}
+This rule aims to standardize the way modules are declared.
+
+
+#### no-non-null-asserted-nullish-coalescing {#TSLINT_NNNANC}
+The nullish coalescing operator is designed to provide a default value when dealing with null or undefined. Using non-null assertions in the left operand of the nullish coalescing operator is redundant.
+
+
+#### no-redeclare {#TSLINT_NR}
+This rule extends the base eslint/no-redeclare rule. It adds support for TypeScript function overloads, and declaration merging.
+
+
+#### prefer-namespace-keyword {#TSLINT_PNK}
+This rule aims to standardize the way modules are declared.
+
+
+#### triple-slash-reference {#TSLINT_TSR}
+Sets preference level for triple slash directives versus ES6-style import declarations.
+
+
+#### unbound-method {#TSLINT_UM}
+Warns when a method is used outside of a method call.
+
+
+### TS Possible Errors
+
+#### no-dupe-class-members {#TSLINT_NDCM}
+This rule extends the base eslint/no-dupe-class-members rule. It adds support for TypeScript's method overload definitions.
+
+
+#### no-empty-interface {#TSLINT_NEI}
+This rule aims to ensure that only meaningful interfaces are declared in the code.
+
+
+#### no-extra-parens {#TSLINT_NEP}
+This rule extends the base eslint/no-extra-parens rule. It adds support for TypeScript type assertions.
+
+
+#### no-extra-semi {#TSLINT_NES}
+This rule extends the base eslint/no-extra-semi rule. It adds support for class properties.
+
+
+#### no-floating-promises {#TSLINT_NFP}
+Requires Promise-like values to be handled appropriately. This rule forbids usage of Promise-like values in statements without handling their errors appropriately. Unhandled promises can cause several issues, such as improperly sequenced operations, ignored Promise rejections and more. Valid ways of handling a Promise-valued statement include awaiting, returning, and either calling .then() with two arguments or .catch() with one argument.
+
+
+#### no-for-in-array {#TSLINT_NFIA}
+A for-in loop (for (var k in o)) iterates over the properties of an Object. While it is legal to use for-in loops with array types, it is not common. for-in will iterate over the indices of the array as strings, omitting any "holes" in the array. More common is to use for-of, which iterates over the values of an array.
+
+
+#### no-implicit-any-catch {#TSLINT_NIAC}
+This rule requires an explicit type to be declared on a catch clause variable.
+
+
+#### no-misused-promises {#TSLINT_NMP}
+This rule forbids using promises in places where the TypeScript compiler allows them but they are not handled properly. These situations can often arise due to a missing await keyword or just a misunderstanding of the way async functions are handled/awaited.
+
+
+#### no-non-null-asserted-optional-chain {#TSLINT_NNNAOC}
+Optional chain expressions are designed to return undefined if the optional property is nullish. Using non-null assertions after an optional chain expression is wrong, and introduces a serious type safety hole into your code.
+
+
+#### no-unsafe-argument {#TSLINT_NUA}
+This rule disallows calling a function with any in its arguments, and it will disallow spreading any[]. This rule also disallows spreading a tuple type with one of its elements typed as any. This rule also compares the argument's type to the variable's type to ensure you don't pass an unsafe any in a generic position to a receiver that's expecting a specific type. For example, it will error if you assign Set any to an argument declared as Set string.
+
+
+#### no-unsafe-assignment {#TSLINT_NUAS}
+This rule disallows assigning any to a variable, and assigning any[] to an array destructuring. This rule also compares the assigned type to the variable's type to ensure you don't assign an unsafe any in a generic position to a receiver that's expecting a specific type. For example, it will error if you assign Set any to a variable declared as Set string.
+
+
+#### no-unsafe-call {#TSLINT_NUCA}
+This rule disallows calling any variable that is typed as any.
+
+
+#### no-unsafe-member-access {#TSLINT_NUMA}
+This rule disallows member access on any variable that is typed as any.
+
+
+#### no-unsafe-return {#TSLINT_NUR}
+This rule disallows returning any or any[] from a function. This rule also compares the return type to the function's declared/inferred return type to ensure you don't return an unsafe any in a generic position to a receiver that's expecting a specific type. For example, it will error if you return Set any from a function declared as returning Set string.
+
+
+#### prefer-as-const {#TSLINT_PAC}
+This rule recommends usage of const assertion when type primitive value is equal to type.
+
+
+#### restrict-plus-operands {#TSLINT_RPO}
+When adding two variables, operands must both be of type number or of type string.
+
+
+### TS Variables
+
+#### no-misused-new {#TSLINT_NMW}
+Warns on apparent attempts to define constructors for interfaces or new for classes.
+
+
+#### no-this-alias {#TSLINT_NTA}
+This rule prohibits assigning variables to this.
+
+
+#### no-unnecessary-type-arguments {#TSLINT_NUTA}
+Type parameters in TypeScript may specify a default value.
+
+
+#### no-unnecessary-type-assertion {#TSLINT_NUTAS}
+This rule aims to prevent unnecessary type assertions.
+
+
+#### no-unnecessary-type-constraint {#TSLINT_NUTC}
+Disallows unnecessary constraints on generic types.
+
+
+#### no-unused-vars {#TSLINT_NUV}
+This rule extends the base eslint/no-unused-vars rule. It adds support for TypeScript features, such as types.
 
 
 ### Variables
@@ -272,9 +465,5 @@ The purpose of the delete operator is to remove a property from an object. Using
 
 #### no-undef {#ESLINT_NUN}
 This rule can help you locate potential ReferenceErrors resulting from misspellings of variable and parameter names, or accidental implicit globals (for example, from forgetting the var keyword in a for loop initializer).
-
-
-#### no-unused-vars {#ESLINT_NUV}
-Variables that are declared and not used anywhere in the code are most likely an error due to incomplete refactoring. Such variables take up space in the code and can lead to confusion by readers.
 
 

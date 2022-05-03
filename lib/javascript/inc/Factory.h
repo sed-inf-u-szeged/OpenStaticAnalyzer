@@ -258,8 +258,8 @@ namespace columbus { namespace javascript { namespace asg {
           const_iterator(const const_iterator& otherit) :containerIt (otherit.containerIt),fact(otherit.fact){}
           const_iterator& operator++() {containerIt++;  while (containerIt != fact->container.end()  &&  ((*containerIt == NULL)   ||  fact->getIsFiltered(*containerIt))) containerIt++; return *this;}
           const_iterator operator++(int) {const_iterator tmp(*this); operator++(); return tmp;}
-          bool operator==(const const_iterator& rhs) {return containerIt==rhs.containerIt;}
-          bool operator!=(const const_iterator& rhs) {return containerIt!=rhs.containerIt;}
+          bool operator==(const const_iterator& rhs) const {return containerIt==rhs.containerIt;}
+          bool operator!=(const const_iterator& rhs) const {return containerIt!=rhs.containerIt;}
           const base::Base* operator*() {return *containerIt;}
           friend class Factory;
       };
@@ -568,13 +568,13 @@ namespace columbus { namespace javascript { namespace asg {
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
-      expression::AssignmentProperty* createAssignmentPropertyNode();
+      expression::AwaitExpression* createAwaitExpressionNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
       * \return Reference to the new node.
       */
-      expression::AwaitExpression* createAwaitExpressionNode();
+      expression::BigIntLiteral* createBigIntLiteralNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -593,6 +593,18 @@ namespace columbus { namespace javascript { namespace asg {
       * \return Reference to the new node.
       */
       expression::CallExpression* createCallExpressionNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      expression::ChainElement* createChainElementNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      expression::ChainExpression* createChainExpressionNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -617,6 +629,12 @@ namespace columbus { namespace javascript { namespace asg {
       * \return Reference to the new node.
       */
       expression::Identifier* createIdentifierNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      expression::ImportExpression* createImportExpressionNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -659,6 +677,12 @@ namespace columbus { namespace javascript { namespace asg {
       * \return Reference to the new node.
       */
       expression::ObjectExpression* createObjectExpressionNode();
+
+      /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      expression::PrivateIdentifier* createPrivateIdentifierNode();
 
       /**
       * \brief Creates a new node, insert it into the container and return with it.
@@ -925,6 +949,12 @@ namespace columbus { namespace javascript { namespace asg {
       structure::MethodDefinition* createMethodDefinitionNode();
 
       /**
+      * \brief Creates a new node, insert it into the container and return with it.
+      * \return Reference to the new node.
+      */
+      structure::PropertyDefinition* createPropertyDefinitionNode();
+
+      /**
       * \brief Flush the node Sizes to the default out
       */
       static void printNodeSizes();
@@ -1032,16 +1062,19 @@ namespace columbus { namespace javascript { namespace asg {
       friend class expression::ArrayExpression;
       friend class expression::ArrowFunctionExpression;
       friend class expression::AssignmentExpression;
-      friend class expression::AssignmentProperty;
       friend class expression::AwaitExpression;
+      friend class expression::BigIntLiteral;
       friend class expression::BinaryExpression;
       friend class expression::BooleanLiteral;
       friend class expression::CallExpression;
+      friend class expression::ChainElement;
+      friend class expression::ChainExpression;
       friend class expression::ClassExpression;
       friend class expression::ConditionalExpression;
       friend class expression::Expression;
       friend class expression::FunctionExpression;
       friend class expression::Identifier;
+      friend class expression::ImportExpression;
       friend class expression::Literal;
       friend class expression::LogicalExpression;
       friend class expression::MemberExpression;
@@ -1050,6 +1083,7 @@ namespace columbus { namespace javascript { namespace asg {
       friend class expression::NullLiteral;
       friend class expression::NumberLiteral;
       friend class expression::ObjectExpression;
+      friend class expression::PrivateIdentifier;
       friend class expression::Property;
       friend class expression::RegExpLiteral;
       friend class expression::SequenceExpression;
@@ -1099,6 +1133,7 @@ namespace columbus { namespace javascript { namespace asg {
       friend class structure::ImportSpecifier;
       friend class structure::MethodDefinition;
       friend class structure::ModuleSpecifier;
+      friend class structure::PropertyDefinition;
 
   }; // Factory
 

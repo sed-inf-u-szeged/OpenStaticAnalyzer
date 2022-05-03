@@ -18,17 +18,20 @@
  *  limitations under the Licence.
  */
 
+#include <columbus_config.h>
+#include <BuildInfo.h>
 #include "io/inc/IO.h"
 #include "io/inc/messages.h"
 #include "../inc/GraphConstants.h"
 #include "../inc/SarifExporter.h"
-#include "../inc/SarifWriter.h"
 #include "../inc/messages.h"
 #include "jsoncpp/inc/json.h"
 #include <algorithm>
 #include <Exception.h>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <graphsupport/inc/Metric.h>
+#include <regex>
 
 using namespace columbus::graph;
 using namespace columbus::graphsupport::graphconstants;
@@ -42,6 +45,8 @@ namespace {
     const string SARIF_NAME_RUNS = "runs";
     const string SARIF_NAME_TOOL = "tool";
     const string SARIF_NAME_DRIVER = "driver";
+    const string SARIF_NAME_DOWNLOADURI = "downloadUri";
+    const string SARIF_NAME_SEMVER = "semanticVersion";
     const string SARIF_NAME_NAME = "name";
     const string SARIF_NAME_LANG = "language";
     const string SARIF_NAME_RESULTS = "results";
@@ -52,6 +57,7 @@ namespace {
     const string SARIF_NAME_LEVEL = "level";
     const string SARIF_NAME_RANK = "rank";
     const string SARIF_NAME_HELPURI = "helpUri";
+    const string SARIF_NAME_INFORMATION_URI = "informationUri";
     const string SARIF_NAME_LOCATIONS = "locations";
     const string SARIF_NAME_THREADFLOWLOCATION = "location";
     const string SARIF_NAME_OCCURED = "occurrenceCount";
@@ -64,7 +70,7 @@ namespace {
     const string SARIF_NAME_COLUMN = "startColumn";
     const string SARIF_NAME_ENDCOLUMN = "endColumn";
     const string SARIF_NAME_CODEFLOWS = "codeFlows";
-    const string SARIF_NAME_NESTINGLEVEL = "nestingLevel"; 
+    const string SARIF_NAME_NESTINGLEVEL = "nestingLevel";
     const string SARIF_NAME_EXECUTIONORDER = "executionOrder";
     const string SARIF_NAME_THREADFLOWS = "threadFlows";
     const string SARIF_NAME_TEXT = "text";
@@ -72,61 +78,84 @@ namespace {
     const string SARIF_NAME_MESSAGE = "message";
     const string SARIF_NAME_SHORTDESC = "shortDescription";
     const string SARIF_NAME_FULLDESC = "fullDescription";
+    const string SARIF_NAME_DESCRIPTION = "description";
     const string SARIF_NAME_DEFCONF = "defaultConfiguration";
     const string SARIF_NAME_RELATIONS = "relationships";
     const string SARIF_NAME_TARGET = "target";
     const string SARIF_NAME_RULEINDEX = "ruleIndex";
+    const string SARIF_NAME_RULEID = "ruleId";
+    const string SARIF_NAME_BASE_LINE = "baselineState";
     const string SARIF_NAME_ENABLED = "enabled";
     const string SARIF_NAME_PROPERTIES = "properties";
+    const string SARIF_NAME_IMPORTANCE = "importance";
 
-    //Sarif values
     //versions available on https://github.com/oasis-tcs/sarif-spec/tree/master/Schemata
+    //Sarif values
     const string SARIF_VALUE_VERSION = "2.1.0";
-    const string SARIF_VALUE_SCHEMA  = "http://json.schemastore.org/sarif-2.1.0-rtm.1";
-    const string SARIF_VALUE_NAME    = "OpenStaticAnalyzer";
-    const string SARIF_VALUE_LANG    = "en-US";
+    const string SARIF_VALUE_SCHEMA = "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json";
+    const string SARIF_VALUE_NAME = "OpenStaticAnalyzer";
+    const string SARIF_VALUE_LANG = "en-US";
+    const string SARIF_VALUE_DOWNURI = "https://github.com/sed-inf-u-szeged/OpenStaticAnalyzer";
+    const string SARIF_VALUE_SEMVER = PROJECT_VERSION + std::string("+") + REVISION_NUMBER;
     namespace SARIF_VALUE_PRIORITY {
-        const string none    = "none";
-        const string note    = "note";
+        const string none = "none";
+        const string info = "note";
         const string warning = "warning";
-        const string error   = "error";
+        const string error = "error";
+    };
+    namespace SARIF_VALUE_BASELINE {
+        const string NEW = "new";
+        const string UNCHANGED = "unchanged";
+        const string UPDATED = "updated";
+        const string ABSENT = "absent";
+    };
+    namespace SARIF_VALUE_IMPORTANCE {
+        const string IMPORTANT = "important";
+        const string ESSENTIAL = "essential";
+        const string UNIMPORTANT = "unimportant";
     };
 
-    const string CloneClassIds[] = {
-        "CA_warning_CloneClass",
-        "CCO_warning_CloneClass",
-        "CEE_warning_CloneClass",
-        "CEG_warning_CloneClass",
-        "CE_warning_CloneClass",
-        "CI_warning_CloneClass",
-        "CLLOC_warning_CloneClass",
-        "CR_warning_CloneClass",
-        "CV_warning_CloneClass",
-        "NCR_warning_CloneClass"
-    };
-    
-    const string customCloneClassId   = "All_CloneClasses";
+    const string customCloneClassId = "All_CloneClasses";
     const string customCloneClassName = "All CloneClasses";
-    
+
     // because OpenStaticAnalyzer-Linux generates a path starting with /, on the other hand windows generates a path starting with the drive name, e.g. C:
-    const string uriFile = 
-    #ifdef __linux__
+    const string uriFile =
+#ifdef __linux__
         "file://";
-    #else
+#else
         "file:///";
-    #endif
+#endif
 
     /**
     * \brief basic IO class for SARIF
     */
     class SarifIO : public virtual columbus::io::IOBase {
+    private:
+        const char *resultLeftMargin = "        ";
+        const char *ruleLeftMargin = "            ";
     public:
-        SarifIO() {};
-        ~SarifIO() {};
-        
-        void writeData(const string& data) {
+        void writeData(const Json::Value& root, bool isRule = false) {
+            Json::StreamWriterBuilder builder;
+            builder["indentation"] = "  ";
             if (!isOpen()) throw columbus::IOException(COLUMBUS_LOCATION, CMSG_EX_FILE_NOT_OPEN);
-            else *stream << data;
+            else {
+                std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
+                common::updateMemoryStat();
+                writer->write(root, stream.get(), isRule ? ruleLeftMargin : resultLeftMargin);
+                common::updateMemoryStat();
+                flush();
+            }
+        }
+        void writeData(const string &text) {
+            *stream << text;
+        }
+        void writeData(const char *text) {
+            *stream << text;
+        }
+        void writeData(const vector<string> &text) {
+            for (auto &t : text) {
+                *stream << t;
+            }
         }
     };
 
@@ -141,7 +170,7 @@ namespace {
     const Attribute &componentHasTheRequiredAttribute(const Node &node, const Attribute::aType &aType, const string &name, const string &context) {
         Attribute::AttributeIterator attrItr = node.findAttribute(aType, name, context);
         if (attrItr.hasNext()) return attrItr.next();
-        const string type = aType == 0 ? "int" : aType == 1 ? "float" : aType == 2 ? "string" : aType == 3 ? "composite" : "invalid";
+        const string type = aType == Attribute::atInt ? "int" : aType == Attribute::atFloat ? "float" : aType == Attribute::atString ? "string" : aType == Attribute::atComposite ? "composite" : "invalid";
         throw columbus::Exception(COLUMBUS_LOCATION, CMSG_SARIF_OUT_OF_DATE(node.getUID(), type, name, context));
     }
 
@@ -153,10 +182,10 @@ namespace {
     * \param context [in], the context of the attribute of the given node
     * \return an Attribute reference
     */
-    const Attribute &componentHasTheRequiredAttribute(AttributeComposite &attr, const Attribute::aType &aType, const string &name, const string &context){
+    const Attribute &componentHasTheRequiredAttribute(AttributeComposite &attr, const Attribute::aType &aType, const string &name, const string &context) {
         Attribute::AttributeIterator attrItr = attr.findAttribute(aType, name, context);
         if (attrItr.hasNext()) return attrItr.next();
-        const string type =  aType == 0 ? "int" : aType == 1 ? "float" : aType == 2 ? "string" : aType == 3 ? "composite" : "invalid";
+        const string type = aType == Attribute::atInt ? "int" : aType == Attribute::atFloat ? "float" : aType == Attribute::atString ? "string" : aType == Attribute::atComposite ? "composite" : "invalid";
         throw columbus::Exception(COLUMBUS_LOCATION, CMSG_SARIF_OUT_OF_DATE("AttributeComposite", type, name, context));
     }
 
@@ -189,90 +218,127 @@ namespace {
     * \param attrComp [in], reference to AttributeComposite to which will be converted
     * \param location [in-out], refernce to Json::Value where the converted SARIF location will be stored
     */
-    void writeLocation(AttributeComposite& attrComp, Json::Value &location) {
-        const Attribute &path = componentHasTheRequiredAttribute(attrComp, Attribute::atString, ATTR_PATH, "");
-        const Attribute &lineBegin = componentHasTheRequiredAttribute(attrComp, Attribute::atInt, ATTR_LINE, "");
-        const Attribute &lineEnd = componentHasTheRequiredAttribute(attrComp, Attribute::atInt, ATTR_ENDLINE, "");
-        const Attribute &columnBegin = componentHasTheRequiredAttribute(attrComp, Attribute::atInt, ATTR_COLUMN, "");
-        const Attribute &columnEnd = componentHasTheRequiredAttribute(attrComp, Attribute::atInt, ATTR_ENDCOLUMN, "");
-        string pathTemp = uriFile + path.getStringValue();
-        replace(pathTemp.begin(), pathTemp.end(), '\\', '/');
+    void writeLocation(AttributeComposite &attrComp, Json::Value &location) {
+        const AttributeString &path = (AttributeString&)componentHasTheRequiredAttribute(attrComp, Attribute::atString, ATTR_PATH, "");
+        const AttributeInt &lineBegin = (AttributeInt&)componentHasTheRequiredAttribute(attrComp, Attribute::atInt, ATTR_LINE, "");
+        const AttributeInt &lineEnd = (AttributeInt&)componentHasTheRequiredAttribute(attrComp, Attribute::atInt, ATTR_ENDLINE, "");
+        const AttributeInt &columnBegin = (AttributeInt&)componentHasTheRequiredAttribute(attrComp, Attribute::atInt, ATTR_COLUMN, "");
+        const AttributeInt &columnEnd = (AttributeInt&)componentHasTheRequiredAttribute(attrComp, Attribute::atInt, ATTR_ENDCOLUMN, "");
 
-        string lineBeginValue = lineBegin.getStringValue();
-        string columnBeginValue = columnBegin.getStringValue();
-        string lineEndValue = lineEnd.getStringValue();
-        string columnEndValue = columnEnd.getStringValue();
+        int line = lineBegin.getValue();
+        int endLine = lineEnd.getValue();
+        int column = columnBegin.getValue();
+        int endColumn = columnEnd.getValue();
+        std::string _path;
+        _path = uriFile + boost::filesystem::path(path.getStringValue()).generic_string();
+        boost::replace_all(_path, " ", "%20");
 
         // negative starting/ending value to 0, because sarif line/column number cannot have negative number
-        if (stoi(lineBeginValue) <= 0) {
-            lineBeginValue = "1";
+        if (line <= 0) {
+            line = 1;
         }
-        if (stoi(lineEndValue) <= 0) {
-            lineEndValue = lineBeginValue;
+        if (endLine <= 0) {
+            endLine = line;
         }
-        if (stoi(columnBeginValue) <= 0) {
-            columnBeginValue = "1";
+        if (column <= 0) {
+            column = 1;
         }
-        if (stoi(columnEndValue) <= 0) {
-            columnEndValue = columnBeginValue;
+        if (endColumn <= 0) {
+            endColumn = column;
         }
 
-        location[SARIF_NAME_PHLOCATION][SARIF_NAME_ARTLOCATION][SARIF_NAME_URI] = pathTemp;
-        location[SARIF_NAME_PHLOCATION][SARIF_NAME_REGION][SARIF_NAME_LINE] = stoi(lineBeginValue);
-        location[SARIF_NAME_PHLOCATION][SARIF_NAME_REGION][SARIF_NAME_COLUMN] = stoi(columnBeginValue);
-        location[SARIF_NAME_PHLOCATION][SARIF_NAME_REGION][SARIF_NAME_ENDLINE] = stoi(lineEndValue);
-        location[SARIF_NAME_PHLOCATION][SARIF_NAME_REGION][SARIF_NAME_ENDCOLUMN] = stoi(columnEndValue);
+        location[SARIF_NAME_PHLOCATION][SARIF_NAME_ARTLOCATION][SARIF_NAME_URI] = _path;
+
+        location[SARIF_NAME_PHLOCATION][SARIF_NAME_REGION][SARIF_NAME_LINE] = line;
+        location[SARIF_NAME_PHLOCATION][SARIF_NAME_REGION][SARIF_NAME_COLUMN] = column;
+        location[SARIF_NAME_PHLOCATION][SARIF_NAME_REGION][SARIF_NAME_ENDLINE] = endLine;
+        location[SARIF_NAME_PHLOCATION][SARIF_NAME_REGION][SARIF_NAME_ENDCOLUMN] = endColumn;
     }
 
-    bool replace(string& str, const string from, const string end, const string to) {
-        size_t startPos = str.find(from);
-        if(startPos == std::string::npos)
-            return false;
-        size_t endPos = str.find(end, startPos + 2) + 1;
-        str.replace(startPos, endPos - startPos, to);
-        return true;
+    void writeLocation(const Node &node, Json::Value &location) {
+        writeLocation((AttributeComposite&)node.findAttribute(Attribute::atComposite, ATTR_POSITION, CONTEXT_ATTRIBUTE).next(), location);
     }
-    
+
+    void replace(string& str, pair<string, string> opening, pair<string, string> closing) {
+        // example : opening={"<pre>","```"}, closing={"</pre>","```"}
+
+        // opFirst = "<pre"
+        string opFirst = opening.first.substr(0, opening.first.length() - 1);
+        // opLast = ">"
+        char opLast = opening.first[opening.first.length() - 1];
+
+        // clFirst = "</pre"
+        string clFirst = closing.first.substr(0, closing.first.length() - 1);
+        // clLast = ">"
+        char clLast = closing.first[closing.first.length() - 1];
+
+        // reg = "<pre(>| .*?>)(.*?)?\<\/pre(>| .+?>)"
+    // which is: 
+    // group 1 : match any html tag that starts with "<pre>" or "<pre ...>" (html attributes, like id, class,...)
+    // group 2 : match everything after the first group
+    // group 3 : first occurence of "</pre>" or "</pre ...>" (html attributes like id, class, .... This usually doesn't happen)
+        string reg = opFirst + "(" + opLast + "| .*?" + opLast + ")(.*?)?\\" + clFirst[0] + "\\" + clFirst.substr(1, clFirst.length()) + "(" + clLast + "| .+?" + clLast + ")";
+        regex r(reg);
+
+        // replaceText = "```Group2```";
+        string replaceText = opening.second + "$2" + closing.second;
+        str = std::regex_replace(str, r, replaceText, regex_constants::match_not_eol);
+    }
+
     /**
     * \brief convert basic html text to Github Flavored Markdown
     * \param sourceHtml [in-out], reference to source text, also the output for GFM
     */
-    void htmlToGFM(string &sourceHtml, const string &asg){
-        const string htmlTags[] = {
-            "<p>" , "</p>",
-            "<b>", "</b>", "<strong>", "</strong>",
-            "<i>" , "</i>", "<em>" , "</em>",
-            "<ul>" , "</ul>", "<li>", "</li>",
-            "<div>" , "<span>" , "</div>" , "</span>" , "</code>" , "</pre>",
-            "&quot;" , "&lt;" , "&gt;", "\n", "\\n", "&#39;", "&amp;"
-        }, GFMTags[] = {
-            "", "\n",
-            "**", "**", "**", "**",
-            "*", "*", "*", "*",
-            "\n", "", "*   ", "\n",
-            "", "", "", "", "`", "```\n",
-            "\"", "<" , ">", "\n" , "\n", "'", "&"
+    string htmlToGFM(string sourceHtml, const string &asg) {
+        // newline is replaced by <br> and not as \n, because \n confuses the regex
+        const map<pair<string, string>, pair<string, string>> htmlToGFMTags{
+
+            {{"<p>", ""},{"</p>", "<br>"}},
+            {{"<b>", "**"},{"</b>", "**"}},
+            {{"<strong>", "**"},{"</strong>", "**"}},
+            {{"<i>", "*"},{"</i>", "*"}},
+            {{"<em>", "*"}, {"</em>", "*"}},
+            {{"<ul>", "<br>"}, {"</ul>", ""}},
+            {{"<li>", "*   "}, {"</li>", "<br>"}},
+            {{"<div>", ""}, {"</div>", ""}},
+            {{"<span>", ""}, {"</span>", ""}},
+            {{"<code>", "`"}, {"</code>", "`"}},
+            {{"<pre>", "```"}, {"</pre>", "```"}},
+            {{"<h1>","# "}, {"</h1>",""}},
+            {{"<h2>","## "}, {"</h2>",""}},
+            {{"<h3>","### "}, {"</h3>",""}},
+            {{"<h4>","#### "}, {"</h4>",""}},
+            {{"<h5>","##### "}, {"</h5>",""}},
+            {{"<h6>","###### "}, {"</h6>",""}},
         };
-        int size = 27;
+        const map<string, string> unicodeToGFMTags{
+            {"&quot;", "\""},
+            {"&lt;", "<"},
+            {"&gt;", ">"},
+            {"\\n", "\n"},
+            {"&#39;", "'"},
+            {"&amp;", "&"},
+            {"\u2013", "-"}
+        };
 
         // Html links to Markdown links
-        while(sourceHtml.find("<a href=\"",0) != std::string::npos){
-            std::size_t positionStart = sourceHtml.find("<a href=\"",0);
+        while (sourceHtml.find("<a href=\"", 0) != std::string::npos) {
+            std::size_t positionStart = sourceHtml.find("<a href=\"", 0);
             std::size_t saveStart = positionStart;
             positionStart += 9;
             std::size_t positionEnd = sourceHtml.find("\"", positionStart);
             string linkHref = "";
             //get the link url from the <a> html tag
-            while(positionStart <= positionEnd - 1){
+            while (positionStart <= positionEnd - 1) {
                 linkHref += sourceHtml.at(positionStart);
                 positionStart++;
             }
-            
+
             positionStart = sourceHtml.find(">", positionEnd) + 1;
             positionEnd = sourceHtml.find("</a>", positionStart) - 1;
             string linkText = "";
             //get the text from the <a> html tag
-            while(positionStart <= positionEnd){
+            while (positionStart <= positionEnd) {
                 linkText += sourceHtml.at(positionStart);
                 positionStart++;
             }
@@ -280,24 +346,24 @@ namespace {
             sourceHtml.replace(saveStart, positionEnd - saveStart + 5, link);
         }
 
-        //simple tags that doesnt have class, id, data, ... attributes
-        for (int i = 0; i < size; i++){
-            boost::replace_all(sourceHtml, htmlTags[i], GFMTags[i]);
+        for (const auto &tag : unicodeToGFMTags) {
+            boost::replace_all(sourceHtml, tag.first, tag.second);
         }
-        //code tags that have class, id, data, ... attributes
-        while (replace(sourceHtml, "<pre", ">", "```"));
-        while (replace(sourceHtml, "<code", ">", "`"));
-        //formatting the markdown code ```
-        boost::replace_all(sourceHtml, "````", "```"); // this happens if <pre><code>... exist
-        boost::replace_first(sourceHtml, "```", "\n```" + asg + "\n");
-        boost::replace_last(sourceHtml, "```", "\n```\n");
-        // every remainig <> tag
-        while (replace(sourceHtml, "<", ">", ""));
+        //have to replace line breaks with a placeholder value, because the regex library cant handle new lines
+        boost::replace_all(sourceHtml, "\n", "<br>");
+        for (const auto &tag : htmlToGFMTags) {
+            replace(sourceHtml, tag.first, tag.second);
+        }
+        replace(sourceHtml, { "````","\n```cpp\n" }, { "````", "\n```\n" }); // this happens if <pre><code>... exist
+        boost::replace_all(sourceHtml, "<br>", "\n");
 
-        //Getting rid of excess line breaks
-        boost::replace_all(sourceHtml, "\n\n\n", "\n\n"),
-        boost::replace_all(sourceHtml, "\n\n\n\n", "\n\n"),
         boost::replace_tail(sourceHtml, 1, "");
+        return sourceHtml;
+    }
+
+    std::string getSmellType(const Node &node) {
+        AttributeString &ciSmellType = (AttributeString&)componentHasTheRequiredAttribute(node, Attribute::atString, ATTR_DCF_CLONESMELLTYPE, CONTEXT_ATTRIBUTE);
+        return ciSmellType.getStringValue();
     }
 }
 
@@ -316,46 +382,88 @@ namespace columbus {
                 sarifSeverityLevel.find('c') != std::string::npos || sarifSeverityLevel.find('C') != std::string::npos
             };
 
-            Json::Value root(Json::objectValue);
+            SarifIO sio;
+            sio.open(filename, io::IOBase::eOpenMode::omWrite);
+
+            /*
+            * ----------------------------------------- README ------------------------------------------------------
+            * Json value as a root has been removed beacause it consumes too much memory
+            * For a 5GB graph in memory, the Json::Value consumes an extra 10GB, and memory overflow can occure...
+            * Json::Value as shown below works just fine, its performance is acceptable, and its usage is clear,
+            *     the only problem is memory consumption
+            * The "Json::Value root" has been replaced with sio.writeData(...) as an alternate solution to not store
+            *     the data unnecessarily in the memory, since this library (jsoncpp) does not have an option to dump
+            *     data constantly into a stream as we assign a value, we must resolve to a solution like this.
+            * I will leave this code here as a reference
+            * -------------------------------------------------------------------------------------------------------
+            */
+
+            /*Json::Value root(Json::objectValue);
             root[SARIF_NAME_VERSION] = SARIF_VALUE_VERSION;
             root[SARIF_NAME_SCHEMA] = SARIF_VALUE_SCHEMA;
             root[SARIF_NAME_RUNS] = Json::arrayValue;
             root[SARIF_NAME_RUNS][0] = Json::objectValue;
             root[SARIF_NAME_RUNS][0][SARIF_NAME_TOOL][SARIF_NAME_DRIVER][SARIF_NAME_NAME] = SARIF_VALUE_NAME;
             root[SARIF_NAME_RUNS][0][SARIF_NAME_TOOL][SARIF_NAME_DRIVER][SARIF_NAME_LANG] = SARIF_VALUE_LANG;
-            root[SARIF_NAME_RUNS][0][SARIF_NAME_RESULTS] = Json::arrayValue;
+            root[SARIF_NAME_RUNS][0][SARIF_NAME_TOOL][SARIF_NAME_DRIVER][SARIF_NAME_VERSION] = PROJECT_VERSION;
+            root[SARIF_NAME_RUNS][0][SARIF_NAME_TOOL][SARIF_NAME_DRIVER][SARIF_NAME_DOWNLOADURI] = SARIF_VALUE_DOWNURI;
+            root[SARIF_NAME_RUNS][0][SARIF_NAME_TOOL][SARIF_NAME_DRIVER][SARIF_NAME_SEMVER] = SARIF_VALUE_SEMVER;
+            root[SARIF_NAME_RUNS][0][SARIF_NAME_RESULTS] = Json::arrayValue;*/
+
+            //quote a string
+            auto quoted = [](const std::string &str)->std::string {
+                return "\"" + str + "\"";
+            };
+            sio.writeData({
+                "{\n",
+                "  " + quoted(SARIF_NAME_SCHEMA) + " : " + quoted(SARIF_VALUE_SCHEMA) + ",\n",
+                "  " + quoted(SARIF_NAME_VERSION) + " : " + quoted(SARIF_VALUE_VERSION) + ",\n",
+                "  " + quoted(SARIF_NAME_RUNS) + " :\n",
+                "  [\n",
+                "    {\n",
+                "      " + quoted(SARIF_NAME_TOOL) + " :\n",
+                "      {\n",
+                "        " + quoted(SARIF_NAME_DRIVER) + " :\n",
+                "          {\n",
+                "            " + quoted(SARIF_NAME_NAME) + " : " + quoted(SARIF_VALUE_NAME) + ",\n",
+                "            " + quoted(SARIF_NAME_LANG) + " : "+ quoted(SARIF_VALUE_LANG) +",\n",
+                "            " + quoted(SARIF_NAME_VERSION) + " : " + quoted(PROJECT_VERSION) + ",\n",
+                "            " + quoted(SARIF_NAME_DOWNLOADURI) + " : " + quoted(SARIF_VALUE_DOWNURI) + ",\n",
+                "            " + quoted(SARIF_NAME_RULES) + " :\n",
+                "            [",
+            });
+
 
             //Everything related to collect,write and store the rules from the graph
             map<string, int> ruleIndexesInJson;
             {
                 Node::NodeIterator ruleNodes = graph.findNodes(NTYPE_RUL_METRIC);
-                root[SARIF_NAME_RUNS][0][SARIF_NAME_TOOL][SARIF_NAME_DRIVER][SARIF_NAME_RULES] = Json::arrayValue;
                 int ruleCounter = 0;
                 boost::filesystem::path full_path(boost::filesystem::current_path().parent_path());
                 full_path /= "UsersGuide.html";
                 bool userGuideExist = boost::filesystem::exists(full_path);
-                string fullPathString = full_path.string();
+                string fullPathString = full_path.generic_string();
                 fullPathString = uriFile + fullPathString;
-
-                replace(fullPathString.begin(), fullPathString.end(), '\\', '/');
+                if (userGuideExist) {
+                    sio.writeData("        \"" + SARIF_NAME_INFORMATION_URI + "\" : \"" + fullPathString + "\",\n");
+                }
 
                 while (ruleNodes.hasNext()) {
                     const Node &ruleNode = ruleNodes.next();
                     const string &description = componentHasTheRequiredAttribute(ruleNode, Attribute::atString, ATTR_RUL_DESCRIPTION, CONTEXT_RUL).getStringValue();
                     const bool ruleParent = componentHasTheRequiredAttribute(ruleNode, Attribute::atString, ATTR_RUL_WARNING, CONTEXT_RUL).getStringValue() == "true";
-                    
+
                     Json::Value rule(Json::objectValue);
                     rule[SARIF_NAME_ID] = ruleNode.getUID();
                     rule[SARIF_NAME_NAME] = componentHasTheRequiredAttribute(ruleNode, Attribute::atString, ATTR_RUL_DISPLAYNAME, CONTEXT_RUL).getStringValue();
-                    if(description != ""){
+                    if (description != "") {
                         rule[SARIF_NAME_SHORTDESC][SARIF_NAME_TEXT] = description;
                     }
 
-                    if(componentHasNonRequiredAttribute(ruleNode, Attribute::atString, ATTR_RUL_HELPTEXT, CONTEXT_RUL)){
+                    if (componentHasNonRequiredAttribute(ruleNode, Attribute::atString, ATTR_RUL_HELPTEXT, CONTEXT_RUL)) {
                         const string &helpText = componentHasTheRequiredAttribute(ruleNode, Attribute::atString, ATTR_RUL_HELPTEXT, CONTEXT_RUL).getStringValue();
-                        string GFMText = helpText;
+                        string GFMText = htmlToGFM(helpText, asg);
                         rule[SARIF_NAME_FULLDESC][SARIF_NAME_TEXT] = helpText;
-                        htmlToGFM(GFMText, asg);
                         rule[SARIF_NAME_FULLDESC][SARIF_NAME_MARKDOWN] = GFMText;
                     }
 
@@ -363,11 +471,11 @@ namespace columbus {
 
                     if (ruleParent) {
                         AttributeComposite &ruleAttribute = (AttributeComposite&)componentHasTheRequiredAttribute(ruleNode, Attribute::atComposite, ATTR_RUL_SETTINGS, CONTEXT_RUL);
-                        
+
                         if (componentHasNonRequiredAttribute(ruleAttribute, Attribute::atString, ATTR_RUL_PRIORITY, CONTEXT_RUL)) {
                             string priority = componentHasTheRequiredAttribute(ruleAttribute, Attribute::atString, ATTR_RUL_PRIORITY, CONTEXT_RUL).getStringValue();
                             int rank = (priority == "Info" ? 0 : (priority == "Minor" ? 1 : (priority == "Major" ? 2 : (priority == "Critical" ? 3 : 4))));
-                                
+
                             // if the severity of the result is not required to be converted, then the rule will not be saved
                             AttributeComposite& attrCalc = (AttributeComposite&)componentHasTheRequiredAttribute(ruleNode, Attribute::atComposite, ATTR_RUL_CALCULATED, CONTEXT_RUL);
                             if (componentHasNonRequiredAttribute(attrCalc, Attribute::atString, ATTR_RUL_CALCULATEDFOR, CONTEXT_RUL)) {
@@ -377,9 +485,9 @@ namespace columbus {
                                     rank = 5;
                                 }
                             }
-                            if(!sarifSeverityLevelVal[rank]) continue;
+                            if (!sarifSeverityLevelVal[rank]) continue;
 
-                            priority = (priority == "Info") ? SARIF_VALUE_PRIORITY::note : (priority == "Minor" || priority == "Major") ? SARIF_VALUE_PRIORITY::warning : SARIF_VALUE_PRIORITY::error;
+                            priority = (priority == "Info") ? SARIF_VALUE_PRIORITY::info : (priority == "Minor" || priority == "Major") ? SARIF_VALUE_PRIORITY::warning : SARIF_VALUE_PRIORITY::error;
                             rule[SARIF_NAME_DEFCONF][SARIF_NAME_LEVEL] = priority;
                             rule[SARIF_NAME_DEFCONF][SARIF_NAME_RANK] = rank;
                         }
@@ -394,18 +502,20 @@ namespace columbus {
                                 rule[SARIF_NAME_HELPURI] = fullPathString + "#" + parentName;
                             }
                         }
-                        else{
+                        else {
                             if (userGuideExist) {
                                 rule[SARIF_NAME_HELPURI] = fullPathString + "#" + ruleNode.getUID();
                             }
                         }
-
                     }
                     else {
                         continue;
                     }
                     if (componentHasTheRequiredAttribute(ruleNode, Attribute::atString, ATTR_RUL_GROUPTYPE, CONTEXT_RUL).getStringValue() != "summarized" && !rule[SARIF_NAME_DEFCONF][SARIF_NAME_RANK].empty() && !rule[SARIF_NAME_DEFCONF][SARIF_NAME_LEVEL].empty() && !rule[SARIF_NAME_DEFCONF][SARIF_NAME_ENABLED].empty() && rule[SARIF_NAME_DEFCONF][SARIF_NAME_ENABLED].asString() == "true") {
-                        root[SARIF_NAME_RUNS][0][SARIF_NAME_TOOL][SARIF_NAME_DRIVER][SARIF_NAME_RULES][ruleCounter] = Json::Value(rule);
+                        sio.writeData(rule, true);
+                        sio.writeData(",");
+                        ruleIndexesInJson.emplace(rule[SARIF_NAME_ID].asString(), ruleCounter);
+                        common::updateMemoryStat();
                         ruleCounter++;
                     }
                 }
@@ -419,16 +529,20 @@ namespace columbus {
                     rule[SARIF_NAME_DEFCONF][SARIF_NAME_LEVEL] = "note";
                     rule[SARIF_NAME_DEFCONF][SARIF_NAME_RANK] = 5;
 
-                    root[SARIF_NAME_RUNS][0][SARIF_NAME_TOOL][SARIF_NAME_DRIVER][SARIF_NAME_RULES][ruleCounter] = Json::Value(rule);
+                    sio.writeData(rule);
+                    ruleIndexesInJson.emplace(rule[SARIF_NAME_ID].asString(), ruleCounter);
                     ruleCounter++;
-                }
-
-                //soft references to the rules, required to do this way, because this type of json formatter organize the elements by its name, and not by the order it was insterted
-                for (unsigned int index = 0; index < root[SARIF_NAME_RUNS][0][SARIF_NAME_TOOL][SARIF_NAME_DRIVER][SARIF_NAME_RULES].size(); index++) {
-                    ruleIndexesInJson.insert(pair<string, int>(root[SARIF_NAME_RUNS][0][SARIF_NAME_TOOL][SARIF_NAME_DRIVER][SARIF_NAME_RULES][index][SARIF_NAME_ID].asString(), index));
                 }
             }
 
+            sio.writeData({
+                    "\n",
+                    "             ]\n",
+                    "         }\n",
+                    "      },\n",
+                    "      " + quoted(SARIF_NAME_RESULTS) + ":\n",
+                    "      ["
+                });
 
             Node::NodeTypeSet types;
 
@@ -460,64 +574,107 @@ namespace columbus {
                 types.insert(NTYPE_RPG_PROGRAM);
                 types.insert(NTYPE_RPG_MODULE);
                 types.insert(NTYPE_RPG_PROCEDURE);
-                types.insert(NTYPE_RPG_SUBROUTINE); 
+                types.insert(NTYPE_RPG_SUBROUTINE);
                 types.insert(NTYPE_DCF_CLONEINSTANCE);
             }
 
             Node::NodeIterator allNodes = graph.findNodes(types);
-            int resultCounter = 0;
+            bool comma = false;
 
             // Goes through all the Nodes that has one of the Node type declared above
             while (allNodes.hasNext()) {
-                Node node = allNodes.next();
-                string  name = node.getUID();
-                Node::NodeType type = node.getType();
+                const Node &node = allNodes.next();
+                const Node::NodeType &type = node.getType();
                 AttributeComposite::AttributeIterator attr = node.findAttributeByContext(CONTEXT_WARNING);
+                string smellType = SARIF_VALUE_BASELINE::NEW;
+
+                // CloneClass changes
+                // CloneClass handling, add extra rule: All CloneClasses
+                if (type == NTYPE_DCF_CLONECLASS && ruleIndexesInJson.find(customCloneClassId) != ruleIndexesInJson.end()) {
+                    Json::Value result;
+                    const string &name = componentHasTheRequiredAttribute(node, Attribute::atString, ATTR_NAME, CONTEXT_ATTRIBUTE).getStringValue();
+                    Edge::EdgeIterator edges = node.findOutEdges(Edge::EdgeType(ETYPE_DCF_CLONETREE, Edge::edtDirectional));
+                    string cloneInstanceSmellType;
+                    string cloneClassSmellType = getSmellType(node);
+                    bool changed = false;
+                    int locationsCounter = 0;
+
+                    // has to iterate through the clone instances again
+                    while (edges.hasNext()) {
+                        // CloneInstance
+                        const Node &edgeNode = edges.next().getToNode();
+                        cloneInstanceSmellType = getSmellType(edgeNode);
+
+                        if (componentHasNonRequiredAttribute(edgeNode, Attribute::atComposite, ATTR_POSITION, CONTEXT_ATTRIBUTE)) {
+                            Json::Value location;
+                            writeLocation(edgeNode, location);
+                            const string &name = componentHasTheRequiredAttribute(edgeNode, Attribute::atString, ATTR_NAME, CONTEXT_ATTRIBUTE).getStringValue();
+                            result[SARIF_NAME_LOCATIONS].append(location);
+                            result[SARIF_NAME_LOCATIONS][result[SARIF_NAME_LOCATIONS].size() - 1][SARIF_NAME_PHLOCATION][SARIF_NAME_ARTLOCATION][SARIF_NAME_DESCRIPTION][SARIF_NAME_TEXT] = name + " location";
+                        }
+                        if (cloneClassSmellType == "cstNone" && cloneInstanceSmellType != "cstNone") {
+                            smellType = SARIF_VALUE_BASELINE::UPDATED;
+                            changed = true;
+                        }
+
+                        locationsCounter++;
+                    }
+                    if (cloneClassSmellType == "cstAppearing") smellType = SARIF_VALUE_BASELINE::NEW;
+                    else if (cloneClassSmellType == "cstDisappearing") smellType = SARIF_VALUE_BASELINE::ABSENT;
+                    else if (!changed) smellType = SARIF_VALUE_BASELINE::UNCHANGED;
+
+                    result[SARIF_NAME_RULEINDEX] = ruleIndexesInJson.find(customCloneClassId)->second;
+                    result[SARIF_NAME_BASE_LINE] = smellType;
+                    result[SARIF_NAME_RULEID] = customCloneClassId;
+                    if (locationsCounter > 0) {
+                        result[SARIF_NAME_KIND] = "pass";
+                        result[SARIF_NAME_OCCURED] = locationsCounter;
+                        result[SARIF_NAME_MESSAGE][SARIF_NAME_TEXT] = name;
+                        if (comma) sio.writeData(",");
+                        sio.writeData(result);
+                        comma = true;
+                        common::updateMemoryStat();
+                    }
+                }
 
                 // Warning handling (simple warnings, CloneClass warnings, CloneInstance warning)
                 while (attr.hasNext()) {
                     AttributeComposite& attrComp = (AttributeComposite&)attr.next();
                     const string &warningID = attrComp.getName();
                     Json::Value result = Json::objectValue;
+                    const string &messageTextTemp = componentHasTheRequiredAttribute(attrComp, Attribute::atString, ATTR_WARNINGTEXT, "").getStringValue();
+                    int locationCounter = 0;
 
                     // if the rule doesn't exist (becuase its not required by severity switch), then the current result will not be examined and will not be saved
                     if (ruleIndexesInJson.find(warningID) == ruleIndexesInJson.end()) continue;
-                      
-                    //linking the rule object index
-                    result[SARIF_NAME_RULEINDEX] = ruleIndexesInJson.find(warningID)->second;
-                    result[SARIF_NAME_KIND] = "pass";
-                    result[SARIF_NAME_LOCATIONS] = Json::arrayValue;
 
-                    // MultiLocation Start
-                    {
-                        Json::Value location(Json::objectValue);
-                        int locationCounter = 0;
-                        // multiple location for the same result
-                        if (type == NTYPE_DCF_CLONECLASS) {
-                            Edge::EdgeIterator edges = node.findOutEdges(Edge::EdgeType(ETYPE_DCF_CLONETREE, Edge::edtDirectional));
+                    // multiple location for the same result
+                    if (type == NTYPE_DCF_CLONECLASS) {
+                        Edge::EdgeIterator edges = node.findOutEdges(Edge::EdgeType(ETYPE_DCF_CLONETREE, Edge::edtDirectional));
 
-                            while (edges.hasNext()) {
-                                Node edgeNode = edges.next().getToNode();
-                                if (componentHasNonRequiredAttribute(edgeNode, Attribute::atComposite, ATTR_POSITION, CONTEXT_ATTRIBUTE)) {
-                                    AttributeComposite& attrComp = (AttributeComposite&)(edgeNode.findAttribute(Attribute::atComposite, ATTR_POSITION, CONTEXT_ATTRIBUTE).next());
-                                    writeLocation(attrComp, location);
+                        while (edges.hasNext()) {
+                            // CloneInstance
+                            Node edgeNode = edges.next().getToNode();
 
-                                    result[SARIF_NAME_LOCATIONS][locationCounter] = Json::Value(location);
-                                    locationCounter++;
-                                }
+                            if (componentHasNonRequiredAttribute(edgeNode, Attribute::atComposite, ATTR_POSITION, CONTEXT_ATTRIBUTE)) {
+                                Json::Value location;
+                                writeLocation(edgeNode, location);
+                                const string &name = componentHasTheRequiredAttribute(edgeNode, Attribute::atString, ATTR_NAME, CONTEXT_ATTRIBUTE).getStringValue();
+                                result[SARIF_NAME_LOCATIONS][locationCounter] = location;
+                                result[SARIF_NAME_LOCATIONS][locationCounter][SARIF_NAME_PHLOCATION][SARIF_NAME_ARTLOCATION][SARIF_NAME_DESCRIPTION][SARIF_NAME_TEXT] = name + " location";
+                                locationCounter++;
                             }
                         }
-                        // only one location for the result / not a cloneclass
-                        else {
-                            writeLocation(attrComp, location);
-                            result[SARIF_NAME_LOCATIONS][locationCounter] = Json::Value(location);
-                            locationCounter++;
-                        }
-                        if (locationCounter == 0) continue; // if there is a cloneclass that has no valid instance (eg. the Instance is cstDisappearing)
-                        result[SARIF_NAME_OCCURED] = locationCounter;
                     }
-                    const string &messageTextTemp = componentHasTheRequiredAttribute(attrComp, Attribute::atString, ATTR_WARNINGTEXT, "").getStringValue();
-                    
+                    // only one location for the result / not a cloneclass
+                    else {
+                        Json::Value location;
+                        writeLocation(attrComp, location);
+                        result[SARIF_NAME_LOCATIONS][locationCounter] = location;
+                        locationCounter++;
+                    }
+                    if (locationCounter == 0) continue; // if there is a cloneclass that has no valid instance (eg. the Instance is cstDisappearing)
+
                     // if the node has traceCallBack attribute
                     if (componentHasNonRequiredAttribute(attrComp, Attribute::atComposite, ATTR_EXTRAINFO, CONTEXT_TRACE)) {
                         AttributeComposite& attrExtraInfo = (AttributeComposite&)componentHasTheRequiredAttribute(attrComp, Attribute::atComposite, ATTR_EXTRAINFO, CONTEXT_TRACE);
@@ -529,17 +686,23 @@ namespace columbus {
                             Json::Value location(Json::objectValue);
 
                             writeLocation(attrTraceComp, location);
-                            
+
                             result[SARIF_NAME_CODEFLOWS][0][SARIF_NAME_THREADFLOWS][0][SARIF_NAME_LOCATIONS][executionOrder][SARIF_NAME_EXECUTIONORDER] = executionOrder;
                             result[SARIF_NAME_CODEFLOWS][0][SARIF_NAME_THREADFLOWS][0][SARIF_NAME_LOCATIONS][executionOrder][SARIF_NAME_THREADFLOWLOCATION] = location;
+                            result[SARIF_NAME_CODEFLOWS][0][SARIF_NAME_THREADFLOWS][0][SARIF_NAME_LOCATIONS][executionOrder][SARIF_NAME_IMPORTANCE] = SARIF_VALUE_IMPORTANCE::ESSENTIAL;
 
-                            // sourcelink relative path to absolute path
-                            boost::filesystem::path absolutePath(result[SARIF_NAME_LOCATIONS][0][SARIF_NAME_PHLOCATION][SARIF_NAME_ARTLOCATION][SARIF_NAME_URI].asString());
-                            string relativePath = componentHasTheRequiredAttribute(attrTraceComp, Attribute::atString, ATTR_PATH, "").getStringValue();
-                            replace(relativePath.begin(), relativePath.end(), '\\', '/');
-                            absolutePath.remove_filename();
-                            absolutePath += "/" + relativePath;
-                            result[SARIF_NAME_CODEFLOWS][0][SARIF_NAME_THREADFLOWS][0][SARIF_NAME_LOCATIONS][executionOrder][SARIF_NAME_THREADFLOWLOCATION][SARIF_NAME_PHLOCATION][SARIF_NAME_ARTLOCATION][SARIF_NAME_URI] = absolutePath.string();
+                            const string path = boost::filesystem::path(uriFile + componentHasTheRequiredAttribute(attrTraceComp, Attribute::atString, ATTR_PATH, "").getStringValue()).generic_string();
+                            result[SARIF_NAME_CODEFLOWS][0][SARIF_NAME_THREADFLOWS][0][SARIF_NAME_LOCATIONS][executionOrder][SARIF_NAME_THREADFLOWLOCATION][SARIF_NAME_PHLOCATION][SARIF_NAME_ARTLOCATION][SARIF_NAME_URI] = path;
+
+                            // Add warningText or RoleName as threadflow message
+                            if (componentHasNonRequiredAttribute(attrTraceComp, Attribute::atString, ATTR_WARNINGTEXT, "")) {
+                                const string &warningText = ((AttributeString&)componentHasTheRequiredAttribute(attrTraceComp, Attribute::atString, ATTR_WARNINGTEXT, "")).getStringValue();
+                                result[SARIF_NAME_CODEFLOWS][0][SARIF_NAME_THREADFLOWS][0][SARIF_NAME_LOCATIONS][executionOrder][SARIF_NAME_THREADFLOWLOCATION][SARIF_NAME_MESSAGE][SARIF_NAME_TEXT] = warningText;
+                            }
+                            else if (componentHasNonRequiredAttribute(attrTraceComp, Attribute::atString, "RoleName", "")) {
+                                const string &warningText = ((AttributeString&)componentHasTheRequiredAttribute(attrTraceComp, Attribute::atString, "RoleName", "")).getStringValue();
+                                result[SARIF_NAME_CODEFLOWS][0][SARIF_NAME_THREADFLOWS][0][SARIF_NAME_LOCATIONS][executionOrder][SARIF_NAME_THREADFLOWLOCATION][SARIF_NAME_MESSAGE][SARIF_NAME_TEXT] = warningText;
+                            }
 
                             if (componentHasNonRequiredAttribute(attrTraceComp, Attribute::atInt, ATTR_CALLSTACKDEPTH, "")) {
                                 const int callStackDepth = ((AttributeInt&)componentHasTheRequiredAttribute(attrTraceComp, Attribute::atInt, ATTR_CALLSTACKDEPTH, "")).getValue();
@@ -554,47 +717,29 @@ namespace columbus {
                     }
 
                     result[SARIF_NAME_MESSAGE][SARIF_NAME_TEXT] = messageTextTemp;
-                    root[SARIF_NAME_RUNS][0][SARIF_NAME_RESULTS][resultCounter] = Json::Value(result);
-                    resultCounter++;
+                    result[SARIF_NAME_RULEINDEX] = ruleIndexesInJson.find(warningID)->second;
+                    result[SARIF_NAME_BASE_LINE] = smellType;
+                    result[SARIF_NAME_OCCURED] = locationCounter;
+                    result[SARIF_NAME_RULEID] = warningID;
+                    result[SARIF_NAME_KIND] = "pass";
+
+                    if (comma) sio.writeData(",");
+                    sio.writeData(result);
+                    comma = true;
+                    common::updateMemoryStat();
                 }
-                
-                // CloneClass handling
-                if (type == NTYPE_DCF_CLONECLASS && ruleIndexesInJson.find(customCloneClassId) != ruleIndexesInJson.end()) {
-                    Json::Value result = Json::objectValue;
-                    Json::Value location(Json::objectValue);
-                    int locationCounter = 0;
-                    Edge::EdgeIterator edges = node.findOutEdges(Edge::EdgeType(ETYPE_DCF_CLONETREE, Edge::edtDirectional));
-                    const string &name = componentHasTheRequiredAttribute(node, Attribute::atString, ATTR_NAME, CONTEXT_ATTRIBUTE).getStringValue();
 
-                    //linking the rule object index
-                    result[SARIF_NAME_RULEINDEX] = ruleIndexesInJson.find(customCloneClassId)->second;
-                    result[SARIF_NAME_LOCATIONS] = Json::arrayValue;
-
-                    while (edges.hasNext()) {
-                        Node edgeNode = edges.next().getToNode();
-                        if (componentHasNonRequiredAttribute(edgeNode, Attribute::atComposite, ATTR_POSITION, CONTEXT_ATTRIBUTE)) {
-                            AttributeComposite& attrComp = (AttributeComposite&)(edgeNode.findAttribute(Attribute::atComposite, ATTR_POSITION, CONTEXT_ATTRIBUTE).next());
-                            writeLocation(attrComp, location);
-
-                            result[SARIF_NAME_LOCATIONS][locationCounter] = Json::Value(location);
-                            locationCounter++;
-                        }
-                    }
-                    if (locationCounter > 0) {  // if there is a cloneclass that has no valid instance (eg. the Instance is cstDisappearing)
-                        result[SARIF_NAME_KIND] = "pass";
-                        result[SARIF_NAME_OCCURED] = locationCounter;
-                        result[SARIF_NAME_MESSAGE][SARIF_NAME_TEXT] = name;
-                        root[SARIF_NAME_RUNS][0][SARIF_NAME_RESULTS][resultCounter] = Json::Value(result);
-                        resultCounter++;
-                    }
-                }
             }
 
-            SarifIO sio;
-            sio.open(filename, io::IOBase::eOpenMode::omWrite);
-            Json::SarifWriter writer;
-            sio.writeData(writer.write(root));
-            sio.close();
+            sio.writeData({
+                "\n",
+                "      ]\n",
+                "    }\n",
+                "  ]\n",
+                "}" 
+            });
+
+            common::updateMemoryStat();
         }
     }
 }

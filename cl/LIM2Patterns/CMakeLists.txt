@@ -1,22 +1,5 @@
 set (PROGRAM_NAME LIM2Patterns)
 
-# Add a ${TARGET_NAME} named custom copy target, which will copy the ${SOURCE}
-# file to the ${DESTINATION}.
-function (add_copy_custom_target_dir TARGET_NAME SOURCE DESTINATION)
-  add_custom_command (
-    DEPENDS ${SOURCE}
-    MAIN_DEPENDENCY ${SOURCE}
-    OUTPUT ${DESTINATION}
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${SOURCE} ${DESTINATION}
-    COMMENT "Copying ${SOURCE} to ${DESTINATION}"
-  )
-  add_custom_target (
-    ${TARGET_NAME}
-    DEPENDS ${DESTINATION}
-  )
-  set_target_properties (${TARGET_NAME} PROPERTIES FOLDER ${CMAKE_SUPPORT_FOLDER_NAME})
-endfunction()
-
 set (SOURCES
     src/Helpers.cpp
     #src/Calculate/CreateCalculate.cpp
@@ -122,28 +105,19 @@ add_copy_custom_target_dir(${PATTERNS_COPY_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/Pat
 # add python libs
 add_copy_custom_target_dir(${LIBS_COPY_NAME} ${CMAKE_CURRENT_BINARY_DIR}/Lib ${EXECUTABLE_OUTPUT_PATH}/Lib)
 
-function (add_language_config LANG)
-  add_executable(${PROGRAM_NAME}_${LANG} ${SOURCES})
-  add_dependencies(${PROGRAM_NAME}_${LANG} ${PATTERNS_COPY_NAME} ${LIBS_COPY_NAME} ${COLUMBUS_GLOBAL_DEPENDENCY})
+add_executable(${PROGRAM_NAME} ${SOURCES})
+add_dependencies(${PROGRAM_NAME} ${PATTERNS_COPY_NAME} ${LIBS_COPY_NAME} ${COLUMBUS_GLOBAL_DEPENDENCY})
 
-  # have to python.h manually because of pybind11
-  target_include_directories(${PROGRAM_NAME}_${LANG} PUBLIC ${COLUMBUS_3RDPARTY_INSTALL_DIR}/include/python${PY_PYVERSION} ${CMAKE_CURRENT_SOURCE_DIR}/pybind11/include)
-  # preprocessor for building the embedding statically
-  target_compile_definitions(${PROGRAM_NAME}_${LANG} PUBLIC Py_NO_ENABLE_SHARED )
-  # not using pybind11::embed or pybind11::pybind11 because that includes the python installed on the system, and not the python in the 3rdparty
-  target_link_libraries(${PROGRAM_NAME}_${LANG} limmetrics lim2graph lim graph graphsupport rul strtable common csi io yamlcpp python${PY_PYVERSION} ${COMMON_EXTERNAL_LIBRARIES})
-  # host specific libraries
-  if (CMAKE_SYSTEM_NAME STREQUAL Windows)
-    target_link_libraries(${PROGRAM_NAME}_${LANG} version ws2_32)
-  else (CMAKE_SYSTEM_NAME STREQUAL Linux)
-    target_link_libraries(${PROGRAM_NAME}_${LANG} pthread dl util m)
-  endif ()
-  set_schema_language_compiler_settings(${PROGRAM_NAME}_${LANG} ${LANG})
-  set_visual_studio_project_folder(${PROGRAM_NAME}_${LANG} FALSE)
-endfunction()
-
-add_language_config(cpp)
-add_language_config(java)
-add_language_config(javascript)
-add_language_config(python)
-add_language_config(csharp)
+# have to python.h manually because of pybind11
+target_include_directories(${PROGRAM_NAME} PUBLIC ${COLUMBUS_3RDPARTY_INSTALL_DIR}/include/python${PY_PYVERSION} ${CMAKE_CURRENT_SOURCE_DIR}/pybind11/include)
+# preprocessor for building the embedding statically
+target_compile_definitions(${PROGRAM_NAME} PUBLIC Py_NO_ENABLE_SHARED )
+# not using pybind11::embed or pybind11::pybind11 because that includes the python installed on the system, and not the python in the 3rdparty
+target_link_libraries(${PROGRAM_NAME} limmetrics lim2graph lim graph graphsupport rul strtable common csi io yamlcpp python${PY_PYVERSION} ${COMMON_EXTERNAL_LIBRARIES})
+# host specific libraries
+if (CMAKE_SYSTEM_NAME STREQUAL Windows)
+  target_link_libraries(${PROGRAM_NAME} version ws2_32)
+else (CMAKE_SYSTEM_NAME STREQUAL Linux)
+  target_link_libraries(${PROGRAM_NAME} pthread dl util m)
+endif ()
+set_visual_studio_project_folder(${PROGRAM_NAME} FALSE)

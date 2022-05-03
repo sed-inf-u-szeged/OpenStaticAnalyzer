@@ -18,46 +18,31 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var conditionalExpression = factory.createConditionalExpressionWrapper();
+        const conditionalExpression = factory.createConditionalExpressionWrapper();
         globals.setPositionInfo(node, conditionalExpression);
         return conditionalExpression;
     } else {
-        var conditionalExpressionWrapper = globals.getWrapperOfNode(node);
+        const conditionalExpressionWrapper = globals.getWrapperOfNode(node);
 
         if (node.alternate != null) {
-            var alternateWrapper = globals.getWrapperOfNode(node.alternate);
-            try {
-                conditionalExpressionWrapper.setAlternate(alternateWrapper);
-            } catch (e) {
-                console.error("CONDITIONALEXPRESSION - Could not set alternate! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(conditionalExpressionWrapper, "setAlternate", node.alternate, "CONDITIONALEXPRESSION - Could not set alternate!");
         }
 
         if (node.test != null) {
-            var testWrapper = globals.getWrapperOfNode(node.test);
-            try {
-                conditionalExpressionWrapper.setTest(testWrapper);
-            } catch (e) {
-                console.error("CONDITIONALEXPRESSION - Could not set test! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(conditionalExpressionWrapper, "setTest", node.test, "CONDITIONALEXPRESSION - Could not set test!");
         }
 
         if (node.consequent != null) {
-            var consequentWrapper = globals.getWrapperOfNode(node.consequent);
-            try {
-                conditionalExpressionWrapper.setConsequent(consequentWrapper);
-            } catch (e) {
-                console.error("CONDITIONALEXPRESSION - Could not set consequent! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(conditionalExpressionWrapper, "setConsequent", node.consequent, "CONDITIONALEXPRESSION - Could not set consequent!")
         }
-
     }
 }

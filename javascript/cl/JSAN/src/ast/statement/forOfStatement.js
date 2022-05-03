@@ -18,49 +18,32 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var forOfStatement = factory.createForOfStatementWrapper();
-        // TODO: uncomment if supported
-        //forOfStatement.setAwait(node.await);
+        const forOfStatement = factory.createForOfStatementWrapper();
+        forOfStatement.setAwait(node.await);
         globals.setPositionInfo(node, forOfStatement);
         return forOfStatement;
     } else {
-        var forOfStatementWrapper = globals.getWrapperOfNode(node);
+        const forOfStatementWrapper = globals.getWrapperOfNode(node);
 
         if (node.left != null) {
-            var leftWrapper = globals.getWrapperOfNode(node.left);
-            try {
-                forOfStatementWrapper.setLeft(leftWrapper);
-            } catch (e) {
-                console.error("FOROFSTATEMENT - Could not set left! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(forOfStatementWrapper, "setLeft", node.left, "FOROFSTATEMENT - Could not set left!");
         }
 
         if (node.right != null) {
-            var rightWrapper = globals.getWrapperOfNode(node.right);
-            try {
-                forOfStatementWrapper.setRight(rightWrapper);
-            } catch (e) {
-                console.error("FOROFSTATEMENT - Cannot set right! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(forOfStatementWrapper, "setRight", node.right, "FOROFSTATEMENT - Could not set right!");
         }
 
         if (node.body != null) {
-            var bodyWrapper = globals.getWrapperOfNode(node.body);
-            try {
-                forOfStatementWrapper.setBody(bodyWrapper);
-            } catch (e) {
-                console.error("FOROFSTATEMENT - Could not set body! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(forOfStatementWrapper, "setBody", node.body, "FOROFSTATEMENT - Could not set body!");
         }
-
-
     }
 }

@@ -18,29 +18,24 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var throwStatement = factory.createThrowStatementWrapper();
+        const throwStatement = factory.createThrowStatementWrapper();
         globals.setPositionInfo(node, throwStatement);
 
         return throwStatement;
     } else {
-        var throwStatementWrapper = globals.getWrapperOfNode(node);
+        const throwStatementWrapper = globals.getWrapperOfNode(node);
 
         if (node.argument != null) {
-            var argumentWrapper = globals.getWrapperOfNode(node.argument);
-            try {
-                throwStatementWrapper.setArgument(argumentWrapper);
-            } catch (e) {
-                console.error("THROWSTATEMENT - Could not set argument! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(throwStatementWrapper, "setArgument", node.argument, "THROWSTATEMENT - Could not set argument!");
         }
-
     }
 }

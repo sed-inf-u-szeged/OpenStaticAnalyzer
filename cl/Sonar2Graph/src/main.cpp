@@ -590,7 +590,7 @@ bool addIssues(string commonApiCall, string key, string severity,
     return true;
   } else if (numberOfIssues > MAX_NUMBER_OF_ISSUES) {
     WriteMsg::write(CMSG_SONAR2GRAPH_WARNING_GREATER_THEN_IN_FILE,
-      numberOfIssues, key, MAX_NUMBER_OF_ISSUES);
+      numberOfIssues, key.c_str(), MAX_NUMBER_OF_ISSUES);
     if (strict) {
       return false;
     }

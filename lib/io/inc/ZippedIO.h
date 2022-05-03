@@ -72,31 +72,31 @@ namespace columbus {  namespace io {
         * \throw IOException if the the file is already closed or not opened.
         * \throw IOException if can't close the file
         */
-        virtual void close();
+        virtual void close() override;
 
         /**
         \brief Write long long 0 size of the following block into the current file position
         * set the blockSizePosition to the current file position
         */
-        virtual void writeStartSizeOfBlock();
+        virtual void writeStartSizeOfBlock() override;
          /**
         \brief Write the difference beetween the actual file positon and the BlockSizeposition as a file size to the storaged blockSizePosition
         */
-        virtual void writeEndSizeOfBlock();
+        virtual void writeEndSizeOfBlock() override;
 
         /**
         \brief skip the next length long data.
         \param length of the data
         */
-        virtual void skipNext(std::streamsize length);
+        virtual void skipNext(std::streamsize length) override;
 
         /**
          * \brief set position to read
          * \param startPos startposition to read
          */
-         virtual void setStartReadPosition(std::streampos& startPos);
+         virtual void setStartReadPosition(std::streampos& startPos) override;
 
-         virtual void setStartWritePosition( std::streampos& startPos);
+         virtual void setStartWritePosition( std::streampos& startPos) override;
     };
 }}
 

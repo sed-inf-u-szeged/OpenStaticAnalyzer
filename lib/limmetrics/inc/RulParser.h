@@ -38,6 +38,10 @@ namespace columbus { namespace lim { namespace metrics {
       RulParser( rul::RulHandler& rul, SharedContainers& shared);
 
       /**
+       * Parses the rules
+       */
+      void run();
+      /**
       * Deletes the allocated MetricHandlers
       */
       ~RulParser();
@@ -66,11 +70,6 @@ namespace columbus { namespace lim { namespace metrics {
       void parse();
 
       /**
-      * This method matches a MetricHandler instance to a given metric in the RUL by its name
-      */
-      MetricHandler* matchHandler( const std::string& id, bool enabled );
-
-      /**
       * This method sorts the loaded handlers by their dependencies so that when a
       * concrete node is processed they can be simply executed in order
       */
@@ -90,19 +89,31 @@ namespace columbus { namespace lim { namespace metrics {
       rul::RulHandler& rul;
 
       /**
-      * Shared containers
-      */
-      SharedContainers& shared;
-      
-      /**
       * Common stack maintenance for the shared containers
       */
       void stack( const NodeWrapper& node, bool push );
-
+      
       /**
       * Checks whether a certain metric is calculated for a specific node type
       */
       bool isCalculatedFor( const std::string& metric, NodeWrapper& node );
+
+      /**
+      * True if the rule is already processed.
+      */
+      bool processed;
+
+    protected:
+      /**
+      * This method matches a MetricHandler instance to a given metric in the RUL by its name
+      */
+      virtual MetricHandler* matchHandler( const std::string& id, bool enabled );
+
+      /**
+      * Shared containers
+      */
+      SharedContainers& shared;
+
   };
 
 }}}

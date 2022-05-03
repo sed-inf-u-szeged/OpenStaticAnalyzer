@@ -306,20 +306,6 @@ namespace columbus { namespace javascript { namespace asg {
       virtual void visitEnd(const expression::AssignmentExpression& node , bool callVirtualBase = true);
 
       /**
-      * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::Property,..) of the expression::AssignmentProperty node.
-      * \param node            [in] The node which is visited.
-      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
-      */
-      virtual void visit(const expression::AssignmentProperty& node , bool callVirtualBase = true);
-
-      /**
-      * \brief Abstract end visitor, which calls the end visitor of the base class (expression::Property,..) of the expression::AssignmentProperty node.
-      * \param node            [in] The node which is visited.
-      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
-      */
-      virtual void visitEnd(const expression::AssignmentProperty& node , bool callVirtualBase = true);
-
-      /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::Expression,..) of the expression::AwaitExpression node.
       * \param node            [in] The node which is visited.
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
@@ -332,6 +318,20 @@ namespace columbus { namespace javascript { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const expression::AwaitExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::Literal,..) of the expression::BigIntLiteral node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expression::BigIntLiteral& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expression::Literal,..) of the expression::BigIntLiteral node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expression::BigIntLiteral& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::Expression,..) of the expression::BinaryExpression node.
@@ -374,6 +374,34 @@ namespace columbus { namespace javascript { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const expression::CallExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the expression::ChainElement node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expression::ChainElement& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (base::Positioned,..) of the expression::ChainElement node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expression::ChainElement& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::Expression,..) of the expression::ChainExpression node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expression::ChainExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expression::Expression,..) of the expression::ChainExpression node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expression::ChainExpression& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::Expression,..) of the expression::ClassExpression node.
@@ -444,6 +472,20 @@ namespace columbus { namespace javascript { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const expression::Identifier& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (expression::Expression,..) of the expression::ImportExpression node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expression::ImportExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (expression::Expression,..) of the expression::ImportExpression node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expression::ImportExpression& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the expression::Literal node.
@@ -556,6 +598,20 @@ namespace columbus { namespace javascript { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const expression::ObjectExpression& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the expression::PrivateIdentifier node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const expression::PrivateIdentifier& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (base::Positioned,..) of the expression::PrivateIdentifier node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const expression::PrivateIdentifier& node , bool callVirtualBase = true);
 
       /**
       * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the expression::Property node.
@@ -1242,6 +1298,20 @@ namespace columbus { namespace javascript { namespace asg {
       * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
       */
       virtual void visitEnd(const structure::ModuleSpecifier& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract visitor, which calls the visitor of the base class(es) (base::Positioned,..) of the structure::PropertyDefinition node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visit(const structure::PropertyDefinition& node , bool callVirtualBase = true);
+
+      /**
+      * \brief Abstract end visitor, which calls the end visitor of the base class (base::Positioned,..) of the structure::PropertyDefinition node.
+      * \param node            [in] The node which is visited.
+      * \param callVirtualBase [in] This technically flag is help the call a multiple heritage call the virtual base or not.(the none virtual base is called directly).
+      */
+      virtual void visitEnd(const structure::PropertyDefinition& node , bool callVirtualBase = true);
 
   }; // VisitorAbstractNodes
 

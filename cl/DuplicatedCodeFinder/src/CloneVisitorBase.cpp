@@ -27,7 +27,7 @@ using namespace common;
 CloneVisitorBase::CloneVisitorBase(
   std::set<LineIdentifier>& visitedLines
   , std::set<columbus::NodeId>& visitedLimNodes
-  , columbus::LimOrigin& limOrigin
+  , columbus::LimOrigin& limOrigin 
   , std::vector<int>& _resultSequence
   , std::vector<ClonePositioned*>& _nodeIdSequence
   , CloneKind _ck /*= schemaOnly*/
@@ -49,7 +49,6 @@ CloneVisitorBase::CloneVisitorBase(
   , limOrigin(limOrigin)
   , resultSequence(_resultSequence)
   , nodeIdSequence(_nodeIdSequence)
-  , inside(0)
   , analizeNode(_analizeNode)
   , block_paths()
   , out(NULL)
@@ -88,7 +87,9 @@ bool CloneVisitorBase::isAnalizeNode(const Base& node) {
 
 int CloneVisitorBase::getSeparator() {
   --separatorCounter;
-  CHECK_SEPARATOR(separatorCounter);
+  #ifndef NDEBUG
+    CHECK_SEPARATOR(separatorCounter);
+  #endif
   return separatorCounter;
 }
 
@@ -133,13 +134,11 @@ void CloneVisitorBase::addPattern(const  Base& n) {
   int kind = n.getNodeKind();
 
   if (analizeNode && isAnalizeNode(n))
-    inside++;
-
-  if (inside == 0 && analizeNode)
-    addToResultSequence(getSeparator());
-  else {
-    addToResultSequence((int)kind);
+  {
+    addBeginEndSeparator();
   }
+
+  addToResultSequence((int)kind);
 
   //it must be a positioned.....checked before addPattern is called
   addToNodeIdSequence(dynamic_cast<const Positioned*>(&n));
@@ -149,32 +148,23 @@ void CloneVisitorBase::decreaseDepth(const Base& n) {
 
   addToResultSequence(decDepthSign);
   addToNodeIdSequence(NULL);
-
-  if (analizeNode && isAnalizeNode(n)) {
-    if (inside>0) {
-      inside--;
-      if (inside == 0) {
-        addBeginEndSeparator();
-      }
-    }
-  }
 }
 
 void CloneVisitorBase::addFileSeparator() {
-
+  
   addToResultSequence(/*globalFileSeparator*/getSeparator());
-  addToNodeIdSequence(NULL);
+  addToNodeIdSequence(NULL);  
 }
 
 void CloneVisitorBase::addBeginEndSeparator() {
-
+  
   addToResultSequence(/*beginEndSeparator*/getSeparator());
   addToNodeIdSequence(NULL);
 }
 
 void CloneVisitorBase::blockNode(const Base& b) {
-
-  if (!AlgorithmCommon::getIsPositioned(b))
+  
+  if (!AlgorithmCommon::getIsPositioned(b)) 
     return;
   const Positioned& pos= dynamic_cast<const Positioned&>(b);
   /**
@@ -227,13 +217,13 @@ void CloneVisitorBase::blockNode(const Base& b) {
 
     if (visitedLines.count(LineIdentifier(limFactory->getStringTable().get(lPath),line))!=0) {
       blockNodeKind = BK_asgNodeBlock;
-      blockedNode   = b.getId();
-
+      blockedNode   = b.getId(); 
+      
       common::WriteMsg::write(common::WriteMsg::mlDDebug,"\nThe %s %d has already been visited.\n", lPath.c_str(),line);
     return;
     }
   }
-
+  
   if (!currentLimNode.empty() && (visitedLimNodes.count(currentLimNode.top()) > 0))
   {
     columbus::NodeId  posibelBlockedNode   = currentLimNode.top();
@@ -241,18 +231,18 @@ void CloneVisitorBase::blockNode(const Base& b) {
       blockNodeKind = BK_limNodeBlock;
       blockedNode   = posibelBlockedNode;
       common::WriteMsg::write(common::WriteMsg::mlDDebug,"The lim node %s %s %d  already visited java %d",lim::asg::Common::toString(limFactory->getRef(blockedNode ).getNodeKind()).c_str(),lPath.c_str(),line,b.getId());
-
+      
     }
-    return;
+    return; 
   }
-
+  
 
   for (std::set<std::string>::iterator s_iter=block_paths.begin();s_iter!=block_paths.end();++s_iter) {
     std::string b_path=(*s_iter);
     if (lPath.find(b_path)!=std::string::npos) {
       common::WriteMsg::write(CMSG_FILTERED_OUT, lPath.c_str());
       blockNodeKind = BK_file;
-      blockedNode   = 0;
+      blockedNode   = 0; 
       return;
     }
   }
@@ -273,18 +263,18 @@ void CloneVisitorBase::setOutputStream(std::ostream& out) {
   this->out = &out;
 }
 
-void CloneVisitorBase::incDepth() {
-  depth++;
+void CloneVisitorBase::incDepth() { 
+  depth++; 
 }
 
-void CloneVisitorBase::decDepth() {
-  depth--;
+void CloneVisitorBase::decDepth() { 
+  depth--; 
 }
 
 void CloneVisitorBase::setFactory(  columbus::LANGUAGE_NAMESPACE::Factory* _factory, columbus::NodeId currentLimComponentId) {
   factory             = _factory;
   currentLimComponent = currentLimComponentId;
-  lastIsFilteredOut   = false;
+  lastIsFilteredOut   = false; 
 }
 
 int CloneVisitorBase::getUniqueValue() {
@@ -299,7 +289,7 @@ int CloneVisitorBase::getBeginEndSeparator() {
   return 0;
 }
 
-bool CloneVisitorBase::isSepCharacter(int s) {
+bool CloneVisitorBase::isSepCharacter(int s) { 
   return (s>INT_MIN+separatorCounter && s!=decDepthSign);
 }
 
@@ -307,8 +297,8 @@ bool CloneVisitorBase::isSepDecDepthSign(int s) {
   return (s==decDepthSign);
 }
 
-int CloneVisitorBase::getDecDepthSign() {
-  return decDepthSign;
+int CloneVisitorBase::getDecDepthSign() { 
+  return decDepthSign; 
 }
 
 void CloneVisitorBase::addBlockPath(const std::string& path) {
@@ -408,7 +398,7 @@ void CloneVisitorBase::visit(const  Positioned& n,bool callVirtualParent){
   } else {
     //not considering non-positioned nodes except in python where the packages nodes are not Positioned nodes
 #ifdef SCHEMA_CSHARP
-    if (n.getNodeKind() != columbus::LANGUAGE_NAMESPACE::ndkNamespaceDeclarationSyntax)
+    if (n.getNodeKind() != columbus::LANGUAGE_NAMESPACE::ndkNamespaceDeclarationSyntax) 
 #endif
       return;
   }
@@ -437,8 +427,8 @@ void CloneVisitorBase::visitEnd(const  Positioned& n, bool callVirtualParent) {
   }
 
   evoluteLimNode(n,true);
-
-
+  
+  
   if (blockNodeKind != BK_none)
     return;
 
@@ -488,7 +478,7 @@ bool CloneVisitorBase::evoluteLimNode( const Base& n ,bool end){
       return true;
     }
   } else if (currentLimNode.empty()) {
-     currentLimNode.push(limFactory->getRoot()->getId());
+     currentLimNode.push(limFactory->getRoot()->getId()); 
   }
   return false;
 }
@@ -505,7 +495,7 @@ bool CloneVisitorBase::parseLimNodeId( const Base& n, columbus::NodeId& limNodeI
 void CloneVisitorBase::assignSrcFileToComponenet( std::string &lPath ,columbus::NodeId currentLimComponent)
 {
   (*fileNamesByComponent)[currentLimComponent].insert(limFactory->getStringTable().set(lPath.c_str()));
-  for ( columbus::lim::asg::ListIterator<columbus::lim::asg::base::Base>
+  for ( columbus::lim::asg::ListIterator<columbus::lim::asg::base::Base> 
     it = limFactory->getReverseEdges().constIteratorBegin(currentLimComponent,columbus::lim::asg::edkComponent_Contains);
     it != limFactory->getReverseEdges().constIteratorEnd(currentLimComponent,columbus::lim::asg::edkComponent_Contains);
   ++it) {

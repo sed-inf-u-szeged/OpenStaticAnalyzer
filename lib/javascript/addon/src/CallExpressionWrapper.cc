@@ -22,6 +22,7 @@ napi_value CallExpressionWrapper::Init(napi_env env, napi_value& exports) {
   DECLARE_NAPI_METHOD( "addComments", addComments),
     DECLARE_NAPI_METHOD("setPath", setPath),
     DECLARE_NAPI_METHOD("setPosition", setPosition),
+    DECLARE_NAPI_METHOD("setOptional", setOptional),
   };
 
   napi_value cons;
@@ -323,4 +324,36 @@ napi_value CallExpressionWrapper::setPosition(napi_env env, napi_callback_info i
 }
 
 
+napi_value CallExpressionWrapper::setOptional(napi_env env, napi_callback_info info){ 
+  napi_status status;
+  napi_value jsthis;
+  size_t argc = 1;
+  napi_value args[1];
+  status = napi_get_cb_info(env, info, &argc, args, &jsthis, nullptr);
+  assert(status == napi_ok);
+
+  if (argc != 1) {
+    napi_throw_type_error(env, nullptr, "Wrong number of arguments.");
+    return nullptr;
+  }
+
+  CallExpressionWrapper* obj;
+  status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+  assert(status == napi_ok);
+
+  napi_valuetype paramtype;
+  status = napi_typeof(env, args[0], &paramtype);
+  assert(status == napi_ok);
+
+  if(paramtype != napi_boolean){
+    napi_throw_type_error(env, nullptr, "Argument should be a boolean!"); 
+    return nullptr;
+  }
+
+  bool b;
+  status = napi_get_value_bool(env, args[0], &b);
+  assert(status == napi_ok);
+  dynamic_cast<columbus::javascript::asg::expression::ChainElement*>(obj->_nativeObj)->setOptional( b );
+  return nullptr;
+}
 }}}} //end of namespaces

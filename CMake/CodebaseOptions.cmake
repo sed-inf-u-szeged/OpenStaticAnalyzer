@@ -21,11 +21,6 @@ set (COLUMBUS_3RDPARTY_SOURCE_DIR ${CMAKE_SOURCE_DIR}/3rdparty)
 
 # Compiler warning settings
 if (MSVC)
-  # For ninja builds on windows we set the CMAKE_VS_PLATFORM_TOOLSET to V140 (VS2015)
-  if (NOT CMAKE_VS_PLATFORM_TOOLSET)
-    set (CMAKE_VS_PLATFORM_TOOLSET V140 CACHE STRING "" FORCE)
-  endif ()
-
   # Disable some common compiler warnings end enable parallel build
   set (EXTRA_COMPILER_OPTIONS "/WX /wd4996 /wd4267 /wd4786 /wd4244 /wd4068 /MP /EHsc /experimental:external /external:W0 /external:I ${COLUMBUS_3RDPARTY_INSTALL_DIR}/include")
 
@@ -51,6 +46,7 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL Linux)
 
   # Enable compiler warnings and use fPIC option
   set (EXTRA_COMPILER_OPTIONS "-Wall -Werror -Wno-unused-local-typedefs -Wno-unknown-pragmas -fPIC")
+  set (EXTRA_CXX_FLAGS "-Wno-overloaded-virtual")
 
   if (STRIP)
     set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
@@ -60,7 +56,7 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL Linux)
 
 endif ()
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_COMPILER_OPTIONS}")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_COMPILER_OPTIONS} ${EXTRA_CXX_FLAGS}")
 set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_COMPILER_OPTIONS}")
 
 # Common global dependencies

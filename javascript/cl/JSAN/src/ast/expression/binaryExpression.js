@@ -18,38 +18,29 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
-const conversions = require('../conversions');
+import * as globals from '../../globals.js';
+import * as conversions from '../conversions.js'
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var binaryExpression = factory.createBinaryExpressionWrapper();
+        const binaryExpression = factory.createBinaryExpressionWrapper();
         globals.setPositionInfo(node, binaryExpression);
         binaryExpression.setOperator(conversions.convertOperatorToString(node.operator));
         return binaryExpression;
     } else {
-        var binaryExpressionWrapper = globals.getWrapperOfNode(node);
+        const binaryExpressionWrapper = globals.getWrapperOfNode(node);
 
         if (node.left != null) {
-            var leftWrapper = globals.getWrapperOfNode(node.left);
-            try {
-                binaryExpressionWrapper.setLeft(leftWrapper);
-            } catch (e) {
-                console.error("BINARYEXPRESSION - Could not set left! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(binaryExpressionWrapper, "setLeft", node.left, "BINARYEXPRESSION - Could not set left!");
         }
 
         if (node.right != null) {
-            var rightWrapper = globals.getWrapperOfNode(node.right);
-            try {
-                binaryExpressionWrapper.setRight(rightWrapper);
-            } catch (e) {
-                console.error("BINARYEXPRESSION - Could not set right! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(binaryExpressionWrapper, "setRight", node.right, "BINARYEXPRESSION - Could not set right!");
         }
 
     }

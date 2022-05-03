@@ -18,40 +18,30 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var switchStatement = factory.createSwitchStatementWrapper();
+        const switchStatement = factory.createSwitchStatementWrapper();
         globals.setPositionInfo(node, switchStatement);
         return switchStatement;
     } else {
-        var switchStatementWrapper = globals.getWrapperOfNode(node);
+        const switchStatementWrapper = globals.getWrapperOfNode(node);
         if (node.cases != null) {
-            for (var i = 0; i < node.cases.length; i++) {
+            for (let i = 0; i < node.cases.length; i++) {
                 if (node.cases[i] != null) {
-                    var casesWrapper = globals.getWrapperOfNode(node.cases[i]);
-                    try {
-                        switchStatementWrapper.addCases(casesWrapper);
-                    } catch (e) {
-                        console.error("SWITCHSTATEMENT - Could not add case! Reason of the error: " + e + "\n");
-                    }
+                    globals.safeSet(switchStatementWrapper, "addCases", node.cases[i], "SWITCHSTATEMENT - Could not add case!");
                 }
             }
         }
+
         if (node.discriminant != null) {
-            var discriminantWrapper = globals.getWrapperOfNode(node.discriminant);
-            try {
-                switchStatementWrapper.setDiscriminant(discriminantWrapper);
-            } catch (e) {
-                console.error("SWITCHSTATEMENT - Could not set discriminant! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(switchStatementWrapper, "setDiscriminant", node.discriminant, "SWITCHSTATEMENT - Could not set discriminant!");
         }
-
-
     }
 }

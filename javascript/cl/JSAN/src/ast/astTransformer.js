@@ -18,257 +18,255 @@
  *  limitations under the Licence.
  */
 
-const hashmap = require('hashmap');
-const addon = require('../../javascriptAddon');
-const fs = require('fs');
-const estraverse = require('estraverse');
-const sha1 = require('sha1');
-const path = require('path');
-const Cache = require('lru-cache-node');
+import {walk} from 'estree-walker';
+import * as path from 'path';
+import * as globals from '../globals.js';
+import * as varUsages from '../assets/varUsages.js'
+import * as scopeManager from '../assets/scopeManager.js'
+import * as conversions from './conversions.js';
 
-let crossRefSolver = require('../assets/crossRefSolver');
-let globals = require('../globals');
+import {default as sha1} from 'sha1';
+
+import {default as Cache} from 'lru-cache-node';
+
+import {default as program} from "./base/program.js";
+
+import {default as classDeclaration} from "./declaration/classDeclaration.js";
+import {default as exportAllDeclaration} from "./declaration/exportAllDeclaration.js";
+import {default as exportDefaultDeclaration} from "./declaration/exportDefaultDeclaration.js";
+import {default as exportNamedDeclaration} from "./declaration/exportNamedDeclaration.js";
+import {default as functionDeclaration} from "./declaration/functionDeclaration.js";
+import {default as importDeclaration} from "./declaration/importDeclaration.js";
+import {default as variableDeclaration} from "./declaration/variableDeclaration.js";
+import {default as variableDeclarator} from "./declaration/variableDeclarator.js";
+
+import {default as arrayExpression} from "./expression/arrayExpression.js";
+import {default as arrowFunctionExpression} from "./expression/arrowFunctionExpression.js";
+import {default as assignmentExpression} from "./expression/assignmentExpression.js";
+import {default as awaitExpression} from "./expression/awaitExpression.js";
+import {default as binaryExpression} from "./expression/binaryExpression.js";
+import {default as callExpression} from "./expression/callExpression.js";
+import {default as chainExpression} from "./expression/chainExpression.js";
+import {default as classExpression} from "./expression/classExpression.js";
+import {default as conditionalExpression} from "./expression/conditionalExpression.js";
+import {default as functionExpression} from "./expression/functionExpression.js";
+import {default as identifier} from "./expression/identifier.js";
+import {default as importExpression} from "./expression/importExpression.js";
+import {default as literal} from "./expression/literal.js";
+import {default as logicalExpression} from "./expression/logicalExpression.js";
+import {default as memberExpression} from "./expression/memberExpression.js";
+import {default as metaProperty} from "./expression/metaProperty.js";
+import {default as newExpression} from "./expression/newExpression.js";
+import {default as objectExpression} from "./expression/objectExpression.js";
+import {default as property} from "./expression/property.js";
+import {default as privateIdentifier} from "./expression/privateIdentifier.js";
+import {default as regExpLiteral} from "./expression/regExpLiteral.js";
+import {default as sequenceExpression} from "./expression/sequenceExpression.js";
+import {default as spreadElement} from "./expression/spreadElement.js";
+import {default as superExp} from "./expression/super.js";
+import {default as taggedTemplateExpression} from "./expression/taggedTemplateExpression.js";
+import {default as templateElement} from "./expression/templateElement.js";
+import {default as templateLiteral} from "./expression/templateLiteral.js";
+import {default as thisExpression} from "./expression/thisExpression.js";
+import {default as unaryExpression} from "./expression/unaryExpression.js";
+import {default as updateExpression} from "./expression/updateExpression.js";
+import {default as yieldExpression} from "./expression/yieldExpression.js";
+
+import {default as arrayPattern} from "./statement/arrayPattern.js";
+import {default as assignmentPattern} from "./statement/assignmentPattern.js";
+import {default as blockStatement} from "./statement/blockStatement.js";
+import {default as breakStatement} from "./statement/breakStatement.js";
+import {default as catchClause} from "./statement/catchClause.js";
+import {default as continueStatement} from "./statement/continueStatement.js";
+import {default as debuggerStatement} from "./statement/debuggerStatement.js";
+import {default as doWhileStatement} from "./statement/doWhileStatement.js";
+import {default as emptyStatement} from "./statement/emptyStatement.js";
+import {default as expressionStatement} from "./statement/expressionStatement.js";
+import {default as forInStatement} from "./statement/forInStatement.js";
+import {default as forOfStatement} from "./statement/forOfStatement.js";
+import {default as forStatement} from "./statement/forStatement.js";
+import {default as ifStatement} from "./statement/ifStatement.js";
+import {default as labeledStatement} from "./statement/labeledStatement.js";
+import {default as objectPattern} from "./statement/objectPattern.js";
+import {default as restElement} from "./statement/restElement.js";
+import {default as returnStatement} from "./statement/returnStatement.js";
+import {default as switchCase} from "./statement/switchCase.js";
+import {default as switchStatement} from "./statement/switchStatement.js";
+import {default as throwStatement} from "./statement/throwStatement.js";
+import {default as tryStatement} from "./statement/tryStatement.js";
+import {default as whileStatement} from "./statement/whileStatement.js";
+import {default as withStatement} from "./statement/withStatement.js";
+
+import {default as classStructure} from "./structure/class.js";
+import {default as classBody} from "./structure/classBody.js";
+import {default as exportSpecifier} from "./structure/exportSpecifier.js";
+import {default as importDefaultSpecifier} from "./structure/importDefaultSpecifier.js";
+import {default as importNamespaceSpecifier} from "./structure/importNamespaceSpecifier.js";
+import {default as importSpecifier} from "./structure/importSpecifier.js";
+import {default as methodDefinition} from "./structure/methodDefinition.js";
+import {default as propertyDefinition} from "./structure/propertyDefinition.js";
+
 let factory = globals.getFactory();
+
 
 let convertNodeToFunction = function (node) {
     switch (node.type) {
         case "Program":
-            return require('./base/program'); //NodeProgramFunction;
+            return program //NodeProgramFunction;
         case "EmptyStatement":
-            return require('./statement/emptyStatement');
+            return emptyStatement;
         case "BlockStatement":
-            return require('./statement/blockStatement');
+            return blockStatement;
         case "ExpressionStatement":
-            return require('./statement/expressionStatement');
+            return expressionStatement;
         case "IfStatement":
-            return require('./statement/ifStatement');
+            return ifStatement;
         case "LabeledStatement":
-            return require('./statement/labeledStatement');
+            return labeledStatement;
         case "BreakStatement":
-            return require('./statement/breakStatement');
+            return breakStatement;
         case "ContinueStatement":
-            return require('./statement/continueStatement');
+            return continueStatement;
         case "WithStatement":
-            return require('./statement/withStatement');
+            return withStatement;
         case "ReturnStatement":
-            return require('./statement/returnStatement');
+            return returnStatement;
         case "SwitchStatement":
-            return require('./statement/switchStatement');
+            return switchStatement;
         case "ThrowStatement":
-            return require('./statement/throwStatement');
+            return throwStatement;
         case "TryStatement":
-            return require('./statement/tryStatement');
+            return tryStatement;
         case "WhileStatement":
-            return require('./statement/whileStatement');
+            return whileStatement;
         case "DoWhileStatement":
-            return require('./statement/doWhileStatement');
+            return doWhileStatement;
         case "ForStatement":
-            return require('./statement/forStatement');
+            return forStatement;
         case "ForInStatement":
-            return require('./statement/forInStatement');
+            return forInStatement;
         case "DebuggerStatement":
-            return require('./statement/debuggerStatement');
+            return debuggerStatement;
         case "FunctionDeclaration":
-            return require('./declaration/functionDeclaration');
+            return functionDeclaration;
         case "VariableDeclaration":
-            return require('./declaration/variableDeclaration');
+            return variableDeclaration;
         case "VariableDeclarator":
-            return require('./declaration/variableDeclarator');
+            return variableDeclarator;
+        case "ChainExpression":
+            return chainExpression;
+        case "ImportExpression":
+            return importExpression;
         case "ThisExpression":
-            return require('./expression/thisExpression');
+            return thisExpression;
         case "ArrayExpression":
-            return require('./expression/arrayExpression');
+            return arrayExpression;
         case "ObjectExpression":
-            return require('./expression/objectExpression');
+            return objectExpression;
         case "Property":
-            return require('./expression/property');
-        case "AssignmentProperty":
-            return require('./expression/assignmentExpression');
+            return property;
         case "FunctionExpression":
-            return require('./expression/functionExpression');
+            return functionExpression;
         case "SequenceExpression":
-            return require('./expression/sequenceExpression');
+            return sequenceExpression;
         case "UnaryExpression":
-            return require('./expression/unaryExpression');
+            return unaryExpression;
         case "BinaryExpression":
-            return require('./expression/binaryExpression');
+            return binaryExpression;
         case "AssignmentExpression":
-            return require('./expression/assignmentExpression');
+            return assignmentExpression;
         case "UpdateExpression":
-            return require('./expression/updateExpression');
+            return updateExpression;
         case "LogicalExpression":
-            return require('./expression/logicalExpression');
+            return logicalExpression;
         case "ConditionalExpression":
-            return require('./expression/conditionalExpression');
+            return conditionalExpression;
         case "CallExpression":
-            return require('./expression/callExpression');
+            return callExpression;
         case "NewExpression":
-            return require('./expression/newExpression');
+            return newExpression;
         case "MemberExpression":
-            return require('./expression/memberExpression');
+            return memberExpression;
         case "SwitchCase":
-            return require('./statement/switchCase');
+            return switchCase;
         case "CatchClause":
-            return require('./statement/catchClause');
+            return catchClause;
         case "Identifier":
-            return require('./expression/identifier');
+            return identifier;
         case "Literal":
-            return require('./expression/literal');
+            return literal;
         case "RegExpLiteral":
-            return require('./expression/regExpLiteral');
+            return regExpLiteral;
         case "YieldExpression":
-            return require('./expression/yieldExpression');
+            return yieldExpression;
         case "Super":
-            return require('./expression/super');
+            return superExp;
         case "SpreadElement":
-            return require('./expression/spreadElement');
+            return spreadElement;
         case "ArrowFunctionExpression":
-            return require('./expression/arrowFunctionExpression');
+            return arrowFunctionExpression;
         case "TaggedTemplateExpression":
-            return require('./expression/taggedTemplateExpression');
+            return taggedTemplateExpression;
         case "ClassExpression":
-            return require('./expression/classExpression');
+            return classExpression;
         case "TemplateLiteral":
-            return require('./expression/templateLiteral');
+            return templateLiteral;
         case "TemplateElement":
-            return require('./expression/templateElement');
+            return templateElement;
         case "MetaProperty":
-            return require('./expression/metaProperty');
+            return metaProperty;
         case "ForOfStatement":
-            return require('./statement/forOfStatement');
+            return forOfStatement;
         case "AssignmentPattern":
-            return require('./statement/assignmentPattern');
+            return assignmentPattern;
         case "ArrayPattern":
-            return require('./statement/arrayPattern');
+            return arrayPattern;
         case "RestElement":
-            return require('./statement/restElement');
+            return restElement;
         case "ObjectPattern":
-            return require('./statement/objectPattern');
-        case "Line":
-            return require('./base/comment');
-        case "Block":
-            return require('./base/comment');
+            return objectPattern;
         case "ImportDeclaration":
-            return require('./declaration/importDeclaration');
+            return importDeclaration;
         case "ExportNamedDeclaration":
-            return require('./declaration/exportNamedDeclaration');
+            return exportNamedDeclaration;
         case "ExportDefaultDeclaration":
-            return require('./declaration/exportDefaultDeclaration');
+            return exportDefaultDeclaration;
         case "ExportAllDeclaration":
-            return require('./declaration/exportAllDeclaration');
+            return exportAllDeclaration;
         case "ClassDeclaration":
-            return require('./declaration/classDeclaration');
+            return classDeclaration;
         case "Class":
-            return require('./structure/class');
+            return classStructure;
         case "ClassBody":
-            return require('./structure/classBody');
+            return classBody;
         case "MethodDefinition":
-            return require('./structure/methodDefinition');
+            return methodDefinition;
         case "ImportSpecifier":
-            return require('./structure/importSpecifier');
+            return importSpecifier;
         case "ExportSpecifier":
-            return require('./structure/exportSpecifier');
+            return exportSpecifier;
         case "ImportNamespaceSpecifier":
-            return require('./structure/importNamespaceSpecifier');
+            return importNamespaceSpecifier;
         case "ImportDefaultSpecifier":
-            return require('./structure/importDefaultSpecifier');
+            return importDefaultSpecifier;
         case "AwaitExpression":
-            return require('./expression/awaitExpression');
+            return awaitExpression;
+        case "ClassProperty": // TODO: Remove this once parser correctly handles PropertyDefinitions
+        case "PropertyDefinition":
+            return propertyDefinition;
+        case "PrivateIdentifier":
+        case "TSPrivateIdentifier": // TODO: Remove this once parser correctly handles private identifiers
+            return privateIdentifier;
+        case "Line":
+        case "Block":
+            /*
+                Intentionally ignored types
+             */
+            break;
         default:
-            console.log("Not recognized type: " + node.type + "\n");
-
+            console.log("Could not recognize type: " + node.type);
     }
 };
-
-/**
- * Transforms the leading and trailing comments attached by Espree for a node.
- * Leading Block comment at the beginning handled as a comment for the whole program.
- * @param {type} node
- * @param {type} wrapper
- */
-function handleComments(node) {
-    let wrapper = globals.getWrapperOfNode(node);
-
-    if (node.leadingComments !== undefined && node.leadingComments !== null) {
-        for (let j = 0; j < node.leadingComments.length; j++) {
-            if (node.leadingComments[j] !== null && node.leadingComments[j] !== undefined) {
-
-                if (globals.isCommentExists(node.leadingComments[j])) {
-                    node.leadingComments.splice(j, 1);
-                    j--;
-                    continue;
-                }
-
-                let leadingComment = factory.createCommentWrapper();
-                leadingComment.setText(node.leadingComments[j].value);
-                globals.setPositionInfo(node.leadingComments[j], leadingComment);
-                leadingComment.setType("ct" + node.leadingComments[j].type);
-                leadingComment.setLocation("clLeading");
-
-                globals.addComment(node.leadingComments[j]);
-
-                //Handle program comment at the beginning
-                if (node.leadingComments[j].loc.start.line === 1 && node.leadingComments[j].type === "Block") {
-                    globals.getWrapperOfNode(globals.getActualProgramNode()).addComments(leadingComment);
-
-                    //attach this comment to the program
-                    globals.getActualProgramNode().leadingComments = [];
-                    globals.getActualProgramNode().leadingComments.push(node.leadingComments[j]);
-
-                    //remove comment from the original node
-                    node.leadingComments.splice(j, 1);
-                    j--;
-                }
-                else {
-                    wrapper.addComments(leadingComment);
-                }
-            }
-
-        }
-    }
-
-    if (node.trailingComments !== undefined && node.trailingComments !== null) {
-        for (let j = 0; j < node.trailingComments.length; j++) {
-            if (node.trailingComments[j] !== null && node.trailingComments[j] !== undefined) {
-
-                if (globals.isCommentExists(node.trailingComments[j]) || Math.abs(node.loc.end.line - node.trailingComments[j].loc.start.line) > 1) {
-                    node.trailingComments.splice(j, 1);
-                    j--;
-                    continue;
-                }
-
-                let trailingComment = factory.createCommentWrapper();
-                trailingComment.setText(node.trailingComments[j].value);
-                globals.setPositionInfo(node.trailingComments[j], trailingComment);
-                trailingComment.setType("ct" + node.trailingComments[j].type);
-                trailingComment.setLocation("clTrailing");
-                wrapper.addComments(trailingComment);
-
-                globals.addComment(node.trailingComments[j]);
-            }
-        }
-    }
-}
-
-/**
- * Detects all unattached comments in the file
- */
-function detectUnAttachedComments(node) {
-    if (!node || node.type !== 'Program') {
-        return null;
-    }
-    //initially all the comments, then remove attached comments
-    //var unattachedComments = Object.assign({}, node.comments);
-    let unattachedComments = node.comments;
-    for (let i = 0; i < unattachedComments.length; i++) {
-        if (globals.isCommentExists(unattachedComments[i])) {
-            unattachedComments.splice(i, 1);
-            i--;
-        }
-    }
-    return unattachedComments;
-}
-
 
 /**
  * Gets the absolute or relative path of a file path.
@@ -281,6 +279,150 @@ function getFilePath(filePath) {
     return filePath;
 }
 
+function createASGNode(node, parent) {
+    let func = convertNodeToFunction(node);
+    if (func !== undefined) {
+        let nodeWrapper = func(node, parent, true);
+        if (nodeWrapper !== undefined) {
+            globals.putNodeWrapperPair(node, nodeWrapper);
+        }
+    }
+}
+
+/**
+ * Transforms the Espree AST
+ *
+ * @param {type} astSet: an ast created by espree
+ * @param {type} parsingOptions: The espree runner configurations
+ */
+let transform = function (astSet, parsingOptions) {
+    astSet.forEach(ast => {
+        globals.setActualFile(ast.filename);
+        //first traverse
+
+        walk(ast, {
+            enter: function (node, parent) {
+                createASGNode(node, parent);
+            }
+        });
+    });
+    astSet.forEach(ast => {
+        globals.setActualFile(ast.filename);
+
+        //second traverse
+        walk(ast, {
+            enter: function (node, parent) {
+                // console.log(node.type);
+                handleComments(node);
+                let func = convertNodeToFunction(node);
+
+                if (func !== undefined) {
+                    func(node, parent, false);
+                }
+            },
+            // leave: function (node, parent) {
+            //     console.log("Leaving node type " + node.type)
+            // }
+        });
+    });
+    console.log("Transform finished!");
+};
+
+let handleComments = function (node) {
+    if (node.comments) {
+        for (let comment of node.comments) {
+            const commentWrapper = factory.createCommentWrapper();
+            commentWrapper.setText(comment.value);
+            commentWrapper.setType(conversions.convertCommentType(comment.type));
+            commentWrapper.setLocation(conversions.convertCommentLocation(comment));
+            globals.setPositionInfo(comment, commentWrapper);
+            const nodeWrapper = globals.getWrapperOfNode(node);
+            if (nodeWrapper !== undefined) {
+                nodeWrapper.addComments(commentWrapper);
+            } else {
+                console.log("Cannot add comments to undefined node.")
+            }
+        }
+    }
+}
+
+let saveAST = function (filename, dumpjsml) {
+    factory.saveAST(filename + ".jssi", dumpjsml);
+};
+
+
+function variableUsages(astSet) {
+    let vus = [];
+    astSet.forEach(ast => {
+        const sm = new scopeManager.JSANScopeManager()
+
+        //TODO: Move this?
+        walk(ast, {
+            enter: (node, parent) => {
+                sm.enter(ast, node);
+            },
+            leave: (node, parent) => {
+                sm.leave(node);
+            }
+        })
+
+        globals.setActualFile(ast.filename);
+        walk(ast, {
+            enter: function (node, parent) {
+                let varUse = varUsages.resolveVariableUsages(node, parent, sm);
+                if (varUse !== null) {
+                    vus.push(varUse);
+                }
+            }
+        });
+    });
+    return vus;
+}
+
+
+let makeHash = function (element) {
+    return sha1(element.source.file + ":" + element.source.range.start + ":" + element.source.range.end) + sha1(element.target.file + ":" + element.target.range.start + ":" + element.target.range.end);
+};
+
+
+let resolveNode = function (ast, filename, range_start, range_end, inner = false) {
+    const searchNode = {
+        file: filename, range: {
+            start: range_start, end: range_end
+        }
+    };
+    let result = null;
+    let status = false;
+
+    ast.forEach(astNode => {
+        if (status || astNode.filename !== searchNode.file) {
+            return;
+        }
+        globals.setActualFile(astNode.filename);
+
+        // find the most inner node which has the same exact source position
+        walk(astNode, {
+            enter: function (node) {
+                if (status) {
+                    if (inner) { // return the most inner node
+                        if (node.range[0] !== searchNode.range.start || node.range[1] !== searchNode.range.end) {
+                            return;
+                        }
+                    } else { // return the most outer node
+                        return;
+                    }
+
+                }
+                if (node.range[0] === searchNode.range.start && node.range[1] === searchNode.range.end && node.type !== 'Program') {
+                    status = true;
+                    result = node;
+                }
+            }
+        });
+    });
+    return result;
+};
+
 /**
  * Bind the references for JSAN2LIM. This method callable more.
  * The format of references see here:
@@ -288,8 +430,9 @@ function getFilePath(filePath) {
  * @param name The name of bindings data
  * @param astSet The ColumbusStyle AST
  * @param references A JSON, which contains the links.
+ * @param type
  */
-module.exports.binder = function (name, astSet, references, type) {
+const binder = function (name, astSet, references, type) {
     let success = 0;
     let numberOfReferences = references.length;
     let cache = new Cache(1000);
@@ -297,7 +440,7 @@ module.exports.binder = function (name, astSet, references, type) {
 
     references.forEach(element => {
         let hash = makeHash(element);
-        if(global.binded.indexOf(hash)!==-1){
+        if (global.binded.indexOf(hash) !== -1) {
             numberOfReferences--;
             return;
         }
@@ -305,24 +448,25 @@ module.exports.binder = function (name, astSet, references, type) {
 
         let sourceFile = getFilePath(element.source.file);
 
-        let hashSource = sha1(element.source.file+":"+element.source.range.start+":"+element.source.range.end);
+        let hashSource = sha1(element.source.file + ":" + element.source.range.start + ":" + element.source.range.end);
         if (!cache.contains(hashSource)) {
-            let wrappedNode = globals.getWrapperOfNode(crossRefSolver.resolveNode(astSet, sourceFile, element.source.range.start, element.source.range.end, true));
+            let wrappedNode = globals.getWrapperOfNode(resolveNode(astSet, sourceFile, element.source.range.start, element.source.range.end, true));
             cache.set(hashSource, wrappedNode || null);
         }
         let sourcenode = cache.get(hashSource);
         if (sourcenode === null) {
             return;
         }
+        // Only for cross-ref binding
         if (element.target.file === "Native") {
             numberOfReferences--;
             return;
         }
         globals.setActualFile(element.target.file);
         let targetFile = getFilePath(element.target.file);
-        let hashTarget = sha1(element.target.file+":"+element.target.range.start+":"+element.target.range.end);
+        let hashTarget = sha1(element.target.file + ":" + element.target.range.start + ":" + element.target.range.end);
         if (!cache.contains(hashTarget)) {
-            let wrappedNode = globals.getWrapperOfNode(crossRefSolver.resolveNode(astSet, targetFile, element.target.range.start, element.target.range.end, false));
+            let wrappedNode = globals.getWrapperOfNode(resolveNode(astSet, targetFile, element.target.range.start, element.target.range.end, false));
             cache.set(hashTarget, wrappedNode || null);
         }
         let targetnode = cache.get(hashTarget);
@@ -330,7 +474,7 @@ module.exports.binder = function (name, astSet, references, type) {
             return;
         }
         try {
-            if (type === "addCalls"){
+            if (type === "addCalls") {
                 sourcenode.addCalls(targetnode);
             } else if (type === "setRefersTo") {
                 sourcenode.setRefersTo(targetnode);
@@ -347,113 +491,11 @@ module.exports.binder = function (name, astSet, references, type) {
     console.log("Binding " + name + ": " + success + "/" + numberOfReferences);
 };
 
-let makeHash = function(element){
-    return sha1(element.source.file+":"+element.source.range.start+":"+element.source.range.end)+sha1(element.target.file+":"+element.target.range.start+":"+element.target.range.end);
-};
 
-module.exports.variableUsages = function (astSet) {
-    let vus = [];
-    astSet.forEach(ast => {
-        globals.setActualFile(ast.filename);
-        estraverse.traverse(ast, {
-            enter: function (node, parent) {
-                let varUse = crossRefSolver.resolveVariableUsages(node, parent);
-                if (varUse !== null) {
-                    vus.push(varUse);
-                }
-            }
-        });
-    });
-    return vus;
-};
-
-module.exports.variableUsages = function (astSet) {
-    let vus = [];
-    astSet.forEach(ast => {
-        globals.setActualFile(ast.filename);
-        estraverse.traverse(ast, {
-            enter: function (node, parent) {
-                let varUse = crossRefSolver.resolveVariableUsages(node, parent);
-                if (varUse !== null) {
-                    vus.push(varUse);
-                }
-            }
-        });
-    });
-    return vus;
-};
-
-/**
- * Transforms the Espree AST
- *
- * @param {type} astSet: an ast created by espree
- * @param {type} parsingOptions: The espree runner configurations
- */
-module.exports.transform = function (astSet, parsingOptions) {
-    astSet.forEach(ast => {
-        globals.setActualFile(ast.filename);
-        //first traverse
-        crossRefSolver.setParsingOptions(parsingOptions);
-        estraverse.traverse(ast, {
-            enter: function (node, parent) {
-                let func = convertNodeToFunction(node);
-                if (func !== undefined) {
-                    let nodeWrapper = func(node, parent, true);
-                    if (nodeWrapper !== undefined) {
-                        globals.putNodeWrapperPair(node, nodeWrapper);
-                    }
-                }
-                //gathering the scopes and the identifiers located in them
-                crossRefSolver.gatherScopes(ast, node, "enter");
-            },
-            leave: function (node, parent) {
-                crossRefSolver.gatherScopes(ast, node, "leave");
-            }
-        });
-    });
-
-    astSet.forEach(ast => {
-        globals.setActualFile(ast.filename);
-        //second traverse
-        estraverse.traverse(ast, {
-            enter: function (node, parent) {
-                let func = convertNodeToFunction(node);
-                if (func !== undefined) {
-                    func(node, parent, false);
-
-                }
-                //handle comments
-                handleComments(node);
-            },
-            leave: function (node, parent) {
-                if (node.type === 'Program') {
-                    let comments = detectUnAttachedComments(node);
-
-                    //create these unattached comments and attach them to the program
-                    for (let i = 0; i < comments.length; i++) {
-                        let comment = factory.createCommentWrapper();
-                        comment.setText(comments[i].value);
-                        globals.setPositionInfo(comments[i], comment);
-                        comment.setType("ct" + comments[i].type);
-                        comment.setLocation("clTrailing");
-                        let programWrapper = globals.getWrapperOfNode(node);
-                        programWrapper.addComments(comment);
-
-                        if (node.loc.end.line < comments[i].loc.start.line || (node.loc.end.line === comments[i].loc.start.line && node.loc.end.column < comments[i].loc.start.column)) {
-                            programWrapper.setPosition({
-                                'endline': comments[i].loc.end.line,
-                                'endcol': comments[i].loc.end.column,
-                                'wideendline': comments[i].loc.end.line,
-                                'wideendcol': comments[i].loc.end.column
-                            });
-                        }
-                    }
-                }
-            }
-        });
-    });
-};
-
-module.exports.saveAST = function (filename, dumpjsml) {
-    factory.saveAST(filename + ".jssi", dumpjsml);
-};
+export {
+    createASGNode,
+    transform,
+    saveAST,
+    variableUsages,
+    binder,
+}

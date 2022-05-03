@@ -9,7 +9,6 @@ set (SOURCES
     src/MetricSum.cpp
     src/RulBuilder.cpp
     src/SarifExporter.cpp
-    src/SarifWriter.cpp
     
     inc/CsvExporter.h
     inc/GraphConstants.h
@@ -18,9 +17,8 @@ set (SOURCES
     inc/messages.h
     inc/Metric.h
     inc/MetricSum.h
-    inc/RulBuilder.h     
+    inc/RulBuilder.h   
     inc/SarifExporter.h  
-    inc/SarifWriter.h  
 )
 
 add_library (${LIBNAME} STATIC ${SOURCES})

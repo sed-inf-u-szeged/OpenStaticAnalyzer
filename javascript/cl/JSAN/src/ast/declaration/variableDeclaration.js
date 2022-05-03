@@ -18,30 +18,26 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
-const conversions = require('../conversions');
+import * as globals from '../../globals.js';
+import * as conversions from '../conversions.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var variableDeclaration = factory.createVariableDeclarationWrapper();
+        const variableDeclaration = factory.createVariableDeclarationWrapper();
         globals.setPositionInfo(node, variableDeclaration);
         variableDeclaration.setKind(conversions.convertDeclarationKind(node.kind));
         return variableDeclaration;
     } else {
-        var variableDeclarationWrapper = globals.getWrapperOfNode(node);
+        const variableDeclarationWrapper = globals.getWrapperOfNode(node);
         if (node.declarations != null) {
-            for (var i = 0; i < node.declarations.length; i++) {
+            for (let i = 0; i < node.declarations.length; i++) {
                 if (node.declarations[i] != null) {
-                    var declarationsWrapper = globals.getWrapperOfNode(node.declarations[i]);
-                    try {
-                        variableDeclarationWrapper.addDeclarations(declarationsWrapper);
-                    } catch (e) {
-                        console.error("VARIABLEDECLARATION - Could not add declaration! Reason of the error: " + e + "\n");
-                    }
+                    globals.safeSet(variableDeclarationWrapper, "addDeclarations", node.declarations[i], "VARIABLEDECLARATION - Could not add declaration!");
                 }
             }
         }

@@ -21,9 +21,9 @@
 #include "../inc/LIM2Patterns.h"
 #include "../inc/Helpers.h"
 #include "../inc/PythonBinding.h"
-#include <boost/filesystem.hpp>
 #include <graphsupport/inc/MetricSum.h>
 #include <graphsupport/inc/RulBuilder.h>
+#include <boost/filesystem.hpp>
 
 using namespace std;
 using namespace common;

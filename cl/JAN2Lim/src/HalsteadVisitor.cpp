@@ -429,7 +429,7 @@ namespace columbus {
           cout << ".class";
         }
         else {
-          throw columbus::Exception(COLUMBUS_LOCATION, "Unhandled Literal type: " + literal->getNodeKind());
+          throw columbus::Exception(COLUMBUS_LOCATION, "Unhandled Literal type" );
         }
         cout << ", ";
       }

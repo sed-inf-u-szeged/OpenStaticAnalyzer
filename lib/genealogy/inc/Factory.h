@@ -241,8 +241,8 @@ namespace columbus { namespace genealogy {
           const_iterator(const const_iterator& otherit) :containerIt (otherit.containerIt),fact(otherit.fact){}
           const_iterator& operator++() {containerIt++;  while (containerIt != fact->container.end()  &&  ((*containerIt == NULL) )) containerIt++; return *this;}
           const_iterator operator++(int) {const_iterator tmp(*this); operator++(); return tmp;}
-          bool operator==(const const_iterator& rhs) {return containerIt==rhs.containerIt;}
-          bool operator!=(const const_iterator& rhs) {return containerIt!=rhs.containerIt;}
+          bool operator==(const const_iterator& rhs) const {return containerIt==rhs.containerIt;}
+          bool operator!=(const const_iterator& rhs) const {return containerIt!=rhs.containerIt;}
           const Base* operator*() {return *containerIt;}
           friend class Factory;
       };

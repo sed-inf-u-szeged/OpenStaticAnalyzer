@@ -260,20 +260,6 @@ void VisitorJAVASCRIPTML::visitEnd(const expression::AssignmentExpression& node 
   ofs << "</expression:AssignmentExpression>\n";
 }
 
-void VisitorJAVASCRIPTML::visit(const expression::AssignmentProperty& node , bool callVirtualBase) {
-  createIndentation();
-  ofs << "<expression:AssignmentProperty";
-  writeAttributes(node,false,true);
-  ofs << ">\n";
-
-  writeAttributes(node,true,true);
-}
-
-void VisitorJAVASCRIPTML::visitEnd(const expression::AssignmentProperty& node , bool callVirtualBase) {
-  createIndentation();
-  ofs << "</expression:AssignmentProperty>\n";
-}
-
 void VisitorJAVASCRIPTML::visit(const expression::AwaitExpression& node , bool callVirtualBase) {
   createIndentation();
   ofs << "<expression:AwaitExpression";
@@ -286,6 +272,20 @@ void VisitorJAVASCRIPTML::visit(const expression::AwaitExpression& node , bool c
 void VisitorJAVASCRIPTML::visitEnd(const expression::AwaitExpression& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</expression:AwaitExpression>\n";
+}
+
+void VisitorJAVASCRIPTML::visit(const expression::BigIntLiteral& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:BigIntLiteral";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVASCRIPTML::visitEnd(const expression::BigIntLiteral& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:BigIntLiteral>\n";
 }
 
 void VisitorJAVASCRIPTML::visit(const expression::BinaryExpression& node , bool callVirtualBase) {
@@ -328,6 +328,34 @@ void VisitorJAVASCRIPTML::visit(const expression::CallExpression& node , bool ca
 void VisitorJAVASCRIPTML::visitEnd(const expression::CallExpression& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</expression:CallExpression>\n";
+}
+
+void VisitorJAVASCRIPTML::visit(const expression::ChainElement& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:ChainElement";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVASCRIPTML::visitEnd(const expression::ChainElement& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:ChainElement>\n";
+}
+
+void VisitorJAVASCRIPTML::visit(const expression::ChainExpression& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:ChainExpression";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVASCRIPTML::visitEnd(const expression::ChainExpression& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:ChainExpression>\n";
 }
 
 void VisitorJAVASCRIPTML::visit(const expression::ClassExpression& node , bool callVirtualBase) {
@@ -384,6 +412,20 @@ void VisitorJAVASCRIPTML::visit(const expression::Identifier& node , bool callVi
 void VisitorJAVASCRIPTML::visitEnd(const expression::Identifier& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</expression:Identifier>\n";
+}
+
+void VisitorJAVASCRIPTML::visit(const expression::ImportExpression& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:ImportExpression";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVASCRIPTML::visitEnd(const expression::ImportExpression& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:ImportExpression>\n";
 }
 
 void VisitorJAVASCRIPTML::visit(const expression::LogicalExpression& node , bool callVirtualBase) {
@@ -482,6 +524,20 @@ void VisitorJAVASCRIPTML::visit(const expression::ObjectExpression& node , bool 
 void VisitorJAVASCRIPTML::visitEnd(const expression::ObjectExpression& node , bool callVirtualBase) {
   createIndentation();
   ofs << "</expression:ObjectExpression>\n";
+}
+
+void VisitorJAVASCRIPTML::visit(const expression::PrivateIdentifier& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<expression:PrivateIdentifier";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVASCRIPTML::visitEnd(const expression::PrivateIdentifier& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</expression:PrivateIdentifier>\n";
 }
 
 void VisitorJAVASCRIPTML::visit(const expression::Property& node , bool callVirtualBase) {
@@ -1100,6 +1156,20 @@ void VisitorJAVASCRIPTML::visitEnd(const structure::MethodDefinition& node , boo
   ofs << "</structure:MethodDefinition>\n";
 }
 
+void VisitorJAVASCRIPTML::visit(const structure::PropertyDefinition& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "<structure:PropertyDefinition";
+  writeAttributes(node,false,true);
+  ofs << ">\n";
+
+  writeAttributes(node,true,true);
+}
+
+void VisitorJAVASCRIPTML::visitEnd(const structure::PropertyDefinition& node , bool callVirtualBase) {
+  createIndentation();
+  ofs << "</structure:PropertyDefinition>\n";
+}
+
 void VisitorJAVASCRIPTML::visitPositioned_Comments(const base::Positioned& begin, const base::Comment& end) {
   createIndentation();
   ofs << "<Positioned_Comments ref='";
@@ -1145,6 +1215,18 @@ void VisitorJAVASCRIPTML::visitEndExportAllDeclaration_HasSource(const declarati
   decDepth();
   createIndentation();
   ofs << "</ExportAllDeclaration_HasSource>\n";
+}
+
+void VisitorJAVASCRIPTML::visitExportAllDeclaration_HasExported(const declaration::ExportAllDeclaration& begin, const expression::Identifier& end) {
+  createIndentation();
+  ofs << "<ExportAllDeclaration_HasExported>\n";
+  incDepth();
+}
+
+void VisitorJAVASCRIPTML::visitEndExportAllDeclaration_HasExported(const declaration::ExportAllDeclaration& begin, const expression::Identifier& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</ExportAllDeclaration_HasExported>\n";
 }
 
 void VisitorJAVASCRIPTML::visitExportDefaultDeclaration_HasDeclaration(const declaration::ExportDefaultDeclaration& begin, const base::Positioned& end) {
@@ -1303,13 +1385,13 @@ void VisitorJAVASCRIPTML::visitEndAwaitExpression_HasArgument(const expression::
   ofs << "</AwaitExpression_HasArgument>\n";
 }
 
-void VisitorJAVASCRIPTML::visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const expression::Expression& end) {
+void VisitorJAVASCRIPTML::visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const base::Positioned& end) {
   createIndentation();
   ofs << "<BinaryExpression_HasLeft>\n";
   incDepth();
 }
 
-void VisitorJAVASCRIPTML::visitEndBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const expression::Expression& end) {
+void VisitorJAVASCRIPTML::visitEndBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const base::Positioned& end) {
   decDepth();
   createIndentation();
   ofs << "</BinaryExpression_HasLeft>\n";
@@ -1362,6 +1444,18 @@ void VisitorJAVASCRIPTML::visitCallExpression_Calls(const expression::CallExpres
 void VisitorJAVASCRIPTML::visitEndCallExpression_Calls(const expression::CallExpression& begin, const statement::Function& end) {
 }
 
+void VisitorJAVASCRIPTML::visitChainExpression_HasExpression(const expression::ChainExpression& begin, const expression::ChainElement& end) {
+  createIndentation();
+  ofs << "<ChainExpression_HasExpression>\n";
+  incDepth();
+}
+
+void VisitorJAVASCRIPTML::visitEndChainExpression_HasExpression(const expression::ChainExpression& begin, const expression::ChainElement& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</ChainExpression_HasExpression>\n";
+}
+
 void VisitorJAVASCRIPTML::visitConditionalExpression_HasAlternate(const expression::ConditionalExpression& begin, const expression::Expression& end) {
   createIndentation();
   ofs << "<ConditionalExpression_HasAlternate>\n";
@@ -1409,6 +1503,18 @@ void VisitorJAVASCRIPTML::visitIdentifier_RefersTo(const expression::Identifier&
 void VisitorJAVASCRIPTML::visitEndIdentifier_RefersTo(const expression::Identifier& begin, const base::Positioned& end) {
 }
 
+void VisitorJAVASCRIPTML::visitImportExpression_HasSource(const expression::ImportExpression& begin, const expression::Expression& end) {
+  createIndentation();
+  ofs << "<ImportExpression_HasSource>\n";
+  incDepth();
+}
+
+void VisitorJAVASCRIPTML::visitEndImportExpression_HasSource(const expression::ImportExpression& begin, const expression::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</ImportExpression_HasSource>\n";
+}
+
 void VisitorJAVASCRIPTML::visitLogicalExpression_HasLeft(const expression::LogicalExpression& begin, const expression::Expression& end) {
   createIndentation();
   ofs << "<LogicalExpression_HasLeft>\n";
@@ -1433,13 +1539,13 @@ void VisitorJAVASCRIPTML::visitEndLogicalExpression_HasRight(const expression::L
   ofs << "</LogicalExpression_HasRight>\n";
 }
 
-void VisitorJAVASCRIPTML::visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const expression::Expression& end) {
+void VisitorJAVASCRIPTML::visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const base::Positioned& end) {
   createIndentation();
   ofs << "<MemberExpression_HasProperty>\n";
   incDepth();
 }
 
-void VisitorJAVASCRIPTML::visitEndMemberExpression_HasProperty(const expression::MemberExpression& begin, const expression::Expression& end) {
+void VisitorJAVASCRIPTML::visitEndMemberExpression_HasProperty(const expression::MemberExpression& begin, const base::Positioned& end) {
   decDepth();
   createIndentation();
   ofs << "</MemberExpression_HasProperty>\n";
@@ -2164,13 +2270,13 @@ void VisitorJAVASCRIPTML::visitEndClass_HasIdentifier(const structure::Class& be
   ofs << "</Class_HasIdentifier>\n";
 }
 
-void VisitorJAVASCRIPTML::visitClassBody_HasBody(const structure::ClassBody& begin, const structure::MethodDefinition& end) {
+void VisitorJAVASCRIPTML::visitClassBody_HasBody(const structure::ClassBody& begin, const base::Positioned& end) {
   createIndentation();
   ofs << "<ClassBody_HasBody>\n";
   incDepth();
 }
 
-void VisitorJAVASCRIPTML::visitEndClassBody_HasBody(const structure::ClassBody& begin, const structure::MethodDefinition& end) {
+void VisitorJAVASCRIPTML::visitEndClassBody_HasBody(const structure::ClassBody& begin, const base::Positioned& end) {
   decDepth();
   createIndentation();
   ofs << "</ClassBody_HasBody>\n";
@@ -2200,13 +2306,13 @@ void VisitorJAVASCRIPTML::visitEndImportSpecifier_HasImported(const structure::I
   ofs << "</ImportSpecifier_HasImported>\n";
 }
 
-void VisitorJAVASCRIPTML::visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const expression::Expression& end) {
+void VisitorJAVASCRIPTML::visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const base::Positioned& end) {
   createIndentation();
   ofs << "<MethodDefinition_HasKey>\n";
   incDepth();
 }
 
-void VisitorJAVASCRIPTML::visitEndMethodDefinition_HasKey(const structure::MethodDefinition& begin, const expression::Expression& end) {
+void VisitorJAVASCRIPTML::visitEndMethodDefinition_HasKey(const structure::MethodDefinition& begin, const base::Positioned& end) {
   decDepth();
   createIndentation();
   ofs << "</MethodDefinition_HasKey>\n";
@@ -2234,6 +2340,30 @@ void VisitorJAVASCRIPTML::visitEndModuleSpecifier_HasLocal(const structure::Modu
   decDepth();
   createIndentation();
   ofs << "</ModuleSpecifier_HasLocal>\n";
+}
+
+void VisitorJAVASCRIPTML::visitPropertyDefinition_HasKey(const structure::PropertyDefinition& begin, const base::Positioned& end) {
+  createIndentation();
+  ofs << "<PropertyDefinition_HasKey>\n";
+  incDepth();
+}
+
+void VisitorJAVASCRIPTML::visitEndPropertyDefinition_HasKey(const structure::PropertyDefinition& begin, const base::Positioned& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</PropertyDefinition_HasKey>\n";
+}
+
+void VisitorJAVASCRIPTML::visitPropertyDefinition_HasValue(const structure::PropertyDefinition& begin, const expression::Expression& end) {
+  createIndentation();
+  ofs << "<PropertyDefinition_HasValue>\n";
+  incDepth();
+}
+
+void VisitorJAVASCRIPTML::visitEndPropertyDefinition_HasValue(const structure::PropertyDefinition& begin, const expression::Expression& end) {
+  decDepth();
+  createIndentation();
+  ofs << "</PropertyDefinition_HasValue>\n";
 }
 
 void VisitorJAVASCRIPTML::createIndentation() {
@@ -2460,17 +2590,23 @@ void VisitorJAVASCRIPTML::writeAttributes(const expression::AssignmentExpression
   }
 }
 
-void VisitorJAVASCRIPTML::writeAttributes(const expression::AssignmentProperty& node,bool composite, bool bWithParent /*= true*/ ) {
-  writeAttributes((expression::Property&)node,composite,false);
-
-}
-
 void VisitorJAVASCRIPTML::writeAttributes(const expression::AwaitExpression& node,bool composite, bool bWithParent /*= true*/ ) {
   if(bWithParent)
     writeAttributes((base::Positioned&)node,composite,false);
 
   writeAttributes((expression::Expression&)node,composite,false);
 
+}
+
+void VisitorJAVASCRIPTML::writeAttributes(const expression::BigIntLiteral& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Positioned&)node,composite,false);
+
+  writeAttributes((expression::Literal&)node,composite,false);
+
+  if (!composite) {
+    ofs << " bigint='" << chk(node.getBigint()) << "'";
+  }
 }
 
 void VisitorJAVASCRIPTML::writeAttributes(const expression::BinaryExpression& node,bool composite, bool bWithParent /*= true*/ ) {
@@ -2496,6 +2632,25 @@ void VisitorJAVASCRIPTML::writeAttributes(const expression::BooleanLiteral& node
 }
 
 void VisitorJAVASCRIPTML::writeAttributes(const expression::CallExpression& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Positioned&)node,composite,false);
+
+  writeAttributes((expression::Expression&)node,composite,false);
+
+  writeAttributes((expression::ChainElement&)node,composite,false);
+
+}
+
+void VisitorJAVASCRIPTML::writeAttributes(const expression::ChainElement& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Positioned&)node,composite,false);
+
+  if (!composite) {
+    ofs << " optional='" << (node.getOptional() ? "true" : "false") << "'";
+  }
+}
+
+void VisitorJAVASCRIPTML::writeAttributes(const expression::ChainExpression& node,bool composite, bool bWithParent /*= true*/ ) {
   if(bWithParent)
     writeAttributes((base::Positioned&)node,composite,false);
 
@@ -2552,6 +2707,14 @@ void VisitorJAVASCRIPTML::writeAttributes(const expression::Identifier& node,boo
 
 }
 
+void VisitorJAVASCRIPTML::writeAttributes(const expression::ImportExpression& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Positioned&)node,composite,false);
+
+  writeAttributes((expression::Expression&)node,composite,false);
+
+}
+
 void VisitorJAVASCRIPTML::writeAttributes(const expression::Literal& node,bool composite, bool bWithParent /*= true*/ ) {
   if(bWithParent)
     writeAttributes((base::Positioned&)node,composite,false);
@@ -2581,6 +2744,8 @@ void VisitorJAVASCRIPTML::writeAttributes(const expression::MemberExpression& no
   writeAttributes((expression::Expression&)node,composite,false);
 
   writeAttributes((statement::Pattern&)node,composite,false);
+
+  writeAttributes((expression::ChainElement&)node,composite,false);
 
   if (!composite) {
     ofs << " computed='" << (node.getComputed() ? "true" : "false") << "'";
@@ -2627,6 +2792,14 @@ void VisitorJAVASCRIPTML::writeAttributes(const expression::ObjectExpression& no
     writeAttributes((base::Positioned&)node,composite,false);
 
   writeAttributes((expression::Expression&)node,composite,false);
+
+}
+
+void VisitorJAVASCRIPTML::writeAttributes(const expression::PrivateIdentifier& node,bool composite, bool bWithParent /*= true*/ ) {
+  if(bWithParent)
+    writeAttributes((base::Positioned&)node,composite,false);
+
+  writeAttributes((base::Named&)node,composite,false);
 
 }
 
@@ -2859,7 +3032,7 @@ void VisitorJAVASCRIPTML::writeAttributes(const statement::ForOfStatement& node,
   writeAttributes((statement::ForInStatement&)node,composite,false);
 
   if (!composite) {
-    ofs << " async='" << (node.getAsync() ? "true" : "false") << "'";
+    ofs << " await='" << (node.getAwait() ? "true" : "false") << "'";
   }
 }
 
@@ -3033,6 +3206,17 @@ void VisitorJAVASCRIPTML::writeAttributes(const structure::MethodDefinition& nod
 void VisitorJAVASCRIPTML::writeAttributes(const structure::ModuleSpecifier& node,bool composite, bool bWithParent /*= true*/ ) {
   writeAttributes((base::Positioned&)node,composite,false);
 
+}
+
+void VisitorJAVASCRIPTML::writeAttributes(const structure::PropertyDefinition& node,bool composite, bool bWithParent /*= true*/ ) {
+  writeAttributes((base::Positioned&)node,composite,false);
+
+  if (!composite) {
+    ofs << " computed='" << (node.getComputed() ? "true" : "false") << "'";
+  }
+  if (!composite) {
+    ofs << " static='" << (node.getStatic() ? "true" : "false") << "'";
+  }
 }
 
 

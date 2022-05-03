@@ -249,13 +249,17 @@ Task::ExecutionResult RunESLintTask::execute()
 
     if (!props.profileXML.empty()) {
       sv.push_back("--rul");
-      const string rul = (props.tempDir / "ESLint.rul").string();
+      const string rul = (props.tempDir / "TSLint.rul").string();
       sv.push_back(rul);
     }
 
     sv.push_back("--out");
     const string out = (props.tempDir / (props.projectName + "-ESLint-result.xml")).string();
     sv.push_back(out);
+
+    if (props.moduleBasedAnalysis) {
+      sv.push_back("-moduleBasedAnalysis");
+    }
 
     const string baseDir = (props.projectBaseDir).string();
     sv.push_back(baseDir);
@@ -319,7 +323,7 @@ Task::ExecutionResult ESLint2GraphTask::execute()
       sv.push_back("-out:" + (props.projectTimedResultDir / (props.projectName + "-ESLint.txt")).string());
       sv.push_back("-lim:" + (props.asgDir / (props.projectName + ".lim")).string());
       sv.push_back("-exportrul");
-      sv.push_back("-rul:" + (props.tempDir / "ESLint.rul").string());
+      sv.push_back("-rul:" + (props.tempDir / "TSLint.rul").string());
       sv.push_back((props.tempDir / (props.projectName + "-ESLint-result.xml")).string());
 
       checkedExec(props.toolsDir / "ESLint2Graph", sv, logger);
@@ -552,10 +556,10 @@ Task::ExecutionResult ProfileTask::execute()
   try {
 
     // original rul files
-    path ESLintRulFileOrig = props.toolsDir / "ESLint.rul";
+    path ESLintRulFileOrig = props.toolsDir / "TSLint.rul";
 
     // temp rul files
-    path ESLintRulFile = props.tempDir / "ESLint.rul";
+    path ESLintRulFile = props.tempDir / "TSLint.rul";
 
     // data
     ProfileHandler profile;

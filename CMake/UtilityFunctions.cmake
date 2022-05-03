@@ -99,30 +99,48 @@ function (add_copy_custom_target TARGET_NAME SOURCE DESTINATION)
   set_target_properties (${TARGET_NAME} PROPERTIES FOLDER ${CMAKE_SUPPORT_FOLDER_NAME})
 endfunction()
 
+
+# Add a ${TARGET_NAME} named custom copy target, which will copy the ${SOURCE}
+# directory to the ${DESTINATION}. It recognises changes in the source directory
+# except the file deletion!
+function (add_copy_custom_target_dir TARGET_NAME SOURCE DESTINATION)
+  file (GLOB_RECURSE SOURCE_DEPS CONFIGURE_DEPENDS "${SOURCE}/*")
+  list (APPEND SOURCE_DEPS ${SOURCE})
+
+  foreach(SRC ${SOURCE_DEPS})
+    string(REPLACE "${SOURCE}" "${DESTINATION}" REPLACED ${SRC} )
+    list (APPEND OUTPUTS ${REPLACED})
+  endforeach()
+
+  add_custom_command (
+    DEPENDS ${SOURCE_DEPS}
+    MAIN_DEPENDENCY ${SOURCE}
+    OUTPUT ${OUTPUTS}
+    COMMAND ${CMAKE_COMMAND} -E rm -rf ${DESTINATION}
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${SOURCE} ${DESTINATION}
+    COMMENT "Copying ${SOURCE} to ${DESTINATION}"
+  )
+  add_custom_target (
+    ${TARGET_NAME}
+    DEPENDS ${OUTPUTS}
+  )
+  set_target_properties (${TARGET_NAME} PROPERTIES FOLDER ${CMAKE_SUPPORT_FOLDER_NAME})
+endfunction()
+
+
 # Add a custom copy target dependency to the ${TARGET_NAME} target, which will copy the ${SOURCE} to the ${DESTINATION}.
 # If 4th parameter is set then directory copy is used instead of file copy.
 function (add_custom_copy_target TARGET_NAME SOURCE DESTINATION)
-  if (${ARGC} LESS 4)
-    set (COMMAND copy)
-  else ()
-    set (COMMAND copy_directory)
-  endif ()
-
-  add_custom_command (
-    DEPENDS ${SOURCE}
-    MAIN_DEPENDENCY ${SOURCE}
-    OUTPUT ${DESTINATION}
-    COMMAND ${CMAKE_COMMAND} -E ${COMMAND} ${SOURCE} ${DESTINATION}
-    COMMENT "Copying ${SOURCE} to ${DESTINATION}"
-  )
   get_filename_component (CUSTOM_TARGET_NAME ${SOURCE} NAME)
   set (CUSTOM_TARGET_NAME ${TARGET_NAME}_copy_${CUSTOM_TARGET_NAME})
-  add_custom_target (
-    ${CUSTOM_TARGET_NAME}
-    DEPENDS ${DESTINATION}
-  )
+
+  if (${ARGC} LESS 4)
+    add_copy_custom_target(${CUSTOM_TARGET_NAME} ${SOURCE} ${DESTINATION})
+  else ()
+    add_copy_custom_target_dir(${CUSTOM_TARGET_NAME} ${SOURCE} ${DESTINATION})
+  endif ()
+
   add_dependencies (${TARGET_NAME} ${CUSTOM_TARGET_NAME})
-  set_target_properties (${CUSTOM_TARGET_NAME} PROPERTIES FOLDER ${CMAKE_SUPPORT_FOLDER_NAME})
 endfunction ()
 
 

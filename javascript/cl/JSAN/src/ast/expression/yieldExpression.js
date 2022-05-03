@@ -18,29 +18,24 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var yieldExpression = factory.createYieldExpressionWrapper();
+        const yieldExpression = factory.createYieldExpressionWrapper();
         globals.setPositionInfo(node, yieldExpression);
         yieldExpression.setDelegate(node.delegate);
         return yieldExpression;
     } else {
-        var yieldExpressionWrapper = globals.getWrapperOfNode(node);
+        const yieldExpressionWrapper = globals.getWrapperOfNode(node);
         yieldExpressionWrapper.setDelegate(node.delegate);
         if (node.argument != null) {
-            var argumentWrapper = globals.getWrapperOfNode(node.argument);
-            try {
-                yieldExpressionWrapper.setArgument(argumentWrapper);
-            } catch (e) {
-                console.error("YIELDEXPRESSION - Could not set argument! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(yieldExpressionWrapper, "setArgument", node.argument, "YIELDEXPRESSION - Could not set argument!");
         }
-
     }
 }

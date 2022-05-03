@@ -18,47 +18,31 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var ifStatement = factory.createIfStatementWrapper();
+        const ifStatement = factory.createIfStatementWrapper();
         globals.setPositionInfo(node, ifStatement);
         return ifStatement;
     } else {
-        var ifStatementWrapper = globals.getWrapperOfNode(node);
-
+        const ifStatementWrapper = globals.getWrapperOfNode(node);
 
         if (node.consequent != null) {
-            var consequentWrapper = globals.getWrapperOfNode(node.consequent);
-            try {
-                ifStatementWrapper.setConsequent(consequentWrapper);
-            } catch (e) {
-                console.error("IFSTATEMENT - Could not set consequent! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(ifStatementWrapper, "setConsequent", node.consequent, "IFSTATEMENT - Could not set consequent!");
         }
 
         if (node.test != null) {
-            var testWrapper = globals.getWrapperOfNode(node.test);
-            try {
-                ifStatementWrapper.setTest(testWrapper);
-            } catch (e) {
-                console.error("IFSTATEMENT - Could not set test! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(ifStatementWrapper, "setTest", node.test, "IFSTATEMENT - Could not set test!");
         }
 
         if (node.alternate != null) {
-            var alternateWrapper = globals.getWrapperOfNode(node.alternate);
-            try {
-                ifStatementWrapper.setAlternate(alternateWrapper);
-            } catch (e) {
-                console.error("IFSTATEMENT - Could not set alternate! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(ifStatementWrapper, "setAlternate", node.alternate, "IFSTATEMENT - Could not set alternate!");
         }
-
     }
 }

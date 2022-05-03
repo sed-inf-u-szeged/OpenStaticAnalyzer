@@ -23,8 +23,7 @@
 
 #include <graph/inc/graph.h>
 #include <string>
-
-using namespace std;
+#include <common/inc/Stat.h>
 
 namespace columbus {
     namespace graphsupport {
@@ -34,7 +33,7 @@ namespace columbus {
         * \param graph [in], graph from file
         * \param filename [in]
         */
-        void exportToSarif(graph::Graph& graph, const std::string& filename, const string& sarifSeverityLevel);
+        void exportToSarif(graph::Graph& graph, const std::string& filename, const std::string& sarifSeverityLevel);
 
     }
 }

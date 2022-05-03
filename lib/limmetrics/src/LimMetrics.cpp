@@ -46,7 +46,20 @@ namespace columbus { namespace lim { namespace metrics {
   LimMetricsVisitor::LimMetricsVisitor( Factory& factory, graph::Graph& graph, rul::RulHandler& rul, SharedContainers& shared) :
     factory( factory ),
     graph( graph ),
-    rul( RulParser( rul, shared) ),
+    rul( make_unique<RulParser>( rul, shared ) ),
+    reverseEdges( factory.getReverseEdges() ),
+    phase( phaseVisit ),
+    useVisitEnd( true )
+  {
+    ap.setVisitSpecialNodes(true, true);
+    ap.setCrossEdgeToTraversal(lim::asg::edkScope_HasMember);
+    ap.setSafeMode();
+  }
+
+  LimMetricsVisitor::LimMetricsVisitor( Factory& factory, graph::Graph& graph, std::unique_ptr<RulParser> rulParser) :
+    factory( factory ),
+    graph( graph ),
+    rul( move(rulParser) ),
     reverseEdges( factory.getReverseEdges() ),
     phase( phaseVisit ),
     useVisitEnd( true )
@@ -63,15 +76,15 @@ namespace columbus { namespace lim { namespace metrics {
   //
 
   void LimMetricsVisitor::run() {
-
+    rul->run();
     // main run
     WriteMsg::write( CMSG_LIMMETRICS_PHASE, "Visit" );
     apRun();
 
     WriteMsg::write( CMSG_LIMMETRICS_PHASE_OVER, "Visit" );
-    rul.phaseOver( phaseVisit );
+    rul->phaseOver( phaseVisit );
     WriteMsg::write( CMSG_LIMMETRICS_PHASE_OVER, "VisitEnd" );
-    rul.phaseOver( phaseVisitEnd );
+    rul->phaseOver( phaseVisitEnd );
 
     // finalization before totaling
     phase = phaseFinishVisit;
@@ -79,14 +92,14 @@ namespace columbus { namespace lim { namespace metrics {
     WriteMsg::write( CMSG_LIMMETRICS_PHASE, "FinishVisit" );
     apRun();
     WriteMsg::write( CMSG_LIMMETRICS_PHASE_OVER, "FinishVisit" );
-    rul.phaseOver( phaseFinishVisit );
+    rul->phaseOver( phaseFinishVisit );
 
     // finalization AFTER totaling
     phase = phaseFinalize;
     WriteMsg::write( CMSG_LIMMETRICS_PHASE, "Finalize" );
     apRun();
     WriteMsg::write( CMSG_LIMMETRICS_PHASE_OVER, "Finalize" );
-    rul.phaseOver( phaseFinalize );
+    rul->phaseOver( phaseFinalize );
 
   }
 
@@ -143,14 +156,14 @@ namespace columbus { namespace lim { namespace metrics {
   void LimMetricsVisitor::begin( const base::Base& node ) {
     VISIT_DEBUG( "begin" );
     NodeWrapper nw( node, graph );
-    rul.dispatch( phase, nw );
+    rul->dispatch( phase, nw );
   }
 
   void LimMetricsVisitor::end( const base::Base& node ) {
     if ( useVisitEnd ) {
       VISIT_DEBUG( "end" );
       NodeWrapper nw( node, graph );
-      rul.dispatch( phaseVisitEnd, nw );
+      rul->dispatch( phaseVisitEnd, nw );
     }
   }
    

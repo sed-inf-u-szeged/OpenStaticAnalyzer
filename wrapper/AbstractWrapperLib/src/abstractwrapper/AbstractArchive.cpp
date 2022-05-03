@@ -106,13 +106,19 @@ namespace ColumbusWrappers {
       writeDebugMsg(ABSTRACT_ARCHIVE, CMSG_DEBUG_ARCHIVE_INPUT, inputFilename.c_str());
       string astName = objectNameToAstName(inputFilename);
       inputFileList.push_back(astName);
-      
-      // handling of .comment files
-      string commentFile = astName + ".comment";
-      if (common::pathFileExists(commentFile))
+
+
+      vector<string> extraFiles = { ".comment", ".err" };
+
+      for (const auto& extraFileExtension : extraFiles)
       {
-        inputFileList.push_back(commentFile);
+        string extraFileName = astName + extraFileExtension;
+        if (common::pathFileExists(extraFileName))
+        {
+          inputFileList.push_back(extraFileName);
+        }
       }
+
     }
 
     string inputfile_list = wrapper_temp_dir + DIRDIVSTRING + common::toString(getCurrentProcessId()) + "input.list";

@@ -41,7 +41,7 @@ namespace expression {
   *   - operator (BinaryOperator) : (missing)
   * 
   * Edges:
-  *   - hasLeft (expression::Expression, single) : (missing)
+  *   - hasLeft (base::Positioned, single) : (missing)
   *   - hasRight (expression::Expression, single) : (missing)
   */
   class BinaryExpression : public Expression {
@@ -137,7 +137,7 @@ namespace expression {
       * \brief Gives back the pointer of the node the hasLeft edge points to.
       * \return Returns the end point of the hasLeft edge.
       */
-      expression::Expression* getLeft() const;
+      base::Positioned* getLeft() const;
 
       /**
       * \brief Gives back the pointer of the node the hasRight edge points to.
@@ -158,7 +158,7 @@ namespace expression {
       * \brief Sets the hasLeft edge.
       * \param node [in] The new end point of the hasLeft edge.
       */
-      void setLeft(Expression *node);
+      void setLeft(base::Positioned *node);
 
       /**
       * \brief remove the hasLeft edge.

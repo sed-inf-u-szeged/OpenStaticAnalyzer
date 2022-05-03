@@ -18,37 +18,27 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var taggedTemplateExpression = factory.createTaggedTemplateExpressionWrapper();
+        const taggedTemplateExpression = factory.createTaggedTemplateExpressionWrapper();
         globals.setPositionInfo(node, taggedTemplateExpression);
         return taggedTemplateExpression;
     } else {
-        var taggedTemplateExpressionWrapper = globals.getWrapperOfNode(node);
+        const taggedTemplateExpressionWrapper = globals.getWrapperOfNode(node);
 
         if (node.tag != null) {
-            var tagWrapper = globals.getWrapperOfNode(node.tag);
-            try {
-                taggedTemplateExpressionWrapper.setTag(tagWrapper);
-            } catch (e) {
-                console.error("TAGGEDTEMPLATEEXPRESSION - Could not add tag! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(taggedTemplateExpressionWrapper, "setTag", node.tag, "TAGGEDTEMPLATEEXPRESSION - Could not add tag!");
         }
 
         if (node.quasi != null) {
-            var quasiWrapper = globals.getWrapperOfNode(node.quasi);
-            try {
-                taggedTemplateExpressionWrapper.setQuasi(quasiWrapper);
-            } catch (e) {
-                console.error("TAGGEDTEMPLATEEXPRESSION - Could not set quasi! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(taggedTemplateExpressionWrapper, "setQuasi", node.quasi, "TAGGEDTEMPLATEEXPRESSION - Could not set quasi!");
         }
-
     }
 }

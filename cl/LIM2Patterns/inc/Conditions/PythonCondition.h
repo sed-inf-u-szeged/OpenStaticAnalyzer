@@ -24,11 +24,17 @@
 #include "Condition.h"
 #include <pybind11/stl.h>
 
+#ifdef __GNUC__
+  #ifndef __clang__
+    #pragma GCC visibility push(hidden)
+  #endif
+#endif
+
+
 namespace py = pybind11;
 
 namespace columbus { namespace lim { namespace patterns { namespace conditions {
 
-    #pragma GCC visibility push(hidden)
     class PythonCondition : virtual public Condition {
     private:
         // \brief Stores the name of the pattern

@@ -42,6 +42,7 @@ namespace columbus { namespace javascript { namespace asg { namespace addon {
       napi_env env_;
       napi_ref wrapper_;
       static napi_value setSource(napi_env env, napi_callback_info info);
+      static napi_value setExported(napi_env env, napi_callback_info info);
       static napi_value addComments(napi_env env, napi_callback_info info);
       static napi_value setPath(napi_env env, napi_callback_info info);
       static napi_value setPosition(napi_env env, napi_callback_info info);

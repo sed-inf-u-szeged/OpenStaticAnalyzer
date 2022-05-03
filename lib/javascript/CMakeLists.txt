@@ -81,16 +81,20 @@ set (SOURCES
     inc/expression/ArrowFunctionExpression.h
     src/expression/AssignmentExpression.cpp
     inc/expression/AssignmentExpression.h
-    src/expression/AssignmentProperty.cpp
-    inc/expression/AssignmentProperty.h
     src/expression/AwaitExpression.cpp
     inc/expression/AwaitExpression.h
+    src/expression/BigIntLiteral.cpp
+    inc/expression/BigIntLiteral.h
     src/expression/BinaryExpression.cpp
     inc/expression/BinaryExpression.h
     src/expression/BooleanLiteral.cpp
     inc/expression/BooleanLiteral.h
     src/expression/CallExpression.cpp
     inc/expression/CallExpression.h
+    src/expression/ChainElement.cpp
+    inc/expression/ChainElement.h
+    src/expression/ChainExpression.cpp
+    inc/expression/ChainExpression.h
     src/expression/ClassExpression.cpp
     inc/expression/ClassExpression.h
     src/expression/ConditionalExpression.cpp
@@ -101,6 +105,8 @@ set (SOURCES
     inc/expression/FunctionExpression.h
     src/expression/Identifier.cpp
     inc/expression/Identifier.h
+    src/expression/ImportExpression.cpp
+    inc/expression/ImportExpression.h
     src/expression/Literal.cpp
     inc/expression/Literal.h
     src/expression/LogicalExpression.cpp
@@ -117,6 +123,8 @@ set (SOURCES
     inc/expression/NumberLiteral.h
     src/expression/ObjectExpression.cpp
     inc/expression/ObjectExpression.h
+    src/expression/PrivateIdentifier.cpp
+    inc/expression/PrivateIdentifier.h
     src/expression/Property.cpp
     inc/expression/Property.h
     src/expression/RegExpLiteral.cpp
@@ -215,6 +223,8 @@ set (SOURCES
     inc/structure/MethodDefinition.h
     src/structure/ModuleSpecifier.cpp
     inc/structure/ModuleSpecifier.h
+    src/structure/PropertyDefinition.cpp
+    inc/structure/PropertyDefinition.h
     inc/messages.h
 )
 

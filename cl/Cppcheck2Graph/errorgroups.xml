@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<groups>
+  <group id="Portability Rules" name="Portability Rules" description="The Portability Ruleset contains rules that find portability issues." help="The Portability Ruleset contains rules that find portability issues." >
+    <error id="AssignmentAddressToInteger" />
+    <error id="AssignmentIntegerToAddress" />
+    <error id="CastIntegerToAddressAtReturn" />
+    <error id="CastAddressToIntegerAtReturn" />
+  </group>
+  <group id="Side Effect Rules" name="Side Effect Rules" description="The Side Effect Ruleset contains rules that find suspicious constructs that can have side effects." help="The Side Effect Ruleset contains rules that find suspicious constructs that can have side effects." >
+    <!-- assert -->
+    <error id="assertWithSideEffect" />
+    <error id="assignmentInAssert" />
+    <error id="unknownEvaluationOrder" />
+  </group>
+  <group id="Memory Handling Rules" name="Memory Handling Rules" description="The Memory Handling Ruleset contains rules about memory leaks and common memory management problems." help="The Memory Handling Ruleset contains rules about memory leaks and common memory management problems." >
+    <!-- auto variables -->
+    <error id="accessForwarded" />
+    <error id="accessMoved" />
+    <error id="autoVariables" />
+    <error id="returnAddressOfAutoVariable" />
+    <error id="returnLocalVariable" />
+    <error id="returnReference" />
+    <error id="returnTempReference" />
+    <error id="autovarInvalidDeallocation" />
+    <error id="returnAddressOfFunctionParameter" />
+    <error id="uselessAssignmentArg" />
+    <error id="uselessAssignmentPtrArg" />
+    <error id="invalidLifetime" />
+    <!-- Leaks (auto variables) -->
+    <error id="deallocret" />
+    <!-- Memory leak -->
+    <error id="leakNoVarFunctionCall" />
+    <error id="leakReturnValNotUsed" />
+    <error id="publicAllocationError" />
+    <error id="unsafeClassCanLeak" />
+    <error id="memleak" />
+    <error id="resourceLeak" />
+    <error id="deallocDealloc" />
+    <error id="deallocuse" />
+    <error id="mismatchSize" />
+    <error id="mismatchAllocDealloc" />
+    <error id="memleakOnRealloc" />
+    <error id="leakUnsafeArgAlloc" />
+    <!-- Other -->
+    <error id="invalidFree" />
+    <error id="doubleFree" />
+    <error id="incompleteArrayFill" />
+    <error id="ignoredReturnValue" />
+    <error id="danglingLifetime" />
+    <error id="returnDanglingLifetime" />
+    <error id="danglingReference" />
+    <error id="danglingTempReference" />
+    <error id="danglingTemporaryLifetime" />
+    <error id="objectIndex" />
+    <error id="thisUseAfterFree" />
+    <!-- NullPointer -->
+    <error id="nullPointer" />
+    <error id="nullPointerArithmetic" />
+    <error id="nullPointerArithmeticRedundantCheck" />
+    <error id="nullPointerDefaultArg" />
+    <error id="nullPointerRedundantCheck" />
+  </group>
+  <group id="Boost Library Rules" name="Boost Library Rules" description="The Boost Library Ruleset contains rules for boost usage." help="The Boost Library Ruleset contains rules for boost usage." >
+    <error id="boostForeachError" />
+  </group>
+  <group id="Buffer Overrun Rules" name="Buffer Overrun Rules" description="The Buffer Overrun Ruleset contains rules that find mistakes about buffers usage and array indices." help="The Buffer Overrun Ruleset contains rules that find mistakes about buffers usage and array indices." >
+    <!-- Buffer overruns and array index out of bounds -->
+    <error id="arrayIndexOutOfBounds" />
+    <error id="bufferAccessOutOfBounds" />
+    <error id="strncatUsage" />
+    <error id="negativeContainerIndex" />
+    <error id="negativeIndex" />
+    <error id="pointerOutOfBounds" />
+    <error id="arrayIndexThenCheck" />
+    <error id="negativeMemoryAllocationSize" />
+    <error id="arrayIndexOutOfBoundsCond" />
+
+  </group>
+  <group id="Object Orientedness Rules" name="Object Orientedness Rules" description="The Object Orientedness Ruleset contains rules that find various mistakes about classes and other object orientedness related constructs." help="The Object Orientedness Ruleset contains rules that find various mistakes about classes and other object orientedness related constructs." >
+    <!-- Class -->
+    <error id="noConstructor" />
+    <error id="copyCtorPointerCopying" />
+    <error id="noCopyConstructor" />
+    <error id="noDestructor" />
+    <error id="noExplicitConstructor" />
+    <error id="noOperatorEq" />
+    <error id="pureVirtualCall" />
+
+    <error id="uninitMemberVar" />
+    <error id="operatorEqVarError" />
+    <error id="unusedPrivateFunction" />
+    <error id="memsetClass" />
+    <error id="memsetClassReference" />
+    <error id="memsetClassFloat" />
+    <error id="mallocOnClassWarning" />
+    <error id="mallocOnClassError" />
+    <error id="virtualDestructor" />
+    <error id="thisSubtraction" />
+    <error id="operatorEqRetRefThis" />
+    <error id="operatorEqMissingReturnStatement" />
+    <error id="operatorEqToSelf" />
+    <error id="operatorEqShouldBeLeftUnimplemented" />
+    <error id="functionConst" />
+    <error id="functionStatic" />
+    <error id="initializerList" />
+    <error id="useInitializationList" />
+    <error id="selfInitialization" />
+    <error id="duplInheritedMember" />
+    <error id="pureVirtualCall" />
+    <error id="copyCtorAndEqOperator" />
+    <error id="virtualCallInConstructor" />
+
+  </group>
+  <group id="Conditional Rules" name="Conditional Rules" description="The Conditional Ruleset contains rules that find condition mistakes." help="The Conditional Ruleset contains rules that find condition mistakes." >
+    <!-- Condition mismatch -->
+    <error id="assignIfError" />
+    <error id="comparisonError" />
+    <error id="multiCondition" />
+    <error id="mismatchingBitAnd" />
+    <error id="oppositeInnerCondition" />
+    <error id="incorrectLogicOperator" />
+    <error id="redundantCondition" />
+    <error id="moduloAlwaysTrueFalse" />
+    <error id="clarifyCondition" />
+    <error id="badBitmaskCheck" />
+    <error id="identicalConditionAfterEarlyExit" />
+    <error id="identicalInnerCondition" />
+    <!-- Other -->
+    <error id="comparisonFunctionIsAlwaysTrueOrFalse" />
+    <error id="comparisonOfBoolWithInvalidComparator" />
+    <error id="invalidTestForOverflow" />
+    <error id="knownConditionTrueFalse" />
+    <error id="pointerAdditionResultNotNull" />
+    <error id="duplicateCondition" />
+    <error id="duplicateConditionalAssign" />
+  </group>
+  <group id="Exception Rules" name="Exception Rules" description="The Exception Ruleset contains rules about throwing and catching exceptions." help="The Exception Ruleset contains rules about throwing and catching exceptions." >
+    <!-- Exception safety -->
+    <error id="exceptThrowInDestructor" />
+    <error id="exceptDeallocThrow" />
+    <error id="exceptRethrowCopy" />
+    <error id="catchExceptionByValue" />
+    <error id="unhandledExceptionSpecification" />
+    <error id="throwInNoexceptFunction" />
+
+
+  </group>
+  <group id="Input Output Rules" name="Input Output Rules" description="The Input Output Ruleset contains rules for input output operations." help="The Input Output Ruleset contains rules for input output operations." >
+    <!-- Input output operationos -->
+    <error id="coutCerrMisusage" />
+    <error id="fflushOnInputStream" />
+    <error id="IOWithoutPositioning" />
+    <error id="readWriteOnlyFile" />
+    <error id="writeReadOnlyFile" />
+    <error id="useClosedFile" />
+    <error id="seekOnAppendedFile" />
+    <error id="invalidscanf" />
+    <error id="invalidscanf_libc" />
+    <error id="wrongPrintfScanfArgNum" />
+    <error id="invalidScanfArgType_s" />
+    <error id="invalidScanfArgType_int" />
+    <error id="invalidScanfArgType_float" />
+    <error id="invalidPrintfArgType_s" />
+    <error id="invalidPrintfArgType_n" />
+    <error id="invalidPrintfArgType_p" />
+    <error id="invalidPrintfArgType_uint" />
+    <error id="invalidPrintfArgType_sint" />
+    <error id="invalidPrintfArgType_float" />
+    <error id="invalidScanfFormatWidth" />
+    <error id="invalidScanfFormatWidth_smaller" />
+    <error id="invalidLengthModifierError" />
+    <error id="wrongPrintfScanfParameterPositionError" />
+  </group>
+  <group id="Performance Rules" name="Performance Rules" description="The Performance Ruleset contains rules that find various performance issues." help="The Performance Ruleset contains rules that find various performance issues." >
+    <!-- PostfixOperator -->
+    <error id="postfixOperator" />
+    <!-- Other -->
+    <error id="redundantCopy" />
+    <error id="redundantAssignment" />
+    <error id="passedByValue" />
+    <error id="redundantCopyLocalConst" />
+    <error id="assignBoolToFloat" />
+    <error id="sameIteratorExpression" />
+
+  </group>
+  <group id="Sizeof Operator Rules" name="Sizeof Operator Rules" description="The Sizeof Operator Ruleset contains rules that check usage of sizeof operator." help="The Sizeof Operator Ruleset contains rules that check usage of sizeof operator." >
+    <!-- Sizeof -->
+    <error id="sizeofFunctionCall" />
+    <error id="sizeofwithnumericparameter" />
+    <error id="sizeofwithsilentarraypointer" />
+    <error id="pointerSize" />
+    <error id="sizeofDivisionMemfunc" />
+    <error id="sizeofsizeof" />
+    <error id="sizeofCalculation" />
+    <error id="multiplySizeof" />
+    <error id="divideSizeof" />
+    <error id="sizeofVoid" />
+    <error id="sizeofDereferencedVoidPointer" />
+    <error id="arithOperationsOnVoidPointer" />
+  </group>
+  <group id="STL Rules" name="STL Rules" description="The STL Ruleset contains rules that find mistakes of STL usage (invalidation of iterators, mismatching containers, etc)." help="The STL Ruleset contains rules that find mistakes of STL usage (invalidation of iterators, mismatching containers, etc)." >
+    <!-- Stl -->
+    <error id="invalidIterator1" />
+    <error id="iterators1" />
+    <error id="iterators2" />
+    <error id="iterators3" />
+    <error id="eraseDereference" />
+    <error id="mismatchingContainers" />
+    <error id="mismatchingContainerIterator" />
+    <error id="stlOutOfBounds" />
+    <error id="stlBoundaries" />
+    <error id="stlIfFind" />
+    <error id="stlIfStrFind" />
+    <error id="stlSize" />
+    <error id="redundantIfRemove" />
+    <error id="StlMissingComparison" />
+    <error id="stlcstr" />
+    <error id="stlcstrReturn" />
+    <error id="stlcstrParam" />
+    <error id="stlcstrthrow" />
+    <error id="useStlAlgorithm" />
+    <error id="uselessCallsCompare" />
+    <error id="uselessCallsSwap" />
+    <error id="uselessCallsSubstr" />
+    <error id="uselessCallsEmpty" />
+    <error id="uselessCallsRemove" />
+    <error id="derefInvalidIterator" />
+    <error id="reademptycontainer" />
+    <error id="containerOutOfBounds" />
+    <error id="iteratorsCmp1" />
+    <error id="iteratorsCmp2" />
+    <error id="stlcstrthrow" />
+    <error id="invalidContainer" />
+    <error id="invalidContainerLoop" />
+    <error id="stlFindInsert" />
+  </group>
+  <group id="Simple Type Rules" name="Simple Type Rules" description="The Simple Type Ruleset contains rules that find simple type related issues." help="The Simple Type Ruleset contains rules that find simple type related issues." >
+    <!-- bool -->
+    <error id="assignBoolToPointer" />
+    <error id="comparisonOfFuncReturningBoolError" />
+    <error id="comparisonOfTwoFuncsReturningBoolError" />
+    <error id="comparisonOfBoolWithBoolError" />
+    <error id="incrementboolean" />
+    <error id="bitwiseOnBoolean" />
+    <error id="compareBoolExpressionWithInt" />
+    <error id="pointerArithBool" />
+    <error id="comparisonOfBoolWithInvalidComparator" />
+    <error id="assignBoolToFloat" />
+    <error id="floatConversionOverflow" />
+    <error id="signedCharArrayIndex" />
+    <error id="sizeArgumentAsChar" />
+
+    <!-- Type -->
+    <error id="shiftTooManyBits" />
+    <error id="shiftTooManyBitsSigned" />
+
+    <error id="integerOverflow" />
+    <error id="signConversion" />
+    <error id="incorrectCharBooleanError" />
+    <!--  String -->
+    <error id="staticStringCompare" />
+    <error id="stringCompare" />
+    <error id="literalWithCharPtrCompare" />
+    <error id="charLiteralWithCharPtrCompare" />
+    <error id="strPlusChar" />
+    <error id="incorrectStringCompare" />
+    <error id="incorrectStringBooleanError" />
+    <error id="sprintfOverlappingData" />
+    <error id="stringLiteralWrite" />
+    <!-- Other -->
+    <error id="checkCastIntToCharAndBack" />
+    <error id="invalidPointerCast" />
+    <error id="memsetFloat" />
+    <error id="charBitOp" />
+    <error id="unsignedLessThanZero" />
+    <error id="pointerLessThanZero" />
+    <error id="unsignedPositive" />
+    <error id="pointerPositive" />
+    <error id="shiftNegative" />
+    <error id="shiftNegativeLHS" />
+    <error id="truncLongCastAssignment" />
+    <error id="truncLongCastReturn" />
+    <error id="unknownSignCharArrayIndex" />
+
+
+
+  </group>
+  <group id="Initialization Rules" name="Initialization Rules" description="The Initialization Ruleset contains rules about the initialization of allocated memory, variables and members." help="The Initialization Ruleset contains rules about the initialization of allocated memory, variables and members." >
+    <!-- UninitVar -->
+    <error id="uninitstring" />
+    <error id="uninitdata" />
+    <error id="uninitvar" />
+    <error id="uninitStructMember" />
+    <error id="redundantInitialization" />
+    <error id="uninitDerivedMemberVar" />
+    <error id="uninitDerivedMemberVarPrivate" />
+    <error id="uninitMemberVarPrivate" />
+    <error id="unsafeClassRefMember" />
+  </group>
+  <group id="Unnecessary and Unused Code Rules" name="Unnecessary and Unused Code Rules" description="The Unnecessary and Unused Code Ruleset contains a collection of rules for unnecessary,unused or ineffective code." help="The Unnecessary and Unused Code Ruleset contains a collection of rules for unnecessary,unused or ineffective code." >
+    <!-- UnusedVar -->
+    <error id="unusedVariable" />
+    <error id="unusedAllocatedMemory" />
+    <error id="unreadVariable" />
+    <error id="unassignedVariable" />
+    <error id="unusedStructMember" />
+    <!-- UnusedFunctions -->
+    <error id="unusedFunction" />
+    <error id="unusedLabel" />
+    <error id="unusedLabelSwitch" />
+
+    <error id="unusedLabelConfiguration" />
+    <error id="unusedLabelSwitchConfiguration" />
+
+  </group>
+  <group id="Unreachable Code Rules" name="Unreachable Code Rules" description="The Unreachable Code Ruleset contains rules about code sections that can never be executed." help="The Unreachable Code Ruleset contains rules about code sections that can never be executed." >
+    <!-- Other -->
+    <error id="duplicateBreak" />
+    <error id="unreachableCode" />
+  </group>
+  <group id="Variable Argument Related Rules" name="Variable Argument Related Rules" description="The Variable Argument Related Ruleset contains rules about the usage of va_start and va_end functions." help="The Variable Argument Related Ruleset contains rules about the usage of va_start and va_end functions." >
+    <!-- Vaarg -->
+    <error id="va_start_wrongParameter" />
+    <error id="va_start_referencePassed" />
+    <error id="va_end_missing" />
+    <error id="va_list_usedBeforeStarted" />
+    <error id="va_start_subsequentCalls" />
+    <!-- Other -->
+    <error id="varFuncNullUB" />
+  </group>
+  <group id="Readability and Consistency Rules" name="Readability and Consistency Rules" description="The Readability and Consistency Ruleset contains rules about constructs that reduce the code readability." help="The Readability and Consistency Ruleset contains rules about constructs that reduce the code readability." >
+    <!-- Other -->
+    <error id="clarifyCalculation" />
+    <error id="clarifyStatement" />
+    <error id="suspiciousSemicolon" />
+    <error id="cstyleCast" />
+    <error id="variableScope" />
+    <error id="commaSeparatedReturn" />
+    <error id="funcArgNamesDifferent" />
+    <error id="funcArgOrderDifferent" />
+    <error id="missingOverride" />
+    <error id="shadowArgument" />
+    <error id="shadowFunction" />
+    <error id="shadowVariable" />
+    <error id="constVariable" />
+
+  </group>
+  <group id="API Rules" name="API Rules" description="The API Ruleset contains rules that find built in function usages that are wrong." help="The API Ruleset contains rules that find built in function usages that are wrong." >
+    <!-- Other -->
+    <error id="wrongPipeParameterSize" />
+    <error id="memsetZeroBytes" />
+    <error id="memsetValueOutOfRange" />
+    <error id="invalidFunctionArg" />
+    <error id="invalidFunctionArgBool" />
+    <error id="invalidFunctionArgStr" />
+    <error id="invalidLengthModifierError" />
+    <error id="wrongmathcall" />
+    <error id="unpreciseMathCall" />
+
+
+  </group>
+  <group id="Suspicious Construct Rules" name="Suspicious Construct Rules" description="The Suspicious Construct Ruleset contains rules about constructs that are redundant or could lead to unexpected results." help="The Suspicious Construct Ruleset contains rules about constructs that are redundant or could lead to unexpected results." >
+    <!-- Other -->
+    <error id="assignmentInCondition" />
+    <error id="redundantCopyInSwitch" />
+    <error id="redundantAssignInSwitch" />
+    <error id="redundantBitwiseOperationInSwitch" />
+    <error id="suspiciousCase" />
+    <error id="unusedScopedObject" />
+    <error id="duplicateBranch" />
+    <error id="duplicateExpression" />
+    <error id="doubleCloseDir" />
+    <error id="selfAssignment" />
+    <error id="constStatement" />
+    <error id="redundantGetAndSetUserId" />
+    <error id="nanInArithmeticExpression" />
+    <error id="duplicateAssignExpression" />
+    <error id="duplicateExpressionTernary" />
+    <error id="duplicateValueTernary" />
+    <error id="mismatchingContainerExpression" />
+    <error id="oppositeExpression" />
+    <error id="overlappingStrcmp" />
+    <error id="redundantBitwiseOperationInSwitch" />
+    <error id="redundantPointerOp" />
+    <error id="returnNonBoolInBooleanFunction" />
+    <error id="comparePointers" />
+    <error id="knownArgument" />
+    <error id="knownArgumentHiddenVariableExpression" />
+    <error id="knownEmptyContainer" />
+    <error id="moduloofone" />
+    <error id="rethrowNoCurrentException" />
+
+  </group>
+  <group id="Division Rules" name="Division Rules" description="The Division Ruleset contains rules about the division operator." help="The Division Ruleset contains rules about the division operator." >
+    <!-- Other -->
+    <error id="zerodiv" />
+    <error id="zerodivcond" />
+  </group>
+
+  <group id="Multithreading Rules" name="Multithreading Rules" description="Rules that flag issues when dealing with multiple threads of execution." help="Rules that flag issues when dealing with multiple threads of execution." >
+    <error id="raceAfterInterlockedDecrement" />
+    <error id="globalLockGuard" />
+    <error id="localMutex" />
+  </group>
+
+  <group id="Preprocessor Rules" name="Preprocessor Rules" description="The Preprocessor Ruleset contains rules about preprocessor definitions." help="The Preprocessor Ruleset contains rules about preprocessor definitions." >
+    <!-- preprocessor -->
+    <error id="preprocessorErrorDirective" />
+  </group>
+</groups>

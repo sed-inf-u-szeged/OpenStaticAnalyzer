@@ -38,7 +38,7 @@ namespace statement {
   * (missing)
   * 
   * Attributes:
-  *   - async (boolean) : (missing)
+  *   - await (boolean) : (missing)
   */
   class ForOfStatement : public ForInStatement {
     protected:
@@ -83,27 +83,27 @@ namespace statement {
       // ---------- Attribute getter function(s) ----------
 
       /**
-      * \brief Gives back the async of the node.
-      * \return Returns with the async.
+      * \brief Gives back the await of the node.
+      * \return Returns with the await.
       */
-      bool getAsync() const;
+      bool getAwait() const;
 
 
       // ---------- Attribute setter function(s) ----------
 
       /**
       * \internal
-      * \brief Sets the async of the node.
-      * \param async [in] The new value of the async.
+      * \brief Sets the await of the node.
+      * \param await [in] The new value of the await.
       */
-      void setAsync(bool _async);
+      void setAwait(bool _await);
 
     protected:
 
       // ---------- Attribute(s) ----------
 
-      /** \internal \brief The value of the `async`. */
-      bool m_async : 1;
+      /** \internal \brief The value of the `await`. */
+      bool m_await : 1;
 
     protected:
       /**

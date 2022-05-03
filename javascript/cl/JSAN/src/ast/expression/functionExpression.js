@@ -18,52 +18,38 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var functionExpression = factory.createFunctionExpressionWrapper();
+        const functionExpression = factory.createFunctionExpressionWrapper();
         globals.setPositionInfo(node, functionExpression);
         functionExpression.setGenerator(node.generator);
         functionExpression.setExpression(node.expression);
         functionExpression.setAsync(node.async);
         return functionExpression;
     } else {
-        var functionExpressionWrapper = globals.getWrapperOfNode(node);
+        const functionExpressionWrapper = globals.getWrapperOfNode(node);
 
         if (node.params != null) {
-            for (var i = 0; i < node.params.length; i++) {
+            for (let i = 0; i < node.params.length; i++) {
                 if (node.params[i] != null) {
-                    var paramsWrapper = globals.getWrapperOfNode(node.params[i]);
-                    try {
-                        functionExpressionWrapper.addParams(paramsWrapper);
-                    } catch (e) {
-                        console.error("FUNCTIONEXPRESSION - Could not add params! Reason of the error: " + e + "\n");
-                    }
+                    globals.safeSet(functionExpressionWrapper, "addParams", node.params[i], "FUNCTIONEXPRESSION - Could not add params!");
                 }
             }
         }
 
         if (node.body != null) {
-            var bodyWrapper = globals.getWrapperOfNode(node.body);
-            try {
-                functionExpressionWrapper.setBody(bodyWrapper);
-            } catch (e) {
-                console.error("FUNCTIONEXPRESSION - Could not set body! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(functionExpressionWrapper, "setBody", node.body, "FUNCTIONEXPRESSION - Could not set body!");
         }
 
         if (node.id != null) {
-            var identifierWrapper = globals.getWrapperOfNode(node.id);
-            try {
-                functionExpressionWrapper.setIdentifier(identifierWrapper);
-            } catch (e) {
-                console.error("FUNCTIONEXPRESSION - Could not set identifier! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(functionExpressionWrapper, "setIdentifier", node.id, "FUNCTIONEXPRESSION - Could not set identifier!")
         }
 
     }

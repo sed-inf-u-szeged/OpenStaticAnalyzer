@@ -37,7 +37,7 @@ namespace structure {
   * (missing)
   * 
   * Edges:
-  *   - hasBody (structure::MethodDefinition, multiple) : (missing)
+  *   - hasBody (base::Positioned, multiple) : (missing)
   */
   class ClassBody : public base::Positioned {
     protected:
@@ -106,13 +106,13 @@ namespace structure {
       * \brief Gives back iterator for the hasBody edges.
       * \return Returns an iterator for the hasBody edges.
       */
-      ListIterator<structure::MethodDefinition> getBodyListIteratorBegin() const;
+      ListIterator<base::Positioned> getBodyListIteratorBegin() const;
 
       /**
       * \brief Gives back iterator for the hasBody edges.
       * \return Returns an iterator for the hasBody edges.
       */
-      ListIterator<structure::MethodDefinition> getBodyListIteratorEnd() const;
+      ListIterator<base::Positioned> getBodyListIteratorEnd() const;
 
       /**
       * \brief Tells whether the node has hasBody edges or not.
@@ -133,7 +133,7 @@ namespace structure {
       * \brief Adds a new hasBody edge to the node and inserts it after the other ones.
       * \param node [in] The end point of the new hasBody edge.
       */
-      void addBody(const MethodDefinition *node);
+      void addBody(const base::Positioned *node);
 
       /**
       * \brief Adds a new hasBody edge to the node and inserts it after the other ones.
@@ -151,14 +151,14 @@ namespace structure {
       * \brief Remove the hasBody edge from the node.
       * \param node [in] The end point of the hasBody edge.
       */
-      void removeBody(MethodDefinition *node);
+      void removeBody(base::Positioned *node);
 
     protected:
 
       // ---------- Edges ----------
 
       /** \internal \brief Container stores the id of the nodes the hasBody edge points to. */
-      ListIterator<structure::MethodDefinition>::Container hasBodyContainer;
+      ListIterator<base::Positioned>::Container hasBodyContainer;
 
     public:
 

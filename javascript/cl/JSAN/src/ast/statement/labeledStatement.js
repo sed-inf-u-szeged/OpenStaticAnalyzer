@@ -18,38 +18,27 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var labeledStatement = factory.createLabeledStatementWrapper();
+        const labeledStatement = factory.createLabeledStatementWrapper();
         globals.setPositionInfo(node, labeledStatement);
         return labeledStatement;
     } else {
-        var labeledStatementWrapper = globals.getWrapperOfNode(node);
-
+        const labeledStatementWrapper = globals.getWrapperOfNode(node);
 
         if (node.label != null) {
-            var labelWrapper = globals.getWrapperOfNode(node.label);
-            try {
-                labeledStatementWrapper.setLabel(labelWrapper);
-            } catch (e) {
-                console.error("LABELEDSTATEMENT - Could not set label! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(labeledStatementWrapper, "setLabel", node.label, "LABELEDSTATEMENT - Could not set label!");
         }
 
         if (node.body != null) {
-            var bodyWrapper = globals.getWrapperOfNode(node.body);
-            try {
-                labeledStatementWrapper.setBody(bodyWrapper);
-            } catch (e) {
-                console.error("LABELEDSTATEMENT - Could not set body! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(labeledStatementWrapper, "setBody", node.body, "LABELEDSTATEMENT - Could not set body!");
         }
-
     }
 }

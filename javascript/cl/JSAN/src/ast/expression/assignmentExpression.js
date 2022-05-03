@@ -18,39 +18,29 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
-const conversions = require('../conversions');
+import * as globals from '../../globals.js';
+import * as conversions from '../conversions.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var assignmentExpression = factory.createAssignmentExpressionWrapper();
+        const assignmentExpression = factory.createAssignmentExpressionWrapper();
         globals.setPositionInfo(node, assignmentExpression);
         assignmentExpression.setOperator(conversions.convertOperatorToString(node.operator));
         return assignmentExpression;
     } else {
-        var assignmentExpressionWrapper = globals.getWrapperOfNode(node);
+        const assignmentExpressionWrapper = globals.getWrapperOfNode(node);
 
         if (node.left != null) {
-            var leftWrapper = globals.getWrapperOfNode(node.left);
-            try {
-                assignmentExpressionWrapper.setLeft(leftWrapper);
-            } catch (e) {
-                console.error("ASSIGNMENTEXPRESSION - Could not set left! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(assignmentExpressionWrapper, "setLeft", node.left, "ASSIGNMENTEXPRESSION - Could not set left!");
         }
 
         if (node.right != null) {
-            var rightWrapper = globals.getWrapperOfNode(node.right);
-            try {
-                assignmentExpressionWrapper.setRight(rightWrapper);
-            } catch (e) {
-                console.error("ASSIGNMENTEXPRESSION - Could not set right! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(assignmentExpressionWrapper, "setRight", node.right, "ASSIGNMENTEXPRESSION - Could not set right!");
         }
-
     }
 }

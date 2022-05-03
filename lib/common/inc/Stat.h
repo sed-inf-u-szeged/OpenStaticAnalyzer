@@ -29,6 +29,10 @@
 #include <stack>
 #include <map>
 
+#ifdef __clang__
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wreturn-stack-address"
+#endif
 
 namespace common
 {
@@ -201,5 +205,9 @@ namespace common
       std::map<key_type, value_type> values;
   };
 }
+
+#ifdef __clang__
+  #pragma clang diagnostic pop
+#endif
 
 #endif

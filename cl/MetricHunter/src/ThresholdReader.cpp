@@ -151,7 +151,7 @@ XERCES_CPP_NAMESPACE_USE
               common::split(entity, ruleEntities, ',');
               
               entities.insert(ruleEntities.begin(), ruleEntities.end());
-                              
+                
               //There we create a temp object and push into the vector
               trs.push_back(Threshold(mid,relation,value, ruleEntities));
 

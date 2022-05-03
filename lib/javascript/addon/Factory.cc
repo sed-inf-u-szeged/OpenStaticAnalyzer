@@ -28,6 +28,8 @@ napi_value Factory::Init(napi_env env, napi_value& exports) {
         DECLARE_NAPI_METHOD("createCommentWrapper", createCommentWrapper),
         DECLARE_NAPI_METHOD("createModuleDeclarationWrapper", createModuleDeclarationWrapper),
         DECLARE_NAPI_METHOD("createVariableDeclaratorWrapper", createVariableDeclaratorWrapper),
+        DECLARE_NAPI_METHOD("createChainElementWrapper", createChainElementWrapper),
+        DECLARE_NAPI_METHOD("createPrivateIdentifierWrapper", createPrivateIdentifierWrapper),
         DECLARE_NAPI_METHOD("createPropertyWrapper", createPropertyWrapper),
         DECLARE_NAPI_METHOD("createSpreadElementWrapper", createSpreadElementWrapper),
         DECLARE_NAPI_METHOD("createSuperWrapper", createSuperWrapper),
@@ -37,21 +39,24 @@ napi_value Factory::Init(napi_env env, napi_value& exports) {
         DECLARE_NAPI_METHOD("createSwitchCaseWrapper", createSwitchCaseWrapper),
         DECLARE_NAPI_METHOD("createClassBodyWrapper", createClassBodyWrapper),
         DECLARE_NAPI_METHOD("createMethodDefinitionWrapper", createMethodDefinitionWrapper),
+        DECLARE_NAPI_METHOD("createPropertyDefinitionWrapper", createPropertyDefinitionWrapper),
         DECLARE_NAPI_METHOD("createProgramWrapper", createProgramWrapper),
         DECLARE_NAPI_METHOD("createIdentifierWrapper", createIdentifierWrapper),
         DECLARE_NAPI_METHOD("createExportNamedDeclarationWrapper", createExportNamedDeclarationWrapper),
         DECLARE_NAPI_METHOD("createImportDeclarationWrapper", createImportDeclarationWrapper),
+        DECLARE_NAPI_METHOD("createCallExpressionWrapper", createCallExpressionWrapper),
+        DECLARE_NAPI_METHOD("createMemberExpressionWrapper", createMemberExpressionWrapper),
         DECLARE_NAPI_METHOD("createArrayExpressionWrapper", createArrayExpressionWrapper),
         DECLARE_NAPI_METHOD("createArrowFunctionExpressionWrapper", createArrowFunctionExpressionWrapper),
         DECLARE_NAPI_METHOD("createAssignmentExpressionWrapper", createAssignmentExpressionWrapper),
         DECLARE_NAPI_METHOD("createAwaitExpressionWrapper", createAwaitExpressionWrapper),
         DECLARE_NAPI_METHOD("createBinaryExpressionWrapper", createBinaryExpressionWrapper),
-        DECLARE_NAPI_METHOD("createCallExpressionWrapper", createCallExpressionWrapper),
+        DECLARE_NAPI_METHOD("createChainExpressionWrapper", createChainExpressionWrapper),
         DECLARE_NAPI_METHOD("createClassExpressionWrapper", createClassExpressionWrapper),
         DECLARE_NAPI_METHOD("createConditionalExpressionWrapper", createConditionalExpressionWrapper),
         DECLARE_NAPI_METHOD("createFunctionExpressionWrapper", createFunctionExpressionWrapper),
+        DECLARE_NAPI_METHOD("createImportExpressionWrapper", createImportExpressionWrapper),
         DECLARE_NAPI_METHOD("createLogicalExpressionWrapper", createLogicalExpressionWrapper),
-        DECLARE_NAPI_METHOD("createMemberExpressionWrapper", createMemberExpressionWrapper),
         DECLARE_NAPI_METHOD("createMetaPropertyWrapper", createMetaPropertyWrapper),
         DECLARE_NAPI_METHOD("createNewExpressionWrapper", createNewExpressionWrapper),
         DECLARE_NAPI_METHOD("createObjectExpressionWrapper", createObjectExpressionWrapper),
@@ -62,12 +67,12 @@ napi_value Factory::Init(napi_env env, napi_value& exports) {
         DECLARE_NAPI_METHOD("createUnaryExpressionWrapper", createUnaryExpressionWrapper),
         DECLARE_NAPI_METHOD("createUpdateExpressionWrapper", createUpdateExpressionWrapper),
         DECLARE_NAPI_METHOD("createYieldExpressionWrapper", createYieldExpressionWrapper),
+        DECLARE_NAPI_METHOD("createBigIntLiteralWrapper", createBigIntLiteralWrapper),
         DECLARE_NAPI_METHOD("createBooleanLiteralWrapper", createBooleanLiteralWrapper),
         DECLARE_NAPI_METHOD("createNullLiteralWrapper", createNullLiteralWrapper),
         DECLARE_NAPI_METHOD("createNumberLiteralWrapper", createNumberLiteralWrapper),
         DECLARE_NAPI_METHOD("createRegExpLiteralWrapper", createRegExpLiteralWrapper),
         DECLARE_NAPI_METHOD("createStringLiteralWrapper", createStringLiteralWrapper),
-        DECLARE_NAPI_METHOD("createAssignmentPropertyWrapper", createAssignmentPropertyWrapper),
         DECLARE_NAPI_METHOD("createArrayPatternWrapper", createArrayPatternWrapper),
         DECLARE_NAPI_METHOD("createAssignmentPatternWrapper", createAssignmentPatternWrapper),
         DECLARE_NAPI_METHOD("createObjectPatternWrapper", createObjectPatternWrapper),
@@ -232,6 +237,44 @@ napi_value Factory::createVariableDeclaratorWrapper(napi_env env, napi_callback_
 
     napi_value instance;
     status = VariableDeclaratorWrapper::NewInstance(env, node, &instance);
+
+    return instance;
+}
+napi_value Factory::createChainElementWrapper(napi_env env, napi_callback_info info) {
+    napi_status status;
+    napi_value jsthis;
+    status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
+    assert(status == napi_ok);
+
+    Factory* obj;
+    status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+    assert(status == napi_ok);
+
+    expression::ChainElement* node;
+    node = obj->factory->createChainElementNode();
+    
+
+    napi_value instance;
+    status = ChainElementWrapper::NewInstance(env, node, &instance);
+
+    return instance;
+}
+napi_value Factory::createPrivateIdentifierWrapper(napi_env env, napi_callback_info info) {
+    napi_status status;
+    napi_value jsthis;
+    status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
+    assert(status == napi_ok);
+
+    Factory* obj;
+    status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+    assert(status == napi_ok);
+
+    expression::PrivateIdentifier* node;
+    node = obj->factory->createPrivateIdentifierNode();
+    
+
+    napi_value instance;
+    status = PrivateIdentifierWrapper::NewInstance(env, node, &instance);
 
     return instance;
 }
@@ -406,6 +449,25 @@ napi_value Factory::createMethodDefinitionWrapper(napi_env env, napi_callback_in
 
     return instance;
 }
+napi_value Factory::createPropertyDefinitionWrapper(napi_env env, napi_callback_info info) {
+    napi_status status;
+    napi_value jsthis;
+    status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
+    assert(status == napi_ok);
+
+    Factory* obj;
+    status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+    assert(status == napi_ok);
+
+    structure::PropertyDefinition* node;
+    node = obj->factory->createPropertyDefinitionNode();
+    
+
+    napi_value instance;
+    status = PropertyDefinitionWrapper::NewInstance(env, node, &instance);
+
+    return instance;
+}
 napi_value Factory::createProgramWrapper(napi_env env, napi_callback_info info) {
     napi_status status;
     napi_value jsthis;
@@ -479,6 +541,44 @@ napi_value Factory::createImportDeclarationWrapper(napi_env env, napi_callback_i
 
     napi_value instance;
     status = ImportDeclarationWrapper::NewInstance(env, node, &instance);
+
+    return instance;
+}
+napi_value Factory::createCallExpressionWrapper(napi_env env, napi_callback_info info) {
+    napi_status status;
+    napi_value jsthis;
+    status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
+    assert(status == napi_ok);
+
+    Factory* obj;
+    status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+    assert(status == napi_ok);
+
+    expression::CallExpression* node;
+    node = obj->factory->createCallExpressionNode();
+    
+
+    napi_value instance;
+    status = CallExpressionWrapper::NewInstance(env, node, &instance);
+
+    return instance;
+}
+napi_value Factory::createMemberExpressionWrapper(napi_env env, napi_callback_info info) {
+    napi_status status;
+    napi_value jsthis;
+    status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
+    assert(status == napi_ok);
+
+    Factory* obj;
+    status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+    assert(status == napi_ok);
+
+    expression::MemberExpression* node;
+    node = obj->factory->createMemberExpressionNode();
+    
+
+    napi_value instance;
+    status = MemberExpressionWrapper::NewInstance(env, node, &instance);
 
     return instance;
 }
@@ -577,7 +677,7 @@ napi_value Factory::createBinaryExpressionWrapper(napi_env env, napi_callback_in
 
     return instance;
 }
-napi_value Factory::createCallExpressionWrapper(napi_env env, napi_callback_info info) {
+napi_value Factory::createChainExpressionWrapper(napi_env env, napi_callback_info info) {
     napi_status status;
     napi_value jsthis;
     status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
@@ -587,12 +687,12 @@ napi_value Factory::createCallExpressionWrapper(napi_env env, napi_callback_info
     status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
     assert(status == napi_ok);
 
-    expression::CallExpression* node;
-    node = obj->factory->createCallExpressionNode();
+    expression::ChainExpression* node;
+    node = obj->factory->createChainExpressionNode();
     
 
     napi_value instance;
-    status = CallExpressionWrapper::NewInstance(env, node, &instance);
+    status = ChainExpressionWrapper::NewInstance(env, node, &instance);
 
     return instance;
 }
@@ -653,6 +753,25 @@ napi_value Factory::createFunctionExpressionWrapper(napi_env env, napi_callback_
 
     return instance;
 }
+napi_value Factory::createImportExpressionWrapper(napi_env env, napi_callback_info info) {
+    napi_status status;
+    napi_value jsthis;
+    status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
+    assert(status == napi_ok);
+
+    Factory* obj;
+    status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+    assert(status == napi_ok);
+
+    expression::ImportExpression* node;
+    node = obj->factory->createImportExpressionNode();
+    
+
+    napi_value instance;
+    status = ImportExpressionWrapper::NewInstance(env, node, &instance);
+
+    return instance;
+}
 napi_value Factory::createLogicalExpressionWrapper(napi_env env, napi_callback_info info) {
     napi_status status;
     napi_value jsthis;
@@ -669,25 +788,6 @@ napi_value Factory::createLogicalExpressionWrapper(napi_env env, napi_callback_i
 
     napi_value instance;
     status = LogicalExpressionWrapper::NewInstance(env, node, &instance);
-
-    return instance;
-}
-napi_value Factory::createMemberExpressionWrapper(napi_env env, napi_callback_info info) {
-    napi_status status;
-    napi_value jsthis;
-    status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
-    assert(status == napi_ok);
-
-    Factory* obj;
-    status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
-    assert(status == napi_ok);
-
-    expression::MemberExpression* node;
-    node = obj->factory->createMemberExpressionNode();
-    
-
-    napi_value instance;
-    status = MemberExpressionWrapper::NewInstance(env, node, &instance);
 
     return instance;
 }
@@ -881,6 +981,25 @@ napi_value Factory::createYieldExpressionWrapper(napi_env env, napi_callback_inf
 
     return instance;
 }
+napi_value Factory::createBigIntLiteralWrapper(napi_env env, napi_callback_info info) {
+    napi_status status;
+    napi_value jsthis;
+    status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
+    assert(status == napi_ok);
+
+    Factory* obj;
+    status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
+    assert(status == napi_ok);
+
+    expression::BigIntLiteral* node;
+    node = obj->factory->createBigIntLiteralNode();
+    
+
+    napi_value instance;
+    status = BigIntLiteralWrapper::NewInstance(env, node, &instance);
+
+    return instance;
+}
 napi_value Factory::createBooleanLiteralWrapper(napi_env env, napi_callback_info info) {
     napi_status status;
     napi_value jsthis;
@@ -973,25 +1092,6 @@ napi_value Factory::createStringLiteralWrapper(napi_env env, napi_callback_info 
 
     napi_value instance;
     status = StringLiteralWrapper::NewInstance(env, node, &instance);
-
-    return instance;
-}
-napi_value Factory::createAssignmentPropertyWrapper(napi_env env, napi_callback_info info) {
-    napi_status status;
-    napi_value jsthis;
-    status = napi_get_cb_info(env, info, 0, nullptr, &jsthis, nullptr);
-    assert(status == napi_ok);
-
-    Factory* obj;
-    status = napi_unwrap(env, jsthis, reinterpret_cast<void**>(&obj));
-    assert(status == napi_ok);
-
-    expression::AssignmentProperty* node;
-    node = obj->factory->createAssignmentPropertyNode();
-    
-
-    napi_value instance;
-    status = AssignmentPropertyWrapper::NewInstance(env, node, &instance);
 
     return instance;
 }

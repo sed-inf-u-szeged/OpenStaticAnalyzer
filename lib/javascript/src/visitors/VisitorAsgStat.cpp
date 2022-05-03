@@ -42,16 +42,19 @@ const char* VisitorAsgStat::nodeNames[] = {
         "expression::ArrayExpression",
         "expression::ArrowFunctionExpression",
         "expression::AssignmentExpression",
-        "expression::AssignmentProperty",
         "expression::AwaitExpression",
+        "expression::BigIntLiteral",
         "expression::BinaryExpression",
         "expression::BooleanLiteral",
         "expression::CallExpression",
+        "expression::ChainElement",
+        "expression::ChainExpression",
         "expression::ClassExpression",
         "expression::ConditionalExpression",
         "expression::Expression",
         "expression::FunctionExpression",
         "expression::Identifier",
+        "expression::ImportExpression",
         "expression::Literal",
         "expression::LogicalExpression",
         "expression::MemberExpression",
@@ -60,6 +63,7 @@ const char* VisitorAsgStat::nodeNames[] = {
         "expression::NullLiteral",
         "expression::NumberLiteral",
         "expression::ObjectExpression",
+        "expression::PrivateIdentifier",
         "expression::Property",
         "expression::RegExpLiteral",
         "expression::SequenceExpression",
@@ -109,6 +113,7 @@ const char* VisitorAsgStat::nodeNames[] = {
         "structure::ImportSpecifier",
         "structure::MethodDefinition",
         "structure::ModuleSpecifier",
+        "structure::PropertyDefinition",
 };
 
 const unsigned short VisitorAsgStat::nodeSizes[] = {
@@ -131,16 +136,19 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
         sizeof(expression::ArrayExpression),
         sizeof(expression::ArrowFunctionExpression),
         sizeof(expression::AssignmentExpression),
-        sizeof(expression::AssignmentProperty),
         sizeof(expression::AwaitExpression),
+        sizeof(expression::BigIntLiteral),
         sizeof(expression::BinaryExpression),
         sizeof(expression::BooleanLiteral),
         sizeof(expression::CallExpression),
+        sizeof(expression::ChainElement),
+        sizeof(expression::ChainExpression),
         sizeof(expression::ClassExpression),
         sizeof(expression::ConditionalExpression),
         sizeof(expression::Expression),
         sizeof(expression::FunctionExpression),
         sizeof(expression::Identifier),
+        sizeof(expression::ImportExpression),
         sizeof(expression::Literal),
         sizeof(expression::LogicalExpression),
         sizeof(expression::MemberExpression),
@@ -149,6 +157,7 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
         sizeof(expression::NullLiteral),
         sizeof(expression::NumberLiteral),
         sizeof(expression::ObjectExpression),
+        sizeof(expression::PrivateIdentifier),
         sizeof(expression::Property),
         sizeof(expression::RegExpLiteral),
         sizeof(expression::SequenceExpression),
@@ -198,16 +207,17 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
         sizeof(structure::ImportSpecifier),
         sizeof(structure::MethodDefinition),
         sizeof(structure::ModuleSpecifier),
+        sizeof(structure::PropertyDefinition),
 };
 
   VisitorAsgStat::VisitorAsgStat() : VisitorAbstractNodes() {
-    for (int i = 0; i < 86; ++i)
+    for (int i = 0; i < 91; ++i)
       nodeStatSimple[i] = 0;
 
-    for (int i = 0; i < 86; ++i)
+    for (int i = 0; i < 91; ++i)
       nodeStatParent[i] = 0;
 
-    for (int i = 0; i < 95; ++i)
+    for (int i = 0; i < 100; ++i)
       edgeStat[i] = 0;
 
   }
@@ -367,20 +377,20 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
       ++nodeStatSimple[ndkAssignmentExpression];
   }
 
-  void VisitorAsgStat::visit(const expression::AssignmentProperty& node,bool callVirtualBase ) {
-    VisitorAbstractNodes::visit(node,callVirtualBase);
-
-    ++nodeStatParent[ndkAssignmentProperty];
-    if (node.getNodeKind() == ndkAssignmentProperty)
-      ++nodeStatSimple[ndkAssignmentProperty];
-  }
-
   void VisitorAsgStat::visit(const expression::AwaitExpression& node,bool callVirtualBase ) {
     VisitorAbstractNodes::visit(node,callVirtualBase);
 
     ++nodeStatParent[ndkAwaitExpression];
     if (node.getNodeKind() == ndkAwaitExpression)
       ++nodeStatSimple[ndkAwaitExpression];
+  }
+
+  void VisitorAsgStat::visit(const expression::BigIntLiteral& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkBigIntLiteral];
+    if (node.getNodeKind() == ndkBigIntLiteral)
+      ++nodeStatSimple[ndkBigIntLiteral];
   }
 
   void VisitorAsgStat::visit(const expression::BinaryExpression& node,bool callVirtualBase ) {
@@ -405,6 +415,22 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++nodeStatParent[ndkCallExpression];
     if (node.getNodeKind() == ndkCallExpression)
       ++nodeStatSimple[ndkCallExpression];
+  }
+
+  void VisitorAsgStat::visit(const expression::ChainElement& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkChainElement];
+    if (node.getNodeKind() == ndkChainElement)
+      ++nodeStatSimple[ndkChainElement];
+  }
+
+  void VisitorAsgStat::visit(const expression::ChainExpression& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkChainExpression];
+    if (node.getNodeKind() == ndkChainExpression)
+      ++nodeStatSimple[ndkChainExpression];
   }
 
   void VisitorAsgStat::visit(const expression::ClassExpression& node,bool callVirtualBase ) {
@@ -445,6 +471,14 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++nodeStatParent[ndkIdentifier];
     if (node.getNodeKind() == ndkIdentifier)
       ++nodeStatSimple[ndkIdentifier];
+  }
+
+  void VisitorAsgStat::visit(const expression::ImportExpression& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkImportExpression];
+    if (node.getNodeKind() == ndkImportExpression)
+      ++nodeStatSimple[ndkImportExpression];
   }
 
   void VisitorAsgStat::visit(const expression::Literal& node,bool callVirtualBase ) {
@@ -509,6 +543,14 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++nodeStatParent[ndkObjectExpression];
     if (node.getNodeKind() == ndkObjectExpression)
       ++nodeStatSimple[ndkObjectExpression];
+  }
+
+  void VisitorAsgStat::visit(const expression::PrivateIdentifier& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkPrivateIdentifier];
+    if (node.getNodeKind() == ndkPrivateIdentifier)
+      ++nodeStatSimple[ndkPrivateIdentifier];
   }
 
   void VisitorAsgStat::visit(const expression::Property& node,bool callVirtualBase ) {
@@ -903,6 +945,14 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
       ++nodeStatSimple[ndkModuleSpecifier];
   }
 
+  void VisitorAsgStat::visit(const structure::PropertyDefinition& node,bool callVirtualBase ) {
+    VisitorAbstractNodes::visit(node,callVirtualBase);
+
+    ++nodeStatParent[ndkPropertyDefinition];
+    if (node.getNodeKind() == ndkPropertyDefinition)
+      ++nodeStatSimple[ndkPropertyDefinition];
+  }
+
   void VisitorAsgStat::visitPositioned_Comments(const base::Positioned& begin, const base::Comment& end) {
     ++edgeStat[edkPositioned_Comments];
   }
@@ -917,6 +967,10 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
 
   void VisitorAsgStat::visitExportAllDeclaration_HasSource(const declaration::ExportAllDeclaration& begin, const expression::Literal& end) {
     ++edgeStat[edkExportAllDeclaration_HasSource];
+  }
+
+  void VisitorAsgStat::visitExportAllDeclaration_HasExported(const declaration::ExportAllDeclaration& begin, const expression::Identifier& end) {
+    ++edgeStat[edkExportAllDeclaration_HasExported];
   }
 
   void VisitorAsgStat::visitExportDefaultDeclaration_HasDeclaration(const declaration::ExportDefaultDeclaration& begin, const base::Positioned& end) {
@@ -971,7 +1025,7 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkAwaitExpression_HasArgument];
   }
 
-  void VisitorAsgStat::visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const expression::Expression& end) {
+  void VisitorAsgStat::visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const base::Positioned& end) {
     ++edgeStat[edkBinaryExpression_HasLeft];
   }
 
@@ -991,6 +1045,10 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkCallExpression_Calls];
   }
 
+  void VisitorAsgStat::visitChainExpression_HasExpression(const expression::ChainExpression& begin, const expression::ChainElement& end) {
+    ++edgeStat[edkChainExpression_HasExpression];
+  }
+
   void VisitorAsgStat::visitConditionalExpression_HasAlternate(const expression::ConditionalExpression& begin, const expression::Expression& end) {
     ++edgeStat[edkConditionalExpression_HasAlternate];
   }
@@ -1007,6 +1065,10 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkIdentifier_RefersTo];
   }
 
+  void VisitorAsgStat::visitImportExpression_HasSource(const expression::ImportExpression& begin, const expression::Expression& end) {
+    ++edgeStat[edkImportExpression_HasSource];
+  }
+
   void VisitorAsgStat::visitLogicalExpression_HasLeft(const expression::LogicalExpression& begin, const expression::Expression& end) {
     ++edgeStat[edkLogicalExpression_HasLeft];
   }
@@ -1015,7 +1077,7 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkLogicalExpression_HasRight];
   }
 
-  void VisitorAsgStat::visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const expression::Expression& end) {
+  void VisitorAsgStat::visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const base::Positioned& end) {
     ++edgeStat[edkMemberExpression_HasProperty];
   }
 
@@ -1259,7 +1321,7 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkClass_HasIdentifier];
   }
 
-  void VisitorAsgStat::visitClassBody_HasBody(const structure::ClassBody& begin, const structure::MethodDefinition& end) {
+  void VisitorAsgStat::visitClassBody_HasBody(const structure::ClassBody& begin, const base::Positioned& end) {
     ++edgeStat[edkClassBody_HasBody];
   }
 
@@ -1271,7 +1333,7 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
     ++edgeStat[edkImportSpecifier_HasImported];
   }
 
-  void VisitorAsgStat::visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const expression::Expression& end) {
+  void VisitorAsgStat::visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const base::Positioned& end) {
     ++edgeStat[edkMethodDefinition_HasKey];
   }
 
@@ -1281,6 +1343,14 @@ const unsigned short VisitorAsgStat::nodeSizes[] = {
 
   void VisitorAsgStat::visitModuleSpecifier_HasLocal(const structure::ModuleSpecifier& begin, const expression::Identifier& end) {
     ++edgeStat[edkModuleSpecifier_HasLocal];
+  }
+
+  void VisitorAsgStat::visitPropertyDefinition_HasKey(const structure::PropertyDefinition& begin, const base::Positioned& end) {
+    ++edgeStat[edkPropertyDefinition_HasKey];
+  }
+
+  void VisitorAsgStat::visitPropertyDefinition_HasValue(const structure::PropertyDefinition& begin, const expression::Expression& end) {
+    ++edgeStat[edkPropertyDefinition_HasValue];
   }
 
 

@@ -83,7 +83,7 @@ public:
             if (!node.getAccessorCallIsEmpty()){
                 columbus::LANGUAGE_NAMESPACE::ListIterator<columbus::LANGUAGE_NAMESPACE::structure::AccessorDeclarationSyntax> it = node.getAccessorCallListIteratorBegin();
                 while (it != node.getAccessorCallListIteratorEnd()) {
-                    if (&(*it) && (*it).getPosition().getFileNameKey() != 0) {
+                    if (it->getPosition().getFileNameKey() != 0) {
                         repr += std::string("(") + (*it).getIdentifier();
                     }
                     ++it;
@@ -98,7 +98,7 @@ public:
             if (!node.getAccessorCallIsEmpty()){
                 columbus::LANGUAGE_NAMESPACE::ListIterator<columbus::LANGUAGE_NAMESPACE::structure::AccessorDeclarationSyntax> it = node.getAccessorCallListIteratorBegin();
                 while (it != node.getAccessorCallListIteratorEnd()) {
-                    if (&(*it) && (*it).getPosition().getFileNameKey() != 0) {
+                    if (it->getPosition().getFileNameKey() != 0) {
                         repr += std::string(")");
                     }
                     ++it;
@@ -176,7 +176,7 @@ public:
             if (!node.getAccessorCallIsEmpty()) {
                 columbus::LANGUAGE_NAMESPACE::ListIterator<columbus::LANGUAGE_NAMESPACE::structure::AccessorDeclarationSyntax> it = node.getAccessorCallListIteratorBegin();
                 while (it != node.getAccessorCallListIteratorEnd()) {
-                    if (&(*it) && (*it).getPosition().getFileNameKey() != 0) {
+                    if (it->getPosition().getFileNameKey() != 0) {
                         repr += std::string("(") + (*it).getIdentifier();
                     }
                     ++it;
@@ -199,7 +199,7 @@ public:
             if (!node.getAccessorCallIsEmpty()) {
                 columbus::LANGUAGE_NAMESPACE::ListIterator<columbus::LANGUAGE_NAMESPACE::structure::AccessorDeclarationSyntax> it = node.getAccessorCallListIteratorBegin();
                 while (it != node.getAccessorCallListIteratorEnd()) {
-                    if (&(*it) && (*it).getPosition().getFileNameKey() != 0) {
+                    if (it->getPosition().getFileNameKey() != 0) {
                         repr += std::string(")");
                     }
                     ++it;

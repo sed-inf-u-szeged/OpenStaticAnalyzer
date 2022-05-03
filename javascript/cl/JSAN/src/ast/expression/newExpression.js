@@ -18,38 +18,29 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var newExpression = factory.createNewExpressionWrapper();
+        const newExpression = factory.createNewExpressionWrapper();
         globals.setPositionInfo(node, newExpression);
         return newExpression;
     } else {
-        var newExpressionWrapper = globals.getWrapperOfNode(node);
+        const newExpressionWrapper = globals.getWrapperOfNode(node);
 
         if (node.callee != null) {
-            var calleeWrapper = globals.getWrapperOfNode(node.callee);
-            try {
-                newExpressionWrapper.setCallee(calleeWrapper);
-            } catch (e) {
-                console.error("NEWEXPRESSION - Could not set callee! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(newExpressionWrapper, "setCallee", node.callee, "NEWEXPRESSION - Could not set callee!");
         }
 
         if (node.arguments != null) {
-            for (var i = 0; i < node.arguments.length; i++) {
+            for (let i = 0; i < node.arguments.length; i++) {
                 if (node.arguments[i] != null) {
-                    var argumentsWrapper = globals.getWrapperOfNode(node.arguments[i]);
-                    try {
-                        newExpressionWrapper.addArguments(argumentsWrapper);
-                    } catch (e) {
-                        console.error("NEWEXPRESSION - Could not add argument! Reason of the error: " + e + "\n");
-                    }
+                    globals.safeSet(newExpressionWrapper, "addArguments", node.arguments[i], "NEWEXPRESSION - Could not set argument!");
                 }
             }
         }

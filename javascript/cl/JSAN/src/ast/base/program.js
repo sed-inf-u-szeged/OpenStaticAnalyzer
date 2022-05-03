@@ -18,41 +18,34 @@
  *  limitations under the Licence.
  */
 
-const path = require('path');
-const conversions = require('../conversions');
+import * as path from 'path';
+import * as conversions from '../conversions.js';
+import * as globals from '../../globals.js';
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+const factory = globals.getFactory();
 
-
-
-module.exports = function (node, parent, firstVisit) {
+export default function (node, parent, firstVisit) {
     globals.setActualProgramNode(node);
-    var actualJsFilePath = globals.getActualFile();
+    const actualJsFilePath = globals.getActualFile();
     //new program => clear comments
-    globals.clearCommentMap();
 
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var program = factory.createProgramWrapper(factory);
+        const program = factory.createProgramWrapper();
         program.setName(path.basename(actualJsFilePath, path.extname(actualJsFilePath)));
         globals.setPositionInfo(node, program);
-        factory.getRoot(factory).addPrograms(program);
+        factory.getRoot().addPrograms(program);
         program.setSourceType(conversions.convertSourceType(node.sourceType));
         return program;
     } else {
-        var programWrapper = globals.getWrapperOfNode(node);
+        const programWrapper = globals.getWrapperOfNode(node);
         if (node.body != null) {
-            for (var i = 0; i < node.body.length; i++) {
+            for (let i = 0; i < node.body.length; i++) {
                 if (node.body[i] != null) {
-                    var bodyWrapper = globals.getWrapperOfNode(node.body[i]);
-                    try {
-                        programWrapper.addBody(bodyWrapper);
-                    } catch (e) {
-                        console.error("Cannot add body to program - " + e + "\n");
-                    }
+
+                    globals.safeSet(programWrapper, "addBody", node.body[i], "PROGRAM - Cannot add body to program!");
                 }
             }
         }

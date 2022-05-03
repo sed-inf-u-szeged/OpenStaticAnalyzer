@@ -33,7 +33,7 @@ typedef struct WrappedTool {
 
 struct Properties : public columbus::controller::BaseProperties
 {
-  Properties() : 
+  Properties() :
     cloneGenealogy(false),
     cloneMinLines(-1),
     csvSeparator(','),
@@ -46,10 +46,11 @@ struct Properties : public columbus::controller::BaseProperties
     runMetricHunter(true),
     runUDM(false),
     runUDMExplicit(false),
+    moduleBasedAnalysis(false),
     analysisOutputDir(".columbus_javascript"),
     runLIM2Patterns(true)
   {}
- 
+
   bool cloneGenealogy;                                // Create clone genealogy or no.
   int cloneMinLines;                                  //
 
@@ -68,6 +69,7 @@ struct Properties : public columbus::controller::BaseProperties
   bool runMetricHunter;                               // Run MetricHunter.
   bool runUDM;                                        // Run UserDefinedMetrics
   bool runUDMExplicit;                                // Was the "runUDM" switch explicitly set on the command line?
+  bool moduleBasedAnalysis;                           // Whether the input should handled as a module or just a collection of scripts (modules have properly configured package.json)
 
   std::string analysisOutputDir;                      // The name of the output directory (.columbus_javascript)
 
@@ -77,7 +79,7 @@ struct Properties : public columbus::controller::BaseProperties
   boost::filesystem::path startCurrentDir;            // Absolute path of the current directory when the CAC was started
   boost::filesystem::path toolchainDir;               // Absolute path of the directory of the CA toolchain
   boost::filesystem::path toolsDir;                   // Absolute path of the directory of the tools inside the CA package
-  
+
   boost::filesystem::path resultsDir;                 // Absolute path of the result directory given by the user
   boost::filesystem::path currentDate;                // The current date
   boost::filesystem::path projectResultDir;           // resultsDir / projectName /

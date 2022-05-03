@@ -28,11 +28,6 @@ namespace columbus {
 namespace lim {
 namespace asg {
 
-const short acdMultiplicityZero = 0;
-const short acdMultiplicityOne = 1;
-const short acdMultiplicityMany = 2;
-const short acdMultiplicityAny = 3;
-
 ClassDiagram::ClassDiagram(){
   emptyContainer = new ListIteratorAssocContainer::Container();
 }
@@ -165,7 +160,7 @@ void ClassDiagram::createClassDiagram(Factory& fact) {
 }
 
 const std::pair<NodeId, ClassDiagramAttrType> ClassDiagram::resolveSimpleType(const NodeId type, const Factory& fact) {
-  const Factory::TurnFilterOffSafely& tfos(fact);
+  const Factory::TurnFilterOffSafely tfos(fact);
   std::pair<NodeId, ClassDiagramAttrType> result(0, cdtValue);
 
   if (!Common::getIsValid(type))

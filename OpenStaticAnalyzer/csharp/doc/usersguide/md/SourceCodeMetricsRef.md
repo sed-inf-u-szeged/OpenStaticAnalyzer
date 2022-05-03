@@ -24,22 +24,16 @@ The following table summarizes the metrics, their abbreviations and their corres
   ---------------------- ---------------------------------------- ------------- ------- ----------- ---------- ------ ------ ----------- -------- ----------- -----------
   Cohesion metrics       Lack of Cohesion in Methods 5            LCOM5         X                                                                             X
   Complexity metrics     McCabe's Cyclomatic Complexity           McCC                                                X                  X
-                         Nesting Level                            NL            X                                                        X                    X
-                         Nesting Level Else-If                    NLE           X                                                        X                    X
                          Weighted Methods per Class               WMC           X                                                                             X
   Coupling metrics       Coupling Between Object classes          CBO           X                                            X                                X
-                         Coupling Between Object classes Inverse  CBOI          X                                            X                                X
-                         Number of Incoming Invocations           NII           X                                            X           X                    X
                          Number of Outgoing Invocations           NOI           X                                                        X                    X
                          Response set For Class                   RFC           X                                                                             X
   Documentation metrics  API Documentation                        AD            X                              X             X                    X           X
                          Comment Density                          CD            X                   X                                    X        X           X
-                         Comment Lines of Code                    CLOC          X                   X                 X      X           X        X           X
                          Documentation Lines of Code              DLOC          X                   X          X             X           X                    X
                          Public Documented API                    PDA           X                                     X      X                    X           X
                          Public Undocumented API                  PUA           X                                     X      X                    X           X
                          Total API Documentation                  TAD                   X                                                         X
-                         Total Comment Density                    TCD           X       X           X                                    X        X           X
                          Total Comment Lines of Code              TCLOC         X       X           X                        X           X        X           X
                          Total Public Documented API              TPDA                  X                                                         X
                          Total Public Undocumented API            TPUA                  X                                                         X
@@ -50,43 +44,35 @@ The following table summarizes the metrics, their abbreviations and their corres
                          Number of Parents                        NOP           X                                            X                                X
   Size metrics           Lines of Code                            LOC           X                   X          X      X      X           X        X           X
                          Logical Lines of Code                    LLOC          X                   X          X      X      X           X        X           X
-                         Number of Attributes                     NA            X                              X             X                    X           X
                          Number of Classes                        NCL                                                                             X
                          Number of Enums                          NEN                                                                             X
                          Number of Getters                        NG            X                                            X                    X           X
                          Number of Interfaces                     NIN                                                                             X
-                         Number of Local Attributes               NLA           X                                            X                                X
                          Number of Local Getters                  NLG           X                                            X                                X
                          Number of Local Methods                  NLM           X                                            X                                X
-                         Number of Local Public Attributes        NLPA          X                                            X                                X
                          Number of Local Public Methods           NLPM          X                                            X                                X
                          Number of Local Setters                  NLS           X                                            X                                X
                          Number of Methods                        NM            X                                            X                    X           X
                          Number of Packages                       NPKG                                                                            X
                          Number of Parameters                     NUMPAR                                                                 X
-                         Number of Public Attributes              NPA           X                                            X                    X           X
                          Number of Public Methods                 NPM           X                                            X                    X           X
                          Number of Setters                        NS            X                                            X                    X           X
                          Number of Statements                     NOS           X                                                        X                    X
                          Number of Structures                     NST                                                                             X
                          Total Lines of Code                      TLOC          X       X           X          X             X           X        X           X
                          Total Logical Lines of Code              TLLOC         X       X           X          X             X           X        X           X
-                         Total Number of Attributes               TNA           X       X                                    X                    X           X
                          Total Number of Classes                  TNCL                  X                                                         X
                          Total Number of Directories              TNDI                  X                                                         X
                          Total Number of Enums                    TNEN                  X                                                         X
                          Total Number of Files                    TNFI                  X                                                         X
                          Total Number of Getters                  TNG           X       X                                    X                    X           X
                          Total Number of Interfaces               TNIN                  X                                                         X
-                         Total Number of Local Attributes         TNLA          X       X                                    X                                X
                          Total Number of Local Getters            TNLG          X       X                                    X                                X
                          Total Number of Local Methods            TNLM          X       X                                    X                                X
-                         Total Number of Local Public Attributes  TNLPA         X       X                                    X                                X
                          Total Number of Local Public Methods     TNLPM         X       X                                    X                                X
                          Total Number of Local Setters            TNLS          X       X                                    X                                X
                          Total Number of Methods                  TNM           X       X                                    X                    X           X
                          Total Number of Packages                 TNPKG                 X                                                         X
-                         Total Number of Public Attributes        TNPA          X       X                                    X                    X           X
                          Total Number of Public Classes           TNPCL                 X                                                         X
                          Total Number of Public Enums             TNPEN                 X                                                         X
                          Total Number of Public Interfaces        TNPIN                 X                                                         X
@@ -108,18 +94,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 
 **Method:** complexity of the method expressed as the number of independent control flow paths in it. It represents a lower bound for the number of possible execution paths in the source code and at the same time it is an upper bound for the minimum number of test cases needed for achieving full branch test coverage. The value of the metric is initially 1 which increases by 1 for each occurence of the following instructions: if, for, foreach, while, do-while, case label (label that belongs to a switch instruction), catch (handler that belongs to a try block), conditional statement (?:) and conditional access operators (?. and ?[]). Moreover, logical and (&&), logical or (||) and null coalescing (??) expressions also add to the final value because their short-circuit evalutaion can cause branching depending on the first operand. The following language elements do not increase the value: else, try, switch, default label (default label that belongs to a switch instruction), finally.
 
-#### Nesting Level (NL) {#NL}
-
-**Method:** complexity of the method expressed as the depth of the maximum embeddedness of its conditional, iteration and exception handling block scopes. The following instructions are taken into account: if, else-if, else, for, foreach, while, do-while, switch, try, catch, finally, lock, checked, unchecked, fixed, using statement, conditional statement (?:) and block statements that are directly inside another block statement. The following instructions do not increase the value by themselves; however, if additional embeddednesses can be found in their blocks, they are considered: case and default label.
-
-**Class, Structure:** complexity of the class expressed as the depth of the maximum embeddedness of its conditional, iteration and exception handling block scopes. It is calculated as the maximum nesting level (NL) of its local methods.
-
-#### Nesting Level Else-If (NLE) {#NLE}
-
-**Method:** complexity of the method expressed as the depth of the maximum embeddedness of its conditional, iteration and exception handling block scopes, where in the if-else-if construct only the first if instruction is considered. The following instructions are taken into account: if, for, foreach, while, do-while, switch, try, catch, finally, lock, checked, unchecked, fixed, using statement, conditional statement (?:) and block statements that are directly inside another block statement. The following instructions do not increase the value by themselves; however, if additional embeddednesses can be found in their blocks, they are considered: else, else-if (i.e. in the if-else-if construct the use of else-if does not increase the value of the metric), case and default label.
-
-**Class, Structure:** complexity of the class expressed as the depth of the maximum embeddedness of its conditional, iteration and exception handling block scopes, where in the if-else-if construct only the first if instruction is considered. It is calculated as the maximum nesting level (NLE) of its local methods.
-
 #### Weighted Methods per Class (WMC) {#WMC}
 
 **Class, Structure:** complexity of the class expressed as the number of independent control flow paths in it. It is calculated as the sum of the McCabe's Cyclomatic Complexity (McCC) values of its local methods.
@@ -129,16 +103,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 #### Coupling Between Object classes (CBO) {#CBO}
 
 **Class, Structure:** number of directly used other classes (e.g. by inheritance, function call, type reference, attribute reference). Classes using many other classes highly depend on their environment, so it is difficult to test or reuse them; furthermore, they are very sensitive to the changes in the system.
-
-#### Coupling Between Object classes Inverse (CBOI) {#CBOI}
-
-**Class, Structure:** number of other classes, which directly use the class. Classes which are used by many other classes have a high impact on the behavior of the system, and should be modified very carefully and tested intensively.
-
-#### Number of Incoming Invocations (NII) {#NII}
-
-**Method:** number of other methods and attribute initializations which directly call the method. If the method is invoked several times from the same method or attribute initialization, it is counted only once.
-
-**Class, Structure:** number of other methods and attribute initializations which directly call the local methods of the class. If a method is invoked several times from the same method or attribute initialization, it is counted only once.
 
 #### Number of Outgoing Invocations (NOI) {#NOI}
 
@@ -157,14 +121,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 **Class, Structure:** ratio of the number of documented public methods in the class +1 if the class itself is documented to the number of all public methods in the class + 1 (the class itself); however, the nested and anonymous classes are not included.
 
 **Namespace:** ratio of the number of documented public classes and methods in the namespace to the number of all of its public classes and methods; however, the classes and methods of its subnamespaces are not included.
-
-#### Comment Density (CD) {#CD}
-
-**Method:** ratio of the comment lines of the method (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).
-
-**Class, Structure:** ratio of the comment lines of the class (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).
-
-**Namespace:** ratio of the comment lines of the namespace (CLOC) to the sum of its comment (CLOC) and logical lines of code (LLOC).
 
 #### Comment Lines of Code (CLOC) {#CLOC}
 
@@ -197,16 +153,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 **Namespace:** ratio of the number of documented public classes and methods in the namespace to the number of all of its public classes and methods, including its subnamespaces.
 
 **Component:** ratio of the number of documented public classes and methods in the component to the number of all of its public classes and methods, including its subcomponents.
-
-#### Total Comment Density (TCD) {#TCD}
-
-**Method:** ratio of the total comment lines of the method (TCLOC) to the sum of its total comment (TCLOC) and total logical lines of code (TLLOC).
-
-**Class, Structure:** ratio of the total comment lines of the class (TCLOC) to the sum of its total comment (TCLOC) and total logical lines of code (TLLOC).
-
-**Namespace:** ratio of the total comment lines of the namespace (TCLOC) to the sum of its total comment (TCLOC) and total logical lines of code (TLLOC).
-
-**Component:** ratio of the total comment lines of the component (TCLOC) to the sum of its total comment (TCLOC) and total logical lines of code (TLLOC).
 
 #### Total Comment Lines of Code (TCLOC) {#TCLOC}
 
@@ -272,12 +218,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 
 **File:** number of non-empty and non-comment code lines of the file.
 
-#### Number of Attributes (NA) {#NA}
-
-**Class, Structure:** number of attributes in the class, including the inherited ones and generated ones backing auto properties; however, the attributes of its nested and anonymous classes are not included.
-
-**Namespace:** number of attributes in the namespace; however, attributes of its subnamespaces are not included.
-
 #### Number of Classes (NCL) {#NCL}
 
 **Namespace:** number of classes in the namespace; however, the classes of its subnamespaces are not included.
@@ -296,10 +236,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 
 **Namespace:** number of interfaces in the namespace; however, the interfaces of its subnamespaces are not included.
 
-#### Number of Local Attributes (NLA) {#NLA}
-
-**Class, Structure:** number of local (i.e. not inherited) attributes in the class, including generated ones backing auto properties; however, the attributes of nested and anonymous classes are not included.
-
 #### Number of Local Getters (NLG) {#NLG}
 
 **Class, Structure:** number of local (i.e. not inherited) getter methods in the class; however, the getter methods of its nested and anonymous classes are not included. Methods that override abstract methods are not counted.
@@ -307,10 +243,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 #### Number of Local Methods (NLM) {#NLM}
 
 **Class, Structure:** number of local (i.e. not inherited) methods in the class; however, the methods of nested and anonymous classes are not included.
-
-#### Number of Local Public Attributes (NLPA) {#NLPA}
-
-**Class, Structure:** number of local (i.e. not inherited) public attributes in the class, including generated ones backing public auto properties; however, the attributes of nested and anonymous classes are not included.
 
 #### Number of Local Public Methods (NLPM) {#NLPM}
 
@@ -333,12 +265,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 #### Number of Parameters (NUMPAR) {#NUMPAR}
 
 **Method:** number of the parameters of the method. The varargs parameter counts as one.
-
-#### Number of Public Attributes (NPA) {#NPA}
-
-**Class, Structure:** number of public attributes in the class, including the inherited ones and generated ones backing public auto properties; however, the public attributes of its nested and anonymous classes are not included.
-
-**Namespace:** number of public attributes in the namespace; however, the public attributes of its subnamespaces are not included.
 
 #### Number of Public Methods (NPM) {#NPM}
 
@@ -382,14 +308,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 
 **Component:** number of non-empty and non-comment code lines of the component, including its subcomponents.
 
-#### Total Number of Attributes (TNA) {#TNA}
-
-**Class, Structure:** number of attributes in the class, including the inherited ones and generated ones backing auto properties, as well as the inherited and local attributes of its nested and anonymous classes.
-
-**Namespace:** number of attributes in the namespace, including the attributes of its subnamespaces.
-
-**Component:** number of attributes in the component, including the attributes of its subcomponents.
-
 #### Total Number of Classes (TNCL) {#TNCL}
 
 **Namespace:** number of classes in the namespace, including the classes of its subnamespaces.
@@ -428,10 +346,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 
 **Component:** number of interfaces in the component, including the interfaces of its subcomponents.
 
-#### Total Number of Local Attributes (TNLA) {#TNLA}
-
-**Class, Structure:** number of local (i.e. not inherited) attributes in the class, including the generated ones backing auto properties and also attributes of its nested and anonymous classes.
-
 #### Total Number of Local Getters (TNLG) {#TNLG}
 
 **Class, Structure:** number of local (i.e. not inherited) getter methods in the class, including the local getter methods of its nested and anonymous classes.
@@ -439,10 +353,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 #### Total Number of Local Methods (TNLM) {#TNLM}
 
 **Class, Structure:** number of local (i.e. not inherited) methods in the class, including the local methods of its nested and anonymous classes.
-
-#### Total Number of Local Public Attributes (TNLPA) {#TNLPA}
-
-**Class, Structure:** number of local (i.e. not inherited) public attributes in the class, including the generated ones backing public auto properties and also local public attributes of its nested and anonymous classes.
 
 #### Total Number of Local Public Methods (TNLPM) {#TNLPM}
 
@@ -465,10 +375,6 @@ The following table summarizes the metrics, their abbreviations and their corres
 **Namespace:** number of subnamespaces in the namespace, including all directly or indirectly contained subnamespaces.
 
 **Component:** number of namespaces and subnamespaces that belong to the component, including its subcomponents.
-
-#### Total Number of Public Attributes (TNPA) {#TNPA}
-
-**Class, Structure:** number of public attributes in the class, including the inherited ones and the generated ones backing public auto properties as well as the inherited and local public attributes of its nested and anonymous classes.
 
 **Namespace:** number of public attributes in the namespace, including the public attributes of its subnamespaces.
 

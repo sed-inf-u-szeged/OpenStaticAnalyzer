@@ -18,11 +18,12 @@
  *  limitations under the Licence.
  */
 
-module.exports.banner = "" +
+const banner = "" +
     " ___  ___  _    _        _    ___                             \n" +
     "| __>/ __>| |  <_>._ _ _| |_ | . \\ _ _ ._ _ ._ _  ___  _ _   \n" +
     "| _> \\__ \\| |_ | || ' | | |  |   /| | || ' || ' |/ ._>| '_> \n" +
     "|___><___/|___||_||_|_| |_|  |_\\_\\`___||_|_||_|_|\\___.|_|  \n";
 
-module.exports.header = 'EsLintRunner - A tool, which can parse the AST for ESLint';
-module.exports.description = 'The EsLintRunner can parse AST for ESLint, which can generate a Columbus-style ESLintToGraph XML.'
+const header = 'EsLintRunner - A tool, which can parse the AST for ESLint';
+const description = 'The EsLintRunner can parse AST for ESLint, which can generate a Columbus-style ESLintToGraph XML.'
+export {banner, header, description}

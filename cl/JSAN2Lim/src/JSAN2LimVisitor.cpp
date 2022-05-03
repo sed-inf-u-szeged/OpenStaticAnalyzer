@@ -524,12 +524,16 @@ namespace JSAN2Lim {
       MethodInfo& methodInfo = methodStack.top();
       //methodInfo.LOC = functionNode.getPosition().getEndLine() - functionNode.getPosition().getLine() + 1; // why not in visit
       lim::asg::logical::Method& method = dynamic_cast<lim::asg::logical::Method&>(limFactory.getRef(methodInfo.methodNodeId));
+      //set program
+      if (packageStack.size() != 0) {
+          if (packageStack.top().NL < methodStack.top().NL) {
+              packageStack.top().NL = methodStack.top().NL;
+          }
+          if (packageStack.top().NLE < methodStack.top().NLE) {
+              packageStack.top().NLE = methodStack.top().NLE;
+          }
+      }
 
-      //set program NL
-      if (packageStack.top().NL < methodStack.top().NL)
-        packageStack.top().NL = methodStack.top().NL;
-      if (packageStack.top().NLE < methodStack.top().NLE)
-        packageStack.top().NLE = methodStack.top().NLE;
       fillCollectedMethodData(method, functionNode);
       lastLimMemberNodeId.pop();
       lastLimScopeNodeId.pop();
@@ -578,7 +582,7 @@ namespace JSAN2Lim {
     }
     else if (callExpressionNode.getCallee() && javascript::asg::Common::getIsMemberExpression(*callExpressionNode.getCallee())) {
       javascript::asg::expression::MemberExpression& memberExpression = dynamic_cast<javascript::asg::expression::MemberExpression&>(*callExpressionNode.getCallee());
-      if (javascript::asg::Common::getIsIdentifier(*memberExpression.getProperty())) {
+      if (memberExpression.getProperty() != nullptr && javascript::asg::Common::getIsIdentifier(*memberExpression.getProperty())) {
         identifier = dynamic_cast<javascript::asg::expression::Identifier*>(memberExpression.getProperty());
       }
     }
@@ -874,7 +878,8 @@ namespace JSAN2Lim {
       fileStack.pop();
     }
     if (!packageStack.empty()) {
-      common::WriteMsg::write(common::WriteMsg::mlDebug, typeid(limFactory.getRef(packageStack.top().packageNodeId)).name());
+      auto& ref = limFactory.getRef(packageStack.top().packageNodeId);
+      common::WriteMsg::write(common::WriteMsg::mlDebug, typeid(ref).name());      
       packageStack.pop();
     }
     lastLimMemberNodeId.pop();

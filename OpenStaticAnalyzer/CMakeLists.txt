@@ -13,6 +13,7 @@ endif ()
 add_custom_target (
     ${OSA_TARGET_NAME}
     DEPENDS OSA-Java
+    DEPENDS OSA-CPP
     DEPENDS OSA-Python
     DEPENDS OSA-CSharp
     DEPENDS OSA-JavaScript
@@ -52,6 +53,7 @@ function (copy_licenses)
   )
 endfunction ()
 
+add_subdirectory (cpp)
 add_subdirectory (java)
 add_subdirectory (python)
 add_subdirectory (csharp)

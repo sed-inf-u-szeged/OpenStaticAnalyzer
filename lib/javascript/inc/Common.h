@@ -161,18 +161,18 @@ namespace columbus { namespace javascript { namespace asg {
       bool getIsAssignmentExpression(const base::Base& node);
 
       /**
-      * \brief Decides whether the node is expression::AssignmentProperty or not.
-      * \param node [in] The node whose kind is examined.
-      * \return Returns true if the node is expression::AssignmentProperty.
-      */
-      bool getIsAssignmentProperty(const base::Base& node);
-
-      /**
       * \brief Decides whether the node is expression::AwaitExpression or not.
       * \param node [in] The node whose kind is examined.
       * \return Returns true if the node is expression::AwaitExpression.
       */
       bool getIsAwaitExpression(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expression::BigIntLiteral or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::BigIntLiteral.
+      */
+      bool getIsBigIntLiteral(const base::Base& node);
 
       /**
       * \brief Decides whether the node is expression::BinaryExpression or not.
@@ -194,6 +194,20 @@ namespace columbus { namespace javascript { namespace asg {
       * \return Returns true if the node is expression::CallExpression.
       */
       bool getIsCallExpression(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expression::ChainElement or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::ChainElement.
+      */
+      bool getIsChainElement(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expression::ChainExpression or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::ChainExpression.
+      */
+      bool getIsChainExpression(const base::Base& node);
 
       /**
       * \brief Decides whether the node is expression::ClassExpression or not.
@@ -229,6 +243,13 @@ namespace columbus { namespace javascript { namespace asg {
       * \return Returns true if the node is expression::Identifier.
       */
       bool getIsIdentifier(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expression::ImportExpression or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::ImportExpression.
+      */
+      bool getIsImportExpression(const base::Base& node);
 
       /**
       * \brief Decides whether the node is expression::Literal or not.
@@ -285,6 +306,13 @@ namespace columbus { namespace javascript { namespace asg {
       * \return Returns true if the node is expression::ObjectExpression.
       */
       bool getIsObjectExpression(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is expression::PrivateIdentifier or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is expression::PrivateIdentifier.
+      */
+      bool getIsPrivateIdentifier(const base::Base& node);
 
       /**
       * \brief Decides whether the node is expression::Property or not.
@@ -628,6 +656,13 @@ namespace columbus { namespace javascript { namespace asg {
       * \return Returns true if the node is structure::ModuleSpecifier.
       */
       bool getIsModuleSpecifier(const base::Base& node);
+
+      /**
+      * \brief Decides whether the node is structure::PropertyDefinition or not.
+      * \param node [in] The node whose kind is examined.
+      * \return Returns true if the node is structure::PropertyDefinition.
+      */
+      bool getIsPropertyDefinition(const base::Base& node);
 
       /**
       * \brief Decides whether the 'base' is one of the base kinds (transitive) of 'what'.

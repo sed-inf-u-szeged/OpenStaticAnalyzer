@@ -74,16 +74,19 @@ namespace columbus { namespace javascript { namespace asg {
     class ArrayExpression;
     class ArrowFunctionExpression;
     class AssignmentExpression;
-    class AssignmentProperty;
     class AwaitExpression;
+    class BigIntLiteral;
     class BinaryExpression;
     class BooleanLiteral;
     class CallExpression;
+    class ChainElement;
+    class ChainExpression;
     class ClassExpression;
     class ConditionalExpression;
     class Expression;
     class FunctionExpression;
     class Identifier;
+    class ImportExpression;
     class Literal;
     class LogicalExpression;
     class MemberExpression;
@@ -92,6 +95,7 @@ namespace columbus { namespace javascript { namespace asg {
     class NullLiteral;
     class NumberLiteral;
     class ObjectExpression;
+    class PrivateIdentifier;
     class Property;
     class RegExpLiteral;
     class SequenceExpression;
@@ -147,6 +151,7 @@ namespace columbus { namespace javascript { namespace asg {
     class ImportSpecifier;
     class MethodDefinition;
     class ModuleSpecifier;
+    class PropertyDefinition;
   }
 
 

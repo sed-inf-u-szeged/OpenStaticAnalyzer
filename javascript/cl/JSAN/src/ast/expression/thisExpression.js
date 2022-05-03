@@ -18,28 +18,23 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var thisExpression = factory.createThisExpressionWrapper();
+        const thisExpression = factory.createThisExpressionWrapper();
         globals.setPositionInfo(node, thisExpression);
         return thisExpression;
     } else {
-        var thisExpressionWrapper = globals.getWrapperOfNode(node);
+        const thisExpressionWrapper = globals.getWrapperOfNode(node);
 
         if (node.body != null) {
-            var bodyWrapper = globals.getWrapperOfNode(node.body);
-            try {
-                thisExpressionWrapper.setBody(bodyWrapper);
-            } catch (e) {
-                console.error("THISEXPRESSION - Could not set body! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(thisExpressionWrapper, "setBody", node.body, "THISEXPRESSION - Could not set body!");
         }
-
     }
 }

@@ -90,13 +90,13 @@ napi_value MethodDefinitionWrapper::setKey(napi_env env, napi_callback_info info
   assert(status == napi_ok);
 
   columbus::javascript::asg::structure::MethodDefinition* source = dynamic_cast<columbus::javascript::asg::structure::MethodDefinition*>(obj->_nativeObj);
-  columbus::javascript::asg::expression::Expression* target = dynamic_cast<columbus::javascript::asg::expression::Expression*>(param->_nativeObj);
+  columbus::javascript::asg::base::Positioned* target = dynamic_cast<columbus::javascript::asg::base::Positioned*>(param->_nativeObj);
 
   if(source == nullptr){
     status = napi_throw_error(env, nullptr, "Cannot cast structure::MethodDefinition" );
   }
   if(target == nullptr){
-    status = napi_throw_error(env, nullptr, "Cannot cast expression::Expression" );
+    status = napi_throw_error(env, nullptr, "Cannot cast base::Positioned" );
   }
 
   source->setKey(target);

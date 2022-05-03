@@ -565,14 +565,14 @@ bool Factory::getExistsReverseEdges() const {
     ap.run(*this, vas);
     unsigned long totalMemUsage = 0; /* it is the sum of memory of nodes */
     common::WriteMsg::write(common::WriteMsg::mlNormal, "Nodes,All,This,Obj Size,Used Mem,Used Mem\n");
-    for (int i = 0; i < 86; ++i) {
+    for (int i = 0; i < 91; ++i) {
       totalMemUsage += vas.nodeStatSimple[i] * vas.nodeSizes[i];
       common::WriteMsg::write(common::WriteMsg::mlNormal, "%s,%d,%d,%d,%d,%d\n", vas.nodeNames[i], vas.nodeStatParent[i], vas.nodeStatSimple[i], vas.nodeSizes[i], vas.nodeStatSimple[i] * vas.nodeSizes[i], vas.nodeStatSimple[i] * vas.nodeSizes[i] / 1024);
     }    common::WriteMsg::write(common::WriteMsg::mlNormal, "\n");
     common::WriteMsg::write(common::WriteMsg::mlNormal, "Memory used by nodes: %d (%d KB)\n\n", totalMemUsage, totalMemUsage );
     if (edgeStat) {
       common::WriteMsg::write(common::WriteMsg::mlNormal, "Edges,Cardinality\n");
-      for (int i = 0; i < 95; ++i)
+      for (int i = 0; i < 100; ++i)
         common::WriteMsg::write(common::WriteMsg::mlNormal, "%s,%d\n", Common::toString((EdgeKind)i).c_str(), vas.edgeStat[i]);
       common::WriteMsg::write(common::WriteMsg::mlNormal, "\n\n");
     }
@@ -604,15 +604,18 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkArrayExpression: p = new expression::ArrayExpression(id, this); break;
     case ndkArrowFunctionExpression: p = new expression::ArrowFunctionExpression(id, this); break;
     case ndkAssignmentExpression: p = new expression::AssignmentExpression(id, this); break;
-    case ndkAssignmentProperty: p = new expression::AssignmentProperty(id, this); break;
     case ndkAwaitExpression: p = new expression::AwaitExpression(id, this); break;
+    case ndkBigIntLiteral: p = new expression::BigIntLiteral(id, this); break;
     case ndkBinaryExpression: p = new expression::BinaryExpression(id, this); break;
     case ndkBooleanLiteral: p = new expression::BooleanLiteral(id, this); break;
     case ndkCallExpression: p = new expression::CallExpression(id, this); break;
+    case ndkChainElement: p = new expression::ChainElement(id, this); break;
+    case ndkChainExpression: p = new expression::ChainExpression(id, this); break;
     case ndkClassExpression: p = new expression::ClassExpression(id, this); break;
     case ndkConditionalExpression: p = new expression::ConditionalExpression(id, this); break;
     case ndkFunctionExpression: p = new expression::FunctionExpression(id, this); break;
     case ndkIdentifier: p = new expression::Identifier(id, this); break;
+    case ndkImportExpression: p = new expression::ImportExpression(id, this); break;
     case ndkLogicalExpression: p = new expression::LogicalExpression(id, this); break;
     case ndkMemberExpression: p = new expression::MemberExpression(id, this); break;
     case ndkMetaProperty: p = new expression::MetaProperty(id, this); break;
@@ -620,6 +623,7 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkNullLiteral: p = new expression::NullLiteral(id, this); break;
     case ndkNumberLiteral: p = new expression::NumberLiteral(id, this); break;
     case ndkObjectExpression: p = new expression::ObjectExpression(id, this); break;
+    case ndkPrivateIdentifier: p = new expression::PrivateIdentifier(id, this); break;
     case ndkProperty: p = new expression::Property(id, this); break;
     case ndkRegExpLiteral: p = new expression::RegExpLiteral(id, this); break;
     case ndkSequenceExpression: p = new expression::SequenceExpression(id, this); break;
@@ -664,6 +668,7 @@ base::Base* Factory::createNode(NodeKind kind) {
     case ndkImportNamespaceSpecifier: p = new structure::ImportNamespaceSpecifier(id, this); break;
     case ndkImportSpecifier: p = new structure::ImportSpecifier(id, this); break;
     case ndkMethodDefinition: p = new structure::MethodDefinition(id, this); break;
+    case ndkPropertyDefinition: p = new structure::PropertyDefinition(id, this); break;
     default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 
@@ -700,15 +705,18 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkArrayExpression: p = new expression::ArrayExpression(i,this); break;
     case ndkArrowFunctionExpression: p = new expression::ArrowFunctionExpression(i,this); break;
     case ndkAssignmentExpression: p = new expression::AssignmentExpression(i,this); break;
-    case ndkAssignmentProperty: p = new expression::AssignmentProperty(i,this); break;
     case ndkAwaitExpression: p = new expression::AwaitExpression(i,this); break;
+    case ndkBigIntLiteral: p = new expression::BigIntLiteral(i,this); break;
     case ndkBinaryExpression: p = new expression::BinaryExpression(i,this); break;
     case ndkBooleanLiteral: p = new expression::BooleanLiteral(i,this); break;
     case ndkCallExpression: p = new expression::CallExpression(i,this); break;
+    case ndkChainElement: p = new expression::ChainElement(i,this); break;
+    case ndkChainExpression: p = new expression::ChainExpression(i,this); break;
     case ndkClassExpression: p = new expression::ClassExpression(i,this); break;
     case ndkConditionalExpression: p = new expression::ConditionalExpression(i,this); break;
     case ndkFunctionExpression: p = new expression::FunctionExpression(i,this); break;
     case ndkIdentifier: p = new expression::Identifier(i,this); break;
+    case ndkImportExpression: p = new expression::ImportExpression(i,this); break;
     case ndkLogicalExpression: p = new expression::LogicalExpression(i,this); break;
     case ndkMemberExpression: p = new expression::MemberExpression(i,this); break;
     case ndkMetaProperty: p = new expression::MetaProperty(i,this); break;
@@ -716,6 +724,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkNullLiteral: p = new expression::NullLiteral(i,this); break;
     case ndkNumberLiteral: p = new expression::NumberLiteral(i,this); break;
     case ndkObjectExpression: p = new expression::ObjectExpression(i,this); break;
+    case ndkPrivateIdentifier: p = new expression::PrivateIdentifier(i,this); break;
     case ndkProperty: p = new expression::Property(i,this); break;
     case ndkRegExpLiteral: p = new expression::RegExpLiteral(i,this); break;
     case ndkSequenceExpression: p = new expression::SequenceExpression(i,this); break;
@@ -760,6 +769,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     case ndkImportNamespaceSpecifier: p = new structure::ImportNamespaceSpecifier(i,this); break;
     case ndkImportSpecifier: p = new structure::ImportSpecifier(i,this); break;
     case ndkMethodDefinition: p = new structure::MethodDefinition(i,this); break;
+    case ndkPropertyDefinition: p = new structure::PropertyDefinition(i,this); break;
     default: throw JavascriptException(COLUMBUS_LOCATION, CMSG_EX_INVALID_NODE_KIND);
   }
 
@@ -838,12 +848,12 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <expression::AssignmentExpression*>( createNode(ndkAssignmentExpression));
   }
 
-  expression::AssignmentProperty* Factory::createAssignmentPropertyNode(){
-    return  dynamic_cast <expression::AssignmentProperty*>( createNode(ndkAssignmentProperty));
-  }
-
   expression::AwaitExpression* Factory::createAwaitExpressionNode(){
     return  dynamic_cast <expression::AwaitExpression*>( createNode(ndkAwaitExpression));
+  }
+
+  expression::BigIntLiteral* Factory::createBigIntLiteralNode(){
+    return  dynamic_cast <expression::BigIntLiteral*>( createNode(ndkBigIntLiteral));
   }
 
   expression::BinaryExpression* Factory::createBinaryExpressionNode(){
@@ -856,6 +866,14 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
 
   expression::CallExpression* Factory::createCallExpressionNode(){
     return  dynamic_cast <expression::CallExpression*>( createNode(ndkCallExpression));
+  }
+
+  expression::ChainElement* Factory::createChainElementNode(){
+    return  dynamic_cast <expression::ChainElement*>( createNode(ndkChainElement));
+  }
+
+  expression::ChainExpression* Factory::createChainExpressionNode(){
+    return  dynamic_cast <expression::ChainExpression*>( createNode(ndkChainExpression));
   }
 
   expression::ClassExpression* Factory::createClassExpressionNode(){
@@ -872,6 +890,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
 
   expression::Identifier* Factory::createIdentifierNode(){
     return  dynamic_cast <expression::Identifier*>( createNode(ndkIdentifier));
+  }
+
+  expression::ImportExpression* Factory::createImportExpressionNode(){
+    return  dynamic_cast <expression::ImportExpression*>( createNode(ndkImportExpression));
   }
 
   expression::LogicalExpression* Factory::createLogicalExpressionNode(){
@@ -900,6 +922,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
 
   expression::ObjectExpression* Factory::createObjectExpressionNode(){
     return  dynamic_cast <expression::ObjectExpression*>( createNode(ndkObjectExpression));
+  }
+
+  expression::PrivateIdentifier* Factory::createPrivateIdentifierNode(){
+    return  dynamic_cast <expression::PrivateIdentifier*>( createNode(ndkPrivateIdentifier));
   }
 
   expression::Property* Factory::createPropertyNode(){
@@ -1078,6 +1104,10 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     return  dynamic_cast <structure::MethodDefinition*>( createNode(ndkMethodDefinition));
   }
 
+  structure::PropertyDefinition* Factory::createPropertyDefinitionNode(){
+    return  dynamic_cast <structure::PropertyDefinition*>( createNode(ndkPropertyDefinition));
+  }
+
   void Factory::printNodeSizes() {
     printf("base::Comment node: %dbyte(s)\n",(int)sizeof(base::Comment)); 
     printf("base::Program node: %dbyte(s)\n",(int)sizeof(base::Program)); 
@@ -1094,15 +1124,18 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("expression::ArrayExpression node: %dbyte(s)\n",(int)sizeof(expression::ArrayExpression)); 
     printf("expression::ArrowFunctionExpression node: %dbyte(s)\n",(int)sizeof(expression::ArrowFunctionExpression)); 
     printf("expression::AssignmentExpression node: %dbyte(s)\n",(int)sizeof(expression::AssignmentExpression)); 
-    printf("expression::AssignmentProperty node: %dbyte(s)\n",(int)sizeof(expression::AssignmentProperty)); 
     printf("expression::AwaitExpression node: %dbyte(s)\n",(int)sizeof(expression::AwaitExpression)); 
+    printf("expression::BigIntLiteral node: %dbyte(s)\n",(int)sizeof(expression::BigIntLiteral)); 
     printf("expression::BinaryExpression node: %dbyte(s)\n",(int)sizeof(expression::BinaryExpression)); 
     printf("expression::BooleanLiteral node: %dbyte(s)\n",(int)sizeof(expression::BooleanLiteral)); 
     printf("expression::CallExpression node: %dbyte(s)\n",(int)sizeof(expression::CallExpression)); 
+    printf("expression::ChainElement node: %dbyte(s)\n",(int)sizeof(expression::ChainElement)); 
+    printf("expression::ChainExpression node: %dbyte(s)\n",(int)sizeof(expression::ChainExpression)); 
     printf("expression::ClassExpression node: %dbyte(s)\n",(int)sizeof(expression::ClassExpression)); 
     printf("expression::ConditionalExpression node: %dbyte(s)\n",(int)sizeof(expression::ConditionalExpression)); 
     printf("expression::FunctionExpression node: %dbyte(s)\n",(int)sizeof(expression::FunctionExpression)); 
     printf("expression::Identifier node: %dbyte(s)\n",(int)sizeof(expression::Identifier)); 
+    printf("expression::ImportExpression node: %dbyte(s)\n",(int)sizeof(expression::ImportExpression)); 
     printf("expression::LogicalExpression node: %dbyte(s)\n",(int)sizeof(expression::LogicalExpression)); 
     printf("expression::MemberExpression node: %dbyte(s)\n",(int)sizeof(expression::MemberExpression)); 
     printf("expression::MetaProperty node: %dbyte(s)\n",(int)sizeof(expression::MetaProperty)); 
@@ -1110,6 +1143,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("expression::NullLiteral node: %dbyte(s)\n",(int)sizeof(expression::NullLiteral)); 
     printf("expression::NumberLiteral node: %dbyte(s)\n",(int)sizeof(expression::NumberLiteral)); 
     printf("expression::ObjectExpression node: %dbyte(s)\n",(int)sizeof(expression::ObjectExpression)); 
+    printf("expression::PrivateIdentifier node: %dbyte(s)\n",(int)sizeof(expression::PrivateIdentifier)); 
     printf("expression::Property node: %dbyte(s)\n",(int)sizeof(expression::Property)); 
     printf("expression::RegExpLiteral node: %dbyte(s)\n",(int)sizeof(expression::RegExpLiteral)); 
     printf("expression::SequenceExpression node: %dbyte(s)\n",(int)sizeof(expression::SequenceExpression)); 
@@ -1154,6 +1188,7 @@ base::Base& Factory::createNode(NodeKind kind, NodeId i) {
     printf("structure::ImportNamespaceSpecifier node: %dbyte(s)\n",(int)sizeof(structure::ImportNamespaceSpecifier)); 
     printf("structure::ImportSpecifier node: %dbyte(s)\n",(int)sizeof(structure::ImportSpecifier)); 
     printf("structure::MethodDefinition node: %dbyte(s)\n",(int)sizeof(structure::MethodDefinition)); 
+    printf("structure::PropertyDefinition node: %dbyte(s)\n",(int)sizeof(structure::PropertyDefinition)); 
   }
 
 }}}

@@ -18,28 +18,24 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var objectExpression = factory.createObjectExpressionWrapper();
+        const objectExpression = factory.createObjectExpressionWrapper();
         globals.setPositionInfo(node, objectExpression);
         return objectExpression;
     } else {
-        var objectExpressionWrapper = globals.getWrapperOfNode(node);
+        const objectExpressionWrapper = globals.getWrapperOfNode(node);
         if (node.properties != null) {
-            for (var i = 0; i < node.properties.length; i++) {
+            for (let i = 0; i < node.properties.length; i++) {
                 if (node.properties[i] != null) {
-                    var propertiesWrapper = globals.getWrapperOfNode(node.properties[i]);
-                    try {
-                        objectExpressionWrapper.addProperties(propertiesWrapper);
-                    } catch (e) {
-                        console.error("OBJECTEXPRESSION - Could not add property! Reason of the error: " + e + "\n");
-                    }
+                    globals.safeSet(objectExpressionWrapper, "addProperties", node.properties[i], "OBJECTEXPRESSION - Could not add property!");
                 }
             }
         }

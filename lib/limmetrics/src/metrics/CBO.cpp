@@ -68,6 +68,22 @@ namespace columbus { namespace lim { namespace metrics {
     this->registerHandler( phaseVisit, NTYPE_LIM_CLASS, limLangOther, false, [this]( NodeWrapper& node ) {
 
       const logical::Class& clazz = node.getLimNode<logical::Class>();
+      set<const logical::Class*> cbo = collectUsedClasses(clazz);
+
+      int cboNum = (int)cbo.size();
+      addMetric( node, cboNum );
+
+      // propagate to package level
+      this->shared->currentPackageInfo().ints[this->name] += cboNum;
+
+      cleanup( node );
+
+    });
+
+  }
+
+  std::set<const asg::logical::Class*> CBOBase::collectUsedClasses(const logical::Class& clazz) const
+  {
       set<const logical::Class*> cbo;
 
       ListIterator<logical::Member> memberIt = clazz.getMemberListIteratorBegin(), memberEnd = clazz.getMemberListIteratorEnd();
@@ -158,26 +174,10 @@ namespace columbus { namespace lim { namespace metrics {
         collectUsedClasses( dynamic_cast<const type::Type&>( *parentIt ), clazz, cbo );
       }
 
-      // Inverse CBO handling
-      set<const logical::Class*>::iterator cboIt = cbo.begin(), cboEnd = cbo.end();
-      for ( ; cboIt != cboEnd; ++cboIt ) {
-        Info& info = this->shared->scopes.map[ *cboIt ];
-        info.sets["CBOI"].insert( clazz.getId() );
-      }
-
-      int cboNum = (int)cbo.size();
-      addMetric( node, cboNum );
-
-      // propagate to package level
-      this->shared->currentPackageInfo().ints[this->name] += cboNum;
-
-      cleanup( node );
-
-    });
-
+      return cbo;
   }
 
-  void CBO::collectUsedClasses( const asg::base::Base& to, const asg::logical::Class& node, std::set<const asg::logical::Class*>& usedClasses) const {
+  void CBOBase::collectUsedClasses( const asg::base::Base& to, const asg::logical::Class& node, std::set<const asg::logical::Class*>& usedClasses) const {
 
     if ( Common::getIsMethodCall( to ) ) {
       const logical::MethodCall& toMethodCall = (const logical::MethodCall&)to;
@@ -216,7 +216,7 @@ namespace columbus { namespace lim { namespace metrics {
     }
   }
 
-  void CBO::getClassOfType( const asg::type::Type& type, const asg::logical::Class& node, std::set<const asg::logical::Class*>& usedClasses ) const {
+  void CBOBase::getClassOfType( const asg::type::Type& type, const asg::logical::Class& node, std::set<const asg::logical::Class*>& usedClasses ) const {
 
     ListIterator<type::TypeFormer> typeFormerIt = type.getTypeFormerListIteratorBegin(), typeFormerEnd = type.getTypeFormerListIteratorEnd();
     for ( ; typeFormerIt != typeFormerEnd; ++typeFormerIt ) {
@@ -294,7 +294,7 @@ namespace columbus { namespace lim { namespace metrics {
     }
   }
 
-  const logical::Class* CBO::getClassOfReferencedMember( const logical::Class& fromClass, const logical::Member& referedMember ) const {
+  const logical::Class* CBOBase::getClassOfReferencedMember( const logical::Class& fromClass, const logical::Member& referedMember ) const {
 
     unsigned int sameComponentCounter = 0;
     ListIterator<base::Base> it = this->shared->factory->getReverseEdges().constIteratorBegin( referedMember.getId(), edkScope_HasMember );
@@ -316,22 +316,6 @@ namespace columbus { namespace lim { namespace metrics {
       }
     }
     return NULL;
-  }
-
-  CBOI::CBOI( bool enabled, SharedContainers* shared ) : CBOBase( "CBOI", mdtInt, enabled, shared ) {
-
-    dependencies.insert( "CBO" );
-
-    this->registerHandler( phaseFinishVisit, NTYPE_LIM_CLASS, limLangOther, false, [this]( NodeWrapper& node ) {
-
-      const logical::Class& clazz = node.getLimNode<logical::Class>();
-      Info& info = this->shared->scopes.map[ &clazz ];
-      addMetric( node, (int) info.sets[this->name].size() );
-      
-      cleanup( node );
-      
-    });
-
   }
 
   TCBO::TCBO(bool enabled, SharedContainers* shared) : MetricHandler("TCBO", mdtInt, enabled, shared) {

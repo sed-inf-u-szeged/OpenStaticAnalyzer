@@ -18,37 +18,27 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var catchClause = factory.createCatchClauseWrapper();
+        const catchClause = factory.createCatchClauseWrapper();
         globals.setPositionInfo(node, catchClause);
         return catchClause;
     } else {
-        var catchClauseWrapper = globals.getWrapperOfNode(node);
+        const catchClauseWrapper = globals.getWrapperOfNode(node);
 
         if (node.body != null) {
-            var bodyWrapper = globals.getWrapperOfNode(node.body);
-            try {
-                catchClauseWrapper.setBody(bodyWrapper);
-            } catch (e) {
-                console.error("CATCHCLAUSE - Could not set body! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(catchClauseWrapper, "setBody", node.body, "CATCHCLAUSE - Could not set body!");
         }
 
         if (node.param != null) {
-            var paramWrapper = globals.getWrapperOfNode(node.param);
-            try {
-                catchClauseWrapper.setParam(paramWrapper);
-            } catch (e) {
-                console.error("CATCHCLAUSE - Could not set param! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(catchClauseWrapper, "setParam", node.param, "CATCHCLAUSE - Could not set param!");
         }
-
     }
 }

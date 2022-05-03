@@ -332,14 +332,6 @@ void VisitorGraphml::addAttributeToContent(const expression::AssignmentExpressio
   content += "operator : " + Common::toString(node.getOperator()) + "\n";
 }
 
-void VisitorGraphml::addAttributeToContent(const expression::AssignmentProperty& node, std::string& content, bool callVirtualBase) {
-  addAttributeToContent(static_cast<const expression::Property&>(node), content, false);
-  if ( !((nodeTypeAttributeFilter.empty()) || ( nodeTypeAttributeFilter.find("expression::AssignmentProperty") != nodeTypeAttributeFilter.end())))
-  {
-    return;
-  }
-}
-
 void VisitorGraphml::addAttributeToContent(const expression::AwaitExpression& node, std::string& content, bool callVirtualBase) {
   if (callVirtualBase) {
     addAttributeToContent(static_cast<const base::Positioned&>(node), content, false);
@@ -349,6 +341,18 @@ void VisitorGraphml::addAttributeToContent(const expression::AwaitExpression& no
   {
     return;
   }
+}
+
+void VisitorGraphml::addAttributeToContent(const expression::BigIntLiteral& node, std::string& content, bool callVirtualBase) {
+  if (callVirtualBase) {
+    addAttributeToContent(static_cast<const base::Positioned&>(node), content, false);
+  }
+  addAttributeToContent(static_cast<const expression::Literal&>(node), content, false);
+  if ( !((nodeTypeAttributeFilter.empty()) || ( nodeTypeAttributeFilter.find("expression::BigIntLiteral") != nodeTypeAttributeFilter.end())))
+  {
+    return;
+  }
+  content += "bigint : " + node.getBigint() + "\n";
 }
 
 void VisitorGraphml::addAttributeToContent(const expression::BinaryExpression& node, std::string& content, bool callVirtualBase) {
@@ -380,7 +384,30 @@ void VisitorGraphml::addAttributeToContent(const expression::CallExpression& nod
     addAttributeToContent(static_cast<const base::Positioned&>(node), content, false);
   }
   addAttributeToContent(static_cast<const expression::Expression&>(node), content, false);
+  addAttributeToContent(static_cast<const expression::ChainElement&>(node), content, false);
   if ( !((nodeTypeAttributeFilter.empty()) || ( nodeTypeAttributeFilter.find("expression::CallExpression") != nodeTypeAttributeFilter.end())))
+  {
+    return;
+  }
+}
+
+void VisitorGraphml::addAttributeToContent(const expression::ChainElement& node, std::string& content, bool callVirtualBase) {
+  if (callVirtualBase) {
+    addAttributeToContent(static_cast<const base::Positioned&>(node), content, false);
+  }
+  if ( !((nodeTypeAttributeFilter.empty()) || ( nodeTypeAttributeFilter.find("expression::ChainElement") != nodeTypeAttributeFilter.end())))
+  {
+    return;
+  }
+  content += "optional : " + std::string(node.getOptional() ? "true" : "false") + "\n";
+}
+
+void VisitorGraphml::addAttributeToContent(const expression::ChainExpression& node, std::string& content, bool callVirtualBase) {
+  if (callVirtualBase) {
+    addAttributeToContent(static_cast<const base::Positioned&>(node), content, false);
+  }
+  addAttributeToContent(static_cast<const expression::Expression&>(node), content, false);
+  if ( !((nodeTypeAttributeFilter.empty()) || ( nodeTypeAttributeFilter.find("expression::ChainExpression") != nodeTypeAttributeFilter.end())))
   {
     return;
   }
@@ -445,6 +472,17 @@ void VisitorGraphml::addAttributeToContent(const expression::Identifier& node, s
   }
 }
 
+void VisitorGraphml::addAttributeToContent(const expression::ImportExpression& node, std::string& content, bool callVirtualBase) {
+  if (callVirtualBase) {
+    addAttributeToContent(static_cast<const base::Positioned&>(node), content, false);
+  }
+  addAttributeToContent(static_cast<const expression::Expression&>(node), content, false);
+  if ( !((nodeTypeAttributeFilter.empty()) || ( nodeTypeAttributeFilter.find("expression::ImportExpression") != nodeTypeAttributeFilter.end())))
+  {
+    return;
+  }
+}
+
 void VisitorGraphml::addAttributeToContent(const expression::Literal& node, std::string& content, bool callVirtualBase) {
   if (callVirtualBase) {
     addAttributeToContent(static_cast<const base::Positioned&>(node), content, false);
@@ -475,6 +513,7 @@ void VisitorGraphml::addAttributeToContent(const expression::MemberExpression& n
   }
   addAttributeToContent(static_cast<const expression::Expression&>(node), content, false);
   addAttributeToContent(static_cast<const statement::Pattern&>(node), content, false);
+  addAttributeToContent(static_cast<const expression::ChainElement&>(node), content, false);
   if ( !((nodeTypeAttributeFilter.empty()) || ( nodeTypeAttributeFilter.find("expression::MemberExpression") != nodeTypeAttributeFilter.end())))
   {
     return;
@@ -533,6 +572,17 @@ void VisitorGraphml::addAttributeToContent(const expression::ObjectExpression& n
   }
   addAttributeToContent(static_cast<const expression::Expression&>(node), content, false);
   if ( !((nodeTypeAttributeFilter.empty()) || ( nodeTypeAttributeFilter.find("expression::ObjectExpression") != nodeTypeAttributeFilter.end())))
+  {
+    return;
+  }
+}
+
+void VisitorGraphml::addAttributeToContent(const expression::PrivateIdentifier& node, std::string& content, bool callVirtualBase) {
+  if (callVirtualBase) {
+    addAttributeToContent(static_cast<const base::Positioned&>(node), content, false);
+  }
+  addAttributeToContent(static_cast<const base::Named&>(node), content, false);
+  if ( !((nodeTypeAttributeFilter.empty()) || ( nodeTypeAttributeFilter.find("expression::PrivateIdentifier") != nodeTypeAttributeFilter.end())))
   {
     return;
   }
@@ -811,7 +861,7 @@ void VisitorGraphml::addAttributeToContent(const statement::ForOfStatement& node
   {
     return;
   }
-  content += "async : " + std::string(node.getAsync() ? "true" : "false") + "\n";
+  content += "await : " + std::string(node.getAwait() ? "true" : "false") + "\n";
 }
 
 void VisitorGraphml::addAttributeToContent(const statement::ForStatement& node, std::string& content, bool callVirtualBase) {
@@ -1050,6 +1100,16 @@ void VisitorGraphml::addAttributeToContent(const structure::ModuleSpecifier& nod
   {
     return;
   }
+}
+
+void VisitorGraphml::addAttributeToContent(const structure::PropertyDefinition& node, std::string& content, bool callVirtualBase) {
+  addAttributeToContent(static_cast<const base::Positioned&>(node), content, false);
+  if ( !((nodeTypeAttributeFilter.empty()) || ( nodeTypeAttributeFilter.find("structure::PropertyDefinition") != nodeTypeAttributeFilter.end())))
+  {
+    return;
+  }
+  content += "computed : " + std::string(node.getComputed() ? "true" : "false") + "\n";
+  content += "static : " + std::string(node.getStatic() ? "true" : "false") + "\n";
 }
 
 void VisitorGraphml::visit(const base::Comment& node, bool callVirtualBase) {
@@ -1334,7 +1394,7 @@ void VisitorGraphml::visit(const declaration::ExportAllDeclaration& node, bool c
       parentNodeStack.push_front(node.getParent()->getId());
     }
     bool hasChildNode = false;
-    if(node.getSource())
+    if(node.getSource() || node.getExported())
       hasChildNode = true;
     if(hasChildNode){
       io.writeGroupNodeBegin(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
@@ -1994,70 +2054,6 @@ void VisitorGraphml::visitEnd(const expression::AssignmentExpression& node, bool
   }
 }
 
-void VisitorGraphml::visit(const expression::AssignmentProperty& node, bool callVirtualBase) {
-  if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("expression::AssignmentProperty") == nodeTypeFilter.end())))
-  {
-    return;
-  }
-  if ( maxDrawingDepth > 0) 
-  {
-    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( node.getId());
-    if ( foundDrawedNode != idsToDrawedNodes.end())
-      if (foundDrawedNode->second)
-        return;
-      else
-        foundDrawedNode->second = true;
-    else
-      return;
-  }
-  std::string content;
-  std::string title("expression::AssignmentProperty");
-  std::string titleBGColor("#ccccff");
-  std::string fillColor("#ccffff");
-  addAttributeToContent(node, content, true);
-  compositeContentFormatter(content);
-  if(isGroupingTreeNodes){ 
-    if(edgeKindStack.begin() != edgeKindStack.end() && *(edgeKindStack.begin()) != node.getParentEdgeKind() && node.getParent() && *(parentNodeStack.begin()) == node.getParent()->getId()){
-      io.writeGroupNodeEnd();
-      edgeKindStack.pop_front();
-      parentNodeStack.pop_front();
-    }
-    if(node.getParent() && (edgeKindStack.begin() == edgeKindStack.end() || (edgeKindStack.begin() != edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())))){
-      std::string edgename = Common::toString(node.getParentEdgeKind());
-      io.writeGroupNodeBegin(Common::toString(node.getParent()->getId())+edgename.substr(edgename.find('_')), edgename.substr(edgename.find('_')+1), "", titleBGColor, "", titleBGColor);
-      edgeKindStack.push_front(node.getParentEdgeKind());
-      parentNodeStack.push_front(node.getParent()->getId());
-    }
-    bool hasChildNode = false;
-    if(node.getValue() || node.getKey())
-      hasChildNode = true;
-    if(hasChildNode){
-      io.writeGroupNodeBegin(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
-    }else{
-      io.writeNode(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
-    }
-  }else{
-    io.writeNode(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
-  }
-  lastVisitedNodeId = node.getId();
-}
-
-void VisitorGraphml::visitEnd(const expression::AssignmentProperty& node, bool callVirtualBase) {
-  if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("expression::AssignmentProperty") == nodeTypeFilter.end())))
-  {
-    return;
-  }
-  if(isGroupingTreeNodes){ 
-    if(lastVisitedNodeId != node.getId())
-      io.writeGroupNodeEnd();
-    if(edgeKindStack.begin()!=edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())){
-      io.writeGroupNodeEnd();
-      edgeKindStack.pop_front();
-      parentNodeStack.pop_front();
-    }
-  }
-}
-
 void VisitorGraphml::visit(const expression::AwaitExpression& node, bool callVirtualBase) {
   if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("expression::AwaitExpression") == nodeTypeFilter.end())))
   {
@@ -2114,6 +2110,61 @@ void VisitorGraphml::visitEnd(const expression::AwaitExpression& node, bool call
   if(isGroupingTreeNodes){ 
     if(lastVisitedNodeId != node.getId())
       io.writeGroupNodeEnd();
+    if(edgeKindStack.begin()!=edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())){
+      io.writeGroupNodeEnd();
+      edgeKindStack.pop_front();
+      parentNodeStack.pop_front();
+    }
+  }
+}
+
+void VisitorGraphml::visit(const expression::BigIntLiteral& node, bool callVirtualBase) {
+  if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("expression::BigIntLiteral") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if ( maxDrawingDepth > 0) 
+  {
+    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( node.getId());
+    if ( foundDrawedNode != idsToDrawedNodes.end())
+      if (foundDrawedNode->second)
+        return;
+      else
+        foundDrawedNode->second = true;
+    else
+      return;
+  }
+  std::string content;
+  std::string title("expression::BigIntLiteral");
+  std::string titleBGColor("#ccccff");
+  std::string fillColor("#ccffff");
+  addAttributeToContent(node, content, true);
+  compositeContentFormatter(content);
+  if(isGroupingTreeNodes){ 
+    if(edgeKindStack.begin() != edgeKindStack.end() && *(edgeKindStack.begin()) != node.getParentEdgeKind() && node.getParent() && *(parentNodeStack.begin()) == node.getParent()->getId()){
+      io.writeGroupNodeEnd();
+      edgeKindStack.pop_front();
+      parentNodeStack.pop_front();
+    }
+    if(node.getParent() && (edgeKindStack.begin() == edgeKindStack.end() || (edgeKindStack.begin() != edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())))){
+      std::string edgename = Common::toString(node.getParentEdgeKind());
+      io.writeGroupNodeBegin(Common::toString(node.getParent()->getId())+edgename.substr(edgename.find('_')), edgename.substr(edgename.find('_')+1), "", titleBGColor, "", titleBGColor);
+      edgeKindStack.push_front(node.getParentEdgeKind());
+      parentNodeStack.push_front(node.getParent()->getId());
+    }
+    io.writeNode(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
+  }else{
+    io.writeNode(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
+  }
+  lastVisitedNodeId = node.getId();
+}
+
+void VisitorGraphml::visitEnd(const expression::BigIntLiteral& node, bool callVirtualBase) {
+  if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("expression::BigIntLiteral") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if(isGroupingTreeNodes){ 
     if(edgeKindStack.begin()!=edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())){
       io.writeGroupNodeEnd();
       edgeKindStack.pop_front();
@@ -2291,6 +2342,125 @@ void VisitorGraphml::visit(const expression::CallExpression& node, bool callVirt
 
 void VisitorGraphml::visitEnd(const expression::CallExpression& node, bool callVirtualBase) {
   if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("expression::CallExpression") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if(isGroupingTreeNodes){ 
+    if(lastVisitedNodeId != node.getId())
+      io.writeGroupNodeEnd();
+    if(edgeKindStack.begin()!=edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())){
+      io.writeGroupNodeEnd();
+      edgeKindStack.pop_front();
+      parentNodeStack.pop_front();
+    }
+  }
+}
+
+void VisitorGraphml::visit(const expression::ChainElement& node, bool callVirtualBase) {
+  if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("expression::ChainElement") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if ( maxDrawingDepth > 0) 
+  {
+    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( node.getId());
+    if ( foundDrawedNode != idsToDrawedNodes.end())
+      if (foundDrawedNode->second)
+        return;
+      else
+        foundDrawedNode->second = true;
+    else
+      return;
+  }
+  std::string content;
+  std::string title("expression::ChainElement");
+  std::string titleBGColor("#ccccff");
+  std::string fillColor("#ccffff");
+  addAttributeToContent(node, content, true);
+  compositeContentFormatter(content);
+  if(isGroupingTreeNodes){ 
+    if(edgeKindStack.begin() != edgeKindStack.end() && *(edgeKindStack.begin()) != node.getParentEdgeKind() && node.getParent() && *(parentNodeStack.begin()) == node.getParent()->getId()){
+      io.writeGroupNodeEnd();
+      edgeKindStack.pop_front();
+      parentNodeStack.pop_front();
+    }
+    if(node.getParent() && (edgeKindStack.begin() == edgeKindStack.end() || (edgeKindStack.begin() != edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())))){
+      std::string edgename = Common::toString(node.getParentEdgeKind());
+      io.writeGroupNodeBegin(Common::toString(node.getParent()->getId())+edgename.substr(edgename.find('_')), edgename.substr(edgename.find('_')+1), "", titleBGColor, "", titleBGColor);
+      edgeKindStack.push_front(node.getParentEdgeKind());
+      parentNodeStack.push_front(node.getParent()->getId());
+    }
+    io.writeNode(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
+  }else{
+    io.writeNode(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
+  }
+  lastVisitedNodeId = node.getId();
+}
+
+void VisitorGraphml::visitEnd(const expression::ChainElement& node, bool callVirtualBase) {
+  if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("expression::ChainElement") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if(isGroupingTreeNodes){ 
+    if(edgeKindStack.begin()!=edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())){
+      io.writeGroupNodeEnd();
+      edgeKindStack.pop_front();
+      parentNodeStack.pop_front();
+    }
+  }
+}
+
+void VisitorGraphml::visit(const expression::ChainExpression& node, bool callVirtualBase) {
+  if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("expression::ChainExpression") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if ( maxDrawingDepth > 0) 
+  {
+    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( node.getId());
+    if ( foundDrawedNode != idsToDrawedNodes.end())
+      if (foundDrawedNode->second)
+        return;
+      else
+        foundDrawedNode->second = true;
+    else
+      return;
+  }
+  std::string content;
+  std::string title("expression::ChainExpression");
+  std::string titleBGColor("#ccccff");
+  std::string fillColor("#ccffff");
+  addAttributeToContent(node, content, true);
+  compositeContentFormatter(content);
+  if(isGroupingTreeNodes){ 
+    if(edgeKindStack.begin() != edgeKindStack.end() && *(edgeKindStack.begin()) != node.getParentEdgeKind() && node.getParent() && *(parentNodeStack.begin()) == node.getParent()->getId()){
+      io.writeGroupNodeEnd();
+      edgeKindStack.pop_front();
+      parentNodeStack.pop_front();
+    }
+    if(node.getParent() && (edgeKindStack.begin() == edgeKindStack.end() || (edgeKindStack.begin() != edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())))){
+      std::string edgename = Common::toString(node.getParentEdgeKind());
+      io.writeGroupNodeBegin(Common::toString(node.getParent()->getId())+edgename.substr(edgename.find('_')), edgename.substr(edgename.find('_')+1), "", titleBGColor, "", titleBGColor);
+      edgeKindStack.push_front(node.getParentEdgeKind());
+      parentNodeStack.push_front(node.getParent()->getId());
+    }
+    bool hasChildNode = false;
+    if(node.getExpression())
+      hasChildNode = true;
+    if(hasChildNode){
+      io.writeGroupNodeBegin(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
+    }else{
+      io.writeNode(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
+    }
+  }else{
+    io.writeNode(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
+  }
+  lastVisitedNodeId = node.getId();
+}
+
+void VisitorGraphml::visitEnd(const expression::ChainExpression& node, bool callVirtualBase) {
+  if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("expression::ChainExpression") == nodeTypeFilter.end())))
   {
     return;
   }
@@ -2544,6 +2714,70 @@ void VisitorGraphml::visitEnd(const expression::Identifier& node, bool callVirtu
     return;
   }
   if(isGroupingTreeNodes){ 
+    if(edgeKindStack.begin()!=edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())){
+      io.writeGroupNodeEnd();
+      edgeKindStack.pop_front();
+      parentNodeStack.pop_front();
+    }
+  }
+}
+
+void VisitorGraphml::visit(const expression::ImportExpression& node, bool callVirtualBase) {
+  if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("expression::ImportExpression") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if ( maxDrawingDepth > 0) 
+  {
+    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( node.getId());
+    if ( foundDrawedNode != idsToDrawedNodes.end())
+      if (foundDrawedNode->second)
+        return;
+      else
+        foundDrawedNode->second = true;
+    else
+      return;
+  }
+  std::string content;
+  std::string title("expression::ImportExpression");
+  std::string titleBGColor("#ccccff");
+  std::string fillColor("#ccffff");
+  addAttributeToContent(node, content, true);
+  compositeContentFormatter(content);
+  if(isGroupingTreeNodes){ 
+    if(edgeKindStack.begin() != edgeKindStack.end() && *(edgeKindStack.begin()) != node.getParentEdgeKind() && node.getParent() && *(parentNodeStack.begin()) == node.getParent()->getId()){
+      io.writeGroupNodeEnd();
+      edgeKindStack.pop_front();
+      parentNodeStack.pop_front();
+    }
+    if(node.getParent() && (edgeKindStack.begin() == edgeKindStack.end() || (edgeKindStack.begin() != edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())))){
+      std::string edgename = Common::toString(node.getParentEdgeKind());
+      io.writeGroupNodeBegin(Common::toString(node.getParent()->getId())+edgename.substr(edgename.find('_')), edgename.substr(edgename.find('_')+1), "", titleBGColor, "", titleBGColor);
+      edgeKindStack.push_front(node.getParentEdgeKind());
+      parentNodeStack.push_front(node.getParent()->getId());
+    }
+    bool hasChildNode = false;
+    if(node.getSource())
+      hasChildNode = true;
+    if(hasChildNode){
+      io.writeGroupNodeBegin(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
+    }else{
+      io.writeNode(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
+    }
+  }else{
+    io.writeNode(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
+  }
+  lastVisitedNodeId = node.getId();
+}
+
+void VisitorGraphml::visitEnd(const expression::ImportExpression& node, bool callVirtualBase) {
+  if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("expression::ImportExpression") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if(isGroupingTreeNodes){ 
+    if(lastVisitedNodeId != node.getId())
+      io.writeGroupNodeEnd();
     if(edgeKindStack.begin()!=edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())){
       io.writeGroupNodeEnd();
       edgeKindStack.pop_front();
@@ -2974,6 +3208,61 @@ void VisitorGraphml::visitEnd(const expression::ObjectExpression& node, bool cal
   if(isGroupingTreeNodes){ 
     if(lastVisitedNodeId != node.getId())
       io.writeGroupNodeEnd();
+    if(edgeKindStack.begin()!=edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())){
+      io.writeGroupNodeEnd();
+      edgeKindStack.pop_front();
+      parentNodeStack.pop_front();
+    }
+  }
+}
+
+void VisitorGraphml::visit(const expression::PrivateIdentifier& node, bool callVirtualBase) {
+  if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("expression::PrivateIdentifier") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if ( maxDrawingDepth > 0) 
+  {
+    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( node.getId());
+    if ( foundDrawedNode != idsToDrawedNodes.end())
+      if (foundDrawedNode->second)
+        return;
+      else
+        foundDrawedNode->second = true;
+    else
+      return;
+  }
+  std::string content;
+  std::string title("expression::PrivateIdentifier");
+  std::string titleBGColor("#ccccff");
+  std::string fillColor("#ccffff");
+  addAttributeToContent(node, content, true);
+  compositeContentFormatter(content);
+  if(isGroupingTreeNodes){ 
+    if(edgeKindStack.begin() != edgeKindStack.end() && *(edgeKindStack.begin()) != node.getParentEdgeKind() && node.getParent() && *(parentNodeStack.begin()) == node.getParent()->getId()){
+      io.writeGroupNodeEnd();
+      edgeKindStack.pop_front();
+      parentNodeStack.pop_front();
+    }
+    if(node.getParent() && (edgeKindStack.begin() == edgeKindStack.end() || (edgeKindStack.begin() != edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())))){
+      std::string edgename = Common::toString(node.getParentEdgeKind());
+      io.writeGroupNodeBegin(Common::toString(node.getParent()->getId())+edgename.substr(edgename.find('_')), edgename.substr(edgename.find('_')+1), "", titleBGColor, "", titleBGColor);
+      edgeKindStack.push_front(node.getParentEdgeKind());
+      parentNodeStack.push_front(node.getParent()->getId());
+    }
+    io.writeNode(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
+  }else{
+    io.writeNode(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
+  }
+  lastVisitedNodeId = node.getId();
+}
+
+void VisitorGraphml::visitEnd(const expression::PrivateIdentifier& node, bool callVirtualBase) {
+  if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("expression::PrivateIdentifier") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if(isGroupingTreeNodes){ 
     if(edgeKindStack.begin()!=edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())){
       io.writeGroupNodeEnd();
       edgeKindStack.pop_front();
@@ -5739,6 +6028,70 @@ void VisitorGraphml::visitEnd(const structure::MethodDefinition& node, bool call
   }
 }
 
+void VisitorGraphml::visit(const structure::PropertyDefinition& node, bool callVirtualBase) {
+  if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("structure::PropertyDefinition") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if ( maxDrawingDepth > 0) 
+  {
+    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( node.getId());
+    if ( foundDrawedNode != idsToDrawedNodes.end())
+      if (foundDrawedNode->second)
+        return;
+      else
+        foundDrawedNode->second = true;
+    else
+      return;
+  }
+  std::string content;
+  std::string title("structure::PropertyDefinition");
+  std::string titleBGColor("#ccccff");
+  std::string fillColor("#ccffff");
+  addAttributeToContent(node, content, true);
+  compositeContentFormatter(content);
+  if(isGroupingTreeNodes){ 
+    if(edgeKindStack.begin() != edgeKindStack.end() && *(edgeKindStack.begin()) != node.getParentEdgeKind() && node.getParent() && *(parentNodeStack.begin()) == node.getParent()->getId()){
+      io.writeGroupNodeEnd();
+      edgeKindStack.pop_front();
+      parentNodeStack.pop_front();
+    }
+    if(node.getParent() && (edgeKindStack.begin() == edgeKindStack.end() || (edgeKindStack.begin() != edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())))){
+      std::string edgename = Common::toString(node.getParentEdgeKind());
+      io.writeGroupNodeBegin(Common::toString(node.getParent()->getId())+edgename.substr(edgename.find('_')), edgename.substr(edgename.find('_')+1), "", titleBGColor, "", titleBGColor);
+      edgeKindStack.push_front(node.getParentEdgeKind());
+      parentNodeStack.push_front(node.getParent()->getId());
+    }
+    bool hasChildNode = false;
+    if(node.getKey() || node.getValue())
+      hasChildNode = true;
+    if(hasChildNode){
+      io.writeGroupNodeBegin(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
+    }else{
+      io.writeNode(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
+    }
+  }else{
+    io.writeNode(Common::toString(node.getId()), title, content, titleBGColor, "", fillColor);
+  }
+  lastVisitedNodeId = node.getId();
+}
+
+void VisitorGraphml::visitEnd(const structure::PropertyDefinition& node, bool callVirtualBase) {
+  if ( !((nodeTypeFilter.empty()) || ( nodeTypeFilter.find("structure::PropertyDefinition") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if(isGroupingTreeNodes){ 
+    if(lastVisitedNodeId != node.getId())
+      io.writeGroupNodeEnd();
+    if(edgeKindStack.begin()!=edgeKindStack.end() && (*(edgeKindStack.begin()) != node.getParentEdgeKind() || *(parentNodeStack.begin()) != node.getParent()->getId())){
+      io.writeGroupNodeEnd();
+      edgeKindStack.pop_front();
+      parentNodeStack.pop_front();
+    }
+  }
+}
+
 void  VisitorGraphml::visitPositioned_Comments(const base::Positioned& begin, const base::Comment& end) {
   if (!visitCrossEdge)
     return;
@@ -5840,6 +6193,32 @@ void  VisitorGraphml::visitExportAllDeclaration_HasSource(const declaration::Exp
     io.writeEdgeBuffer(Common::toString(begin.getId()), Common::toString(end.getId()), "ExportAllDeclaration_HasSource", 1, GraphmlIO::ls_line, GraphmlIO::at_diamond, GraphmlIO::at_none);
   else
     io.writeEdge(Common::toString(begin.getId()), Common::toString(end.getId()), "ExportAllDeclaration_HasSource", 1, GraphmlIO::ls_line, GraphmlIO::at_diamond, GraphmlIO::at_none);
+  idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
+}
+
+void  VisitorGraphml::visitExportAllDeclaration_HasExported(const declaration::ExportAllDeclaration& begin, const expression::Identifier& end) {
+  if(isGroupingTreeNodes)
+    return;
+  if ( (this->getDepth() >= maxDrawingDepth) && ( maxDrawingDepth > 0))
+    return;
+  if ( !((edgeFilter.empty()) || ( edgeFilter.find("ExportAllDeclaration_HasExported") != edgeFilter.end())))
+  {
+    return;
+  }
+  if ( maxDrawingDepth > 0)
+  {
+    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( begin.getId());
+    if ( foundDrawedNode == idsToDrawedNodes.end())
+      return;
+  }
+  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("declaration::ExportAllDeclaration") == nodeTypeFilter.end() && nodeTypeFilter.find("expression::Identifier") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if(isGroupingTreeNodes)
+    io.writeEdgeBuffer(Common::toString(begin.getId()), Common::toString(end.getId()), "ExportAllDeclaration_HasExported", 1, GraphmlIO::ls_line, GraphmlIO::at_diamond, GraphmlIO::at_none);
+  else
+    io.writeEdge(Common::toString(begin.getId()), Common::toString(end.getId()), "ExportAllDeclaration_HasExported", 1, GraphmlIO::ls_line, GraphmlIO::at_diamond, GraphmlIO::at_none);
   idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
 }
 
@@ -6181,7 +6560,7 @@ void  VisitorGraphml::visitAwaitExpression_HasArgument(const expression::AwaitEx
   idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
 }
 
-void  VisitorGraphml::visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const expression::Expression& end) {
+void  VisitorGraphml::visitBinaryExpression_HasLeft(const expression::BinaryExpression& begin, const base::Positioned& end) {
   if(isGroupingTreeNodes)
     return;
   if ( (this->getDepth() >= maxDrawingDepth) && ( maxDrawingDepth > 0))
@@ -6196,7 +6575,7 @@ void  VisitorGraphml::visitBinaryExpression_HasLeft(const expression::BinaryExpr
     if ( foundDrawedNode == idsToDrawedNodes.end())
       return;
   }
-  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("expression::BinaryExpression") == nodeTypeFilter.end() && nodeTypeFilter.find("expression::Expression") == nodeTypeFilter.end())))
+  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("expression::BinaryExpression") == nodeTypeFilter.end() && nodeTypeFilter.find("base::Positioned") == nodeTypeFilter.end())))
   {
     return;
   }
@@ -6311,6 +6690,32 @@ void  VisitorGraphml::visitCallExpression_Calls(const expression::CallExpression
   idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
 }
 
+void  VisitorGraphml::visitChainExpression_HasExpression(const expression::ChainExpression& begin, const expression::ChainElement& end) {
+  if(isGroupingTreeNodes)
+    return;
+  if ( (this->getDepth() >= maxDrawingDepth) && ( maxDrawingDepth > 0))
+    return;
+  if ( !((edgeFilter.empty()) || ( edgeFilter.find("ChainExpression_HasExpression") != edgeFilter.end())))
+  {
+    return;
+  }
+  if ( maxDrawingDepth > 0)
+  {
+    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( begin.getId());
+    if ( foundDrawedNode == idsToDrawedNodes.end())
+      return;
+  }
+  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("expression::ChainExpression") == nodeTypeFilter.end() && nodeTypeFilter.find("expression::ChainElement") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if(isGroupingTreeNodes)
+    io.writeEdgeBuffer(Common::toString(begin.getId()), Common::toString(end.getId()), "ChainExpression_HasExpression", 1, GraphmlIO::ls_line, GraphmlIO::at_diamond, GraphmlIO::at_none);
+  else
+    io.writeEdge(Common::toString(begin.getId()), Common::toString(end.getId()), "ChainExpression_HasExpression", 1, GraphmlIO::ls_line, GraphmlIO::at_diamond, GraphmlIO::at_none);
+  idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
+}
+
 void  VisitorGraphml::visitConditionalExpression_HasAlternate(const expression::ConditionalExpression& begin, const expression::Expression& end) {
   if(isGroupingTreeNodes)
     return;
@@ -6415,6 +6820,32 @@ void  VisitorGraphml::visitIdentifier_RefersTo(const expression::Identifier& beg
   idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
 }
 
+void  VisitorGraphml::visitImportExpression_HasSource(const expression::ImportExpression& begin, const expression::Expression& end) {
+  if(isGroupingTreeNodes)
+    return;
+  if ( (this->getDepth() >= maxDrawingDepth) && ( maxDrawingDepth > 0))
+    return;
+  if ( !((edgeFilter.empty()) || ( edgeFilter.find("ImportExpression_HasSource") != edgeFilter.end())))
+  {
+    return;
+  }
+  if ( maxDrawingDepth > 0)
+  {
+    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( begin.getId());
+    if ( foundDrawedNode == idsToDrawedNodes.end())
+      return;
+  }
+  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("expression::ImportExpression") == nodeTypeFilter.end() && nodeTypeFilter.find("expression::Expression") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if(isGroupingTreeNodes)
+    io.writeEdgeBuffer(Common::toString(begin.getId()), Common::toString(end.getId()), "ImportExpression_HasSource", 1, GraphmlIO::ls_line, GraphmlIO::at_diamond, GraphmlIO::at_none);
+  else
+    io.writeEdge(Common::toString(begin.getId()), Common::toString(end.getId()), "ImportExpression_HasSource", 1, GraphmlIO::ls_line, GraphmlIO::at_diamond, GraphmlIO::at_none);
+  idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
+}
+
 void  VisitorGraphml::visitLogicalExpression_HasLeft(const expression::LogicalExpression& begin, const expression::Expression& end) {
   if(isGroupingTreeNodes)
     return;
@@ -6467,7 +6898,7 @@ void  VisitorGraphml::visitLogicalExpression_HasRight(const expression::LogicalE
   idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
 }
 
-void  VisitorGraphml::visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const expression::Expression& end) {
+void  VisitorGraphml::visitMemberExpression_HasProperty(const expression::MemberExpression& begin, const base::Positioned& end) {
   if(isGroupingTreeNodes)
     return;
   if ( (this->getDepth() >= maxDrawingDepth) && ( maxDrawingDepth > 0))
@@ -6482,7 +6913,7 @@ void  VisitorGraphml::visitMemberExpression_HasProperty(const expression::Member
     if ( foundDrawedNode == idsToDrawedNodes.end())
       return;
   }
-  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("expression::MemberExpression") == nodeTypeFilter.end() && nodeTypeFilter.find("expression::Expression") == nodeTypeFilter.end())))
+  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("expression::MemberExpression") == nodeTypeFilter.end() && nodeTypeFilter.find("base::Positioned") == nodeTypeFilter.end())))
   {
     return;
   }
@@ -8053,7 +8484,7 @@ void  VisitorGraphml::visitClass_HasIdentifier(const structure::Class& begin, co
   idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
 }
 
-void  VisitorGraphml::visitClassBody_HasBody(const structure::ClassBody& begin, const structure::MethodDefinition& end) {
+void  VisitorGraphml::visitClassBody_HasBody(const structure::ClassBody& begin, const base::Positioned& end) {
   if(isGroupingTreeNodes)
     return;
   if ( (this->getDepth() >= maxDrawingDepth) && ( maxDrawingDepth > 0))
@@ -8068,7 +8499,7 @@ void  VisitorGraphml::visitClassBody_HasBody(const structure::ClassBody& begin, 
     if ( foundDrawedNode == idsToDrawedNodes.end())
       return;
   }
-  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("structure::ClassBody") == nodeTypeFilter.end() && nodeTypeFilter.find("structure::MethodDefinition") == nodeTypeFilter.end())))
+  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("structure::ClassBody") == nodeTypeFilter.end() && nodeTypeFilter.find("base::Positioned") == nodeTypeFilter.end())))
   {
     return;
   }
@@ -8131,7 +8562,7 @@ void  VisitorGraphml::visitImportSpecifier_HasImported(const structure::ImportSp
   idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
 }
 
-void  VisitorGraphml::visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const expression::Expression& end) {
+void  VisitorGraphml::visitMethodDefinition_HasKey(const structure::MethodDefinition& begin, const base::Positioned& end) {
   if(isGroupingTreeNodes)
     return;
   if ( (this->getDepth() >= maxDrawingDepth) && ( maxDrawingDepth > 0))
@@ -8146,7 +8577,7 @@ void  VisitorGraphml::visitMethodDefinition_HasKey(const structure::MethodDefini
     if ( foundDrawedNode == idsToDrawedNodes.end())
       return;
   }
-  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("structure::MethodDefinition") == nodeTypeFilter.end() && nodeTypeFilter.find("expression::Expression") == nodeTypeFilter.end())))
+  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("structure::MethodDefinition") == nodeTypeFilter.end() && nodeTypeFilter.find("base::Positioned") == nodeTypeFilter.end())))
   {
     return;
   }
@@ -8206,6 +8637,58 @@ void  VisitorGraphml::visitModuleSpecifier_HasLocal(const structure::ModuleSpeci
     io.writeEdgeBuffer(Common::toString(begin.getId()), Common::toString(end.getId()), "ModuleSpecifier_HasLocal", 1, GraphmlIO::ls_line, GraphmlIO::at_diamond, GraphmlIO::at_none);
   else
     io.writeEdge(Common::toString(begin.getId()), Common::toString(end.getId()), "ModuleSpecifier_HasLocal", 1, GraphmlIO::ls_line, GraphmlIO::at_diamond, GraphmlIO::at_none);
+  idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
+}
+
+void  VisitorGraphml::visitPropertyDefinition_HasKey(const structure::PropertyDefinition& begin, const base::Positioned& end) {
+  if(isGroupingTreeNodes)
+    return;
+  if ( (this->getDepth() >= maxDrawingDepth) && ( maxDrawingDepth > 0))
+    return;
+  if ( !((edgeFilter.empty()) || ( edgeFilter.find("PropertyDefinition_HasKey") != edgeFilter.end())))
+  {
+    return;
+  }
+  if ( maxDrawingDepth > 0)
+  {
+    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( begin.getId());
+    if ( foundDrawedNode == idsToDrawedNodes.end())
+      return;
+  }
+  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("structure::PropertyDefinition") == nodeTypeFilter.end() && nodeTypeFilter.find("base::Positioned") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if(isGroupingTreeNodes)
+    io.writeEdgeBuffer(Common::toString(begin.getId()), Common::toString(end.getId()), "PropertyDefinition_HasKey", 1, GraphmlIO::ls_line, GraphmlIO::at_diamond, GraphmlIO::at_none);
+  else
+    io.writeEdge(Common::toString(begin.getId()), Common::toString(end.getId()), "PropertyDefinition_HasKey", 1, GraphmlIO::ls_line, GraphmlIO::at_diamond, GraphmlIO::at_none);
+  idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
+}
+
+void  VisitorGraphml::visitPropertyDefinition_HasValue(const structure::PropertyDefinition& begin, const expression::Expression& end) {
+  if(isGroupingTreeNodes)
+    return;
+  if ( (this->getDepth() >= maxDrawingDepth) && ( maxDrawingDepth > 0))
+    return;
+  if ( !((edgeFilter.empty()) || ( edgeFilter.find("PropertyDefinition_HasValue") != edgeFilter.end())))
+  {
+    return;
+  }
+  if ( maxDrawingDepth > 0)
+  {
+    std::map<NodeId, bool>::iterator foundDrawedNode = idsToDrawedNodes.find( begin.getId());
+    if ( foundDrawedNode == idsToDrawedNodes.end())
+      return;
+  }
+  if ( !((nodeTypeFilter.empty()) || (nodeTypeFilter.find("structure::PropertyDefinition") == nodeTypeFilter.end() && nodeTypeFilter.find("expression::Expression") == nodeTypeFilter.end())))
+  {
+    return;
+  }
+  if(isGroupingTreeNodes)
+    io.writeEdgeBuffer(Common::toString(begin.getId()), Common::toString(end.getId()), "PropertyDefinition_HasValue", 1, GraphmlIO::ls_line, GraphmlIO::at_diamond, GraphmlIO::at_none);
+  else
+    io.writeEdge(Common::toString(begin.getId()), Common::toString(end.getId()), "PropertyDefinition_HasValue", 1, GraphmlIO::ls_line, GraphmlIO::at_diamond, GraphmlIO::at_none);
   idsToDrawedNodes.insert( std::make_pair( end.getId(),false));
 }
 

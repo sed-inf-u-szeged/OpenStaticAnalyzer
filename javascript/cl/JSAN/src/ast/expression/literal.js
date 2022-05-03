@@ -18,18 +18,18 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
+import * as globals from '../../globals.js';
 
-module.exports = function (node, parent, firstVisit) {
+const factory = globals.getFactory();
+
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
-        var type = globals.getLiteralType(node);
-        var literalNode;
-
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
 
+        const type = globals.getLiteralType(node);
+        let literalNode;
         switch (type) {
             case "Number":
                 literalNode = factory.createNumberLiteralWrapper();
@@ -51,9 +51,12 @@ module.exports = function (node, parent, firstVisit) {
                 literalNode.setFlags(node.regex.flags);
                 literalNode.setPattern(node.regex.pattern);
                 break;
+            case "Bigint":
+                literalNode = factory.createBigIntLiteralWrapper();
+                literalNode.setBigint(node.bigint);
+                break;
             default:
-                console.log("Literal type not recognized! Type: " + type);
-                return;
+                throw new Error("Literal type could not be recognized! Type: " + type);
         }
 
         globals.setPositionInfo(node, literalNode);

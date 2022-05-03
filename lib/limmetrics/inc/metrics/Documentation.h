@@ -117,30 +117,6 @@ namespace columbus { namespace lim { namespace metrics {
       TAD( bool enabled, SharedContainers* shared );
   };
 
-  class CDBase : public DocBase {
-    public:
-      typedef unsigned int (asg::logical::Scope::*ScopePtr) () const;
-      typedef unsigned int (asg::base::Component::*ComponentPtr) () const;
-
-      CDBase( bool total, bool enabled, SharedContainers* shared );
-    protected:
-      const std::string& translateLevel( asg::Language language, const std::string& level ) const override;
-    private:
-      ScopePtr scopeLLOC;
-      ComponentPtr componentLLOC;
-      std::string CLOC;
-  };
-
-  class CD : public CDBase {
-    public:
-      CD( bool enabled, SharedContainers* shared );
-  };
-
-  class TCD : public CDBase {
-    public:
-      TCD( bool enabled, SharedContainers* shared );
-  };
-
 }}}
 
 #endif

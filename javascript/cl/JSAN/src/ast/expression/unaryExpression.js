@@ -18,31 +18,26 @@
  *  limitations under the Licence.
  */
 
-var globals = require('../../globals');
-var factory = globals.getFactory();
-var conversions = require('../conversions');
+import * as globals from '../../globals.js';
+import * as conversions from '../conversions.js';
+
+const factory = globals.getFactory();
 
 
-module.exports = function (node, parent, firstVisit) {
+export default function (node, parent, firstVisit) {
     if (firstVisit) {
         if (globals.getWrapperOfNode(node) !== undefined) {
             return;
         }
-        var unaryExpression = factory.createUnaryExpressionWrapper();
+        const unaryExpression = factory.createUnaryExpressionWrapper();
         globals.setPositionInfo(node, unaryExpression);
         unaryExpression.setOperator(conversions.convertUnaryOperatorToString(node.operator));
         unaryExpression.setPrefix(node.prefix);
         return unaryExpression;
     } else {
-        var unaryExpressionWrapper = globals.getWrapperOfNode(node);
+        const unaryExpressionWrapper = globals.getWrapperOfNode(node);
         if (node.argument != null) {
-            var argumentWrapper = globals.getWrapperOfNode(node.argument);
-            try {
-                unaryExpressionWrapper.setArgument(argumentWrapper);
-            } catch (e) {
-                console.error("UNARYEXPRESSION - Could not set argument! Reason of the error: " + e + "\n");
-            }
+            globals.safeSet(unaryExpressionWrapper, "setArgument", node.argument, "UNARYEXPRESSION - Could not set argument!");
         }
-
     }
 }
