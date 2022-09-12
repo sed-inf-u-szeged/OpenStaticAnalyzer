@@ -48,7 +48,7 @@ By continuous static analysis, the software developers can:
 - the number of errors in delivered software can be reduced, so the operational risks can be decreased, increasing the company's reputation.
 
 ## License
-OpenStaticAnalyzer 5.0 is licensed under the [European Union Public Licence](https://joinup.ec.europa.eu/software/page/eupl) (EUPL) v1.2.
+OpenStaticAnalyzer 5.1 is licensed under the [European Union Public Licence](https://joinup.ec.europa.eu/software/page/eupl) (EUPL) v1.2.
 
 OpenStaticAnalyzer is free software, distributed in the hope that it will be useful, but on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the LICENSE file for more details.
 
