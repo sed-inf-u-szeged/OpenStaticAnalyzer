@@ -96,7 +96,7 @@ built by executing the following commands in the `Build` directory:
 - Linux:
     
         cmake ../OpenStaticAnalyzer -G "Unix Makefiles"
-        make OpenStaticAnalyzer-Package
+        make Analyzer-Package
 
 - Windows:
 
@@ -104,7 +104,7 @@ built by executing the following commands in the `Build` directory:
     
         `cmake ..\OpenStaticAnalyzer -G "Visual Studio 15 2017 Win64"`
    
-        Open the generated OpenStaticAnalyzer.sln file with the VS IDE and build the `Columbus\OpenStaticAnalyzer\OpenStaticAnalyzer-Package` project to generate the OpenStaticAnalyzer package.
+        Open the generated OpenStaticAnalyzer.sln file with the VS IDE and build the `Columbus\OpenStaticAnalyzer\Analyzer-Package` project to generate the OpenStaticAnalyzer package.
     
     - Building from command line
         
