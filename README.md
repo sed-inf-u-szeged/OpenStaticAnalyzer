@@ -56,15 +56,15 @@ OpenStaticAnalyzer is free software, distributed in the hope that it will be use
 
 ### User's Guide
 
-[Java](OpenStaticAnalyzer/java/doc/usersguide/md/Main.md)
+[Java](Analyzer/java/doc/usersguide/md/Main.md)
 
-[Python](OpenStaticAnalyzer/python/doc/usersguide/md/Main.md)
+[Python](Analyzer/python/doc/usersguide/md/Main.md)
 
-[C#](OpenStaticAnalyzer/csharp/doc/usersguide/md/Main.md)
+[C#](Analyzer/csharp/doc/usersguide/md/Main.md)
 
-[JavaScript](OpenStaticAnalyzer/javascript/doc/usersguide/md/Main.md)
+[JavaScript](Analyzer/javascript/doc/usersguide/md/Main.md)
 
-[C/C++](OpenStaticAnalyzer/cpp/doc/usersguide/md/Main.md)
+[C/C++](Analyzer/cpp/doc/usersguide/md/Main.md)
 
 ### How to compile
 
